@@ -3,6 +3,7 @@ import re
 import hashlib
 import json
 
+hashes = {}
 
 HTML_TEMPLATE = """
 <!doctype html>
@@ -235,6 +236,15 @@ def escape_html(text):
     text =  text.replace(">", "&gt;")
     text =  text.replace("<", "&lt;")
     return text
+
+def md5(text):
+    global hashes 
+    if text in hashes:
+        return hashes[text]
+    h = hashlib.md5(bytes(text, 'utf-8')).hexdigest()
+    hashes[text] = h
+    return h
+
     
 def to_html(node_dict, node_list): 
 
@@ -247,9 +257,9 @@ def to_html(node_dict, node_list):
     n_next          = (nd.get("next", "-") or "-").strip()
     n_up            = (nd.get("up", "-") or "-").strip()
 
-    l_prev          = hashlib.md5(bytes(n_prev, 'utf-8')).hexdigest()
-    l_next          = hashlib.md5(bytes(n_next, 'utf-8')).hexdigest()
-    l_up            = hashlib.md5(bytes(n_up, 'utf-8')).hexdigest()
+    l_prev          = md5(n_prev)
+    l_next          = md5(n_next)
+    l_up            = md5(n_up)
 
 
 
@@ -322,7 +332,7 @@ def to_html(node_dict, node_list):
 
 
                 for n in node_list:
-                    stext = stext.replace(f"href=\"{n}\"", f"href=\"{hashlib.md5(bytes(n, 'utf-8')).hexdigest()}.html\"")
+                    stext = stext.replace(f"href=\"{n}\"", f"href=\"{md5(n)}.html\"")
                 stext = stext.replace("\n", "<br>")
 
             section_html = ""
@@ -380,12 +390,12 @@ def to_html(node_dict, node_list):
                     </div>
                 """
 
-    node_list =  ",".join(["['{}', '{}']".format(n.replace("'", "\\'").lower(), hashlib.md5(bytes(n, 'utf-8')).hexdigest()) for n in node_list])
+    node_list =  ",".join(["['{}', '{}']".format(n.replace("'", "\\'").lower(), md5(n)) for n in node_list])
     return (HTML_TEMPLATE
                 .replace("{{body}}", body)
                 .replace("{{title}}", node_dict["name"])
                 .replace("{{node_list}}", node_list)
-                .replace("{{top}}", hashlib.md5(bytes("Top", 'utf-8')).hexdigest())
+                .replace("{{top}}", md5("Top"))
                 )
 
 def main():
