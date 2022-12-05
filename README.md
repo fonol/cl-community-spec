@@ -4,7 +4,7 @@
 
 This project aims to provide an alternative to the Common Lisp HyperSpec.
 Due to its license, the HyperSpec can not be modified in any way, so this project 
-is using a rendition of the ANSI Common Lisp specification made by Bill Schelter [for more information](https://www.emacswiki.org/emacs/CommonLispHyperspec). 
+is using a rendition of the ANSI Common Lisp specification made by Bill Schelter [(see the emacswiki for more information)](https://www.emacswiki.org/emacs/CommonLispHyperspec). 
 
 The files are in [.info](https://www.gnu.org/software/texinfo/manual/texinfo/html_node/Info-Files.html) format. Each file contains one or more "nodes", which are output as
 a HTML file each.
