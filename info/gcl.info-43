@@ -1,0 +1,1624 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: directory,  Next: probe-file,  Prev: Files Dictionary,  Up: Files Dictionary
+
+directory                                                        [Function]
+---------------------------------------------------------------------------
+
+`directory'  pathspec &key =>  pathnames
+
+Arguments and Values::
+......................
+
+pathspec--a pathname designator, which may contain wild components.
+
+pathnames--a list of
+
+physical pathnames.
+
+Description::
+.............
+
+Determines which, if any, files that are present in the file system have
+names matching pathspec, and returns a
+
+fresh
+
+list of pathnames corresponding to the truenames of those files.
+
+An implementation may be extended to accept implementation-defined keyword
+arguments to directory.
+
+Affected By::
+.............
+
+The host computer's file system.
+
+Exceptional Situations::
+........................
+
+If the attempt to obtain a directory listing is not successful, an error
+of type file-error is signaled.
+
+See Also::
+..........
+
+pathname,
+
+logical-pathname,
+
+*Note ensure-directories-exist:: , *Note File System Concepts::, *Note
+File Operations on Open and Closed Streams::,
+
+*Note Pathnames as Filenames::
+
+Notes::
+.......
+
+If the pathspec is not wild, the resulting list will contain either zero
+or one elements.
+
+Common Lisp specifies "&key" in the argument list to directory even though
+no standardized keyword arguments to directory are defined.
+":allow-other-keys t" may be used in conforming programs in order to
+quietly ignore any additional keywords which are passed by the program but
+not supported by the implementation.
+
+
+File: gcl.info,  Node: probe-file,  Next: ensure-directories-exist,  Prev: directory,  Up: Files Dictionary
+
+probe-file                                                       [Function]
+---------------------------------------------------------------------------
+
+`probe-file'  pathspec =>  truename
+
+Arguments and Values::
+......................
+
+pathspec--a pathname designator.
+
+truename--a physical pathname or nil.
+
+Description::
+.............
+
+probe-file tests whether a file exists.
+
+probe-file returns false if there is no file named pathspec, and otherwise
+returns the truename of pathspec.
+
+If the pathspec designator is an open stream, then probe-file produces the
+truename of its associated file.
+
+If pathspec is a stream, whether open or closed, it is coerced to a
+pathname as if by the function pathname.
+
+Affected By::
+.............
+
+The host computer's file system.
+
+Exceptional Situations::
+........................
+
+An error of type file-error is signaled if pathspec is wild.
+
+An error of type file-error is signaled if the file system cannot perform
+the requested operation.
+
+See Also::
+..........
+
+*Note truename:: , *Note open:: , *Note ensure-directories-exist:: ,
+pathname,
+
+logical-pathname,
+
+*Note File System Concepts::, *Note File Operations on Open and Closed
+Streams::,
+
+*Note Pathnames as Filenames::
+
+
+File: gcl.info,  Node: ensure-directories-exist,  Next: truename,  Prev: probe-file,  Up: Files Dictionary
+
+ensure-directories-exist                                         [Function]
+---------------------------------------------------------------------------
+
+`ensure-directories-exist'  pathspec &key verbose =>  pathspec, created
+
+Arguments and Values::
+......................
+
+pathspec--a pathname designator.
+
+verbose--a generalized boolean.
+
+created--a generalized boolean.
+
+Description::
+.............
+
+Tests whether the directories containing the specified file actually exist,
+and attempts to create them if they do not.
+
+If the containing directories do not exist and if verbose is true, then
+the implementation is permitted (but not required) to perform output to
+standard output saying what directories were created.  If the containing
+directories exist, or if verbose is false, this function performs no
+output.
+
+The primary value is the given pathspec so that this operation can be
+straightforwardly composed with other file manipulation expressions.  The
+secondary value, created, is true if any directories were created.
+
+Affected By::
+.............
+
+The host computer's file system.
+
+Exceptional Situations::
+........................
+
+An error of type file-error is signaled if the host, device, or directory
+part of pathspec is wild.
+
+If the directory creation attempt is not successful, an error of type
+file-error is signaled; if this occurs, it might be the case that none,
+some, or all of the requested creations have actually occurred within the
+file system.
+
+See Also::
+..........
+
+*Note probe-file:: , *Note open:: ,
+
+*Note Pathnames as Filenames::
+
+
+File: gcl.info,  Node: truename,  Next: file-author,  Prev: ensure-directories-exist,  Up: Files Dictionary
+
+truename                                                         [Function]
+---------------------------------------------------------------------------
+
+`truename'  filespec =>  truename
+
+Arguments and Values::
+......................
+
+filespec--a pathname designator.
+
+truename--a physical pathname.
+
+Description::
+.............
+
+truename tries to find the file indicated by filespec and returns its
+truename.  If the filespec designator is an open stream, its associated
+file is used.
+
+If filespec is a stream, truename can be used whether the stream is open
+or closed. It is permissible for truename to return more specific
+information after the stream is closed than when the stream was open.
+
+If filespec is a pathname it represents the name used to open the file.
+This may be, but is not required to be, the actual name of the file.
+
+Examples::
+..........
+
+     ;; An example involving version numbers.  Note that the precise nature of
+     ;; the truename is implementation-dependent while the file is still open.
+      (with-open-file (stream ">vistor>test.text.newest")
+        (values (pathname stream)
+                (truename stream)))
+     =>  #P"S:>vistor>test.text.newest", #P"S:>vistor>test.text.1"
+     OR=> #P"S:>vistor>test.text.newest", #P"S:>vistor>test.text.newest"
+     OR=> #P"S:>vistor>test.text.newest", #P"S:>vistor>_temp_._temp_.1"
+     
+     ;; In this case, the file is closed when the truename is tried, so the
+     ;; truename information is reliable.
+      (with-open-file (stream ">vistor>test.text.newest")
+        (close stream)
+        (values (pathname stream)
+                (truename stream)))
+     =>  #P"S:>vistor>test.text.newest", #P"S:>vistor>test.text.1"
+     
+     ;; An example involving TOP-20's implementation-dependent concept
+     ;; of logical devices -- in this case, "DOC:" is shorthand for
+     ;; "PS:<DOCUMENTATION>" ...
+      (with-open-file (stream "CMUC::DOC:DUMPER.HLP")
+        (values (pathname stream)
+                (truename stream)))
+     =>  #P"CMUC::DOC:DUMPER.HLP", #P"CMUC::PS:<DOCUMENTATION>DUMPER.HLP.13"
+
+Exceptional Situations::
+........................
+
+An error of type file-error is signaled if an appropriate file cannot be
+located within the file system for the given filespec,
+
+or if the file system cannot perform the requested operation.
+
+An error of type file-error is signaled if pathname is wild.
+
+See Also::
+..........
+
+pathname, logical-pathname, *Note File System Concepts::,
+
+*Note Pathnames as Filenames::
+
+Notes::
+.......
+
+truename may be used to account for any filename translations performed by
+the file system.
+
+
+File: gcl.info,  Node: file-author,  Next: file-write-date,  Prev: truename,  Up: Files Dictionary
+
+file-author                                                      [Function]
+---------------------------------------------------------------------------
+
+`file-author'  pathspec =>  author
+
+Arguments and Values::
+......................
+
+pathspec--a pathname designator.
+
+author--a string or nil.
+
+Description::
+.............
+
+Returns a string naming the author of the file specified by pathspec, or
+nil if the author's name cannot be determined.
+
+Examples::
+..........
+
+      (with-open-file (stream ">relativity>general.text")
+        (file-author s))
+     =>  "albert"
+
+Affected By::
+.............
+
+The host computer's file system.
+
+Other users of the file named by pathspec.
+
+Exceptional Situations::
+........................
+
+An error of type file-error is signaled if pathspec is wild.
+
+An error of type file-error is signaled if the file system cannot perform
+the requested operation.
+
+See Also::
+..........
+
+pathname, logical-pathname, *Note File System Concepts::,
+
+*Note Pathnames as Filenames::
+
+
+File: gcl.info,  Node: file-write-date,  Next: rename-file,  Prev: file-author,  Up: Files Dictionary
+
+file-write-date                                                  [Function]
+---------------------------------------------------------------------------
+
+`file-write-date'  pathspec =>  date
+
+Arguments and Values::
+......................
+
+pathspec--a pathname designator.
+
+date--a universal time or nil.
+
+Description::
+.............
+
+Returns a universal time representing the time at which the file specified
+by pathspec was last written (or created), or returns nil if such a time
+cannot be determined.
+
+Examples::
+..........
+
+      (with-open-file (s "noel.text"
+                         :direction :output :if-exists :error)
+        (format s "~&Dear Santa,~2
+                     Please leave lots of toys.~2
+                  ~2
+        (truename s))
+     =>  #P"CUPID:/susan/noel.text"
+      (with-open-file (s "noel.text")
+        (file-write-date s))
+     =>  2902600800
+
+Affected By::
+.............
+
+The host computer's file system.
+
+Exceptional Situations::
+........................
+
+An error of type file-error is signaled if pathspec is wild.
+
+An error of type file-error is signaled if the file system cannot perform
+the requested operation.
+
+See Also::
+..........
+
+*Note Universal Time::,
+
+*Note Pathnames as Filenames::
+
+
+File: gcl.info,  Node: rename-file,  Next: delete-file,  Prev: file-write-date,  Up: Files Dictionary
+
+rename-file                                                      [Function]
+---------------------------------------------------------------------------
+
+`rename-file'  filespec new-name =>  defaulted-new-name, old-truename,
+new-truename
+
+Arguments and Values::
+......................
+
+filespec--a pathname designator.
+
+new-name--a pathname designator other than a stream.
+
+defaulted-new-name--a pathname
+
+old-truename--a physical pathname.
+
+new-truename--a physical pathname.
+
+Description::
+.............
+
+rename-file modifies the file system in such a way that the file indicated
+by filespec is renamed to defaulted-new-name.
+
+It is an error to specify a filename containing a wild component, for
+filespec to contain a nil component where the file system does not permit
+a nil component, or for the result of defaulting missing components of
+new-name from filespec to contain a nil component where the file system
+does not permit a nil component.
+
+If new-name is a logical pathname, rename-file returns a logical pathname
+as its primary value.
+
+rename-file returns three values if successful.  The primary value,
+defaulted-new-name, is the resulting name which is composed of new-name
+with any missing components filled in by performing a merge-pathnames
+operation using filespec as the defaults.  The secondary value,
+old-truename, is the truename of the file before it was renamed.  The
+tertiary value, new-truename, is the truename of the file after it was
+renamed.
+
+If the filespec designator is an open stream, then the stream itself and
+the file associated with it are affected (if the file system permits).
+
+Examples::
+..........
+
+     ;; An example involving logical pathnames.
+      (with-open-file (stream "sys:chemistry;lead.text"
+                              :direction :output :if-exists :error)
+        (princ "eureka" stream)
+        (values (pathname stream) (truename stream)))
+     =>  #P"SYS:CHEMISTRY;LEAD.TEXT.NEWEST", #P"Q:>sys>chem>lead.text.1"
+      (rename-file "sys:chemistry;lead.text" "gold.text")
+     =>  #P"SYS:CHEMISTRY;GOLD.TEXT.NEWEST",
+        #P"Q:>sys>chem>lead.text.1",
+        #P"Q:>sys>chem>gold.text.1"
+
+Exceptional Situations::
+........................
+
+If the renaming operation is not successful, an error of type file-error
+is signaled.
+
+An error of type file-error might be signaled if filespec is wild.
+
+See Also::
+..........
+
+*Note truename:: , pathname, logical-pathname, *Note File System
+Concepts::,
+
+*Note Pathnames as Filenames::
+
+
+File: gcl.info,  Node: delete-file,  Next: file-error,  Prev: rename-file,  Up: Files Dictionary
+
+delete-file                                                      [Function]
+---------------------------------------------------------------------------
+
+`delete-file'  filespec =>  t
+
+Arguments and Values::
+......................
+
+filespec--a pathname designator.
+
+Description::
+.............
+
+Deletes the file specified by filespec.
+
+If the filespec designator is an open stream, then filespec and the file
+associated with it are affected (if the file system permits), in which
+case filespec might be closed immediately, and the deletion might be
+immediate or delayed until filespec is explicitly closed, depending on the
+requirements of the file system.
+
+It is implementation-dependent whether an attempt to delete a nonexistent
+file is considered to be successful.
+
+delete-file returns true if it succeeds, or signals an error of type
+file-error if it does not.
+
+The consequences are undefined if filespec has a wild component, or if
+filespec has a nil component and the file system does not permit a nil
+component.
+
+Examples::
+..........
+
+      (with-open-file (s "delete-me.text" :direction :output :if-exists :error))
+     =>  NIL
+      (setq p (probe-file "delete-me.text")) =>  #P"R:>fred>delete-me.text.1"
+      (delete-file p) =>  T
+      (probe-file "delete-me.text") =>  false
+      (with-open-file (s "delete-me.text" :direction :output :if-exists :error)
+        (delete-file s))
+     =>  T
+      (probe-file "delete-me.text") =>  false
+
+Exceptional Situations::
+........................
+
+If the deletion operation is not successful, an error of type file-error
+is signaled.
+
+An error of type file-error might be signaled if filespec is wild.
+
+See Also::
+..........
+
+pathname, logical-pathname, *Note File System Concepts::,
+
+*Note Pathnames as Filenames::
+
+
+File: gcl.info,  Node: file-error,  Next: file-error-pathname,  Prev: delete-file,  Up: Files Dictionary
+
+file-error                                                 [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+file-error, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type file-error consists of error conditions that occur during an
+attempt to open or close a file, or during some low-level transactions
+with a file system.  The "offending pathname" is initialized by the
+:pathname initialization argument to make-condition, and is accessed by
+the function file-error-pathname.
+
+See Also::
+..........
+
+file-error-pathname, *Note open:: , *Note probe-file:: , *Note directory::
+, *Note ensure-directories-exist::
+
+
+File: gcl.info,  Node: file-error-pathname,  Prev: file-error,  Up: Files Dictionary
+
+file-error-pathname                                              [Function]
+---------------------------------------------------------------------------
+
+`file-error-pathname'  condition =>  pathspec
+
+Arguments and Values::
+......................
+
+condition--a condition of type file-error.
+
+pathspec--a pathname designator.
+
+Description::
+.............
+
+Returns the "offending pathname" of a condition of type file-error.
+
+Exceptional Situations::
+........................
+
+See Also::
+..........
+
+file-error, *Note Conditions::
+
+
+File: gcl.info,  Node: Streams,  Next: Printer,  Prev: Files,  Up: Top
+
+Streams
+*******
+
+* Menu:
+
+* Stream Concepts::
+* Streams Dictionary::
+
+
+File: gcl.info,  Node: Stream Concepts,  Next: Streams Dictionary,  Prev: Streams,  Up: Streams
+
+Stream Concepts
+===============
+
+* Menu:
+
+* Introduction to Streams::
+* Stream Variables::
+* Stream Arguments to Standardized Functions::
+* Restrictions on Composite Streams::
+
+
+File: gcl.info,  Node: Introduction to Streams,  Next: Stream Variables,  Prev: Stream Concepts,  Up: Stream Concepts
+
+Introduction to Streams
+-----------------------
+
+A stream is an object that can be used with an input or output function to
+identify an appropriate source or sink of characters or bytes for that
+operation.  A character stream is a source or sink of characters.  A binary
+stream is a source or sink of bytes.
+
+Some operations may be performed on any kind of stream; Figure 21-1
+provides a list of standardized operations that are potentially useful
+with any kind of stream.
+
+  close                 stream-element-type  
+  input-stream-p        streamp              
+  interactive-stream-p  with-open-stream     
+  output-stream-p                            
+
+  Figure 21-1: Some General-Purpose Stream Operations
+
+
+Other operations are only meaningful on certain stream types.  For
+example, read-char is only defined for character streams and read-byte is
+only defined for binary streams.
+
+* Menu:
+
+* Abstract Classifications of Streams (Introduction to Streams)::
+* Input::
+* Open and Closed Streams::
+* Interactive Streams::
+* Abstract Classifications of Streams::
+* File Streams::
+* Other Subclasses of Stream::
+
+
+File: gcl.info,  Node: Abstract Classifications of Streams (Introduction to Streams),  Next: Input,  Prev: Introduction to Streams,  Up: Introduction to Streams
+
+Abstract Classifications of Streams
+...................................
+
+
+File: gcl.info,  Node: Input,  Next: Open and Closed Streams,  Prev: Abstract Classifications of Streams (Introduction to Streams),  Up: Introduction to Streams
+
+Input, Output, and Bidirectional Streams
+........................................
+
+A stream, whether a character stream or a binary stream, can be an input
+stream (source of data), an output stream (sink for data), both, or (e.g.,
+when ":direction :probe" is given to open) neither.
+
+Figure 21-2 shows operators relating to input streams.
+
+  clear-input  read-byte            read-from-string            
+  listen       read-char            read-line                   
+  peek-char    read-char-no-hang    read-preserving-whitespace  
+  read         read-delimited-list  unread-char                 
+
+        Figure 21-2: Operators relating to Input Streams.      
+
+
+Figure 21-3 shows operators relating to output streams.
+
+  clear-output   prin1            write            
+  finish-output  prin1-to-string  write-byte       
+  force-output   princ            write-char       
+  format         princ-to-string  write-line       
+  fresh-line     print            write-string     
+  pprint         terpri           write-to-string  
+
+  Figure 21-3: Operators relating to Output Streams.
+
+
+A stream that is both an input stream and an output stream is called a
+bidirectional stream .  See the functions input-stream-p and
+output-stream-p.
+
+Any of the operators listed in Figure~21-2 or Figure~21-3 can be used with
+bidirectional streams.  In addition, Figure 21-4 shows a list of operators
+that relate specificaly to bidirectional streams.
+
+  y-or-n-p  yes-or-no-p    
+
+  Figure 21-4: Operators relating to Bidirectional Streams.
+
+
+
+File: gcl.info,  Node: Open and Closed Streams,  Next: Interactive Streams,  Prev: Input,  Up: Introduction to Streams
+
+Open and Closed Streams
+.......................
+
+Streams are either open or closed .
+
+Except as explicitly specified otherwise, operations that create and
+return streams return open streams.
+
+The action of closing a stream marks the end of its use as a source or
+sink of data, permitting the implementation to reclaim its internal data
+structures, and to free any external resources which might have been
+locked by the stream when it was opened.
+
+Except as explicitly specified otherwise, the consequences are undefined
+when a closed stream is used where a stream is called for.
+
+Coercion of streams to pathnames is permissible for closed streams; in
+some situations, such as for a truename computation, the result might be
+different for an open stream and for that same stream once it has been
+closed.
+
+
+File: gcl.info,  Node: Interactive Streams,  Next: Abstract Classifications of Streams,  Prev: Open and Closed Streams,  Up: Introduction to Streams
+
+Interactive Streams
+...................
+
+An interactive stream is one on which it makes sense to perform
+interactive querying.
+
+The precise meaning of an interactive stream is implementation-defined,
+and may depend on the underlying operating system.  Some examples of the
+things that an implementation might choose to use as identifying
+characteristics of an interactive stream include:
+
+*
+     The stream is connected to a person (or equivalent) in such a way
+     that the program can prompt for information and expect to receive
+     different input depending on the prompt.
+
+*
+     The program is expected to prompt for input and support "normal input
+     editing".
+
+*
+     read-char might wait for the user to type something before returning
+     instead of immediately returning a character or end-of-file.
+
+The general intent of having some streams be classified as interactive
+streams is to allow them to be distinguished from streams containing batch
+(or background or command-file) input.  Output to batch streams is
+typically discarded or saved for later viewing, so interactive queries to
+such streams might not have the expected effect.
+
+Terminal I/O might or might not be an interactive stream.
+
+
+File: gcl.info,  Node: Abstract Classifications of Streams,  Next: File Streams,  Prev: Interactive Streams,  Up: Introduction to Streams
+
+Abstract Classifications of Streams
+...................................
+
+
+File: gcl.info,  Node: File Streams,  Next: Other Subclasses of Stream,  Prev: Abstract Classifications of Streams,  Up: Introduction to Streams
+
+File Streams
+............
+
+Some streams, called file streams , provide access to files.  An object of
+class file-stream is used to represent a file stream.
+
+The basic operation for opening a file is open, which typically returns a
+file stream (see its dictionary entry for details).  The basic operation
+for closing a stream is close.  The macro with-open-file is useful to
+express the common idiom of opening a file for the duration of a given
+body of code, and assuring that the resulting stream is closed upon exit
+from that body.
+
+
+File: gcl.info,  Node: Other Subclasses of Stream,  Prev: File Streams,  Up: Introduction to Streams
+
+Other Subclasses of Stream
+..........................
+
+The class stream has a number of subclasses defined by this specification.
+Figure 21-5 shows some information about these subclasses.
+
+  Class                Related Operators             
+  broadcast-stream     make-broadcast-stream         
+                       broadcast-stream-streams      
+  concatenated-stream  make-concatenated-stream      
+                       concatenated-stream-streams   
+  echo-stream          make-echo-stream              
+                       echo-stream-input-stream      
+                       echo-stream-output-stream     
+  string-stream        make-string-input-stream      
+                       with-input-from-string        
+                       make-string-output-stream     
+                       with-output-to-string         
+                       get-output-stream-string      
+  synonym-stream       make-synonym-stream           
+                       synonym-stream-symbol         
+  two-way-stream       make-two-way-stream           
+                       two-way-stream-input-stream   
+                       two-way-stream-output-stream  
+
+  Figure 21-5: Defined Names related to Specialized Streams
+
+
+
+File: gcl.info,  Node: Stream Variables,  Next: Stream Arguments to Standardized Functions,  Prev: Introduction to Streams,  Up: Stream Concepts
+
+Stream Variables
+----------------
+
+Variables whose values must be streams are sometimes called stream
+variables .
+
+Certain stream variables are defined by this specification to be the
+proper source of input or output in various situations where no specific
+stream has been specified instead.  A complete list of such standardized
+stream variables appears in Figure 21-6.  The consequences are undefined
+if at any time the value of any of these variables is not an open stream.
+
+  Glossary Term    Variable Name      
+  debug I/O        *debug-io*         
+  error output     *error-output*     
+  query I/O        *query-io*         
+  standard input   *standard-input*   
+  standard output  *standard-output*  
+  terminal I/O     *terminal-io*      
+  trace output     *trace-output*     
+
+  Figure 21-6: Standardized Stream Variables
+
+
+Note that, by convention, standardized stream variables have names ending
+in "-input*"  if they must be input streams, ending in "-output*" if they
+must be output streams, or ending in "-io*"     if they must be
+bidirectional streams.
+
+User programs may assign or bind any standardized stream variable except
+*terminal-io*.
+
+
+File: gcl.info,  Node: Stream Arguments to Standardized Functions,  Next: Restrictions on Composite Streams,  Prev: Stream Variables,  Up: Stream Concepts
+
+Stream Arguments to Standardized Functions
+------------------------------------------
+
+The operators in Figure 21-7 accept stream arguments that might be either
+open or closed streams.
+
+  broadcast-stream-streams     file-author       pathnamep                     
+  close                        file-namestring   probe-file                    
+  compile-file                 file-write-date   rename-file                   
+  compile-file-pathname        host-namestring   streamp                       
+  concatenated-stream-streams  load              synonym-stream-symbol         
+  delete-file                  logical-pathname  translate-logical-pathname    
+  directory                    merge-pathnames   translate-pathname            
+  directory-namestring         namestring        truename                      
+  dribble                      open              two-way-stream-input-stream   
+  echo-stream-input-stream     open-stream-p     two-way-stream-output-stream  
+  echo-stream-ouput-stream     parse-namestring  wild-pathname-p               
+  ed                           pathname          with-open-file                
+  enough-namestring            pathname-match-p                                
+
+        Figure 21-7: Operators that accept either Open or Closed Streams      
+
+
+The operators in Figure 21-8 accept stream arguments that must be open
+streams.
+
+ clear-input              output-stream-p         read-char-no-hang          
+ clear-output             peek-char               read-delimited-list        
+ file-length              pprint                  read-line                  
+ file-position            pprint-fill             read-preserving-whitespace 
+ file-string-length       pprint-indent           stream-element-type        
+ finish-output            pprint-linear           stream-external-format     
+ force-output             pprint-logical-block    terpri                     
+ format                   pprint-newline          unread-char                
+ fresh-line               pprint-tab              with-open-stream           
+ get-output-stream-string pprint-tabular          write                      
+ input-stream-p           prin1                   write-byte                 
+ interactive-stream-p     princ                   write-char                 
+ listen                   print                   write-line                 
+ make-broadcast-stream    print-object            write-string               
+ make-concatenated-stream print-unreadable-object y-or-n-p                   
+ make-echo-stream         read                    yes-or-no-p                
+ make-synonym-stream      read-byte                                          
+ make-two-way-stream      read-char                                          
+
+             Figure 21-8: Operators that accept Open Streams only            
+
+
+
+File: gcl.info,  Node: Restrictions on Composite Streams,  Prev: Stream Arguments to Standardized Functions,  Up: Stream Concepts
+
+Restrictions on Composite Streams
+---------------------------------
+
+The consequences are undefined if any component of a composite stream is
+closed before the composite stream is closed.
+
+The consequences are undefined if the synonym stream symbol is not bound
+to an open stream from the time of the synonym stream's creation until the
+time it is closed.
+
+
+File: gcl.info,  Node: Streams Dictionary,  Prev: Stream Concepts,  Up: Streams
+
+Streams Dictionary
+==================
+
+* Menu:
+
+* stream::
+* broadcast-stream::
+* concatenated-stream::
+* echo-stream::
+* file-stream::
+* string-stream::
+* synonym-stream::
+* two-way-stream::
+* input-stream-p::
+* interactive-stream-p::
+* open-stream-p::
+* stream-element-type::
+* streamp::
+* read-byte::
+* write-byte::
+* peek-char::
+* read-char::
+* read-char-no-hang::
+* terpri::
+* unread-char::
+* write-char::
+* read-line::
+* write-string::
+* read-sequence::
+* write-sequence::
+* file-length::
+* file-position::
+* file-string-length::
+* open::
+* stream-external-format::
+* with-open-file::
+* close::
+* with-open-stream::
+* listen::
+* clear-input::
+* finish-output::
+* y-or-n-p::
+* make-synonym-stream::
+* synonym-stream-symbol::
+* broadcast-stream-streams::
+* make-broadcast-stream::
+* make-two-way-stream::
+* two-way-stream-input-stream::
+* echo-stream-input-stream::
+* make-echo-stream::
+* concatenated-stream-streams::
+* make-concatenated-stream::
+* get-output-stream-string::
+* make-string-input-stream::
+* make-string-output-stream::
+* with-input-from-string::
+* with-output-to-string::
+* *debug-io*::
+* *terminal-io*::
+* stream-error::
+* stream-error-stream::
+* end-of-file::
+
+
+File: gcl.info,  Node: stream,  Next: broadcast-stream,  Prev: Streams Dictionary,  Up: Streams Dictionary
+
+stream                                                       [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+stream, t
+
+Description::
+.............
+
+A stream is an object that can be used with an input or output function to
+identify an appropriate source or sink of characters or bytes for that
+operation.
+
+For more complete information, see *Note Stream Concepts::.
+
+See Also::
+..........
+
+*Note Stream Concepts::, *Note Printing Other Objects::, *Note Printer::,
+*Note Reader::
+
+
+File: gcl.info,  Node: broadcast-stream,  Next: concatenated-stream,  Prev: stream,  Up: Streams Dictionary
+
+broadcast-stream                                             [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+broadcast-stream, stream, t
+
+Description::
+.............
+
+A broadcast stream is an output stream which has associated with it a set
+of zero or more output streams such that any output sent to the broadcast
+stream gets passed on as output to each of the associated output streams.
+(If a broadcast stream has no component streams, then all output to the
+broadcast stream is discarded.)
+
+The set of operations that may be performed on a broadcast stream is the
+intersection of those for its associated output streams.
+
+Some output operations (e.g., fresh-line) return values based on the state
+of the stream at the time of the operation.
+
+Since these values might differ for each of the component streams, it is
+necessary to describe their return value specifically:
+
+*
+     stream-element-type returns the value from the last component stream,
+     or t if there are no component streams.
+
+*
+     fresh-line returns the value from the last component stream, or nil
+     if there are no component streams.
+
+*
+     The functions file-length, file-position, file-string-length, and
+     stream-external-format return the value from the last component
+     stream; if there are no component streams, file-length and
+     file-position return 0, file-string-length returns 1, and
+     stream-external-format returns :default.
+
+*
+     The functions streamp and output-stream-p always return true for
+     broadcast streams.
+
+*
+     The functions open-stream-p tests whether the broadcast stream is
+     open_2, not whether its component streams are open.
+
+*
+     The functions input-stream-p and interactive-stream-p return an
+     implementation-defined, generalized boolean value.
+
+*
+     For the input operations clear-input listen, peek-char, read-byte,
+     read-char-no-hang, read-char, read-line, and unread-char, the
+     consequences are undefined if the indicated operation is performed.
+     However, an implementation is permitted to define such a behavior as
+     an implementation-dependent extension.
+
+For any output operations not having their return values explicitly
+specified above or elsewhere in this document, it is defined that the
+values returned by such an operation are the values resulting from
+performing the operation on the last of its component streams; the values
+resulting from performing the operation on all preceding streams are
+discarded.  If there are no component streams, the value is
+implementation-dependent.
+
+See Also::
+..........
+
+*Note broadcast-stream-streams:: , *Note make-broadcast-stream::
+
+
+File: gcl.info,  Node: concatenated-stream,  Next: echo-stream,  Prev: broadcast-stream,  Up: Streams Dictionary
+
+concatenated-stream                                          [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+concatenated-stream, stream, t
+
+Description::
+.............
+
+A concatenated stream is an input stream which is a composite stream of
+zero or more other input streams, such that the sequence of data which can
+be read from the concatenated stream is the same as the concatenation of
+the sequences of data which could be read from each of the constituent
+streams.
+
+Input from a concatenated stream is taken from the first of the associated
+input streams until it reaches end of file_1; then that stream is
+discarded, and subsequent input is taken from the next input stream, and
+so on.  An end of file on the associated input streams is always managed
+invisibly by the concatenated stream--the only time a client of a
+concatenated stream sees an end of file is when an attempt is made to
+obtain data from the concatenated stream but it has no remaining input
+streams from which to obtain such data.
+
+See Also::
+..........
+
+*Note concatenated-stream-streams:: , *Note make-concatenated-stream::
+
+
+File: gcl.info,  Node: echo-stream,  Next: file-stream,  Prev: concatenated-stream,  Up: Streams Dictionary
+
+echo-stream                                                  [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+echo-stream, stream, t
+
+Description::
+.............
+
+An echo stream is a bidirectional stream that gets  its input  from an
+associated input  stream and  sends its output to   an associated output
+stream.
+
+All input taken from the input stream is echoed to the output stream.
+Whether the input is echoed immediately after it is encountered, or after
+it has been read from the input stream is implementation-dependent.
+
+See Also::
+..........
+
+*Note echo-stream-input-stream; echo-stream-output-stream:: ,
+echo-stream-output-stream, *Note make-echo-stream::
+
+
+File: gcl.info,  Node: file-stream,  Next: string-stream,  Prev: echo-stream,  Up: Streams Dictionary
+
+file-stream                                                  [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+file-stream, stream, t
+
+Description::
+.............
+
+An object of type file-stream is a stream the direct source or sink of
+which is a file.  Such a stream is created explicitly by open and
+with-open-file, and implicitly by functions such as load that process
+files.
+
+See Also::
+..........
+
+*Note load:: , *Note open:: , *Note with-open-file::
+
+
+File: gcl.info,  Node: string-stream,  Next: synonym-stream,  Prev: file-stream,  Up: Streams Dictionary
+
+string-stream                                                [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+string-stream, stream, t
+
+Description::
+.............
+
+A string stream is a stream which reads input from or writes output to an
+associated string.
+
+The stream element type of a string stream is always a subtype of type
+character.
+
+See Also::
+..........
+
+*Note make-string-input-stream:: , *Note make-string-output-stream:: ,
+*Note with-input-from-string:: , *Note with-output-to-string::
+
+
+File: gcl.info,  Node: synonym-stream,  Next: two-way-stream,  Prev: string-stream,  Up: Streams Dictionary
+
+synonym-stream                                               [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+synonym-stream, stream, t
+
+Description::
+.............
+
+A stream that is an alias for another stream, which is the value of a
+dynamic variable whose name is the synonym stream symbol of the synonym
+stream.
+
+Any operations on a synonym stream will be performed on the stream that is
+then the value of the dynamic variable named by the synonym stream symbol.
+If the value of the variable should change, or if the variable should be
+bound, then the stream will operate on the new value of the variable.
+
+See Also::
+..........
+
+*Note make-synonym-stream:: , *Note synonym-stream-symbol::
+
+
+File: gcl.info,  Node: two-way-stream,  Next: input-stream-p,  Prev: synonym-stream,  Up: Streams Dictionary
+
+two-way-stream                                               [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+two-way-stream, stream, t
+
+Description::
+.............
+
+A bidirectional composite stream that receives its input  from an
+associated input  stream and sends    its output to   an associated output
+stream.
+
+See Also::
+..........
+
+*Note make-two-way-stream:: , *Note two-way-stream-input-stream;
+two-way-stream-output-stream:: , two-way-stream-output-stream
+
+
+File: gcl.info,  Node: input-stream-p,  Next: interactive-stream-p,  Prev: two-way-stream,  Up: Streams Dictionary
+
+input-stream-p, output-stream-p                                  [Function]
+---------------------------------------------------------------------------
+
+`input-stream-p'  stream =>  generalized-boolean
+
+`output-stream-p'  stream =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+stream--a stream.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+input-stream-p returns true if stream is an input stream; otherwise,
+returns false.
+
+output-stream-p returns true if stream is an output stream; otherwise,
+returns false.
+
+Examples::
+..........
+
+      (input-stream-p *standard-input*) =>  true
+      (input-stream-p *terminal-io*) =>  true
+      (input-stream-p (make-string-output-stream)) =>  false
+     
+      (output-stream-p *standard-output*) =>  true
+      (output-stream-p *terminal-io*) =>  true
+      (output-stream-p (make-string-input-stream "jr")) =>  false
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if stream is not a stream.
+
+
+File: gcl.info,  Node: interactive-stream-p,  Next: open-stream-p,  Prev: input-stream-p,  Up: Streams Dictionary
+
+interactive-stream-p                                             [Function]
+---------------------------------------------------------------------------
+
+`interactive-stream-p'  stream =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+stream--a stream.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if stream is an interactive stream; otherwise, returns false.
+
+Examples::
+..........
+
+      (when (> measured limit)
+        (let ((error (round (* (- measured limit) 100)
+                            limit)))
+          (unless (if (interactive-stream-p *query-io*)
+                      (yes-or-no-p "The frammis is out of tolerance by ~D
+                                    Is it safe to proceed? " error)
+                      (< error 15))  ;15
+            (error "The frammis is out of tolerance by ~D
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if stream is not a stream.
+
+See Also::
+..........
+
+*Note Stream Concepts::
+
+
+File: gcl.info,  Node: open-stream-p,  Next: stream-element-type,  Prev: interactive-stream-p,  Up: Streams Dictionary
+
+open-stream-p                                                    [Function]
+---------------------------------------------------------------------------
+
+`open-stream-p'  stream =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+stream--a stream.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if stream is an open stream; otherwise, returns false.
+
+Streams are open until they have been explicitly closed with close, or
+until they are implicitly closed due to exit from a with-output-to-string,
+with-open-file, with-input-from-string,  or with-open-stream form.
+
+Examples::
+..........
+
+      (open-stream-p *standard-input*) =>  true
+
+Affected By::
+.............
+
+close.
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if stream is not a stream.
+
+
+File: gcl.info,  Node: stream-element-type,  Next: streamp,  Prev: open-stream-p,  Up: Streams Dictionary
+
+stream-element-type                                              [Function]
+---------------------------------------------------------------------------
+
+`stream-element-type'  stream =>  typespec
+
+Arguments and Values::
+......................
+
+stream--a stream.
+
+typespec--a type specifier.
+
+Description::
+.............
+
+stream-element-type returns a type specifier that indicates the types of
+objects that may be read from or written to stream.
+
+Streams created by open have an element type restricted to integer or a
+subtype of type character.
+
+Examples::
+..........
+
+     ;; Note that the stream must accomodate at least the specified type,
+     ;; but might accomodate other types.  Further note that even if it does
+     ;; accomodate exactly the specified type, the type might be specified in
+     ;; any of several ways.
+      (with-open-file (s "test" :element-type '(integer 0 1)
+                                :if-exists :error
+                                :direction :output)
+        (stream-element-type s))
+     =>  INTEGER
+     OR=> (UNSIGNED-BYTE 16)
+     OR=> (UNSIGNED-BYTE 8)
+     OR=> BIT
+     OR=> (UNSIGNED-BYTE 1)
+     OR=> (INTEGER 0 1)
+     OR=> (INTEGER 0 (2))
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if stream is not a stream.
+
+
+File: gcl.info,  Node: streamp,  Next: read-byte,  Prev: stream-element-type,  Up: Streams Dictionary
+
+streamp                                                          [Function]
+---------------------------------------------------------------------------
+
+`streamp'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type stream; otherwise, returns false.
+
+streamp is unaffected by whether object, if it is a stream, is open or
+closed.
+
+Examples::
+..........
+
+      (streamp *terminal-io*) =>  true
+      (streamp 1) =>  false
+
+Notes::
+.......
+
+      (streamp object) == (typep object 'stream)
+
+
+File: gcl.info,  Node: read-byte,  Next: write-byte,  Prev: streamp,  Up: Streams Dictionary
+
+read-byte                                                        [Function]
+---------------------------------------------------------------------------
+
+`read-byte'  stream &optional eof-error-p eof-value =>  byte
+
+Arguments and Values::
+......................
+
+stream--a binary input stream.
+
+eof-error-p--a generalized boolean.  The default is true.
+
+eof-value--an object.  The default is nil.
+
+byte--an integer, or the eof-value.
+
+Description::
+.............
+
+read-byte reads and returns one byte from stream.
+
+If an end of file_2 occurs and eof-error-p is false, the eof-value is
+returned.
+
+Examples::
+..........
+
+      (with-open-file (s "temp-bytes"
+                          :direction :output
+                          :element-type 'unsigned-byte)
+         (write-byte 101 s)) =>  101
+      (with-open-file (s "temp-bytes" :element-type 'unsigned-byte)
+         (format t "~S ~S" (read-byte s) (read-byte s nil 'eof)))
+      |>  101 EOF
+     =>  NIL
+
+Side Effects::
+..............
+
+Modifies stream.
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if stream is not a stream.
+
+Should signal an error of type error if stream is not  a binary input
+stream.
+
+If there are no bytes remaining in the stream and eof-error-p is true, an
+error of type end-of-file is signaled.
+
+See Also::
+..........
+
+*Note read-char:: ,
+
+*Note read-sequence:: ,
+
+*Note write-byte::
+
+
+File: gcl.info,  Node: write-byte,  Next: peek-char,  Prev: read-byte,  Up: Streams Dictionary
+
+write-byte                                                       [Function]
+---------------------------------------------------------------------------
+
+`write-byte'  byte stream =>  byte
+
+Arguments and Values::
+......................
+
+byte--an integer of the stream element type of stream.
+
+stream--a binary output stream.
+
+Description::
+.............
+
+write-byte writes one byte, byte, to stream.
+
+Examples::
+..........
+
+      (with-open-file (s "temp-bytes"
+                         :direction :output
+                         :element-type 'unsigned-byte)
+         (write-byte 101 s)) =>  101
+
+Side Effects::
+..............
+
+stream is modified.
+
+Affected By::
+.............
+
+The element type of the stream.
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if stream is not a stream.
+Should signal an error of type error if stream is not  a binary output
+stream.
+
+Might signal an error of type type-error if byte is not an integer of the
+stream element type of stream.
+
+See Also::
+..........
+
+*Note read-byte:: , *Note write-char:: ,
+
+*Note write-sequence::
+
+
+File: gcl.info,  Node: peek-char,  Next: read-char,  Prev: write-byte,  Up: Streams Dictionary
+
+peek-char                                                        [Function]
+---------------------------------------------------------------------------
+
+`peek-char'  &optional peek-type input-stream eof-error-p eof-value
+recursive-p =>  char
+
+Arguments and Values::
+......................
+
+peek-type--a character or t or nil.
+
+input-stream--input stream designator.  The default is standard input.
+
+eof-error-p--a generalized boolean.  The default is true.
+
+eof-value--an object.  The default is nil.
+
+recursive-p--a generalized boolean.  The default is false.
+
+char--a character or the eof-value.
+
+Description::
+.............
+
+peek-char obtains the next character in input-stream without actually
+reading it, thus leaving the character to be read at a later time.  It can
+also be used to skip over and discard intervening characters in the
+input-stream until a particular character is found.
+
+If peek-type is not supplied or nil, peek-char returns the next character
+to be read from input-stream, without actually removing it from
+input-stream.  The next time input is done from input-stream, the
+character will still be there.  If peek-type is t, then peek-char skips
+over whitespace_2 characters, but not comments, and then performs the
+peeking operation on the next character.  The last character examined, the
+one that starts an object, is not removed from input-stream.  If peek-type
+is a character, then peek-char skips over input characters until a
+character that is char= to that character is found; that character is left
+in input-stream.
+
+If an end of file_2 occurs and eof-error-p is false, eof-value is returned.
+
+If recursive-p is true, this call is expected to be embedded in a
+higher-level call to read or a similar function used by the Lisp reader.
+
+When input-stream is an echo stream, characters that are only peeked at
+are not echoed. In the case that peek-type is not nil, the characters that
+are passed by peek-char are treated as if by read-char, and so are echoed
+unless they have been marked otherwise by unread-char.
+
+Examples::
+..........
+
+      (with-input-from-string (input-stream "    1 2 3 4 5")
+         (format t "~S ~S ~S"
+                 (peek-char t input-stream)
+                 (peek-char #\4 input-stream)
+                 (peek-char nil input-stream)))
+      |>  #\1 #\4 #\4
+     =>  NIL
+
+Affected By::
+.............
+
+*readtable*, *standard-input*, *terminal-io*.
+
+Exceptional Situations::
+........................
+
+If eof-error-p is true and an end of file_2 occurs an error of type
+end-of-file is signaled.
+
+If     peek-type is a character, an end of file_2 occurs, and eof-error-p
+is true, an error of type end-of-file is signaled.
+
+If recursive-p is true and an end of file_2 occurs, an error of type
+end-of-file is signaled.
+

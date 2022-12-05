@@ -1,0 +1,69 @@
+{
+    "name": "macro-function",
+    "prev": "defmacro",
+    "next": "macroexpand",
+    "up": "Evaluation and Compilation Dictionary",
+    "header": {
+        "type": "Accessor",
+        "text": "macro-function"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "macro-function",
+                    "text": " symbol &optional environment =>  function\n(setf (`         macro-function' symbol &optional environment)\nnew-function)\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "symbol",
+                    "desc": "a symbol."
+                },
+                {
+                    "name": "environment",
+                    "desc": "an environment object."
+                },
+                {
+                    "name": "function",
+                    "desc": "a macro function or nil."
+                },
+                {
+                    "name": "new-function",
+                    "desc": "a macro function."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Determines whether symbol has a function definition as a macro in the\nspecified environment.\nIf so, the macro expansion function, a function of two arguments, is\nreturned.  If symbol has no function definition in the lexical environment\nenvironment, or its definition is not a macro, macro-function returns nil.\nIt is possible for both macro-function and\nspecial-operator-p\nto return true of symbol.  The macro definition must be available for use\nby programs that understand only the standard Common Lisp special forms.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defmacro macfun (x) '(macro-function 'macfun)) =>  MACFUN\n      (not (macro-function 'macfun)) =>  false\n      (macrolet ((foo (&environment env)\n                    (if (macro-function 'bar env)\n                       ''yes\n                       ''no)))\n         (list (foo)\n               (macrolet ((bar () :beep))\n                  (foo))))\n     =>  (NO YES)\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "(setf macro-function), defmacro, and macrolet.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "The consequences are undefined if environment is non-nil in a use of setf\nof macro-function.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note defmacro:: , *Note Evaluation::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "setf can be used with macro-function to install a macro as a symbol's\nglobal function definition:\n      (setf (macro-function symbol) fn)\nThe value installed must be a function that accepts two arguments, the\nentire macro call and an environment, and computes the expansion for that\ncall.  Performing this operation causes symbol to have only that macro\ndefinition as its global function definition; any previous definition,\nwhether as a macro or as a function, is lost.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: macro-function,  Next: macroexpand,  Prev: defmacro,  Up: Evaluation and Compilation Dictionary\n\nmacro-function                                                   [Accessor]\n---------------------------------------------------------------------------\n\n`macro-function'  symbol &optional environment =>  function\n\n(setf (`         macro-function' symbol &optional environment)\nnew-function)\nArguments and Values::\n......................\n\nsymbol--a symbol.\n\nenvironment--an environment object.\n\nfunction--a macro function or nil.\n\nnew-function--a macro function.\n\nDescription::\n.............\n\nDetermines whether symbol has a function definition as a macro in the\nspecified environment.\n\nIf so, the macro expansion function, a function of two arguments, is\nreturned.  If symbol has no function definition in the lexical environment\nenvironment, or its definition is not a macro, macro-function returns nil.\n\nIt is possible for both macro-function and\n\nspecial-operator-p\n\nto return true of symbol.  The macro definition must be available for use\nby programs that understand only the standard Common Lisp special forms.\n\nExamples::\n..........\n\n      (defmacro macfun (x) '(macro-function 'macfun)) =>  MACFUN\n      (not (macro-function 'macfun)) =>  false\n\n      (macrolet ((foo (&environment env)\n                    (if (macro-function 'bar env)\n                       ''yes\n                       ''no)))\n         (list (foo)\n               (macrolet ((bar () :beep))\n                  (foo))))\n     \n     =>  (NO YES)\n\nAffected By::\n.............\n\n(setf macro-function), defmacro, and macrolet.\n\nExceptional Situations::\n........................\n\nThe consequences are undefined if environment is non-nil in a use of setf\nof macro-function.\n\nSee Also::\n..........\n\n*Note defmacro:: , *Note Evaluation::\n\nNotes::\n.......\n\nsetf can be used with macro-function to install a macro as a symbol's\nglobal function definition:\n\n      (setf (macro-function symbol) fn)\n\nThe value installed must be a function that accepts two arguments, the\nentire macro call and an environment, and computes the expansion for that\ncall.  Performing this operation causes symbol to have only that macro\ndefinition as its global function definition; any previous definition,\nwhether as a macro or as a function, is lost.\n\n"
+}

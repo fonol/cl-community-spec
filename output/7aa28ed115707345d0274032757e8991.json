@@ -1,0 +1,33 @@
+{
+    "name": "continue",
+    "prev": "abort",
+    "next": "muffle-warning",
+    "up": "Conditions Dictionary",
+    "header": {
+        "type": "Restart",
+        "text": "continue"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Data Arguments Required",
+            "text": "None.\n"
+        },
+        {
+            "type": "Description",
+            "text": "The continue restart is generally part of protocols where there is a\nsingle \"obvious\" way to continue, such as in break and cerror.  Some\nuser-defined protocols may also wish to incorporate it for similar reasons.\nIn general, however, it is more reliable to design a special purpose\nrestart with a name that more directly suits the particular application.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (let ((x 3))\n        (handler-bind ((error #'(lambda (c)\n                                  (let ((r (find-restart 'continue c)))\n                                    (when r (invoke-restart r))))))\n          (cond ((not (floatp x))\n                 (cerror \"Try floating it.\" \"~D is not a float.\" x)\n                 (float x))\n                (t x)))) =>  3.0\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note Restarts::, *Note Interfaces to Restarts::, *Note invoke-restart:: ,\n*Note continue:: (function), *Note assert:: , *Note cerror::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: continue,  Next: muffle-warning,  Prev: abort,  Up: Conditions Dictionary\n\ncontinue                                                          [Restart]\n---------------------------------------------------------------------------\n\nData Arguments Required::\n.........................\n\nNone.\n\nDescription::\n.............\n\nThe continue restart is generally part of protocols where there is a\nsingle \"obvious\" way to continue, such as in break and cerror.  Some\nuser-defined protocols may also wish to incorporate it for similar reasons.\nIn general, however, it is more reliable to design a special purpose\nrestart with a name that more directly suits the particular application.\n\nExamples::\n..........\n\n      (let ((x 3))\n        (handler-bind ((error #'(lambda (c)\n                                  (let ((r (find-restart 'continue c)))\n                                    (when r (invoke-restart r))))))\n          (cond ((not (floatp x))\n                 (cerror \"Try floating it.\" \"~D is not a float.\" x)\n                 (float x))\n                (t x)))) =>  3.0\n\nSee Also::\n..........\n\n*Note Restarts::, *Note Interfaces to Restarts::, *Note invoke-restart:: ,\n*Note continue:: (function), *Note assert:: , *Note cerror::\n\n"
+}

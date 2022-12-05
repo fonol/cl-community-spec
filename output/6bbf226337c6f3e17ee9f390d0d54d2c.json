@@ -1,0 +1,57 @@
+{
+    "name": "nconc",
+    "prev": "null",
+    "next": "append",
+    "up": "Conses Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "nconc"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "nconc",
+                    "text": " &rest lists =>  concatenated-list\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "list",
+                    "desc": "each but the last must be a list (which might be a dotted list but"
+                },
+                {
+                    "name": "list",
+                    "desc": "each but the last must be a list (which might be a dotted list butmust not be a circular list); the last list may be any object.\n"
+                },
+                {
+                    "name": "concatenated-list",
+                    "desc": "a list."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns a list that is the concatenation of lists.  If no lists are\nsupplied, (nconc) returns nil.\nnconc is defined using the following recursive relationship:\n      (nconc) =>  ()\n      (nconc nil . lists) == (nconc . lists)\n      (nconc list) =>  list\n      (nconc list-1 list-2) == (progn (rplacd (last list-1) list-2) list-1)\n      (nconc list-1 list-2 . lists) == (nconc (nconc list-1 list-2) . lists)\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (nconc) =>  NIL\n      (setq x '(a b c)) =>  (A B C)\n      (setq y '(d e f)) =>  (D E F)\n      (nconc x y) =>  (A B C D E F)\n      x =>  (A B C D E F)\nNote, in the example, that the value of x is now different, since its last\ncons has been rplacd'd to the value of y.  If (nconc x y) were evaluated\nagain, it would yield a piece of a circular list, whose printed\nrepresentation would be (A B C D E F D E F D E F ...), repeating forever;\nif the *print-circle* switch were non-nil, it would be printed as (A B C .\n#1=(D E F . #1#)).\n      (setq foo (list 'a 'b 'c 'd 'e)\n            bar (list 'f 'g 'h 'i 'j)\n            baz (list 'k 'l 'm)) =>  (K L M)\n      (setq foo (nconc foo bar baz)) =>  (A B C D E F G H I J K L M)\n      foo =>  (A B C D E F G H I J K L M)\n      bar =>  (F G H I J K L M)\n      baz =>  (K L M)\n      (setq foo (list 'a 'b 'c 'd 'e)\n            bar (list 'f 'g 'h 'i 'j)\n            baz (list 'k 'l 'm)) =>  (K L M)\n      (setq foo (nconc nil foo bar nil baz)) =>  (A B C D E F G H I J K L M)\n      foo =>  (A B C D E F G H I J K L M)\n      bar =>  (F G H I J K L M)\n      baz =>  (K L M)\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "The lists are modified rather than copied.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note append:: , *Note concatenate::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: nconc,  Next: append,  Prev: null,  Up: Conses Dictionary\n\nnconc                                                            [Function]\n---------------------------------------------------------------------------\n\n`nconc'  &rest lists =>  concatenated-list\n\nArguments and Values::\n......................\n\nlist--each but the last must be a list (which might be a dotted list but\nmust not be a circular list); the last list may be any object.\n\nconcatenated-list--a list.\n\nDescription::\n.............\n\nReturns a list that is the concatenation of lists.  If no lists are\nsupplied, (nconc) returns nil.\n\nnconc is defined using the following recursive relationship:\n\n      (nconc) =>  ()\n      (nconc nil . lists) == (nconc . lists)\n      (nconc list) =>  list\n      (nconc list-1 list-2) == (progn (rplacd (last list-1) list-2) list-1)\n      (nconc list-1 list-2 . lists) == (nconc (nconc list-1 list-2) . lists)\n\nExamples::\n..........\n\n      (nconc) =>  NIL\n      (setq x '(a b c)) =>  (A B C)\n      (setq y '(d e f)) =>  (D E F)\n      (nconc x y) =>  (A B C D E F)\n      x =>  (A B C D E F)\n\nNote, in the example, that the value of x is now different, since its last\ncons has been rplacd'd to the value of y.  If (nconc x y) were evaluated\nagain, it would yield a piece of a circular list, whose printed\nrepresentation would be (A B C D E F D E F D E F ...), repeating forever;\nif the *print-circle* switch were non-nil, it would be printed as (A B C .\n#1=(D E F . #1#)).\n\n      (setq foo (list 'a 'b 'c 'd 'e)\n            bar (list 'f 'g 'h 'i 'j)\n            baz (list 'k 'l 'm)) =>  (K L M)\n      (setq foo (nconc foo bar baz)) =>  (A B C D E F G H I J K L M)\n      foo =>  (A B C D E F G H I J K L M)\n      bar =>  (F G H I J K L M)\n      baz =>  (K L M)\n     \n      (setq foo (list 'a 'b 'c 'd 'e)\n            bar (list 'f 'g 'h 'i 'j)\n            baz (list 'k 'l 'm)) =>  (K L M)\n      (setq foo (nconc nil foo bar nil baz)) =>  (A B C D E F G H I J K L M)\n      foo =>  (A B C D E F G H I J K L M)\n      bar =>  (F G H I J K L M)\n      baz =>  (K L M)\n\nSide Effects::\n..............\n\nThe lists are modified rather than copied.\n\nSee Also::\n..........\n\n*Note append:: , *Note concatenate::\n\n"
+}

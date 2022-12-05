@@ -1,0 +1,53 @@
+{
+    "name": "compute-restarts",
+    "prev": "restart",
+    "next": "find-restart",
+    "up": "Conditions Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "compute-restarts"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "compute-restarts",
+                    "text": " &optional condition =>  restarts\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "condition",
+                    "desc": "a condition object, or nil."
+                },
+                {
+                    "name": "restarts",
+                    "desc": "a list of restarts."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "compute-restarts uses the dynamic state of the program to compute a list\nof the restarts which are currently active.\nThe resulting list is ordered so that the innermost (more-recently\nestablished) restarts are nearer the head of the list.\nWhen condition is non-nil, only those restarts are considered that are\neither explicitly associated with that condition, or not associated with\nany condition; that is, the excluded restarts are those that are\nassociated with a non-empty set of conditions of which the given condition\nis not an element.  If condition is nil, all restarts are considered.\ncompute-restarts returns all applicable restarts, including anonymous\nones, even if some of them have the same name as others and would\ntherefore not be found by find-restart when given a symbol argument.\nImplementations are permitted, but not required, to return distinct lists\nfrom repeated calls to compute-restarts while in the same dynamic\nenvironment.  The consequences are undefined if the list returned by\ncompute-restarts is every modified.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      ;; One possible way in which an interactive debugger might present\n      ;; restarts to the user.\n      (defun invoke-a-restart ()\n        (let ((restarts (compute-restarts)))\n          (do ((i 0 (+ i 1)) (r restarts (cdr r))) ((null r))\n            (format t \"~&~D: ~A~\n          (let ((n nil) (k (length restarts)))\n            (loop (when (and (typep n 'integer) (>= n 0) (< n k))\n                    (return t))\n                  (format t \"~&Option: \")\n                  (setq n (read))\n                  (fresh-line))\n            (invoke-restart-interactively (nth n restarts)))))\n      (restart-case (invoke-a-restart)\n        (one () 1)\n        (two () 2)\n        (nil () :report \"Who knows?\" 'anonymous)\n        (one () 'I)\n        (two () 'II))\n      |>  0: ONE\n      |>  1: TWO\n      |>  2: Who knows?\n      |>  3: ONE\n      |>  4: TWO\n      |>  5: Return to Lisp Toplevel.\n      |>  Option: |>>4<<|\n     =>  II\n      ;; Note that in addition to user-defined restart points, COMPUTE-RESTARTS\n      ;; also returns information about any system-supplied restarts, such as\n      ;; the \"Return to Lisp Toplevel\" restart offered above.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "Existing restarts.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note find-restart:: , *Note invoke-restart:: , *Note restart-bind::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: compute-restarts,  Next: find-restart,  Prev: restart,  Up: Conditions Dictionary\n\ncompute-restarts                                                 [Function]\n---------------------------------------------------------------------------\n\n`compute-restarts'  &optional condition =>  restarts\n\nArguments and Values::\n......................\n\ncondition--a condition object, or nil.\n\nrestarts--a list of restarts.\n\nDescription::\n.............\n\ncompute-restarts uses the dynamic state of the program to compute a list\nof the restarts which are currently active.\n\nThe resulting list is ordered so that the innermost (more-recently\nestablished) restarts are nearer the head of the list.\n\nWhen condition is non-nil, only those restarts are considered that are\neither explicitly associated with that condition, or not associated with\nany condition; that is, the excluded restarts are those that are\nassociated with a non-empty set of conditions of which the given condition\nis not an element.  If condition is nil, all restarts are considered.\n\ncompute-restarts returns all applicable restarts, including anonymous\nones, even if some of them have the same name as others and would\ntherefore not be found by find-restart when given a symbol argument.\n\nImplementations are permitted, but not required, to return distinct lists\nfrom repeated calls to compute-restarts while in the same dynamic\nenvironment.  The consequences are undefined if the list returned by\ncompute-restarts is every modified.\n\nExamples::\n..........\n\n      ;; One possible way in which an interactive debugger might present\n      ;; restarts to the user.\n      (defun invoke-a-restart ()\n        (let ((restarts (compute-restarts)))\n          (do ((i 0 (+ i 1)) (r restarts (cdr r))) ((null r))\n            (format t \"~&~D: ~A~\n          (let ((n nil) (k (length restarts)))\n            (loop (when (and (typep n 'integer) (>= n 0) (< n k))\n                    (return t))\n                  (format t \"~&Option: \")\n                  (setq n (read))\n                  (fresh-line))\n            (invoke-restart-interactively (nth n restarts)))))\n     \n      (restart-case (invoke-a-restart)\n        (one () 1)\n        (two () 2)\n        (nil () :report \"Who knows?\" 'anonymous)\n        (one () 'I)\n        (two () 'II))\n      |>  0: ONE\n      |>  1: TWO\n      |>  2: Who knows?\n      |>  3: ONE\n      |>  4: TWO\n      |>  5: Return to Lisp Toplevel.\n      |>  Option: |>>4<<|\n     =>  II\n     \n      ;; Note that in addition to user-defined restart points, COMPUTE-RESTARTS\n      ;; also returns information about any system-supplied restarts, such as\n      ;; the \"Return to Lisp Toplevel\" restart offered above.\n\nAffected By::\n.............\n\nExisting restarts.\n\nSee Also::\n..........\n\n*Note find-restart:: , *Note invoke-restart:: , *Note restart-bind::\n\n"
+}

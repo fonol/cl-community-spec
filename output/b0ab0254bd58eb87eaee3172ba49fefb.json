@@ -1,0 +1,65 @@
+{
+    "name": "exp",
+    "prev": "evenp",
+    "next": "gcd",
+    "up": "Numbers Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "exp, expt"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "exp",
+                    "text": " number =>  result\n"
+                },
+                {
+                    "name": "expt",
+                    "text": " base-number power-number =>  result\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "number",
+                    "desc": "a number."
+                },
+                {
+                    "name": "base-number",
+                    "desc": "a number."
+                },
+                {
+                    "name": "power-number",
+                    "desc": "a number."
+                },
+                {
+                    "name": "result",
+                    "desc": "a number."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "exp and expt perform exponentiation.\nexp returns e raised to the power number, where e is the base of the\nnatural logarithms.  exp has no branch cut.\nexpt returns base-number raised to the power power-number.  If the\nbase-number is a rational and power-number is an integer, the calculation\nis exact and the result will be of type rational; otherwise a\nfloating-point approximation might result.\nFor expt of a complex rational to an integer power, the calculation must\nbe exact and the result is of type (or rational (complex rational)).\nThe result of expt can be a complex, even when neither argument is a\ncomplex, if base-number is negative and power-number is not an integer.\nThe result is always the principal complex value.  For example, (expt -8\n1/3) is not permitted to return -2, even though -2 is one of the cube\nroots of -8.  The principal cube root is a complex approximately equal to\n#C(1.0 1.73205), not -2.\nexpt is defined as b^x = e^x log b\\/.  This defines the principal values\nprecisely.  The range of expt is the entire complex plane.  Regarded as a\nfunction of x, with b fixed, there is no branch cut.  Regarded as a\nfunction of b, with x fixed, there is in general a branch cut along the\nnegative real axis, continuous with quadrant II.  The domain excludes the\norigin.  By definition, 0^0=1.  If b=0 and the real part of x is strictly\npositive, then b^x=0. For all other values of x, 0^x is an error.\nWhen power-number is an integer 0, then the result is always the value one\nin the type of base-number, even if the base-number is zero (of any type).\nThat is:\n      (expt x 0) == (coerce 1 (type-of x))\nIf power-number is a zero of any other type, then the result is also the\nvalue one, in the type of the arguments after the application of the\ncontagion rules in *Note Contagion in Numeric Operations::, with one\nexception: the consequences are undefined if base-number is zero when\npower-number is zero and not of type integer.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (exp 0) =>  1.0\n      (exp 1) =>  2.718282\n      (exp (log 5)) =>  5.0\n      (expt 2 8) =>  256\n      (expt 4 .5) =>  2.0\n      (expt #c(0 1) 2) =>  -1\n      (expt #c(2 2) 3) =>  #C(-16 16)\n      (expt #c(2 2) 4) =>  -64\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note log:: , *Note Rule of Float Substitutability::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Implementations of expt are permitted to use different algorithms for the\ncases of a power-number of type rational and a power-number of type float.\nNote that by the following logic, (sqrt (expt x 3)) is not equivalent to\n(expt x 3/2).\n      (setq x (exp (/ (* 2 pi #c(0 1)) 3)))         ;exp(2.pi.i/3)\n      (expt x 3) =>  1 ;except for round-off error\n      (sqrt (expt x 3)) =>  1 ;except for round-off error\n      (expt x 3/2) =>  -1 ;except for round-off error\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: exp,  Next: gcd,  Prev: evenp,  Up: Numbers Dictionary\n\nexp, expt                                                        [Function]\n---------------------------------------------------------------------------\n\n`exp'  number =>  result\n\n`expt'  base-number power-number =>  result\n\nArguments and Values::\n......................\n\nnumber--a number.\n\nbase-number--a number.\n\npower-number--a number.\n\nresult--a number.\n\nDescription::\n.............\n\nexp and expt perform exponentiation.\n\nexp returns e raised to the power number, where e is the base of the\nnatural logarithms.  exp has no branch cut.\n\nexpt returns base-number raised to the power power-number.  If the\nbase-number is a rational and power-number is an integer, the calculation\nis exact and the result will be of type rational; otherwise a\nfloating-point approximation might result.\n\nFor expt of a complex rational to an integer power, the calculation must\nbe exact and the result is of type (or rational (complex rational)).\n\nThe result of expt can be a complex, even when neither argument is a\ncomplex, if base-number is negative and power-number is not an integer.\nThe result is always the principal complex value.  For example, (expt -8\n1/3) is not permitted to return -2, even though -2 is one of the cube\nroots of -8.  The principal cube root is a complex approximately equal to\n#C(1.0 1.73205), not -2.\n\nexpt is defined as b^x = e^x log b\\/.  This defines the principal values\nprecisely.  The range of expt is the entire complex plane.  Regarded as a\nfunction of x, with b fixed, there is no branch cut.  Regarded as a\nfunction of b, with x fixed, there is in general a branch cut along the\nnegative real axis, continuous with quadrant II.  The domain excludes the\norigin.  By definition, 0^0=1.  If b=0 and the real part of x is strictly\npositive, then b^x=0. For all other values of x, 0^x is an error.\n\nWhen power-number is an integer 0, then the result is always the value one\nin the type of base-number, even if the base-number is zero (of any type).\nThat is:\n\n      (expt x 0) == (coerce 1 (type-of x))\n\nIf power-number is a zero of any other type, then the result is also the\nvalue one, in the type of the arguments after the application of the\ncontagion rules in *Note Contagion in Numeric Operations::, with one\nexception: the consequences are undefined if base-number is zero when\npower-number is zero and not of type integer.\n\nExamples::\n..........\n\n      (exp 0) =>  1.0\n      (exp 1) =>  2.718282\n      (exp (log 5)) =>  5.0\n      (expt 2 8) =>  256\n      (expt 4 .5) =>  2.0\n      (expt #c(0 1) 2) =>  -1\n      (expt #c(2 2) 3) =>  #C(-16 16)\n      (expt #c(2 2) 4) =>  -64\n\nSee Also::\n..........\n\n*Note log:: , *Note Rule of Float Substitutability::\n\nNotes::\n.......\n\nImplementations of expt are permitted to use different algorithms for the\ncases of a power-number of type rational and a power-number of type float.\n\nNote that by the following logic, (sqrt (expt x 3)) is not equivalent to\n(expt x 3/2).\n\n      (setq x (exp (/ (* 2 pi #c(0 1)) 3)))         ;exp(2.pi.i/3)\n      (expt x 3) =>  1 ;except for round-off error\n      (sqrt (expt x 3)) =>  1 ;except for round-off error\n      (expt x 3/2) =>  -1 ;except for round-off error\n\n"
+}

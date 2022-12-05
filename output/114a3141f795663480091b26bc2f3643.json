@@ -1,0 +1,41 @@
+{
+    "name": "*macroexpand-hook*",
+    "prev": "symbol-macrolet",
+    "next": "proclaim",
+    "up": "Evaluation and Compilation Dictionary",
+    "header": {
+        "type": "Variable",
+        "text": "*macroexpand-hook*"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Value Type",
+            "text": "a designator for a function of three arguments: a macro function, a macro\nform, and an environment object.\n"
+        },
+        {
+            "type": "Initial Value",
+            "text": "a designator for a function that is equivalent to the function funcall,\nbut that might have additional implementation-dependent side-effects.\n"
+        },
+        {
+            "type": "Description",
+            "text": "Used as the expansion interface hook by macroexpand-1 to control the macro\nexpansion process.  When a macro form is to be expanded, this function is\ncalled with three arguments: the macro function, the macro form, and the\nenvironment in which the macro form is to be expanded.\nThe environment object has dynamic extent; the consequences are undefined\nif the environment object is referred to outside the dynamic extent of the\nmacro expansion function.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defun hook (expander form env)\n         (format t \"Now expanding: ~S~\n         (funcall expander form env)) =>  HOOK\n      (defmacro machook (x y) `(/ (+ ,x ,y) 2)) =>  MACHOOK\n      (macroexpand '(machook 1 2)) =>  (/ (+ 1 2) 2), true\n      (let ((*macroexpand-hook* #'hook)) (macroexpand '(machook 1 2)))\n      |>  Now expanding (MACHOOK 1 2)\n     =>  (/ (+ 1 2) 2), true\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note macroexpand; macroexpand-1:: , macroexpand-1, *Note funcall:: ,\n*Note Evaluation::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The net effect of the chosen initial value is to just invoke the macro\nfunction, giving it the macro form and environment as its two arguments.\nUsers or user programs can assign this variable to customize or trace the\nmacro expansion mechanism.  Note, however, that this variable is a global\nresource, potentially shared by multiple programs; as such, if any two\nprograms depend for their correctness on the setting of this variable,\nthose programs may not be able to run in the same Lisp image.  For this\nreason, it is frequently best to confine its uses to debugging situations.\nUsers who put their own function into *macroexpand-hook* should consider\nsaving the previous value of the hook, and calling that value from their\nown.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: *macroexpand-hook*,  Next: proclaim,  Prev: symbol-macrolet,  Up: Evaluation and Compilation Dictionary\n\n*macroexpand-hook*                                               [Variable]\n---------------------------------------------------------------------------\n\nValue Type::\n............\n\na designator for a function of three arguments: a macro function, a macro\nform, and an environment object.\n\nInitial Value::\n...............\n\na designator for a function that is equivalent to the function funcall,\nbut that might have additional implementation-dependent side-effects.\n\nDescription::\n.............\n\nUsed as the expansion interface hook by macroexpand-1 to control the macro\nexpansion process.  When a macro form is to be expanded, this function is\ncalled with three arguments: the macro function, the macro form, and the\nenvironment in which the macro form is to be expanded.\n\nThe environment object has dynamic extent; the consequences are undefined\nif the environment object is referred to outside the dynamic extent of the\nmacro expansion function.\n\nExamples::\n..........\n\n      (defun hook (expander form env)\n         (format t \"Now expanding: ~S~\n         (funcall expander form env)) =>  HOOK\n      (defmacro machook (x y) `(/ (+ ,x ,y) 2)) =>  MACHOOK\n      (macroexpand '(machook 1 2)) =>  (/ (+ 1 2) 2), true\n      (let ((*macroexpand-hook* #'hook)) (macroexpand '(machook 1 2)))\n      |>  Now expanding (MACHOOK 1 2)\n     =>  (/ (+ 1 2) 2), true\n\nSee Also::\n..........\n\n*Note macroexpand; macroexpand-1:: , macroexpand-1, *Note funcall:: ,\n*Note Evaluation::\n\nNotes::\n.......\n\nThe net effect of the chosen initial value is to just invoke the macro\nfunction, giving it the macro form and environment as its two arguments.\n\nUsers or user programs can assign this variable to customize or trace the\nmacro expansion mechanism.  Note, however, that this variable is a global\nresource, potentially shared by multiple programs; as such, if any two\nprograms depend for their correctness on the setting of this variable,\nthose programs may not be able to run in the same Lisp image.  For this\nreason, it is frequently best to confine its uses to debugging situations.\n\nUsers who put their own function into *macroexpand-hook* should consider\nsaving the previous value of the hook, and calling that value from their\nown.\n\n"
+}

@@ -1,0 +1,49 @@
+{
+    "name": "proclaim",
+    "prev": "*macroexpand-hook*",
+    "next": "declaim",
+    "up": "Evaluation and Compilation Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "proclaim"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "proclaim",
+                    "text": " declaration-specifier =>  implementation-dependent\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "declaration-specifier",
+                    "desc": "a declaration specifier."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Establishes the declaration specified by declaration-specifier in the\nglobal environment.\nSuch a declaration, sometimes called a global declaration or a\nproclamation, is always in force unless locally shadowed.\nNames of variables and functions within declaration-specifier refer to\ndynamic variables and global function definitions, respectively.\nFigure 3-22 shows a list of declaration identifiers that can be used with\nproclaim.\n  declaration  inline     optimize  type  \n  ftype        notinline  special         \n  Figure 3-22: Global Declaration Specifiers\nAn implementation is free to support other (implementation-defined)\ndeclaration identifiers as well.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defun declare-variable-types-globally (type vars)\n        (proclaim `(type ,type ,@vars))\n        type)\n      ;; Once this form is executed, the dynamic variable *TOLERANCE*\n      ;; must always contain a float.\n      (declare-variable-types-globally 'float '(*tolerance*))\n     =>  FLOAT\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note declaim:: , declare, *Note Compilation::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Although the execution of a proclaim form has effects that might affect\ncompilation, the compiler does not make any attempt to recognize and\nspecially process proclaim forms.  A proclamation such as the following,\neven if a top level form, does not have any effect until it is executed:\n     (proclaim '(special *x*))\nIf compile time side effects are desired, eval-when may be useful.  For\nexample:\n      (eval-when (:execute :compile-toplevel :load-toplevel)\n        (proclaim '(special *x*)))\nIn most such cases, however, it is preferrable to use declaim for this\npurpose.\nSince proclaim forms are ordinary function forms, macro forms can expand\ninto them.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: proclaim,  Next: declaim,  Prev: *macroexpand-hook*,  Up: Evaluation and Compilation Dictionary\n\nproclaim                                                         [Function]\n---------------------------------------------------------------------------\n\n`proclaim'  declaration-specifier =>  implementation-dependent\n\nArguments and Values::\n......................\n\ndeclaration-specifier--a declaration specifier.\n\nDescription::\n.............\n\nEstablishes the declaration specified by declaration-specifier in the\nglobal environment.\n\nSuch a declaration, sometimes called a global declaration or a\nproclamation, is always in force unless locally shadowed.\n\nNames of variables and functions within declaration-specifier refer to\ndynamic variables and global function definitions, respectively.\n\nFigure 3-22 shows a list of declaration identifiers that can be used with\nproclaim.\n\n  declaration  inline     optimize  type  \n  ftype        notinline  special         \n\n  Figure 3-22: Global Declaration Specifiers\n\n\nAn implementation is free to support other (implementation-defined)\ndeclaration identifiers as well.\n\nExamples::\n..........\n\n      (defun declare-variable-types-globally (type vars)\n        (proclaim `(type ,type ,@vars))\n        type)\n     \n      ;; Once this form is executed, the dynamic variable *TOLERANCE*\n      ;; must always contain a float.\n      (declare-variable-types-globally 'float '(*tolerance*))\n     =>  FLOAT\n\nSee Also::\n..........\n\n*Note declaim:: , declare, *Note Compilation::\n\nNotes::\n.......\n\nAlthough the execution of a proclaim form has effects that might affect\ncompilation, the compiler does not make any attempt to recognize and\nspecially process proclaim forms.  A proclamation such as the following,\neven if a top level form, does not have any effect until it is executed:\n\n     (proclaim '(special *x*))\n\nIf compile time side effects are desired, eval-when may be useful.  For\nexample:\n\n      (eval-when (:execute :compile-toplevel :load-toplevel)\n        (proclaim '(special *x*)))\n\nIn most such cases, however, it is preferrable to use declaim for this\npurpose.\n\nSince proclaim forms are ordinary function forms, macro forms can expand\ninto them.\n\n"
+}

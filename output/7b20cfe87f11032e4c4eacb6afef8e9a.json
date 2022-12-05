@@ -1,0 +1,61 @@
+{
+    "name": "print-unreadable-object",
+    "prev": "print-object",
+    "next": "set-pprint-dispatch",
+    "up": "Printer Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "print-unreadable-object"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "print-unreadable-object",
+                    "text": " (object stream &key type identity) {form}* =>nil\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "object",
+                    "desc": "an object; evaluated."
+                },
+                {
+                    "name": "stream",
+                    "desc": " a stream designator; evaluated."
+                },
+                {
+                    "name": "type",
+                    "desc": "a generalized boolean; evaluated."
+                },
+                {
+                    "name": "identity",
+                    "desc": "a generalized boolean; evaluated."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Outputs a printed representation of object on stream, beginning with \"#<\"\nand ending with \">\".  Everything output to stream by the body forms is\nenclosed in the the angle brackets.  If type is true, the output from forms\nis preceded by a brief description of the object's type and a space\ncharacter.  If identity is true, the output from forms is followed by a\nspace character and a representation of the object's identity, typically a\nstorage address.\nIf either type or identity is not supplied, its value is false.  It is\nvalid to omit the body forms.  If type and identity are both true and\nthere are no body forms, only one space character separates the type and\nthe identity.\n"
+        },
+        {
+            "type": "Examples",
+            "text": ";; Note that in this example, the precise form of the output ;; is\nimplementation-dependent.\n      (defmethod print-object ((obj airplane) stream)\n        (print-unreadable-object (obj stream :type t :identity t)\n          (princ (tail-number obj) stream)))\n      (prin1-to-string my-airplane)\n     =>  \"#<Airplane NW0773 36000123135>\"\n     OR=> \"#<FAA:AIRPLANE NW0773 17>\"\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If *print-readably* is true, print-unreadable-object signals an error of\ntype print-not-readable without printing anything.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: print-unreadable-object,  Next: set-pprint-dispatch,  Prev: print-object,  Up: Printer Dictionary\n\nprint-unreadable-object                                             [Macro]\n---------------------------------------------------------------------------\n\n`print-unreadable-object'  (object stream &key type identity) {form}* =>\nnil\n\nArguments and Values::\n......................\n\nobject--an object; evaluated.\n\nstream-- a stream designator; evaluated.\n\ntype--a generalized boolean; evaluated.\n\nidentity--a generalized boolean; evaluated.\n\nforms--an implicit progn.\n\nDescription::\n.............\n\nOutputs a printed representation of object on stream, beginning with \"#<\"\nand ending with \">\".  Everything output to stream by the body forms is\nenclosed in the the angle brackets.  If type is true, the output from forms\nis preceded by a brief description of the object's type and a space\ncharacter.  If identity is true, the output from forms is followed by a\nspace character and a representation of the object's identity, typically a\nstorage address.\n\nIf either type or identity is not supplied, its value is false.  It is\nvalid to omit the body forms.  If type and identity are both true and\nthere are no body forms, only one space character separates the type and\nthe identity.\n\nExamples::\n..........\n\n;; Note that in this example, the precise form of the output ;; is\nimplementation-dependent.\n\n      (defmethod print-object ((obj airplane) stream)\n        (print-unreadable-object (obj stream :type t :identity t)\n          (princ (tail-number obj) stream)))\n     \n      (prin1-to-string my-airplane)\n     =>  \"#<Airplane NW0773 36000123135>\"\n     OR=> \"#<FAA:AIRPLANE NW0773 17>\"\n\nExceptional Situations::\n........................\n\nIf *print-readably* is true, print-unreadable-object signals an error of\ntype print-not-readable without printing anything.\n\n"
+}

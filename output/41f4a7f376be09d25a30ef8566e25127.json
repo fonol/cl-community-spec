@@ -1,0 +1,17 @@
+{
+    "name": "Package System Consistency Rules",
+    "prev": "Valid Patterns for Tokens",
+    "next": null,
+    "up": "Interpretation of Tokens",
+    "header": {
+        "type": null,
+        "text": "Package System Consistency Rules"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": "The following rules apply to the package system as long as the value of\n*package* is not changed:\nRead-read consistency\n     Reading the same symbol name always results in the same symbol.\nPrint-read consistency\n     An interned symbol always prints as a sequence of characters that,\n     when read back in, yields the same symbol.\n     For information about how the Lisp printer treats symbols, see *Note\n     Printing Symbols::.\nPrint-print consistency\n     If two interned symbols are not the same, then their printed\n     representations will be different sequences of characters.\nThese rules are true regardless of any implicit interning.  As long as the\ncurrent package is not changed, results are reproducible regardless of the\norder of loading files or the exact history of what symbols were typed in\nwhen.  If the value of *package* is changed and then changed back to the\nprevious value, consistency is maintained.  The rules can be violated by\nchanging the value of *package*, forcing a change to symbols or to packages\nor to both by continuing from an error, or calling one of the following\nfunctions: unintern, unexport, shadow, shadowing-import, or unuse-package.\nAn inconsistency only applies if one of the restrictions is violated\nbetween two of the named symbols.  shadow, unexport, unintern, and\nshadowing-import can only affect the consistency of symbols with the same\nnames (under string=) as the ones supplied as arguments.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: Package System Consistency Rules,  Prev: Valid Patterns for Tokens,  Up: Interpretation of Tokens\n\nPackage System Consistency Rules\n--------------------------------\n\nThe following rules apply to the package system as long as the value of\n*package* is not changed:\n\nRead-read consistency\n     Reading the same symbol name always results in the same symbol.\n\nPrint-read consistency\n     An interned symbol always prints as a sequence of characters that,\n     when read back in, yields the same symbol.\n\n     For information about how the Lisp printer treats symbols, see *Note\n     Printing Symbols::.\n\nPrint-print consistency\n     If two interned symbols are not the same, then their printed\n     representations will be different sequences of characters.\n\nThese rules are true regardless of any implicit interning.  As long as the\ncurrent package is not changed, results are reproducible regardless of the\norder of loading files or the exact history of what symbols were typed in\nwhen.  If the value of *package* is changed and then changed back to the\nprevious value, consistency is maintained.  The rules can be violated by\nchanging the value of *package*, forcing a change to symbols or to packages\nor to both by continuing from an error, or calling one of the following\nfunctions: unintern, unexport, shadow, shadowing-import, or unuse-package.\n\nAn inconsistency only applies if one of the restrictions is violated\nbetween two of the named symbols.  shadow, unexport, unintern, and\nshadowing-import can only affect the consistency of symbols with the same\nnames (under string=) as the ones supplied as arguments.\n\n"
+}

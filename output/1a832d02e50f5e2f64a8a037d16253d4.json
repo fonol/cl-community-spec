@@ -1,0 +1,73 @@
+{
+    "name": "read-char",
+    "prev": "peek-char",
+    "next": "read-char-no-hang",
+    "up": "Streams Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "read-char"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "read-char",
+                    "text": " &optional input-stream eof-error-p eof-value recursive-p =>char\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "input-stream",
+                    "desc": "an input stream designator.  The default is standard input."
+                },
+                {
+                    "name": "eof-error-p",
+                    "desc": "a generalized boolean.  The default is true."
+                },
+                {
+                    "name": "eof-value",
+                    "desc": "an object.  The default is nil."
+                },
+                {
+                    "name": "recursive-p",
+                    "desc": "a generalized boolean.  The default is false."
+                },
+                {
+                    "name": "char",
+                    "desc": "a character or the eof-value."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "read-char returns the next character from input-stream.\nWhen input-stream is an echo stream, the character is echoed on\ninput-stream the first time the character is seen.  Characters that are\nnot echoed by read-char are those that were put there by unread-char and\nhence are assumed to have been echoed already by a previous call to\nread-char.\nIf recursive-p is true, this call is expected to be embedded in a\nhigher-level call to read or a similar function used by the Lisp reader.\nIf an end of file_2 occurs and eof-error-p is false, eof-value is returned.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (with-input-from-string (is \"0123\")\n         (do ((c (read-char is) (read-char is nil 'the-end)))\n             ((not (characterp c)))\n          (format t \"~S \" c)))\n      |>  #\\0 #\\1 #\\2 #\\3\n     =>  NIL\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "*standard-input*, *terminal-io*.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If an end of file_2 occurs before a character can be read, and eof-error-p\nis true, an error of type end-of-file is signaled.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note read-byte:: ,\n*Note read-sequence:: ,\n*Note write-char:: , *Note read; read-preserving-whitespace::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The corresponding output function is write-char.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: read-char,  Next: read-char-no-hang,  Prev: peek-char,  Up: Streams Dictionary\n\nread-char                                                        [Function]\n---------------------------------------------------------------------------\n\n`read-char'  &optional input-stream eof-error-p eof-value recursive-p =>\nchar\n\nArguments and Values::\n......................\n\ninput-stream--an input stream designator.  The default is standard input.\n\neof-error-p--a generalized boolean.  The default is true.\n\neof-value--an object.  The default is nil.\n\nrecursive-p--a generalized boolean.  The default is false.\n\nchar--a character or the eof-value.\n\nDescription::\n.............\n\nread-char returns the next character from input-stream.\n\nWhen input-stream is an echo stream, the character is echoed on\ninput-stream the first time the character is seen.  Characters that are\nnot echoed by read-char are those that were put there by unread-char and\nhence are assumed to have been echoed already by a previous call to\nread-char.\n\nIf recursive-p is true, this call is expected to be embedded in a\nhigher-level call to read or a similar function used by the Lisp reader.\n\nIf an end of file_2 occurs and eof-error-p is false, eof-value is returned.\n\nExamples::\n..........\n\n      (with-input-from-string (is \"0123\")\n         (do ((c (read-char is) (read-char is nil 'the-end)))\n             ((not (characterp c)))\n          (format t \"~S \" c)))\n      |>  #\\0 #\\1 #\\2 #\\3\n     =>  NIL\n\nAffected By::\n.............\n\n*standard-input*, *terminal-io*.\n\nExceptional Situations::\n........................\n\nIf an end of file_2 occurs before a character can be read, and eof-error-p\nis true, an error of type end-of-file is signaled.\n\nSee Also::\n..........\n\n*Note read-byte:: ,\n\n*Note read-sequence:: ,\n\n*Note write-char:: , *Note read; read-preserving-whitespace::\n\nNotes::\n.......\n\nThe corresponding output function is write-char.\n\n"
+}

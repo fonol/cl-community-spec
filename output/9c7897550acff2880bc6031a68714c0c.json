@@ -1,0 +1,43 @@
+{
+    "name": "broadcast-stream",
+    "prev": "stream",
+    "next": "concatenated-stream",
+    "up": "Streams Dictionary",
+    "header": {
+        "type": "System Class",
+        "text": "broadcast-stream"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Class Precedence List",
+            "text": "",
+            "items": [
+                {
+                    "name": "broadcast-stream",
+                    "link": "9c7897550acff2880bc6031a68714c0c"
+                },
+                {
+                    "name": " stream",
+                    "link": null
+                },
+                {
+                    "name": " t",
+                    "link": null
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "A broadcast stream is an output stream which has associated with it a set\nof zero or more output streams such that any output sent to the broadcast\nstream gets passed on as output to each of the associated output streams.\n(If a broadcast stream has no component streams, then all output to the\nbroadcast stream is discarded.)\nThe set of operations that may be performed on a broadcast stream is the\nintersection of those for its associated output streams.\nSome output operations (e.g., fresh-line) return values based on the state\nof the stream at the time of the operation.\nSince these values might differ for each of the component streams, it is\nnecessary to describe their return value specifically:\n*\n     stream-element-type returns the value from the last component stream,\n     or t if there are no component streams.\n*\n     fresh-line returns the value from the last component stream, or nil\n     if there are no component streams.\n*\n     The functions file-length, file-position, file-string-length, and\n     stream-external-format return the value from the last component\n     stream; if there are no component streams, file-length and\n     file-position return 0, file-string-length returns 1, and\n     stream-external-format returns :default.\n*\n     The functions streamp and output-stream-p always return true for\n     broadcast streams.\n*\n     The functions open-stream-p tests whether the broadcast stream is\n     open_2, not whether its component streams are open.\n*\n     The functions input-stream-p and interactive-stream-p return an\n     implementation-defined, generalized boolean value.\n*\n     For the input operations clear-input listen, peek-char, read-byte,\n     read-char-no-hang, read-char, read-line, and unread-char, the\n     consequences are undefined if the indicated operation is performed.\n     However, an implementation is permitted to define such a behavior as\n     an implementation-dependent extension.\nFor any output operations not having their return values explicitly\nspecified above or elsewhere in this document, it is defined that the\nvalues returned by such an operation are the values resulting from\nperforming the operation on the last of its component streams; the values\nresulting from performing the operation on all preceding streams are\ndiscarded.  If there are no component streams, the value is\nimplementation-dependent.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note broadcast-stream-streams:: , *Note make-broadcast-stream::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: broadcast-stream,  Next: concatenated-stream,  Prev: stream,  Up: Streams Dictionary\n\nbroadcast-stream                                             [System Class]\n---------------------------------------------------------------------------\n\nClass Precedence List::\n.......................\n\nbroadcast-stream, stream, t\n\nDescription::\n.............\n\nA broadcast stream is an output stream which has associated with it a set\nof zero or more output streams such that any output sent to the broadcast\nstream gets passed on as output to each of the associated output streams.\n(If a broadcast stream has no component streams, then all output to the\nbroadcast stream is discarded.)\n\nThe set of operations that may be performed on a broadcast stream is the\nintersection of those for its associated output streams.\n\nSome output operations (e.g., fresh-line) return values based on the state\nof the stream at the time of the operation.\n\nSince these values might differ for each of the component streams, it is\nnecessary to describe their return value specifically:\n\n*\n     stream-element-type returns the value from the last component stream,\n     or t if there are no component streams.\n\n*\n     fresh-line returns the value from the last component stream, or nil\n     if there are no component streams.\n\n*\n     The functions file-length, file-position, file-string-length, and\n     stream-external-format return the value from the last component\n     stream; if there are no component streams, file-length and\n     file-position return 0, file-string-length returns 1, and\n     stream-external-format returns :default.\n\n*\n     The functions streamp and output-stream-p always return true for\n     broadcast streams.\n\n*\n     The functions open-stream-p tests whether the broadcast stream is\n     open_2, not whether its component streams are open.\n\n*\n     The functions input-stream-p and interactive-stream-p return an\n     implementation-defined, generalized boolean value.\n\n*\n     For the input operations clear-input listen, peek-char, read-byte,\n     read-char-no-hang, read-char, read-line, and unread-char, the\n     consequences are undefined if the indicated operation is performed.\n     However, an implementation is permitted to define such a behavior as\n     an implementation-dependent extension.\n\nFor any output operations not having their return values explicitly\nspecified above or elsewhere in this document, it is defined that the\nvalues returned by such an operation are the values resulting from\nperforming the operation on the last of its component streams; the values\nresulting from performing the operation on all preceding streams are\ndiscarded.  If there are no component streams, the value is\nimplementation-dependent.\n\nSee Also::\n..........\n\n*Note broadcast-stream-streams:: , *Note make-broadcast-stream::\n\n"
+}

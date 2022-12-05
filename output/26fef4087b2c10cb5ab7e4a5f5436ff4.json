@@ -1,0 +1,89 @@
+{
+    "name": "intersection",
+    "prev": "remf",
+    "next": "adjoin",
+    "up": "Conses Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "intersection, nintersection"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "intersection",
+                    "text": " list-1 list-2 &key key test test-not =>  result-list\n"
+                },
+                {
+                    "name": "nintersection",
+                    "text": " list-1 list-2 &key key test test-not =>  result-list\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "list-1",
+                    "desc": "a proper list."
+                },
+                {
+                    "name": "list-2",
+                    "desc": "a proper list."
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "result-list",
+                    "desc": "a list."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "intersection and nintersection return a list that contains every element\nthat occurs in both list-1 and list-2.\nnintersection is the destructive version of intersection.  It performs the\nsame operation, but may destroy list-1 using its cells to construct the\nresult.\nlist-2 is not destroyed.\nThe intersection operation is described as follows.  For all possible\nordered pairs consisting of one element from list-1 and one element from\nlist-2, :test or :test-not are used to determine whether they satisfy the\ntest.  The first argument to the :test or :test-not function is an element\nof list-1; the second argument is an element of list-2.  If :test or\n:test-not is not supplied, eql is used.  It is an error if :test and\n:test-not are supplied in the same function call.\nIf :key is supplied (and not nil), it is used to extract the part to be\ntested from the list element.  The argument to the :key function is an\nelement of either list-1 or list-2; the :key function typically returns\npart of the supplied element.  If :key is not supplied or nil, the list-1\nand list-2 elements are used.\nFor every pair that satifies the test, exactly one of the two elements of\nthe pair will be put in the result.  No element from either list appears\nin the result that does not satisfy the test for an element from the other\nlist.  If one of the lists contains duplicate elements, there may be\nduplication in the result.\nThere is no guarantee that the order of elements in the result will\nreflect the ordering of the arguments in any particular way.  The result\nlist may share cells with, or be eq to, either list-1 or list-2 if\nappropriate.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq list1 (list 1 1 2 3 4 a b c \"A\" \"B\" \"C\" \"d\")\n            list2 (list 1 4 5 b c d \"a\" \"B\" \"c\" \"D\"))\n       =>  (1 4 5 B C D \"a\" \"B\" \"c\" \"D\")\n      (intersection list1 list2) =>  (C B 4 1 1)\n      (intersection list1 list2 :test 'equal) =>  (\"B\" C B 4 1 1)\n      (intersection list1 list2 :test #'equalp) =>  (\"d\" \"C\" \"B\" \"A\" C B 4 1 1)\n      (nintersection list1 list2) =>  (1 1 4 B C)\n      list1 =>  implementation-dependent ;e.g., (1 1 4 B C)\n      list2 =>  implementation-dependent ;e.g., (1 4 5 B C D \"a\" \"B\" \"c\" \"D\")\n      (setq list1 (copy-list '((1 . 2) (2 . 3) (3 . 4) (4 . 5))))\n     =>  ((1 . 2) (2 . 3) (3 . 4) (4 . 5))\n      (setq list2 (copy-list '((1 . 3) (2 . 4) (3 . 6) (4 . 8))))\n     =>  ((1 . 3) (2 . 4) (3 . 6) (4 . 8))\n      (nintersection list1 list2 :key #'cdr) =>  ((2 . 3) (3 . 4))\n      list1 =>  implementation-dependent ;e.g., ((1 . 2) (2 . 3) (3 . 4))\n      list2 =>  implementation-dependent ;e.g., ((1 . 3) (2 . 4) (3 . 6) (4 . 8))\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "nintersection can modify list-1,\nbut not list-2.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if list-1 and\nlist-2 are not proper lists.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note union; nunion:: ,\n*Note Compiler Terminology::,\n*Note Traversal Rules and Side Effects::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The :test-not parameter is deprecated.\nSince the nintersection side effect is not required, it should not be used\nin for-effect-only positions in portable code.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: intersection,  Next: adjoin,  Prev: remf,  Up: Conses Dictionary\n\nintersection, nintersection                                      [Function]\n---------------------------------------------------------------------------\n\n`intersection'  list-1 list-2 &key key test test-not =>  result-list\n\n`nintersection'  list-1 list-2 &key key test test-not =>  result-list\n\nArguments and Values::\n......................\n\nlist-1--a proper list.\n\nlist-2--a proper list.\n\ntest--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\ntest-not--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nkey--a designator for a function of one argument, or nil.\n\nresult-list--a list.\n\nDescription::\n.............\n\nintersection and nintersection return a list that contains every element\nthat occurs in both list-1 and list-2.\n\nnintersection is the destructive version of intersection.  It performs the\nsame operation, but may destroy list-1 using its cells to construct the\nresult.\n\nlist-2 is not destroyed.\n\nThe intersection operation is described as follows.  For all possible\nordered pairs consisting of one element from list-1 and one element from\nlist-2, :test or :test-not are used to determine whether they satisfy the\ntest.  The first argument to the :test or :test-not function is an element\nof list-1; the second argument is an element of list-2.  If :test or\n:test-not is not supplied, eql is used.  It is an error if :test and\n:test-not are supplied in the same function call.\n\nIf :key is supplied (and not nil), it is used to extract the part to be\ntested from the list element.  The argument to the :key function is an\nelement of either list-1 or list-2; the :key function typically returns\npart of the supplied element.  If :key is not supplied or nil, the list-1\nand list-2 elements are used.\n\nFor every pair that satifies the test, exactly one of the two elements of\nthe pair will be put in the result.  No element from either list appears\nin the result that does not satisfy the test for an element from the other\nlist.  If one of the lists contains duplicate elements, there may be\nduplication in the result.\n\nThere is no guarantee that the order of elements in the result will\nreflect the ordering of the arguments in any particular way.  The result\nlist may share cells with, or be eq to, either list-1 or list-2 if\nappropriate.\n\nExamples::\n..........\n\n      (setq list1 (list 1 1 2 3 4 a b c \"A\" \"B\" \"C\" \"d\")\n            list2 (list 1 4 5 b c d \"a\" \"B\" \"c\" \"D\"))\n       =>  (1 4 5 B C D \"a\" \"B\" \"c\" \"D\")\n      (intersection list1 list2) =>  (C B 4 1 1)\n      (intersection list1 list2 :test 'equal) =>  (\"B\" C B 4 1 1)\n      (intersection list1 list2 :test #'equalp) =>  (\"d\" \"C\" \"B\" \"A\" C B 4 1 1)\n      (nintersection list1 list2) =>  (1 1 4 B C)\n      list1 =>  implementation-dependent ;e.g., (1 1 4 B C)\n      list2 =>  implementation-dependent ;e.g., (1 4 5 B C D \"a\" \"B\" \"c\" \"D\")\n      (setq list1 (copy-list '((1 . 2) (2 . 3) (3 . 4) (4 . 5))))\n     =>  ((1 . 2) (2 . 3) (3 . 4) (4 . 5))\n      (setq list2 (copy-list '((1 . 3) (2 . 4) (3 . 6) (4 . 8))))\n     =>  ((1 . 3) (2 . 4) (3 . 6) (4 . 8))\n      (nintersection list1 list2 :key #'cdr) =>  ((2 . 3) (3 . 4))\n      list1 =>  implementation-dependent ;e.g., ((1 . 2) (2 . 3) (3 . 4))\n      list2 =>  implementation-dependent ;e.g., ((1 . 3) (2 . 4) (3 . 6) (4 . 8))\n\nSide Effects::\n..............\n\nnintersection can modify list-1,\n\nbut not list-2.\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if list-1 and\nlist-2 are not proper lists.\n\nSee Also::\n..........\n\n*Note union; nunion:: ,\n\n*Note Compiler Terminology::,\n\n*Note Traversal Rules and Side Effects::\n\nNotes::\n.......\n\nThe :test-not parameter is deprecated.\n\nSince the nintersection side effect is not required, it should not be used\nin for-effect-only positions in portable code.\n\n"
+}

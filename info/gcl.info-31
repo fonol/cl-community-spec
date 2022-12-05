@@ -1,0 +1,1605 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: short-float,  Next: rational,  Prev: float (System Class),  Up: Numbers Dictionary
+
+short-float, single-float, double-float, long-float                  [Type]
+---------------------------------------------------------------------------
+
+Supertypes::
+............
+
+short-float: short-float, float,
+
+real,
+
+number, t
+
+single-float: single-float, float,
+
+real,
+
+number, t
+
+double-float: double-float, float,
+
+real,
+
+number, t
+
+long-float: long-float, float,
+
+real,
+
+number, t
+
+Description::
+.............
+
+For the four defined subtypes of type float, it is true that intermediate
+between the type short-float and the type long-float are the type
+single-float and the type double-float.  The precise definition of these
+categories is implementation-defined.  The precision (measured in "bits",
+computed as p\log_2b) and the exponent size (also measured in "bits,"
+computed as \log_2(n+1), where n is the maximum exponent value) is
+recommended to be at least as great as the values in Figure 12-11.  Each
+of the defined subtypes of type float might or might not have a minus zero.
+
+  Format  Minimum Precision  Minimum Exponent Size  
+  __________________________________________________
+  Short   13 bits            5 bits                 
+  Single  24 bits            8 bits                 
+  Double  50 bits            8 bits                 
+  Long    50 bits            8 bits                 
+
+  Figure 12-11: Recommended Minimum Floating-Point Precision and Exponent Size
+
+
+There can be fewer than four internal representations for floats.  If
+there are fewer distinct representations, the following rules apply:
+-
+     If there is only one, it is the type single-float.  In this
+     representation, an object is simultaneously of types single-float,
+     double-float, short-float, and long-float.
+
+-
+     Two internal representations can be arranged in either of the
+     following ways:
+    *
+          Two types are provided: single-float and short-float.  An object
+          is simultaneously of types single-float, double-float, and
+          long-float.
+
+    *
+          Two types are provided: single-float and double-float. An object
+          is simultaneously of types single-float and short-float, or
+          double-float and long-float.
+
+-
+     Three internal representations can be arranged in either of the
+     following ways:
+    *
+          Three types are provided: short-float, single-float, and
+          double-float.  An object can simultaneously be of type
+          double-float and long-float.
+
+    *
+          Three types are provided: single-float, double-float, and
+          long-float. An object can simultaneously be of types
+          single-float and short-float.
+
+Compound Type Specifier Kind::
+..............................
+
+Abbreviating.
+
+Compound Type Specifier Syntax::
+................................
+
+(`short-float'{[short-lower-limit   [short-upper-limit]]})
+(`single-float'{[single-lower-limit [single-upper-limit]]})
+(`double-float'{[double-lower-limit [double-upper-limit]]})
+(`long-float'{[long-lower-limit     [long-upper-limit]]})
+
+Compound Type Specifier Arguments::
+...................................
+
+short-lower-limit, short-upper-limit--interval designators for type
+short-float.  The defaults for each of lower-limit and upper-limit is the
+symbol *.
+
+single-lower-limit, single-upper-limit--interval designators for type
+single-float.  The defaults for each of lower-limit and upper-limit is the
+symbol *.
+
+double-lower-limit, double-upper-limit--interval designators for type
+double-float.  The defaults for each of lower-limit and upper-limit is the
+symbol *.
+
+long-lower-limit, long-upper-limit--interval designators for type
+long-float.  The defaults for each of lower-limit and upper-limit is the
+symbol *.
+
+Compound Type Specifier Description::
+.....................................
+
+Each of these denotes the set of floats of the indicated type that are on
+the interval specified by the interval designators.
+
+
+File: gcl.info,  Node: rational,  Next: ratio,  Prev: short-float,  Up: Numbers Dictionary
+
+rational                                                     [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+rational,
+
+real,
+
+number, t
+
+Description::
+.............
+
+The canonical representation of a rational is as an integer if its value
+is integral, and otherwise as a ratio.
+
+The types integer and ratio are disjoint subtypes of type rational.
+
+Compound Type Specifier Kind::
+..............................
+
+Abbreviating.
+
+Compound Type Specifier Syntax::
+................................
+
+(`rational'{[lower-limit [upper-limit]]})
+
+Compound Type Specifier Arguments::
+...................................
+
+lower-limit, upper-limit--interval designators for type rational.  The
+defaults for each of lower-limit and upper-limit is the symbol *.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the rationals on the interval described by lower-limit and
+upper-limit.
+
+
+File: gcl.info,  Node: ratio,  Next: integer,  Prev: rational,  Up: Numbers Dictionary
+
+ratio                                                        [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+ratio, rational,
+
+real,
+
+number, t
+
+Description::
+.............
+
+A ratio is a number representing the mathematical ratio of two non-zero
+integers, the numerator and denominator, whose greatest common divisor is
+one, and of which the denominator is positive and greater than one.
+
+See Also::
+..........
+
+Figure~2-9, *Note Constructing Numbers from Tokens::, *Note Printing
+Ratios::
+
+
+File: gcl.info,  Node: integer,  Next: signed-byte,  Prev: ratio,  Up: Numbers Dictionary
+
+integer                                                      [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+integer, rational,
+
+real,
+
+number, t
+
+Description::
+.............
+
+An integer is a mathematical integer. There is no limit on the magnitude
+of an integer.
+
+The types fixnum and bignum form an exhaustive partition of type integer.
+
+Compound Type Specifier Kind::
+..............................
+
+Abbreviating.
+
+Compound Type Specifier Syntax::
+................................
+
+(`integer'{[lower-limit [upper-limit]]})
+
+Compound Type Specifier Arguments::
+...................................
+
+lower-limit, upper-limit--interval designators for type integer.  The
+defaults for each of lower-limit and upper-limit is the symbol *.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the integers on the interval described by lower-limit and
+upper-limit.
+
+See Also::
+..........
+
+Figure~2-9, *Note Constructing Numbers from Tokens::, *Note Printing
+Integers::
+
+Notes::
+.......
+
+The type (integer lower upper), where lower and upper are
+most-negative-fixnum and most-positive-fixnum, respectively, is also
+called fixnum.
+
+The type (integer 0 1) is also called bit.  The type (integer 0 *) is also
+called unsigned-byte.
+
+
+File: gcl.info,  Node: signed-byte,  Next: unsigned-byte,  Prev: integer,  Up: Numbers Dictionary
+
+signed-byte                                                          [Type]
+---------------------------------------------------------------------------
+
+Supertypes::
+............
+
+signed-byte, integer, rational,
+
+real,
+
+number, t
+
+Description::
+.............
+
+The atomic type specifier signed-byte denotes the same type as is denoted
+by the type specifier integer; however, the list forms of these two type
+specifiers have different semantics.
+
+Compound Type Specifier Kind::
+..............................
+
+Abbreviating.
+
+Compound Type Specifier Syntax::
+................................
+
+(`signed-byte'{[s | *]})
+
+Compound Type Specifier Arguments::
+...................................
+
+s--a positive integer.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the set of integers that can be represented in
+two's-complement form in a byte of s bits.  This is equivalent to (integer
+-2^s-1 2^s-1-1).  The type signed-byte or the type (signed-byte *) is the
+same as the type integer.
+
+
+File: gcl.info,  Node: unsigned-byte,  Next: mod,  Prev: signed-byte,  Up: Numbers Dictionary
+
+unsigned-byte                                                        [Type]
+---------------------------------------------------------------------------
+
+Supertypes::
+............
+
+unsigned-byte, signed-byte, integer, rational,
+
+real,
+
+number, t
+
+Description::
+.............
+
+The atomic type specifier unsigned-byte denotes the same type as is
+denoted by the type specifier (integer 0 *).
+
+Compound Type Specifier Kind::
+..............................
+
+Abbreviating.
+
+Compound Type Specifier Syntax::
+................................
+
+(`unsigned-byte'{[s | *]})
+
+Compound Type Specifier Arguments::
+...................................
+
+s--a positive integer.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the set of non-negative integers that can be represented in a
+byte of size s (bits).  This is equivalent to (mod m) for m=2^s, or to
+(integer 0 n) for n=2^s-1.  The type unsigned-byte or the type
+(unsigned-byte *) is the same as the type (integer 0 *), the set of
+non-negative integers.
+
+Notes::
+.......
+
+The type (unsigned-byte 1) is also called bit.
+
+
+File: gcl.info,  Node: mod,  Next: bit,  Prev: unsigned-byte,  Up: Numbers Dictionary
+
+mod                                                        [Type Specifier]
+---------------------------------------------------------------------------
+
+Compound Type Specifier Kind::
+..............................
+
+Abbreviating.
+
+Compound Type Specifier Syntax::
+................................
+
+(`mod'{n})
+
+Compound Type Specifier Arguments::
+...................................
+
+n--a positive integer.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the set of non-negative integers less than n.  This is
+equivalent to (integer 0 (n)) or to (integer 0 m), where m=n-1.
+
+The argument is required, and cannot be *.
+
+The symbol mod is not valid as a type specifier.
+
+
+File: gcl.info,  Node: bit,  Next: fixnum,  Prev: mod,  Up: Numbers Dictionary
+
+bit                                                                  [Type]
+---------------------------------------------------------------------------
+
+Supertypes::
+............
+
+bit, unsigned-byte, signed-byte, integer, rational,
+
+real,
+
+number, t
+
+Description::
+.............
+
+The type bit is equivalent to the type (integer 0 1) and (unsigned-byte 1).
+
+
+File: gcl.info,  Node: fixnum,  Next: bignum,  Prev: bit,  Up: Numbers Dictionary
+
+fixnum                                                               [Type]
+---------------------------------------------------------------------------
+
+Supertypes::
+............
+
+fixnum, integer, rational,
+
+real,
+
+number, t
+
+Description::
+.............
+
+A fixnum is an integer whose value is between most-negative-fixnum and
+most-positive-fixnum inclusive.  Exactly which integers are fixnums is
+implementation-defined.
+
+The type fixnum is required to be a supertype of (signed-byte 16).
+
+
+File: gcl.info,  Node: bignum,  Next: =,  Prev: fixnum,  Up: Numbers Dictionary
+
+bignum                                                               [Type]
+---------------------------------------------------------------------------
+
+Supertypes::
+............
+
+bignum, integer, rational,
+
+real,
+
+number, t
+
+Description::
+.............
+
+The type bignum is defined to be exactly (and integer (not fixnum)).
+
+
+File: gcl.info,  Node: =,  Next: max,  Prev: bignum,  Up: Numbers Dictionary
+
+=, /=, <, >, <=, >=                                              [Function]
+---------------------------------------------------------------------------
+
+`='  &rest numbers^+ =>  generalized-boolean
+
+`/='  &rest numbers^+ =>  generalized-boolean
+
+`<'  &rest numbers^+ =>  generalized-boolean
+
+`>'  &rest numbers^+ =>  generalized-boolean
+
+`<='  &rest numbers^+ =>  generalized-boolean
+
+`>='  &rest numbers^+ =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+number--for <, >, <=, >=: a real; for =, /=: a number.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+=, /=, <, >, <=, and >= perform arithmetic comparisons on their arguments
+as follows:
+
+=
+     The value of = is true if all numbers are the same in value;
+     otherwise it is false.  Two complexes are considered equal by = if
+     their real and imaginary parts are equal according to =.
+
+/=
+     The value of /= is true if no two numbers are the same in value;
+     otherwise it is false.
+
+<
+     The value of < is true if the numbers are in monotonically increasing
+     order; otherwise it is false.
+
+>
+     The value of > is true if the numbers are in monotonically decreasing
+     order; otherwise it is false.
+
+<=
+     The value of <= is true if the numbers are in monotonically
+     nondecreasing order; otherwise it is false.
+
+>=
+     The value of >= is true if the numbers are in monotonically
+     nonincreasing order; otherwise it is false.
+
+=, /=, <, >, <=, and >= perform necessary type conversions.
+
+Examples::
+..........
+
+The uses of these functions are illustrated in Figure 12-12.
+
+  (= 3 3) is true.              (/= 3 3) is false.             
+  (= 3 5) is false.             (/= 3 5) is true.              
+  (= 3 3 3 3) is true.          (/= 3 3 3 3) is false.         
+  (= 3 3 5 3) is false.         (/= 3 3 5 3) is false.         
+  (= 3 6 5 2) is false.         (/= 3 6 5 2) is true.          
+  (= 3 2 3) is false.           (/= 3 2 3) is false.           
+  (< 3 5) is true.              (<= 3 5) is true.              
+  (< 3 -5) is false.            (<= 3 -5) is false.            
+  (< 3 3) is false.             (<= 3 3) is true.              
+  (< 0 3 4 6 7) is true.        (<= 0 3 4 6 7) is true.        
+  (< 0 3 4 4 6) is false.       (<= 0 3 4 4 6) is true.        
+  (> 4 3) is true.              (>= 4 3) is true.              
+  (> 4 3 2 1 0) is true.        (>= 4 3 2 1 0) is true.        
+  (> 4 3 3 2 0) is false.       (>= 4 3 3 2 0) is true.        
+  (> 4 3 1 2 0) is false.       (>= 4 3 1 2 0) is false.       
+  (= 3) is true.                (/= 3) is true.                
+  (< 3) is true.                (<= 3) is true.                
+  (= 3.0 #c(3.0 0.0)) is true.  (/= 3.0 #c(3.0 1.0)) is true.  
+  (= 3 3.0) is true.            (= 3.0s0 3.0d0) is true.       
+  (= 0.0 -0.0) is true.         (= 5/2 2.5) is true.           
+  (> 0.0 -0.0) is false.        (= 0 -0.0) is true.            
+  (<= 0 x 9) is true if x is between 0 and 9, inclusive
+  (< 0.0 x 1.0) is true if x is between 0.0 and 1.0, exclusive
+  (< -1 j (length v)) is true if j is a valid array index for a vector v
+
+         Figure 12-12: Uses of /=, =, <, >, <=, and >=        
+
+
+Exceptional Situations::
+........................
+
+Might signal type-error if some argument is not a real.  Might signal
+arithmetic-error if otherwise unable to fulfill its contract.
+
+Notes::
+.......
+
+= differs from eql in that (= 0.0 -0.0) is always true, because = compares
+the mathematical values of its operands, whereas eql compares the
+representational values, so to speak.
+
+
+File: gcl.info,  Node: max,  Next: minusp,  Prev: =,  Up: Numbers Dictionary
+
+max, min                                                         [Function]
+---------------------------------------------------------------------------
+
+`max'  &rest reals^+ =>  max-real
+
+`min'  &rest reals^+ =>  min-real
+
+Arguments and Values::
+......................
+
+real--a real.
+
+max-real, min-real--a real.
+
+Description::
+.............
+
+max returns the real that is greatest (closest to positive infinity).  min
+returns the real that is least (closest to negative infinity).
+
+For max, the implementation has the choice of returning the largest
+argument as is or applying the rules of floating-point contagion, taking
+all the arguments into consideration for contagion purposes.  Also, if one
+or more of the arguments are =, then any one of them may be chosen as the
+value to return.  For example, if the reals are a mixture of rationals and
+floats, and the largest argument is a rational, then the implementation is
+free to produce either that rational or its float approximation; if the
+largest argument is a float of a smaller format than the largest format of
+any float argument, then the implementation is free to return the argument
+in its given format or expanded to the larger format.  Similar remarks
+apply to min (replacing "largest argument" by "smallest argument").
+
+Examples::
+..........
+
+      (max 3) =>  3
+      (min 3) =>  3
+      (max 6 12) =>  12
+      (min 6 12) =>  6
+      (max -6 -12) =>  -6
+      (min -6 -12) =>  -12
+      (max 1 3 2 -7) =>  3
+      (min 1 3 2 -7) =>  -7
+      (max -2 3 0 7) =>  7
+      (min -2 3 0 7) =>  -2
+      (max 5.0 2) =>  5.0
+      (min 5.0 2)
+     =>  2
+     OR=> 2.0
+      (max 3.0 7 1)
+     =>  7
+     OR=> 7.0
+      (min 3.0 7 1)
+     =>  1
+     OR=> 1.0
+      (max 1.0s0 7.0d0) =>  7.0d0
+      (min 1.0s0 7.0d0)
+     =>  1.0s0
+     OR=> 1.0d0
+      (max 3 1 1.0s0 1.0d0)
+     =>  3
+     OR=> 3.0d0
+      (min 3 1 1.0s0 1.0d0)
+     =>  1
+     OR=> 1.0s0
+     OR=> 1.0d0
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if any number is not a real.
+
+
+File: gcl.info,  Node: minusp,  Next: zerop,  Prev: max,  Up: Numbers Dictionary
+
+minusp, plusp                                                    [Function]
+---------------------------------------------------------------------------
+
+`minusp'  real =>  generalized-boolean
+
+`plusp'  real =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+real--a real.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+minusp returns true if real is less than zero; otherwise, returns false.
+
+plusp returns true if real is greater than zero; otherwise, returns false.
+
+Regardless of whether an implementation provides distinct representations
+for positive and negative float zeros, (minusp -0.0) always returns false.
+
+Examples::
+..........
+
+      (minusp -1) =>  true
+      (plusp 0) =>  false
+      (plusp least-positive-single-float) =>  true
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if real is not a real.
+
+
+File: gcl.info,  Node: zerop,  Next: floor,  Prev: minusp,  Up: Numbers Dictionary
+
+zerop                                                            [Function]
+---------------------------------------------------------------------------
+
+`zerop'  number =>  generalized-boolean
+
+Pronunciation::
+...............
+
+pronounced 'z\=e (, )r\=o(, )p\=e
+
+Arguments and Values::
+......................
+
+number--a number.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if number is zero (integer, float, or complex); otherwise,
+returns false.
+
+Regardless of whether an implementation provides distinct representations
+for positive and negative floating-point zeros, (zerop -0.0) always
+returns true.
+
+Examples::
+..........
+
+      (zerop 0) =>  true
+      (zerop 1) =>  false
+      (zerop -0.0) =>  true
+      (zerop 0/100) =>  true
+      (zerop #c(0 0.0)) =>  true
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if number is not a number.
+
+Notes::
+.......
+
+      (zerop number) == (= number 0)
+
+
+File: gcl.info,  Node: floor,  Next: sin,  Prev: zerop,  Up: Numbers Dictionary
+
+floor, ffloor, ceiling, fceiling,
+---------------------------------
+
+truncate, ftruncate, round, fround
+----------------------------------
+
+                                                                [Function]
+
+`floor'  number &optional divisor =>  quotient, remainder
+
+`ffloor'  number &optional divisor =>  quotient, remainder
+
+`ceiling'  number &optional divisor =>  quotient, remainder
+
+`fceiling'  number &optional divisor =>  quotient, remainder
+
+`truncate'  number &optional divisor =>  quotient, remainder
+
+`ftruncate'  number &optional divisor =>  quotient, remainder
+
+`round'  number &optional divisor =>  quotient, remainder
+
+`fround'  number &optional divisor =>  quotient, remainder
+
+Arguments and Values::
+......................
+
+number--a real.
+
+divisor--a non-zero real.  The default is the integer 1.
+
+quotient--for floor, ceiling, truncate, and round: an integer; for ffloor,
+fceiling, ftruncate, and fround: a float.
+
+remainder--a real.
+
+Description::
+.............
+
+These functions divide number by divisor, returning a quotient and
+remainder, such that
+
+quotient\cdot divisor+remainder=number
+
+The quotient always represents a mathematical integer.  When more than one
+mathematical integer might be possible (i.e., when the remainder is not
+zero), the kind of rounding or truncation depends on the operator:
+
+floor, ffloor
+     floor and ffloor produce a quotient that has been truncated toward
+     negative infinity; that is, the quotient represents the largest
+     mathematical integer that is not larger than the mathematical
+     quotient.
+
+ceiling, fceiling
+     ceiling and fceiling produce a quotient that has been truncated
+     toward positive infinity; that is, the quotient represents the
+     smallest mathematical integer that is not smaller than the
+     mathematical result.
+
+truncate, ftruncate
+     truncate and ftruncate produce a quotient that has been truncated
+     towards zero; that is, the quotient represents the mathematical
+     integer of the same sign as the mathematical quotient, and that has
+     the greatest integral magnitude not greater than that of the
+     mathematical quotient.
+
+round, fround
+     round and fround produce a quotient that has been rounded to the
+     nearest mathematical integer; if the mathematical quotient is exactly
+     halfway between two integers, (that is, it has the form
+     integer+1\over2), then the quotient has been rounded to the even
+     (divisible by two) integer.
+
+All of these functions perform type conversion operations on numbers.
+
+The remainder is an integer  if both   x and y are integers, is a
+rational if both   x and y are rationals, and is a  float    if either x
+or  y is  a float.
+
+ffloor, fceiling, ftruncate, and fround handle arguments of different
+types in the following way: If  number  is     a float, and divisor is not
+a float of longer format, then the first result is a float of the same
+type as number.  Otherwise, the first result is of the type determined by
+contagion rules; see *Note Contagion in Numeric Operations::.
+
+Examples::
+..........
+
+      (floor 3/2) =>  1, 1/2
+      (ceiling 3 2) =>  2, -1
+      (ffloor 3 2) =>  1.0, 1
+      (ffloor -4.7) =>  -5.0, 0.3
+      (ffloor 3.5d0) =>  3.0d0, 0.5d0
+      (fceiling 3/2) =>  2.0, -1/2
+      (truncate 1) =>  1, 0
+      (truncate .5) =>  0, 0.5
+      (round .5) =>  0, 0.5
+      (ftruncate -7 2) =>  -3.0, -1
+      (fround -7 2) =>  -4.0, 1
+      (dolist (n '(2.6 2.5 2.4 0.7 0.3 -0.3 -0.7 -2.4 -2.5 -2.6))
+        (format t "~&~4,1@F ~2,' D ~2,' D ~2,' D ~2,' D"
+                n (floor n) (ceiling n) (truncate n) (round n)))
+      |>  +2.6  2  3  2  3
+      |>  +2.5  2  3  2  2
+      |>  +2.4  2  3  2  2
+      |>  +0.7  0  1  0  1
+      |>  +0.3  0  1  0  0
+      |>  -0.3 -1  0  0  0
+      |>  -0.7 -1  0  0 -1
+      |>  -2.4 -3 -2 -2 -2
+      |>  -2.5 -3 -2 -2 -2
+      |>  -2.6 -3 -2 -2 -3
+     =>  NIL
+
+Notes::
+.......
+
+When only number is given, the two results are exact; the mathematical sum
+of the two results is always equal to the mathematical value of number.
+
+(function number divisor) and (function (/ number divisor)) (where
+function is any of one of floor, ceiling, ffloor, fceiling, truncate,
+round, ftruncate, and fround) return the same first value, but they return
+different remainders as the second value. For example:
+
+      (floor 5 2) =>  2, 1
+      (floor (/ 5 2)) =>  2, 1/2
+
+If an effect is desired that is similar to round, but that always rounds
+up or down (rather than toward the nearest even integer) if the
+mathematical quotient is exactly halfway between two integers, the
+programmer should consider a construction such as (floor (+ x 1/2)) or
+(ceiling (- x 1/2)).
+
+
+File: gcl.info,  Node: sin,  Next: asin,  Prev: floor,  Up: Numbers Dictionary
+
+sin, cos, tan                                                    [Function]
+---------------------------------------------------------------------------
+
+`sin'  radians =>  number
+
+`cos'  radians =>  number
+
+`tan'  radians =>  number
+
+Arguments and Values::
+......................
+
+radians--a number given in radians.
+
+number--a number.
+
+Description::
+.............
+
+sin, cos, and tan return the sine, cosine, and tangent, respectively, of
+radians.
+
+Examples::
+..........
+
+      (sin 0) =>  0.0
+      (cos 0.7853982) =>  0.707107
+      (tan #c(0 1)) =>  #C(0.0 0.761594)
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if radians is not a number.
+Might signal arithmetic-error.
+
+See Also::
+..........
+
+*Note asin; acos; atan:: , acos, atan, *Note Rule of Float
+Substitutability::
+
+
+File: gcl.info,  Node: asin,  Next: pi,  Prev: sin,  Up: Numbers Dictionary
+
+asin, acos, atan                                                 [Function]
+---------------------------------------------------------------------------
+
+`asin'  number =>  radians
+
+`acos'  number =>  radians
+
+`atan'  number1 &optional number2 =>  radians
+
+Arguments and Values::
+......................
+
+number--a number.
+
+number1--a number if number2 is not supplied, or a real   if number2 is
+supplied.
+
+number2--a real.
+
+radians--a number (of radians).
+
+Description::
+.............
+
+asin, acos, and atan compute the arc sine, arc cosine, and arc tangent
+respectively.
+
+The arc sine, arc cosine, and arc tangent (with only number1 supplied)
+functions can be defined mathematically for number or number1 specified as
+x as in Figure 12-13.
+
+  Function     Definition                            
+  Arc sine      -i log  (ix+ \sqrt1-x^2 )          
+  Arc cosine    (\pi/2) - arcsin  x                  
+  Arc tangent   -i log  ((1+ix) \sqrt1/(1+x^2) )   
+
+  Figure 12-13: Mathematical definition of arc sine, arc cosine, and arc tangent
+
+
+These formulae are mathematically correct, assuming completely accurate
+computation. They are not necessarily the simplest ones for real-valued
+computations.
+
+If both number1 and number2 are supplied for atan, the result is the arc
+tangent of number1/number2.  The value of atan is always between -\pi
+(exclusive) and~\pi (inclusive)
+
+when minus zero is not supported.  The range of the two-argument arc
+tangent when minus zero is supported includes -\pi.
+
+For a
+
+real
+
+number1, the result is
+
+a real
+
+and lies between -\pi/2 and~\pi/2 (both exclusive).  number1 can be a
+complex if number2 is not supplied. If both are supplied, number2 can be
+zero provided number1 is not zero.
+
+[Reviewer Note by Barmar: Should add "However, if the implementation
+distinguishes positive and negative zero, both may be signed zeros, and
+limits are used to define the result."]
+
+The following definition for arc sine determines the range and branch cuts:
+
+                 arcsin  z = -i log  (iz+\sqrt1-z^2\Bigr)
+
+The branch cut for the arc sine function is in two pieces: one along the
+negative real axis to the left of~-1 (inclusive), continuous with quadrant
+II, and one along the positive real axis to the right of~1 (inclusive),
+continuous with quadrant IV.  The range is that strip of the complex plane
+containing numbers whose real part is between -\pi/2 and~\pi/2.  A number
+with real part equal to -\pi/2 is in the range if and only if its imaginary
+part is non-negative; a number with real part equal to \pi/2 is in the
+range if and only if its imaginary part is non-positive.
+
+The following definition for arc cosine determines the range and branch
+cuts:
+
+                     arccos  z = \pi\over2- arcsin  z
+
+or, which are equivalent,
+
+                arccos  z = -i log  (z+i \sqrt1-z^2\Bigr)
+
+         arccos  z = 2 log  (\sqrt(1+z)/2 + i \sqrt(1-z)/2)\overi
+
+The branch cut for the arc cosine function is in two pieces: one along the
+negative real axis to the left of~-1 (inclusive), continuous with quadrant
+II, and one along the positive real axis to the right of~1 (inclusive),
+continuous with quadrant IV.  This is the same branch cut as for arc sine.
+The range is that strip of the complex plane containing numbers whose real
+part is between 0 and~\pi.  A number with real part equal to 0 is in the
+range if and only if its imaginary part is non-negative; a number with
+real part equal to \pi is in the range if and only if its imaginary part
+is non-positive.
+
+The following definition for (one-argument) arc tangent determines the
+range and branch cuts:
+
+               arctan  z = log  (1+iz) - log  (1-iz)\over2i
+
+Beware of simplifying this formula; "obvious" simplifications are likely
+to alter the branch cuts or the values on the branch cuts incorrectly.
+The branch cut for the arc tangent function is in two pieces: one along
+the positive imaginary axis above i (exclusive), continuous with quadrant
+II, and one along the negative imaginary axis below -i (exclusive),
+continuous with quadrant IV.  The points i and~-i are excluded from the
+domain.  The range is that strip of the complex plane containing numbers
+whose real part is between -\pi/2 and~\pi/2.  A number with real part
+equal to -\pi/2 is in the range if and only if its imaginary part is
+strictly positive; a number with real part equal to \pi/2 is in the range
+if and only if its imaginary part is strictly negative.  Thus the range of
+arc tangent is identical to that of arc sine with the points -\pi/2
+and~\pi/2 excluded.
+
+For atan, the signs of number1 (indicated as x) and number2 (indicated as
+y) are used to derive quadrant information. Figure 12-14 details various
+special cases.
+
+The asterisk (*) indicates that the entry in the figure applies to
+implementations that support minus zero.
+
+   to 1pcy Condition  x Condition  Cartesian locus  Range of result          
+   to 1pc y = 0        x > 0       Positive x-axis   0                       
+   to 1pc* y = +0      x > 0       Positive x-axis  +0                       
+   to 1pc* y = -0      x > 0       Positive x-axis  -0                       
+   to 1pc y > 0        x > 0       Quadrant I       0 < result < \pi/2      
+   to 1pc y > 0        x = 0       Positive y-axis  \pi/2                    
+   to 1pc y > 0        x < 0       Quadrant II      \pi/2 < result < \pi    
+   to 1pc y = 0        x < 0       Negative x-axis   \pi                     
+   to 1pc* y = +0      x < 0       Negative x-axis  +\pi                     
+   to 1pc* y = -0      x < 0       Negative x-axis  -\pi                     
+   to 1pc y < 0        x < 0       Quadrant III     -\pi < result < -\pi/2  
+   to 1pc y < 0        x = 0       Negative y-axis  -\pi/2                   
+   to 1pc y < 0        x > 0       Quadrant IV      -\pi/2 < result < 0     
+   to 1pc y = 0        x = 0       Origin           undefined consequences   
+   to 1pc* y = +0      x = +0      Origin           +0                       
+   to 1pc* y = -0      x = +0      Origin           -0                       
+   to 1pc* y = +0      x = -0      Origin           +\pi                     
+   to 1pc* y = -0      x = -0      Origin           -\pi                     
+
+               Figure 12-14: Quadrant information for arc tangent             
+
+
+Examples::
+..........
+
+      (asin 0) =>  0.0
+      (acos #c(0 1))  =>  #C(1.5707963267948966 -0.8813735870195432)
+      (/ (atan 1 (sqrt 3)) 6)  =>  0.087266
+      (atan #c(0 2)) =>  #C(-1.5707964 0.54930615)
+
+Exceptional Situations::
+........................
+
+acos and asin should signal an error of type type-error if number is not a
+number.  atan should signal type-error if one argument is supplied and
+that argument is not a number, or if two arguments are supplied and both
+of those arguments are not reals.
+
+acos, asin, and atan might signal arithmetic-error.
+
+See Also::
+..........
+
+*Note log:: , *Note sqrt; isqrt:: , *Note Rule of Float Substitutability::
+
+Notes::
+.......
+
+The result of either asin or acos can be a complex even if number is not a
+complex; this occurs when the absolute value of number is greater than one.
+
+
+File: gcl.info,  Node: pi,  Next: sinh,  Prev: asin,  Up: Numbers Dictionary
+
+pi                                                      [Constant Variable]
+---------------------------------------------------------------------------
+
+Value::
+.......
+
+an implementation-dependent long float.
+
+Description::
+.............
+
+The best long float approximation to the mathematical constant \pi.
+
+Examples::
+..........
+
+      ;; In each of the following computations, the precision depends
+      ;; on the implementation.  Also, if `long float' is treated by
+      ;; the implementation as equivalent to some other float format
+      ;; (e.g., `double float') the exponent marker might be the marker
+      ;; for that equivalent (e.g., `D' instead of `L').
+      pi =>  3.141592653589793L0
+      (cos pi) =>  -1.0L0
+     
+      (defun sin-of-degrees (degrees)
+        (let ((x (if (floatp degrees) degrees (float degrees pi))))
+          (sin (* x (/ (float pi x) 180)))))
+
+Notes::
+.......
+
+An approximation to \pi in some other precision can be obtained by writing
+(float pi x), where x is a float of the desired precision, or by writing
+(coerce pi type), where type is the desired type, such as short-float.
+
+
+File: gcl.info,  Node: sinh,  Next: *,  Prev: pi,  Up: Numbers Dictionary
+
+sinh, cosh, tanh, asinh, acosh, atanh                            [Function]
+---------------------------------------------------------------------------
+
+`sinh'  number =>  result
+
+`cosh'  number =>  result
+
+`tanh'  number =>  result
+
+`asinh'  number =>  result
+
+`acosh'  number =>  result
+
+`atanh'  number =>  result
+
+Arguments and Values::
+......................
+
+number--a number.
+
+result--a number.
+
+Description::
+.............
+
+These functions compute the hyperbolic sine, cosine, tangent, arc sine,
+arc cosine, and arc tangent functions, which are mathematically defined
+for an argument x as given in Figure 12-15.
+
+  Function                Definition                                  
+  Hyperbolic sine          (e^x-e^-x)/2                             
+  Hyperbolic cosine        (e^x+e^-x)/2                             
+  Hyperbolic tangent       (e^x-e^-x)/(e^x+e^-x)                  
+  Hyperbolic arc sine      log  (x+\sqrt1+x^2)                      
+  Hyperbolic arc cosine    2 log  (\sqrt(x+1)/2 + \sqrt(x-1)/2)   
+  Hyperbolic arc tangent   (log  (1+x) - log (1-x))/2                 
+
+    Figure 12-15: Mathematical definitions for hyperbolic functions  
+
+
+The following definition for the inverse hyperbolic cosine determines the
+range and branch cuts:
+
+         arccosh  z = 2 log  (\sqrt(z+1)/2 + \sqrt(z-1)/2\Bigr).
+
+The branch cut for the inverse hyperbolic cosine function lies along the
+real axis to the left of~1 (inclusive), extending indefinitely along the
+negative real axis, continuous with quadrant II and (between 0 and~1) with
+quadrant I.  The range is that half-strip of the complex plane containing
+numbers whose real part is non-negative and whose imaginary part is
+between -\pi (exclusive) and~\pi (inclusive).  A number with real part
+zero is in the range if its imaginary part is between zero (inclusive)
+and~\pi (inclusive).
+
+The following definition for the inverse hyperbolic sine determines the
+range and branch cuts:
+
+                  arcsinh  z = log  (z+\sqrt1+z^2\Bigr).
+
+The branch cut for the inverse hyperbolic sine function is in two pieces:
+one along the positive imaginary axis above i (inclusive), continuous with
+quadrant I, and one along the negative imaginary axis below -i
+(inclusive), continuous with quadrant III.  The range is that strip of the
+complex plane containing numbers whose imaginary part is between -\pi/2
+and~\pi/2.  A number with imaginary part equal to -\pi/2 is in the range
+if and only if its real part is non-positive; a number with imaginary part
+equal to \pi/2 is in the range if and only if its imaginary part is
+non-negative.
+
+The following definition for the inverse hyperbolic tangent determines the
+range and branch cuts:
+
+               arctanh  z = log  (1+z) - log  (1-z)\over2.
+
+Note that:
+
+                        i arctan  z = arctanh  iz.
+
+The branch cut for the inverse hyperbolic tangent function is in two
+pieces: one along the negative real axis to the left of -1 (inclusive),
+continuous with quadrant III, and one along the positive real axis to the
+right of~1 (inclusive), continuous with quadrant I.  The points -1 and~1
+are excluded from the domain.  The range is that strip of the complex
+plane containing numbers whose imaginary part is between -\pi/2 and \pi/2.
+A number with imaginary part equal to -\pi/2 is in the range if and only
+if its real part is strictly negative; a number with imaginary part equal
+to \pi/2 is in the range if and only if its imaginary part is strictly
+positive.  Thus the range of the inverse hyperbolic tangent function is
+identical to that of the inverse hyperbolic sine function with the points
+-\pi i/2 and~\pi i/2 excluded.
+
+Examples::
+..........
+
+      (sinh 0) =>  0.0
+      (cosh (complex 0 -1)) =>  #C(0.540302 -0.0)
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if number is not a number.
+Might signal arithmetic-error.
+
+See Also::
+..........
+
+*Note log:: , *Note sqrt; isqrt:: , *Note Rule of Float Substitutability::
+
+Notes::
+.......
+
+The result of acosh may be a complex even if number is not a complex; this
+occurs when number is less than one.  Also, the result of atanh may be a
+complex even if number is not a complex; this occurs when the absolute
+value of number is greater than one.
+
+The branch cut formulae are mathematically correct, assuming completely
+accurate computation.  Implementors should consult a good text on
+numerical analysis.  The formulae given above are not necessarily the
+simplest ones for real-valued computations; they are chosen to define the
+branch cuts in desirable ways for the complex case.
+
+
+File: gcl.info,  Node: *,  Next: +,  Prev: sinh,  Up: Numbers Dictionary
+
+*                                                                [Function]
+---------------------------------------------------------------------------
+
+`*'  &rest numbers =>  product
+
+Arguments and Values::
+......................
+
+number--a number.
+
+product--a number.
+
+Description::
+.............
+
+Returns the product of numbers, performing any necessary type conversions
+in the process.  If no numbers are supplied, 1 is returned.
+
+Examples::
+..........
+
+      (*) =>  1
+      (* 3 5) =>  15
+      (* 1.0 #c(22 33) 55/98) =>  #C(12.346938775510203 18.520408163265305)
+
+Exceptional Situations::
+........................
+
+Might signal type-error if some argument is not a number.  Might signal
+arithmetic-error.
+
+See Also::
+..........
+
+*Note Numeric Operations::, *Note Rational Computations::, *Note
+Floating-point Computations::, *Note Complex Computations::
+
+
+File: gcl.info,  Node: +,  Next: -,  Prev: *,  Up: Numbers Dictionary
+
++                                                                [Function]
+---------------------------------------------------------------------------
+
+`+'  &rest numbers =>  sum
+
+Arguments and Values::
+......................
+
+number--a number.
+
+sum--a number.
+
+Description::
+.............
+
+Returns the sum of numbers, performing any necessary type conversions in
+the process.  If no numbers are supplied, 0 is returned.
+
+Examples::
+..........
+
+      (+) =>  0
+      (+ 1) =>  1
+      (+ 31/100 69/100) =>  1
+      (+ 1/5 0.8) =>  1.0
+
+Exceptional Situations::
+........................
+
+Might signal type-error if some argument is not a number.  Might signal
+arithmetic-error.
+
+See Also::
+..........
+
+*Note Numeric Operations::, *Note Rational Computations::, *Note
+Floating-point Computations::, *Note Complex Computations::
+
+
+File: gcl.info,  Node: -,  Next: /,  Prev: +,  Up: Numbers Dictionary
+
+-                                                              [Function]
+-------------------------------------------------------------------------
+
+`-'  number =>  negation
+
+`-'  minuend &rest subtrahends^+ =>  difference
+
+Arguments and Values::
+......................
+
+number, minuend, subtrahend--a number.
+
+negation, difference--a number.
+
+Description::
+.............
+
+The function - performs arithmetic subtraction and negation.
+
+If only one number is supplied, the negation of that number is returned.
+
+If more than one argument is given, it subtracts all of the subtrahends
+from the minuend and returns the result.
+
+The function - performs necessary type conversions.
+
+Examples::
+..........
+
+      (- 55.55) =>  -55.55
+      (- #c(3 -5)) =>  #C(-3 5)
+      (- 0) =>  0
+      (eql (- 0.0) -0.0) =>  true
+      (- #c(100 45) #c(0 45)) =>  100
+      (- 10 1 2 3 4) =>  0
+
+Exceptional Situations::
+........................
+
+Might signal type-error if some argument is not a number.  Might signal
+arithmetic-error.
+
+See Also::
+..........
+
+*Note Numeric Operations::, *Note Rational Computations::, *Note
+Floating-point Computations::, *Note Complex Computations::
+
+
+File: gcl.info,  Node: /,  Next: 1+,  Prev: -,  Up: Numbers Dictionary
+
+/                                                                [Function]
+---------------------------------------------------------------------------
+
+`/'  number =>  reciprocal
+
+`/'  numerator &rest denominators^+ =>  quotient
+
+Arguments and Values::
+......................
+
+number, denominator--a non-zero number.
+
+numerator, quotient, reciprocal--a number.
+
+Description::
+.............
+
+The function / performs division or reciprocation.
+
+If no denominators are supplied, the function / returns the reciprocal of
+number.
+
+If at least one denominator is supplied, the function / divides the
+numerator by all of the denominators and returns the resulting quotient.
+
+If each argument is either an integer or a ratio, and the result is not an
+integer, then it is a ratio.
+
+The function / performs necessary type conversions.
+
+If any argument is a float then the rules of floating-point contagion
+apply; see *Note Floating-point Computations::.
+
+Examples::
+..........
+
+      (/ 12 4) =>  3
+      (/ 13 4) =>  13/4
+      (/ -8) =>  -1/8
+      (/ 3 4 5) =>  3/20
+      (/ 0.5) =>  2.0
+      (/ 20 5) =>  4
+      (/ 5 20) =>  1/4
+      (/ 60 -2 3 5.0) =>  -2.0
+      (/ 2 #c(2 2)) =>  #C(1/2 -1/2)
+
+Exceptional Situations::
+........................
+
+The consequences are unspecified if any argument other than the first is
+zero.  If there is only one argument, the consequences are unspecified if
+it is zero.
+
+Might signal type-error if some argument is not a number.  Might signal
+division-by-zero if division by zero is attempted.  Might signal
+arithmetic-error.
+
+See Also::
+..........
+
+*Note floor; ffloor; ceiling; fceiling; truncate; ftruncate; round;
+fround:: , ceiling, truncate, round
+
+
+File: gcl.info,  Node: 1+,  Next: abs,  Prev: /,  Up: Numbers Dictionary
+
+1+, 1-                                                         [Function]
+-------------------------------------------------------------------------
+
+`1'  + =>  number successor `1'  - =>  number predecessor
+
+Arguments and Values::
+......................
+
+number--a number.
+
+successor, predecessor--a number.
+
+Description::
+.............
+
+1+ returns a number that is one more than its argument number.  1- returns
+a number that is one less than its argument number.
+
+Examples::
+..........
+
+      (1+ 99) =>  100
+      (1- 100) =>  99
+      (1+ (complex 0.0)) =>  #C(1.0 0.0)
+      (1- 5/3) =>  2/3
+
+Exceptional Situations::
+........................
+
+Might signal type-error if its argument is not a number.  Might signal
+arithmetic-error.
+
+See Also::
+..........
+
+*Note incf; decf:: , decf
+
+Notes::
+.......
+
+      (1+ number) == (+ number 1)
+      (1- number) == (- number 1)
+
+Implementors are encouraged to make the performance of both the previous
+expressions be the same.
+
+
+File: gcl.info,  Node: abs,  Next: evenp,  Prev: 1+,  Up: Numbers Dictionary
+
+abs                                                              [Function]
+---------------------------------------------------------------------------
+
+`abs'  number =>  absolute-value
+
+Arguments and Values::
+......................
+
+number--a number.
+
+absolute-value--a non-negative real.
+
+Description::
+.............
+
+abs returns the absolute value of number.
+
+If number is
+
+a real,
+
+the result is  of the same type as number.
+
+If number is a complex, the result is a positive
+
+real
+
+with the same magnitude as number.  The result can be a float
+
+[Reviewer Note by Barmar: Single-float.] even if number's components are
+rationals and an exact rational result would have been possible.  Thus the
+result of (abs #c(3 4)) can be either 5 or 5.0, depending on the
+implementation.
+
+Examples::
+..........
+
+      (abs 0) =>  0
+      (abs 12/13) =>  12/13
+      (abs -1.09) =>  1.09
+      (abs #c(5.0 -5.0)) =>  7.071068
+      (abs #c(5 5)) =>  7.071068
+      (abs #c(3/5 4/5)) =>  1 or approximately 1.0
+      (eql (abs -0.0) -0.0) =>  true
+
+See Also::
+..........
+
+*Note Rule of Float Substitutability::
+
+Notes::
+.......
+
+If number is a complex, the result is equivalent to the following:
+
+(sqrt (+ (expt (realpart number) 2)  (expt (imagpart number) 2)))
+
+An implementation should not use this formula directly for all complexes
+but should handle very large or very small components specially to avoid
+intermediate overflow or underflow.
+
+
+File: gcl.info,  Node: evenp,  Next: exp,  Prev: abs,  Up: Numbers Dictionary
+
+evenp, oddp                                                      [Function]
+---------------------------------------------------------------------------
+
+`evenp'  integer =>  generalized-boolean
+
+`oddp'  integer =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+integer--an integer.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+evenp returns true if integer is even (divisible by two); otherwise,
+returns false.
+
+oddp returns true if integer is odd (not divisible by two); otherwise,
+returns false.
+
+Examples::
+..........
+
+      (evenp 0) =>  true
+      (oddp 10000000000000000000000) =>  false
+      (oddp -1) =>  true
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if integer is not an integer.
+
+Notes::
+.......
+
+      (evenp integer) == (not (oddp integer))
+      (oddp integer)  == (not (evenp integer))
+

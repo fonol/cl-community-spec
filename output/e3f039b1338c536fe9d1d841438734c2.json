@@ -1,0 +1,57 @@
+{
+    "name": "package-shadowing-symbols",
+    "prev": "package-nicknames",
+    "next": "package-use-list",
+    "up": "Packages Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "package-shadowing-symbols"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "package-shadowing-symbols",
+                    "text": " package =>  symbols\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "package",
+                    "desc": "a package designator."
+                },
+                {
+                    "name": "symbols",
+                    "desc": "a list of symbols."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns a list of symbols that have been declared as shadowing symbols in\npackage by shadow or shadowing-import (or the equivalent defpackage\noptions).  All symbols on this list are present in package.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (package-shadowing-symbols (make-package 'temp)) =>  ()\n      (shadow 'cdr 'temp) =>  T\n      (package-shadowing-symbols 'temp) =>  (TEMP::CDR)\n      (intern \"PILL\" 'temp) =>  TEMP::PILL, NIL\n      (shadowing-import 'pill 'temp) =>  T\n      (package-shadowing-symbols 'temp) =>  (PILL TEMP::CDR)\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should signal an error of type type-error if package is not a package\ndesignator.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note shadow:: , *Note shadowing-import::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Whether the list of symbols is fresh is implementation-dependent.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: package-shadowing-symbols,  Next: package-use-list,  Prev: package-nicknames,  Up: Packages Dictionary\n\npackage-shadowing-symbols                                        [Function]\n---------------------------------------------------------------------------\n\n`package-shadowing-symbols'  package =>  symbols\n\nArguments and Values::\n......................\n\npackage--a package designator.\n\nsymbols--a list of symbols.\n\nDescription::\n.............\n\nReturns a list of symbols that have been declared as shadowing symbols in\npackage by shadow or shadowing-import (or the equivalent defpackage\noptions).  All symbols on this list are present in package.\n\nExamples::\n..........\n\n      (package-shadowing-symbols (make-package 'temp)) =>  ()\n      (shadow 'cdr 'temp) =>  T\n      (package-shadowing-symbols 'temp) =>  (TEMP::CDR)\n      (intern \"PILL\" 'temp) =>  TEMP::PILL, NIL\n      (shadowing-import 'pill 'temp) =>  T\n      (package-shadowing-symbols 'temp) =>  (PILL TEMP::CDR)\n\nExceptional Situations::\n........................\n\nShould signal an error of type type-error if package is not a package\ndesignator.\n\nSee Also::\n..........\n\n*Note shadow:: , *Note shadowing-import::\n\nNotes::\n.......\n\nWhether the list of symbols is fresh is implementation-dependent.\n\n"
+}

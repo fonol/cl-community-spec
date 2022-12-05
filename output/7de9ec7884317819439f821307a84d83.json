@@ -1,0 +1,21 @@
+{
+    "name": "Compiler Macros",
+    "prev": "Compilation Semantics",
+    "next": "Purpose of Compiler Macros",
+    "up": "Compilation Semantics",
+    "header": {
+        "type": null,
+        "text": null
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Compiler Macros",
+            "text": "A compiler macro can be defined for a name that also names a function or\nmacro.  That is, it is possible for a function name to name both a\nfunction and a compiler macro.\nA function name names a compiler macro if compiler-macro-function is true\nof the function name in the lexical environment in which it appears.\nCreating a lexical binding for the function name not only creates a new\nlocal function or macro definition, but also shadows_2 the compiler macro.\nThe function returned by compiler-macro-function is a function of two\narguments, called the expansion function.  To expand a compiler macro, the\nexpansion function is invoked by calling the macroexpand hook with the\nexpansion function as its first argument, the entire compiler macro form\nas its second argument, and the current compilation environment (or with\nthe current lexical environment, if the form is being processed by\nsomething other than compile-file) as its third argument.  The macroexpand\nhook, in turn, calls the expansion function with the form as its first\nargument and the environment as its second argument.  The return value\nfrom the expansion function, which is passed through by the macroexpand\nhook, might either be the same form, or else a form that can, at the\ndiscretion of the code doing the expansion, be used in place of the\noriginal form.\n  *macroexpand-hook*  compiler-macro-function  define-compiler-macro  \n        Figure 3-6: Defined names applicable to compiler macros      \n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: Compiler Macros,  Next: Purpose of Compiler Macros,  Prev: Compilation Semantics,  Up: Compilation Semantics\n\nCompiler Macros\n...............\n\nA compiler macro can be defined for a name that also names a function or\nmacro.  That is, it is possible for a function name to name both a\nfunction and a compiler macro.\n\nA function name names a compiler macro if compiler-macro-function is true\nof the function name in the lexical environment in which it appears.\nCreating a lexical binding for the function name not only creates a new\nlocal function or macro definition, but also shadows_2 the compiler macro.\n\nThe function returned by compiler-macro-function is a function of two\narguments, called the expansion function.  To expand a compiler macro, the\nexpansion function is invoked by calling the macroexpand hook with the\nexpansion function as its first argument, the entire compiler macro form\nas its second argument, and the current compilation environment (or with\nthe current lexical environment, if the form is being processed by\nsomething other than compile-file) as its third argument.  The macroexpand\nhook, in turn, calls the expansion function with the form as its first\nargument and the environment as its second argument.  The return value\nfrom the expansion function, which is passed through by the macroexpand\nhook, might either be the same form, or else a form that can, at the\ndiscretion of the code doing the expansion, be used in place of the\noriginal form.\n\n  *macroexpand-hook*  compiler-macro-function  define-compiler-macro  \n\n        Figure 3-6: Defined names applicable to compiler macros      \n\n\n"
+}

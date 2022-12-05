@@ -1,0 +1,73 @@
+{
+    "name": "read",
+    "prev": "make-dispatch-macro-character",
+    "next": "read-delimited-list",
+    "up": "Reader Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "read, read-preserving-whitespace"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "read",
+                    "text": " &optional input-stream eof-error-p eof-value recursive-p =>  object\n"
+                },
+                {
+                    "name": "read-preserving-whitespace",
+                    "text": " &optional input-stream eof-error-p eof-value\nrecursive-p\n=>  object\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "input-stream",
+                    "desc": "an input stream designator."
+                },
+                {
+                    "name": "eof-error-p",
+                    "desc": "a generalized boolean.  The default is true."
+                },
+                {
+                    "name": "eof-value",
+                    "desc": "an object.The default is nil.\n"
+                },
+                {
+                    "name": "recursive-p",
+                    "desc": "a generalized boolean.  The default is false."
+                },
+                {
+                    "name": "object",
+                    "desc": "an object (parsed by the Lisp reader) or the eof-value."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "read parses the printed representation of an object from input-stream and\nbuilds such an object.\nread-preserving-whitespace is like read but preserves any whitespace_2\ncharacter that delimits the printed representation of the object.\nread-preserving-whitespace is exactly like read when the recursive-p\nargument to read-preserving-whitespace is true.\nWhen *read-suppress* is false, read throws away the delimiting character\nrequired by certain printed representations if it is a whitespace_2\ncharacter; but read preserves the character (using unread-char) if it is\nsyntactically meaningful, because it could be the start of the next\nexpression.\nIf a file ends in a symbol or a number immediately followed by an end of\nfile_1, read reads the symbol or number successfully; when called again,\nit sees the end of file_1 and only then acts according to eof-error-p.  If\na file contains ignorable text at the end, such as blank lines and\ncomments, read does not consider it to end in the middle of an object.\nIf recursive-p is true, the call to read is expected to be made from\nwithin some function that itself has been called from read or from a\nsimilar input function, rather than from the top level.\nBoth functions return the object read from input-stream.  Eof-value is\nreturned if eof-error-p is false and end of file is reached before the\nbeginning of an object.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (read)\n      |>  |>>'a<<|\n     =>  (QUOTE A)\n      (with-input-from-string (is \" \") (read is nil 'the-end)) =>  THE-END\n      (defun skip-then-read-char (s c n)\n         (if (char= c #\\{) (read s t nil t) (read-preserving-whitespace s))\n         (read-char-no-hang s)) =>  SKIP-THEN-READ-CHAR\n      (let ((*readtable* (copy-readtable nil)))\n         (set-dispatch-macro-character #\\# #\\{ #'skip-then-read-char)\n         (set-dispatch-macro-character #\\# #\\} #'skip-then-read-char)\n         (with-input-from-string (is \"#{123 x #}123 y\")\n           (format t \"~S ~S\" (read is) (read is)))) =>  #\\x, #\\Space, NIL\nAs an example, consider this reader macro definition:\n      (defun slash-reader (stream char)\n        (declare (ignore char))\n        `(path . ,(loop for dir = (read-preserving-whitespace stream t nil t)\n                        then (progn (read-char stream t nil t)\n                                    (read-preserving-whitespace stream t nil t))\n                        collect dir\n                        while (eql (peek-char nil stream nil nil t) #\\/))))\n      (set-macro-character #\\/ #'slash-reader)\nConsider now calling read on this expression:\n      (zyedh /usr/games/zork /usr/games/boggle)\nThe / macro reads objects separated by more / characters; thus\n/usr/games/zork is intended to read as (path usr games zork).  The entire\nexample expression should therefore be read as\n      (zyedh (path usr games zork) (path usr games boggle))\nHowever, if read had been used instead of read-preserving-whitespace, then\nafter the reading of the symbol zork, the following space would be\ndiscarded; the next call to peek-char would see the following /, and the\nloop would continue, producing this interpretation:\n      (zyedh (path usr games zork usr games boggle))\nThere are times when whitespace_2 should be discarded.  If a command\ninterpreter takes single-character commands, but occasionally reads an\nobject then if the whitespace_2 after a symbol is not discarded it might\nbe interpreted as a command some time later after the symbol had been read.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "*standard-input*, *terminal-io*, *readtable*, *read-default-float-format*,\n*read-base*, *read-suppress*, *package*, *read-eval*.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "read signals an error of type end-of-file, regardless of eof-error-p, if\nthe file ends in the middle of an object representation.  For example, if\na file does not contain enough right parentheses to balance the left\nparentheses in it, read signals an error.  This is detected when read or\nread-preserving-whitespace is called with recursive-p and eof-error-p\nnon-nil, and end-of-file is reached before the beginning of an object.\nIf eof-error-p is true, an error of type end-of-file is signaled at the\nend of file.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note peek-char:: , *Note read-char:: , *Note unread-char:: , *Note\nread-from-string:: , *Note read-delimited-list:: , *Note parse-integer:: ,\n*Note Syntax::, *Note Reader Concepts::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: read,  Next: read-delimited-list,  Prev: make-dispatch-macro-character,  Up: Reader Dictionary\n\nread, read-preserving-whitespace                                 [Function]\n---------------------------------------------------------------------------\n\n`read'  &optional input-stream eof-error-p eof-value recursive-p =>  object\n\n`read-preserving-whitespace'  &optional input-stream eof-error-p eof-value\nrecursive-p\n=>  object\n\nArguments and Values::\n......................\n\ninput-stream--an input stream designator.\n\neof-error-p--a generalized boolean.  The default is true.\n\neof-value--an object.\n\nThe default is nil.\n\nrecursive-p--a generalized boolean.  The default is false.\n\nobject--an object (parsed by the Lisp reader) or the eof-value.\n\nDescription::\n.............\n\nread parses the printed representation of an object from input-stream and\nbuilds such an object.\n\nread-preserving-whitespace is like read but preserves any whitespace_2\ncharacter that delimits the printed representation of the object.\nread-preserving-whitespace is exactly like read when the recursive-p\nargument to read-preserving-whitespace is true.\n\nWhen *read-suppress* is false, read throws away the delimiting character\nrequired by certain printed representations if it is a whitespace_2\ncharacter; but read preserves the character (using unread-char) if it is\nsyntactically meaningful, because it could be the start of the next\nexpression.\n\nIf a file ends in a symbol or a number immediately followed by an end of\nfile_1, read reads the symbol or number successfully; when called again,\nit sees the end of file_1 and only then acts according to eof-error-p.  If\na file contains ignorable text at the end, such as blank lines and\ncomments, read does not consider it to end in the middle of an object.\n\nIf recursive-p is true, the call to read is expected to be made from\nwithin some function that itself has been called from read or from a\nsimilar input function, rather than from the top level.\n\nBoth functions return the object read from input-stream.  Eof-value is\nreturned if eof-error-p is false and end of file is reached before the\nbeginning of an object.\n\nExamples::\n..........\n\n      (read)\n      |>  |>>'a<<|\n     =>  (QUOTE A)\n      (with-input-from-string (is \" \") (read is nil 'the-end)) =>  THE-END\n      (defun skip-then-read-char (s c n)\n         (if (char= c #\\{) (read s t nil t) (read-preserving-whitespace s))\n         (read-char-no-hang s)) =>  SKIP-THEN-READ-CHAR\n      (let ((*readtable* (copy-readtable nil)))\n         (set-dispatch-macro-character #\\# #\\{ #'skip-then-read-char)\n         (set-dispatch-macro-character #\\# #\\} #'skip-then-read-char)\n         (with-input-from-string (is \"#{123 x #}123 y\")\n           (format t \"~S ~S\" (read is) (read is)))) =>  #\\x, #\\Space, NIL\n\nAs an example, consider this reader macro definition:\n\n      (defun slash-reader (stream char)\n        (declare (ignore char))\n        `(path . ,(loop for dir = (read-preserving-whitespace stream t nil t)\n                        then (progn (read-char stream t nil t)\n                                    (read-preserving-whitespace stream t nil t))\n                        collect dir\n                        while (eql (peek-char nil stream nil nil t) #\\/))))\n      (set-macro-character #\\/ #'slash-reader)\n\nConsider now calling read on this expression:\n\n      (zyedh /usr/games/zork /usr/games/boggle)\n\nThe / macro reads objects separated by more / characters; thus\n/usr/games/zork is intended to read as (path usr games zork).  The entire\nexample expression should therefore be read as\n\n      (zyedh (path usr games zork) (path usr games boggle))\n\nHowever, if read had been used instead of read-preserving-whitespace, then\nafter the reading of the symbol zork, the following space would be\ndiscarded; the next call to peek-char would see the following /, and the\nloop would continue, producing this interpretation:\n\n      (zyedh (path usr games zork usr games boggle))\n\nThere are times when whitespace_2 should be discarded.  If a command\ninterpreter takes single-character commands, but occasionally reads an\nobject then if the whitespace_2 after a symbol is not discarded it might\nbe interpreted as a command some time later after the symbol had been read.\n\nAffected By::\n.............\n\n*standard-input*, *terminal-io*, *readtable*, *read-default-float-format*,\n*read-base*, *read-suppress*, *package*, *read-eval*.\n\nExceptional Situations::\n........................\n\nread signals an error of type end-of-file, regardless of eof-error-p, if\nthe file ends in the middle of an object representation.  For example, if\na file does not contain enough right parentheses to balance the left\nparentheses in it, read signals an error.  This is detected when read or\nread-preserving-whitespace is called with recursive-p and eof-error-p\nnon-nil, and end-of-file is reached before the beginning of an object.\n\nIf eof-error-p is true, an error of type end-of-file is signaled at the\nend of file.\n\nSee Also::\n..........\n\n*Note peek-char:: , *Note read-char:: , *Note unread-char:: , *Note\nread-from-string:: , *Note read-delimited-list:: , *Note parse-integer:: ,\n*Note Syntax::, *Note Reader Concepts::\n\n"
+}

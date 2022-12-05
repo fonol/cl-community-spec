@@ -1,0 +1,57 @@
+{
+    "name": "values",
+    "prev": "multiple-value-setq",
+    "next": "values-list",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Accessor",
+        "text": "values"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "values",
+                    "text": " &rest object =>  {object}*\n(setf (`         values' &rest place) new-values)\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "object",
+                    "desc": "an object."
+                },
+                {
+                    "name": "place",
+                    "desc": "a place."
+                },
+                {
+                    "name": "new-value",
+                    "desc": "an object."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "values returns the objects as multiple values_2.\nsetf of values is used to store the multiple values_2 new-values into the\nplaces.  See *Note VALUES Forms as Places::.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (values) =>  <no values>\n      (values 1) =>  1\n      (values 1 2) =>  1, 2\n      (values 1 2 3) =>  1, 2, 3\n      (values (values 1 2 3) 4 5) =>  1, 4, 5\n      (defun polar (x y)\n        (values (sqrt (+ (* x x) (* y y))) (atan y x))) =>  POLAR\n      (multiple-value-bind (r theta) (polar 3.0 4.0)\n        (vector r theta))\n     =>  #(5.0 0.927295)\nSometimes it is desirable to indicate explicitly that a function returns\nexactly one value.  For example, the function\n      (defun foo (x y)\n        (floor (+ x y) y)) =>  FOO\nreturns two values because floor returns two values.  It may be that the\nsecond value makes no sense, or that for efficiency reasons it is desired\nnot to compute the second value.  values is the standard idiom for\nindicating that only one value is to be returned:\n      (defun foo (x y)\n        (values (floor (+ x y) y))) =>  FOO\nThis works because values returns exactly one value for each of args; as\nfor any function call, if any of args produces more than one value, all\nbut the first are discarded.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note values-list:: , *Note multiple-value-bind:: , *Note\nmultiple-values-limit:: , *Note Evaluation::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Since values is a function, not a macro or special form, it receives as\narguments only the primary values of its argument forms.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: values,  Next: values-list,  Prev: multiple-value-setq,  Up: Data and Control Flow Dictionary\n\nvalues                                                           [Accessor]\n---------------------------------------------------------------------------\n\n`values'  &rest object =>  {object}*\n\n(setf (`         values' &rest place) new-values)\nArguments and Values::\n......................\n\nobject--an object.\n\nplace--a place.\n\nnew-value--an object.\n\nDescription::\n.............\n\nvalues returns the objects as multiple values_2.\n\nsetf of values is used to store the multiple values_2 new-values into the\nplaces.  See *Note VALUES Forms as Places::.\n\nExamples::\n..........\n\n      (values) =>  <no values>\n      (values 1) =>  1\n      (values 1 2) =>  1, 2\n      (values 1 2 3) =>  1, 2, 3\n      (values (values 1 2 3) 4 5) =>  1, 4, 5\n      (defun polar (x y)\n        (values (sqrt (+ (* x x) (* y y))) (atan y x))) =>  POLAR\n      (multiple-value-bind (r theta) (polar 3.0 4.0)\n        (vector r theta))\n     =>  #(5.0 0.927295)\n\nSometimes it is desirable to indicate explicitly that a function returns\nexactly one value.  For example, the function\n\n      (defun foo (x y)\n        (floor (+ x y) y)) =>  FOO\n\nreturns two values because floor returns two values.  It may be that the\nsecond value makes no sense, or that for efficiency reasons it is desired\nnot to compute the second value.  values is the standard idiom for\nindicating that only one value is to be returned:\n\n      (defun foo (x y)\n        (values (floor (+ x y) y))) =>  FOO\n\nThis works because values returns exactly one value for each of args; as\nfor any function call, if any of args produces more than one value, all\nbut the first are discarded.\n\nSee Also::\n..........\n\n*Note values-list:: , *Note multiple-value-bind:: , *Note\nmultiple-values-limit:: , *Note Evaluation::\n\nNotes::\n.......\n\nSince values is a function, not a macro or special form, it receives as\narguments only the primary values of its argument forms.\n\n"
+}

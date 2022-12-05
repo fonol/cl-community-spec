@@ -1,0 +1,57 @@
+{
+    "name": "equal",
+    "prev": "eql",
+    "next": "equalp",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "equal"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "equal",
+                    "text": " x y =>  generalized-boolean\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "x",
+                    "desc": "an object."
+                },
+                {
+                    "name": "y",
+                    "desc": "an object."
+                },
+                {
+                    "name": "generalized-boolean",
+                    "desc": "a generalized boolean."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns true if x and y are structurally similar (isomorphic) objects.\nObjects are treated as follows by equal.\nSymbols, Numbers, and Characters\n     equal is true of two objects if they are symbols that are eq, if they\n     are numbers that are eql, or if they are characters that are eql.\nConses\n     For conses, equal is defined recursively as the two cars being equal\n     and the two cdrs being equal.\nArrays\n     Two arrays are equal only if they are eq, with one exception: strings\n     and bit vectors are compared element-by-element (using eql).  If\n     either x or y has a fill pointer, the fill pointer limits the number\n     of elements examined by equal.  Uppercase and lowercase letters in\n     strings are considered by equal to be different.\nPathnames\n     Two pathnames are equal if and only if all the corresponding\n     components (host, device, and so on) are equivalent.  Whether or not\n     uppercase and lowercase letters are considered equivalent in strings\n     appearing in components is implementation-dependent.  pathnames that\n     are equal should be functionally equivalent.\nOther (Structures, hash-tables, instances, ...)\n     Two other objects are equal only if they are eq.\nequal does not descend any objects other than the ones explicitly\nspecified above.  Figure 5-12 summarizes the information given in the\nprevious list.  In addition, the figure specifies the priority of the\nbehavior of equal, with upper entries taking priority over lower ones.\n  Type          Behavior                   \n  number        uses eql                   \n  character     uses eql                   \n  cons          descends                   \n  bit vector    descends                   \n  string        descends                   \n  pathname      \"functionally equivalent\"  \n  structure     uses eq                    \n  Other array   uses eq                    \n  hash table    uses eq                    \n  Other object  uses eq                    \n  Figure 5-12: Summary and priorities of behavior of equal\nAny two objects that are eql are also equal.\nequal may fail to terminate if x or y is circular.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (equal 'a 'b) =>  false\n      (equal 'a 'a) =>  true\n      (equal 3 3) =>  true\n      (equal 3 3.0) =>  false\n      (equal 3.0 3.0) =>  true\n      (equal #c(3 -4) #c(3 -4)) =>  true\n      (equal #c(3 -4.0) #c(3 -4)) =>  false\n      (equal (cons 'a 'b) (cons 'a 'c)) =>  false\n      (equal (cons 'a 'b) (cons 'a 'b)) =>  true\n      (equal #\\A #\\A) =>  true\n      (equal #\\A #\\a) =>  false\n      (equal \"Foo\" \"Foo\") =>  true\n      (equal \"Foo\" (copy-seq \"Foo\")) =>  true\n      (equal \"FOO\" \"foo\") =>  false\n      (equal \"This-string\" \"This-string\") =>  true\n      (equal \"This-string\" \"this-string\") =>  false\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note eq:: , *Note eql:: , *Note equalp:: , *Note =; /=; <; >; <=; >=:: ,\n*Note string=; string/=; string<; string>; string<=; string>=;\nstring-equal; string-not-equal; string-lessp; string-greaterp;\nstring-not-greaterp; string-not-lessp:: , string-equal, *Note char=;\nchar/=; char<; char>; char<=; char>=; char-equal; char-not-equal;\nchar-lessp; char-greaterp; char-not-greaterp; char-not-lessp:: ,\nchar-equal, *Note tree-equal::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Object equality is not a concept for which there is a uniquely determined\ncorrect algorithm. The appropriateness of an equality predicate can be\njudged only in the context of the needs of some particular program.\nAlthough these functions take any type of argument and their names sound\nvery generic, equal and equalp are not appropriate for every application.\nA rough rule of thumb is that two objects are equal if and only if their\nprinted representations are the same.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: equal,  Next: equalp,  Prev: eql,  Up: Data and Control Flow Dictionary\n\nequal                                                            [Function]\n---------------------------------------------------------------------------\n\n`equal'  x y =>  generalized-boolean\n\nArguments and Values::\n......................\n\nx--an object.\n\ny--an object.\n\ngeneralized-boolean--a generalized boolean.\n\nDescription::\n.............\n\nReturns true if x and y are structurally similar (isomorphic) objects.\nObjects are treated as follows by equal.\n\nSymbols, Numbers, and Characters\n     equal is true of two objects if they are symbols that are eq, if they\n     are numbers that are eql, or if they are characters that are eql.\n\nConses\n     For conses, equal is defined recursively as the two cars being equal\n     and the two cdrs being equal.\n\nArrays\n     Two arrays are equal only if they are eq, with one exception: strings\n     and bit vectors are compared element-by-element (using eql).  If\n     either x or y has a fill pointer, the fill pointer limits the number\n     of elements examined by equal.  Uppercase and lowercase letters in\n     strings are considered by equal to be different.\n\nPathnames\n     Two pathnames are equal if and only if all the corresponding\n     components (host, device, and so on) are equivalent.  Whether or not\n     uppercase and lowercase letters are considered equivalent in strings\n     appearing in components is implementation-dependent.  pathnames that\n     are equal should be functionally equivalent.\n\nOther (Structures, hash-tables, instances, ...)\n     Two other objects are equal only if they are eq.\n\nequal does not descend any objects other than the ones explicitly\nspecified above.  Figure 5-12 summarizes the information given in the\nprevious list.  In addition, the figure specifies the priority of the\nbehavior of equal, with upper entries taking priority over lower ones.\n\n  Type          Behavior                   \n  number        uses eql                   \n  character     uses eql                   \n  cons          descends                   \n  bit vector    descends                   \n  string        descends                   \n  pathname      \"functionally equivalent\"  \n  structure     uses eq                    \n  Other array   uses eq                    \n  hash table    uses eq                    \n  Other object  uses eq                    \n\n  Figure 5-12: Summary and priorities of behavior of equal\n\n\nAny two objects that are eql are also equal.\n\nequal may fail to terminate if x or y is circular.\n\nExamples::\n..........\n\n      (equal 'a 'b) =>  false\n      (equal 'a 'a) =>  true\n      (equal 3 3) =>  true\n      (equal 3 3.0) =>  false\n      (equal 3.0 3.0) =>  true\n      (equal #c(3 -4) #c(3 -4)) =>  true\n      (equal #c(3 -4.0) #c(3 -4)) =>  false\n      (equal (cons 'a 'b) (cons 'a 'c)) =>  false\n      (equal (cons 'a 'b) (cons 'a 'b)) =>  true\n      (equal #\\A #\\A) =>  true\n      (equal #\\A #\\a) =>  false\n      (equal \"Foo\" \"Foo\") =>  true\n      (equal \"Foo\" (copy-seq \"Foo\")) =>  true\n      (equal \"FOO\" \"foo\") =>  false\n      (equal \"This-string\" \"This-string\") =>  true\n      (equal \"This-string\" \"this-string\") =>  false\n\nSee Also::\n..........\n\n*Note eq:: , *Note eql:: , *Note equalp:: , *Note =; /=; <; >; <=; >=:: ,\n*Note string=; string/=; string<; string>; string<=; string>=;\nstring-equal; string-not-equal; string-lessp; string-greaterp;\nstring-not-greaterp; string-not-lessp:: , string-equal, *Note char=;\nchar/=; char<; char>; char<=; char>=; char-equal; char-not-equal;\nchar-lessp; char-greaterp; char-not-greaterp; char-not-lessp:: ,\nchar-equal, *Note tree-equal::\n\nNotes::\n.......\n\nObject equality is not a concept for which there is a uniquely determined\ncorrect algorithm. The appropriateness of an equality predicate can be\njudged only in the context of the needs of some particular program.\nAlthough these functions take any type of argument and their names sound\nvery generic, equal and equalp are not appropriate for every application.\n\nA rough rule of thumb is that two objects are equal if and only if their\nprinted representations are the same.\n\n"
+}

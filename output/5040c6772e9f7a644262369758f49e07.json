@@ -1,0 +1,85 @@
+{
+    "name": "sublis",
+    "prev": "copy-tree",
+    "next": "subst",
+    "up": "Conses Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "sublis, nsublis"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "sublis",
+                    "text": " alist tree &key key test test-not =>  new-tree\n"
+                },
+                {
+                    "name": "nsublis",
+                    "text": " alist tree &key key test test-not =>  new-tree\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "alist",
+                    "desc": "an association list."
+                },
+                {
+                    "name": "tree",
+                    "desc": "a tree."
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "new-tree",
+                    "desc": "a tree."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "sublis makes substitutions for objects in tree (a structure of conses).\nnsublis is like sublis but destructively modifies the relevant parts of\nthe tree.\nsublis looks at all subtrees and leaves of tree; if a subtree or leaf\nappears as a key in alist (that is, the key and the subtree or leaf\nsatisfy the test), it is replaced by the object with which that key is\nassociated.  This operation is non-destructive.  In effect, sublis can\nperform several subst operations simultaneously.\nIf sublis succeeds, a new copy of tree is returned in which each\noccurrence of such a subtree or leaf is replaced by the object with which\nit is associated.   If no changes are made, the original tree is returned.\nThe original tree is left unchanged, but the result tree may share cells\nwith it.\nnsublis is permitted to modify tree but otherwise returns the same values\nas sublis.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (sublis '((x . 100) (z . zprime))\n              '(plus x (minus g z x p) 4 . x))\n     =>  (PLUS 100 (MINUS G ZPRIME 100 P) 4 . 100)\n      (sublis '(((+ x y) . (- x y)) ((- x y) . (+ x y)))\n              '(* (/ (+ x y) (+ x p)) (- x y))\n              :test #'equal)\n     =>  (* (/ (- X Y) (+ X P)) (+ X Y))\n      (setq tree1 '(1 (1 2) ((1 2 3)) (((1 2 3 4)))))\n     =>  (1 (1 2) ((1 2 3)) (((1 2 3 4))))\n      (sublis '((3 . \"three\")) tree1)\n     =>  (1 (1 2) ((1 2 \"three\")) (((1 2 \"three\" 4))))\n      (sublis '((t . \"string\"))\n               (sublis '((1 . \"\") (4 . 44)) tree1)\n               :key #'stringp)\n     =>  (\"string\" (\"string\" 2) ((\"string\" 2 3)) (((\"string\" 2 3 44))))\n      tree1 =>  (1 (1 2) ((1 2 3)) (((1 2 3 4))))\n      (setq tree2 '(\"one\" (\"one\" \"two\") ((\"one\" \"Two\" \"three\"))))\n     =>  (\"one\" (\"one\" \"two\") ((\"one\" \"Two\" \"three\")))\n      (sublis '((\"two\" . 2)) tree2)\n     =>  (\"one\" (\"one\" \"two\") ((\"one\" \"Two\" \"three\")))\n      tree2 =>  (\"one\" (\"one\" \"two\") ((\"one\" \"Two\" \"three\")))\n      (sublis '((\"two\" . 2)) tree2 :test 'equal)\n     =>  (\"one\" (\"one\" 2) ((\"one\" \"Two\" \"three\")))\n      (nsublis '((t . 'temp))\n                tree1\n                :key #'(lambda (x) (or (atom x) (< (list-length x) 3))))\n     =>  ((QUOTE TEMP) (QUOTE TEMP) QUOTE TEMP)\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "nsublis modifies tree.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note subst; subst-if; subst-if-not; nsubst; nsubst-if; nsubst-if-not:: ,\n*Note Compiler Terminology::,\n*Note Traversal Rules and Side Effects::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The :test-not parameter is deprecated.\nBecause the side-effecting variants (e.g., nsublis) potentially change the\npath that is being traversed, their effects in the presence of shared or\ncircular structure structure may vary in surprising ways when compared to\ntheir non-side-effecting alternatives.  To see this, consider the\nfollowing side-effect behavior, which might be exhibited by some\nimplementations:\n      (defun test-it (fn)\n        (let* ((shared-piece (list 'a 'b))\n               (data (list shared-piece shared-piece)))\n          (funcall fn '((a . b) (b . a)) data)))\n      (test-it #'sublis) =>  ((B A) (B A))\n      (test-it #'nsublis) =>  ((A B) (A B))\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: sublis,  Next: subst,  Prev: copy-tree,  Up: Conses Dictionary\n\nsublis, nsublis                                                  [Function]\n---------------------------------------------------------------------------\n\n`sublis'  alist tree &key key test test-not =>  new-tree\n\n`nsublis'  alist tree &key key test test-not =>  new-tree\n\nArguments and Values::\n......................\n\nalist--an association list.\n\ntree--a tree.\n\ntest--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\ntest-not--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nkey--a designator for a function of one argument, or nil.\n\nnew-tree--a tree.\n\nDescription::\n.............\n\nsublis makes substitutions for objects in tree (a structure of conses).\nnsublis is like sublis but destructively modifies the relevant parts of\nthe tree.\n\nsublis looks at all subtrees and leaves of tree; if a subtree or leaf\nappears as a key in alist (that is, the key and the subtree or leaf\nsatisfy the test), it is replaced by the object with which that key is\nassociated.  This operation is non-destructive.  In effect, sublis can\nperform several subst operations simultaneously.\n\nIf sublis succeeds, a new copy of tree is returned in which each\noccurrence of such a subtree or leaf is replaced by the object with which\nit is associated.   If no changes are made, the original tree is returned.\nThe original tree is left unchanged, but the result tree may share cells\nwith it.\n\nnsublis is permitted to modify tree but otherwise returns the same values\nas sublis.\n\nExamples::\n..........\n\n      (sublis '((x . 100) (z . zprime))\n              '(plus x (minus g z x p) 4 . x))\n     =>  (PLUS 100 (MINUS G ZPRIME 100 P) 4 . 100)\n      (sublis '(((+ x y) . (- x y)) ((- x y) . (+ x y)))\n              '(* (/ (+ x y) (+ x p)) (- x y))\n              :test #'equal)\n     =>  (* (/ (- X Y) (+ X P)) (+ X Y))\n      (setq tree1 '(1 (1 2) ((1 2 3)) (((1 2 3 4)))))\n     =>  (1 (1 2) ((1 2 3)) (((1 2 3 4))))\n      (sublis '((3 . \"three\")) tree1)\n     =>  (1 (1 2) ((1 2 \"three\")) (((1 2 \"three\" 4))))\n      (sublis '((t . \"string\"))\n               (sublis '((1 . \"\") (4 . 44)) tree1)\n               :key #'stringp)\n     =>  (\"string\" (\"string\" 2) ((\"string\" 2 3)) (((\"string\" 2 3 44))))\n      tree1 =>  (1 (1 2) ((1 2 3)) (((1 2 3 4))))\n      (setq tree2 '(\"one\" (\"one\" \"two\") ((\"one\" \"Two\" \"three\"))))\n     =>  (\"one\" (\"one\" \"two\") ((\"one\" \"Two\" \"three\")))\n      (sublis '((\"two\" . 2)) tree2)\n     =>  (\"one\" (\"one\" \"two\") ((\"one\" \"Two\" \"three\")))\n      tree2 =>  (\"one\" (\"one\" \"two\") ((\"one\" \"Two\" \"three\")))\n      (sublis '((\"two\" . 2)) tree2 :test 'equal)\n     =>  (\"one\" (\"one\" 2) ((\"one\" \"Two\" \"three\")))\n     \n      (nsublis '((t . 'temp))\n                tree1\n                :key #'(lambda (x) (or (atom x) (< (list-length x) 3))))\n     =>  ((QUOTE TEMP) (QUOTE TEMP) QUOTE TEMP)\n\nSide Effects::\n..............\n\nnsublis modifies tree.\n\nSee Also::\n..........\n\n*Note subst; subst-if; subst-if-not; nsubst; nsubst-if; nsubst-if-not:: ,\n\n*Note Compiler Terminology::,\n\n*Note Traversal Rules and Side Effects::\n\nNotes::\n.......\n\nThe :test-not parameter is deprecated.\n\nBecause the side-effecting variants (e.g., nsublis) potentially change the\npath that is being traversed, their effects in the presence of shared or\ncircular structure structure may vary in surprising ways when compared to\ntheir non-side-effecting alternatives.  To see this, consider the\nfollowing side-effect behavior, which might be exhibited by some\nimplementations:\n\n      (defun test-it (fn)\n        (let* ((shared-piece (list 'a 'b))\n               (data (list shared-piece shared-piece)))\n          (funcall fn '((a . b) (b . a)) data)))\n      (test-it #'sublis) =>  ((B A) (B A))\n      (test-it #'nsublis) =>  ((A B) (A B))\n\n"
+}

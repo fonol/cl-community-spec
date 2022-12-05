@@ -1,0 +1,61 @@
+{
+    "name": "pprint-newline",
+    "prev": "pprint-logical-block",
+    "next": "pprint-pop",
+    "up": "Printer Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "pprint-newline"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "pprint-newline",
+                    "text": " kind &optional stream =>  nil\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "kind",
+                    "desc": "one of :linear, :fill, :miser, or :mandatory."
+                },
+                {
+                    "name": "stream",
+                    "desc": "a stream designator.  The default is standard output."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "If stream is a pretty printing stream and the value of *print-pretty* is\ntrue, a line break is inserted in the output when the appropriate\ncondition below is satisfied; otherwise, pprint-newline has no effect.\nKind specifies the style of conditional newline.  This parameter is\ntreated as follows:\n:linear\n     This specifies a \"linear-style\" conditional newline.\n     A line break is inserted if and only if the immediately containing\n     section cannot be printed on one line.  The effect of this is that\n     line breaks are either inserted at every linear-style conditional\n     newline in a logical block or at none of them.\n:miser\n     This specifies a \"miser-style\" conditional newline.\n     A line break is inserted if and only if the immediately containing\n     section cannot be printed on one line and miser style is in effect in\n     the immediately containing logical block.  The effect of this is that\n     miser-style conditional newlines act like linear-style conditional\n     newlines, but only when miser style is in effect.  Miser style is in\n     effect for a logical block if and only if the starting position of\n     the logical block is less than or equal to *print-miser-width* ems\n     from the right margin.\n:fill\n     This specifies a \"fill-style\" conditional newline.\n     A line break is inserted if and only if either (a) the following\n     section cannot be printed on the end of the current line, (b) the\n     preceding section was not printed on a single line, or (c) the\n     immediately containing section cannot be printed on one line and\n     miser style is in effect in the immediately containing logical block.\n     If a logical block is broken up into a number of subsections by\n     fill-style conditional newlines, the basic effect is that the logical\n     block is printed with as many subsections as possible on each line.\n     However, if miser style is in effect, fill-style conditional newlines\n     act like linear-style conditional newlines.\n:mandatory\n     This specifies a \"mandatory-style\" conditional newline.\n     A line break is always inserted.  This implies that  none of the\n     containing sections can be printed on a single line and will\n     therefore trigger the insertion of line breaks at linear-style\n     conditional newlines in these sections.\nWhen a line break is inserted by any type of conditional newline, any\nblanks that immediately precede the conditional newline are omitted from\nthe output and indentation is introduced at the beginning of the next line.\nBy default, the indentation causes the following line to begin in the same\nhorizontal position as the first character in the immediately containing\nlogical block.  (The indentation can be changed via pprint-indent.)\nThere are a variety of ways unconditional newlines can be introduced into\nthe output (i.e., via terpri or by printing a string containing a newline\ncharacter).  As with mandatory conditional newlines, this prevents any of\nthe containing sections from being printed on one line.  In general, when\nan unconditional newline is encountered, it is printed out without\nsuppression of the preceding blanks and without any indentation following\nit.  However, if a per-line prefix has been specified (see\npprint-logical-block), this prefix will always be printed no matter how a\nnewline originates.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "See *Note Examples of using the Pretty Printer::.\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "Output to stream.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "*print-pretty*, *print-miser*.  The presence of containing logical blocks.\nThe placement of newlines and conditional newlines.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "An error of type type-error is signaled if kind is not one of :linear,\n:fill, :miser, or :mandatory.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note Tilde Underscore-> Conditional Newline::, *Note Examples of using\nthe Pretty Printer::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: pprint-newline,  Next: pprint-pop,  Prev: pprint-logical-block,  Up: Printer Dictionary\n\npprint-newline                                                   [Function]\n---------------------------------------------------------------------------\n\n`pprint-newline'  kind &optional stream =>  nil\n\nArguments and Values::\n......................\n\nkind--one of :linear, :fill, :miser, or :mandatory.\n\nstream--a stream designator.  The default is standard output.\n\nDescription::\n.............\n\nIf stream is a pretty printing stream and the value of *print-pretty* is\ntrue, a line break is inserted in the output when the appropriate\ncondition below is satisfied; otherwise, pprint-newline has no effect.\n\nKind specifies the style of conditional newline.  This parameter is\ntreated as follows:\n\n:linear\n     This specifies a \"linear-style\" conditional newline.\n\n     A line break is inserted if and only if the immediately containing\n     section cannot be printed on one line.  The effect of this is that\n     line breaks are either inserted at every linear-style conditional\n     newline in a logical block or at none of them.\n\n:miser\n     This specifies a \"miser-style\" conditional newline.\n\n     A line break is inserted if and only if the immediately containing\n     section cannot be printed on one line and miser style is in effect in\n     the immediately containing logical block.  The effect of this is that\n     miser-style conditional newlines act like linear-style conditional\n     newlines, but only when miser style is in effect.  Miser style is in\n     effect for a logical block if and only if the starting position of\n     the logical block is less than or equal to *print-miser-width* ems\n     from the right margin.\n\n:fill\n     This specifies a \"fill-style\" conditional newline.\n\n     A line break is inserted if and only if either (a) the following\n     section cannot be printed on the end of the current line, (b) the\n     preceding section was not printed on a single line, or (c) the\n     immediately containing section cannot be printed on one line and\n     miser style is in effect in the immediately containing logical block.\n     If a logical block is broken up into a number of subsections by\n     fill-style conditional newlines, the basic effect is that the logical\n     block is printed with as many subsections as possible on each line.\n     However, if miser style is in effect, fill-style conditional newlines\n     act like linear-style conditional newlines.\n\n:mandatory\n     This specifies a \"mandatory-style\" conditional newline.\n\n     A line break is always inserted.  This implies that  none of the\n     containing sections can be printed on a single line and will\n     therefore trigger the insertion of line breaks at linear-style\n     conditional newlines in these sections.\n\nWhen a line break is inserted by any type of conditional newline, any\nblanks that immediately precede the conditional newline are omitted from\nthe output and indentation is introduced at the beginning of the next line.\nBy default, the indentation causes the following line to begin in the same\nhorizontal position as the first character in the immediately containing\nlogical block.  (The indentation can be changed via pprint-indent.)\n\nThere are a variety of ways unconditional newlines can be introduced into\nthe output (i.e., via terpri or by printing a string containing a newline\ncharacter).  As with mandatory conditional newlines, this prevents any of\nthe containing sections from being printed on one line.  In general, when\nan unconditional newline is encountered, it is printed out without\nsuppression of the preceding blanks and without any indentation following\nit.  However, if a per-line prefix has been specified (see\npprint-logical-block), this prefix will always be printed no matter how a\nnewline originates.\n\nExamples::\n..........\n\nSee *Note Examples of using the Pretty Printer::.\n\nSide Effects::\n..............\n\nOutput to stream.\n\nAffected By::\n.............\n\n*print-pretty*, *print-miser*.  The presence of containing logical blocks.\nThe placement of newlines and conditional newlines.\n\nExceptional Situations::\n........................\n\nAn error of type type-error is signaled if kind is not one of :linear,\n:fill, :miser, or :mandatory.\n\nSee Also::\n..........\n\n*Note Tilde Underscore-> Conditional Newline::, *Note Examples of using\nthe Pretty Printer::\n\n"
+}

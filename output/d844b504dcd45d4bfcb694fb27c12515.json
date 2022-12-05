@@ -1,0 +1,57 @@
+{
+    "name": "concatenate",
+    "prev": "substitute",
+    "next": "merge",
+    "up": "Sequences Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "concatenate"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "concatenate",
+                    "text": " result-type &rest sequences =>  result-sequence\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "result-type",
+                    "desc": "a sequence type specifier."
+                },
+                {
+                    "name": "sequences",
+                    "desc": "a sequence."
+                },
+                {
+                    "name": "result-sequence",
+                    "desc": "a proper sequence of type result-type."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "concatenate returns a sequence that contains all the individual elements\nof all the sequences in the order that they are supplied.  The sequence is\nof type result-type, which must be a subtype of type sequence.\nAll of the sequences are copied from; the result does not share any\nstructure with any of the sequences.  Therefore, if only one sequence is\nprovided and it is of type result-type, concatenate is required to copy\nsequence rather than simply returning it.\nIt is an error if any element of the sequences cannot be an element of the\nsequence result.\n[Reviewer Note by Barmar: Should signal?]\nIf the result-type is a subtype of list, the result will be a list.\nIf the result-type is a subtype of vector, then if the implementation can\ndetermine the element type specified for the result-type, the element type\nof the resulting array is the result of upgrading that element type; or,\nif the implementation can determine that the element type is unspecified\n(or *), the element type of the resulting array is t; otherwise, an error\nis signaled.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "     (concatenate 'string \"all\" \" \" \"together\" \" \" \"now\") =>  \"all together now\"\n     (concatenate 'list \"ABC\" '(d e f) #(1 2 3) #*1011)\n     =>  (#\\A #\\B #\\C D E F 1 2 3 1 0 1 1)\n     (concatenate 'list) =>  NIL\n       (concatenate '(vector * 2) \"a\" \"bc\") should signal an error\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "An error is signaled if the result-type is neither a recognizable subtype\nof list, nor a recognizable subtype of vector.\nAn error of type type-error should be signaled if result-type specifies\nthe number of elements and the sum of sequences is different from that\nnumber.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note append::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: concatenate,  Next: merge,  Prev: substitute,  Up: Sequences Dictionary\n\nconcatenate                                                      [Function]\n---------------------------------------------------------------------------\n\n`concatenate'  result-type &rest sequences =>  result-sequence\n\nArguments and Values::\n......................\n\nresult-type--a sequence type specifier.\n\nsequences--a sequence.\n\nresult-sequence--a proper sequence of type result-type.\n\nDescription::\n.............\n\nconcatenate returns a sequence that contains all the individual elements\nof all the sequences in the order that they are supplied.  The sequence is\nof type result-type, which must be a subtype of type sequence.\n\nAll of the sequences are copied from; the result does not share any\nstructure with any of the sequences.  Therefore, if only one sequence is\nprovided and it is of type result-type, concatenate is required to copy\nsequence rather than simply returning it.\n\nIt is an error if any element of the sequences cannot be an element of the\nsequence result.\n\n[Reviewer Note by Barmar: Should signal?]\n\nIf the result-type is a subtype of list, the result will be a list.\n\nIf the result-type is a subtype of vector, then if the implementation can\ndetermine the element type specified for the result-type, the element type\nof the resulting array is the result of upgrading that element type; or,\nif the implementation can determine that the element type is unspecified\n(or *), the element type of the resulting array is t; otherwise, an error\nis signaled.\n\nExamples::\n..........\n\n     (concatenate 'string \"all\" \" \" \"together\" \" \" \"now\") =>  \"all together now\"\n     (concatenate 'list \"ABC\" '(d e f) #(1 2 3) #*1011)\n     =>  (#\\A #\\B #\\C D E F 1 2 3 1 0 1 1)\n     (concatenate 'list) =>  NIL\n\n       (concatenate '(vector * 2) \"a\" \"bc\") should signal an error\n\nExceptional Situations::\n........................\n\nAn error is signaled if the result-type is neither a recognizable subtype\nof list, nor a recognizable subtype of vector.\n\nAn error of type type-error should be signaled if result-type specifies\nthe number of elements and the sum of sequences is different from that\nnumber.\n\nSee Also::\n..........\n\n*Note append::\n\n"
+}

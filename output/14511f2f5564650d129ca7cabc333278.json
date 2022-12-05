@@ -1,0 +1,57 @@
+{
+    "name": "block",
+    "prev": "psetq",
+    "next": "catch",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Special Operator",
+        "text": "block"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "block",
+                    "text": " name form* =>  {result}*\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "name",
+                    "desc": "a symbol."
+                },
+                {
+                    "name": "form",
+                    "desc": "a form."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values of the forms if a normal return occurs, or else, if an"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "block establishes a block named name and then evaluates forms as an\nimplicit progn.\nThe special operators block and return-from work together to provide a\nstructured, lexical, non-local exit facility.  At any point lexically\ncontained within forms, return-from can be used with the given name to\nreturn control and values from the block form, except when an intervening\nblock with the same name has been established, in which case the outer\nblock is shadowed by the inner one.\nThe block named name has lexical scope and dynamic extent.\nOnce established, a block may only be exited once, whether by normal\nreturn or explicit return.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (block empty) =>  NIL\n      (block whocares (values 1 2) (values 3 4)) =>  3, 4\n      (let ((x 1))\n        (block stop (setq x 2) (return-from stop) (setq x 3))\n        x) =>  2\n      (block early (return-from early (values 1 2)) (values 3 4)) =>  1, 2\n      (block outer (block inner (return-from outer 1)) 2) =>  1\n      (block twin (block twin (return-from twin 1)) 2) =>  2\n      ;; Contrast behavior of this example with corresponding example of CATCH.\n      (block b\n        (flet ((b1 () (return-from b 1)))\n          (block b (b1) (print 'unreachable))\n          2)) =>  1\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note return:: , *Note return-from:: , *Note Evaluation::\n"
+        },
+        {
+            "type": "Notes",
+            "text": ""
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: block,  Next: catch,  Prev: psetq,  Up: Data and Control Flow Dictionary\n\nblock                                                    [Special Operator]\n---------------------------------------------------------------------------\n\n`block'  name form* =>  {result}*\n\nArguments and Values::\n......................\n\nname--a symbol.\n\nform--a form.\n\nresults--the values of the forms if a normal return occurs, or else, if an\nexplicit return occurs, the values that were transferred.\n\nDescription::\n.............\n\nblock establishes a block named name and then evaluates forms as an\nimplicit progn.\n\nThe special operators block and return-from work together to provide a\nstructured, lexical, non-local exit facility.  At any point lexically\ncontained within forms, return-from can be used with the given name to\nreturn control and values from the block form, except when an intervening\nblock with the same name has been established, in which case the outer\nblock is shadowed by the inner one.\n\nThe block named name has lexical scope and dynamic extent.\n\nOnce established, a block may only be exited once, whether by normal\nreturn or explicit return.\n\nExamples::\n..........\n\n      (block empty) =>  NIL\n      (block whocares (values 1 2) (values 3 4)) =>  3, 4\n      (let ((x 1))\n        (block stop (setq x 2) (return-from stop) (setq x 3))\n        x) =>  2\n      (block early (return-from early (values 1 2)) (values 3 4)) =>  1, 2\n      (block outer (block inner (return-from outer 1)) 2) =>  1\n      (block twin (block twin (return-from twin 1)) 2) =>  2\n      ;; Contrast behavior of this example with corresponding example of CATCH.\n      (block b\n        (flet ((b1 () (return-from b 1)))\n          (block b (b1) (print 'unreachable))\n          2)) =>  1\n\nSee Also::\n..........\n\n*Note return:: , *Note return-from:: , *Note Evaluation::\n\nNotes::\n.......\n\n"
+}

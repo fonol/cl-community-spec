@@ -1,0 +1,1295 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: defsetf,  Next: define-setf-expander,  Prev: define-modify-macro,  Up: Data and Control Flow Dictionary
+
+defsetf                                                             [Macro]
+---------------------------------------------------------------------------
+
+The "short form":
+
+`defsetf'  access-fn update-fn [documentation]
+=>  access-fn
+
+The "long form":
+
+`defsetf'  access-fn lambda-list ({store-variable}*) [[{declaration}* |
+documentation]] {form}*
+=>  access-fn
+
+Arguments and Values::
+......................
+
+access-fn--a symbol which names a function or a macro.
+
+update-fn--a symbol naming a function or macro.
+
+lambda-list--a defsetf lambda list.
+
+store-variable--a symbol (a variable name).
+
+declaration--a declare expression; not evaluated.
+
+documentation--a string; not evaluated.
+
+form--a form.
+
+Description::
+.............
+
+defsetf defines how to setf a place of the form (access-fn ...) for
+relatively simple cases.  (See define-setf-expander for more general
+access to this facility.)
+
+It must be the case that the function or macro named by access-fn
+evaluates all of its arguments.
+
+defsetf may take one of two forms, called the "short form" and the "long
+form," which are distinguished by the type of the second argument.
+
+When the short form is used, update-fn must name a function (or macro)
+that takes one more argument than access-fn takes.  When setf is given a
+place that is a call on access-fn, it expands into a call on update-fn
+that is given all the arguments to access-fn and also, as its last
+argument, the new value (which must be returned by update-fn as its value).
+
+The long form defsetf resembles defmacro.  The lambda-list describes the
+arguments of access-fn.  The store-variables describe the value
+
+or values
+
+to be stored into the place.  The body must compute the expansion of a
+setf of a call on access-fn.
+
+The expansion function is defined in the same lexical environment in which
+the defsetf form appears.
+
+During the evaluation of the forms, the variables in the lambda-list and
+the store-variables are bound to names of temporary variables, generated
+as if by gensym or gentemp, that will be bound by the expansion of setf to
+the values of those subforms.  This binding permits the forms to be
+written without regard for order-of-evaluation issues.  defsetf arranges
+for the temporary variables to be optimized out of the final result in
+cases where that is possible.
+
+The body code in defsetf is implicitly enclosed in a block whose name is
+access-fn
+
+defsetf ensures that subforms of the place are evaluated exactly once.
+
+Documentation is attached to access-fn as a documentation string of kind
+setf.
+
+If a defsetf form appears as a top level form, the compiler must make the
+setf expander available so that it may be used to expand calls to setf
+later on in the file.  Users must ensure that the forms, if any, can be
+evaluated at compile time if the access-fn is used in a place later in the
+same file.  The compiler must make these setf expanders available to
+compile-time calls to get-setf-expansion when its environment argument is
+a value received as the environment parameter of a macro.
+
+Examples::
+..........
+
+The effect of
+
+      (defsetf symbol-value set)
+
+is built into the Common Lisp system.  This causes the form (setf
+(symbol-value foo) fu) to expand into (set foo fu).
+
+Note that
+
+      (defsetf car rplaca)
+
+would be incorrect because rplaca does not return its last argument.
+
+      (defun middleguy (x) (nth (truncate (1- (list-length x)) 2) x)) =>  MIDDLEGUY
+      (defun set-middleguy (x v)
+         (unless (null x)
+           (rplaca (nthcdr (truncate (1- (list-length x)) 2) x) v))
+         v) =>  SET-MIDDLEGUY
+      (defsetf middleguy set-middleguy) =>  MIDDLEGUY
+      (setq a (list 'a 'b 'c 'd)
+            b (list 'x)
+            c (list 1 2 3 (list 4 5 6) 7 8 9)) =>  (1 2 3 (4 5 6) 7 8 9)
+      (setf (middleguy a) 3) =>  3
+      (setf (middleguy b) 7) =>  7
+      (setf (middleguy (middleguy c)) 'middleguy-symbol) =>  MIDDLEGUY-SYMBOL
+      a =>  (A 3 C D)
+      b =>  (7)
+      c =>  (1 2 3 (4 MIDDLEGUY-SYMBOL 6) 7 8 9)
+
+An example of the use of the long form of defsetf:
+
+      (defsetf subseq (sequence start &optional end) (new-sequence)
+        `(progn (replace ,sequence ,new-sequence
+                         :start1 ,start :end1 ,end)
+                ,new-sequence)) =>  SUBSEQ
+
+      (defvar *xy* (make-array '(10 10)))
+      (defun xy (&key ((x x) 0) ((y y) 0)) (aref *xy* x y)) =>  XY
+      (defun set-xy (new-value &key ((x x) 0) ((y y) 0))
+        (setf (aref *xy* x y) new-value)) =>  SET-XY
+      (defsetf xy (&key ((x x) 0) ((y y) 0)) (store)
+        `(set-xy ,store 'x ,x 'y ,y)) =>  XY
+      (get-setf-expansion '(xy a b))
+     =>  (#:t0 #:t1),
+        (a b),
+        (#:store),
+        ((lambda (&key ((x #:x)) ((y #:y)))
+           (set-xy #:store 'x #:x 'y #:y))
+         #:t0 #:t1),
+        (xy #:t0 #:t1)
+      (xy 'x 1) =>  NIL
+      (setf (xy 'x 1) 1) =>  1
+      (xy 'x 1) =>  1
+      (let ((a 'x) (b 'y))
+        (setf (xy a 1 b 2) 3)
+        (setf (xy b 5 a 9) 14))
+     =>  14
+      (xy 'y 0 'x 1) =>  1
+      (xy 'x 1 'y 2) =>  3
+
+See Also::
+..........
+
+*Note documentation; (setf documentation):: , *Note setf; psetf:: ,
+
+*Note define-setf-expander:: , *Note get-setf-expansion:: ,
+
+*Note Generalized Reference::, *Note Syntactic Interaction of
+Documentation Strings and Declarations::
+
+Notes::
+.......
+
+forms must include provision for returning the correct value (the value
+
+or values
+
+of store-variable).  This is handled by forms rather than by defsetf
+because in many cases this value can be returned at no extra cost, by
+calling a function that simultaneously stores into the place and returns
+the correct value.
+
+A setf of a call on access-fn also evaluates all of access-fn's arguments;
+it cannot treat any of them specially.  This means that defsetf cannot be
+used to describe how to store into a generalized reference to a byte, such
+as (ldb field reference).
+
+define-setf-expander
+
+is used to handle situations that do not fit the restrictions imposed by
+defsetf and gives the user additional control.
+
+
+File: gcl.info,  Node: define-setf-expander,  Next: get-setf-expansion,  Prev: defsetf,  Up: Data and Control Flow Dictionary
+
+define-setf-expander                                                [Macro]
+---------------------------------------------------------------------------
+
+`define-setf-expander'  access-fn lambda-list [[{declaration}* |
+documentation]] {form}*
+=>  access-fn
+
+Arguments and Values::
+......................
+
+access-fn--a symbol that names a function or macro.
+
+lambda-list - macro lambda list.
+
+declaration--a declare expression; not evaluated.
+
+documentation--a string; not evaluated.
+
+forms--an implicit progn.
+
+Description::
+.............
+
+define-setf-expander specifies the means by which setf updates a place
+that is referenced by access-fn.
+
+When setf is given a place that is specified in terms of access-fn and a
+new value for the place, it is expanded into a form that performs the
+appropriate update.
+
+The lambda-list supports destructuring.  See *Note Macro Lambda Lists::.
+
+Documentation is attached to access-fn as a documentation string of kind
+setf.
+
+Forms constitute the body of the
+
+setf expander
+
+definition and must compute the setf expansion for a call on setf that
+references the place by means of the given access-fn.
+
+The setf expander function is defined in the same lexical environment in
+which the define-setf-expander form appears.
+
+While forms are being executed, the variables in lambda-list are bound to
+parts of the place form.
+
+The body forms (but not the lambda-list)
+
+in a define-setf-expander form are implicitly enclosed in a block whose
+name is access-fn.
+
+The evaluation of forms must result in the five values described in *Note
+Setf Expansions::.
+
+If a define-setf-expander form appears as a top level form, the compiler
+must make the setf expander available so that it may be used to expand
+calls to setf later on in the file.  Programmers must ensure that the
+forms can be evaluated at compile time if the access-fn is used in a place
+later in the same file.  The compiler must make these setf expanders
+available to compile-time calls to get-setf-expansion when its environment
+argument is a value received as the environment parameter of a macro.
+
+Examples::
+..........
+
+      (defun lastguy (x) (car (last x))) =>  LASTGUY
+      (define-setf-expander lastguy (x &environment env)
+        "Set the last element in a list to the given value."
+        (multiple-value-bind (dummies vals newval setter getter)
+            (get-setf-expansion x env)
+          (let ((store (gensym)))
+            (values dummies
+                    vals
+                    `(,store)
+                    `(progn (rplaca (last ,getter) ,store) ,store)
+                    `(lastguy ,getter))))) =>  LASTGUY
+      (setq a (list 'a 'b 'c 'd)
+            b (list 'x)
+            c (list 1 2 3 (list 4 5 6))) =>  (1 2 3 (4 5 6))
+      (setf (lastguy a) 3) =>  3
+      (setf (lastguy b) 7) =>  7
+      (setf (lastguy (lastguy c)) 'lastguy-symbol) =>  LASTGUY-SYMBOL
+      a =>  (A B C 3)
+      b =>  (7)
+      c =>  (1 2 3 (4 5 LASTGUY-SYMBOL))
+
+     ;;; Setf expander for the form (LDB bytespec int).
+     ;;; Recall that the int form must itself be suitable for SETF.
+      (define-setf-expander ldb (bytespec int &environment env)
+        (multiple-value-bind (temps vals stores
+                               store-form access-form)
+            (get-setf-expansion int env);Get setf expansion for int.
+          (let ((btemp (gensym))     ;Temp var for byte specifier.
+                (store (gensym))     ;Temp var for byte to store.
+                (stemp (first stores))) ;Temp var for int to store.
+            (if (cdr stores) (error "Can't expand this."))
+     ;;; Return the setf expansion for LDB as five values.
+            (values (cons btemp temps)       ;Temporary variables.
+                    (cons bytespec vals)     ;Value forms.
+                    (list store)             ;Store variables.
+                    `(let ((,stemp (dpb ,store ,btemp ,access-form)))
+                       ,store-form
+                       ,store)               ;Storing form.
+                    `(ldb ,btemp ,access-form) ;Accessing form.
+                   ))))
+
+See Also::
+..........
+
+*Note setf; psetf:: , *Note defsetf:: , *Note documentation; (setf
+documentation):: , *Note get-setf-expansion:: , *Note Syntactic
+Interaction of Documentation Strings and Declarations::
+
+Notes::
+.......
+
+define-setf-expander differs from the long form of defsetf in that while
+the body is being executed the variables in lambda-list are bound to parts
+of the place form, not to temporary variables that will be bound to the
+values of such parts.  In addition, define-setf-expander does not have
+defsetf's restriction that access-fn must be a function or a function-like
+macro; an arbitrary defmacro destructuring pattern is permitted in
+lambda-list.
+
+
+File: gcl.info,  Node: get-setf-expansion,  Next: setf,  Prev: define-setf-expander,  Up: Data and Control Flow Dictionary
+
+get-setf-expansion                                               [Function]
+---------------------------------------------------------------------------
+
+`get-setf-expansion'  place &optional environment
+=>  vars, vals, store-vars, writer-form, reader-form
+
+Arguments and Values::
+......................
+
+place--a place.
+
+environment--an environment object.
+
+vars, vals, store-vars, writer-form, reader-form--a setf expansion.
+
+Description::
+.............
+
+Determines five values constituting the setf expansion for place in
+environment; see *Note Setf Expansions::.
+
+If environment is not supplied or nil, the environment is the null lexical
+environment.
+
+Examples::
+..........
+
+      (get-setf-expansion 'x)
+     =>  NIL, NIL, (#:G0001), (SETQ X #:G0001), X
+
+     ;;; This macro is like POP
+     
+      (defmacro xpop (place &environment env)
+        (multiple-value-bind (dummies vals new setter getter)
+                             (get-setf-expansion place env)
+           `(let* (,@(mapcar #'list dummies vals) (,(car new) ,getter))
+              (if (cdr new) (error "Can't expand this."))
+              (prog1 (car ,(car new))
+                     (setq ,(car new) (cdr ,(car new)))
+                     ,setter))))
+     
+      (defsetf frob (x) (value)
+          `(setf (car ,x) ,value)) =>  FROB
+     ;;; The following is an error; an error might be signaled at macro expansion time
+      (flet ((frob (x) (cdr x)))  ;Invalid
+        (xpop (frob z)))
+
+See Also::
+..........
+
+*Note defsetf:: , *Note define-setf-expander:: , *Note setf; psetf::
+
+Notes::
+.......
+
+Any compound form is a valid place, since any compound form whose operator
+f has no setf expander are expanded into a call to (setf f).
+
+
+File: gcl.info,  Node: setf,  Next: shiftf,  Prev: get-setf-expansion,  Up: Data and Control Flow Dictionary
+
+setf, psetf                                                         [Macro]
+---------------------------------------------------------------------------
+
+`setf'  {!pair}* =>  {result}*
+
+`psetf'  {!pair}* =>  nil
+
+pair ::=place newvalue
+
+Arguments and Values::
+......................
+
+place--a place.
+
+newvalue--a form.
+
+results--the multiple values_2 returned by the storing form for the last
+place, or nil if there are no pairs.
+
+Description::
+.............
+
+setf changes the value of place to be newvalue.
+
+(setf place newvalue) expands into an update form that stores the result
+of evaluating newvalue into the location referred to by place.  Some place
+forms involve uses of accessors that take optional arguments.  Whether
+those optional arguments are permitted by setf, or what their use is, is
+up to the setf expander function and is not under the control of setf.
+The documentation for any function that accepts &optional, &rest, or &key
+arguments and that claims to be usable with setf must specify how those
+arguments are treated.
+
+If more than one pair is supplied, the pairs are processed sequentially;
+that is,
+
+      (setf place-1 newvalue-1
+            place-2 newvalue-2
+            ...
+            place-N newvalue-N)
+
+is precisely equivalent to
+
+      (progn (setf place-1 newvalue-1)
+             (setf place-2 newvalue-2)
+             ...
+             (setf place-N newvalue-N))
+
+For psetf, if more than one pair is supplied then the assignments of new
+values to places are done in parallel.  More precisely, all subforms (in
+both the place and newvalue forms) that are to be evaluated are evaluated
+from left to right; after all evaluations have been performed, all of the
+assignments are performed in an unpredictable order.
+
+For detailed treatment of the expansion of setf and psetf, see *Note Kinds
+of Places::.
+
+Examples::
+..........
+
+      (setq x (cons 'a 'b) y (list 1 2 3)) =>  (1 2 3)
+      (setf (car x) 'x (cadr y) (car x) (cdr x) y) =>  (1 X 3)
+      x =>  (X 1 X 3)
+      y =>  (1 X 3)
+      (setq x (cons 'a 'b) y (list 1 2 3)) =>  (1 2 3)
+      (psetf (car x) 'x (cadr y) (car x) (cdr x) y) =>  NIL
+      x =>  (X 1 A 3)
+      y =>  (1 A 3)
+
+Affected By::
+.............
+
+define-setf-expander, defsetf, *macroexpand-hook*
+
+See Also::
+..........
+
+*Note define-setf-expander:: , *Note defsetf:: , macroexpand-1, *Note
+rotatef:: , *Note shiftf:: , *Note Generalized Reference::
+
+
+File: gcl.info,  Node: shiftf,  Next: rotatef,  Prev: setf,  Up: Data and Control Flow Dictionary
+
+shiftf                                                              [Macro]
+---------------------------------------------------------------------------
+
+`shiftf'  {place}^+ newvalue =>  old-value-1
+
+Arguments and Values::
+......................
+
+place--a place.
+
+newvalue--a form; evaluated.
+
+old-value-1--an object (the old value of the first place).
+
+Description::
+.............
+
+shiftf modifies the values of each place by storing newvalue into the last
+place, and shifting the values of the second through the last place into
+the remaining places.
+
+If newvalue produces more values than there are store variables, the extra
+values are ignored. If newvalue produces fewer values than there are store
+variables, the missing values are set to nil.
+
+In the form (shiftf place1 place2 ... placen newvalue), the values in
+place1 through placen are read and saved, and newvalue is evaluated, for a
+total of n+1 values in all.  Values 2 through n+1 are then stored into
+place1 through placen, respectively.  It is as if all the places form a
+shift register; the newvalue is shifted in from the right, all values
+shift over to the left one place, and the value shifted out of place1 is
+returned.
+
+For information about the evaluation of subforms of places, see *Note
+Evaluation of Subforms to Places::.
+
+Examples::
+..........
+
+      (setq x (list 1 2 3) y 'trash) =>  TRASH
+      (shiftf y x (cdr x) '(hi there)) =>  TRASH
+      x =>  (2 3)
+      y =>  (1 HI THERE)
+     
+      (setq x (list 'a 'b 'c)) =>  (A B C)
+      (shiftf (cadr x) 'z) =>  B
+      x =>  (A Z C)
+      (shiftf (cadr x) (cddr x) 'q) =>  Z
+      x =>  (A (C) . Q)
+      (setq n 0) =>  0
+      (setq x (list 'a 'b 'c 'd)) =>  (A B C D)
+      (shiftf (nth (setq n (+ n 1)) x) 'z) =>  B
+      x =>  (A Z C D)
+
+Affected By::
+.............
+
+define-setf-expander, defsetf, *macroexpand-hook*
+
+See Also::
+..........
+
+*Note setf; psetf:: , *Note rotatef:: , *Note Generalized Reference::
+
+Notes::
+.......
+
+The effect of (shiftf place1 place2 ... placen newvalue) is roughly
+equivalent to
+
+      (let ((var1 place1)
+            (var2 place2)
+            ...
+            (varn placen)
+            (var0 newvalue))
+        (setf place1 var2)
+        (setf place2 var3)
+        ...
+        (setf placen var0)
+        var1)
+
+except that the latter would evaluate any subforms of each place twice,
+whereas shiftf evaluates them once.  For example,
+
+      (setq n 0) =>  0
+      (setq x (list 'a 'b 'c 'd)) =>  (A B C D)
+      (prog1 (nth (setq n (+ n 1)) x)
+             (setf (nth (setq n (+ n 1)) x) 'z)) =>  B
+      x =>  (A B Z D)
+
+
+File: gcl.info,  Node: rotatef,  Next: control-error,  Prev: shiftf,  Up: Data and Control Flow Dictionary
+
+rotatef                                                             [Macro]
+---------------------------------------------------------------------------
+
+`rotatef'  {place}* =>  nil
+
+Arguments and Values::
+......................
+
+place--a place.
+
+Description::
+.............
+
+rotatef modifies the values of each place by rotating values from one
+place into another.
+
+If a place produces more values than there are store variables, the extra
+values are ignored. If a place produces fewer values than there are store
+variables, the missing values are set to nil.
+
+In the form (rotatef place1 place2 ... placen), the values in place1
+through placen are read and written.  Values 2 through n and value 1 are
+then stored into place1 through placen.  It is as if all the places form
+an end-around shift register that is rotated one place to the left, with
+the value of place1 being shifted around the end to placen.
+
+For information about the evaluation of subforms of places, see *Note
+Evaluation of Subforms to Places::.
+
+Examples::
+..........
+
+      (let ((n 0)
+             (x (list 'a 'b 'c 'd 'e 'f 'g)))
+         (rotatef (nth (incf n) x)
+                  (nth (incf n) x)
+                  (nth (incf n) x))
+         x) =>  (A C D B E F G)
+
+See Also::
+..........
+
+*Note define-setf-expander:: , *Note defsetf:: , *Note setf; psetf:: ,
+*Note shiftf:: , *macroexpand-hook*, *Note Generalized Reference::
+
+Notes::
+.......
+
+The effect of (rotatef place1 place2 ... placen) is roughly equivalent to
+
+      (psetf place1 place2
+             place2 place3
+             ...
+             placen place1)
+
+except that the latter would evaluate any subforms of each place twice,
+whereas rotatef evaluates them once.
+
+
+File: gcl.info,  Node: control-error,  Next: program-error,  Prev: rotatef,  Up: Data and Control Flow Dictionary
+
+control-error                                              [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+control-error, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type control-error consists of error conditions that result from
+invalid dynamic transfers of control in a program.  The errors that result
+from giving throw a tag that is not active or from giving go or
+return-from a tag that is no longer dynamically available are of type
+control-error.
+
+
+File: gcl.info,  Node: program-error,  Next: undefined-function,  Prev: control-error,  Up: Data and Control Flow Dictionary
+
+program-error                                              [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+program-error, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type program-error consists of error conditions related to incorrect
+program syntax.  The errors that result from naming a go tag or a block tag
+that is not lexically apparent are of type program-error.
+
+
+File: gcl.info,  Node: undefined-function,  Prev: program-error,  Up: Data and Control Flow Dictionary
+
+undefined-function                                         [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+undefined-function, cell-error, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type undefined-function consists of error conditions that represent
+attempts to read the definition of an undefined function.
+
+The name of the cell (see cell-error) is the function name which was
+funbound.
+
+See Also::
+..........
+
+*Note cell-error-name::
+
+
+File: gcl.info,  Node: Iteration,  Next: Objects,  Prev: Data and Control Flow,  Up: Top
+
+Iteration
+*********
+
+* Menu:
+
+* The LOOP Facility::
+* Iteration Dictionary::
+
+
+File: gcl.info,  Node: The LOOP Facility,  Next: Iteration Dictionary,  Prev: Iteration,  Up: Iteration
+
+The LOOP Facility
+=================
+
+* Menu:
+
+* Overview of the Loop Facility::
+* Variable Initialization and Stepping Clauses::
+* Value Accumulation Clauses::
+* Termination Test Clauses::
+* Unconditional Execution Clauses::
+* Conditional Execution Clauses::
+* Miscellaneous Clauses::
+* Examples of Miscellaneous Loop Features::
+* Notes about Loop::
+
+
+File: gcl.info,  Node: Overview of the Loop Facility,  Next: Variable Initialization and Stepping Clauses,  Prev: The LOOP Facility,  Up: The LOOP Facility
+
+Overview of the Loop Facility
+-----------------------------
+
+The loop macro performs iteration.
+
+* Menu:
+
+* Simple vs Extended Loop::
+* Simple Loop::
+* Extended Loop::
+* Loop Keywords::
+* Parsing Loop Clauses::
+* Expanding Loop Forms::
+* Summary of Loop Clauses::
+* Summary of Variable Initialization and Stepping Clauses::
+* Summary of Value Accumulation Clauses::
+* Summary of Termination Test Clauses::
+* Summary of Unconditional Execution Clauses::
+* Summary of Conditional Execution Clauses::
+* Summary of Miscellaneous Clauses::
+* Order of Execution::
+* Destructuring::
+* Restrictions on Side-Effects::
+
+
+File: gcl.info,  Node: Simple vs Extended Loop,  Next: Simple Loop,  Prev: Overview of the Loop Facility,  Up: Overview of the Loop Facility
+
+Simple vs Extended Loop
+.......................
+
+loop forms are partitioned into two categories: simple loop forms and
+extended loop forms.
+
+
+File: gcl.info,  Node: Simple Loop,  Next: Extended Loop,  Prev: Simple vs Extended Loop,  Up: Overview of the Loop Facility
+
+Simple Loop
+...........
+
+A simple loop form is one that has a body containing only compound forms.
+Each form is evaluated in turn from left to right.  When the last form has
+been evaluated, then the first form is evaluated again, and so on, in a
+never-ending cycle.  A simple loop form establishes an implicit block
+named nil.  The execution of a simple loop can be terminated by explicitly
+transfering control to the implicit block (using return or return-from) or
+to some exit point outside of the block (e.g., using throw, go, or
+return-from).
+
+
+File: gcl.info,  Node: Extended Loop,  Next: Loop Keywords,  Prev: Simple Loop,  Up: Overview of the Loop Facility
+
+Extended Loop
+.............
+
+An extended loop form is one that has a body containing atomic
+expressions.  When the loop macro processes such a form, it invokes a
+facility that is commonly called "the Loop Facility."
+
+The Loop Facility provides standardized access to mechanisms commonly used
+in iterations through Loop schemas, which are introduced by loop keywords.
+
+The body of an extended loop form is divided into loop clauses, each which
+is in turn made up of loop keywords and forms.
+
+
+File: gcl.info,  Node: Loop Keywords,  Next: Parsing Loop Clauses,  Prev: Extended Loop,  Up: Overview of the Loop Facility
+
+Loop Keywords
+.............
+
+Loop keywords are not true keywords_1; they are special symbols,
+recognized by name rather than object identity, that are meaningful only
+to the loop facility.  A loop keyword is a symbol but is recognized by its
+name (not its identity), regardless of the packages in which it is
+accessible.
+
+In general, loop keywords are not external symbols of the COMMON-LISP
+package, except in the coincidental situation that a symbol with the same
+name as a loop keyword was needed for some other purpose in Common Lisp.
+For example, there is a symbol in the COMMON-LISP package whose name is
+"UNLESS" but not one whose name is "UNTIL".
+
+If no loop keywords are supplied in a loop form, the Loop Facility
+executes the loop body repeatedly; see *Note Simple Loop::.
+
+
+File: gcl.info,  Node: Parsing Loop Clauses,  Next: Expanding Loop Forms,  Prev: Loop Keywords,  Up: Overview of the Loop Facility
+
+Parsing Loop Clauses
+....................
+
+The syntactic parts of an extended loop form are called clauses; the rules
+for parsing are determined by that clause's keyword.  The following
+example shows a loop form with six clauses:
+
+      (loop for i from 1 to (compute-top-value)       ; first clause
+            while (not (unacceptable i))              ; second clause
+            collect (square i)                        ; third clause
+            do (format t "Working on ~D now" i)       ; fourth clause
+            when (evenp i)                            ; fifth clause
+              do (format t "~D is a non-odd number" i)
+            finally (format t "About to exit!"))      ; sixth clause
+
+Each loop keyword introduces either a compound loop clause or a simple
+loop clause that can consist of a loop keyword followed by a single form.
+The number of forms in a clause is determined by the loop keyword that
+begins the clause and by the auxiliary keywords in the clause.  The
+keywords do,
+
+doing,
+
+initially, and finally are the only loop keywords that can take any number
+of forms and group them as an implicit progn.
+
+Loop clauses can contain auxiliary keywords, which are sometimes called
+prepositions.  For example, the first clause in the code above includes
+the prepositions from and to, which mark the value from which stepping
+begins and the value at which stepping ends.
+
+For detailed information about loop syntax, see the macro loop.
+
+
+File: gcl.info,  Node: Expanding Loop Forms,  Next: Summary of Loop Clauses,  Prev: Parsing Loop Clauses,  Up: Overview of the Loop Facility
+
+Expanding Loop Forms
+....................
+
+A loop macro form expands into a form containing one or more binding forms
+(that establish bindings of loop variables) and a block and a tagbody
+(that express a looping control structure). The variables established in
+loop are bound as if by let or lambda.
+
+Implementations can interleave the setting of initial values with the
+bindings.  However, the assignment of the initial values is always
+calculated in the order specified by the user.  A variable is thus
+sometimes bound to a meaningless value of the correct type, and then later
+in the prologue it is set to the true initial value by using setq.
+
+One implication of this interleaving is that it is implementation-dependent
+whether the lexical environment in which the initial value forms
+(variously called the form1, form2, form3, step-fun, vector, hash-table,
+and package) in any for-as-subclause, except for-as-equals-then, are
+evaluated includes only the loop variables preceding that form or includes
+more or all of the loop variables; the form1 and form2 in a
+for-as-equals-then form includes the lexical environment of all the loop
+variables.
+
+After the form is expanded, it consists of three basic parts in the
+tagbody: the loop prologue, the loop body, and the loop epilogue.
+
+Loop prologue
+     The loop prologue contains forms that are executed before iteration
+     begins, such as any automatic variable initializations prescribed by
+     the variable clauses, along with any initially clauses in the order
+     they appear in the source.
+
+Loop body
+     The loop body contains those forms that are executed during iteration,
+     including application-specific calculations, termination tests, and
+     variable stepping_1.
+
+Loop epilogue
+     The loop epilogue contains forms that are executed after iteration
+     terminates, such as finally clauses, if any, along with any implicit
+     return value from an accumulation clause or an termination-test
+     clause.
+
+Some clauses from the source form contribute code only to the loop
+prologue; these clauses must come before other clauses that are in the
+main body of the loop form.  Others contribute code only to the loop
+epilogue.  All other clauses contribute to the final translated form in
+the same order given in the original source form of the loop.
+
+Expansion of the loop macro produces an implicit block named nil
+
+unless named is supplied.
+
+Thus, return-from (and sometimes return) can be used to return values from
+loop or to exit loop.
+
+
+File: gcl.info,  Node: Summary of Loop Clauses,  Next: Summary of Variable Initialization and Stepping Clauses,  Prev: Expanding Loop Forms,  Up: Overview of the Loop Facility
+
+Summary of Loop Clauses
+.......................
+
+Loop clauses fall into one of the following categories:
+
+
+File: gcl.info,  Node: Summary of Variable Initialization and Stepping Clauses,  Next: Summary of Value Accumulation Clauses,  Prev: Summary of Loop Clauses,  Up: Overview of the Loop Facility
+
+Summary of Variable Initialization and Stepping Clauses
+.......................................................
+
+The for and as constructs provide iteration control clauses that establish
+a variable to be initialized.  for and as clauses can be combined with the
+loop keyword and to get parallel initialization and stepping_1.
+Otherwise, the initialization and stepping_1 are sequential.
+
+The with construct is similar to a single let clause.  with clauses can be
+combined using the loop keyword and to get parallel initialization.
+
+For more information, see *Note Variable Initialization and Stepping
+Clauses::.
+
+
+File: gcl.info,  Node: Summary of Value Accumulation Clauses,  Next: Summary of Termination Test Clauses,  Prev: Summary of Variable Initialization and Stepping Clauses,  Up: Overview of the Loop Facility
+
+Summary of Value Accumulation Clauses
+.....................................
+
+The collect (or collecting) construct takes one form in its clause and
+adds the value of that form to the end of a list of values.  By default,
+the list of values is returned when the loop finishes.
+
+The append (or appending) construct takes one form in its clause and
+appends the value of that form to the end of a list of values.  By
+default, the list of values is returned when the loop finishes.
+
+The nconc (or nconcing) construct is similar to the append construct, but
+its list values are concatenated as if by the function nconc.  By default,
+the list of values is returned when the loop finishes.
+
+The sum (or summing) construct takes one form in its clause that must
+evaluate to a number and accumulates the sum of all these numbers.  By
+default, the cumulative sum is returned when the loop finishes.
+
+The count (or counting) construct takes one form in its clause and counts
+the number of times that the form evaluates to true.  By default, the
+count is returned when the loop finishes.
+
+The minimize (or minimizing) construct takes one form in its clause and
+determines the minimum value obtained by evaluating that form.  By
+default, the minimum value is returned when the loop finishes.
+
+The maximize (or maximizing) construct takes one form in its clause and
+determines the maximum value obtained by evaluating that form.  By
+default, the maximum value is returned when the loop finishes.
+
+For more information, see *Note Value Accumulation Clauses::.
+
+
+File: gcl.info,  Node: Summary of Termination Test Clauses,  Next: Summary of Unconditional Execution Clauses,  Prev: Summary of Value Accumulation Clauses,  Up: Overview of the Loop Facility
+
+Summary of Termination Test Clauses
+...................................
+
+The for and as constructs provide a termination test that is determined by
+the iteration control clause.
+
+The repeat construct causes termination after a specified number of
+iterations.  (It uses an internal variable to keep track of the number of
+iterations.)
+
+The while construct takes one form, a test, and terminates the iteration
+if the test evaluates to false.  A while clause is equivalent to the
+expression (if (not test) (loop-finish)).
+
+The until construct is the inverse of while; it terminates the iteration
+if the test evaluates to any non-nil value.  An until clause is equivalent
+to the expression (if test (loop-finish)).
+
+The always construct takes one form and terminates the loop if the form
+ever evaluates to false; in this case, the loop form returns nil.
+Otherwise, it provides a default return value of t.
+
+The never construct takes one form and terminates the loop if the form
+ever evaluates to true; in this case, the loop form returns nil.
+Otherwise, it provides a default return value of t.
+
+The thereis construct takes one form and terminates the loop if the form
+ever evaluates to a non-nil object; in this case, the loop form returns
+that object.
+
+Otherwise, it provides a default return value of nil.
+
+If multiple termination test clauses are specified, the loop form
+terminates if any are satisfied.
+
+For more information, see *Note Termination Test Clauses::.
+
+
+File: gcl.info,  Node: Summary of Unconditional Execution Clauses,  Next: Summary of Conditional Execution Clauses,  Prev: Summary of Termination Test Clauses,  Up: Overview of the Loop Facility
+
+Summary of Unconditional Execution Clauses
+..........................................
+
+The do (or doing) construct evaluates all forms in its clause.
+
+The return construct takes one
+
+form. Any values returned by the form are immediately returned by the loop
+form.  It is equivalent to the clause do (return-from block-name value),
+where block-name is the name specified in a named clause, or nil if there
+is no named clause.
+
+For more information, see *Note Unconditional Execution Clauses::.
+
+
+File: gcl.info,  Node: Summary of Conditional Execution Clauses,  Next: Summary of Miscellaneous Clauses,  Prev: Summary of Unconditional Execution Clauses,  Up: Overview of the Loop Facility
+
+Summary of Conditional Execution Clauses
+........................................
+
+The if and when constructs take one form as a test and a clause that is
+executed when the test yields true.  The clause can be a value
+accumulation, unconditional, or another conditional clause; it can also be
+any combination of such clauses connected by the loop and keyword.
+
+The loop unless construct is similar to the loop when construct except
+that it complements the test result.
+
+The loop else construct provides an optional component of if, when, and
+unless clauses that is executed when an if or when test yields false or
+when an unless test yields true.  The component is one of the clauses
+described under if.
+
+The loop end construct provides an optional component to mark the end of a
+conditional clause.
+
+For more information, see *Note Conditional Execution Clauses::.
+
+
+File: gcl.info,  Node: Summary of Miscellaneous Clauses,  Next: Order of Execution,  Prev: Summary of Conditional Execution Clauses,  Up: Overview of the Loop Facility
+
+Summary of Miscellaneous Clauses
+................................
+
+The loop named construct gives a name for the block of the loop.
+
+The loop initially construct causes its forms to be evaluated in the loop
+prologue, which precedes all loop code except for initial settings
+supplied by the constructs with, for, or as.
+
+The loop finally construct causes its forms to be evaluated in the loop
+epilogue after normal iteration terminates.
+
+For more information, see *Note Miscellaneous Clauses::.
+
+
+File: gcl.info,  Node: Order of Execution,  Next: Destructuring,  Prev: Summary of Miscellaneous Clauses,  Up: Overview of the Loop Facility
+
+Order of Execution
+..................
+
+With the exceptions listed below, clauses are executed in the loop body in
+the order in which they appear in the source.  Execution is repeated until
+a clause terminates the loop or until a return, go, or throw form is
+encountered which transfers control to a point outside of the loop.  The
+following actions are exceptions to the linear order of execution:
+
+*
+     All variables are initialized first, regardless of where the
+     establishing clauses appear in the source.  The order of
+     initialization follows the order of these clauses.
+
+*
+     The code for any initially clauses is collected into one progn in the
+     order in which the clauses appear in the source.  The collected code
+     is executed once in the loop prologue after any implicit variable
+     initializations.
+
+*
+     The code for any finally clauses is collected into one progn in the
+     order in which the clauses appear in the source.  The collected code
+     is executed once in the loop epilogue before any implicit values from
+     the accumulation clauses are returned.  Explicit returns anywhere in
+     the source, however, will exit the loop without executing the
+     epilogue code.
+
+*
+     A with clause introduces a variable binding and an optional initial
+     value.  The initial values are calculated in the order in which the
+     with clauses occur.
+
+*
+     Iteration control clauses implicitly perform the following actions:
+
+    -
+          initialize variables;
+
+    -
+          step variables, generally between each execution of the loop
+          body;
+
+    -
+          perform termination tests, generally just before the execution
+          of the loop body.
+
+
+File: gcl.info,  Node: Destructuring,  Next: Restrictions on Side-Effects,  Prev: Order of Execution,  Up: Overview of the Loop Facility
+
+Destructuring
+.............
+
+The d-type-spec argument is used for destructuring.  If the d-type-spec
+argument consists solely of the type fixnum, float, t, or nil, the of-type
+keyword is optional.  The of-type construct is optional in these cases to
+provide backwards compatibility; thus, the following two expressions are
+the same:
+
+     ;;; This expression uses the old syntax for type specifiers.
+      (loop for i fixnum upfrom 3 ...)
+     
+     ;;; This expression uses the new syntax for type specifiers.
+      (loop for i of-type fixnum upfrom 3 ...)
+     
+     ;; Declare X and Y to be of type VECTOR and FIXNUM respectively.
+      (loop for (x y) of-type (vector fixnum)
+            in l do ...)
+
+A type specifier for a destructuring pattern is a tree of type specifiers
+with the same shape as the tree of variable names, with the following
+exceptions:
+
+*
+     When aligning the trees, an atom in the tree of type specifiers that
+     matches a cons in the variable tree declares the same type for each
+     variable in the subtree rooted at the cons.
+
+*
+     A cons in the tree of type specifiers that matches an atom in the
+     tree of variable names is a compound type specifer.
+
+Destructuring allows binding of a set of variables to a corresponding set
+of values anywhere that a value can normally be bound to a single
+variable.  During loop expansion, each variable in the variable list is
+matched with the values in the values list.  If there are more variables
+in the variable list than there are values in the values list, the
+remaining variables are given a value of nil.  If there are more values
+than variables listed, the extra values are discarded.
+
+To assign values from a list to the variables a, b, and c, the for clause
+could be used to bind the variable numlist to the car of the supplied form,
+and then another for clause could be used to bind the variables a, b, and
+c sequentially.
+
+     ;; Collect values by using FOR constructs.
+      (loop for numlist in '((1 2 4.0) (5 6 8.3) (8 9 10.4))
+            for a of-type integer = (first numlist)
+            and b of-type integer = (second numlist)
+            and c of-type float = (third numlist)
+            collect (list c b a))
+     =>  ((4.0 2 1) (8.3 6 5) (10.4 9 8))
+
+Destructuring makes this process easier by allowing the variables to be
+bound in each loop iteration.  Types can be declared by using a list of
+type-spec arguments.  If all the types are the same, a shorthand
+destructuring syntax can be used, as the second example illustrates.
+
+     ;; Destructuring simplifies the process.
+      (loop for (a b c) of-type (integer integer float) in
+            '((1 2 4.0) (5 6 8.3) (8 9 10.4))
+            collect (list c b a))
+     =>  ((4.0 2 1) (8.3 6 5) (10.4 9 8))
+     
+     ;; If all the types are the same, this way is even simpler.
+      (loop for (a b c) of-type float in
+            '((1.0 2.0 4.0) (5.0 6.0 8.3) (8.0 9.0 10.4))
+            collect (list c b a))
+     =>  ((4.0 2.0 1.0) (8.3 6.0 5.0) (10.4 9.0 8.0))
+
+If destructuring is used to declare or initialize a number of groups of
+variables into types, the loop keyword and can be used to simplify the
+process further.
+
+     ;; Initialize and declare variables in parallel by using the AND construct.\kern-7pt
+      (loop with (a b) of-type float = '(1.0 2.0)
+            and (c d) of-type integer = '(3 4)
+            and (e f)
+            return (list a b c d e f))
+     =>  (1.0 2.0 3 4 NIL NIL)
+
+If nil is used in a destructuring list, no variable is provided for its
+place.
+
+      (loop for (a nil b) = '(1 2 3)
+            do (return (list a b)))
+     =>  (1 3)
+
+Note that dotted lists can specify destructuring.
+
+      (loop for (x . y) = '(1 . 2)
+            do (return y))
+     =>  2
+      (loop for ((a . b) (c . d)) of-type ((float . float) (integer . integer)) in
+            '(((1.2 . 2.4) (3 . 4)) ((3.4 . 4.6) (5 . 6)))
+            collect (list a b c d))
+     =>  ((1.2 2.4 3 4) (3.4 4.6 5 6))
+
+An error of type program-error is signaled (at macro expansion time) if
+the same variable is bound twice in any variable-binding clause of a
+single loop expression.  Such variables include local variables, iteration
+control variables, and variables found by destructuring.
+
+
+File: gcl.info,  Node: Restrictions on Side-Effects,  Prev: Destructuring,  Up: Overview of the Loop Facility
+
+Restrictions on Side-Effects
+............................
+
+See *Note Traversal Rules and Side Effects::.
+
+
+File: gcl.info,  Node: Variable Initialization and Stepping Clauses,  Next: Value Accumulation Clauses,  Prev: Overview of the Loop Facility,  Up: The LOOP Facility
+
+Variable Initialization and Stepping Clauses
+--------------------------------------------
+
+* Menu:
+
+* Iteration Control::
+* The for-as-arithmetic subclause::
+* Examples of for-as-arithmetic subclause::
+* The for-as-in-list subclause::
+* Examples of for-as-in-list subclause::
+* The for-as-on-list subclause::
+* Examples of for-as-on-list subclause::
+* The for-as-equals-then subclause::
+* Examples of for-as-equals-then subclause::
+* The for-as-across subclause::
+* Examples of for-as-across subclause::
+* The for-as-hash subclause::
+* The for-as-package subclause::
+* Examples of for-as-package subclause::
+* Local Variable Initializations::
+* Examples of WITH clause::
+
+
+File: gcl.info,  Node: Iteration Control,  Next: The for-as-arithmetic subclause,  Prev: Variable Initialization and Stepping Clauses,  Up: Variable Initialization and Stepping Clauses
+
+Iteration Control
+.................
+
+Iteration control clauses allow direction of loop iteration.  The loop
+keywords for and as designate iteration control clauses.  Iteration
+control clauses differ with respect to the specification of termination
+tests and to the initialization and stepping_1 of loop variables.
+Iteration clauses by themselves do not cause the Loop Facility to return
+values, but they can be used in conjunction with value-accumulation
+clauses to return values.
+
+All variables are initialized in the loop prologue.  A variable binding
+has lexical scope unless it is proclaimed special; thus, by default, the
+variable can be accessed only by forms that lie textually within the loop.
+Stepping assignments are made in the loop body before any other forms are
+evaluated in the body.
+
+The variable argument in iteration control clauses can be a destructuring
+list.  A destructuring list is a tree whose non-nil atoms are variable
+names.  See *Note Destructuring::.
+
+The iteration control clauses for, as,  and repeat must precede any other
+loop clauses, except initially, with, and named, since they establish
+variable bindings.  When iteration control clauses are used in a loop, the
+corresponding termination tests in the loop body are evaluated before any
+other loop body code is executed.
+
+If multiple iteration clauses are used to control iteration, variable
+initialization and stepping_1 occur sequentially by default.  The and
+construct can be used to connect two or more iteration clauses when
+sequential binding and stepping_1 are not necessary.  The iteration
+behavior of clauses joined by and is analogous to the behavior of the
+macro do with respect to do*.
+
+The for and as clauses iterate by using one or more local loop  variables
+that are initialized to some value and that can be modified or stepped_1
+after each iteration.  For these clauses, iteration terminates when a local
+variable reaches some supplied value or when some other loop clause
+terminates iteration.  At each iteration, variables can be stepped_1 by an
+increment or a decrement or can be assigned a new value by the evaluation
+of a form).  Destructuring can be used to assign values to variables
+during iteration.
+
+The for and as keywords are synonyms; they can be used interchangeably.
+There are seven syntactic formats for these constructs.  In each syntactic
+format, the type of var can be supplied by the optional type-spec
+argument.  If var is a destructuring list, the type supplied by the
+type-spec argument must appropriately match the elements of the list.  By
+convention, for introduces new iterations and as introduces iterations
+that depend on a previous iteration specification.
+

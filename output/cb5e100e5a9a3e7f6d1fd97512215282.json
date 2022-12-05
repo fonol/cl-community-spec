@@ -1,0 +1,57 @@
+{
+    "name": "error",
+    "prev": "assert",
+    "next": "cerror",
+    "up": "Conditions Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "error"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "error",
+                    "text": " datum &rest arguments =>  #<NoValue>\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "datum, arguments",
+                    "desc": "designators for a condition of default type simple-error."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "error effectively invokes signal on the denoted condition.\nIf the condition is not handled, (invoke-debugger condition) is done.  As\na consequence of calling invoke-debugger, error cannot directly return;\nthe only exit from error can come by non-local transfer of control in a\nhandler or by use of an interactive debugging command.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defun factorial (x)\n        (cond ((or (not (typep x 'integer)) (minusp x))\n               (error \"~S is not a valid argument to FACTORIAL.\" x))\n              ((zerop x) 1)\n              (t (* x (factorial (- x 1))))))\n     =>  FACTORIAL\n     (factorial 20)\n     =>  2432902008176640000\n     (factorial -1)\n      |>  Error: -1 is not a valid argument to FACTORIAL.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Return to Lisp Toplevel.\n      |>  Debug>\n      (setq a 'fred)\n     =>  FRED\n      (if (numberp a) (1+ a) (error \"~S is not a number.\" A))\n      |>  Error: FRED is not a number.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Return to Lisp Toplevel.\n      |>  Debug> |>>:Continue 1<<|\n      |>  Return to Lisp Toplevel.\n      (define-condition not-a-number (error)\n                        ((argument :reader not-a-number-argument :initarg :argument))\n        (:report (lambda (condition stream)\n                   (format stream \"~S is not a number.\"\n                           (not-a-number-argument condition)))))\n     =>  NOT-A-NUMBER\n      (if (numberp a) (1+ a) (error 'not-a-number :argument a))\n      |>  Error: FRED is not a number.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Return to Lisp Toplevel.\n      |>  Debug> |>>:Continue 1<<|\n      |>  Return to Lisp Toplevel.\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "Handlers for the specified condition, if any, are invoked and might have\nside effects.  Program execution might stop, and the debugger might be\nentered.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "Existing handler bindings.\n*break-on-signals*\nSignals an error of type type-error if datum and arguments are not\ndesignators for a condition.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note cerror:: , *Note signal:: , *Note format:: , *Note ignore-errors:: ,\n*break-on-signals*, *Note handler-bind:: , *Note Condition System\nConcepts::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Some implementations may provide debugger commands for interactively\nreturning from individual stack frames.  However, it should be possible\nfor the programmer to feel confident about writing code like:\n      (defun wargames:no-win-scenario ()\n        (if (error \"pushing the button would be stupid.\"))\n        (push-the-button))\nIn this scenario, there should be no chance that error will return and the\nbutton will get pushed.\nWhile the meaning of this program is clear and it might be proven `safe'\nby a formal theorem prover, such a proof is no guarantee that the program\nis safe to execute.  Compilers have been known to have bugs, computers to\nhave signal glitches, and human beings to manually intervene in ways that\nare not always possible to predict.  Those kinds of errors, while beyond\nthe scope of the condition system to formally model, are not beyond the\nscope of things that should seriously be considered when writing code that\ncould have the kinds of sweeping effects hinted at by this example.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: error,  Next: cerror,  Prev: assert,  Up: Conditions Dictionary\n\nerror                                                            [Function]\n---------------------------------------------------------------------------\n\n`error'  datum &rest arguments =>  #<NoValue>\n\nArguments and Values::\n......................\n\ndatum, arguments--designators for a condition of default type simple-error.\n\nDescription::\n.............\n\nerror effectively invokes signal on the denoted condition.\n\nIf the condition is not handled, (invoke-debugger condition) is done.  As\na consequence of calling invoke-debugger, error cannot directly return;\nthe only exit from error can come by non-local transfer of control in a\nhandler or by use of an interactive debugging command.\n\nExamples::\n..........\n\n      (defun factorial (x)\n        (cond ((or (not (typep x 'integer)) (minusp x))\n               (error \"~S is not a valid argument to FACTORIAL.\" x))\n              ((zerop x) 1)\n              (t (* x (factorial (- x 1))))))\n     =>  FACTORIAL\n     (factorial 20)\n     =>  2432902008176640000\n     (factorial -1)\n      |>  Error: -1 is not a valid argument to FACTORIAL.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Return to Lisp Toplevel.\n      |>  Debug>\n\n      (setq a 'fred)\n     =>  FRED\n      (if (numberp a) (1+ a) (error \"~S is not a number.\" A))\n      |>  Error: FRED is not a number.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Return to Lisp Toplevel.\n      |>  Debug> |>>:Continue 1<<|\n      |>  Return to Lisp Toplevel.\n     \n      (define-condition not-a-number (error)\n                        ((argument :reader not-a-number-argument :initarg :argument))\n        (:report (lambda (condition stream)\n                   (format stream \"~S is not a number.\"\n                           (not-a-number-argument condition)))))\n     =>  NOT-A-NUMBER\n     \n      (if (numberp a) (1+ a) (error 'not-a-number :argument a))\n      |>  Error: FRED is not a number.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Return to Lisp Toplevel.\n      |>  Debug> |>>:Continue 1<<|\n      |>  Return to Lisp Toplevel.\n\nSide Effects::\n..............\n\nHandlers for the specified condition, if any, are invoked and might have\nside effects.  Program execution might stop, and the debugger might be\nentered.\n\nAffected By::\n.............\n\nExisting handler bindings.\n\n*break-on-signals*\n\nSignals an error of type type-error if datum and arguments are not\ndesignators for a condition.\n\nSee Also::\n..........\n\n*Note cerror:: , *Note signal:: , *Note format:: , *Note ignore-errors:: ,\n*break-on-signals*, *Note handler-bind:: , *Note Condition System\nConcepts::\n\nNotes::\n.......\n\nSome implementations may provide debugger commands for interactively\nreturning from individual stack frames.  However, it should be possible\nfor the programmer to feel confident about writing code like:\n\n      (defun wargames:no-win-scenario ()\n        (if (error \"pushing the button would be stupid.\"))\n        (push-the-button))\n\nIn this scenario, there should be no chance that error will return and the\nbutton will get pushed.\n\nWhile the meaning of this program is clear and it might be proven `safe'\nby a formal theorem prover, such a proof is no guarantee that the program\nis safe to execute.  Compilers have been known to have bugs, computers to\nhave signal glitches, and human beings to manually intervene in ways that\nare not always possible to predict.  Those kinds of errors, while beyond\nthe scope of the condition system to formally model, are not beyond the\nscope of things that should seriously be considered when writing code that\ncould have the kinds of sweeping effects hinted at by this example.\n\n"
+}

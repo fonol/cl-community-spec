@@ -1,0 +1,69 @@
+{
+    "name": "make-sequence",
+    "prev": "fill",
+    "next": "subseq",
+    "up": "Sequences Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "make-sequence"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "make-sequence",
+                    "text": " result-type size &key initial-element =>  sequence\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "result-type",
+                    "desc": "a sequence type specifier."
+                },
+                {
+                    "name": "size",
+                    "desc": "a non-negative integer."
+                },
+                {
+                    "name": "initial-element",
+                    "desc": "an object.  The default is implementation-dependent."
+                },
+                {
+                    "name": "sequence",
+                    "desc": "a proper sequence."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns a sequence of the type result-type and of length size, each of the\nelements of which has been initialized to initial-element.\nIf the result-type is a subtype of list, the result will be a list.\nIf the result-type is a subtype of vector, then if the implementation can\ndetermine the element type specified for the result-type, the element type\nof the resulting array is the result of upgrading that element type; or,\nif the implementation can determine that the element type is unspecified\n(or *), the element type of the resulting array is t; otherwise, an error\nis signaled.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (make-sequence 'list 0) =>  ()\n      (make-sequence 'string 26 :initial-element #\\.)\n     =>  \"..........................\"\n      (make-sequence '(vector double-float) 2\n                     :initial-element 1d0)\n     =>  #(1.0d0 1.0d0)\n      (make-sequence '(vector * 2) 3) should signal an error\n      (make-sequence '(vector * 4) 3) should signal an error\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "The implementation.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "The consequences are unspecified if initial-element is not an object which\ncan be stored in the resulting sequence.\nAn error of type type-error must be signaled if the result-type is neither\na recognizable subtype of list, nor a recognizable subtype of vector.\nAn error of type type-error should be signaled if result-type specifies\nthe number of elements and size is different from that number.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note make-array:: , *Note make-list::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "      (make-sequence 'string 5) == (make-string 5)\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: make-sequence,  Next: subseq,  Prev: fill,  Up: Sequences Dictionary\n\nmake-sequence                                                    [Function]\n---------------------------------------------------------------------------\n\n`make-sequence'  result-type size &key initial-element =>  sequence\n\nArguments and Values::\n......................\n\nresult-type--a sequence type specifier.\n\nsize--a non-negative integer.\n\ninitial-element--an object.  The default is implementation-dependent.\n\nsequence--a proper sequence.\n\nDescription::\n.............\n\nReturns a sequence of the type result-type and of length size, each of the\nelements of which has been initialized to initial-element.\n\nIf the result-type is a subtype of list, the result will be a list.\n\nIf the result-type is a subtype of vector, then if the implementation can\ndetermine the element type specified for the result-type, the element type\nof the resulting array is the result of upgrading that element type; or,\nif the implementation can determine that the element type is unspecified\n(or *), the element type of the resulting array is t; otherwise, an error\nis signaled.\n\nExamples::\n..........\n\n      (make-sequence 'list 0) =>  ()\n      (make-sequence 'string 26 :initial-element #\\.)\n     =>  \"..........................\"\n      (make-sequence '(vector double-float) 2\n                     :initial-element 1d0)\n     =>  #(1.0d0 1.0d0)\n\n      (make-sequence '(vector * 2) 3) should signal an error\n      (make-sequence '(vector * 4) 3) should signal an error\n\nAffected By::\n.............\n\nThe implementation.\n\nExceptional Situations::\n........................\n\nThe consequences are unspecified if initial-element is not an object which\ncan be stored in the resulting sequence.\n\nAn error of type type-error must be signaled if the result-type is neither\na recognizable subtype of list, nor a recognizable subtype of vector.\n\nAn error of type type-error should be signaled if result-type specifies\nthe number of elements and size is different from that number.\n\nSee Also::\n..........\n\n*Note make-array:: , *Note make-list::\n\nNotes::\n.......\n\n      (make-sequence 'string 5) == (make-string 5)\n\n"
+}

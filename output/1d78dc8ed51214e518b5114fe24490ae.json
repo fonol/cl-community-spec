@@ -1,0 +1,61 @@
+{
+    "name": "map",
+    "prev": "subseq",
+    "next": "map-into",
+    "up": "Sequences Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "map"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "map",
+                    "text": " result-type function &rest sequences^+ =>  result\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "function",
+                    "desc": "a function designator.  function must take as many arguments as"
+                },
+                {
+                    "name": "function",
+                    "desc": "a function designator.  function must take as many arguments asthere are sequences.\n"
+                },
+                {
+                    "name": "sequence",
+                    "desc": "a proper sequence."
+                },
+                {
+                    "name": "result",
+                    "desc": "if result-type is a type specifier other than nil, then a sequence"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Applies function to successive sets of arguments in which one argument is\nobtained from each sequence.  The function is called first on all the\nelements with index 0, then on all those with index 1, and so on.  The\nresult-type specifies the type of the resulting sequence.\nmap returns nil if result-type is nil.  Otherwise, map returns a sequence\nsuch that element j is the result of applying function to element j of\neach of the sequences.  The result sequence is as long as the shortest of\nthe sequences.  The consequences are undefined if the result of applying\nfunction to the successive elements of the sequences cannot be contained\nin a sequence of the type given by result-type.\nIf the result-type is a subtype of list, the result will be a list.\nIf the result-type is a subtype of vector, then if the implementation can\ndetermine the element type specified for the result-type, the element type\nof the resulting array is the result of upgrading that element type; or,\nif the implementation can determine that the element type is unspecified\n(or *), the element type of the resulting array is t; otherwise, an error\nis signaled.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (map 'string #'(lambda (x y)\n                       (char \"01234567890ABCDEF\" (mod (+ x y) 16)))\n            '(1 2 3 4)\n            '(10 9 8 7)) =>  \"AAAA\"\n      (setq seq '(\"lower\" \"UPPER\" \"\" \"123\")) =>  (\"lower\" \"UPPER\" \"\" \"123\")\n      (map nil #'nstring-upcase seq) =>  NIL\n      seq =>  (\"LOWER\" \"UPPER\" \"\" \"123\")\n      (map 'list #'- '(1 2 3 4)) =>  (-1 -2 -3 -4)\n      (map 'string\n           #'(lambda (x) (if (oddp x) #\\1 #\\0))\n           '(1 2 3 4)) =>  \"1010\"\n      (map '(vector * 4) #'cons \"abc\" \"de\") should signal an error\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "An error of type type-error must be signaled if the result-type is not a\nrecognizable subtype of list, not a recognizable subtype of vector, and\nnot nil.\nShould be prepared to signal an error of type type-error if any sequence\nis not a proper sequence.\nAn error of type type-error should be signaled if result-type specifies the\nnumber of elements and the minimum length of the sequences is different\nfrom that number.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note Traversal Rules and Side Effects::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: map,  Next: map-into,  Prev: subseq,  Up: Sequences Dictionary\n\nmap                                                              [Function]\n---------------------------------------------------------------------------\n\n`map'  result-type function &rest sequences^+ =>  result\n\nArguments and Values::\n......................\n\nresult-type - a sequence type specifier, or nil.\n\nfunction--a function designator.  function must take as many arguments as\nthere are sequences.\n\nsequence--a proper sequence.\n\nresult--if result-type is a type specifier other than nil, then a sequence\nof the type it denotes; otherwise (if the result-type is nil), nil.\n\nDescription::\n.............\n\nApplies function to successive sets of arguments in which one argument is\nobtained from each sequence.  The function is called first on all the\nelements with index 0, then on all those with index 1, and so on.  The\nresult-type specifies the type of the resulting sequence.\n\nmap returns nil if result-type is nil.  Otherwise, map returns a sequence\nsuch that element j is the result of applying function to element j of\neach of the sequences.  The result sequence is as long as the shortest of\nthe sequences.  The consequences are undefined if the result of applying\nfunction to the successive elements of the sequences cannot be contained\nin a sequence of the type given by result-type.\n\nIf the result-type is a subtype of list, the result will be a list.\n\nIf the result-type is a subtype of vector, then if the implementation can\ndetermine the element type specified for the result-type, the element type\nof the resulting array is the result of upgrading that element type; or,\nif the implementation can determine that the element type is unspecified\n(or *), the element type of the resulting array is t; otherwise, an error\nis signaled.\n\nExamples::\n..........\n\n      (map 'string #'(lambda (x y)\n                       (char \"01234567890ABCDEF\" (mod (+ x y) 16)))\n            '(1 2 3 4)\n            '(10 9 8 7)) =>  \"AAAA\"\n      (setq seq '(\"lower\" \"UPPER\" \"\" \"123\")) =>  (\"lower\" \"UPPER\" \"\" \"123\")\n      (map nil #'nstring-upcase seq) =>  NIL\n      seq =>  (\"LOWER\" \"UPPER\" \"\" \"123\")\n      (map 'list #'- '(1 2 3 4)) =>  (-1 -2 -3 -4)\n      (map 'string\n           #'(lambda (x) (if (oddp x) #\\1 #\\0))\n           '(1 2 3 4)) =>  \"1010\"\n\n      (map '(vector * 4) #'cons \"abc\" \"de\") should signal an error\n\nExceptional Situations::\n........................\n\nAn error of type type-error must be signaled if the result-type is not a\nrecognizable subtype of list, not a recognizable subtype of vector, and\nnot nil.\n\nShould be prepared to signal an error of type type-error if any sequence\nis not a proper sequence.\n\nAn error of type type-error should be signaled if result-type specifies the\nnumber of elements and the minimum length of the sequences is different\nfrom that number.\n\nSee Also::\n..........\n\n*Note Traversal Rules and Side Effects::\n\n"
+}

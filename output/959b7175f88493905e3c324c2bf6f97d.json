@@ -1,0 +1,57 @@
+{
+    "name": "throw",
+    "prev": "tagbody",
+    "next": "unwind-protect",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Special Operator",
+        "text": "throw"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "throw",
+                    "text": " tag result-form =>  #<NoValue>\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "tag",
+                    "desc": "a catch tag; evaluated."
+                },
+                {
+                    "name": "result-form",
+                    "desc": "a form; evaluated as described below."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "throw causes a non-local control transfer to a catch whose tag is eq to\ntag.\nTag is evaluated first to produce an object called the throw tag; then\nresult-form is evaluated, and its results are saved. If the result-form\nproduces multiple values, then all the values are saved.  The most recent\noutstanding catch whose tag is eq to the throw tag is exited; the saved\nresults are returned as the value or values of catch.\nThe transfer of control initiated by throw is performed as described in\n*Note Transfer of Control to an Exit Point::.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (catch 'result\n         (setq i 0 j 0)\n         (loop (incf j 3) (incf i)\n               (if (= i 3) (throw 'result (values i j))))) =>  3, 9\n      (catch nil\n        (unwind-protect (throw nil 1)\n          (throw nil 2))) =>  2\nThe consequences of the following are undefined because the catch of b is\npassed over by the first throw, hence portable programs must assume that\nits dynamic extent is terminated.  The binding of the catch tag is not yet\ndisestablished and therefore it is the target of the second throw.\n      (catch 'a\n        (catch 'b\n          (unwind-protect (throw 'a 1)\n            (throw 'b 2))))\nThe following prints \"The inner catch returns :SECOND-THROW\" and then\nreturns :outer-catch.\n      (catch 'foo\n              (format t \"The inner catch returns ~s.~\n                      (catch 'foo\n                          (unwind-protect (throw 'foo :first-throw)\n                              (throw 'foo :second-throw))))\n              :outer-catch)\n      |>  The inner catch returns :SECOND-THROW\n     =>  :OUTER-CATCH\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If there is no outstanding catch tag that matches the throw tag, no\nunwinding of the stack is performed, and an error of type control-error is\nsignaled.  When the error is signaled, the dynamic environment is that\nwhich was in force at the point of the throw.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note block:: , *Note catch:: , *Note return-from:: , *Note\nunwind-protect:: , *Note Evaluation::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "catch and throw are normally used when the exit point must have dynamic\nscope (e.g., the throw is not lexically enclosed by the catch), while\nblock and return are used when lexical scope is sufficient.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: throw,  Next: unwind-protect,  Prev: tagbody,  Up: Data and Control Flow Dictionary\n\nthrow                                                    [Special Operator]\n---------------------------------------------------------------------------\n\n`throw'  tag result-form =>  #<NoValue>\n\nArguments and Values::\n......................\n\ntag--a catch tag; evaluated.\n\nresult-form--a form; evaluated as described below.\n\nDescription::\n.............\n\nthrow causes a non-local control transfer to a catch whose tag is eq to\ntag.\n\nTag is evaluated first to produce an object called the throw tag; then\nresult-form is evaluated, and its results are saved. If the result-form\nproduces multiple values, then all the values are saved.  The most recent\noutstanding catch whose tag is eq to the throw tag is exited; the saved\nresults are returned as the value or values of catch.\n\nThe transfer of control initiated by throw is performed as described in\n*Note Transfer of Control to an Exit Point::.\n\nExamples::\n..........\n\n      (catch 'result\n         (setq i 0 j 0)\n         (loop (incf j 3) (incf i)\n               (if (= i 3) (throw 'result (values i j))))) =>  3, 9\n\n      (catch nil\n        (unwind-protect (throw nil 1)\n          (throw nil 2))) =>  2\n\nThe consequences of the following are undefined because the catch of b is\npassed over by the first throw, hence portable programs must assume that\nits dynamic extent is terminated.  The binding of the catch tag is not yet\ndisestablished and therefore it is the target of the second throw.\n\n      (catch 'a\n        (catch 'b\n          (unwind-protect (throw 'a 1)\n            (throw 'b 2))))\n\nThe following prints \"The inner catch returns :SECOND-THROW\" and then\nreturns :outer-catch.\n\n      (catch 'foo\n              (format t \"The inner catch returns ~s.~\n                      (catch 'foo\n                          (unwind-protect (throw 'foo :first-throw)\n                              (throw 'foo :second-throw))))\n              :outer-catch)\n      |>  The inner catch returns :SECOND-THROW\n     =>  :OUTER-CATCH\n\nExceptional Situations::\n........................\n\nIf there is no outstanding catch tag that matches the throw tag, no\nunwinding of the stack is performed, and an error of type control-error is\nsignaled.  When the error is signaled, the dynamic environment is that\nwhich was in force at the point of the throw.\n\nSee Also::\n..........\n\n*Note block:: , *Note catch:: , *Note return-from:: , *Note\nunwind-protect:: , *Note Evaluation::\n\nNotes::\n.......\n\ncatch and throw are normally used when the exit point must have dynamic\nscope (e.g., the throw is not lexically enclosed by the catch), while\nblock and return are used when lexical scope is sufficient.\n\n"
+}

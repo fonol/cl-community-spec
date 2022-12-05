@@ -1,0 +1,21 @@
+{
+    "name": "Nesting of FORMAT Operations",
+    "prev": "Additional Information about FORMAT Operations",
+    "next": "Missing and Additional FORMAT Arguments",
+    "up": "Additional Information about FORMAT Operations",
+    "header": {
+        "type": null,
+        "text": null
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Nesting of FORMAT Operations",
+            "text": "The case-conversion, conditional, iteration, and justification constructs\ncan contain other formatting constructs by bracketing them.  These\nconstructs must nest properly with respect to each other.  For example, it\nis not legitimate to put the start of a case-conversion construct in each\narm of a conditional and the end of the case-conversion construct outside\nthe conditional:\n      (format nil \"~:[abc~:@(def~;ghi~\n     :@(jkl~]mno~)\" x) ;Invalid!\nThis notation is invalid because the ~[...~;...~] and ~(...~) constructs\nare not properly nested.\nThe processing indirection caused by the ~? directive is also a kind of\nnesting for the purposes of this rule of proper nesting.  It is not\npermitted to start a bracketing construct within a string processed under\ncontrol of a ~?  directive and end the construct at some point after the\n~? construct in the string containing that construct, or vice versa.  For\nexample, this situation is invalid:\n      (format nil \"~@?ghi~)\" \"abc~@(def\") ;Invalid!\nThis notation is invalid because the ~?  and ~(...~) constructs are not\nproperly nested.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: Nesting of FORMAT Operations,  Next: Missing and Additional FORMAT Arguments,  Prev: Additional Information about FORMAT Operations,  Up: Additional Information about FORMAT Operations\n\nNesting of FORMAT Operations\n............................\n\nThe case-conversion, conditional, iteration, and justification constructs\ncan contain other formatting constructs by bracketing them.  These\nconstructs must nest properly with respect to each other.  For example, it\nis not legitimate to put the start of a case-conversion construct in each\narm of a conditional and the end of the case-conversion construct outside\nthe conditional:\n\n      (format nil \"~:[abc~:@(def~;ghi~\n     :@(jkl~]mno~)\" x) ;Invalid!\n\nThis notation is invalid because the ~[...~;...~] and ~(...~) constructs\nare not properly nested.\n\nThe processing indirection caused by the ~? directive is also a kind of\nnesting for the purposes of this rule of proper nesting.  It is not\npermitted to start a bracketing construct within a string processed under\ncontrol of a ~?  directive and end the construct at some point after the\n~? construct in the string containing that construct, or vice versa.  For\nexample, this situation is invalid:\n\n      (format nil \"~@?ghi~)\" \"abc~@(def\") ;Invalid!\n\nThis notation is invalid because the ~?  and ~(...~) constructs are not\nproperly nested.\n\n"
+}

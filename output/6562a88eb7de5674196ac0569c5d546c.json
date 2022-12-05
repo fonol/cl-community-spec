@@ -1,0 +1,89 @@
+{
+    "name": "typecase",
+    "prev": "case",
+    "next": "multiple-value-bind",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "typecase, ctypecase, etypecase"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "typecase",
+                    "text": " keyform  {!normal-clause}* [!otherwise-clause] =>  {result}*\n"
+                },
+                {
+                    "name": "ctypecase",
+                    "text": " keyplace {!normal-clause}* =>  {result}*\n\n"
+                },
+                {
+                    "name": "etypecase",
+                    "text": " keyform  {!normal-clause}* =>  {result}*\n\nnormal-clause ::=(type {form}*)\n\notherwise-clause ::=({otherwise | t} {form}*)\n\nclause ::=normal-clause | otherwise-clause\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "keyform",
+                    "desc": "a form; evaluated to produce a test-key."
+                },
+                {
+                    "name": "keyplace",
+                    "desc": "a form; evaluated initially to produce a test-key.  Possibly"
+                },
+                {
+                    "name": "keyplace",
+                    "desc": "a form; evaluated initially to produce a test-key.  Possiblyalso used later as a place if no types match.\n"
+                },
+                {
+                    "name": "test-key",
+                    "desc": "an object produced by evaluating keyform or keyplace."
+                },
+                {
+                    "name": "type",
+                    "desc": "a type specifier."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values returned by the forms in the matching clause."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "These macros allow the conditional execution of a body of forms in a\nclause that is selected by matching the test-key on the basis of its type.\nThe keyform or keyplace is evaluated to produce the test-key.\nEach of the normal-clauses is then considered in turn.  If the test-key is\nof the type given by the clauses's type, the forms in that clause are\nevaluated as an implicit progn, and the values it returns are returned as\nthe value of the typecase, ctypecase, or etypecase form.\nThese macros differ only in their behavior when no normal-clause matches;\nspecifically:\ntypecase\n     If no normal-clause matches, and there is an otherwise-clause, then\n     that otherwise-clause automatically matches; the forms in that clause\n     are evaluated as an implicit progn, and the values it returns are\n     returned as the value of the typecase.\n     If there is no otherwise-clause, typecase returns nil.\nctypecase\n     If no normal-clause matches, a correctable error of type type-error\n     is signaled.  The offending datum is the test-key and the expected\n     type is type equivalent to (or type1 type2 ...).  The store-value\n     restart can be used to correct the error.\n     If the store-value restart is invoked, its argument becomes the new\n     test-key, and is stored in keyplace as if by (setf keyplace test-key).\n     Then ctypecase starts over, considering each clause anew.\n     If the store-value restart is invoked interactively, the user is\n     prompted for a new test-key to use.\n     The subforms of keyplace might be evaluated again if none of the\n     cases holds.\netypecase\n     If no normal-clause matches, a non-correctable error of type\n     type-error is signaled.  The offending datum is the test-key and the\n     expected type is type equivalent to (or type1 type2 ...).\n     Note that in contrast with ctypecase, the caller of etypecase may\n     rely on the fact that etypecase does not return if a normal-clause\n     does not match.\nIn all three cases, is permissible for more than one clause to specify a\nmatching type, particularly if one is a subtype of another; the earliest\napplicable clause is chosen.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "     ;;; (Note that the parts of this example which use TYPE-OF\n     ;;;  are implementation-dependent.)\n      (defun what-is-it (x)\n        (format t \"~&~S is ~A.~\n                x (typecase x\n                    (float \"a float\")\n                    (null \"a symbol, boolean false, or the empty list\")\n                    (list \"a list\")\n                    (t (format nil \"a(n) ~(~A~)\" (type-of x))))))\n     =>  WHAT-IS-IT\n      (map 'nil #'what-is-it '(nil (a b) 7.0 7 box))\n      |>  NIL is a symbol, boolean false, or the empty list.\n      |>  (A B) is a list.\n      |>  7.0 is a float.\n      |>  7 is a(n) integer.\n      |>  BOX is a(n) symbol.\n     =>  NIL\n      (setq x 1/3)\n     =>  1/3\n      (ctypecase x\n          (integer (* x 4))\n          (symbol  (symbol-value x)))\n      |>  Error: The value of X, 1/3, is neither an integer nor a symbol.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Specify a value to use instead.\n      |>   2: Return to Lisp Toplevel.\n      |>  Debug> |>>:CONTINUE 1<<|\n      |>  Use value: |>>3.7<<|\n      |>  Error: The value of X, 3.7, is neither an integer nor a symbol.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Specify a value to use instead.\n      |>   2: Return to Lisp Toplevel.\n      |>  Debug> |>>:CONTINUE 1<<|\n      |>  Use value: |>>12<<|\n     =>  48\n      x =>  12\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "ctypecase and etypecase, since they might signal an error, are potentially\naffected by existing handlers and *debug-io*.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "ctypecase and etypecase signal an error of type type-error if no\nnormal-clause matches.\nThe compiler may choose to issue a warning of type style-warning if a\nclause will never be selected because it is completely shadowed by earlier\nclauses.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note case; ccase; ecase:: , *Note cond:: , *Note setf; psetf:: , *Note\nGeneralized Reference::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "     (typecase test-key\n       {(type {form}*)}*)\n     ==\n     (let ((#1=#:g0001 test-key))\n       (cond {((typep #1# 'type) {form}*)}*))\nThe specific error message used by etypecase and ctypecase can vary\nbetween implementations.  In situations where control of the specific\nwording of the error message is important, it is better to use typecase\nwith an otherwise-clause that explicitly signals an error with an\nappropriate message.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: typecase,  Next: multiple-value-bind,  Prev: case,  Up: Data and Control Flow Dictionary\n\ntypecase, ctypecase, etypecase                                      [Macro]\n---------------------------------------------------------------------------\n\n`typecase'  keyform  {!normal-clause}* [!otherwise-clause] =>  {result}*\n\n`ctypecase'  keyplace {!normal-clause}* =>  {result}*\n\n`etypecase'  keyform  {!normal-clause}* =>  {result}*\n\nnormal-clause ::=(type {form}*)\n\notherwise-clause ::=({otherwise | t} {form}*)\n\nclause ::=normal-clause | otherwise-clause\n\nArguments and Values::\n......................\n\nkeyform--a form; evaluated to produce a test-key.\n\nkeyplace--a form; evaluated initially to produce a test-key.  Possibly\nalso used later as a place if no types match.\n\ntest-key--an object produced by evaluating keyform or keyplace.\n\ntype--a type specifier.\n\nforms--an implicit progn.\n\nresults--the values returned by the forms in the matching clause.\n\nDescription::\n.............\n\nThese macros allow the conditional execution of a body of forms in a\nclause that is selected by matching the test-key on the basis of its type.\n\nThe keyform or keyplace is evaluated to produce the test-key.\n\nEach of the normal-clauses is then considered in turn.  If the test-key is\nof the type given by the clauses's type, the forms in that clause are\nevaluated as an implicit progn, and the values it returns are returned as\nthe value of the typecase, ctypecase, or etypecase form.\n\nThese macros differ only in their behavior when no normal-clause matches;\nspecifically:\n\ntypecase\n     If no normal-clause matches, and there is an otherwise-clause, then\n     that otherwise-clause automatically matches; the forms in that clause\n     are evaluated as an implicit progn, and the values it returns are\n     returned as the value of the typecase.\n\n     If there is no otherwise-clause, typecase returns nil.\n\nctypecase\n     If no normal-clause matches, a correctable error of type type-error\n     is signaled.  The offending datum is the test-key and the expected\n     type is type equivalent to (or type1 type2 ...).  The store-value\n     restart can be used to correct the error.\n\n     If the store-value restart is invoked, its argument becomes the new\n     test-key, and is stored in keyplace as if by (setf keyplace test-key).\n     Then ctypecase starts over, considering each clause anew.\n\n     If the store-value restart is invoked interactively, the user is\n     prompted for a new test-key to use.\n\n     The subforms of keyplace might be evaluated again if none of the\n     cases holds.\n\netypecase\n     If no normal-clause matches, a non-correctable error of type\n     type-error is signaled.  The offending datum is the test-key and the\n     expected type is type equivalent to (or type1 type2 ...).\n\n     Note that in contrast with ctypecase, the caller of etypecase may\n     rely on the fact that etypecase does not return if a normal-clause\n     does not match.\n\nIn all three cases, is permissible for more than one clause to specify a\nmatching type, particularly if one is a subtype of another; the earliest\napplicable clause is chosen.\n\nExamples::\n..........\n\n     ;;; (Note that the parts of this example which use TYPE-OF\n     ;;;  are implementation-dependent.)\n      (defun what-is-it (x)\n        (format t \"~&~S is ~A.~\n                x (typecase x\n                    (float \"a float\")\n                    (null \"a symbol, boolean false, or the empty list\")\n                    (list \"a list\")\n                    (t (format nil \"a(n) ~(~A~)\" (type-of x))))))\n     =>  WHAT-IS-IT\n      (map 'nil #'what-is-it '(nil (a b) 7.0 7 box))\n      |>  NIL is a symbol, boolean false, or the empty list.\n      |>  (A B) is a list.\n      |>  7.0 is a float.\n      |>  7 is a(n) integer.\n      |>  BOX is a(n) symbol.\n     =>  NIL\n      (setq x 1/3)\n     =>  1/3\n      (ctypecase x\n          (integer (* x 4))\n          (symbol  (symbol-value x)))\n      |>  Error: The value of X, 1/3, is neither an integer nor a symbol.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Specify a value to use instead.\n      |>   2: Return to Lisp Toplevel.\n      |>  Debug> |>>:CONTINUE 1<<|\n      |>  Use value: |>>3.7<<|\n      |>  Error: The value of X, 3.7, is neither an integer nor a symbol.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Specify a value to use instead.\n      |>   2: Return to Lisp Toplevel.\n      |>  Debug> |>>:CONTINUE 1<<|\n      |>  Use value: |>>12<<|\n     =>  48\n      x =>  12\n\nAffected By::\n.............\n\nctypecase and etypecase, since they might signal an error, are potentially\naffected by existing handlers and *debug-io*.\n\nExceptional Situations::\n........................\n\nctypecase and etypecase signal an error of type type-error if no\nnormal-clause matches.\n\nThe compiler may choose to issue a warning of type style-warning if a\nclause will never be selected because it is completely shadowed by earlier\nclauses.\n\nSee Also::\n..........\n\n*Note case; ccase; ecase:: , *Note cond:: , *Note setf; psetf:: , *Note\nGeneralized Reference::\n\nNotes::\n.......\n\n     (typecase test-key\n       {(type {form}*)}*)\n     ==\n     (let ((#1=#:g0001 test-key))\n       (cond {((typep #1# 'type) {form}*)}*))\n\nThe specific error message used by etypecase and ctypecase can vary\nbetween implementations.  In situations where control of the specific\nwording of the error message is important, it is better to use typecase\nwith an otherwise-clause that explicitly signals an error with an\nappropriate message.\n\n"
+}

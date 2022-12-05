@@ -1,0 +1,65 @@
+{
+    "name": "lambda",
+    "prev": "lambda (Symbol)",
+    "next": "compile",
+    "up": "Evaluation and Compilation Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "lambda"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "lambda",
+                    "text": " lambda-list [[{declaration}* | documentation]] {form}* =>function\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "lambda-list",
+                    "desc": "an ordinary lambda list."
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "documentation",
+                    "desc": "a string; not evaluated."
+                },
+                {
+                    "name": "form",
+                    "desc": "a form."
+                },
+                {
+                    "name": "function",
+                    "desc": "a function."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Provides a shorthand notation for a function special form involving a\nlambda expression such that:\n         (lambda lambda-list [[{declaration}* | documentation]] {form}*)\n      == (function (lambda lambda-list [[{declaration}* | documentation]] {form}*))\n      == #'(lambda lambda-list [[{declaration}* | documentation]] {form}*)\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (funcall (lambda (x) (+ x 3)) 4) =>  7\n"
+        },
+        {
+            "type": "See Also",
+            "text": "lambda (symbol)\n"
+        },
+        {
+            "type": "Notes",
+            "text": "This macro could be implemented by:\n     (defmacro lambda (&whole form &rest bvl-decls-and-body)\n       (declare (ignore bvl-decls-and-body))\n       `#',form)\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: lambda,  Next: compile,  Prev: lambda (Symbol),  Up: Evaluation and Compilation Dictionary\n\nlambda                                                              [Macro]\n---------------------------------------------------------------------------\n\n`lambda'  lambda-list [[{declaration}* | documentation]] {form}* =>\nfunction\n\nArguments and Values::\n......................\n\nlambda-list--an ordinary lambda list.\n\ndeclaration--a declare expression; not evaluated.\n\ndocumentation--a string; not evaluated.\n\nform--a form.\n\nfunction--a function.\n\nDescription::\n.............\n\nProvides a shorthand notation for a function special form involving a\nlambda expression such that:\n\n         (lambda lambda-list [[{declaration}* | documentation]] {form}*)\n      == (function (lambda lambda-list [[{declaration}* | documentation]] {form}*))\n      == #'(lambda lambda-list [[{declaration}* | documentation]] {form}*)\n\nExamples::\n..........\n\n      (funcall (lambda (x) (+ x 3)) 4) =>  7\n\nSee Also::\n..........\n\nlambda (symbol)\n\nNotes::\n.......\n\nThis macro could be implemented by:\n\n     (defmacro lambda (&whole form &rest bvl-decls-and-body)\n       (declare (ignore bvl-decls-and-body))\n       `#',form)\n\n"
+}

@@ -1,0 +1,53 @@
+{
+    "name": "aref",
+    "prev": "adjustable-array-p",
+    "next": "array-dimension",
+    "up": "Arrays Dictionary",
+    "header": {
+        "type": "Accessor",
+        "text": "aref"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "aref",
+                    "text": " array &rest subscripts =>  element\n(setf (`         aref' array &rest subscripts) new-element)\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "array",
+                    "desc": "an array."
+                },
+                {
+                    "name": "subscripts",
+                    "desc": "a list of valid array indices for the array."
+                },
+                {
+                    "name": "element, new-element",
+                    "desc": "an object."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Accesses the array element specified by the subscripts.  If no subscripts\nare supplied and array is zero rank, aref accesses the sole element of\narray.\naref ignores fill pointers.  It is permissible to use aref to access any\narray element, whether active or not.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "If the variable foo names a 3-by-5 array, then the first index could be 0,\n1, or 2, and then second index could be 0, 1, 2, 3, or 4.  The array\nelements can be referred to by using the function aref; for example, (aref\nfoo 2 1) refers to element (2, 1) of the array.\n      (aref (setq alpha (make-array 4)) 3) =>  implementation-dependent\n      (setf (aref alpha 3) 'sirens) =>  SIRENS\n      (aref alpha 3) =>  SIRENS\n      (aref (setq beta (make-array '(2 4)\n                         :element-type '(unsigned-byte 2)\n                         :initial-contents '((0 1 2 3) (3 2 1 0))))\n             1 2) =>  1\n      (setq gamma '(0 2))\n      (apply #'aref beta gamma) =>  2\n      (setf (apply #'aref beta gamma) 3) =>  3\n      (apply #'aref beta gamma) =>  3\n      (aref beta 0 2) =>  3\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note bit:: , *Note char; schar:: , *Note elt:: , *Note row-major-aref:: ,\n*Note svref:: ,\n*Note Compiler Terminology::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: aref,  Next: array-dimension,  Prev: adjustable-array-p,  Up: Arrays Dictionary\n\naref                                                             [Accessor]\n---------------------------------------------------------------------------\n\n`aref'  array &rest subscripts =>  element\n\n(setf (`         aref' array &rest subscripts) new-element)\nArguments and Values::\n......................\n\narray--an array.\n\nsubscripts--a list of valid array indices for the array.\n\nelement, new-element--an object.\n\nDescription::\n.............\n\nAccesses the array element specified by the subscripts.  If no subscripts\nare supplied and array is zero rank, aref accesses the sole element of\narray.\n\naref ignores fill pointers.  It is permissible to use aref to access any\narray element, whether active or not.\n\nExamples::\n..........\n\nIf the variable foo names a 3-by-5 array, then the first index could be 0,\n1, or 2, and then second index could be 0, 1, 2, 3, or 4.  The array\nelements can be referred to by using the function aref; for example, (aref\nfoo 2 1) refers to element (2, 1) of the array.\n\n      (aref (setq alpha (make-array 4)) 3) =>  implementation-dependent\n      (setf (aref alpha 3) 'sirens) =>  SIRENS\n      (aref alpha 3) =>  SIRENS\n      (aref (setq beta (make-array '(2 4)\n                         :element-type '(unsigned-byte 2)\n                         :initial-contents '((0 1 2 3) (3 2 1 0))))\n             1 2) =>  1\n      (setq gamma '(0 2))\n      (apply #'aref beta gamma) =>  2\n      (setf (apply #'aref beta gamma) 3) =>  3\n      (apply #'aref beta gamma) =>  3\n      (aref beta 0 2) =>  3\n\nSee Also::\n..........\n\n*Note bit:: , *Note char; schar:: , *Note elt:: , *Note row-major-aref:: ,\n*Note svref:: ,\n\n*Note Compiler Terminology::\n\n"
+}

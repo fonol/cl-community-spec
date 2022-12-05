@@ -1,0 +1,1523 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: *print-gensym*,  Next: *print-level*,  Prev: *print-escape*,  Up: Printer Dictionary
+
+*print-gensym*                                                   [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a generalized boolean.
+
+Initial Value::
+...............
+
+true.
+
+Description::
+.............
+
+Controls whether the prefix "#:" is printed before apparently uninterned
+symbols.  The prefix is printed before such symbols if and only if the
+value of *print-gensym* is true.
+
+Examples::
+..........
+
+      (let ((*print-gensym* nil))
+        (print (gensym)))
+      |>  G6040
+     =>  #:G6040
+
+See Also::
+..........
+
+*Note write; prin1; print; pprint; princ:: , *print-escape*
+
+
+File: gcl.info,  Node: *print-level*,  Next: *print-lines*,  Prev: *print-gensym*,  Up: Printer Dictionary
+
+*print-level*, *print-length*                                    [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a non-negative integer, or nil.
+
+Initial Value::
+...............
+
+nil.
+
+Description::
+.............
+
+*print-level* controls how many levels deep a nested object will print.
+If it is false, then no control is exercised.  Otherwise, it is an integer
+indicating the maximum level to be printed.  An object to be printed is at
+level 0; its components (as of a list or vector) are at level 1; and so on.
+If an object to be recursively printed has components and is at a level
+equal to or greater than the value of *print-level*, then the object is
+printed as "#".
+
+*print-length* controls how many elements at a given level are printed.
+If it is false, there is no limit to the number of components printed.
+Otherwise, it is an integer indicating the maximum number of elements of
+an object to be printed.  If exceeded, the printer will print "..." in
+place of the other elements.  In the case of a dotted list, if the list
+contains exactly as many elements as the value of *print-length*, the
+terminating atom is printed rather than printing "..."
+
+*print-level* and *print-length* affect the printing of an any object
+printed with a list-like syntax.  They do not affect the printing of
+symbols, strings, and bit vectors.
+
+Examples::
+..........
+
+      (setq a '(1 (2 (3 (4 (5 (6))))))) =>  (1 (2 (3 (4 (5 (6))))))
+      (dotimes (i 8)
+        (let ((*print-level* i))
+          (format t "~&~D -- ~S~
+      |>  0 -- #
+      |>  1 -- (1 #)
+      |>  2 -- (1 (2 #))
+      |>  3 -- (1 (2 (3 #)))
+      |>  4 -- (1 (2 (3 (4 #))))
+      |>  5 -- (1 (2 (3 (4 (5 #)))))
+      |>  6 -- (1 (2 (3 (4 (5 (6))))))
+      |>  7 -- (1 (2 (3 (4 (5 (6))))))
+     =>  NIL
+     
+      (setq a '(1 2 3 4 5 6)) =>  (1 2 3 4 5 6)
+      (dotimes (i 7)
+        (let ((*print-length* i))
+          (format t "~&~D -- ~S~
+      |>  0 -- (...)
+      |>  1 -- (1 ...)
+      |>  2 -- (1 2 ...)
+      |>  3 -- (1 2 3 ...)
+      |>  4 -- (1 2 3 4 ...)
+      |>  5 -- (1 2 3 4 5 6)
+      |>  6 -- (1 2 3 4 5 6)
+     =>  NIL
+     
+     (dolist (level-length '((0 1) (1 1) (1 2) (1 3) (1 4)
+                             (2 1) (2 2) (2 3) (3 2) (3 3) (3 4)))
+      (let ((*print-level*  (first  level-length))
+            (*print-length* (second level-length)))
+        (format t "~&~D ~D -- ~S~
+                *print-level* *print-length*
+                '(if (member x y) (+ (car x) 3) '(foo . #(a b c d "Baz"))))))
+      |>  0 1 -- #
+      |>  1 1 -- (IF ...)
+      |>  1 2 -- (IF # ...)
+      |>  1 3 -- (IF # # ...)
+      |>  1 4 -- (IF # # #)
+      |>  2 1 -- (IF ...)
+      |>  2 2 -- (IF (MEMBER X ...) ...)
+      |>  2 3 -- (IF (MEMBER X Y) (+ # 3) ...)
+      |>  3 2 -- (IF (MEMBER X ...) ...)
+      |>  3 3 -- (IF (MEMBER X Y) (+ (CAR X) 3) ...)
+      |>  3 4 -- (IF (MEMBER X Y) (+ (CAR X) 3) '(FOO . #(A B C D ...)))
+     =>  NIL
+
+See Also::
+..........
+
+*Note write; prin1; print; pprint; princ::
+
+
+File: gcl.info,  Node: *print-lines*,  Next: *print-miser-width*,  Prev: *print-level*,  Up: Printer Dictionary
+
+*print-lines*                                                    [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a non-negative integer, or nil.
+
+Initial Value::
+...............
+
+nil.
+
+Description::
+.............
+
+When the value of *print-lines* is other than nil, it is a limit on the
+number of output lines produced when something is pretty printed.  If an
+attempt is made to go beyond that many lines, ".." is printed at the end
+of the last line followed by all of the suffixes (closing delimiters) that
+are pending to be printed.
+
+Examples::
+..........
+
+      (let ((*print-right-margin* 25) (*print-lines* 3))
+        (pprint '(progn (setq a 1 b 2 c 3 d 4))))
+      |>  (PROGN (SETQ A 1
+      |>               B 2
+      |>               C 3 ..))
+     =>  <no values>
+
+Notes::
+.......
+
+The ".." notation is intentionally different than the "..." notation used
+for level abbreviation, so that the two different situations can be
+visually distinguished.
+
+This notation is used to increase the likelihood that the Lisp reader will
+signal an error if an attempt is later made to read the abbreviated output.
+Note however that if the truncation occurs in a string, as in "This string
+has been trunc..", the problem situation cannot be detected later and no
+such error will be signaled.
+
+
+File: gcl.info,  Node: *print-miser-width*,  Next: *print-pprint-dispatch*,  Prev: *print-lines*,  Up: Printer Dictionary
+
+*print-miser-width*                                              [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a non-negative integer, or nil.
+
+Initial Value::
+...............
+
+implementation-dependent
+
+Description::
+.............
+
+If it is not nil, the pretty printer switches to a compact style of output
+(called miser style) whenever the width available for printing a
+substructure is less than or equal to this many ems.
+
+
+File: gcl.info,  Node: *print-pprint-dispatch*,  Next: *print-pretty*,  Prev: *print-miser-width*,  Up: Printer Dictionary
+
+*print-pprint-dispatch*                                          [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a pprint dispatch table.
+
+Initial Value::
+...............
+
+implementation-dependent, but the initial entries all use a special class
+of priorities that have the property that they are less than every
+priority that can be specified using set-pprint-dispatch, so that the
+initial contents of any entry can be overridden.
+
+Description::
+.............
+
+The pprint dispatch table which currently controls the pretty printer.
+
+See Also::
+..........
+
+*print-pretty*, *Note Pretty Print Dispatch Tables::
+
+Notes::
+.......
+
+The intent is that the initial value of this variable should cause
+`traditional' pretty printing of code.  In general, however, you can put a
+value in *print-pprint-dispatch* that makes pretty-printed output look
+exactly like non-pretty-printed output.
+
+Setting *print-pretty* to true just causes the functions contained in the
+current pprint dispatch table to have priority over normal print-object
+methods; it has no magic way of enforcing that those functions actually
+produce pretty output.  For details, see *Note Pretty Print Dispatch
+Tables::.
+
+
+File: gcl.info,  Node: *print-pretty*,  Next: *print-readably*,  Prev: *print-pprint-dispatch*,  Up: Printer Dictionary
+
+*print-pretty*                                                   [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a generalized boolean.
+
+Initial Value::
+...............
+
+implementation-dependent.
+
+Description::
+.............
+
+Controls whether the Lisp printer calls the pretty printer.
+
+If it is false, the pretty printer is not used and
+
+a minimum
+
+of whitespace_1 is output when printing an expression.
+
+If it is true, the pretty printer is used, and the Lisp printer will
+endeavor to insert extra whitespace_1 where appropriate to make expressions
+more readable.
+
+*print-pretty* has an effect even when the value of *print-escape* is
+false.
+
+Examples::
+..........
+
+      (setq *print-pretty* 'nil) =>  NIL
+      (progn (write '(let ((a 1) (b 2) (c 3)) (+ a b c))) nil)
+      |>  (LET ((A 1) (B 2) (C 3)) (+ A B C))
+     =>  NIL
+      (let ((*print-pretty* t))
+        (progn (write '(let ((a 1) (b 2) (c 3)) (+ a b c))) nil))
+      |>  (LET ((A 1)
+      |>        (B 2)
+      |>        (C 3))
+      |>    (+ A B C))
+     =>  NIL
+     ;; Note that the first two expressions printed by this next form
+     ;; differ from the second two only in whether escape characters are printed.
+     ;; In all four cases, extra whitespace is inserted by the pretty printer.
+      (flet ((test (x)
+               (let ((*print-pretty* t))
+                 (print x)
+                 (format t "~
+                 (terpri) (princ x) (princ " ")
+                 (format t "~
+       (test '#'(lambda () (list "a" #'c #'d))))
+      |>  #'(LAMBDA ()
+      |>      (LIST "a" #'C #'D))
+      |>  #'(LAMBDA ()
+      |>      (LIST "a" #'C #'D))
+      |>  #'(LAMBDA ()
+      |>      (LIST a b 'C #'D))
+      |>  #'(LAMBDA ()
+      |>      (LIST a b 'C #'D))
+     =>  NIL
+
+See Also::
+..........
+
+*Note write; prin1; print; pprint; princ::
+
+
+File: gcl.info,  Node: *print-readably*,  Next: *print-right-margin*,  Prev: *print-pretty*,  Up: Printer Dictionary
+
+*print-readably*                                                 [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a generalized boolean.
+
+Initial Value::
+...............
+
+false.
+
+Description::
+.............
+
+If *print-readably* is true, some special rules for printing objects go
+into effect.  Specifically, printing any object O_1 produces a printed
+representation that, when seen by the Lisp reader while the standard
+readtable is in effect, will produce an object O_2 that is similar to O_1.
+The printed representation produced might or might not be the same as the
+printed representation produced when *print-readably* is false.  If
+printing an object readably is not possible, an error of type
+print-not-readable is signaled rather than using a syntax (e.g., the "#<"
+syntax) that would not be readable by the same implementation.  If the
+value of some other printer control variable is such that these
+requirements would be violated, the value of that other variable is
+ignored.
+
+Specifically, if *print-readably* is true, printing proceeds as if
+*print-escape*, *print-array*, and *print-gensym* were also true, and as if
+*print-length*, *print-level*, and *print-lines* were false.
+
+If *print-readably* is false, the normal rules for printing and the normal
+interpretations of other printer control variables are in effect.
+
+Individual methods for print-object, including user-defined methods, are
+responsible for implementing these requirements.
+
+If *read-eval* is false and *print-readably* is true, any such method that
+would output a reference to the "#." reader macro will either output
+something else or will signal an error (as described above).
+
+Examples::
+..........
+
+      (let ((x (list "a" '\a (gensym) '((a (b (c))) d e f g)))
+            (*print-escape* nil)
+            (*print-gensym* nil)
+            (*print-level* 3)
+            (*print-length* 3))
+        (write x)
+        (let ((*print-readably* t))
+          (terpri)
+          (write x)
+          :done))
+      |>  (a a G4581 ((A #) D E ...))
+      |>  ("a" |a| #:G4581 ((A (B (C))) D E F G))
+     =>  :DONE
+     
+     ;; This is setup code is shared between the examples
+     ;; of three hypothetical implementations which follow.
+      (setq table (make-hash-table)) =>  #<HASH-TABLE EQL 0/120 32005763>
+      (setf (gethash table 1) 'one) =>  ONE
+      (setf (gethash table 2) 'two) =>  TWO
+     
+     ;; Implementation A
+      (let ((*print-readably* t)) (print table))
+      Error: Can't print #<HASH-TABLE EQL 0/120 32005763> readably.
+     
+     ;; Implementation B
+     ;; No standardized #S notation for hash tables is defined,
+     ;; but there might be an implementation-defined notation.
+      (let ((*print-readably* t)) (print table))
+      |>  #S(HASH-TABLE :TEST EQL :SIZE 120 :CONTENTS (1 ONE 2 TWO))
+     =>  #<HASH-TABLE EQL 0/120 32005763>
+     
+     ;; Implementation C
+     ;; Note that #. notation can only be used if *READ-EVAL* is true.
+     ;; If *READ-EVAL* were false, this same implementation might have to
+     ;; signal an error unless it had yet another printing strategy to fall
+     ;; back on.
+      (let ((*print-readably* t)) (print table))
+      |>  #.(LET ((HASH-TABLE (MAKE-HASH-TABLE)))
+      |>      (SETF (GETHASH 1 HASH-TABLE) ONE)
+      |>      (SETF (GETHASH 2 HASH-TABLE) TWO)
+      |>      HASH-TABLE)
+     =>  #<HASH-TABLE EQL 0/120 32005763>
+
+See Also::
+..........
+
+*Note write; prin1; print; pprint; princ:: , *Note
+print-unreadable-object::
+
+Notes::
+.......
+
+The rules for "similarity" imply that #A or #( syntax cannot be used for
+arrays of element type other than t.  An implementation will have to use
+another syntax or signal an error of type print-not-readable.
+
+
+File: gcl.info,  Node: *print-right-margin*,  Next: print-not-readable,  Prev: *print-readably*,  Up: Printer Dictionary
+
+*print-right-margin*                                             [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a non-negative integer, or nil.
+
+Initial Value::
+...............
+
+nil.
+
+Description::
+.............
+
+If it is non-nil, it specifies the right margin (as integer number of ems)
+to use when the pretty printer is making layout decisions.
+
+If it is nil, the right margin is taken to be the maximum line length such
+that output can be displayed without wraparound or truncation.  If this
+cannot be determined, an implementation-dependent value is used.
+
+Notes::
+.......
+
+This measure is in units of ems in order to be compatible with
+implementation-defined variable-width fonts while still not requiring the
+language to provide support for fonts.
+
+
+File: gcl.info,  Node: print-not-readable,  Next: print-not-readable-object,  Prev: *print-right-margin*,  Up: Printer Dictionary
+
+print-not-readable                                         [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+print-not-readable, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type print-not-readable consists of error conditions that occur during
+output while *print-readably* is true, as a result of attempting to write
+a printed representation with the Lisp printer that would not be correctly
+read back with the Lisp reader.  The object which could not be printed is
+initialized by the :object initialization argument to make-condition, and
+is accessed by the function print-not-readable-object.
+
+See Also::
+..........
+
+*Note print-not-readable-object::
+
+
+File: gcl.info,  Node: print-not-readable-object,  Next: format,  Prev: print-not-readable,  Up: Printer Dictionary
+
+print-not-readable-object                                        [Function]
+---------------------------------------------------------------------------
+
+`print-not-readable-object'  condition =>  object
+
+Arguments and Values::
+......................
+
+condition--a condition of type print-not-readable.
+
+object--an object.
+
+Description::
+.............
+
+Returns the object that could not be printed readably in the situation
+represented by condition.
+
+See Also::
+..........
+
+print-not-readable, *Note Conditions::
+
+
+File: gcl.info,  Node: format,  Prev: print-not-readable-object,  Up: Printer Dictionary
+
+format                                                           [Function]
+---------------------------------------------------------------------------
+
+`format'  destination control-string &rest args =>  result
+
+Arguments and Values::
+......................
+
+destination--nil, t, a stream, or a string with a fill pointer.
+
+control-string--a format control.
+
+args--format arguments for control-string.
+
+result--if destination is non-nil, then nil; otherwise, a string.
+
+Description::
+.............
+
+format produces formatted output by outputting the characters of
+control-string and observing that a tilde introduces a directive.  The
+character after the tilde, possibly preceded by prefix parameters and
+modifiers, specifies what kind of formatting is desired.  Most directives
+use one or more elements of args to create their output.
+
+If destination is a string, a stream, or t, then the result is nil.
+Otherwise, the result is a string containing the `output.'
+
+format is useful for producing nicely formatted text, producing
+good-looking messages, and so on.  format can generate and return a string
+or output to destination.
+
+For details on how the control-string is interpreted, see *Note Formatted
+Output::.
+
+Affected By::
+.............
+
+*standard-output*, *print-escape*, *print-radix*, *print-base*,
+*print-circle*, *print-pretty*, *print-level*, *print-length*,
+*print-case*, *print-gensym*, *print-array*.
+
+Exceptional Situations::
+........................
+
+If destination is a string with a fill pointer, the consequences are
+undefined if destructive modifications are performed directly on the
+string during the dynamic extent of the call.
+
+See Also::
+..........
+
+*Note write; prin1; print; pprint; princ:: , *Note Documentation of
+Implementation-Defined Scripts::
+
+
+File: gcl.info,  Node: Reader,  Next: System Construction,  Prev: Printer,  Up: Top
+
+Reader
+******
+
+* Menu:
+
+* Reader Concepts::
+* Reader Dictionary::
+
+
+File: gcl.info,  Node: Reader Concepts,  Next: Reader Dictionary,  Prev: Reader,  Up: Reader
+
+Reader Concepts
+===============
+
+* Menu:
+
+* Dynamic Control of the Lisp Reader::
+* Effect of Readtable Case on the Lisp Reader::
+* Argument Conventions of Some Reader Functions::
+
+
+File: gcl.info,  Node: Dynamic Control of the Lisp Reader,  Next: Effect of Readtable Case on the Lisp Reader,  Prev: Reader Concepts,  Up: Reader Concepts
+
+Dynamic Control of the Lisp Reader
+----------------------------------
+
+Various aspects of the Lisp reader can be controlled dynamically.  See
+*Note Readtables:: and *Note Variables that affect the Lisp Reader::.
+
+
+File: gcl.info,  Node: Effect of Readtable Case on the Lisp Reader,  Next: Argument Conventions of Some Reader Functions,  Prev: Dynamic Control of the Lisp Reader,  Up: Reader Concepts
+
+Effect of Readtable Case on the Lisp Reader
+-------------------------------------------
+
+The readtable case of the current readtable affects the Lisp reader in the
+following ways:
+
+:upcase
+     When the readtable case is :upcase, unescaped constituent characters
+     are converted to uppercase, as specified in *Note Reader Algorithm::.
+
+:downcase
+     When the readtable case is :downcase, unescaped constituent
+     characters are converted to lowercase.
+
+:preserve
+     When the readtable case is :preserve, the case of all characters
+     remains unchanged.
+
+:invert
+     When the readtable case is :invert, then if all of the unescaped
+     letters in the extended token are of the same case, those (unescaped)
+     letters are converted to the opposite case.
+
+* Menu:
+
+* Examples of Effect of Readtable Case on the Lisp Reader::
+
+
+File: gcl.info,  Node: Examples of Effect of Readtable Case on the Lisp Reader,  Prev: Effect of Readtable Case on the Lisp Reader,  Up: Effect of Readtable Case on the Lisp Reader
+
+Examples of Effect of Readtable Case on the Lisp Reader
+.......................................................
+
+      (defun test-readtable-case-reading ()
+        (let ((*readtable* (copy-readtable nil)))
+          (format t "READTABLE-CASE  Input   Symbol-name~
+                   ~
+                   ~
+          (dolist (readtable-case '(:upcase :downcase :preserve :invert))
+            (setf (readtable-case *readtable*) readtable-case)
+            (dolist (input '("ZEBRA" "Zebra" "zebra"))
+              (format t "~&:~A~16T~A~24T~A"
+                      (string-upcase readtable-case)
+                      input
+                      (symbol-name (read-from-string input)))))))
+
+The output from (test-readtable-case-reading) should be as follows:
+
+      READTABLE-CASE     Input Symbol-name
+      -------------------------------------
+         :UPCASE         ZEBRA   ZEBRA
+         :UPCASE         Zebra   ZEBRA
+         :UPCASE         zebra   ZEBRA
+         :DOWNCASE       ZEBRA   zebra
+         :DOWNCASE       Zebra   zebra
+         :DOWNCASE       zebra   zebra
+         :PRESERVE       ZEBRA   ZEBRA
+         :PRESERVE       Zebra   Zebra
+         :PRESERVE       zebra   zebra
+         :INVERT         ZEBRA   zebra
+         :INVERT         Zebra   Zebra
+         :INVERT         zebra   ZEBRA
+
+
+File: gcl.info,  Node: Argument Conventions of Some Reader Functions,  Prev: Effect of Readtable Case on the Lisp Reader,  Up: Reader Concepts
+
+Argument Conventions of Some Reader Functions
+---------------------------------------------
+
+* Menu:
+
+* The EOF-ERROR-P argument::
+* The RECURSIVE-P argument::
+
+
+File: gcl.info,  Node: The EOF-ERROR-P argument,  Next: The RECURSIVE-P argument,  Prev: Argument Conventions of Some Reader Functions,  Up: Argument Conventions of Some Reader Functions
+
+The EOF-ERROR-P argument
+........................
+
+Eof-error-p in input function calls controls what happens if input is from
+a file (or any other input source that has a definite end) and the end of
+the file is reached.  If eof-error-p is true (the default), an error of
+type end-of-file is signaled at end of file.  If it is false, then no
+error is signaled, and instead the function returns eof-value.
+
+Functions such as read that read the representation of an object rather
+than a single character always signals an error, regardless of
+eof-error-p, if the file ends in the middle of an object representation.
+For example, if a file does not contain enough right parentheses to
+balance the left parentheses in it, read signals an error.  If a file ends
+in a symbol or a number immediately followed by end-of-file, read reads the
+symbol or number successfully and when called again will act according to
+eof-error-p.  Similarly, the function read-line successfully reads the
+last line of a file even if that line is terminated by end-of-file rather
+than the newline character.  Ignorable text, such as lines containing only
+whitespace_2 or comments, are not considered to begin an object; if read
+begins to read an expression but sees only such ignorable text, it does
+not consider the file to end in the middle of an object.  Thus an
+eof-error-p argument controls what happens when the file ends between
+objects.
+
+
+File: gcl.info,  Node: The RECURSIVE-P argument,  Prev: The EOF-ERROR-P argument,  Up: Argument Conventions of Some Reader Functions
+
+The RECURSIVE-P argument
+........................
+
+If recursive-p is supplied and not nil, it specifies that this function
+call is not an outermost call to read but an embedded call, typically from
+a reader macro function.  It is important to distinguish such recursive
+calls for three reasons.
+
+1.
+     An outermost call establishes the context within which the #n= and
+     #n# syntax is scoped.  Consider, for example, the expression
+
+           (cons '#3=(p q r) '(x y . #3#))
+
+     If the single-quote reader macro were defined in this way:
+
+           (set-macro-character #\'       ;incorrect
+              #'(lambda (stream char)
+                   (declare (ignore char))
+                   (list 'quote (read stream))))
+
+     then each call to the single-quote reader macro function would
+     establish independent contexts for the scope of read information,
+     including the scope of identifications between markers like "#3=" and
+     "#3#".  However, for this expression, the scope was clearly intended
+     to be determined by the outer set of parentheses, so such a
+     definition would be incorrect.  The correct way to define the
+     single-quote reader macro uses recursive-p:
+
+           (set-macro-character #\'       ;correct
+              #'(lambda (stream char)
+                   (declare (ignore char))
+                   (list 'quote (read stream t nil t))))
+
+2.
+     A recursive call does not alter whether the reading process is to
+     preserve whitespace_2 or not (as determined by whether the outermost
+     call was to read or read-preserving-whitespace).  Suppose again that
+     single-quote were to be defined as shown above in the incorrect
+     definition.  Then a call to read-preserving-whitespace that read the
+     expression 'foo<Space> would fail to preserve the space character
+     following the symbol foo because the single-quote reader macro
+     function calls read, not read-preserving-whitespace, to read the
+     following expression (in this case foo).  The correct definition,
+     which passes the value true for recursive-p to read, allows the
+     outermost call to determine whether whitespace_2 is preserved.
+
+3.
+     When end-of-file is encountered and the eof-error-p argument is not
+     nil, the kind of error that is signaled may depend on the value of
+     recursive-p.  If recursive-p is true, then the end-of-file is deemed
+     to have occurred within the middle of a printed representation; if
+     recursive-p is false, then the end-of-file may be deemed to have
+     occurred between objects rather than within the middle of one.
+
+
+File: gcl.info,  Node: Reader Dictionary,  Prev: Reader Concepts,  Up: Reader
+
+Reader Dictionary
+=================
+
+* Menu:
+
+* readtable::
+* copy-readtable::
+* make-dispatch-macro-character::
+* read::
+* read-delimited-list::
+* read-from-string::
+* readtable-case::
+* readtablep::
+* set-dispatch-macro-character::
+* set-macro-character::
+* set-syntax-from-char::
+* with-standard-io-syntax::
+* *read-base*::
+* *read-default-float-format*::
+* *read-eval*::
+* *read-suppress*::
+* *readtable*::
+* reader-error::
+
+
+File: gcl.info,  Node: readtable,  Next: copy-readtable,  Prev: Reader Dictionary,  Up: Reader Dictionary
+
+readtable                                                    [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+readtable, t
+
+Description::
+.............
+
+A readtable maps characters into syntax types for the Lisp reader; see
+*Note Syntax::.  A readtable also contains associations between macro
+characters and their reader macro functions, and records information about
+the case conversion rules to be used by the Lisp reader when parsing
+symbols.
+
+Each simple character must be representable in the readtable.  It is
+implementation-defined whether non-simple characters can have syntax
+descriptions in the readtable.
+
+See Also::
+..........
+
+*Note Readtables::, *Note Printing Other Objects::
+
+
+File: gcl.info,  Node: copy-readtable,  Next: make-dispatch-macro-character,  Prev: readtable,  Up: Reader Dictionary
+
+copy-readtable                                                   [Function]
+---------------------------------------------------------------------------
+
+`copy-readtable'  &optional from-readtable to-readtable =>  readtable
+
+Arguments and Values::
+......................
+
+from-readtable--a readtable designator.  The default is the current
+readtable.
+
+to-readtable--a readtable or nil.  The default is nil.
+
+readtable--the to-readtable if it is non-nil, or else a fresh readtable.
+
+Description::
+.............
+
+copy-readtable copies from-readtable.
+
+If to-readtable is nil, a new readtable is created and returned.
+Otherwise the readtable specified by to-readtable is modified and returned.
+
+copy-readtable copies the setting of readtable-case.
+
+Examples::
+..........
+
+      (setq zvar 123) =>  123
+      (set-syntax-from-char #\z #\' (setq table2 (copy-readtable))) =>  T
+      zvar =>  123
+      (copy-readtable table2 *readtable*) =>  #<READTABLE 614000277>
+      zvar =>  VAR
+      (setq *readtable* (copy-readtable)) =>  #<READTABLE 46210223>
+      zvar =>  VAR
+      (setq *readtable* (copy-readtable nil)) =>  #<READTABLE 46302670>
+      zvar =>  123
+
+See Also::
+..........
+
+readtable, *Note readtable::
+
+Notes::
+.......
+
+     (setq *readtable* (copy-readtable nil))
+
+restores the input syntax to standard Common Lisp syntax, even if the
+initial readtable has been clobbered (assuming it is not so badly
+clobbered that you cannot type in the above expression).
+
+On the other hand,
+
+     (setq *readtable* (copy-readtable))
+
+replaces the current readtable with a copy of itself.  This is useful if
+you want to save a copy of a readtable for later use, protected from
+alteration in the meantime.  It is also useful if you want to locally bind
+the readtable to a copy of itself, as in:
+
+     (let ((*readtable* (copy-readtable))) ...)
+
+
+File: gcl.info,  Node: make-dispatch-macro-character,  Next: read,  Prev: copy-readtable,  Up: Reader Dictionary
+
+make-dispatch-macro-character                                    [Function]
+---------------------------------------------------------------------------
+
+`make-dispatch-macro-character'  char &optional non-terminating-p
+readtable =>  t
+
+Arguments and Values::
+......................
+
+char--a character.
+
+non-terminating-p--a generalized boolean.  The default is false.
+
+readtable--a readtable.  The default is the current readtable.
+
+Description::
+.............
+
+make-dispatch-macro-character makes char be a dispatching macro character
+in readtable.
+
+Initially, every character in the dispatch table associated with the char
+has an associated function that signals an error of type reader-error.
+
+If non-terminating-p is true, the dispatching macro character is made a
+non-terminating macro character; if non-terminating-p is false, the
+dispatching macro character is made a terminating macro character.
+
+Examples::
+..........
+
+      (get-macro-character #\{) =>  NIL, false
+      (make-dispatch-macro-character #\{) =>  T
+      (not (get-macro-character #\{)) =>  false
+
+The readtable is altered.
+
+See Also::
+..........
+
+*Note readtable:: , *Note set-dispatch-macro-character;
+get-dispatch-macro-character::
+
+
+File: gcl.info,  Node: read,  Next: read-delimited-list,  Prev: make-dispatch-macro-character,  Up: Reader Dictionary
+
+read, read-preserving-whitespace                                 [Function]
+---------------------------------------------------------------------------
+
+`read'  &optional input-stream eof-error-p eof-value recursive-p =>  object
+
+`read-preserving-whitespace'  &optional input-stream eof-error-p eof-value
+recursive-p
+=>  object
+
+Arguments and Values::
+......................
+
+input-stream--an input stream designator.
+
+eof-error-p--a generalized boolean.  The default is true.
+
+eof-value--an object.
+
+The default is nil.
+
+recursive-p--a generalized boolean.  The default is false.
+
+object--an object (parsed by the Lisp reader) or the eof-value.
+
+Description::
+.............
+
+read parses the printed representation of an object from input-stream and
+builds such an object.
+
+read-preserving-whitespace is like read but preserves any whitespace_2
+character that delimits the printed representation of the object.
+read-preserving-whitespace is exactly like read when the recursive-p
+argument to read-preserving-whitespace is true.
+
+When *read-suppress* is false, read throws away the delimiting character
+required by certain printed representations if it is a whitespace_2
+character; but read preserves the character (using unread-char) if it is
+syntactically meaningful, because it could be the start of the next
+expression.
+
+If a file ends in a symbol or a number immediately followed by an end of
+file_1, read reads the symbol or number successfully; when called again,
+it sees the end of file_1 and only then acts according to eof-error-p.  If
+a file contains ignorable text at the end, such as blank lines and
+comments, read does not consider it to end in the middle of an object.
+
+If recursive-p is true, the call to read is expected to be made from
+within some function that itself has been called from read or from a
+similar input function, rather than from the top level.
+
+Both functions return the object read from input-stream.  Eof-value is
+returned if eof-error-p is false and end of file is reached before the
+beginning of an object.
+
+Examples::
+..........
+
+      (read)
+      |>  |>>'a<<|
+     =>  (QUOTE A)
+      (with-input-from-string (is " ") (read is nil 'the-end)) =>  THE-END
+      (defun skip-then-read-char (s c n)
+         (if (char= c #\{) (read s t nil t) (read-preserving-whitespace s))
+         (read-char-no-hang s)) =>  SKIP-THEN-READ-CHAR
+      (let ((*readtable* (copy-readtable nil)))
+         (set-dispatch-macro-character #\# #\{ #'skip-then-read-char)
+         (set-dispatch-macro-character #\# #\} #'skip-then-read-char)
+         (with-input-from-string (is "#{123 x #}123 y")
+           (format t "~S ~S" (read is) (read is)))) =>  #\x, #\Space, NIL
+
+As an example, consider this reader macro definition:
+
+      (defun slash-reader (stream char)
+        (declare (ignore char))
+        `(path . ,(loop for dir = (read-preserving-whitespace stream t nil t)
+                        then (progn (read-char stream t nil t)
+                                    (read-preserving-whitespace stream t nil t))
+                        collect dir
+                        while (eql (peek-char nil stream nil nil t) #\/))))
+      (set-macro-character #\/ #'slash-reader)
+
+Consider now calling read on this expression:
+
+      (zyedh /usr/games/zork /usr/games/boggle)
+
+The / macro reads objects separated by more / characters; thus
+/usr/games/zork is intended to read as (path usr games zork).  The entire
+example expression should therefore be read as
+
+      (zyedh (path usr games zork) (path usr games boggle))
+
+However, if read had been used instead of read-preserving-whitespace, then
+after the reading of the symbol zork, the following space would be
+discarded; the next call to peek-char would see the following /, and the
+loop would continue, producing this interpretation:
+
+      (zyedh (path usr games zork usr games boggle))
+
+There are times when whitespace_2 should be discarded.  If a command
+interpreter takes single-character commands, but occasionally reads an
+object then if the whitespace_2 after a symbol is not discarded it might
+be interpreted as a command some time later after the symbol had been read.
+
+Affected By::
+.............
+
+*standard-input*, *terminal-io*, *readtable*, *read-default-float-format*,
+*read-base*, *read-suppress*, *package*, *read-eval*.
+
+Exceptional Situations::
+........................
+
+read signals an error of type end-of-file, regardless of eof-error-p, if
+the file ends in the middle of an object representation.  For example, if
+a file does not contain enough right parentheses to balance the left
+parentheses in it, read signals an error.  This is detected when read or
+read-preserving-whitespace is called with recursive-p and eof-error-p
+non-nil, and end-of-file is reached before the beginning of an object.
+
+If eof-error-p is true, an error of type end-of-file is signaled at the
+end of file.
+
+See Also::
+..........
+
+*Note peek-char:: , *Note read-char:: , *Note unread-char:: , *Note
+read-from-string:: , *Note read-delimited-list:: , *Note parse-integer:: ,
+*Note Syntax::, *Note Reader Concepts::
+
+
+File: gcl.info,  Node: read-delimited-list,  Next: read-from-string,  Prev: read,  Up: Reader Dictionary
+
+read-delimited-list                                              [Function]
+---------------------------------------------------------------------------
+
+`read-delimited-list'  char &optional input-stream recursive-p =>  list
+
+Arguments and Values::
+......................
+
+char--a character.
+
+input-stream--an input stream designator.  The default is standard input.
+
+recursive-p--a generalized boolean.  The default is false.
+
+list--a list of the objects read.
+
+Description::
+.............
+
+read-delimited-list reads objects from input-stream until the next
+character after an object's representation (ignoring whitespace_2
+characters and comments) is char.
+
+read-delimited-list looks ahead at each step for the next non-whitespace_2
+character and peeks at it as if with peek-char.  If it is char, then the
+character is consumed and the list of objects is returned.  If it is a
+constituent or escape character, then read is used to read an object,
+which is added to the end of the list.  If it is a macro character, its
+reader macro function is called; if the function returns a value, that
+value is added to the list.  The peek-ahead process is then repeated.
+
+If recursive-p is true, this call is expected to be embedded in a
+higher-level call to read or a similar function.
+
+It is an error to reach end-of-file during the operation of
+read-delimited-list.
+
+The consequences are undefined if char has a syntax type of whitespace_2
+in the current readtable.
+
+Examples::
+..........
+
+      (read-delimited-list #\]) 1 2 3 4 5 6 ]
+     =>  (1 2 3 4 5 6)
+
+Suppose you wanted #{a b c ... z} to read as a list of all pairs of the
+elements a, b, c, ..., z, for example.
+
+      #{p q z a}  reads as  ((p q) (p z) (p a) (q z) (q a) (z a))
+
+This can be done by specifying a macro-character definition for #{ that
+does two things: reads in all the items up to the }, and constructs the
+pairs.  read-delimited-list performs the first task.
+
+      (defun |#{-reader| (stream char arg)
+        (declare (ignore char arg))
+        (mapcon #'(lambda (x)
+                   (mapcar #'(lambda (y) (list (car x) y)) (cdr x)))
+               (read-delimited-list #\} stream t))) =>  |#{-reader|
+     
+      (set-dispatch-macro-character #\# #\{ #'|#{-reader|) =>  T
+      (set-macro-character #\} (get-macro-character #\) nil))
+
+Note that true is supplied for the recursive-p argument.
+
+It is necessary here to give a definition to the character } as well to
+prevent it from being a constituent.  If the line
+
+      (set-macro-character #\} (get-macro-character #\) nil))
+
+shown above were not included, then the } in
+
+      #{ p q z a}
+
+would be considered a constituent character, part of the symbol named a}.
+This could be corrected by putting a space before the }, but it is better
+to call set-macro-character.
+
+Giving } the same definition as the standard definition of the character )
+has the twin benefit of making it terminate tokens for use with
+read-delimited-list and also making it invalid for use in any other
+context. Attempting to read a stray } will signal an error.
+
+Affected By::
+.............
+
+*standard-input*, *readtable*, *terminal-io*.
+
+See Also::
+..........
+
+*Note read; read-preserving-whitespace:: , *Note peek-char:: , *Note
+read-char:: , *Note unread-char:: .
+
+Notes::
+.......
+
+read-delimited-list is intended for use in implementing reader macros.
+Usually it is desirable for char to be a terminating macro character so
+that it can be used to delimit tokens; however, read-delimited-list makes
+no attempt to alter the syntax specified for char by the current
+readtable.  The caller must make any necessary changes to the readtable
+syntax explicitly.
+
+
+File: gcl.info,  Node: read-from-string,  Next: readtable-case,  Prev: read-delimited-list,  Up: Reader Dictionary
+
+read-from-string                                                 [Function]
+---------------------------------------------------------------------------
+
+`read-from-string'  string &optional eof-error-p eof-value &key start end
+preserve-whitespace
+=>  object, position
+
+Arguments and Values::
+......................
+
+string--a string.
+
+eof-error-p--a generalized boolean.  The default is true.
+
+eof-value--an object.
+
+The default is nil.
+
+start, end--bounding index designators of string.  The defaults for start
+and end are 0 and nil, respectively.
+
+preserve-whitespace--a generalized boolean.  The default is false.
+
+object--an object (parsed by the Lisp reader) or the eof-value.
+
+position--an integer greater than or equal to zero, and less than or equal
+to one more than the length of the string.
+
+Description::
+.............
+
+Parses the printed representation of an object from the subsequence of
+string bounded by start and end, as if read had been called on an input
+stream containing those same characters.
+
+If preserve-whitespace is true, the operation will preserve whitespace_2
+as read-preserving-whitespace would do.
+
+If an object is successfully parsed, the primary value, object, is the
+object that was parsed.  If eof-error-p is false and if the end of the
+substring is reached, eof-value is returned.
+
+The secondary value, position, is the index of the first character in the
+bounded string that was not read.  The position may depend upon the value
+of preserve-whitespace.  If the entire string was read, the position
+returned is either the length of the string or one greater than the length
+of the string.
+
+Examples::
+..........
+
+      (read-from-string " 1 3 5" t nil :start 2) =>  3, 5
+      (read-from-string "(a b c)") =>  (A B C), 7
+
+Exceptional Situations::
+........................
+
+If the end of the supplied substring occurs before an object can be read,
+an error is signaled if eof-error-p is true.  An error is signaled if the
+end of the substring occurs in the middle of an incomplete object.
+
+See Also::
+..........
+
+*Note read; read-preserving-whitespace:: , read-preserving-whitespace
+
+Notes::
+.......
+
+The reason that position is allowed to be beyond the length of the string
+is to permit (but not require) the implementation to work by simulating
+the effect of a trailing delimiter at the end of the bounded string.  When
+preserve-whitespace is true, the position might count the simulated
+delimiter.
+
+
+File: gcl.info,  Node: readtable-case,  Next: readtablep,  Prev: read-from-string,  Up: Reader Dictionary
+
+readtable-case                                                   [Accessor]
+---------------------------------------------------------------------------
+
+`readtable-case'  readtable =>  mode
+
+(setf (` readtable-case' readtable) mode)
+Arguments and Values::
+......................
+
+readtable--a readtable.
+
+mode--a case sensitivity mode.
+
+Description::
+.............
+
+Accesses the readtable case of readtable, which affects the way in which
+the Lisp Reader  reads  symbols and the way in which the Lisp Printer
+writes symbols.
+
+Examples::
+..........
+
+See *Note Examples of Effect of Readtable Case on the Lisp Reader:: and
+*Note Examples of Effect of Readtable Case on the Lisp Printer::.
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if readtable is not a readtable.
+Should signal an error of type type-error if mode is not a case
+sensitivity mode.
+
+See Also::
+..........
+
+*Note readtable:: , *print-escape*, *Note Reader Algorithm::, *Note Effect
+of Readtable Case on the Lisp Reader::, *Note Effect of Readtable Case on
+the Lisp Printer::
+
+Notes::
+.......
+
+copy-readtable copies the readtable case of the readtable.
+
+
+File: gcl.info,  Node: readtablep,  Next: set-dispatch-macro-character,  Prev: readtable-case,  Up: Reader Dictionary
+
+readtablep                                                       [Function]
+---------------------------------------------------------------------------
+
+`readtablep'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type readtable; otherwise, returns false.
+
+Examples::
+..........
+
+      (readtablep *readtable*) =>  true
+      (readtablep (copy-readtable)) =>  true
+      (readtablep '*readtable*) =>  false
+
+Notes::
+.......
+
+      (readtablep object) == (typep object 'readtable)
+
+
+File: gcl.info,  Node: set-dispatch-macro-character,  Next: set-macro-character,  Prev: readtablep,  Up: Reader Dictionary
+
+set-dispatch-macro-character, get-dispatch-macro-character
+----------------------------------------------------------
+
+                                                                [Function]
+
+`get-dispatch-macro-character'  disp-char sub-char &optional readtable =>
+function
+
+`set-dispatch-macro-character'  disp-char sub-char new-function &optional
+readtable =>  t
+
+Arguments and Values::
+......................
+
+disp-char--a character.
+
+sub-char--a character.
+
+readtable--a readtable designator.
+
+The default is the current readtable.
+
+function--a function designator or nil.
+
+new-function--a function designator.
+
+Description::
+.............
+
+set-dispatch-macro-character causes new-function to be called when
+disp-char followed by sub-char is read.  If sub-char is a lowercase letter,
+it is converted to its uppercase equivalent.  It is an error if sub-char
+is one of the ten decimal digits.
+
+set-dispatch-macro-character installs a new-function to be called when a
+particular dispatching macro character pair is read.  New-function is
+installed as the dispatch function to be called  when readtable is in use
+and when disp-char is followed by sub-char.
+
+For more information about how the new-function is invoked, see *Note
+Macro Characters::.
+
+get-dispatch-macro-character retrieves the dispatch function associated
+with disp-char and sub-char in readtable.
+
+get-dispatch-macro-character returns the macro-character function for
+sub-char under disp-char, or nil if there is no function associated with
+sub-char.  If sub-char is a decimal digit, get-dispatch-macro-character
+returns nil.
+
+Examples::
+..........
+
+      (get-dispatch-macro-character #\# #\{) =>  NIL
+      (set-dispatch-macro-character #\# #\{        ;dispatch on #{
+         #'(lambda(s c n)
+             (let ((list (read s nil (values) t)))  ;list is object after #n{
+               (when (consp list)                   ;return nth element of list
+                 (unless (and n (< 0 n (length list))) (setq n 0))
+                 (setq list (nth n list)))
+              list))) =>  T
+      #{(1 2 3 4) =>  1
+      #3{(0 1 2 3) =>  3
+      #{123 =>  123
+
+If it is desired that #$foo : as if it were (dollars foo).
+
+     (defun |#$-reader| (stream subchar arg)
+        (declare (ignore subchar arg))
+        (list 'dollars (read stream t nil t))) =>  |#$-reader|
+      (set-dispatch-macro-character #\# #\$ #'|#$-reader|) =>  T
+
+See Also::
+..........
+
+*Note Macro Characters::
+
+Side Effects::
+..............
+
+The readtable is modified.
+
+Affected By::
+.............
+
+*readtable*.
+
+Exceptional Situations::
+........................
+
+For either function, an error is signaled if disp-char is not a
+dispatching macro character in readtable.
+
+See Also::
+..........
+
+*Note readtable::
+
+Notes::
+.......
+
+It is necessary to use make-dispatch-macro-character to set up the
+dispatch character before specifying its sub-characters.
+
+
+File: gcl.info,  Node: set-macro-character,  Next: set-syntax-from-char,  Prev: set-dispatch-macro-character,  Up: Reader Dictionary
+
+set-macro-character, get-macro-character                         [Function]
+---------------------------------------------------------------------------
+
+`get-macro-character'  char &optional readtable =>  function,
+non-terminating-p
+
+`set-macro-character'  char new-function &optional non-terminating-p
+readtable =>  t
+
+Arguments and Values::
+......................
+
+char--a character.
+
+non-terminating-p--a generalized boolean.  The default is false.
+
+readtable--a readtable designator.
+
+The default is the current readtable.
+
+function--nil, or a designator for a function of two arguments.
+
+new-function--a function designator.
+
+Description::
+.............
+
+get-macro-character returns as its primary value, function, the reader
+macro function associated with char in readtable (if any), or else nil if
+char is not a macro character in readtable.  The secondary value,
+non-terminating-p, is true if char is a non-terminating macro character;
+otherwise, it is false.
+
+set-macro-character causes char to be a macro character associated with
+the reader macro function new-function (or the designator for
+new-function) in readtable.  If non-terminating-p is true, char becomes a
+non-terminating macro character; otherwise it becomes a     terminating
+macro character.
+
+Examples::
+..........
+
+      (get-macro-character #\{) =>  NIL, false
+      (not (get-macro-character #\;)) =>  false
+
+The following is a possible definition for the single-quote reader macro
+in standard syntax:
+
+      (defun single-quote-reader (stream char)
+        (declare (ignore char))
+        (list 'quote (read stream t nil t))) =>  SINGLE-QUOTE-READER
+      (set-macro-character #\' #'single-quote-reader) =>  T
+
+Here single-quote-reader reads an object following the single-quote and
+returns a list of quote and that object.  The char argument is ignored.
+
+The following is a possible definition for the semicolon reader macro in
+standard syntax:
+
+      (defun semicolon-reader (stream char)
+        (declare (ignore char))
+        ;; First swallow the rest of the current input line.
+        ;; End-of-file is acceptable for terminating the comment.
+        (do () ((char= (read-char stream nil #\Newline t) #\Newline)))
+        ;; Return zero values.
+        (values)) =>  SEMICOLON-READER
+      (set-macro-character #\; #'semicolon-reader) =>  T
+
+Side Effects::
+..............
+
+The readtable is modified.
+
+See Also::
+..........
+
+*Note readtable::
+

@@ -1,0 +1,61 @@
+{
+    "name": "deposit-field",
+    "prev": "byte",
+    "next": "dpb",
+    "up": "Numbers Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "deposit-field"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "deposit-field",
+                    "text": " newbyte bytespec integer =>  result-integer\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "newbyte",
+                    "desc": "an integer."
+                },
+                {
+                    "name": "bytespec",
+                    "desc": "a byte specifier."
+                },
+                {
+                    "name": "integer",
+                    "desc": "an integer."
+                },
+                {
+                    "name": "result-integer",
+                    "desc": "an integer."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Replaces a field of bits within integer; specifically, returns an integer\nthat contains the bits of newbyte within the byte specified by bytespec,\nand elsewhere contains the bits of integer.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (deposit-field 7 (byte 2 1) 0) =>  6\n      (deposit-field -1 (byte 4 0) 0) =>  15\n      (deposit-field 0 (byte 2 1) -3) =>  -7\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note byte; byte-size; byte-position:: , *Note dpb::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "      (logbitp j (deposit-field m (byte s p) n))\n      == (if (and (>= j p) (< j (+ p s)))\n             (logbitp j m)\n             (logbitp j n))\ndeposit-field is to mask-field as dpb           is to ldb.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: deposit-field,  Next: dpb,  Prev: byte,  Up: Numbers Dictionary\n\ndeposit-field                                                    [Function]\n---------------------------------------------------------------------------\n\n`deposit-field'  newbyte bytespec integer =>  result-integer\n\nArguments and Values::\n......................\n\nnewbyte--an integer.\n\nbytespec--a byte specifier.\n\ninteger--an integer.\n\nresult-integer--an integer.\n\nDescription::\n.............\n\nReplaces a field of bits within integer; specifically, returns an integer\nthat contains the bits of newbyte within the byte specified by bytespec,\nand elsewhere contains the bits of integer.\n\nExamples::\n..........\n\n      (deposit-field 7 (byte 2 1) 0) =>  6\n      (deposit-field -1 (byte 4 0) 0) =>  15\n      (deposit-field 0 (byte 2 1) -3) =>  -7\n\nSee Also::\n..........\n\n*Note byte; byte-size; byte-position:: , *Note dpb::\n\nNotes::\n.......\n\n      (logbitp j (deposit-field m (byte s p) n))\n      == (if (and (>= j p) (< j (+ p s)))\n             (logbitp j m)\n             (logbitp j n))\n\ndeposit-field is to mask-field as dpb           is to ldb.\n\n"
+}

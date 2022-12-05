@@ -1,0 +1,49 @@
+{
+    "name": "pathname",
+    "prev": "logical-pathname (System Class)",
+    "next": "make-pathname",
+    "up": "Filenames Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "pathname"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "pathname",
+                    "text": " pathspec =>  pathname\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "pathspec",
+                    "desc": "a pathname designator."
+                },
+                {
+                    "name": "pathname",
+                    "desc": "a pathname."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns the pathname denoted by pathspec.\nIf the pathspec designator is a stream, the stream can be either open or\nclosed; in both cases, the pathname returned corresponds to the filename\nused to open the file.  pathname returns the same pathname for a file\nstream after it is closed as it did when it was open.\nIf the pathspec designator is a file stream created by opening a logical\npathname, a logical pathname is returned.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      ;; There is a great degree of variability permitted here.  The next\n      ;; several examples are intended to illustrate just a few of the many\n      ;; possibilities.  Whether the name is canonicalized to a particular\n      ;; case (either upper or lower) depends on both the file system and the\n      ;; implementation since two different implementations using the same\n      ;; file system might differ on many issues.  How information is stored\n      ;; internally (and possibly presented in #S notation) might vary,\n      ;; possibly requiring `accessors' such as PATHNAME-NAME to perform case\n      ;; conversion upon access.  The format of a namestring is dependent both\n      ;; on the file system and the implementation since, for example, one\n      ;; implementation might include the host name in a namestring, and\n      ;; another might not.  #S notation would generally only be used in a\n      ;; situation where no appropriate namestring could be constructed for use\n      ;; with #P.\n      (setq p1 (pathname \"test\"))\n     =>  #P\"CHOCOLATE:TEST\" ; with case canonicalization (e.g., VMS)\n     OR=> #P\"VANILLA:test\"   ; without case canonicalization (e.g., Unix)\n     OR=> #P\"test\"\n     OR=> #S(PATHNAME :HOST \"STRAWBERRY\" :NAME \"TEST\")\n     OR=> #S(PATHNAME :HOST \"BELGIAN-CHOCOLATE\" :NAME \"test\")\n      (setq p2 (pathname \"test\"))\n     =>  #P\"CHOCOLATE:TEST\"\n     OR=> #P\"VANILLA:test\"\n     OR=> #P\"test\"\n     OR=> #S(PATHNAME :HOST \"STRAWBERRY\" :NAME \"TEST\")\n     OR=> #S(PATHNAME :HOST \"BELGIAN-CHOCOLATE\" :NAME \"test\")\n      (pathnamep p1) =>  true\n      (eq p1 (pathname p1)) =>  true\n      (eq p1 p2)\n     =>  true\n     OR=> false\n      (with-open-file (stream \"test\" :direction :output)\n        (pathname stream))\n     =>  #P\"ORANGE-CHOCOLATE:>Gus>test.lisp.newest\"\n"
+        },
+        {
+            "type": "See Also",
+            "text": "pathname, logical-pathname, *Note File System Concepts::,\n*Note Pathnames as Filenames::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: pathname,  Next: make-pathname,  Prev: logical-pathname (System Class),  Up: Filenames Dictionary\n\npathname                                                         [Function]\n---------------------------------------------------------------------------\n\n`pathname'  pathspec =>  pathname\n\nArguments and Values::\n......................\n\npathspec--a pathname designator.\n\npathname--a pathname.\n\nDescription::\n.............\n\nReturns the pathname denoted by pathspec.\n\nIf the pathspec designator is a stream, the stream can be either open or\nclosed; in both cases, the pathname returned corresponds to the filename\nused to open the file.  pathname returns the same pathname for a file\nstream after it is closed as it did when it was open.\n\nIf the pathspec designator is a file stream created by opening a logical\npathname, a logical pathname is returned.\n\nExamples::\n..........\n\n      ;; There is a great degree of variability permitted here.  The next\n      ;; several examples are intended to illustrate just a few of the many\n      ;; possibilities.  Whether the name is canonicalized to a particular\n      ;; case (either upper or lower) depends on both the file system and the\n      ;; implementation since two different implementations using the same\n      ;; file system might differ on many issues.  How information is stored\n      ;; internally (and possibly presented in #S notation) might vary,\n      ;; possibly requiring `accessors' such as PATHNAME-NAME to perform case\n      ;; conversion upon access.  The format of a namestring is dependent both\n      ;; on the file system and the implementation since, for example, one\n      ;; implementation might include the host name in a namestring, and\n      ;; another might not.  #S notation would generally only be used in a\n      ;; situation where no appropriate namestring could be constructed for use\n      ;; with #P.\n      (setq p1 (pathname \"test\"))\n     =>  #P\"CHOCOLATE:TEST\" ; with case canonicalization (e.g., VMS)\n     OR=> #P\"VANILLA:test\"   ; without case canonicalization (e.g., Unix)\n     OR=> #P\"test\"\n     OR=> #S(PATHNAME :HOST \"STRAWBERRY\" :NAME \"TEST\")\n     OR=> #S(PATHNAME :HOST \"BELGIAN-CHOCOLATE\" :NAME \"test\")\n      (setq p2 (pathname \"test\"))\n     =>  #P\"CHOCOLATE:TEST\"\n     OR=> #P\"VANILLA:test\"\n     OR=> #P\"test\"\n     OR=> #S(PATHNAME :HOST \"STRAWBERRY\" :NAME \"TEST\")\n     OR=> #S(PATHNAME :HOST \"BELGIAN-CHOCOLATE\" :NAME \"test\")\n      (pathnamep p1) =>  true\n      (eq p1 (pathname p1)) =>  true\n      (eq p1 p2)\n     =>  true\n     OR=> false\n      (with-open-file (stream \"test\" :direction :output)\n        (pathname stream))\n     =>  #P\"ORANGE-CHOCOLATE:>Gus>test.lisp.newest\"\n\nSee Also::\n..........\n\npathname, logical-pathname, *Note File System Concepts::,\n\n*Note Pathnames as Filenames::\n\n"
+}

@@ -1,0 +1,65 @@
+{
+    "name": "get-universal-time",
+    "prev": "encode-universal-time",
+    "next": "sleep",
+    "up": "Environment Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "get-universal-time, get-decoded-time"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "get-universal-time",
+                    "text": " <no arguments> =>  universal-time\n"
+                },
+                {
+                    "name": "get-decoded-time",
+                    "text": " <no arguments>\n=>  second, minute, hour, date, month, year, day, daylight-p, zone\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "universal-time",
+                    "desc": "a universal time."
+                },
+                {
+                    "name": "second, minute, hour, date, month, year, day, daylight-p, zone",
+                    "desc": "a decoded"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "get-universal-time returns the current time, represented as a universal\ntime.\nget-decoded-time returns the current time, represented as a decoded time.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "     ;; At noon on July 4, 1976 in Eastern Daylight Time.\n      (get-decoded-time) =>  0, 0, 12, 4, 7, 1976, 6, true, 5\n     ;; At exactly the same instant.\n      (get-universal-time) =>  2414332800\n     ;; Exactly five minutes later.\n      (get-universal-time) =>  2414333100\n     ;; The difference is 300 seconds (five minutes)\n      (- * **) =>  300\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "The time of day (i.e., the passage of time), the system clock's ability to\nkeep accurate time, and the accuracy of the system clock's initial setting.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "An error of type error might be signaled if the current time cannot be\ndetermined.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note decode-universal-time:: , *Note encode-universal-time:: , *Note\nTime::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "      (get-decoded-time) == (decode-universal-time (get-universal-time))\nNo implementation is required to have a way to verify that the time\nreturned is correct.  However, if an implementation provides a validity\ncheck (e.g., the failure to have properly initialized the system clock can\nbe reliably detected) and that validity check fails, the implementation is\nstrongly encouraged (but not required) to signal an error of type error\n(rather than, for example, returning a known-to-be-wrong value) that is\ncorrectable by allowing the user to interactively set the correct time.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: get-universal-time,  Next: sleep,  Prev: encode-universal-time,  Up: Environment Dictionary\n\nget-universal-time, get-decoded-time                             [Function]\n---------------------------------------------------------------------------\n\n`get-universal-time'  <no arguments> =>  universal-time\n\n`get-decoded-time'  <no arguments>\n=>  second, minute, hour, date, month, year, day, daylight-p, zone\n\nArguments and Values::\n......................\n\nuniversal-time--a universal time.\n\nsecond, minute, hour, date, month, year, day, daylight-p, zone--a decoded\ntime.\n\nDescription::\n.............\n\nget-universal-time returns the current time, represented as a universal\ntime.\n\nget-decoded-time returns the current time, represented as a decoded time.\n\nExamples::\n..........\n\n     ;; At noon on July 4, 1976 in Eastern Daylight Time.\n      (get-decoded-time) =>  0, 0, 12, 4, 7, 1976, 6, true, 5\n     ;; At exactly the same instant.\n      (get-universal-time) =>  2414332800\n     ;; Exactly five minutes later.\n      (get-universal-time) =>  2414333100\n     ;; The difference is 300 seconds (five minutes)\n      (- * **) =>  300\n\nAffected By::\n.............\n\nThe time of day (i.e., the passage of time), the system clock's ability to\nkeep accurate time, and the accuracy of the system clock's initial setting.\n\nExceptional Situations::\n........................\n\nAn error of type error might be signaled if the current time cannot be\ndetermined.\n\nSee Also::\n..........\n\n*Note decode-universal-time:: , *Note encode-universal-time:: , *Note\nTime::\n\nNotes::\n.......\n\n      (get-decoded-time) == (decode-universal-time (get-universal-time))\n\nNo implementation is required to have a way to verify that the time\nreturned is correct.  However, if an implementation provides a validity\ncheck (e.g., the failure to have properly initialized the system clock can\nbe reliably detected) and that validity check fails, the implementation is\nstrongly encouraged (but not required) to signal an error of type error\n(rather than, for example, returning a known-to-be-wrong value) that is\ncorrectable by allowing the user to interactively set the correct time.\n\n"
+}

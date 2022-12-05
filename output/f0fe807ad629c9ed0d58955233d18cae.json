@@ -1,0 +1,73 @@
+{
+    "name": "ldiff",
+    "prev": "last",
+    "next": "nthcdr",
+    "up": "Conses Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "ldiff, tailp"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "ldiff",
+                    "text": " list object =>  result-list\n"
+                },
+                {
+                    "name": "tailp",
+                    "text": " object list =>  generalized-boolean\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "list",
+                    "desc": "a list,which might be a dotted list.\n"
+                },
+                {
+                    "name": "object",
+                    "desc": "an object."
+                },
+                {
+                    "name": "result-list",
+                    "desc": "a list."
+                },
+                {
+                    "name": "generalized-boolean",
+                    "desc": "a generalized boolean."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "If object is the same as some tail of list, tailp returns true; otherwise,\nit returns false.\nIf object is the same as some tail of list, ldiff returns a fresh list of\nthe elements of list that precede object in the list structure of list;\notherwise, it returns a copy_2 of list.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (let ((lists '#((a b c) (a b c . d))))\n        (dotimes (i (length lists)) ()\n          (let ((list (aref lists i)))\n            (format t \"~2&list=~S ~21T(tailp object list)~\n                       ~44T(ldiff list object)~\n              (let ((objects (vector list (cddr list) (copy-list (cddr list))\n                                     '(f g h) '() 'd 'x)))\n                (dotimes (j (length objects)) ()\n                  (let ((object (aref objects j)))\n                    (format t \"~& object=~S ~21T~S ~44T~S\"\n                            object (tailp object list) (ldiff list object))))))))\n      |> \n      |>  list=(A B C)         (tailp object list)    (ldiff list object)\n      |>   object=(A B C)      T                      NIL\n      |>   object=(C)          T                      (A B)\n      |>   object=(C)          NIL                    (A B C)\n      |>   object=(F G H)      NIL                    (A B C)\n      |>   object=NIL          T                      (A B C)\n      |>   object=D            NIL                    (A B C)\n      |>   object=X            NIL                    (A B C)\n      |> \n      |>  list=(A B C . D)     (tailp object list)    (ldiff list object)\n      |>   object=(A B C . D)  T                      NIL\n      |>   object=(C . D)      T                      (A B)\n      |>   object=(C . D)      NIL                    (A B C . D)\n      |>   object=(F G H)      NIL                    (A B C . D)\n      |>   object=NIL          NIL                    (A B C . D)\n      |>   object=D            T                      (A B C)\n      |>   object=X            NIL                    (A B C . D)\n     =>  NIL\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "Neither ldiff nor tailp modifies either of its arguments.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if list is not a\nproper list or a dotted list.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note set-difference; nset-difference::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "If the list is a circular list, tailp will reliably yield a value only if\nthe given object is in fact a tail of list.  Otherwise, the consequences\nare unspecified: a given implementation which detects the circularity must\nreturn false, but since an implementation is not obliged to detect such a\nsituation, tailp might just loop indefinitely without returning in that\ncase.\ntailp could be defined as follows:\n      (defun tailp (object list)\n        (do ((list list (cdr list)))\n            ((atom list) (eql list object))\n           (if (eql object list)\n               (return t))))\nand ldiff could be defined by:\n     (defun ldiff (list object)\n       (do ((list list (cdr list))\n            (r '() (cons (car list) r)))\n           ((atom list)\n            (if (eql list object) (nreverse r) (nreconc r list)))\n         (when (eql object list)\n           (return (nreverse r)))))\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: ldiff,  Next: nthcdr,  Prev: last,  Up: Conses Dictionary\n\nldiff, tailp                                                     [Function]\n---------------------------------------------------------------------------\n\n`ldiff'  list object =>  result-list\n\n`tailp'  object list =>  generalized-boolean\n\nArguments and Values::\n......................\n\nlist--a list,\n\nwhich might be a dotted list.\n\nobject--an object.\n\nresult-list--a list.\n\ngeneralized-boolean--a generalized boolean.\n\nDescription::\n.............\n\nIf object is the same as some tail of list, tailp returns true; otherwise,\nit returns false.\n\nIf object is the same as some tail of list, ldiff returns a fresh list of\nthe elements of list that precede object in the list structure of list;\notherwise, it returns a copy_2 of list.\n\nExamples::\n..........\n\n      (let ((lists '#((a b c) (a b c . d))))\n        (dotimes (i (length lists)) ()\n          (let ((list (aref lists i)))\n            (format t \"~2&list=~S ~21T(tailp object list)~\n                       ~44T(ldiff list object)~\n              (let ((objects (vector list (cddr list) (copy-list (cddr list))\n                                     '(f g h) '() 'd 'x)))\n                (dotimes (j (length objects)) ()\n                  (let ((object (aref objects j)))\n                    (format t \"~& object=~S ~21T~S ~44T~S\"\n                            object (tailp object list) (ldiff list object))))))))\n      |> \n      |>  list=(A B C)         (tailp object list)    (ldiff list object)\n      |>   object=(A B C)      T                      NIL\n      |>   object=(C)          T                      (A B)\n      |>   object=(C)          NIL                    (A B C)\n      |>   object=(F G H)      NIL                    (A B C)\n      |>   object=NIL          T                      (A B C)\n      |>   object=D            NIL                    (A B C)\n      |>   object=X            NIL                    (A B C)\n      |> \n      |>  list=(A B C . D)     (tailp object list)    (ldiff list object)\n      |>   object=(A B C . D)  T                      NIL\n      |>   object=(C . D)      T                      (A B)\n      |>   object=(C . D)      NIL                    (A B C . D)\n      |>   object=(F G H)      NIL                    (A B C . D)\n      |>   object=NIL          NIL                    (A B C . D)\n      |>   object=D            T                      (A B C)\n      |>   object=X            NIL                    (A B C . D)\n     =>  NIL\n\nSide Effects::\n..............\n\nNeither ldiff nor tailp modifies either of its arguments.\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if list is not a\nproper list or a dotted list.\n\nSee Also::\n..........\n\n*Note set-difference; nset-difference::\n\nNotes::\n.......\n\nIf the list is a circular list, tailp will reliably yield a value only if\nthe given object is in fact a tail of list.  Otherwise, the consequences\nare unspecified: a given implementation which detects the circularity must\nreturn false, but since an implementation is not obliged to detect such a\nsituation, tailp might just loop indefinitely without returning in that\ncase.\n\ntailp could be defined as follows:\n\n      (defun tailp (object list)\n        (do ((list list (cdr list)))\n            ((atom list) (eql list object))\n           (if (eql object list)\n               (return t))))\n\nand ldiff could be defined by:\n\n     (defun ldiff (list object)\n       (do ((list list (cdr list))\n            (r '() (cons (car list) r)))\n           ((atom list)\n            (if (eql list object) (nreverse r) (nreconc r list)))\n         (when (eql object list)\n           (return (nreverse r)))))\n\n"
+}

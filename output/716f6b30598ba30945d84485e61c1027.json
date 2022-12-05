@@ -1,0 +1,57 @@
+{
+    "name": "close",
+    "prev": "with-open-file",
+    "next": "with-open-stream",
+    "up": "Streams Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "close"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "close",
+                    "text": " stream &key abort =>  result\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "stream",
+                    "desc": "a stream (either open or closed)."
+                },
+                {
+                    "name": "abort",
+                    "desc": "a generalized boolean.  The default is false."
+                },
+                {
+                    "name": "result",
+                    "desc": "t if the stream was open at the time it was received as an"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "close closes stream.  Closing a stream means that it may no longer be used\nin input or output operations.  The act of closing a file stream ends the\nassociation between the stream and its associated file; the transaction\nwith the file system is terminated, and input/output may no longer be\nperformed on the stream.\nIf abort is true, an attempt is made to clean up any side effects of\nhaving created stream.  If stream performs output to a file that was\ncreated when the stream was created, the file is deleted and any\npreviously existing file is not superseded.\nIt is permissible to close an already closed stream, but in that case the\nresult is implementation-dependent.\nAfter stream is closed, it is still possible to perform the following\nquery operations upon it:\nstreamp, pathname, truename, merge-pathnames, pathname-host,\npathname-device, pathname-directory,pathname-name, pathname-type,\npathname-version, namestring, file-namestring, directory-namestring,\nhost-namestring, enough-namestring, open, probe-file, and directory.\nThe effect of close on a constructed stream is to close the argument\nstream only.  There is no effect on the constituents of composite streams.\nFor a stream created with make-string-output-stream, the result of\nget-output-stream-string is unspecified after close.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq s (make-broadcast-stream)) =>  #<BROADCAST-STREAM>\n      (close s) =>  T\n      (output-stream-p s) =>  true\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "The stream is closed (if necessary).  If abort is true and the stream is\nan output file stream, its associated file might be deleted.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note open::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: close,  Next: with-open-stream,  Prev: with-open-file,  Up: Streams Dictionary\n\nclose                                                            [Function]\n---------------------------------------------------------------------------\n\n`close'  stream &key abort =>  result\n\nArguments and Values::\n......................\n\nstream--a stream (either open or closed).\n\nabort--a generalized boolean.  The default is false.\n\nresult--t if the stream was open at the time it was received as an\nargument, or implementation-dependent otherwise.\n\nDescription::\n.............\n\nclose closes stream.  Closing a stream means that it may no longer be used\nin input or output operations.  The act of closing a file stream ends the\nassociation between the stream and its associated file; the transaction\nwith the file system is terminated, and input/output may no longer be\nperformed on the stream.\n\nIf abort is true, an attempt is made to clean up any side effects of\nhaving created stream.  If stream performs output to a file that was\ncreated when the stream was created, the file is deleted and any\npreviously existing file is not superseded.\n\nIt is permissible to close an already closed stream, but in that case the\nresult is implementation-dependent.\n\nAfter stream is closed, it is still possible to perform the following\nquery operations upon it:\n\nstreamp, pathname, truename, merge-pathnames, pathname-host,\npathname-device, pathname-directory,pathname-name, pathname-type,\npathname-version, namestring, file-namestring, directory-namestring,\nhost-namestring, enough-namestring, open, probe-file, and directory.\n\nThe effect of close on a constructed stream is to close the argument\nstream only.  There is no effect on the constituents of composite streams.\n\nFor a stream created with make-string-output-stream, the result of\nget-output-stream-string is unspecified after close.\n\nExamples::\n..........\n\n      (setq s (make-broadcast-stream)) =>  #<BROADCAST-STREAM>\n      (close s) =>  T\n      (output-stream-p s) =>  true\n\nSide Effects::\n..............\n\nThe stream is closed (if necessary).  If abort is true and the stream is\nan output file stream, its associated file might be deleted.\n\nSee Also::\n..........\n\n*Note open::\n\n"
+}

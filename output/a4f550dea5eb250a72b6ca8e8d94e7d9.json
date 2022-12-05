@@ -1,0 +1,69 @@
+{
+    "name": "provide",
+    "prev": "*modules*",
+    "next": null,
+    "up": "System Construction Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "provide, require"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "provide",
+                    "text": " module-name =>  implementation-dependent\n"
+                },
+                {
+                    "name": "require",
+                    "text": " module-name &optional pathname-list =>  implementation-dependent\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "module-name",
+                    "desc": "a string designator."
+                },
+                {
+                    "name": "pathname-list",
+                    "desc": "nil, or a designator for a non-empty list of pathname"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "provide adds the module-name to the list held by *modules*, if such a name\nis not already present.\nrequire tests for the presence of the module-name in the list held by\n*modules*.  If it is present, require immediately returns.\nOtherwise, an attempt is made to load an appropriate set of files as\nfollows: The pathname-list argument, if non-nil, specifies a list of\npathnames to be loaded in order, from left to right.  If the pathname-list\nis nil, an implementation-dependent mechanism will be invoked in an attempt\nto load the module named module-name; if no such module can be loaded, an\nerror of type error is signaled.\nBoth functions use string= to test for the presence of a module-name.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "     ;;; This illustrates a nonportable use of REQUIRE, because it\n     ;;; depends on the implementation-dependent file-loading mechanism.\n     (require \"CALCULUS\")\n     ;;; This use of REQUIRE is nonportable because of the literal\n     ;;; physical pathname.\n     (require \"CALCULUS\" \"/usr/lib/lisp/calculus\")\n     ;;; One form of portable usage involves supplying a logical pathname,\n     ;;; with appropriate translations defined elsewhere.\n     (require \"CALCULUS\" \"lib:calculus\")\n     ;;; Another form of portable usage involves using a variable or\n     ;;; table lookup function to determine the pathname, which again\n     ;;; must be initialized elsewhere.\n     (require \"CALCULUS\" *calculus-module-pathname*)\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "provide modifies *modules*.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "The specific action taken by require is affected by calls to provide (or,\nin general, any changes to the value of *modules*).\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should signal an error of type type-error if module-name is not a string\ndesignator.\nIf require fails to perform the requested operation due to a problem while\ninteracting with the file system, an error of type file-error is signaled.\nAn error of type file-error might be signaled if any pathname in\npathname-list is a designator for a wild pathname.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*modules*,\n*Note Pathnames as Filenames::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The functions provide and require are deprecated.\nIf a module consists of a single package, it is customary for the package\nand module names to be the same.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: provide,  Prev: *modules*,  Up: System Construction Dictionary\n\nprovide, require                                                 [Function]\n---------------------------------------------------------------------------\n\n`provide'  module-name =>  implementation-dependent\n\n`require'  module-name &optional pathname-list =>  implementation-dependent\n\nArguments and Values::\n......................\n\nmodule-name--a string designator.\n\npathname-list--nil, or a designator for a non-empty list of pathname\ndesignators.  The default is nil.\n\nDescription::\n.............\n\nprovide adds the module-name to the list held by *modules*, if such a name\nis not already present.\n\nrequire tests for the presence of the module-name in the list held by\n*modules*.  If it is present, require immediately returns.\n\nOtherwise, an attempt is made to load an appropriate set of files as\nfollows: The pathname-list argument, if non-nil, specifies a list of\npathnames to be loaded in order, from left to right.  If the pathname-list\nis nil, an implementation-dependent mechanism will be invoked in an attempt\nto load the module named module-name; if no such module can be loaded, an\nerror of type error is signaled.\n\nBoth functions use string= to test for the presence of a module-name.\n\nExamples::\n..........\n\n     ;;; This illustrates a nonportable use of REQUIRE, because it\n     ;;; depends on the implementation-dependent file-loading mechanism.\n     \n     (require \"CALCULUS\")\n     \n     ;;; This use of REQUIRE is nonportable because of the literal\n     ;;; physical pathname.\n     \n     (require \"CALCULUS\" \"/usr/lib/lisp/calculus\")\n     \n     ;;; One form of portable usage involves supplying a logical pathname,\n     ;;; with appropriate translations defined elsewhere.\n     \n     (require \"CALCULUS\" \"lib:calculus\")\n     \n     ;;; Another form of portable usage involves using a variable or\n     ;;; table lookup function to determine the pathname, which again\n     ;;; must be initialized elsewhere.\n     \n     (require \"CALCULUS\" *calculus-module-pathname*)\n\nSide Effects::\n..............\n\nprovide modifies *modules*.\n\nAffected By::\n.............\n\nThe specific action taken by require is affected by calls to provide (or,\nin general, any changes to the value of *modules*).\n\nExceptional Situations::\n........................\n\nShould signal an error of type type-error if module-name is not a string\ndesignator.\n\nIf require fails to perform the requested operation due to a problem while\ninteracting with the file system, an error of type file-error is signaled.\n\nAn error of type file-error might be signaled if any pathname in\npathname-list is a designator for a wild pathname.\n\nSee Also::\n..........\n\n*modules*,\n\n*Note Pathnames as Filenames::\n\nNotes::\n.......\n\nThe functions provide and require are deprecated.\n\nIf a module consists of a single package, it is customary for the package\nand module names to be the same.\n\n"
+}

@@ -1,0 +1,101 @@
+{
+    "name": "make-pathname",
+    "prev": "pathname",
+    "next": "pathnamep",
+    "up": "Filenames Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "make-pathname"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "make-pathname",
+                    "text": " &key host device directory name type version defaults case=>  pathname\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "host",
+                    "desc": "a valid physical pathname host.  Complicated defaulting behavior;"
+                },
+                {
+                    "name": "host",
+                    "desc": "a valid physical pathname host.  Complicated defaulting behavior;see below.\n"
+                },
+                {
+                    "name": "device",
+                    "desc": "a valid pathname device.  Complicated defaulting behavior; see"
+                },
+                {
+                    "name": "device",
+                    "desc": "a valid pathname device.  Complicated defaulting behavior; seebelow.\n"
+                },
+                {
+                    "name": "directory",
+                    "desc": "a valid pathname directory.  Complicated defaulting behavior;"
+                },
+                {
+                    "name": "directory",
+                    "desc": "a valid pathname directory.  Complicated defaulting behavior;see below.\n"
+                },
+                {
+                    "name": "name",
+                    "desc": "a valid pathname name.  Complicated defaulting behavior; see below."
+                },
+                {
+                    "name": "type",
+                    "desc": "a valid pathname type.  Complicated defaulting behavior; see below."
+                },
+                {
+                    "name": "version",
+                    "desc": "a valid pathname version.  Complicated defaulting behavior; see"
+                },
+                {
+                    "name": "version",
+                    "desc": "a valid pathname version.  Complicated defaulting behavior; seebelow.\n"
+                },
+                {
+                    "name": "defaults",
+                    "desc": "a pathname designator.  The default is a pathname whose hostcomponent is the same as the host component of the value of\n*default-pathname-defaults*, and whose other components are all nil.\n"
+                },
+                {
+                    "name": "case",
+                    "desc": "one of :common or :local.  The default is :local."
+                },
+                {
+                    "name": "pathname",
+                    "desc": "a pathname."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Constructs and returns a pathname from the supplied keyword arguments.\nAfter the components supplied explicitly by host, device, directory, name,\ntype, and version are filled in, the merging rules used by merge-pathnames\nare used to fill in any unsupplied components from the defaults supplied\nby defaults.\nWhenever a pathname is constructed the components may be canonicalized if\nappropriate.  For the explanation of the arguments that can be supplied\nfor each component, see *Note Pathname Components::.\nIf case is supplied, it is treated as described in *Note Case in Pathname\nComponents::.\nThe resulting pathname is a logical pathname if and only its host component\nis a logical host or a string that names a defined logical host.\nIf the directory is a string, it should be the name of a top level\ndirectory, and should not contain any punctuation characters; that is,\nspecifying a string, str, is equivalent to specifying the list (:absolute\nstr).  Specifying the symbol :wild is equivalent to specifying the list\n(:absolute :wild-inferiors), or (:absolute :wild) in a file system that\ndoes not support :wild-inferiors.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      ;; Implementation A -- an implementation with access to a single\n      ;;  Unix file system.  This implementation happens to never display\n      ;;  the `host' information in a namestring, since there is only one host.\n      (make-pathname :directory '(:absolute \"public\" \"games\")\n                     :name \"chess\" :type \"db\")\n     =>  #P\"/public/games/chess.db\"\n      ;; Implementation B -- an implementation with access to one or more\n      ;;  VMS file systems.  This implementation displays `host' information\n      ;;  in the namestring only when the host is not the local host.\n      ;;  It uses a double colon to separate a host name from the host's local\n      ;;  file name.\n      (make-pathname :directory '(:absolute \"PUBLIC\" \"GAMES\")\n                     :name \"CHESS\" :type \"DB\")\n     =>  #P\"SYS$DISK:[PUBLIC.GAMES]CHESS.DB\"\n      (make-pathname :host \"BOBBY\"\n                     :directory '(:absolute \"PUBLIC\" \"GAMES\")\n                     :name \"CHESS\" :type \"DB\")\n     =>  #P\"BOBBY::SYS$DISK:[PUBLIC.GAMES]CHESS.DB\"\n      ;; Implementation C -- an implementation with simultaneous access to\n      ;;  multiple file systems from the same Lisp image.  In this\n      ;;  implementation, there is a convention that any text preceding the\n      ;;  first colon in a pathname namestring is a host name.\n      (dolist (case '(:common :local))\n        (dolist (host '(\"MY-LISPM\" \"MY-VAX\" \"MY-UNIX\"))\n          (print (make-pathname :host host :case case\n                                :directory '(:absolute \"PUBLIC\" \"GAMES\")\n                                :name \"CHESS\" :type \"DB\"))))\n      |>  #P\"MY-LISPM:>public>games>chess.db\"\n      |>  #P\"MY-VAX:SYS$DISK:[PUBLIC.GAMES]CHESS.DB\"\n      |>  #P\"MY-UNIX:/public/games/chess.db\"\n      |>  #P\"MY-LISPM:>public>games>chess.db\"\n      |>  #P\"MY-VAX:SYS$DISK:[PUBLIC.GAMES]CHESS.DB\"\n      |>  #P\"MY-UNIX:/PUBLIC/GAMES/CHESS.DB\"\n     =>  NIL\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "The file system.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note merge-pathnames:: , pathname, logical-pathname, *Note File System\nConcepts::,\n*Note Pathnames as Filenames::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Portable programs should not supply :unspecific for any component.  See\n*Note ->UNSPECIFIC as a Component Value::.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: make-pathname,  Next: pathnamep,  Prev: pathname,  Up: Filenames Dictionary\n\nmake-pathname                                                    [Function]\n---------------------------------------------------------------------------\n\n`make-pathname'  &key host device directory name type version defaults case\n=>  pathname\n\nArguments and Values::\n......................\n\nhost--a valid physical pathname host.  Complicated defaulting behavior;\nsee below.\n\ndevice--a valid pathname device.  Complicated defaulting behavior; see\nbelow.\n\ndirectory--a valid pathname directory.  Complicated defaulting behavior;\nsee below.\n\nname--a valid pathname name.  Complicated defaulting behavior; see below.\n\ntype--a valid pathname type.  Complicated defaulting behavior; see below.\n\nversion--a valid pathname version.  Complicated defaulting behavior; see\nbelow.\n\ndefaults--a pathname designator.  The default is a pathname whose host\ncomponent is the same as the host component of the value of\n*default-pathname-defaults*, and whose other components are all nil.\n\ncase--one of :common or :local.  The default is :local.\n\npathname--a pathname.\n\nDescription::\n.............\n\nConstructs and returns a pathname from the supplied keyword arguments.\n\nAfter the components supplied explicitly by host, device, directory, name,\ntype, and version are filled in, the merging rules used by merge-pathnames\nare used to fill in any unsupplied components from the defaults supplied\nby defaults.\n\nWhenever a pathname is constructed the components may be canonicalized if\nappropriate.  For the explanation of the arguments that can be supplied\nfor each component, see *Note Pathname Components::.\n\nIf case is supplied, it is treated as described in *Note Case in Pathname\nComponents::.\n\nThe resulting pathname is a logical pathname if and only its host component\nis a logical host or a string that names a defined logical host.\n\nIf the directory is a string, it should be the name of a top level\ndirectory, and should not contain any punctuation characters; that is,\nspecifying a string, str, is equivalent to specifying the list (:absolute\nstr).  Specifying the symbol :wild is equivalent to specifying the list\n(:absolute :wild-inferiors), or (:absolute :wild) in a file system that\ndoes not support :wild-inferiors.\n\nExamples::\n..........\n\n      ;; Implementation A -- an implementation with access to a single\n      ;;  Unix file system.  This implementation happens to never display\n      ;;  the `host' information in a namestring, since there is only one host.\n      (make-pathname :directory '(:absolute \"public\" \"games\")\n                     :name \"chess\" :type \"db\")\n     =>  #P\"/public/games/chess.db\"\n     \n      ;; Implementation B -- an implementation with access to one or more\n      ;;  VMS file systems.  This implementation displays `host' information\n      ;;  in the namestring only when the host is not the local host.\n      ;;  It uses a double colon to separate a host name from the host's local\n      ;;  file name.\n      (make-pathname :directory '(:absolute \"PUBLIC\" \"GAMES\")\n                     :name \"CHESS\" :type \"DB\")\n     =>  #P\"SYS$DISK:[PUBLIC.GAMES]CHESS.DB\"\n      (make-pathname :host \"BOBBY\"\n                     :directory '(:absolute \"PUBLIC\" \"GAMES\")\n                     :name \"CHESS\" :type \"DB\")\n     =>  #P\"BOBBY::SYS$DISK:[PUBLIC.GAMES]CHESS.DB\"\n     \n      ;; Implementation C -- an implementation with simultaneous access to\n      ;;  multiple file systems from the same Lisp image.  In this\n      ;;  implementation, there is a convention that any text preceding the\n      ;;  first colon in a pathname namestring is a host name.\n      (dolist (case '(:common :local))\n        (dolist (host '(\"MY-LISPM\" \"MY-VAX\" \"MY-UNIX\"))\n          (print (make-pathname :host host :case case\n                                :directory '(:absolute \"PUBLIC\" \"GAMES\")\n                                :name \"CHESS\" :type \"DB\"))))\n      |>  #P\"MY-LISPM:>public>games>chess.db\"\n      |>  #P\"MY-VAX:SYS$DISK:[PUBLIC.GAMES]CHESS.DB\"\n      |>  #P\"MY-UNIX:/public/games/chess.db\"\n      |>  #P\"MY-LISPM:>public>games>chess.db\"\n      |>  #P\"MY-VAX:SYS$DISK:[PUBLIC.GAMES]CHESS.DB\"\n      |>  #P\"MY-UNIX:/PUBLIC/GAMES/CHESS.DB\"\n     =>  NIL\n\nAffected By::\n.............\n\nThe file system.\n\nSee Also::\n..........\n\n*Note merge-pathnames:: , pathname, logical-pathname, *Note File System\nConcepts::,\n\n*Note Pathnames as Filenames::\n\nNotes::\n.......\n\nPortable programs should not supply :unspecific for any component.  See\n*Note ->UNSPECIFIC as a Component Value::.\n\n"
+}

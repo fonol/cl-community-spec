@@ -1,0 +1,1439 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: invoke-restart-interactively,  Next: restart-bind,  Prev: invoke-restart,  Up: Conditions Dictionary
+
+invoke-restart-interactively                                     [Function]
+---------------------------------------------------------------------------
+
+`invoke-restart-interactively'  restart =>  {result}*
+
+Arguments and Values::
+......................
+
+restart--a restart designator.
+
+results--the values returned by the function associated with restart, if
+that function returns.
+
+Description::
+.............
+
+invoke-restart-interactively calls the function associated with restart,
+prompting for any necessary arguments.  If restart is a name, it must be
+valid in the current dynamic environment.
+
+invoke-restart-interactively prompts for arguments by executing the code
+provided in the :interactive keyword to restart-case or
+:interactive-function keyword to restart-bind.
+
+If no such options have been supplied in the corresponding restart-bind or
+restart-case, then the consequences are undefined if the restart takes
+required arguments.  If the arguments are optional, an argument list of
+nil is used.
+
+Once the arguments have been determined, invoke-restart-interactively
+executes the following:
+
+      (apply #'invoke-restart restart arguments)
+
+Examples::
+..........
+
+      (defun add3 (x) (check-type x number) (+ x 3))
+     
+      (add3 'seven)
+      |>  Error: The value SEVEN was not of type NUMBER.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Specify a different value to use.
+      |>   2: Return to Lisp Toplevel.
+      |>  Debug> |>>(invoke-restart-interactively 'store-value)<<|
+      |>  Type a form to evaluate and use: |>>7<<|
+     =>  10
+
+Side Effects::
+..............
+
+If prompting for arguments is necesary, some typeout may occur (on query
+I/O).
+
+A non-local transfer of control might be done by the restart.
+
+Affected By::
+.............
+
+*query-io*, active restarts
+
+Exceptional Situations::
+........................
+
+If restart is not valid, an error of type control-error is signaled.
+
+See Also::
+..........
+
+*Note find-restart:: , *Note invoke-restart:: , *Note restart-case:: ,
+*Note restart-bind::
+
+Notes::
+.......
+
+invoke-restart-interactively is used internally by the debugger and may
+also be useful in implementing other portable, interactive debugging tools.
+
+
+File: gcl.info,  Node: restart-bind,  Next: restart-case,  Prev: invoke-restart-interactively,  Up: Conditions Dictionary
+
+restart-bind                                                        [Macro]
+---------------------------------------------------------------------------
+
+`restart-bind'  ({(name function {!key-val-pair}*)}) {form}*
+=>  {result}*
+
+key-val-pair ::=:interactive-function interactive-function | 
+                 :report-function report-function | 
+                 :test-function test-function
+
+Arguments and Values::
+......................
+
+name--a symbol; not evaluated.
+
+function--a form; evaluated.
+
+forms--an implicit progn.
+
+interactive-function--a form; evaluated.
+
+report-function--a form; evaluated.
+
+test-function--a form; evaluated.
+
+results--the values returned by the forms.
+
+Description::
+.............
+
+restart-bind executes the body of forms in a dynamic environment where
+restarts with the given names are in effect.
+
+If a name is nil, it indicates an anonymous restart; if a name is a
+non-nil symbol, it indicates a named restart.
+
+The function, interactive-function, and report-function are
+unconditionally evaluated in the current lexical and dynamic environment
+prior to evaluation of the body. Each of these forms must evaluate to a
+function.
+
+If invoke-restart is done on that restart, the function which resulted
+from evaluating function is called, in the dynamic environment of the
+invoke-restart, with the arguments given to invoke-restart.  The function
+may either perform a non-local transfer of control or may return normally.
+
+If the restart is invoked interactively from the debugger (using
+invoke-restart-interactively), the arguments are defaulted by calling the
+function which resulted from evaluating interactive-function.  That
+function may optionally prompt interactively on query I/O, and should
+return a list of arguments to be used by invoke-restart-interactively when
+invoking the restart.
+
+If a restart is invoked interactively but no interactive-function is used,
+then an argument list of nil is used. In that case, the function must be
+compatible with an empty argument list.
+
+If the restart is presented interactively (e.g., by the debugger), the
+presentation is done by calling the function which resulted from
+evaluating report-function.  This function must be a function of one
+argument, a stream.  It is expected to print a description of the action
+that the restart takes to that stream.  This function is called any time
+the restart is printed while *print-escape* is nil.
+
+In the case of interactive invocation, the result is dependent on the
+value of :interactive-function as follows.
+
+:interactive-function
+     Value is evaluated in the current lexical environment and should
+     return a function of no arguments which constructs a list of
+     arguments to be used by invoke-restart-interactively when invoking
+     this restart.  The function may prompt interactively using query I/O
+     if necessary.
+
+:report-function
+     Value is evaluated in the current lexical environment and should
+     return a function of one argument, a stream, which prints on the
+     stream a summary of the action that this restart takes.  This
+     function is called whenever the restart is reported (printed while
+     *print-escape* is nil).  If no :report-function option is provided,
+     the manner in which the restart is reported is
+     implementation-dependent.
+
+:test-function
+     Value is evaluated in the current lexical environment and should
+     return a function of one argument, a condition, which returns true if
+     the restart is to be considered visible.
+
+Affected By::
+.............
+
+*query-io*.
+
+See Also::
+..........
+
+*Note restart-case:: , *Note with-simple-restart::
+
+Notes::
+.......
+
+restart-bind is primarily intended to be used to implement restart-case
+and  might be useful in implementing other macros. Programmers who are
+uncertain about whether to use restart-case or restart-bind should prefer
+restart-case for the cases where it is powerful enough, using restart-bind
+only in cases where its full generality is really needed.
+
+
+File: gcl.info,  Node: restart-case,  Next: restart-name,  Prev: restart-bind,  Up: Conditions Dictionary
+
+restart-case                                                        [Macro]
+---------------------------------------------------------------------------
+
+`restart-case'  restartable-form {!clause} =>  {result}*
+
+clause ::=( case-name lambda-list 
+            [[:interactive interactive-expression | :report report-expression | :test test-expression]] 
+            {declaration}* {form}*)
+
+Arguments and Values::
+......................
+
+restartable-form--a form.
+
+case-name--a symbol or nil.
+
+lambda-list--an ordinary lambda list.
+
+interactive-expression--a symbol or a lambda expression.
+
+report-expression--a string, a symbol, or a lambda expression.
+
+test-expression--a symbol or a lambda expression.
+
+declaration--a declare expression; not evaluated.
+
+form--a form.
+
+results--the values resulting from the evaluation of restartable-form, or
+the values returned by the last form executed in a chosen clause, or nil.
+
+Description::
+.............
+
+restart-case evaluates restartable-form in a dynamic environment where the
+clauses have special meanings as points to which control may be
+transferred.  If restartable-form finishes executing and returns any
+values, all values returned are returned by restart-case and processing
+has completed. While restartable-form is executing, any code may transfer
+control to one of the clauses (see invoke-restart).  If a transfer occurs,
+the forms in the body of that clause is evaluated and any values returned
+by the last such form are returned by restart-case.  In this case, the
+dynamic state is unwound appropriately (so that the restarts established
+around the restartable-form are no longer active) prior to execution of the
+clause.
+
+If there are no forms in a selected clause, restart-case returns nil.
+
+If case-name is a symbol, it names this restart.
+
+It is possible to have more than one clause use the same case-name.  In
+this case, the first clause with that name is found by find-restart.  The
+other clauses are accessible using compute-restarts.
+
+Each arglist is an ordinary lambda list to be bound during the execution
+of its corresponding forms.  These parameters are used by the restart-case
+clause to receive any necessary data from a call to invoke-restart.
+
+By default, invoke-restart-interactively passes no arguments and all
+arguments must be optional in order to accomodate interactive restarting.
+However, the arguments need not be optional if the :interactive keyword
+has been used to inform invoke-restart-interactively about how to compute
+a proper argument list.
+
+Keyword options have the following meaning.
+:interactive
+     The value supplied by :interactive value must be a suitable argument
+     to function.  (function value) is evaluated in the current lexical
+     environment.  It should return a function of no arguments which
+     returns arguments to be used by invoke-restart-interactively when it
+     is invoked.  invoke-restart-interactively is called in the dynamic
+     environment available prior to any restart attempt, and uses query
+     I/O for user interaction.
+
+     If a restart is invoked interactively but no :interactive option was
+     supplied, the argument list used in the invocation is the empty list.
+
+:report
+     If the value supplied by :report value is a lambda expression or a
+     symbol, it must be acceptable to function.  (function value) is
+     evaluated in the current lexical environment.  It should return a
+     function of one argument, a stream, which prints on the stream a
+     description of the restart.  This function is called whenever the
+     restart is printed while *print-escape* is nil.
+
+     If value is a string, it is a shorthand for
+
+           (lambda (stream) (write-string value stream))
+
+     If a named restart is asked to report but no report information has
+     been supplied, the name of the restart is used in generating default
+     report text.
+
+     When *print-escape* is nil, the printer uses the report information
+     for a restart.  For example, a debugger might announce the action of
+     typing a "continue" command by:
+
+           (format t "~&~S -- ~A~
+
+     which might then display as something like:
+
+           :CONTINUE -- Return to command level
+
+     The consequences are unspecified if an unnamed restart is specified
+     but no :report option is provided.
+
+:test
+     The value supplied by :test value must be a suitable argument to
+     function.  (function value) is evaluated in the current lexical
+     environment.  It should return a function of one argument, the
+     condition, that returns true if the restart is to be considered
+     visible.
+
+     The default for this option is equivalent to (lambda (c) (declare
+     (ignore c)) t).
+
+If the restartable-form is a list whose car is any of the symbols signal,
+error, cerror, or warn (or is a macro form which macroexpands into such a
+list), then with-condition-restarts is used implicitly to associate the
+indicated restarts with the condition to be signaled.
+
+Examples::
+..........
+
+      (restart-case
+          (handler-bind ((error #'(lambda (c)
+                                  (declare (ignore condition))
+                                  (invoke-restart 'my-restart 7))))
+            (error "Foo."))
+        (my-restart (&optional v) v))
+     =>  7
+     
+      (define-condition food-error (error) ())
+     =>  FOOD-ERROR
+      (define-condition bad-tasting-sundae (food-error)
+        ((ice-cream :initarg :ice-cream :reader bad-tasting-sundae-ice-cream)
+         (sauce :initarg :sauce :reader bad-tasting-sundae-sauce)
+         (topping :initarg :topping :reader bad-tasting-sundae-topping))
+        (:report (lambda (condition stream)
+                   (format stream "Bad tasting sundae with ~S, ~S, and ~S"
+                           (bad-tasting-sundae-ice-cream condition)
+                           (bad-tasting-sundae-sauce condition)
+                           (bad-tasting-sundae-topping condition)))))
+     =>  BAD-TASTING-SUNDAE
+      (defun all-start-with-same-letter (symbol1 symbol2 symbol3)
+        (let ((first-letter (char (symbol-name symbol1) 0)))
+          (and (eql first-letter (char (symbol-name symbol2) 0))
+               (eql first-letter (char (symbol-name symbol3) 0)))))
+     =>  ALL-START-WITH-SAME-LETTER
+      (defun read-new-value ()
+        (format t "Enter a new value: ")
+        (multiple-value-list (eval (read))))
+     =>  READ-NEW-VALUE
+      (defun verify-or-fix-perfect-sundae (ice-cream sauce topping)
+        (do ()
+           ((all-start-with-same-letter ice-cream sauce topping))
+          (restart-case
+            (error 'bad-tasting-sundae
+                   :ice-cream ice-cream
+                   :sauce sauce
+                   :topping topping)
+            (use-new-ice-cream (new-ice-cream)
+              :report "Use a new ice cream."
+              :interactive read-new-value
+              (setq ice-cream new-ice-cream))
+            (use-new-sauce (new-sauce)
+              :report "Use a new sauce."
+              :interactive read-new-value
+              (setq sauce new-sauce))
+            (use-new-topping (new-topping)
+              :report "Use a new topping."
+              :interactive read-new-value
+              (setq topping new-topping))))
+        (values ice-cream sauce topping))
+     =>  VERIFY-OR-FIX-PERFECT-SUNDAE
+      (verify-or-fix-perfect-sundae 'vanilla 'caramel 'cherry)
+      |>  Error: Bad tasting sundae with VANILLA, CARAMEL, and CHERRY.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Use a new ice cream.
+      |>   2: Use a new sauce.
+      |>   3: Use a new topping.
+      |>   4: Return to Lisp Toplevel.
+      |>  Debug> |>>:continue 1<<|
+      |>  Use a new ice cream.
+      |>  Enter a new ice cream: |>>'chocolate<<|
+     =>  CHOCOLATE, CARAMEL, CHERRY
+
+See Also::
+..........
+
+*Note restart-bind:: , *Note with-simple-restart:: .
+
+Notes::
+.......
+
+      (restart-case expression
+         (name1 arglist1 ...options1... . body1)
+         (name2 arglist2 ...options2... . body2))
+
+is essentially equivalent to
+
+      (block #1=#:g0001
+        (let ((#2=#:g0002 nil))
+             (tagbody
+             (restart-bind ((name1 #'(lambda (&rest temp)
+                                     (setq #2# temp)
+                                     (go #3=#:g0003))
+                               ...slightly-transformed-options1...)
+                            (name2 #'(lambda (&rest temp)
+                                     (setq #2# temp)
+                                     (go #4=#:g0004))
+                               ...slightly-transformed-options2...))
+             (return-from #1# expression))
+               #3# (return-from #1#
+                       (apply #'(lambda arglist1 . body1) #2#))
+               #4# (return-from #1#
+                       (apply #'(lambda arglist2 . body2) #2#)))))
+
+Unnamed restarts are generally only useful interactively and an
+interactive option which has no description is of little value.
+Implementations are encouraged to warn if an unnamed restart is used and
+no report information is provided at compilation    time.  At runtime,
+this error might be noticed when entering the debugger.  Since signaling
+an error would probably cause recursive entry into the debugger (causing
+yet another recursive error, etc.) it is suggested that the debugger print
+some indication of such problems when they occur but not actually signal
+errors.
+
+      (restart-case (signal fred)
+        (a ...)
+        (b ...))
+      ==
+      (restart-case
+          (with-condition-restarts fred
+                                   (list (find-restart 'a)
+                                         (find-restart 'b))
+            (signal fred))
+        (a ...)
+        (b ...))
+
+
+File: gcl.info,  Node: restart-name,  Next: with-condition-restarts,  Prev: restart-case,  Up: Conditions Dictionary
+
+restart-name                                                     [Function]
+---------------------------------------------------------------------------
+
+`restart-name'  restart =>  name
+
+Arguments and Values::
+......................
+
+restart--a restart.
+
+name--a symbol.
+
+Description::
+.............
+
+Returns the name of the restart, or nil if the restart is not named.
+
+Examples::
+..........
+
+      (restart-case
+          (loop for restart in (compute-restarts)
+                    collect (restart-name restart))
+        (case1 () :report "Return 1." 1)
+        (nil   () :report "Return 2." 2)
+        (case3 () :report "Return 3." 3)
+        (case1 () :report "Return 4." 4))
+     =>  (CASE1 NIL CASE3 CASE1 ABORT)
+      ;; In the example above the restart named ABORT was not created
+      ;; explicitly, but was implicitly supplied by the system.
+
+See Also::
+..........
+
+*Note compute-restarts::
+
+*Note find-restart::
+
+
+File: gcl.info,  Node: with-condition-restarts,  Next: with-simple-restart,  Prev: restart-name,  Up: Conditions Dictionary
+
+with-condition-restarts                                             [Macro]
+---------------------------------------------------------------------------
+
+`with-condition-restarts'  condition-form restarts-form {form}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+condition-form--a form; evaluated to produce a condition.
+
+condition--a condition object resulting from the evaluation of
+condition-form.
+
+restart-form--a form; evaluated to produce a restart-list.
+
+restart-list--a list of restart objects resulting from the evaluation of
+restart-form.
+
+forms--an implicit progn; evaluated.
+
+results--the values returned by forms.
+
+Description::
+.............
+
+First, the condition-form and restarts-form are evaluated in normal
+left-to-right order; the primary values yielded by these evaluations are
+respectively called the condition and the restart-list.
+
+Next, the forms are evaluated in a dynamic environment in which each
+restart in restart-list is associated with the condition.  See *Note
+Associating a Restart with a Condition::.
+
+See Also::
+..........
+
+*Note restart-case::
+
+Notes::
+.......
+
+Usually this macro is not used explicitly in code, since restart-case
+handles most of the common cases in a way that is syntactically more
+concise.
+
+
+File: gcl.info,  Node: with-simple-restart,  Next: abort,  Prev: with-condition-restarts,  Up: Conditions Dictionary
+
+with-simple-restart                                                 [Macro]
+---------------------------------------------------------------------------
+
+`with-simple-restart'  (name format-control {format-argument}*) {form}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+name--a symbol.
+
+format-control--a format control.
+
+format-argument--an object (i.e., a format argument).
+
+forms--an implicit progn.
+
+results--in the normal situation, the values returned by the forms; in the
+exceptional situation where the restart named name is invoked, two
+values--nil and t.
+
+Description::
+.............
+
+with-simple-restart establishes a restart.
+
+If the restart designated by name is not invoked while executing forms,
+all values returned by the last of forms are returned.  If the restart
+designated by name is invoked, control is transferred to
+with-simple-restart, which returns two values, nil and t.
+
+If name is nil, an anonymous restart is established.
+
+The format-control and format-arguments are used report the restart.
+
+Examples::
+..........
+
+      (defun read-eval-print-loop (level)
+        (with-simple-restart (abort "Exit command level ~D." level)
+          (loop
+            (with-simple-restart (abort "Return to command level ~D." level)
+              (let ((form (prog2 (fresh-line) (read) (fresh-line))))
+                (prin1 (eval form)))))))
+     =>  READ-EVAL-PRINT-LOOP
+      (read-eval-print-loop 1)
+      (+ 'a 3)
+      |>  Error: The argument, A, to the function + was of the wrong type.
+      |>         The function expected a number.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Specify a value to use this time.
+      |>   2: Return to command level 1.
+      |>   3: Exit command level 1.
+      |>   4: Return to Lisp Toplevel.
+
+      (defun compute-fixnum-power-of-2 (x)
+        (with-simple-restart (nil "Give up on computing 2^~D." x)
+          (let ((result 1))
+            (dotimes (i x result)
+              (setq result (* 2 result))
+              (unless (fixnump result)
+                (error "Power of 2 is too large."))))))
+     COMPUTE-FIXNUM-POWER-OF-2
+      (defun compute-power-of-2 (x)
+        (or (compute-fixnum-power-of-2 x) 'something big))
+     COMPUTE-POWER-OF-2
+      (compute-power-of-2 10)
+     1024
+      (compute-power-of-2 10000)
+      |>  Error: Power of 2 is too large.
+      |>  To continue, type :CONTINUE followed by an option number.
+      |>   1: Give up on computing 2^10000.
+      |>   2: Return to Lisp Toplevel
+      |>  Debug> |>>:continue 1<<|
+     =>  SOMETHING-BIG
+
+See Also::
+..........
+
+*Note restart-case::
+
+Notes::
+.......
+
+with-simple-restart is shorthand for one of the most common uses of
+restart-case.
+
+with-simple-restart could be defined by:
+
+      (defmacro with-simple-restart ((restart-name format-control
+                                                   &rest format-arguments)
+                                     &body forms)
+        `(restart-case (progn ,@forms)
+           (,restart-name ()
+               :report (lambda (stream)
+                         (format stream ,format-control ,@format-arguments))
+              (values nil t))))
+
+Because the second return value is t in the exceptional case, it is common
+(but not required) to arrange for the second return value in the normal
+case to be missing or nil so that the two situations can be distinguished.
+
+
+File: gcl.info,  Node: abort,  Next: continue,  Prev: with-simple-restart,  Up: Conditions Dictionary
+
+abort                                                             [Restart]
+---------------------------------------------------------------------------
+
+Data Arguments Required::
+.........................
+
+None.
+
+Description::
+.............
+
+The intent of the abort restart is to allow return to the innermost
+"command level."  Implementors are encouraged to make sure that there is
+always a restart named abort around any user code so that user code can
+call abort at any time and expect something reasonable to happen; exactly
+what the reasonable thing is may vary somewhat.  Typically, in an
+interactive listener, the invocation of abort returns to the Lisp reader
+phase of the Lisp read-eval-print loop, though in some batch or
+multi-processing situations there may be situations in which having it
+kill the running process is more appropriate.
+
+See Also::
+..........
+
+*Note Restarts::, *Note Interfaces to Restarts::, *Note invoke-restart:: ,
+*Note abort:: (function)
+
+
+File: gcl.info,  Node: continue,  Next: muffle-warning,  Prev: abort,  Up: Conditions Dictionary
+
+continue                                                          [Restart]
+---------------------------------------------------------------------------
+
+Data Arguments Required::
+.........................
+
+None.
+
+Description::
+.............
+
+The continue restart is generally part of protocols where there is a
+single "obvious" way to continue, such as in break and cerror.  Some
+user-defined protocols may also wish to incorporate it for similar reasons.
+In general, however, it is more reliable to design a special purpose
+restart with a name that more directly suits the particular application.
+
+Examples::
+..........
+
+      (let ((x 3))
+        (handler-bind ((error #'(lambda (c)
+                                  (let ((r (find-restart 'continue c)))
+                                    (when r (invoke-restart r))))))
+          (cond ((not (floatp x))
+                 (cerror "Try floating it." "~D is not a float." x)
+                 (float x))
+                (t x)))) =>  3.0
+
+See Also::
+..........
+
+*Note Restarts::, *Note Interfaces to Restarts::, *Note invoke-restart:: ,
+*Note continue:: (function), *Note assert:: , *Note cerror::
+
+
+File: gcl.info,  Node: muffle-warning,  Next: store-value,  Prev: continue,  Up: Conditions Dictionary
+
+muffle-warning                                                    [Restart]
+---------------------------------------------------------------------------
+
+Data Arguments Required::
+.........................
+
+None.
+
+Description::
+.............
+
+This restart is established by warn so that handlers of warning conditions
+have a way to tell warn that a warning has already been dealt with and
+that no further action is warranted.
+
+Examples::
+..........
+
+      (defvar *all-quiet* nil) =>  *ALL-QUIET*
+      (defvar *saved-warnings* '()) =>  *SAVED-WARNINGS*
+      (defun quiet-warning-handler (c)
+        (when *all-quiet*
+          (let ((r (find-restart 'muffle-warning c)))
+            (when r
+              (push c *saved-warnings*)
+              (invoke-restart r)))))
+     =>  CUSTOM-WARNING-HANDLER
+      (defmacro with-quiet-warnings (&body forms)
+        `(let ((*all-quiet* t)
+               (*saved-warnings* '()))
+           (handler-bind ((warning #'quiet-warning-handler))
+             ,@forms
+             *saved-warnings*)))
+     =>  WITH-QUIET-WARNINGS
+      (setq saved
+        (with-quiet-warnings
+          (warn "Situation #1.")
+          (let ((*all-quiet* nil))
+            (warn "Situation #2."))
+          (warn "Situation #3.")))
+      |>  Warning: Situation #2.
+     =>  (#<SIMPLE-WARNING 42744421> #<SIMPLE-WARNING 42744365>)
+      (dolist (s saved) (format t "~&~A~
+      |>  Situation #3.
+      |>  Situation #1.
+     =>  NIL
+
+See Also::
+..........
+
+*Note Restarts::, *Note Interfaces to Restarts::, *Note invoke-restart:: ,
+*Note muffle-warning:: (function), *Note warn::
+
+
+File: gcl.info,  Node: store-value,  Next: use-value,  Prev: muffle-warning,  Up: Conditions Dictionary
+
+store-value                                                       [Restart]
+---------------------------------------------------------------------------
+
+Data Arguments Required::
+.........................
+
+a value to use instead (on an ongoing basis).
+
+Description::
+.............
+
+The store-value restart is generally used by handlers trying to recover
+from errors of types such as cell-error or type-error, which may wish to
+supply a replacement datum to be stored permanently.
+
+Examples::
+..........
+
+      (defun type-error-auto-coerce (c)
+        (when (typep c 'type-error)
+          (let ((r (find-restart 'store-value c)))
+            (handler-case (let ((v (coerce (type-error-datum c)
+                                           (type-error-expected-type c))))
+                            (invoke-restart r v))
+              (error ()))))) =>  TYPE-ERROR-AUTO-COERCE
+      (let ((x 3))
+        (handler-bind ((type-error #'type-error-auto-coerce))
+          (check-type x float)
+          x)) =>  3.0
+
+See Also::
+..........
+
+*Note Restarts::, *Note Interfaces to Restarts::, *Note invoke-restart:: ,
+*Note store-value:: (function), ccase, *Note check-type:: , ctypecase,
+*Note use-value:: (function and restart)
+
+
+File: gcl.info,  Node: use-value,  Next: abort,  Prev: store-value,  Up: Conditions Dictionary
+
+use-value                                                         [Restart]
+---------------------------------------------------------------------------
+
+Data Arguments Required::
+.........................
+
+a value to use instead (once).
+
+Description::
+.............
+
+The use-value restart is generally used by handlers trying to recover from
+errors of types such as cell-error, where the handler may wish to supply a
+replacement datum for one-time use.
+
+See Also::
+..........
+
+*Note Restarts::, *Note Interfaces to Restarts::, *Note invoke-restart:: ,
+*Note use-value:: (function), *Note store-value:: (function and restart)
+
+
+File: gcl.info,  Node: abort,  Prev: use-value,  Up: Conditions Dictionary
+
+abort, continue, muffle-warning, store-value, use-value          [Function]
+---------------------------------------------------------------------------
+
+`abort'  &optional condition =>  #<NoValue>
+
+`continue'  &optional condition =>  nil
+
+`muffle-warning'  &optional condition =>  #<NoValue>
+
+`store-value'  value &optional condition =>  nil
+
+`use-value'  value &optional condition =>  nil
+
+Arguments and Values::
+......................
+
+value--an object.
+
+condition--a condition object, or nil.
+
+Description::
+.............
+
+Transfers control to the most recently established applicable restart
+having the same name as the function.  That is, the function abort
+searches for an applicable abort    restart, the function continue
+searches for an applicable continue restart, and so on.
+
+If no such restart exists, the functions continue, store-value, and
+use-value return nil, and the functions abort and muffle-warning signal an
+error of type control-error.
+
+When condition is non-nil, only those restarts are considered that are
+either explicitly associated with that condition, or not associated with
+any condition; that is, the excluded restarts are those that are
+associated with a non-empty set of conditions of which the given condition
+is not an element.  If condition is nil, all restarts are considered.
+
+Examples::
+..........
+
+     ;;; Example of the ABORT retart
+     
+      (defmacro abort-on-error (&body forms)
+        `(handler-bind ((error #'abort))
+           ,@forms)) =>  ABORT-ON-ERROR
+      (abort-on-error (+ 3 5)) =>  8
+      (abort-on-error (error "You lose."))
+      |>  Returned to Lisp Top Level.
+     
+     ;;; Example of the CONTINUE restart
+     
+      (defun real-sqrt (n)
+        (when (minusp n)
+          (setq n (- n))
+          (cerror "Return sqrt(~D) instead." "Tried to take sqrt(-~D)." n))
+        (sqrt n))
+     
+      (real-sqrt 4) =>  2
+      (real-sqrt -9)
+      |>  Error: Tried to take sqrt(-9).
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Return sqrt(9) instead.
+      |>   2: Return to Lisp Toplevel.
+      |>  Debug> |>>(continue)<<|
+      |>  Return sqrt(9) instead.
+     =>  3
+     
+      (handler-bind ((error #'(lambda (c) (continue))))
+        (real-sqrt -9)) =>  3
+     
+     ;;; Example of the MUFFLE-WARNING restart
+     
+      (defun count-down (x)
+        (do ((counter x (1- counter)))
+            ((= counter 0) 'done)
+          (when (= counter 1)
+            (warn "Almost done"))
+          (format t "~&~D~
+     =>  COUNT-DOWN
+      (count-down 3)
+      |>  3
+      |>  2
+      |>  Warning: Almost done
+      |>  1
+     =>  DONE
+      (defun ignore-warnings-while-counting (x)
+        (handler-bind ((warning #'ignore-warning))
+          (count-down x)))
+     =>  IGNORE-WARNINGS-WHILE-COUNTING
+      (defun ignore-warning (condition)
+        (declare (ignore condition))
+        (muffle-warning))
+     =>  IGNORE-WARNING
+      (ignore-warnings-while-counting 3)
+      |>  3
+      |>  2
+      |>  1
+     =>  DONE
+     
+     ;;; Example of the STORE-VALUE and USE-VALUE restarts
+     
+      (defun careful-symbol-value (symbol)
+        (check-type symbol symbol)
+        (restart-case (if (boundp symbol)
+                          (return-from careful-symbol-value
+                                       (symbol-value symbol))
+                          (error 'unbound-variable
+                                 :name symbol))
+          (use-value (value)
+            :report "Specify a value to use this time."
+            value)
+          (store-value (value)
+            :report "Specify a value to store and use in the future."
+            (setf (symbol-value symbol) value))))
+      (setq a 1234) =>  1234
+      (careful-symbol-value 'a) =>  1234
+      (makunbound 'a) =>  A
+      (careful-symbol-value 'a)
+      |>  Error: A is not bound.
+      |>  To continue, type :CONTINUE followed by an option number.
+      |>   1: Specify a value to use this time.
+      |>   2: Specify a value to store and use in the future.
+      |>   3: Return to Lisp Toplevel.
+      |>  Debug> |>>(use-value 12)<<|
+     =>  12
+      (careful-symbol-value 'a)
+      |>  Error: A is not bound.
+      |>  To continue, type :CONTINUE followed by an option number.
+      |>    1: Specify a value to use this time.
+      |>    2: Specify a value to store and use in the future.
+      |>    3: Return to Lisp Toplevel.
+      |>  Debug> |>>(store-value 24)<<|
+     =>  24
+      (careful-symbol-value 'a)
+     =>  24
+     
+     ;;; Example of the USE-VALUE restart
+     
+      (defun add-symbols-with-default (default &rest symbols)
+        (handler-bind ((sys:unbound-symbol
+                         #'(lambda (c)
+                             (declare (ignore c))
+                             (use-value default))))
+          (apply #'+ (mapcar #'careful-symbol-value symbols))))
+     =>  ADD-SYMBOLS-WITH-DEFAULT
+      (setq x 1 y 2) =>  2
+      (add-symbols-with-default 3 'x 'y 'z) =>  6
+
+Side Effects::
+..............
+
+A transfer of control may occur if an appropriate restart is available, or
+(in the case of the function abort or the function muffle-warning)
+execution may be stopped.
+
+Affected By::
+.............
+
+Each of these functions can be affected by the presence of a restart
+having the same name.
+
+Exceptional Situations::
+........................
+
+If an appropriate abort restart is not available for the function abort,
+or an appropriate muffle-warning restart is not available for the function
+muffle-warning, an error of type control-error is signaled.
+
+See Also::
+..........
+
+*Note invoke-restart:: , *Note Restarts::, *Note Interfaces to Restarts::,
+*Note assert:: , ccase, *Note cerror:: , *Note check-type:: , ctypecase,
+*Note use-value:: , *Note warn::
+
+Notes::
+.......
+
+      (abort condition) == (invoke-restart 'abort)
+      (muffle-warning)  == (invoke-restart 'muffle-warning)
+      (continue)        == (let ((r (find-restart 'continue))) (if r (invoke-restart r)))
+      (use-value x) == (let ((r (find-restart 'use-value))) (if r (invoke-restart r x)))
+      (store-value x) == (let ((r (find-restart 'store-value))) (if r (invoke-restart r x)))
+
+No functions defined in this specification are required to provide a
+use-value restart.
+
+
+File: gcl.info,  Node: Symbols,  Next: Packages,  Prev: Conditions,  Up: Top
+
+Symbols
+*******
+
+* Menu:
+
+* Symbol Concepts::
+* Symbols Dictionary::
+
+
+File: gcl.info,  Node: Symbol Concepts,  Next: Symbols Dictionary,  Prev: Symbols,  Up: Symbols
+
+Symbol Concepts
+===============
+
+Figure 10-1 lists some defined names that are applicable to the property
+lists of symbols.
+
+  get  remprop  symbol-plist  
+
+  Figure 10-1: Property list defined names
+
+
+Figure 10-2 lists some defined names that are applicable to the creation
+of and inquiry about symbols.
+
+  copy-symbol  keywordp     symbol-package  
+  gensym       make-symbol  symbol-value    
+  gentemp      symbol-name                  
+
+  Figure 10-2: Symbol creation and inquiry defined names
+
+
+
+File: gcl.info,  Node: Symbols Dictionary,  Prev: Symbol Concepts,  Up: Symbols
+
+Symbols Dictionary
+==================
+
+* Menu:
+
+* symbol::
+* keyword::
+* symbolp::
+* keywordp::
+* make-symbol::
+* copy-symbol::
+* gensym::
+* *gensym-counter*::
+* gentemp::
+* symbol-function::
+* symbol-name::
+* symbol-package::
+* symbol-plist::
+* symbol-value::
+* get::
+* remprop::
+* boundp::
+* makunbound::
+* set::
+* unbound-variable::
+
+
+File: gcl.info,  Node: symbol,  Next: keyword,  Prev: Symbols Dictionary,  Up: Symbols Dictionary
+
+symbol                                                       [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+symbol, t
+
+Description::
+.............
+
+Symbols are used for their object identity to name various entities in
+Common Lisp, including (but not limited to) linguistic entities such as
+variables and functions.
+
+Symbols can be collected together into packages.  A symbol is said to be
+interned in a package if it is accessible in that package; the same symbol
+can be interned in more than one package.  If a symbol is not interned in
+any package, it is called uninterned.
+
+An interned symbol is uniquely identifiable by its name from any package
+in which it is accessible.
+
+Symbols have the following attributes. For historically reasons, these are
+sometimes referred to as cells, although the actual internal
+representation of symbols and their attributes is implementation-dependent.
+
+Name
+     The name of a symbol is a string used to identify the symbol.  Every
+     symbol has a name,
+
+     and the consequences are undefined if that name is altered.
+
+     The name is used as part of the external, printed representation of
+     the symbol; see *Note Character Syntax::.  The function symbol-name
+     returns the name of a given symbol.
+
+     A symbol may have any character in its name.
+
+Package
+     The object in this cell is called the home package of the symbol.  If
+     the home package is nil, the symbol is sometimes said to have no home
+     package.
+
+     When a symbol is first created, it has no home package.  When it is
+     first interned, the package in which it is initially interned becomes
+     its home package.  The home package of a symbol can be accessed by
+     using the function symbol-package.
+
+     If a symbol is uninterned from the package which is its home package,
+     its home package is set to nil.  Depending on whether there is
+     another package in which the symbol is interned, the symbol might or
+     might not really be an uninterned symbol.  A symbol with no home
+     package is therefore called apparently uninterned.
+
+     The consequences are undefined if an attempt is made to alter the
+     home package of a symbol external in the COMMON-LISP package or the
+     KEYWORD package.
+
+Property list
+     The property list of a symbol provides a mechanism for associating
+     named attributes with that symbol.  The operations for adding and
+     removing entries are destructive to the property list.  Common Lisp
+     provides operators both for direct manipulation of property list
+     objects (e.g., see getf, remf, and symbol-plist) and for implicit
+     manipulation of a symbol's property list by reference to the symbol
+     (e.g., see get and remprop).  The property list associated with a
+     fresh symbol is initially null.
+
+Value
+     If a symbol has a value attribute, it is said to be bound, and that
+     fact can be detected by the function boundp.  The object contained in
+     the value cell of a bound symbol is the value of the global variable
+     named by that symbol, and can be accessed by the function
+     symbol-value.  A symbol can be made to be unbound by the function
+     makunbound.
+
+     The consequences are undefined if an attempt is made to change the
+     value of a symbol that names a constant variable, or to make such a
+     symbol be unbound.
+
+Function
+     If a symbol has a function attribute, it is said to be fbound, and
+     that fact can be detected by the function fboundp.  If the symbol is
+     the name of a function in the global environment, the function cell
+     contains the function, and can be accessed by the function
+     symbol-function.  If the symbol is the name of either a macro in the
+     global environment (see macro-function) or a special operator (see
+     special-operator-p), the symbol is fbound, and can be accessed by the
+     function symbol-function, but the object which the function cell
+     contains is of implementation-dependent type and purpose.  A symbol
+     can be made to be funbound by the function fmakunbound.
+
+     The consequences are undefined if an attempt is made to change the
+     functional value of a symbol that names a special form.
+
+Operations on a symbol's value cell and function cell are sometimes
+described in terms of their effect on the symbol itself, but the user
+should keep in mind that there is an intimate relationship between the
+contents of those cells and the global variable or global function
+definition, respectively.
+
+Symbols are used as identifiers for lexical variables and lexical function
+definitions, but in that role, only their object identity is significant.
+Common Lisp provides no operation on a symbol that can have any effect on
+a lexical variable or on a lexical function definition.
+
+See Also::
+..........
+
+*Note Symbols as Tokens::, *Note Potential Numbers as Tokens::, *Note
+Printing Symbols::
+
+
+File: gcl.info,  Node: keyword,  Next: symbolp,  Prev: symbol,  Up: Symbols Dictionary
+
+keyword                                                              [Type]
+---------------------------------------------------------------------------
+
+Supertypes::
+............
+
+keyword, symbol, t
+
+Description::
+.............
+
+The type keyword includes all symbols interned the KEYWORD package.
+
+Interning a symbol in the KEYWORD package has three automatic effects:
+
+1.
+     It causes the symbol to become bound to itself.
+
+2.
+     It causes the symbol to become an external symbol of the KEYWORD
+     package.
+
+3.
+     It causes the symbol to become a constant variable.
+
+See Also::
+..........
+
+*Note keywordp::
+
+
+File: gcl.info,  Node: symbolp,  Next: keywordp,  Prev: keyword,  Up: Symbols Dictionary
+
+symbolp                                                          [Function]
+---------------------------------------------------------------------------
+
+`symbolp'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type symbol; otherwise, returns false.
+
+Examples::
+..........
+
+      (symbolp 'elephant) =>  true
+      (symbolp 12) =>  false
+      (symbolp nil) =>  true
+      (symbolp '()) =>  true
+      (symbolp :test) =>  true
+      (symbolp "hello") =>  false
+
+See Also::
+..........
+
+*Note keywordp:: , symbol, *Note typep::
+
+Notes::
+.......
+
+      (symbolp object) == (typep object 'symbol)
+
+
+File: gcl.info,  Node: keywordp,  Next: make-symbol,  Prev: symbolp,  Up: Symbols Dictionary
+
+keywordp                                                         [Function]
+---------------------------------------------------------------------------
+
+`keywordp'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is a keyword_1; otherwise, returns false.
+
+Examples::
+..........
+
+      (keywordp 'elephant) =>  false
+      (keywordp 12) =>  false
+      (keywordp :test) =>  true
+      (keywordp ':test) =>  true
+      (keywordp nil) =>  false
+      (keywordp :nil) =>  true
+      (keywordp '(:test)) =>  false
+      (keywordp "hello") =>  false
+      (keywordp ":hello") =>  false
+      (keywordp '&optional) =>  false
+
+See Also::
+..........
+
+*Note constantp:: , *Note keyword:: , *Note symbolp:: , *Note
+symbol-package::
+
+
+File: gcl.info,  Node: make-symbol,  Next: copy-symbol,  Prev: keywordp,  Up: Symbols Dictionary
+
+make-symbol                                                      [Function]
+---------------------------------------------------------------------------
+
+`make-symbol'  name =>  new-symbol
+
+Arguments and Values::
+......................
+
+name--a string.
+
+new-symbol--a fresh, uninterned symbol.
+
+Description::
+.............
+
+make-symbol creates and returns a fresh, uninterned symbol whose name is
+the given name.  The new-symbol is neither bound nor fbound and has a null
+property list.
+
+It is implementation-dependent whether the string that becomes the
+new-symbol's name is the given name or a copy of it.  Once a string has
+been given as the name argument to make-symbol, the consequences are
+undefined if a subsequent attempt is made to alter that string.
+
+Examples::
+..........
+
+      (setq temp-string "temp") =>  "temp"
+      (setq temp-symbol (make-symbol temp-string)) =>  #:|temp|
+      (symbol-name temp-symbol) =>  "temp"
+      (eq (symbol-name temp-symbol) temp-string) =>  implementation-dependent
+      (find-symbol "temp") =>  NIL, NIL
+      (eq (make-symbol temp-string) (make-symbol temp-string)) =>  false
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if name is not a string.
+
+See Also::
+..........
+
+*Note copy-symbol::
+
+Notes::
+.......
+
+No attempt is made by make-symbol to convert the case of the name to
+uppercase.  The only case conversion which ever occurs for symbols is done
+by the Lisp reader.  The program interface to symbol creation retains case,
+and the program interface to interning symbols is case-sensitive.
+
+
+File: gcl.info,  Node: copy-symbol,  Next: gensym,  Prev: make-symbol,  Up: Symbols Dictionary
+
+copy-symbol                                                      [Function]
+---------------------------------------------------------------------------
+
+`copy-symbol'  symbol &optional copy-properties =>  new-symbol
+
+Arguments and Values::
+......................
+
+symbol--a symbol.
+
+copy-properties--a generalized boolean.  The default is false.
+
+new-symbol--a fresh, uninterned symbol.
+
+Description::
+.............
+
+copy-symbol returns a fresh, uninterned symbol, the name of which is
+string= to and possibly the same as the name of the given symbol.
+
+If copy-properties is false, the new-symbol is neither bound nor fbound
+and has a null property list.  If copy-properties is true, then the
+initial value of new-symbol is the value of symbol, the initial function
+definition of new-symbol is the functional value of symbol, and the
+property list of new-symbol is
+
+a copy_2 of the property list of symbol.
+
+Examples::
+..........
+
+      (setq fred 'fred-smith) =>  FRED-SMITH
+      (setf (symbol-value fred) 3) =>  3
+      (setq fred-clone-1a (copy-symbol fred nil)) =>  #:FRED-SMITH
+      (setq fred-clone-1b (copy-symbol fred nil)) =>  #:FRED-SMITH
+      (setq fred-clone-2a (copy-symbol fred t))   =>  #:FRED-SMITH
+      (setq fred-clone-2b (copy-symbol fred t))   =>  #:FRED-SMITH
+      (eq fred fred-clone-1a) =>  false
+      (eq fred-clone-1a fred-clone-1b) =>  false
+      (eq fred-clone-2a fred-clone-2b) =>  false
+      (eq fred-clone-1a fred-clone-2a) =>  false
+      (symbol-value fred) =>  3
+      (boundp fred-clone-1a) =>  false
+      (symbol-value fred-clone-2a) =>  3
+      (setf (symbol-value fred-clone-2a) 4) =>  4
+      (symbol-value fred) =>  3
+      (symbol-value fred-clone-2a) =>  4
+      (symbol-value fred-clone-2b) =>  3
+      (boundp fred-clone-1a) =>  false
+      (setf (symbol-function fred) #'(lambda (x) x)) =>  #<FUNCTION anonymous>
+      (fboundp fred) =>  true
+      (fboundp fred-clone-1a) =>  false
+      (fboundp fred-clone-2a) =>  false
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if symbol is not a symbol.
+
+See Also::
+..........
+
+*Note make-symbol::
+
+Notes::
+.......
+
+Implementors are encouraged not to copy the string which is the symbol's
+name unnecessarily.  Unless there is a good reason to do so, the normal
+implementation strategy is for the new-symbol's name to be identical to
+the given symbol's name.
+

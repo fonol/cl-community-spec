@@ -1,0 +1,69 @@
+{
+    "name": "parse-integer",
+    "prev": "integerp",
+    "next": "boole",
+    "up": "Numbers Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "parse-integer"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "parse-integer",
+                    "text": " string &key start end radix junk-allowed =>  integer, pos\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "string",
+                    "desc": "a string."
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of string.  The defaults for start"
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of string.  The defaults for startand end are 0 and nil, respectively.\n"
+                },
+                {
+                    "name": "radix",
+                    "desc": "a radix.  The default is 10."
+                },
+                {
+                    "name": "junk-allowed",
+                    "desc": "a generalized boolean.  The default is false."
+                },
+                {
+                    "name": "integer",
+                    "desc": "an integer or false."
+                },
+                {
+                    "name": "pos",
+                    "desc": "a bounding index of string."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "parse-integer parses an integer in the specified radix from the substring\nof string delimited by start and end.\nparse-integer expects an optional sign (+ or -) followed by a a non-empty\nsequence of digits to be interpreted in the specified radix.  Optional\nleading and trailing whitespace_1 is ignored.\nparse-integer does not recognize the syntactic radix-specifier prefixes\n#O, #B, #X, and #nR, nor does it recognize a trailing decimal point.\nIf junk-allowed is false, an error of type parse-error is signaled if\nsubstring does not consist entirely of the representation of a signed\ninteger, possibly surrounded on either side by whitespace_1 characters.\nThe first value returned is either the integer that was parsed, or else\nnil if no syntactically correct integer was seen but junk-allowed was true.\nThe second value is either the index into the string of the delimiter that\nterminated the parse, or the upper bounding index of the substring if the\nparse terminated at the end of the substring (as is always the case if\njunk-allowed is false).\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (parse-integer \"123\") =>  123, 3\n      (parse-integer \"123\" :start 1 :radix 5) =>  13, 3\n      (parse-integer \"no-integer\" :junk-allowed t) =>  NIL, 0\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If junk-allowed is false, an error is signaled if substring does not\nconsist entirely of the representation of an integer, possibly surrounded\non either side by whitespace_1 characters.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: parse-integer,  Next: boole,  Prev: integerp,  Up: Numbers Dictionary\n\nparse-integer                                                    [Function]\n---------------------------------------------------------------------------\n\n`parse-integer'  string &key start end radix junk-allowed =>  integer, pos\n\nArguments and Values::\n......................\n\nstring--a string.\n\nstart, end--bounding index designators of string.  The defaults for start\nand end are 0 and nil, respectively.\n\nradix--a radix.  The default is 10.\n\njunk-allowed--a generalized boolean.  The default is false.\n\ninteger--an integer or false.\n\npos--a bounding index of string.\n\nDescription::\n.............\n\nparse-integer parses an integer in the specified radix from the substring\nof string delimited by start and end.\n\nparse-integer expects an optional sign (+ or -) followed by a a non-empty\nsequence of digits to be interpreted in the specified radix.  Optional\nleading and trailing whitespace_1 is ignored.\n\nparse-integer does not recognize the syntactic radix-specifier prefixes\n#O, #B, #X, and #nR, nor does it recognize a trailing decimal point.\n\nIf junk-allowed is false, an error of type parse-error is signaled if\nsubstring does not consist entirely of the representation of a signed\ninteger, possibly surrounded on either side by whitespace_1 characters.\n\nThe first value returned is either the integer that was parsed, or else\nnil if no syntactically correct integer was seen but junk-allowed was true.\n\nThe second value is either the index into the string of the delimiter that\nterminated the parse, or the upper bounding index of the substring if the\nparse terminated at the end of the substring (as is always the case if\njunk-allowed is false).\n\nExamples::\n..........\n\n      (parse-integer \"123\") =>  123, 3\n      (parse-integer \"123\" :start 1 :radix 5) =>  13, 3\n      (parse-integer \"no-integer\" :junk-allowed t) =>  NIL, 0\n\nExceptional Situations::\n........................\n\nIf junk-allowed is false, an error is signaled if substring does not\nconsist entirely of the representation of an integer, possibly surrounded\non either side by whitespace_1 characters.\n\n"
+}

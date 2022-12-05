@@ -1,0 +1,1281 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: define-compiler-macro,  Next: defmacro,  Prev: compiler-macro-function,  Up: Evaluation and Compilation Dictionary
+
+define-compiler-macro                                               [Macro]
+---------------------------------------------------------------------------
+
+`define-compiler-macro'  name lambda-list [[{declaration}* |
+documentation]] {form}*
+=>  name
+
+Arguments and Values::
+......................
+
+name--a function name.
+
+lambda-list--a macro lambda list.
+
+declaration--a declare expression; not evaluated.
+
+documentation--a string; not evaluated.
+
+form--a form.
+
+Description::
+.............
+
+[Editorial Note by KMP: This definition probably needs to be fully
+expanded to not refer through the definition of defmacro, but should
+suffice for now.]
+
+This is the normal mechanism for defining a compiler macro function.  Its
+manner of definition is the same as for defmacro; the only differences are:
+
+*
+     The name can be a function name naming any function or macro.
+
+*
+     The expander function is installed as a compiler macro function for
+     the name, rather than as a macro function.
+
+*
+     The &whole argument is bound to the form argument that is passed to
+     the compiler macro function.  The remaining lambda-list parameters
+     are specified as if this form contained the function name in the car
+     and the actual arguments in the cdr, but if the car of the actual
+     form is the symbol funcall, then the destructuring of the arguments
+     is actually performed using its cddr instead.
+
+*
+     Documentation is attached as a documentation string to name (as kind
+     compiler-macro) and to the compiler macro function.
+
+*
+     Unlike an ordinary macro, a compiler macro can decline to provide an
+     expansion merely by returning a form that is the same as the original
+     (which can be obtained by using &whole).
+
+Examples::
+..........
+
+      (defun square (x) (expt x 2)) =>  SQUARE
+      (define-compiler-macro square (&whole form arg)
+        (if (atom arg)
+            `(expt ,arg 2)
+            (case (car arg)
+              (square (if (= (length arg) 2)
+                          `(expt ,(nth 1 arg) 4)
+                          form))
+              (expt   (if (= (length arg) 3)
+                          (if (numberp (nth 2 arg))
+                              `(expt ,(nth 1 arg) ,(* 2 (nth 2 arg)))
+                              `(expt ,(nth 1 arg) (* 2 ,(nth 2 arg))))
+                          form))
+              (otherwise `(expt ,arg 2))))) =>  SQUARE
+      (square (square 3)) =>  81
+      (macroexpand '(square x)) =>  (SQUARE X), false
+      (funcall (compiler-macro-function 'square) '(square x) nil)
+     =>  (EXPT X 2)
+      (funcall (compiler-macro-function 'square) '(square (square x)) nil)
+     =>  (EXPT X 4)
+      (funcall (compiler-macro-function 'square) '(funcall #'square x) nil)
+     =>  (EXPT X 2)
+     
+      (defun distance-positional (x1 y1 x2 y2)
+        (sqrt (+ (expt (- x2 x1) 2) (expt (- y2 y1) 2))))
+     =>  DISTANCE-POSITIONAL
+      (defun distance (&key (x1 0) (y1 0) (x2 x1) (y2 y1))
+        (distance-positional x1 y1 x2 y2))
+     =>  DISTANCE
+      (define-compiler-macro distance (&whole form
+                                       &rest key-value-pairs
+                                       &key (x1 0  x1-p)
+                                            (y1 0  y1-p)
+                                            (x2 x1 x2-p)
+                                            (y2 y1 y2-p)
+                                       &allow-other-keys
+                                       &environment env)
+        (flet ((key (n) (nth (* n 2) key-value-pairs))
+               (arg (n) (nth (1+ (* n 2)) key-value-pairs))
+               (simplep (x)
+                 (let ((expanded-x (macroexpand x env)))
+                   (or (constantp expanded-x env)
+                       (symbolp expanded-x)))))
+          (let ((n (/ (length key-value-pairs) 2)))
+            (multiple-value-bind (x1s y1s x2s y2s others)
+                (loop for (key) on key-value-pairs by #'cddr
+                      count (eq key ':x1) into x1s
+                      count (eq key ':y1) into y1s
+                      count (eq key ':x2) into x2s
+                      count (eq key ':y1) into y2s
+                      count (not (member key '(:x1 :x2 :y1 :y2)))
+                        into others
+                      finally (return (values x1s y1s x2s y2s others)))
+              (cond ((and (= n 4)
+                          (eq (key 0) :x1)
+                          (eq (key 1) :y1)
+                          (eq (key 2) :x2)
+                          (eq (key 3) :y2))
+                     `(distance-positional ,x1 ,y1 ,x2 ,y2))
+                    ((and (if x1-p (and (= x1s 1) (simplep x1)) t)
+                          (if y1-p (and (= y1s 1) (simplep y1)) t)
+                          (if x2-p (and (= x2s 1) (simplep x2)) t)
+                          (if y2-p (and (= y2s 1) (simplep y2)) t)
+                          (zerop others))
+                     `(distance-positional ,x1 ,y1 ,x2 ,y2))
+                    ((and (< x1s 2) (< y1s 2) (< x2s 2) (< y2s 2)
+                          (zerop others))
+                     (let ((temps (loop repeat n collect (gensym))))
+                       `(let ,(loop for i below n
+                                    collect (list (nth i temps) (arg i)))
+                          (distance
+                            ,@(loop for i below n
+                                    append (list (key i) (nth i temps)))))))
+                    (t form))))))
+     =>  DISTANCE
+      (dolist (form
+                '((distance :x1 (setq x 7) :x2 (decf x) :y1 (decf x) :y2 (decf x))
+                  (distance :x1 (setq x 7) :y1 (decf x) :x2 (decf x) :y2 (decf x))
+                  (distance :x1 (setq x 7) :y1 (incf x))
+                  (distance :x1 (setq x 7) :y1 (incf x) :x1 (incf x))
+                  (distance :x1 a1 :y1 b1 :x2 a2 :y2 b2)
+                  (distance :x1 a1 :x2 a2 :y1 b1 :y2 b2)
+                  (distance :x1 a1 :y1 b1 :z1 c1 :x2 a2 :y2 b2 :z2 c2)))
+        (print (funcall (compiler-macro-function 'distance) form nil)))
+      |>  (LET ((#:G6558 (SETQ X 7))
+      |>        (#:G6559 (DECF X))
+      |>        (#:G6560 (DECF X))
+      |>        (#:G6561 (DECF X)))
+      |>    (DISTANCE :X1 #:G6558 :X2 #:G6559 :Y1 #:G6560 :Y2 #:G6561))
+      |>  (DISTANCE-POSITIONAL (SETQ X 7) (DECF X) (DECF X) (DECF X))
+      |>  (LET ((#:G6567 (SETQ X 7))
+      |>        (#:G6568 (INCF X)))
+      |>    (DISTANCE :X1 #:G6567 :Y1 #:G6568))
+      |>  (DISTANCE :X1 (SETQ X 7) :Y1 (INCF X) :X1 (INCF X))
+      |>  (DISTANCE-POSITIONAL A1 B1 A2 B2)
+      |>  (DISTANCE-POSITIONAL A1 B1 A2 B2)
+      |>  (DISTANCE :X1 A1 :Y1 B1 :Z1 C1 :X2 A2 :Y2 B2 :Z2 C2)
+     =>  NIL
+
+See Also::
+..........
+
+*Note compiler-macro-function:: , *Note defmacro:: , *Note documentation;
+(setf documentation):: , *Note Syntactic Interaction of Documentation
+Strings and Declarations::
+
+Notes::
+.......
+
+The consequences of writing a compiler macro definition for a function in
+the COMMON-LISP package are undefined; it is quite possible that in some
+implementations such an attempt would override an equivalent or equally
+important definition.  In general, it is recommended that a programmer only
+write compiler macro definitions for functions he or she personally
+maintains-writing a compiler macro definition for a function maintained
+elsewhere is normally considered a violation of traditional rules of
+modularity and data abstraction.
+
+
+File: gcl.info,  Node: defmacro,  Next: macro-function,  Prev: define-compiler-macro,  Up: Evaluation and Compilation Dictionary
+
+defmacro                                                            [Macro]
+---------------------------------------------------------------------------
+
+`defmacro'  name lambda-list [[{declaration}* | documentation]] {form}*
+=>  name
+
+Arguments and Values::
+......................
+
+name--a symbol.
+
+lambda-list--a macro lambda list.
+
+declaration--a declare expression; not evaluated.
+
+documentation--a string; not evaluated.
+
+form--a form.
+
+Description::
+.............
+
+Defines name as a macro by associating a macro function with that name in
+the global environment.
+
+The macro function is defined in the same lexical environment in which the
+defmacro form appears.
+
+The parameter variables in lambda-list are bound to destructured portions
+of the macro call.
+
+The expansion function accepts two arguments, a form and an environment.
+The expansion function returns a form.  The body of the expansion function
+is specified by forms.  Forms are executed in order.  The value of the
+last form executed is returned as the expansion of the macro.
+
+The body forms of the expansion function (but not the lambda-list)
+
+are implicitly enclosed in a block whose name is name.
+
+The lambda-list conforms to the requirements described in *Note Macro
+Lambda Lists::.
+
+Documentation is attached as a documentation string to name (as kind
+function) and to the macro function.
+
+defmacro can be used to redefine a macro or to replace a function
+definition with a macro definition.
+
+Recursive expansion of the form returned must terminate, including the
+expansion of other macros which are subforms of other forms returned.
+
+The consequences are undefined if the result of fully macroexpanding a form
+contains any circular list structure except in literal objects.
+
+If a defmacro form appears as a top level form, the compiler must store
+the macro definition at compile time, so that occurrences of the macro
+later on in the file can be expanded correctly.  Users must ensure that
+the body of the macro can be evaluated at compile time if it is referenced
+within the file being compiled.
+
+Examples::
+..........
+
+      (defmacro mac1 (a b) "Mac1 multiplies and adds"
+                 `(+ ,a (* ,b 3))) =>  MAC1
+      (mac1 4 5) =>  19
+      (documentation 'mac1 'function) =>  "Mac1 multiplies and adds"
+      (defmacro mac2 (&optional (a 2 b) (c 3 d) &rest x) `'(,a ,b ,c ,d ,x)) =>  MAC2
+      (mac2 6) =>  (6 T 3 NIL NIL)
+      (mac2 6 3 8) =>  (6 T 3 T (8))
+      (defmacro mac3 (&whole r a &optional (b 3) &rest x &key c (d a))
+         `'(,r ,a ,b ,c ,d ,x)) =>  MAC3
+      (mac3 1 6 :d 8 :c 9 :d 10) =>  ((MAC3 1 6 :D 8 :C 9 :D 10) 1 6 9 8 (:D 8 :C 9 :D 10))
+
+The stipulation that an embedded destructuring lambda list is permitted
+only where ordinary lambda list syntax would permit a parameter name but
+not a list is made to prevent ambiguity.  For example, the following is
+not valid:
+
+      (defmacro loser (x &optional (a b &rest c) &rest z)
+        ...)
+
+because ordinary lambda list syntax does permit a list following &optional;
+the list (a b &rest c) would be interpreted as describing an optional
+parameter named a whose default value is that of the form b, with a
+supplied-p parameter named &rest (not valid), and an extraneous symbol c
+in the list (also not valid).  An almost correct way to express this is
+
+      (defmacro loser (x &optional ((a b &rest c)) &rest z)
+        ...)
+
+The extra set of parentheses removes the ambiguity.  However, the
+definition is now incorrect because a macro call such as (loser (car pool))
+would not provide any argument form for the lambda list (a b &rest c), and
+so the default value against which to match the lambda list would be nil
+because no explicit default value was specified.  The consequences of this
+are  unspecified since the empty list, nil, does not have forms to satisfy
+the parameters a and b.  The fully correct definition would be either
+
+      (defmacro loser (x &optional ((a b &rest c) '(nil nil)) &rest z)
+        ...)
+
+or
+
+      (defmacro loser (x &optional ((&optional a b &rest c)) &rest z)
+        ...)
+
+These differ slightly: the first requires that if the macro call specifies
+a explicitly then it must also specify b explicitly, whereas the second
+does not have this requirement.  For example,
+
+      (loser (car pool) ((+ x 1)))
+
+would be a valid call for the second definition but not for the first.
+
+      (defmacro dm1a (&whole x) `',x)
+      (macroexpand '(dm1a))  =>  (QUOTE (DM1A))
+      (macroexpand '(dm1a a)) is an error.
+     
+      (defmacro dm1b (&whole x a &optional b) `'(,x ,a ,b))
+      (macroexpand '(dm1b))  is an error.
+      (macroexpand '(dm1b q))  =>  (QUOTE ((DM1B Q) Q NIL))
+      (macroexpand '(dm1b q r)) =>  (QUOTE ((DM1B Q R) Q R))
+      (macroexpand '(dm1b q r s)) is an error.
+
+      (defmacro dm2a (&whole form a b) `'(form ,form a ,a b ,b))
+      (macroexpand '(dm2a x y)) =>  (QUOTE (FORM (DM2A X Y) A X B Y))
+      (dm2a x y) =>  (FORM (DM2A X Y) A X B Y)
+     
+      (defmacro dm2b (&whole form a (&whole b (c . d) &optional (e 5))
+                      &body f &environment env)
+        ``(,',form ,,a ,',b ,',(macroexpand c env) ,',d ,',e ,',f))
+      ;Note that because backquote is involved, implementations may differ
+      ;slightly in the nature (though not the functionality) of the expansion.
+      (macroexpand '(dm2b x1 (((incf x2) x3 x4)) x5 x6))
+      =>  (LIST* '(DM2B X1 (((INCF X2) X3 X4))
+                        X5 X6)
+                 X1
+                 '((((INCF X2) X3 X4)) (SETQ X2 (+ X2 1)) (X3 X4) 5 (X5 X6))),
+          T
+      (let ((x1 5))
+        (macrolet ((segundo (x) `(cadr ,x)))
+          (dm2b x1 (((segundo x2) x3 x4)) x5 x6)))
+      =>  ((DM2B X1 (((SEGUNDO X2) X3 X4)) X5 X6)
+           5 (((SEGUNDO X2) X3 X4)) (CADR X2) (X3 X4) 5 (X5 X6))
+
+See Also::
+..........
+
+*Note define-compiler-macro:: ,
+
+*Note destructuring-bind:: , *Note documentation; (setf documentation):: ,
+*Note macroexpand; macroexpand-1:: , *macroexpand-hook*, macrolet, *Note
+macro-function:: , *Note Evaluation::, *Note Compilation::, *Note
+Syntactic Interaction of Documentation Strings and Declarations::
+
+
+File: gcl.info,  Node: macro-function,  Next: macroexpand,  Prev: defmacro,  Up: Evaluation and Compilation Dictionary
+
+macro-function                                                   [Accessor]
+---------------------------------------------------------------------------
+
+`macro-function'  symbol &optional environment =>  function
+
+(setf (`         macro-function' symbol &optional environment)
+new-function)
+Arguments and Values::
+......................
+
+symbol--a symbol.
+
+environment--an environment object.
+
+function--a macro function or nil.
+
+new-function--a macro function.
+
+Description::
+.............
+
+Determines whether symbol has a function definition as a macro in the
+specified environment.
+
+If so, the macro expansion function, a function of two arguments, is
+returned.  If symbol has no function definition in the lexical environment
+environment, or its definition is not a macro, macro-function returns nil.
+
+It is possible for both macro-function and
+
+special-operator-p
+
+to return true of symbol.  The macro definition must be available for use
+by programs that understand only the standard Common Lisp special forms.
+
+Examples::
+..........
+
+      (defmacro macfun (x) '(macro-function 'macfun)) =>  MACFUN
+      (not (macro-function 'macfun)) =>  false
+
+      (macrolet ((foo (&environment env)
+                    (if (macro-function 'bar env)
+                       ''yes
+                       ''no)))
+         (list (foo)
+               (macrolet ((bar () :beep))
+                  (foo))))
+     
+     =>  (NO YES)
+
+Affected By::
+.............
+
+(setf macro-function), defmacro, and macrolet.
+
+Exceptional Situations::
+........................
+
+The consequences are undefined if environment is non-nil in a use of setf
+of macro-function.
+
+See Also::
+..........
+
+*Note defmacro:: , *Note Evaluation::
+
+Notes::
+.......
+
+setf can be used with macro-function to install a macro as a symbol's
+global function definition:
+
+      (setf (macro-function symbol) fn)
+
+The value installed must be a function that accepts two arguments, the
+entire macro call and an environment, and computes the expansion for that
+call.  Performing this operation causes symbol to have only that macro
+definition as its global function definition; any previous definition,
+whether as a macro or as a function, is lost.
+
+
+File: gcl.info,  Node: macroexpand,  Next: define-symbol-macro,  Prev: macro-function,  Up: Evaluation and Compilation Dictionary
+
+macroexpand, macroexpand-1                                       [Function]
+---------------------------------------------------------------------------
+
+`macroexpand'  form &optional env =>  expansion, expanded-p
+
+`macroexpand-'  1 =>  form &optional env expansion, expanded-p
+
+Arguments and Values::
+......................
+
+form--a form.
+
+env--an environment object.  The default is nil.
+
+expansion--a form.
+
+expanded-p--a generalized boolean.
+
+Description::
+.............
+
+macroexpand and macroexpand-1 expand macros.
+
+If form is a macro form, then macroexpand-1 expands the macro form call
+once.
+
+macroexpand repeatedly expands form until it is no longer a macro form.
+In effect, macroexpand calls macroexpand-1 repeatedly until the secondary
+value it returns is nil.
+
+If form is a macro form, then the expansion is a macro expansion and
+expanded-p is true.  Otherwise, the expansion is the given form and
+expanded-p is false.
+
+Macro expansion is carried out as follows.  Once macroexpand-1 has
+determined that the form is a macro form, it obtains an appropriate
+expansion function for the macro or symbol macro.  The value of
+*macroexpand-hook* is
+
+coerced to a function and
+
+then called as a function of three arguments: the expansion function, the
+form, and the env.  The value returned from this call is taken to be the
+expansion of the form.
+
+In addition to macro definitions in the global environment, any local
+macro definitions established within env by macrolet or symbol-macrolet
+are considered.  If only form is supplied as an argument, then the
+environment is effectively null, and only global macro definitions as
+established by defmacro are considered.  Macro definitions are shadowed by
+local function definitions.
+
+Examples::
+..........
+
+      (defmacro alpha (x y) `(beta ,x ,y)) =>  ALPHA
+      (defmacro beta (x y) `(gamma ,x ,y)) =>  BETA
+      (defmacro delta (x y) `(gamma ,x ,y)) =>  EPSILON
+      (defmacro expand (form &environment env)
+        (multiple-value-bind (expansion expanded-p)
+            (macroexpand form env)
+          `(values ',expansion ',expanded-p))) =>  EXPAND
+      (defmacro expand-1 (form &environment env)
+        (multiple-value-bind (expansion expanded-p)
+            (macroexpand-1 form env)
+          `(values ',expansion ',expanded-p))) =>  EXPAND-1
+     
+     ;; Simple examples involving just the global environment
+      (macroexpand-1 '(alpha a b)) =>  (BETA A B), true
+      (expand-1 (alpha a b)) =>  (BETA A B), true
+      (macroexpand '(alpha a b)) =>  (GAMMA A B), true
+      (expand (alpha a b)) =>  (GAMMA A B), true
+      (macroexpand-1 'not-a-macro) =>  NOT-A-MACRO, false
+      (expand-1 not-a-macro) =>  NOT-A-MACRO, false
+      (macroexpand '(not-a-macro a b)) =>  (NOT-A-MACRO A B), false
+      (expand (not-a-macro a b)) =>  (NOT-A-MACRO A B), false
+     
+     ;; Examples involving lexical environments
+      (macrolet ((alpha (x y) `(delta ,x ,y)))
+        (macroexpand-1 '(alpha a b))) =>  (BETA A B), true
+      (macrolet ((alpha (x y) `(delta ,x ,y)))
+        (expand-1 (alpha a b))) =>  (DELTA A B), true
+      (macrolet ((alpha (x y) `(delta ,x ,y)))
+        (macroexpand '(alpha a b))) =>  (GAMMA A B), true
+      (macrolet ((alpha (x y) `(delta ,x ,y)))
+        (expand (alpha a b))) =>  (GAMMA A B), true
+      (macrolet ((beta (x y) `(epsilon ,x ,y)))
+        (expand (alpha a b))) =>  (EPSILON A B), true
+      (let ((x (list 1 2 3)))
+        (symbol-macrolet ((a (first x)))
+          (expand a))) =>  (FIRST X), true
+      (let ((x (list 1 2 3)))
+        (symbol-macrolet ((a (first x)))
+          (macroexpand 'a))) =>  A, false
+      (symbol-macrolet ((b (alpha x y)))
+        (expand-1 b)) =>  (ALPHA X Y), true
+      (symbol-macrolet ((b (alpha x y)))
+        (expand b)) =>  (GAMMA X Y), true
+      (symbol-macrolet ((b (alpha x y))
+                        (a b))
+        (expand-1 a)) =>  B, true
+      (symbol-macrolet ((b (alpha x y))
+                        (a b))
+        (expand a)) =>  (GAMMA X Y), true
+     
+     ;; Examples of shadowing behavior
+      (flet ((beta (x y) (+ x y)))
+        (expand (alpha a b))) =>  (BETA A B), true
+      (macrolet ((alpha (x y) `(delta ,x ,y)))
+        (flet ((alpha (x y) (+ x y)))
+          (expand (alpha a b)))) =>  (ALPHA A B), false
+      (let ((x (list 1 2 3)))
+        (symbol-macrolet ((a (first x)))
+          (let ((a x))
+            (expand a)))) =>  A, false
+
+Affected By::
+.............
+
+defmacro, setf of macro-function, macrolet, symbol-macrolet
+
+See Also::
+..........
+
+*macroexpand-hook*, *Note defmacro:: , *Note setf; psetf:: of *Note
+macro-function:: , macrolet, *Note symbol-macrolet:: , *Note Evaluation::
+
+Notes::
+.......
+
+Neither macroexpand nor macroexpand-1 makes any explicit attempt to expand
+macro forms that are either subforms of the form or subforms of the
+expansion.  Such expansion might occur implicitly, however, due to the
+semantics or implementation of the macro function.
+
+
+File: gcl.info,  Node: define-symbol-macro,  Next: symbol-macrolet,  Prev: macroexpand,  Up: Evaluation and Compilation Dictionary
+
+define-symbol-macro                                                 [Macro]
+---------------------------------------------------------------------------
+
+`define-symbol-macro'  symbol expansion
+=>  symbol
+
+Arguments and Values::
+......................
+
+symbol--a symbol.
+
+expansion--a form.
+
+Description::
+.............
+
+Provides a mechanism for globally affecting the macro expansion of the
+indicated symbol.
+
+Globally establishes an expansion function for the symbol macro named by
+symbol.  The only guaranteed property of an expansion function for a
+symbol macro is that when it is applied to the form and the environment it
+returns the correct expansion.  (In particular, it is
+implementation-dependent whether the expansion is conceptually stored in
+the expansion function, the environment, or both.)
+
+Each global reference to symbol (i.e., not shadowed_2 by a binding for a
+variable or symbol macro named by the same symbol) is expanded by the
+normal macro expansion process; see *Note Symbols as Forms::.  The
+expansion of a symbol macro is subject to further macro expansion in the
+same lexical environment as the symbol macro reference, exactly analogous
+to normal macros.
+
+The consequences are unspecified if a special declaration is made for
+symbol while in the scope of this definition (i.e., when it is not
+shadowed_2 by a binding for a variable or symbol macro named by the same
+symbol).
+
+Any use of setq to set the value of the symbol while in the scope of this
+definition is treated as if it were a setf.  psetq of symbol is treated as
+if it were a psetf, and multiple-value-setq is treated as if it were a
+setf of values.
+
+A binding for a symbol macro can be shadowed_2 by let or symbol-macrolet.
+
+Examples::
+..........
+
+     (defvar *things* (list 'alpha 'beta 'gamma)) =>  *THINGS*
+     
+     (define-symbol-macro thing1 (first *things*)) =>  THING1
+     (define-symbol-macro thing2 (second *things*)) =>  THING2
+     (define-symbol-macro thing3 (third *things*)) =>  THING3
+     
+     thing1 =>  ALPHA
+     (setq thing1 'ONE) =>  ONE
+     *things* =>  (ONE BETA GAMMA)
+     (multiple-value-setq (thing2 thing3) (values 'two 'three)) =>  TWO
+     thing3 =>  THREE
+     *things* =>  (ONE TWO THREE)
+     
+     (list thing2 (let ((thing2 2)) thing2)) =>  (TWO 2)
+
+Exceptional Situations::
+........................
+
+If symbol is already defined as a global variable, an error of type
+program-error is signaled.
+
+See Also::
+..........
+
+*Note symbol-macrolet:: , *Note macroexpand; macroexpand-1::
+
+
+File: gcl.info,  Node: symbol-macrolet,  Next: *macroexpand-hook*,  Prev: define-symbol-macro,  Up: Evaluation and Compilation Dictionary
+
+symbol-macrolet                                          [Special Operator]
+---------------------------------------------------------------------------
+
+`symbol-macrolet'  ({(symbol expansion)}*) {declaration}* {form}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+symbol--a symbol.
+
+expansion--a form.
+
+declaration--a declare expression; not evaluated.
+
+forms--an implicit progn.
+
+results--the values returned by the forms.
+
+Description::
+.............
+
+symbol-macrolet provides a mechanism for affecting the macro expansion
+environment for symbols.
+
+symbol-macrolet lexically establishes expansion functions for each of the
+symbol macros named by symbols.
+
+The only guaranteed property of an expansion function for a symbol macro
+is that when it is applied to the form and the environment it returns the
+correct expansion.  (In particular, it is implementation-dependent whether
+the expansion is conceptually stored in the expansion function, the
+environment, or both.)
+
+Each reference to symbol as a variable within the lexical scope of
+symbol-macrolet is expanded by the normal macro expansion process; see
+*Note Symbols as Forms::.  The expansion of a symbol macro is subject to
+further macro expansion in the same lexical environment as the symbol
+macro invocation, exactly analogous to normal macros.
+
+Exactly the same declarations are allowed as for let with one exception:
+symbol-macrolet signals an error if a special declaration names one of the
+symbols being defined by symbol-macrolet.
+
+When the forms of the symbol-macrolet form are expanded, any use of setq
+to set the value of one of the specified variables is treated as if it
+were a setf.  psetq of a symbol defined as a symbol macro is treated as if
+it were a psetf, and multiple-value-setq is treated as if it were a setf
+of values.
+
+The use of symbol-macrolet can be shadowed by let.  In other words,
+symbol-macrolet only substitutes for occurrences of symbol that would be
+in the scope of a lexical binding of symbol surrounding the forms.
+
+Examples::
+..........
+
+     ;;; The following is equivalent to
+     ;;;   (list 'foo (let ((x 'bar)) x)),
+     ;;; not
+     ;;;   (list 'foo (let (('foo 'bar)) 'foo))
+      (symbol-macrolet ((x 'foo))
+        (list x (let ((x 'bar)) x)))
+     =>  (foo bar)
+     NOT=> (foo foo)
+     
+      (symbol-macrolet ((x '(foo x)))
+        (list x))
+     =>  ((FOO X))
+
+Exceptional Situations::
+........................
+
+If an attempt is made to bind a symbol that is defined as a global
+variable, an error of type program-error is signaled.
+
+If declaration contains a special declaration that names one of the
+symbols being bound by symbol-macrolet, an error of type program-error is
+signaled.
+
+See Also::
+..........
+
+*Note with-slots:: , *Note macroexpand; macroexpand-1::
+
+Notes::
+.......
+
+The special form symbol-macrolet is the basic mechanism that is used to
+implement with-slots.
+
+If a symbol-macrolet form is a top level form, the forms are also
+processed as top level forms.  See *Note File Compilation::.
+
+
+File: gcl.info,  Node: *macroexpand-hook*,  Next: proclaim,  Prev: symbol-macrolet,  Up: Evaluation and Compilation Dictionary
+
+*macroexpand-hook*                                               [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a designator for a function of three arguments: a macro function, a macro
+form, and an environment object.
+
+Initial Value::
+...............
+
+a designator for a function that is equivalent to the function funcall,
+but that might have additional implementation-dependent side-effects.
+
+Description::
+.............
+
+Used as the expansion interface hook by macroexpand-1 to control the macro
+expansion process.  When a macro form is to be expanded, this function is
+called with three arguments: the macro function, the macro form, and the
+environment in which the macro form is to be expanded.
+
+The environment object has dynamic extent; the consequences are undefined
+if the environment object is referred to outside the dynamic extent of the
+macro expansion function.
+
+Examples::
+..........
+
+      (defun hook (expander form env)
+         (format t "Now expanding: ~S~
+         (funcall expander form env)) =>  HOOK
+      (defmacro machook (x y) `(/ (+ ,x ,y) 2)) =>  MACHOOK
+      (macroexpand '(machook 1 2)) =>  (/ (+ 1 2) 2), true
+      (let ((*macroexpand-hook* #'hook)) (macroexpand '(machook 1 2)))
+      |>  Now expanding (MACHOOK 1 2)
+     =>  (/ (+ 1 2) 2), true
+
+See Also::
+..........
+
+*Note macroexpand; macroexpand-1:: , macroexpand-1, *Note funcall:: ,
+*Note Evaluation::
+
+Notes::
+.......
+
+The net effect of the chosen initial value is to just invoke the macro
+function, giving it the macro form and environment as its two arguments.
+
+Users or user programs can assign this variable to customize or trace the
+macro expansion mechanism.  Note, however, that this variable is a global
+resource, potentially shared by multiple programs; as such, if any two
+programs depend for their correctness on the setting of this variable,
+those programs may not be able to run in the same Lisp image.  For this
+reason, it is frequently best to confine its uses to debugging situations.
+
+Users who put their own function into *macroexpand-hook* should consider
+saving the previous value of the hook, and calling that value from their
+own.
+
+
+File: gcl.info,  Node: proclaim,  Next: declaim,  Prev: *macroexpand-hook*,  Up: Evaluation and Compilation Dictionary
+
+proclaim                                                         [Function]
+---------------------------------------------------------------------------
+
+`proclaim'  declaration-specifier =>  implementation-dependent
+
+Arguments and Values::
+......................
+
+declaration-specifier--a declaration specifier.
+
+Description::
+.............
+
+Establishes the declaration specified by declaration-specifier in the
+global environment.
+
+Such a declaration, sometimes called a global declaration or a
+proclamation, is always in force unless locally shadowed.
+
+Names of variables and functions within declaration-specifier refer to
+dynamic variables and global function definitions, respectively.
+
+Figure 3-22 shows a list of declaration identifiers that can be used with
+proclaim.
+
+  declaration  inline     optimize  type  
+  ftype        notinline  special         
+
+  Figure 3-22: Global Declaration Specifiers
+
+
+An implementation is free to support other (implementation-defined)
+declaration identifiers as well.
+
+Examples::
+..........
+
+      (defun declare-variable-types-globally (type vars)
+        (proclaim `(type ,type ,@vars))
+        type)
+     
+      ;; Once this form is executed, the dynamic variable *TOLERANCE*
+      ;; must always contain a float.
+      (declare-variable-types-globally 'float '(*tolerance*))
+     =>  FLOAT
+
+See Also::
+..........
+
+*Note declaim:: , declare, *Note Compilation::
+
+Notes::
+.......
+
+Although the execution of a proclaim form has effects that might affect
+compilation, the compiler does not make any attempt to recognize and
+specially process proclaim forms.  A proclamation such as the following,
+even if a top level form, does not have any effect until it is executed:
+
+     (proclaim '(special *x*))
+
+If compile time side effects are desired, eval-when may be useful.  For
+example:
+
+      (eval-when (:execute :compile-toplevel :load-toplevel)
+        (proclaim '(special *x*)))
+
+In most such cases, however, it is preferrable to use declaim for this
+purpose.
+
+Since proclaim forms are ordinary function forms, macro forms can expand
+into them.
+
+
+File: gcl.info,  Node: declaim,  Next: declare,  Prev: proclaim,  Up: Evaluation and Compilation Dictionary
+
+declaim                                                             [Macro]
+---------------------------------------------------------------------------
+
+`declaim'  {declaration-specifier}* =>  implementation-dependent
+
+Arguments and Values::
+......................
+
+declaration-specifier--a declaration specifier; not evaluated.
+
+Description::
+.............
+
+Establishes the declarations specified by the declaration-specifiers.
+
+If a use of this macro appears as a top level form in a file being
+processed by the file compiler, the proclamations are also made at
+compile-time.  As with other defining macros, it is unspecified whether or
+not the compile-time side-effects of a declaim persist after the file has
+been compiled.
+
+Examples::
+..........
+
+See Also::
+..........
+
+declare, *Note proclaim::
+
+
+File: gcl.info,  Node: declare,  Next: ignore,  Prev: declaim,  Up: Evaluation and Compilation Dictionary
+
+declare                                                            [Symbol]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`declare'  {declaration-specifier}*
+
+Arguments::
+...........
+
+declaration-specifier--a declaration specifier; not evaluated.
+
+Description::
+.............
+
+A declare expression, sometimes called a declaration, can occur only at
+the beginning of the bodies of certain forms; that is, it may be preceded
+only by other declare expressions, or by a documentation string if the
+context permits.
+
+A declare expression can occur in a lambda expression or in any of the
+forms listed in Figure 3-23.
+
+  defgeneric                 do-external-symbols   prog                      
+  define-compiler-macro      do-symbols            prog*                     
+  define-method-combination  dolist                restart-case              
+  define-setf-expander       dotimes               symbol-macrolet           
+  defmacro                   flet                  with-accessors            
+  defmethod                  handler-case          with-hash-table-iterator  
+  defsetf                    labels                with-input-from-string    
+  deftype                    let                   with-open-file            
+  defun                      let*                  with-open-stream          
+  destructuring-bind         locally               with-output-to-string     
+  do                         macrolet              with-package-iterator     
+  do*                        multiple-value-bind   with-slots                
+  do-all-symbols             pprint-logical-block                            
+
+       Figure 3-23: Standardized Forms In Which Declarations Can Occur      
+
+
+A declare expression can only occur where specified by the syntax of these
+forms.  The consequences of attempting to evaluate a declare expression
+are undefined.  In situations where such expressions can appear, explicit
+checks are made for their presence and they are never actually evaluated;
+it is for this reason that they are called  "declare expressions" rather
+than "declare forms."
+
+Macro forms cannot expand into declarations; declare expressions must
+appear as actual subexpressions of the form to which they refer.
+
+Figure 3-24 shows a list of declaration identifiers that can be used with
+declare.
+
+  dynamic-extent  ignore     optimize  
+  ftype           inline     special   
+  ignorable       notinline  type      
+
+  Figure 3-24: Local Declaration Specifiers
+
+
+An implementation is free to support other (implementation-defined)
+declaration identifiers as well.
+
+Examples::
+..........
+
+      (defun nonsense (k x z)
+        (foo z x)                     ;First call to foo
+        (let ((j (foo k x))           ;Second call to foo
+              (x (* k k)))
+          (declare (inline foo) (special x z))
+          (foo x j z)))               ;Third call to foo
+
+In this example, the inline declaration applies only to the third call to
+foo, but not to the first or second ones.  The special declaration of x
+causes let to make a dynamic binding for x, and causes the reference to x
+in the body of let to be a dynamic reference.  The reference to x in the
+second call to foo is a local reference to the second parameter of
+nonsense.  The reference to x in the first call to foo is a local
+reference, not a special one.  The special declaration of z causes the
+reference to z in the third call to foo to be a dynamic reference; it does
+not refer to the parameter to nonsense named z, because that parameter
+binding has not been declared to be special.  (The special declaration of
+z does not appear in the body of defun,  but in an inner form, and
+therefore does not affect the binding of the parameter.)
+
+Exceptional Situations::
+........................
+
+The consequences  of trying to use a declare expression as a form to be
+evaluated are undefined.
+
+[Editorial Note by KMP: Probably we need to say something here about
+ill-formed declare expressions.]
+
+See Also::
+..........
+
+*Note proclaim:: , *Note Type Specifiers::, declaration, dynamic-extent,
+ftype, ignorable, ignore, inline, notinline, optimize, type
+
+
+File: gcl.info,  Node: ignore,  Next: dynamic-extent,  Prev: declare,  Up: Evaluation and Compilation Dictionary
+
+ignore, ignorable                                             [Declaration]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+(ignore {var | (function fn)}*)
+
+(ignorable {var | (function fn)}*)
+
+Arguments::
+...........
+
+var--a variable name.
+
+fn--a function name.
+
+Valid Context::
+...............
+
+declaration
+
+Binding Types Affected::
+........................
+
+variable, function
+
+Description::
+.............
+
+The ignore and ignorable declarations refer to for-value references to
+variable bindings for the vars and to function bindings for the fns.
+
+An ignore declaration specifies that for-value references to the indicated
+bindings will not occur within the scope of the declaration.  Within the
+scope of such a declaration, it is desirable for a compiler to issue a
+warning about the presence of either a for-value reference to any var or
+fn, or a special declaration for any var.
+
+An ignorable declaration specifies that for-value references to the
+indicated bindings might or might not occur within the scope of the
+declaration.  Within the scope of such a declaration, it is not desirable
+for a compiler to issue a warning about the presence or absence of either
+a for-value reference to any var or fn, or a special declaration for any
+var.
+
+When not within the scope of a ignore or ignorable declaration, it is
+desirable for a compiler to issue a warning about any var for which there
+is neither a for-value reference nor a special declaration, or about any
+fn for which there is no for-value reference.
+
+Any warning about a "used" or "unused" binding must be of type
+style-warning, and may not affect program semantics.
+
+The stream variables established by with-open-file, with-open-stream,
+with-input-from-string, and with-output-to-string, and all iteration
+variables are, by definition, always "used".  Using (declare (ignore v)),
+for such a variable v has unspecified consequences.
+
+See Also::
+..........
+
+declare
+
+
+File: gcl.info,  Node: dynamic-extent,  Next: type,  Prev: ignore,  Up: Evaluation and Compilation Dictionary
+
+dynamic-extent                                                [Declaration]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+(dynamic-extent [[{var}* | (function fn)*]])
+
+Arguments::
+...........
+
+var--a variable name.
+
+fn--a function name.
+
+Valid Context::
+...............
+
+declaration
+
+Binding Types Affected::
+........................
+
+variable, function
+
+Description::
+.............
+
+In some containing form, F, this declaration asserts for each var_i (which
+need not be bound by F), and for each value v_{ij} that var_i takes on,
+and for each object x_{ijk} that is an otherwise inaccessible part of
+v_{ij} at any time when v_{ij} becomes the value of var_i, that just after
+the execution of F terminates, x_{ijk} is either inaccessible (if F
+established a binding for var_i) or still an otherwise inaccessible part
+of the current value of var_i (if F did not establish a binding for var_i).
+
+The same relation holds for each fn_i, except that the bindings are in the
+function namespace.
+
+The compiler is permitted to use this information in any way that is
+appropriate to the implementation and that does not conflict with the
+semantics of Common Lisp.
+
+dynamic-extent declarations can be free declarations or bound declarations.
+
+The vars and fns named in a dynamic-extent declaration must not refer to
+symbol macro or macro bindings.
+
+Examples::
+..........
+
+Since stack allocation of the initial value entails knowing at the
+object's creation time that the object can be stack-allocated,  it is not
+generally useful to make a dynamic-extent declaration for variables which
+have no lexically apparent initial value.  For example, it is probably
+useful to write:
+
+      (defun f ()
+        (let ((x (list 1 2 3)))
+          (declare (dynamic-extent x))
+              ...))
+
+This would permit those compilers that wish to do so to stack allocate the
+list held by the local variable x.  It is permissible, but in practice
+probably not as useful, to write:
+
+      (defun g (x) (declare (dynamic-extent x)) ...)
+      (defun f () (g (list 1 2 3)))
+
+Most compilers would probably not stack allocate the argument to g in f
+because it would be a modularity violation for the compiler to assume
+facts about g from within f.   Only an implementation that was willing to
+be responsible for recompiling f if the definition of g changed
+incompatibly could legitimately stack allocate the list argument to g in f.
+
+Here is another example:
+
+      (declaim (inline g))
+      (defun g (x) (declare (dynamic-extent x)) ...)
+      (defun f () (g (list 1 2 3)))
+     
+      (defun f ()
+        (flet ((g (x) (declare (dynamic-extent x)) ...))
+          (g (list 1 2 3))))
+
+In the previous example, some compilers might determine that optimization
+was possible and others might not.
+
+A variant of this is the so-called "stack allocated rest list" that can be
+achieved (in implementations supporting the optimization) by:
+
+      (defun f (&rest x)
+        (declare (dynamic-extent x))
+        ...)
+
+Note that although the initial value of x is not explicit, the f function
+is responsible for assembling the list x from the passed arguments, so the
+f function can be optimized by the compiler to construct a stack-allocated
+list instead of a heap-allocated list in implementations that support such.
+
+In the following example,
+
+      (let ((x (list 'a1 'b1 'c1))
+            (y (cons 'a2 (cons 'b2 (cons 'c2 nil)))))
+        (declare (dynamic-extent x y))
+        ...)
+
+The otherwise inaccessible parts of x are three conses,  and the otherwise
+inaccessible parts of y are three other conses.  None of the symbols a1,
+b1,  c1,  a2, b2,  c2,  or nil is an otherwise inaccessible part of x or y
+because each is interned and hence accessible by the package (or packages)
+in which it is interned.  However, if a freshly allocated uninterned
+symbol had been used, it would have been an otherwise inaccessible part of
+the list which contained it.
+
+     ;; In this example, the implementation is permitted to stack allocate
+     ;; the list that is bound to X.
+      (let ((x (list 1 2 3)))
+        (declare (dynamic-extent x))
+        (print x)
+        :done)
+      |>  (1 2 3)
+     =>  :DONE
+     
+     ;; In this example, the list to be bound to L can be stack-allocated.
+      (defun zap (x y z)
+        (do ((l (list x y z) (cdr l)))
+            ((null l))
+          (declare (dynamic-extent l))
+          (prin1 (car l)))) =>  ZAP
+      (zap 1 2 3)
+      |>  123
+     =>  NIL
+     
+     ;; Some implementations might open-code LIST-ALL-PACKAGES in a way
+     ;; that permits using stack allocation of the list to be bound to L.
+      (do ((l (list-all-packages) (cdr l)))
+          ((null l))
+        (declare (dynamic-extent l))
+        (let ((name (package-name (car l))))
+          (when (string-search "COMMON-LISP" name) (print name))))
+      |>  "COMMON-LISP"
+      |>  "COMMON-LISP-USER"
+     =>  NIL
+     
+     ;; Some implementations might have the ability to stack allocate
+     ;; rest lists.  A declaration such as the following should be a cue
+     ;; to such implementations that stack-allocation of the rest list
+     ;; would be desirable.
+      (defun add (&rest x)
+        (declare (dynamic-extent x))
+        (apply #'+ x)) =>  ADD
+      (add 1 2 3) =>  6
+     
+      (defun zap (n m)
+        ;; Computes (RANDOM (+ M 1)) at relative speed of roughly O(N).
+        ;; It may be slow, but with a good compiler at least it
+        ;; doesn't waste much heap storage.  :-}
+        (let ((a (make-array n)))
+          (declare (dynamic-extent a))
+          (dotimes (i n)
+            (declare (dynamic-extent i))
+            (setf (aref a i) (random (+ i 1))))
+          (aref a m))) =>  ZAP
+      (< (zap 5 3) 3) =>  true
+
+The following are in error, since the value of x is used outside of its
+extent:
+
+      (length (list (let ((x (list 1 2 3)))  ; Invalid
+                     (declare (dynamic-extent x))
+                     x)))
+     
+      (progn (let ((x (list 1 2 3)))  ; Invalid
+               (declare (dynamic-extent x))
+               x)
+             nil)
+
+See Also::
+..........
+
+declare
+
+Notes::
+.......
+
+The most common optimization is to stack allocate the initial value of the
+objects named by the vars.
+
+It is permissible for an implementation to simply ignore this declaration.
+

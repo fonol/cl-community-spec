@@ -1,0 +1,53 @@
+{
+    "name": "with-compilation-unit",
+    "prev": "load",
+    "next": "*features*",
+    "up": "System Construction Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "with-compilation-unit"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "with-compilation-unit",
+                    "text": " ([[!option]]) {form}* =>  {result}*\noption ::=:override override\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "override",
+                    "desc": "a generalized boolean; evaluated.  The default is nil."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values returned by the forms."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Executes forms from left to right.  Within the dynamic environment of\nwith-compilation-unit, actions deferred by the compiler until the end of\ncompilation will be deferred until the end of the outermost call to\nwith-compilation-unit.\nThe set of options permitted may be extended by the implementation, but\nthe only standardized keyword is :override.\nIf nested dynamically only the outer call to with-compilation-unit has any\neffect unless the value associated with :override is true, in which case\nwarnings are deferred only to the end of the innermost call for which\noverride is true.\nThe function compile-file provides the effect of\n      (with-compilation-unit (:override nil) ...)\naround its code.\nAny implementation-dependent extensions can only be provided as the result\nof an explicit programmer request by use of an implementation-dependent\nkeyword.  Implementations are forbidden from attaching additional meaning\nto a use of this macro which involves either no keywords or just the\nkeyword :override.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "If an implementation would normally defer certain kinds of warnings, such\nas warnings about undefined functions, to the end of a compilation unit\n(such as a file), the following example shows how to cause those warnings\nto be deferred to the end of the compilation of several files.\n      (defun compile-files (&rest files)\n        (with-compilation-unit ()\n          (mapcar #'(lambda (file) (compile-file file)) files)))\n      (compile-files \"A\" \"B\" \"C\")\nNote however that if the implementation does not normally defer any\nwarnings, use of with-compilation-unit might not have any effect.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note compile:: , *Note compile-file::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: with-compilation-unit,  Next: *features*,  Prev: load,  Up: System Construction Dictionary\n\nwith-compilation-unit                                               [Macro]\n---------------------------------------------------------------------------\n\n`with-compilation-unit'  ([[!option]]) {form}* =>  {result}*\n\noption ::=:override override\n\nArguments and Values::\n......................\n\noverride--a generalized boolean; evaluated.  The default is nil.\n\nforms--an implicit progn.\n\nresults--the values returned by the forms.\n\nDescription::\n.............\n\nExecutes forms from left to right.  Within the dynamic environment of\nwith-compilation-unit, actions deferred by the compiler until the end of\ncompilation will be deferred until the end of the outermost call to\nwith-compilation-unit.\n\nThe set of options permitted may be extended by the implementation, but\nthe only standardized keyword is :override.\n\nIf nested dynamically only the outer call to with-compilation-unit has any\neffect unless the value associated with :override is true, in which case\nwarnings are deferred only to the end of the innermost call for which\noverride is true.\n\nThe function compile-file provides the effect of\n\n      (with-compilation-unit (:override nil) ...)\n\naround its code.\n\nAny implementation-dependent extensions can only be provided as the result\nof an explicit programmer request by use of an implementation-dependent\nkeyword.  Implementations are forbidden from attaching additional meaning\nto a use of this macro which involves either no keywords or just the\nkeyword :override.\n\nExamples::\n..........\n\nIf an implementation would normally defer certain kinds of warnings, such\nas warnings about undefined functions, to the end of a compilation unit\n(such as a file), the following example shows how to cause those warnings\nto be deferred to the end of the compilation of several files.\n\n      (defun compile-files (&rest files)\n        (with-compilation-unit ()\n          (mapcar #'(lambda (file) (compile-file file)) files)))\n     \n      (compile-files \"A\" \"B\" \"C\")\n\nNote however that if the implementation does not normally defer any\nwarnings, use of with-compilation-unit might not have any effect.\n\nSee Also::\n..........\n\n*Note compile:: , *Note compile-file::\n\n"
+}

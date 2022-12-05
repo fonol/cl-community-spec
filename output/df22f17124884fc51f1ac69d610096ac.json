@@ -1,0 +1,57 @@
+{
+    "name": "eq",
+    "prev": "t",
+    "next": "eql",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "eq"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "eq",
+                    "text": " x y =>  generalized-boolean\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "x",
+                    "desc": "an object."
+                },
+                {
+                    "name": "y",
+                    "desc": "an object."
+                },
+                {
+                    "name": "generalized-boolean",
+                    "desc": "a generalized boolean."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns true if its arguments are the same, identical object; otherwise,\nreturns false.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (eq 'a 'b) =>  false\n      (eq 'a 'a) =>  true\n      (eq 3 3)\n     =>  true\n     OR=> false\n      (eq 3 3.0) =>  false\n      (eq 3.0 3.0)\n     =>  true\n     OR=> false\n      (eq #c(3 -4) #c(3 -4))\n     =>  true\n     OR=> false\n      (eq #c(3 -4.0) #c(3 -4)) =>  false\n      (eq (cons 'a 'b) (cons 'a 'c)) =>  false\n      (eq (cons 'a 'b) (cons 'a 'b)) =>  false\n      (eq '(a . b) '(a . b))\n     =>  true\n     OR=> false\n      (progn (setq x (cons 'a 'b)) (eq x x)) =>  true\n      (progn (setq x '(a . b)) (eq x x)) =>  true\n      (eq #\\A #\\A)\n     =>  true\n     OR=> false\n      (let ((x \"Foo\")) (eq x x)) =>  true\n      (eq \"Foo\" \"Foo\")\n     =>  true\n     OR=> false\n      (eq \"Foo\" (copy-seq \"Foo\")) =>  false\n      (eq \"FOO\" \"foo\") =>  false\n      (eq \"string-seq\" (copy-seq \"string-seq\")) =>  false\n      (let ((x 5)) (eq x x))\n     =>  true\n     OR=> false\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note eql:: , *Note equal:: , *Note equalp:: , *Note =; /=; <; >; <=; >=::\n, *Note Compilation::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Objects that appear the same when printed are not necessarily eq to each\nother.  Symbols that print the same usually are eq to each other because\nof the use of the intern function.  However, numbers with the same value\nneed not be eq, and two similar lists are usually not identical.\nAn implementation is permitted to make \"copies\" of characters and numbers\nat any time.  The effect is that Common Lisp makes no guarantee that eq is\ntrue even when both its arguments are \"the same thing\" if that thing is a\ncharacter or number.\nMost Common Lisp operators use eql rather than eq to compare objects, or\nelse they default to eql and only use eq if specifically requested to do\nso.  However, the following operators are defined to use eq rather than\neql in a way that cannot be overridden by the code which employs them:\n  catch           getf     throw     get             remf            \n  get-properties  remprop  \n  Figure 5-11: Operators that always prefer EQ over EQL\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: eq,  Next: eql,  Prev: t,  Up: Data and Control Flow Dictionary\n\neq                                                               [Function]\n---------------------------------------------------------------------------\n\n`eq'  x y =>  generalized-boolean\n\nArguments and Values::\n......................\n\nx--an object.\n\ny--an object.\n\ngeneralized-boolean--a generalized boolean.\n\nDescription::\n.............\n\nReturns true if its arguments are the same, identical object; otherwise,\nreturns false.\n\nExamples::\n..........\n\n      (eq 'a 'b) =>  false\n      (eq 'a 'a) =>  true\n      (eq 3 3)\n     =>  true\n     OR=> false\n      (eq 3 3.0) =>  false\n      (eq 3.0 3.0)\n     =>  true\n     OR=> false\n      (eq #c(3 -4) #c(3 -4))\n     =>  true\n     OR=> false\n      (eq #c(3 -4.0) #c(3 -4)) =>  false\n      (eq (cons 'a 'b) (cons 'a 'c)) =>  false\n      (eq (cons 'a 'b) (cons 'a 'b)) =>  false\n      (eq '(a . b) '(a . b))\n     =>  true\n     OR=> false\n      (progn (setq x (cons 'a 'b)) (eq x x)) =>  true\n      (progn (setq x '(a . b)) (eq x x)) =>  true\n      (eq #\\A #\\A)\n     =>  true\n     OR=> false\n      (let ((x \"Foo\")) (eq x x)) =>  true\n      (eq \"Foo\" \"Foo\")\n     =>  true\n     OR=> false\n      (eq \"Foo\" (copy-seq \"Foo\")) =>  false\n      (eq \"FOO\" \"foo\") =>  false\n      (eq \"string-seq\" (copy-seq \"string-seq\")) =>  false\n      (let ((x 5)) (eq x x))\n     =>  true\n     OR=> false\n\nSee Also::\n..........\n\n*Note eql:: , *Note equal:: , *Note equalp:: , *Note =; /=; <; >; <=; >=::\n, *Note Compilation::\n\nNotes::\n.......\n\nObjects that appear the same when printed are not necessarily eq to each\nother.  Symbols that print the same usually are eq to each other because\nof the use of the intern function.  However, numbers with the same value\nneed not be eq, and two similar lists are usually not identical.\n\nAn implementation is permitted to make \"copies\" of characters and numbers\nat any time.  The effect is that Common Lisp makes no guarantee that eq is\ntrue even when both its arguments are \"the same thing\" if that thing is a\ncharacter or number.\n\nMost Common Lisp operators use eql rather than eq to compare objects, or\nelse they default to eql and only use eq if specifically requested to do\nso.  However, the following operators are defined to use eq rather than\neql in a way that cannot be overridden by the code which employs them:\n\n  catch           getf     throw     get             remf            \n  get-properties  remprop  \n\n  Figure 5-11: Operators that always prefer EQ over EQL\n\n\n"
+}

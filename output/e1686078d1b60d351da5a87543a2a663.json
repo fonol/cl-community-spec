@@ -1,0 +1,65 @@
+{
+    "name": "let",
+    "prev": "destructuring-bind",
+    "next": "progv",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Special Operator",
+        "text": "let, let*"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "let",
+                    "text": " ({var | (var [init-form])}*) {declaration}* {form}* =>  {result}*\n"
+                },
+                {
+                    "name": "let*",
+                    "text": " ({var | (var [init-form])}*) {declaration}* {form}* =>  {result}*\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "var",
+                    "desc": "a symbol."
+                },
+                {
+                    "name": "init-form",
+                    "desc": "a form."
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "form",
+                    "desc": "a form."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values returned by the forms."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "let and let* create new variable bindings and execute a series of forms\nthat use these bindings.  let performs the bindings in parallel and let*\ndoes them sequentially.\nThe form\n      (let ((var1 init-form-1)\n            (var2 init-form-2)\n            ...\n            (varm init-form-m))\n        declaration1\n        declaration2\n        ...\n        declarationp\n        form1\n        form2\n        ...\n        formn)\nfirst evaluates the expressions init-form-1, init-form-2, and so on,\nin that order, saving the resulting values.  Then all of the variables\nvarj are bound to the corresponding values; each binding is lexical unless\nthere is a special declaration to the contrary.  The expressions formk are\nthen evaluated in order; the values of all but the last are discarded\n(that is, the body of a let is an implicit progn).\nlet* is similar to let, but the bindings of variables are performed\nsequentially rather than in parallel.  The expression for the init-form of\na var can refer to vars previously bound in the let*.\nThe form\n      (let* ((var1 init-form-1)\n             (var2 init-form-2)\n             ...\n             (varm init-form-m))\n        declaration1\n        declaration2\n        ...\n        declarationp\n        form1\n        form2\n        ...\n        formn)\nfirst evaluates the expression init-form-1, then binds the variable var1\nto that value; then it evaluates init-form-2 and binds\nvar2, and so on.  The expressions formj are then evaluated in order; the\nvalues of all but the last are discarded (that is, the body of let* is an\nimplicit progn).\nFor both let and let*, if there is not an init-form associated with a var,\nvar is initialized to nil.\nThe special form let has the property that the scope of the name binding\ndoes not include any initial value form.  For let*, a variable's scope\nalso includes the remaining initial value forms for subsequent variable\nbindings.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq a 'top) =>  TOP\n      (defun dummy-function () a) =>  DUMMY-FUNCTION\n      (let ((a 'inside) (b a))\n         (format nil \"~S ~S ~S\" a b (dummy-function))) =>  \"INSIDE TOP TOP\"\n      (let* ((a 'inside) (b a))\n         (format nil \"~S ~S ~S\" a b (dummy-function))) =>  \"INSIDE INSIDE TOP\"\n      (let ((a 'inside) (b a))\n         (declare (special a))\n         (format nil \"~S ~S ~S\" a b (dummy-function))) =>  \"INSIDE TOP INSIDE\"\nThe code\n      (let (x)\n        (declare (integer x))\n        (setq x (gcd y z))\n        ...)\nis incorrect; although x is indeed set before it is used, and is set to a\nvalue of the declared type integer, nevertheless x initially takes on the\nvalue nil in violation of the type declaration.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note progv::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: let,  Next: progv,  Prev: destructuring-bind,  Up: Data and Control Flow Dictionary\n\nlet, let*                                                [Special Operator]\n---------------------------------------------------------------------------\n\n`let'  ({var | (var [init-form])}*) {declaration}* {form}* =>  {result}*\n\n`let*'  ({var | (var [init-form])}*) {declaration}* {form}* =>  {result}*\n\nArguments and Values::\n......................\n\nvar--a symbol.\n\ninit-form--a form.\n\ndeclaration--a declare expression; not evaluated.\n\nform--a form.\n\nresults--the values returned by the forms.\n\nDescription::\n.............\n\nlet and let* create new variable bindings and execute a series of forms\nthat use these bindings.  let performs the bindings in parallel and let*\ndoes them sequentially.\n\nThe form\n\n      (let ((var1 init-form-1)\n            (var2 init-form-2)\n            ...\n            (varm init-form-m))\n        declaration1\n        declaration2\n        ...\n        declarationp\n        form1\n        form2\n        ...\n        formn)\n\nfirst evaluates the expressions init-form-1, init-form-2, and so on,\n\nin that order, saving the resulting values.  Then all of the variables\nvarj are bound to the corresponding values; each binding is lexical unless\nthere is a special declaration to the contrary.  The expressions formk are\nthen evaluated in order; the values of all but the last are discarded\n(that is, the body of a let is an implicit progn).\n\nlet* is similar to let, but the bindings of variables are performed\nsequentially rather than in parallel.  The expression for the init-form of\na var can refer to vars previously bound in the let*.\n\nThe form\n\n      (let* ((var1 init-form-1)\n             (var2 init-form-2)\n             ...\n             (varm init-form-m))\n        declaration1\n        declaration2\n        ...\n        declarationp\n        form1\n        form2\n        ...\n        formn)\n\nfirst evaluates the expression init-form-1, then binds the variable var1\nto that value; then it evaluates init-form-2 and binds\n\nvar2, and so on.  The expressions formj are then evaluated in order; the\nvalues of all but the last are discarded (that is, the body of let* is an\nimplicit progn).\n\nFor both let and let*, if there is not an init-form associated with a var,\nvar is initialized to nil.\n\nThe special form let has the property that the scope of the name binding\ndoes not include any initial value form.  For let*, a variable's scope\nalso includes the remaining initial value forms for subsequent variable\nbindings.\n\nExamples::\n..........\n\n      (setq a 'top) =>  TOP\n      (defun dummy-function () a) =>  DUMMY-FUNCTION\n      (let ((a 'inside) (b a))\n         (format nil \"~S ~S ~S\" a b (dummy-function))) =>  \"INSIDE TOP TOP\"\n      (let* ((a 'inside) (b a))\n         (format nil \"~S ~S ~S\" a b (dummy-function))) =>  \"INSIDE INSIDE TOP\"\n      (let ((a 'inside) (b a))\n         (declare (special a))\n         (format nil \"~S ~S ~S\" a b (dummy-function))) =>  \"INSIDE TOP INSIDE\"\n\nThe code\n\n      (let (x)\n        (declare (integer x))\n        (setq x (gcd y z))\n        ...)\n\nis incorrect; although x is indeed set before it is used, and is set to a\nvalue of the declared type integer, nevertheless x initially takes on the\nvalue nil in violation of the type declaration.\n\nSee Also::\n..........\n\n*Note progv::\n\n"
+}

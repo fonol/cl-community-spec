@@ -1,0 +1,65 @@
+{
+    "name": "prog1",
+    "prev": "prog",
+    "next": "progn",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "prog1, prog2"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "prog'  1 =>  first-form             {form}* result-1 `prog",
+                    "text": " 2 =>first-form second-form {form}* result-2\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "first-form",
+                    "desc": "a form; evaluated as described below."
+                },
+                {
+                    "name": "second-form",
+                    "desc": "a form; evaluated as described below."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn; evaluated as described below."
+                },
+                {
+                    "name": "result-1",
+                    "desc": "the primary value resulting from the evaluation of first-form."
+                },
+                {
+                    "name": "result-2",
+                    "desc": "the primary value resulting from the evaluation of second-form."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "prog1 evaluates first-form and then forms, yielding as its only value the\nprimary value yielded by first-form.\nprog2 evaluates first-form, then second-form, and then forms, yielding as\nits only value the primary value yielded by first-form.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq temp 1) =>  1\n      (prog1 temp (print temp) (incf temp) (print temp))\n      |>  1\n      |>  2\n     =>  1\n      (prog1 temp (setq temp nil)) =>  2\n      temp =>  NIL\n      (prog1 (values 1 2 3) 4) =>  1\n      (setq temp (list 'a 'b 'c))\n      (prog1 (car temp) (setf (car temp) 'alpha)) =>  A\n      temp =>  (ALPHA B C)\n      (flet ((swap-symbol-values (x y)\n               (setf (symbol-value x)\n                     (prog1 (symbol-value y)\n                            (setf (symbol-value y) (symbol-value x))))))\n        (let ((*foo* 1) (*bar* 2))\n          (declare (special *foo* *bar*))\n          (swap-symbol-values '*foo* '*bar*)\n          (values *foo* *bar*)))\n     =>  2, 1\n      (setq temp 1) =>  1\n      (prog2 (incf temp) (incf temp) (incf temp)) =>  3\n      temp =>  4\n      (prog2 1 (values 2 3 4) 5) =>  2\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note multiple-value-prog1:: , *Note progn::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "prog1 and prog2 are typically used to evaluate one or more forms with side\neffects and return a value that must be computed before some or all of the\nside effects happen.\n      (prog1 {form}*) == (values (multiple-value-prog1 {form}*))\n      (prog2 form1 {form}*) == (let () form1 (prog1 {form}*))\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: prog1,  Next: progn,  Prev: prog,  Up: Data and Control Flow Dictionary\n\nprog1, prog2                                                        [Macro]\n---------------------------------------------------------------------------\n\n`prog'  1 =>  first-form             {form}* result-1 `prog'  2 =>\nfirst-form second-form {form}* result-2\n\nArguments and Values::\n......................\n\nfirst-form--a form; evaluated as described below.\n\nsecond-form--a form; evaluated as described below.\n\nforms--an implicit progn; evaluated as described below.\n\nresult-1--the primary value resulting from the evaluation of first-form.\n\nresult-2--the primary value resulting from the evaluation of second-form.\n\nDescription::\n.............\n\nprog1 evaluates first-form and then forms, yielding as its only value the\nprimary value yielded by first-form.\n\nprog2 evaluates first-form, then second-form, and then forms, yielding as\nits only value the primary value yielded by first-form.\n\nExamples::\n..........\n\n      (setq temp 1) =>  1\n      (prog1 temp (print temp) (incf temp) (print temp))\n      |>  1\n      |>  2\n     =>  1\n      (prog1 temp (setq temp nil)) =>  2\n      temp =>  NIL\n      (prog1 (values 1 2 3) 4) =>  1\n      (setq temp (list 'a 'b 'c))\n      (prog1 (car temp) (setf (car temp) 'alpha)) =>  A\n      temp =>  (ALPHA B C)\n      (flet ((swap-symbol-values (x y)\n               (setf (symbol-value x)\n                     (prog1 (symbol-value y)\n                            (setf (symbol-value y) (symbol-value x))))))\n        (let ((*foo* 1) (*bar* 2))\n          (declare (special *foo* *bar*))\n          (swap-symbol-values '*foo* '*bar*)\n          (values *foo* *bar*)))\n     =>  2, 1\n      (setq temp 1) =>  1\n      (prog2 (incf temp) (incf temp) (incf temp)) =>  3\n      temp =>  4\n      (prog2 1 (values 2 3 4) 5) =>  2\n\nSee Also::\n..........\n\n*Note multiple-value-prog1:: , *Note progn::\n\nNotes::\n.......\n\nprog1 and prog2 are typically used to evaluate one or more forms with side\neffects and return a value that must be computed before some or all of the\nside effects happen.\n\n      (prog1 {form}*) == (values (multiple-value-prog1 {form}*))\n      (prog2 form1 {form}*) == (let () form1 (prog1 {form}*))\n\n"
+}

@@ -1,0 +1,65 @@
+{
+    "name": "unintern",
+    "prev": "unexport",
+    "next": "in-package",
+    "up": "Packages Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "unintern"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "unintern",
+                    "text": " symbol &optional package =>  generalized-boolean\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "symbol",
+                    "desc": "a symbol."
+                },
+                {
+                    "name": "package",
+                    "desc": "a package designator.The default is the current package.\n"
+                },
+                {
+                    "name": "generalized-boolean",
+                    "desc": "a generalized boolean."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "unintern removes symbol from package.  If symbol is present in package, it\nis removed from package and also from package's shadowing symbols list if\nit is present there.  If package is the home package for symbol, symbol is\nmade to have no home package.  Symbol may continue to be accessible in\npackage by inheritance.\nUse of unintern can result in a symbol that has no recorded home package,\nbut that in fact is accessible in some package.  Common Lisp does not\ncheck for this pathological case, and such symbols are always printed\npreceded by #:.\nunintern returns true if it removes symbol, and nil otherwise.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (in-package \"COMMON-LISP-USER\") =>  #<PACKAGE \"COMMON-LISP-USER\">\n      (setq temps-unpack (intern \"UNPACK\" (make-package 'temp))) =>  TEMP::UNPACK\n      (unintern temps-unpack 'temp) =>  T\n      (find-symbol \"UNPACK\" 'temp) =>  NIL, NIL\n      temps-unpack =>  #:UNPACK\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "unintern changes the state of the package system in such a way that the\nconsistency rules do not hold across the change.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "Current state of the package system.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Giving a shadowing symbol to unintern can uncover a name conflict that had\npreviously been resolved by the shadowing.  If package A uses packages B\nand C, A contains a shadowing symbol x, and B and C each contain external\nsymbols named x, then removing the shadowing symbol x from A will reveal a\nname conflict between b:x and c:x if those two symbols are distinct.  In\nthis case unintern will signal an error.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note Package Concepts::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: unintern,  Next: in-package,  Prev: unexport,  Up: Packages Dictionary\n\nunintern                                                         [Function]\n---------------------------------------------------------------------------\n\n`unintern'  symbol &optional package =>  generalized-boolean\n\nArguments and Values::\n......................\n\nsymbol--a symbol.\n\npackage--a package designator.\n\nThe default is the current package.\n\ngeneralized-boolean--a generalized boolean.\n\nDescription::\n.............\n\nunintern removes symbol from package.  If symbol is present in package, it\nis removed from package and also from package's shadowing symbols list if\nit is present there.  If package is the home package for symbol, symbol is\nmade to have no home package.  Symbol may continue to be accessible in\npackage by inheritance.\n\nUse of unintern can result in a symbol that has no recorded home package,\nbut that in fact is accessible in some package.  Common Lisp does not\ncheck for this pathological case, and such symbols are always printed\npreceded by #:.\n\nunintern returns true if it removes symbol, and nil otherwise.\n\nExamples::\n..........\n\n      (in-package \"COMMON-LISP-USER\") =>  #<PACKAGE \"COMMON-LISP-USER\">\n      (setq temps-unpack (intern \"UNPACK\" (make-package 'temp))) =>  TEMP::UNPACK\n      (unintern temps-unpack 'temp) =>  T\n      (find-symbol \"UNPACK\" 'temp) =>  NIL, NIL\n      temps-unpack =>  #:UNPACK\n\nSide Effects::\n..............\n\nunintern changes the state of the package system in such a way that the\nconsistency rules do not hold across the change.\n\nAffected By::\n.............\n\nCurrent state of the package system.\n\nExceptional Situations::\n........................\n\nGiving a shadowing symbol to unintern can uncover a name conflict that had\npreviously been resolved by the shadowing.  If package A uses packages B\nand C, A contains a shadowing symbol x, and B and C each contain external\nsymbols named x, then removing the shadowing symbol x from A will reveal a\nname conflict between b:x and c:x if those two symbols are distinct.  In\nthis case unintern will signal an error.\n\nSee Also::\n..........\n\n*Note Package Concepts::\n\n"
+}

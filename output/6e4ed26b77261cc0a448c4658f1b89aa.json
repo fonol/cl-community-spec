@@ -1,0 +1,69 @@
+{
+    "name": "macroexpand",
+    "prev": "macro-function",
+    "next": "define-symbol-macro",
+    "up": "Evaluation and Compilation Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "macroexpand, macroexpand-1"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "macroexpand",
+                    "text": " form &optional env =>  expansion, expanded-p\n"
+                },
+                {
+                    "name": "macroexpand-",
+                    "text": " 1 =>  form &optional env expansion, expanded-p\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "form",
+                    "desc": "a form."
+                },
+                {
+                    "name": "env",
+                    "desc": "an environment object.  The default is nil."
+                },
+                {
+                    "name": "expansion",
+                    "desc": "a form."
+                },
+                {
+                    "name": "expanded-p",
+                    "desc": "a generalized boolean."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "macroexpand and macroexpand-1 expand macros.\nIf form is a macro form, then macroexpand-1 expands the macro form call\nonce.\nmacroexpand repeatedly expands form until it is no longer a macro form.\nIn effect, macroexpand calls macroexpand-1 repeatedly until the secondary\nvalue it returns is nil.\nIf form is a macro form, then the expansion is a macro expansion and\nexpanded-p is true.  Otherwise, the expansion is the given form and\nexpanded-p is false.\nMacro expansion is carried out as follows.  Once macroexpand-1 has\ndetermined that the form is a macro form, it obtains an appropriate\nexpansion function for the macro or symbol macro.  The value of\n*macroexpand-hook* is\ncoerced to a function and\nthen called as a function of three arguments: the expansion function, the\nform, and the env.  The value returned from this call is taken to be the\nexpansion of the form.\nIn addition to macro definitions in the global environment, any local\nmacro definitions established within env by macrolet or symbol-macrolet\nare considered.  If only form is supplied as an argument, then the\nenvironment is effectively null, and only global macro definitions as\nestablished by defmacro are considered.  Macro definitions are shadowed by\nlocal function definitions.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defmacro alpha (x y) `(beta ,x ,y)) =>  ALPHA\n      (defmacro beta (x y) `(gamma ,x ,y)) =>  BETA\n      (defmacro delta (x y) `(gamma ,x ,y)) =>  EPSILON\n      (defmacro expand (form &environment env)\n        (multiple-value-bind (expansion expanded-p)\n            (macroexpand form env)\n          `(values ',expansion ',expanded-p))) =>  EXPAND\n      (defmacro expand-1 (form &environment env)\n        (multiple-value-bind (expansion expanded-p)\n            (macroexpand-1 form env)\n          `(values ',expansion ',expanded-p))) =>  EXPAND-1\n     ;; Simple examples involving just the global environment\n      (macroexpand-1 '(alpha a b)) =>  (BETA A B), true\n      (expand-1 (alpha a b)) =>  (BETA A B), true\n      (macroexpand '(alpha a b)) =>  (GAMMA A B), true\n      (expand (alpha a b)) =>  (GAMMA A B), true\n      (macroexpand-1 'not-a-macro) =>  NOT-A-MACRO, false\n      (expand-1 not-a-macro) =>  NOT-A-MACRO, false\n      (macroexpand '(not-a-macro a b)) =>  (NOT-A-MACRO A B), false\n      (expand (not-a-macro a b)) =>  (NOT-A-MACRO A B), false\n     ;; Examples involving lexical environments\n      (macrolet ((alpha (x y) `(delta ,x ,y)))\n        (macroexpand-1 '(alpha a b))) =>  (BETA A B), true\n      (macrolet ((alpha (x y) `(delta ,x ,y)))\n        (expand-1 (alpha a b))) =>  (DELTA A B), true\n      (macrolet ((alpha (x y) `(delta ,x ,y)))\n        (macroexpand '(alpha a b))) =>  (GAMMA A B), true\n      (macrolet ((alpha (x y) `(delta ,x ,y)))\n        (expand (alpha a b))) =>  (GAMMA A B), true\n      (macrolet ((beta (x y) `(epsilon ,x ,y)))\n        (expand (alpha a b))) =>  (EPSILON A B), true\n      (let ((x (list 1 2 3)))\n        (symbol-macrolet ((a (first x)))\n          (expand a))) =>  (FIRST X), true\n      (let ((x (list 1 2 3)))\n        (symbol-macrolet ((a (first x)))\n          (macroexpand 'a))) =>  A, false\n      (symbol-macrolet ((b (alpha x y)))\n        (expand-1 b)) =>  (ALPHA X Y), true\n      (symbol-macrolet ((b (alpha x y)))\n        (expand b)) =>  (GAMMA X Y), true\n      (symbol-macrolet ((b (alpha x y))\n                        (a b))\n        (expand-1 a)) =>  B, true\n      (symbol-macrolet ((b (alpha x y))\n                        (a b))\n        (expand a)) =>  (GAMMA X Y), true\n     ;; Examples of shadowing behavior\n      (flet ((beta (x y) (+ x y)))\n        (expand (alpha a b))) =>  (BETA A B), true\n      (macrolet ((alpha (x y) `(delta ,x ,y)))\n        (flet ((alpha (x y) (+ x y)))\n          (expand (alpha a b)))) =>  (ALPHA A B), false\n      (let ((x (list 1 2 3)))\n        (symbol-macrolet ((a (first x)))\n          (let ((a x))\n            (expand a)))) =>  A, false\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "defmacro, setf of macro-function, macrolet, symbol-macrolet\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*macroexpand-hook*, *Note defmacro:: , *Note setf; psetf:: of *Note\nmacro-function:: , macrolet, *Note symbol-macrolet:: , *Note Evaluation::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Neither macroexpand nor macroexpand-1 makes any explicit attempt to expand\nmacro forms that are either subforms of the form or subforms of the\nexpansion.  Such expansion might occur implicitly, however, due to the\nsemantics or implementation of the macro function.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: macroexpand,  Next: define-symbol-macro,  Prev: macro-function,  Up: Evaluation and Compilation Dictionary\n\nmacroexpand, macroexpand-1                                       [Function]\n---------------------------------------------------------------------------\n\n`macroexpand'  form &optional env =>  expansion, expanded-p\n\n`macroexpand-'  1 =>  form &optional env expansion, expanded-p\n\nArguments and Values::\n......................\n\nform--a form.\n\nenv--an environment object.  The default is nil.\n\nexpansion--a form.\n\nexpanded-p--a generalized boolean.\n\nDescription::\n.............\n\nmacroexpand and macroexpand-1 expand macros.\n\nIf form is a macro form, then macroexpand-1 expands the macro form call\nonce.\n\nmacroexpand repeatedly expands form until it is no longer a macro form.\nIn effect, macroexpand calls macroexpand-1 repeatedly until the secondary\nvalue it returns is nil.\n\nIf form is a macro form, then the expansion is a macro expansion and\nexpanded-p is true.  Otherwise, the expansion is the given form and\nexpanded-p is false.\n\nMacro expansion is carried out as follows.  Once macroexpand-1 has\ndetermined that the form is a macro form, it obtains an appropriate\nexpansion function for the macro or symbol macro.  The value of\n*macroexpand-hook* is\n\ncoerced to a function and\n\nthen called as a function of three arguments: the expansion function, the\nform, and the env.  The value returned from this call is taken to be the\nexpansion of the form.\n\nIn addition to macro definitions in the global environment, any local\nmacro definitions established within env by macrolet or symbol-macrolet\nare considered.  If only form is supplied as an argument, then the\nenvironment is effectively null, and only global macro definitions as\nestablished by defmacro are considered.  Macro definitions are shadowed by\nlocal function definitions.\n\nExamples::\n..........\n\n      (defmacro alpha (x y) `(beta ,x ,y)) =>  ALPHA\n      (defmacro beta (x y) `(gamma ,x ,y)) =>  BETA\n      (defmacro delta (x y) `(gamma ,x ,y)) =>  EPSILON\n      (defmacro expand (form &environment env)\n        (multiple-value-bind (expansion expanded-p)\n            (macroexpand form env)\n          `(values ',expansion ',expanded-p))) =>  EXPAND\n      (defmacro expand-1 (form &environment env)\n        (multiple-value-bind (expansion expanded-p)\n            (macroexpand-1 form env)\n          `(values ',expansion ',expanded-p))) =>  EXPAND-1\n     \n     ;; Simple examples involving just the global environment\n      (macroexpand-1 '(alpha a b)) =>  (BETA A B), true\n      (expand-1 (alpha a b)) =>  (BETA A B), true\n      (macroexpand '(alpha a b)) =>  (GAMMA A B), true\n      (expand (alpha a b)) =>  (GAMMA A B), true\n      (macroexpand-1 'not-a-macro) =>  NOT-A-MACRO, false\n      (expand-1 not-a-macro) =>  NOT-A-MACRO, false\n      (macroexpand '(not-a-macro a b)) =>  (NOT-A-MACRO A B), false\n      (expand (not-a-macro a b)) =>  (NOT-A-MACRO A B), false\n     \n     ;; Examples involving lexical environments\n      (macrolet ((alpha (x y) `(delta ,x ,y)))\n        (macroexpand-1 '(alpha a b))) =>  (BETA A B), true\n      (macrolet ((alpha (x y) `(delta ,x ,y)))\n        (expand-1 (alpha a b))) =>  (DELTA A B), true\n      (macrolet ((alpha (x y) `(delta ,x ,y)))\n        (macroexpand '(alpha a b))) =>  (GAMMA A B), true\n      (macrolet ((alpha (x y) `(delta ,x ,y)))\n        (expand (alpha a b))) =>  (GAMMA A B), true\n      (macrolet ((beta (x y) `(epsilon ,x ,y)))\n        (expand (alpha a b))) =>  (EPSILON A B), true\n      (let ((x (list 1 2 3)))\n        (symbol-macrolet ((a (first x)))\n          (expand a))) =>  (FIRST X), true\n      (let ((x (list 1 2 3)))\n        (symbol-macrolet ((a (first x)))\n          (macroexpand 'a))) =>  A, false\n      (symbol-macrolet ((b (alpha x y)))\n        (expand-1 b)) =>  (ALPHA X Y), true\n      (symbol-macrolet ((b (alpha x y)))\n        (expand b)) =>  (GAMMA X Y), true\n      (symbol-macrolet ((b (alpha x y))\n                        (a b))\n        (expand-1 a)) =>  B, true\n      (symbol-macrolet ((b (alpha x y))\n                        (a b))\n        (expand a)) =>  (GAMMA X Y), true\n     \n     ;; Examples of shadowing behavior\n      (flet ((beta (x y) (+ x y)))\n        (expand (alpha a b))) =>  (BETA A B), true\n      (macrolet ((alpha (x y) `(delta ,x ,y)))\n        (flet ((alpha (x y) (+ x y)))\n          (expand (alpha a b)))) =>  (ALPHA A B), false\n      (let ((x (list 1 2 3)))\n        (symbol-macrolet ((a (first x)))\n          (let ((a x))\n            (expand a)))) =>  A, false\n\nAffected By::\n.............\n\ndefmacro, setf of macro-function, macrolet, symbol-macrolet\n\nSee Also::\n..........\n\n*macroexpand-hook*, *Note defmacro:: , *Note setf; psetf:: of *Note\nmacro-function:: , macrolet, *Note symbol-macrolet:: , *Note Evaluation::\n\nNotes::\n.......\n\nNeither macroexpand nor macroexpand-1 makes any explicit attempt to expand\nmacro forms that are either subforms of the form or subforms of the\nexpansion.  Such expansion might occur implicitly, however, due to the\nsemantics or implementation of the macro function.\n\n"
+}

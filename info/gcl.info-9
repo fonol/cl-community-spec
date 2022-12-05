@@ -1,0 +1,1277 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: Boa Lambda Lists,  Next: Defsetf Lambda Lists,  Prev: Destructuring Lambda Lists,  Up: Lambda Lists
+
+Boa Lambda Lists
+----------------
+
+A boa lambda list is a lambda list that is syntactically like an ordinary
+lambda list, but that is processed in "by order of argument" style.
+
+A boa lambda list is used only in a defstruct form, when explicitly
+specifying the lambda list of a constructor function (sometimes called a
+"boa constructor").
+
+The &optional, &rest, &aux,
+
+&key, and &allow-other-keys
+
+lambda list keywords are recognized in a boa lambda list.  The way these
+lambda list keywords differ from their use in an ordinary lambda list
+follows.
+
+Consider this example, which describes how destruct processes its
+:constructor option.
+
+      (:constructor create-foo
+              (a &optional b (c 'sea) &rest d &aux e (f 'eff)))
+
+This defines create-foo to be a constructor of one or more arguments.  The
+first argument is used to initialize the a slot.  The second argument is
+used to initialize the b slot.  If there isn't any second argument, then
+the default value given in the body of the defstruct (if given) is used
+instead.  The third argument is used to initialize the c slot.  If there
+isn't any third argument, then the symbol sea is used instead.  Any
+arguments following the third argument are collected into a list and used
+to initialize the d slot.  If there are three or fewer arguments, then nil
+is placed in the d slot.  The e slot is not initialized; its initial value
+is implementation-defined.  Finally, the f slot is initialized to contain
+the symbol eff.
+
+&key and &allow-other-keys arguments default in a manner similar to that
+of &optional arguments: if no default is supplied in the lambda list then
+the default value given in the body of the defstruct (if given) is used
+instead.  For example:
+
+      (defstruct (foo (:constructor CREATE-FOO (a &optional b (c 'sea)
+                                                  &key (d 2)
+                                                  &aux e (f 'eff))))
+        (a 1) (b 2) (c 3) (d 4) (e 5) (f 6))
+     
+      (create-foo 10) =>  #S(FOO A 10 B 2 C SEA D 2 E implemention-dependent F EFF)
+      (create-foo 10 'bee 'see :d 'dee)
+     =>  #S(FOO A 10 B BEE C SEE D DEE E implemention-dependent F EFF)
+
+If keyword arguments of the form ((key var) [default [svar]]) are
+specified, the slot name is matched with var (not key).
+
+The actions taken in the b and e cases were carefully chosen to allow the
+user to specify all possible behaviors.  The &aux variables can be used to
+completely override the default initializations given in the body.
+
+If no default value is supplied for an aux variable variable, the
+consequences are undefined if an attempt is later made to read the
+corresponding slot's value before a value is explicitly assigned.  If such
+a slot has a :type option specified, this suppressed initialization does
+not imply a type mismatch situation; the declared type is only required to
+apply when the slot is finally assigned.
+
+With this definition, the following can be written:
+
+      (create-foo 1 2)
+
+instead of
+
+      (make-foo :a 1 :b 2)
+
+and create-foo provides defaulting different from that of make-foo.
+
+Additional arguments that do not correspond to slot names but are merely
+present to supply values used in subsequent initialization computations
+are allowed.  For example, in the definition
+
+      (defstruct (frob (:constructor create-frob
+                       (a &key (b 3 have-b) (c-token 'c)
+                               (c (list c-token (if have-b 7 2))))))
+              a b c)
+
+the c-token argument is used merely to supply a value used in the
+initialization of the c slot. The supplied-p parameters associated with
+optional parameters and keyword parameters might also be used this way.
+
+
+File: gcl.info,  Node: Defsetf Lambda Lists,  Next: Deftype Lambda Lists,  Prev: Boa Lambda Lists,  Up: Lambda Lists
+
+Defsetf Lambda Lists
+--------------------
+
+A defsetf lambda list is used by defsetf.
+
+A defsetf lambda list has the following syntax:
+
+lambda-list ::=({var}*
+                [&optional {var | (var [init-form [supplied-p-parameter]])}*]
+                [&rest var]
+                [&key {var | ({var | (keyword-name var)} [init-form [supplied-p-parameter]])}* pt [&allow-other-keys]]
+                [&environment var]
+
+A defsetf lambda list can contain the lambda list keywords shown in Figure
+3-19.
+
+  &allow-other-keys  &key       &rest  
+  &environment       &optional         
+
+  Figure 3-19: Lambda List Keywords used by Defsetf Lambda Lists
+
+
+A defsetf lambda list differs from an ordinary lambda list only in that it
+does not permit the use of &aux, and that it permits use of &environment,
+which introduces an environment parameter.
+
+
+File: gcl.info,  Node: Deftype Lambda Lists,  Next: Define-modify-macro Lambda Lists,  Prev: Defsetf Lambda Lists,  Up: Lambda Lists
+
+Deftype Lambda Lists
+--------------------
+
+A deftype lambda list is used by deftype.
+
+A deftype lambda list has the same syntax as a macro lambda list, and can
+therefore contain the lambda list keywords as a macro lambda list.
+
+A deftype lambda list differs from a macro lambda list only in that if no
+init-form is supplied for an optional parameter or keyword parameter in
+the lambda-list, the default value for that parameter is the symbol *
+(rather than nil).
+
+
+File: gcl.info,  Node: Define-modify-macro Lambda Lists,  Next: Define-method-combination Arguments Lambda Lists,  Prev: Deftype Lambda Lists,  Up: Lambda Lists
+
+Define-modify-macro Lambda Lists
+--------------------------------
+
+A define-modify-macro lambda list is used by define-modify-macro.
+
+A define-modify-macro lambda list can contain the lambda list keywords
+shown in Figure 3-20.
+
+  &optional  &rest  
+
+  Figure 3-20: Lambda List Keywords used by Define-modify-macro Lambda Lists
+
+
+Define-modify-macro lambda lists are similar to ordinary lambda lists, but
+do not support keyword arguments.  define-modify-macro has no need match
+keyword arguments, and a rest parameter is sufficient.  Aux variables are
+also not supported, since define-modify-macro has no body forms which
+could refer to such bindings.  See the macro define-modify-macro.
+
+
+File: gcl.info,  Node: Define-method-combination Arguments Lambda Lists,  Next: Syntactic Interaction of Documentation Strings and Declarations,  Prev: Define-modify-macro Lambda Lists,  Up: Lambda Lists
+
+Define-method-combination Arguments Lambda Lists
+------------------------------------------------
+
+A define-method-combination arguments lambda list is used by the
+:arguments option to define-method-combination.
+
+A define-method-combination arguments lambda list can contain the lambda
+list keywords shown in Figure 3-21.
+
+  &allow-other-keys  &key       &rest   
+  &aux               &optional  &whole  
+
+  Figure 3-21: Lambda List Keywords used by Define-method-combination arguments Lambda Lists
+
+
+Define-method-combination arguments lambda lists are similar to ordinary
+lambda lists, but also permit the use of &whole.
+
+
+File: gcl.info,  Node: Syntactic Interaction of Documentation Strings and Declarations,  Prev: Define-method-combination Arguments Lambda Lists,  Up: Lambda Lists
+
+Syntactic Interaction of Documentation Strings and Declarations
+---------------------------------------------------------------
+
+In a number of situations, a documentation string can appear amidst a
+series of declare expressions prior to a series of forms.
+
+In that case, if a string S appears where a documentation string is
+permissible and is not followed by either a declare expression or a form
+then S is taken to be a form; otherwise, S is taken as a documentation
+string.  The consequences are unspecified if more than one such
+documentation string is present.
+
+
+File: gcl.info,  Node: Error Checking in Function Calls,  Next: Traversal Rules and Side Effects,  Prev: Lambda Lists,  Up: Evaluation and Compilation
+
+Error Checking in Function Calls
+================================
+
+* Menu:
+
+* Argument Mismatch Detection::
+
+
+File: gcl.info,  Node: Argument Mismatch Detection,  Prev: Error Checking in Function Calls,  Up: Error Checking in Function Calls
+
+Argument Mismatch Detection
+---------------------------
+
+* Menu:
+
+* Safe and Unsafe Calls::
+* Error Detection Time in Safe Calls::
+* Too Few Arguments::
+* Too Many Arguments::
+* Unrecognized Keyword Arguments::
+* Invalid Keyword Arguments::
+* Odd Number of Keyword Arguments::
+* Destructuring Mismatch::
+* Errors When Calling a Next Method::
+
+
+File: gcl.info,  Node: Safe and Unsafe Calls,  Next: Error Detection Time in Safe Calls,  Prev: Argument Mismatch Detection,  Up: Argument Mismatch Detection
+
+Safe and Unsafe Calls
+.....................
+
+A call is a safe call if each of the following is either safe code or
+system code (other than system code that results from macro expansion of
+programmer code):
+*
+     the call.
+
+*
+     the definition of the function being called.
+
+*
+     the point of functional evaluation
+
+The following special cases require some elaboration:
+
+*
+     If the function being called is a generic function, it is considered
+     safe if all of the following are
+
+     safe code or system code:
+
+    -
+          its definition (if it was defined explicitly).
+
+    -
+          the method definitions for all applicable methods.
+
+    -
+          the definition of its method combination.
+
+*
+     For the form (coerce x 'function), where x is a lambda expression,
+     the value of the optimize quality safety in the global environment at
+     the time the coerce is executed applies to the resulting function.
+
+*
+     For a call to the function ensure-generic-function, the value of the
+     optimize quality safety in the environment object passed as the
+     :environment argument applies to the resulting generic function.
+
+*
+     For a call to compile with a lambda expression as the argument, the
+     value of the optimize quality safety in the global environment at the
+     time compile is called applies to the resulting compiled function.
+
+*
+     For a call to compile with only one argument, if the original
+     definition of the function was safe, then the resulting compiled
+     function must also be safe.
+
+*
+     A call to a method by call-next-method must be considered safe if
+     each of the following is
+
+     safe code or system code:
+
+    -
+          the definition of the generic function (if it was defined
+          explicitly).
+
+    -
+          the method definitions for all applicable methods.
+
+    -
+          the definition of the method combination.
+
+    -
+          the point of entry into the body of the method defining form,
+          where the binding of call-next-method is established.
+
+    -
+          the point of functional evaluation of the name call-next-method.
+
+An unsafe call is a call that is not a safe call.
+
+The informal intent is that the programmer can rely on a call to be safe,
+even when system code is involved, if all reasonable steps have been taken
+to ensure that the call is safe.  For example, if a programmer calls
+mapcar from safe code and supplies a function that was compiled as safe,
+the implementation is required to ensure that mapcar makes a safe call as
+well.
+
+
+File: gcl.info,  Node: Error Detection Time in Safe Calls,  Next: Too Few Arguments,  Prev: Safe and Unsafe Calls,  Up: Argument Mismatch Detection
+
+Error Detection Time in Safe Calls
+..................................
+
+If an error is signaled in a safe call, the exact point of the signal is
+implementation-dependent.  In particular, it might be signaled at compile
+time or at run time, and if signaled at run time, it might be prior to,
+during, or after executing the call.  However, it is always prior to the
+execution of the body of the function being called.
+
+
+File: gcl.info,  Node: Too Few Arguments,  Next: Too Many Arguments,  Prev: Error Detection Time in Safe Calls,  Up: Argument Mismatch Detection
+
+Too Few Arguments
+.................
+
+It is not permitted to supply too few arguments to a function.  Too few
+arguments means fewer arguments than the number of required parameters for
+the function.
+
+If this situation occurs in a safe call,
+
+an error of type program-error must be signaled; and in an unsafe call the
+situation has undefined consequences.
+
+
+File: gcl.info,  Node: Too Many Arguments,  Next: Unrecognized Keyword Arguments,  Prev: Too Few Arguments,  Up: Argument Mismatch Detection
+
+Too Many Arguments
+..................
+
+It is not permitted to supply too many arguments to a function.  Too many
+arguments means more arguments than the number of required parameters plus
+the number of optional parameters; however, if the function uses &rest or
+&key, it is not possible for it to receive too many arguments.
+
+If this situation occurs in a safe call,
+
+an error of type program-error must be signaled; and in an unsafe call the
+situation has undefined consequences.
+
+
+File: gcl.info,  Node: Unrecognized Keyword Arguments,  Next: Invalid Keyword Arguments,  Prev: Too Many Arguments,  Up: Argument Mismatch Detection
+
+Unrecognized Keyword Arguments
+..............................
+
+It is not permitted to supply a keyword argument to a function using a
+name that is not recognized by that function unless keyword argument
+checking is suppressed as described in *Note Suppressing Keyword Argument
+Checking::.
+
+If this situation occurs in a safe call,
+
+an error of type program-error must be signaled; and in an unsafe call the
+situation has undefined consequences.
+
+
+File: gcl.info,  Node: Invalid Keyword Arguments,  Next: Odd Number of Keyword Arguments,  Prev: Unrecognized Keyword Arguments,  Up: Argument Mismatch Detection
+
+Invalid Keyword Arguments
+.........................
+
+It is not permitted to supply a keyword argument to a function using a
+name that is not a symbol.
+
+If this situation occurs in a safe call,
+
+an error of type program-error must be signaled unless keyword argument
+checking is suppressed as described in *Note Suppressing Keyword Argument
+Checking::; and in an unsafe call the situation has undefined consequences.
+
+
+File: gcl.info,  Node: Odd Number of Keyword Arguments,  Next: Destructuring Mismatch,  Prev: Invalid Keyword Arguments,  Up: Argument Mismatch Detection
+
+Odd Number of Keyword Arguments
+...............................
+
+An odd number of arguments must not be supplied for the keyword parameters.
+
+If this situation occurs in a safe call,
+
+an error of type program-error must be signaled unless keyword argument
+checking is suppressed as described in *Note Suppressing Keyword Argument
+Checking::; and in an unsafe call the situation has undefined consequences.
+
+
+File: gcl.info,  Node: Destructuring Mismatch,  Next: Errors When Calling a Next Method,  Prev: Odd Number of Keyword Arguments,  Up: Argument Mismatch Detection
+
+Destructuring Mismatch
+......................
+
+When matching a destructuring lambda list against a form, the pattern and
+the form must have compatible tree structure, as described in *Note Macro
+Lambda Lists::.
+
+Otherwise, in a safe call, an error of type program-error must be signaled;
+and in an unsafe call the situation has undefined consequences.
+
+
+File: gcl.info,  Node: Errors When Calling a Next Method,  Prev: Destructuring Mismatch,  Up: Argument Mismatch Detection
+
+Errors When Calling a Next Method
+.................................
+
+If call-next-method is called with arguments, the ordered set of
+applicable methods for the changed set of arguments for call-next-method
+must be the same as the ordered set of applicable methods for the original
+arguments to the generic function, or else an error should be signaled.
+
+The comparison between the set of methods applicable to the new arguments
+and the set applicable to the original arguments is insensitive to order
+differences among methods with the same specializers.
+
+If call-next-method is called with arguments that specify a different
+ordered set of applicable methods and there is no next method available,
+the test for different methods and the associated error signaling (when
+present) takes precedence over calling no-next-method.
+
+
+File: gcl.info,  Node: Traversal Rules and Side Effects,  Next: Destructive Operations,  Prev: Error Checking in Function Calls,  Up: Evaluation and Compilation
+
+Traversal Rules and Side Effects
+================================
+
+The consequences are undefined when code executed during an
+object-traversing operation destructively modifies the object in a way
+that might affect the ongoing traversal operation.  In particular, the
+following rules apply.
+List traversal
+     For list traversal operations, the cdr chain of the list is not
+     allowed to be destructively modified.
+
+Array traversal
+     For array traversal operations, the array is not allowed to be
+     adjusted and its fill pointer, if any, is not allowed to be changed.
+
+Hash-table traversal
+     For hash table traversal operations, new elements may not be added or
+     deleted except that the element corresponding to the current hash key
+     may be changed or removed.
+
+Package traversal
+     For package traversal operations (e.g., do-symbols), new symbols may
+     not be interned in or uninterned from the package being traversed or
+     any package that it uses except that the current symbol may be
+     uninterned from the package being traversed.
+
+
+File: gcl.info,  Node: Destructive Operations,  Next: Evaluation and Compilation Dictionary,  Prev: Traversal Rules and Side Effects,  Up: Evaluation and Compilation
+
+Destructive Operations
+======================
+
+* Menu:
+
+* Modification of Literal Objects::
+* Transfer of Control during a Destructive Operation::
+
+
+File: gcl.info,  Node: Modification of Literal Objects,  Next: Transfer of Control during a Destructive Operation,  Prev: Destructive Operations,  Up: Destructive Operations
+
+Modification of Literal Objects
+-------------------------------
+
+The consequences are undefined if literal objects are destructively
+modified.  For this purpose, the following operations are considered
+destructive:
+
+random-state
+     Using it as an argument to the function random.
+
+cons
+     Changing the car_1 or cdr_1 of the cons, or performing a destructive
+     operation on an object which is either the car_2 or the cdr_2 of the
+     cons.
+
+array
+     Storing a new value into some element of the array, or performing a
+     destructive operation on an object that is already such an element.
+
+     Changing the fill pointer, dimensions, or displacement of the array
+     (regardless of whether the array is actually adjustable).
+
+     Performing a destructive operation on another array that is displaced
+     to the array or that otherwise shares its contents with the array.
+
+hash-table
+     Performing a destructive operation on any key.
+
+     Storing a new value_4 for any key, or performing a destructive
+     operation on any object that is such a value.
+
+     Adding or removing entries from the hash table.
+
+structure-object
+     Storing a new value into any slot, or performing a destructive
+     operation on an object that is the value of some slot.
+
+standard-object
+     Storing a new value into any slot, or performing a destructive
+     operation on an object that is the value of some slot.
+
+     Changing the class of the object (e.g., using the function
+     change-class).
+
+readtable
+     Altering the readtable case.
+
+     Altering the syntax type of any character in this readtable.
+
+     Altering the reader macro function associated with any character in
+     the readtable, or altering the reader macro functions associated with
+     characters defined as dispatching macro characters in the readtable.
+
+stream
+     Performing I/O operations on the stream, or closing the stream.
+
+All other standardized types
+     [This category includes, for example, character, condition, function,
+     method-combination, method, number, package, pathname, restart, and
+     symbol.]
+
+     There are no standardized destructive operations defined on objects
+     of these types.
+
+
+File: gcl.info,  Node: Transfer of Control during a Destructive Operation,  Prev: Modification of Literal Objects,  Up: Destructive Operations
+
+Transfer of Control during a Destructive Operation
+--------------------------------------------------
+
+Should a transfer of control out of a destructive operation occur (e.g.,
+due to an error) the state of the object being modified is
+implementation-dependent.
+
+* Menu:
+
+* Examples of Transfer of Control during a Destructive Operation::
+
+
+File: gcl.info,  Node: Examples of Transfer of Control during a Destructive Operation,  Prev: Transfer of Control during a Destructive Operation,  Up: Transfer of Control during a Destructive Operation
+
+Examples of Transfer of Control during a Destructive Operation
+..............................................................
+
+The following examples illustrate some of the many ways in which the
+implementation-dependent nature of the modification can manifest itself.
+
+      (let ((a (list 2 1 4 3 7 6 'five)))
+        (ignore-errors (sort a #'<))
+        a)
+     =>  (1 2 3 4 6 7 FIVE)
+     OR=> (2 1 4 3 7 6 FIVE)
+     OR=> (2)
+     
+      (prog foo ((a (list 1 2 3 4 5 6 7 8 9 10)))
+        (sort a #'(lambda (x y) (if (zerop (random 5)) (return-from foo a) (> x y)))))
+     =>  (1 2 3 4 5 6 7 8 9 10)
+     OR=> (3 4 5 6 2 7 8 9 10 1)
+     OR=> (1 2 4 3)
+
+
+File: gcl.info,  Node: Evaluation and Compilation Dictionary,  Prev: Destructive Operations,  Up: Evaluation and Compilation
+
+Evaluation and Compilation Dictionary
+=====================================
+
+* Menu:
+
+* lambda (Symbol)::
+* lambda::
+* compile::
+* eval::
+* eval-when::
+* load-time-value::
+* quote::
+* compiler-macro-function::
+* define-compiler-macro::
+* defmacro::
+* macro-function::
+* macroexpand::
+* define-symbol-macro::
+* symbol-macrolet::
+* *macroexpand-hook*::
+* proclaim::
+* declaim::
+* declare::
+* ignore::
+* dynamic-extent::
+* type::
+* inline::
+* ftype::
+* declaration::
+* optimize::
+* special::
+* locally::
+* the::
+* special-operator-p::
+* constantp::
+
+
+File: gcl.info,  Node: lambda (Symbol),  Next: lambda,  Prev: Evaluation and Compilation Dictionary,  Up: Evaluation and Compilation Dictionary
+
+lambda                                                             [Symbol]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`lambda'  lambda-list [[{declaration}* | documentation]] {form}*
+
+Arguments::
+...........
+
+lambda-list--an ordinary lambda list.
+
+declaration--a declare expression; not evaluated.
+
+documentation--a string; not evaluated.
+
+form--a form.
+
+Description::
+.............
+
+A lambda expression is a list that can be used in place of a function name
+in certain contexts to denote a function by directly describing its
+behavior rather than indirectly by referring to the name of an established
+function.
+
+Documentation is attached to the denoted function (if any is actually
+created) as a documentation string.
+
+See Also::
+..........
+
+function, *Note documentation; (setf documentation):: , *Note Lambda
+Expressions::, *Note Lambda Forms::, *Note Syntactic Interaction of
+Documentation Strings and Declarations::
+
+Notes::
+.......
+
+The lambda form
+
+      ((lambda lambda-list . body) . arguments)
+
+is semantically equivalent to the function form
+
+      (funcall #'(lambda lambda-list . body) . arguments)
+
+
+File: gcl.info,  Node: lambda,  Next: compile,  Prev: lambda (Symbol),  Up: Evaluation and Compilation Dictionary
+
+lambda                                                              [Macro]
+---------------------------------------------------------------------------
+
+`lambda'  lambda-list [[{declaration}* | documentation]] {form}* =>
+function
+
+Arguments and Values::
+......................
+
+lambda-list--an ordinary lambda list.
+
+declaration--a declare expression; not evaluated.
+
+documentation--a string; not evaluated.
+
+form--a form.
+
+function--a function.
+
+Description::
+.............
+
+Provides a shorthand notation for a function special form involving a
+lambda expression such that:
+
+         (lambda lambda-list [[{declaration}* | documentation]] {form}*)
+      == (function (lambda lambda-list [[{declaration}* | documentation]] {form}*))
+      == #'(lambda lambda-list [[{declaration}* | documentation]] {form}*)
+
+Examples::
+..........
+
+      (funcall (lambda (x) (+ x 3)) 4) =>  7
+
+See Also::
+..........
+
+lambda (symbol)
+
+Notes::
+.......
+
+This macro could be implemented by:
+
+     (defmacro lambda (&whole form &rest bvl-decls-and-body)
+       (declare (ignore bvl-decls-and-body))
+       `#',form)
+
+
+File: gcl.info,  Node: compile,  Next: eval,  Prev: lambda,  Up: Evaluation and Compilation Dictionary
+
+compile                                                          [Function]
+---------------------------------------------------------------------------
+
+`compile'  name &optional definition =>  function, warnings-p, failure-p
+
+Arguments and Values::
+......................
+
+name--a function name, or nil.
+
+definition--a lambda expression or a function.  The default is the
+function definition of name if it names a function, or the macro function
+of name if it names a macro.  The consequences are undefined if no
+definition is supplied when the name is nil.
+
+function--the function-name,
+
+or a compiled function.
+
+warnings-p--a generalized boolean.
+
+failure-p--a generalized boolean.
+
+Description::
+.............
+
+Compiles an interpreted function.
+
+compile produces a compiled function from definition.  If the definition
+is a lambda expression, it is coerced to a function.
+
+If the definition is already a compiled function, compile either produces
+that function itself (i.e., is an identity operation) or an equivalent
+function.
+
+[Editorial Note by KMP: There are a number of ambiguities here that still
+need resolution.] If the name is nil, the resulting compiled function is
+returned directly as the primary value.  If a non-nil name is given, then
+the resulting compiled function replaces the existing function definition
+of name and the name is returned as the primary value; if name is a symbol
+that names a macro, its macro function is updated and the name is returned
+as the primary value.
+
+Literal objects appearing in code processed by the compile function are
+neither copied nor coalesced.  The code resulting from the execution of
+compile references objects that are eql to the corresponding objects in
+the source code.
+
+compile is permitted, but not required, to establish a handler for
+conditions of type error.  For example, the handler might issue a warning
+and restart compilation from some implementation-dependent point in order
+to let the compilation proceed without manual intervention.
+
+The secondary value, warnings-p, is false if no conditions of type error
+or warning were detected by the compiler, and true otherwise.
+
+The tertiary value, failure-p, is false if no conditions of type error or
+warning (other than style-warning) were detected by the compiler, and true
+otherwise.
+
+Examples::
+..........
+
+      (defun foo () "bar") =>  FOO
+      (compiled-function-p #'foo) =>  implementation-dependent
+      (compile 'foo) =>  FOO
+      (compiled-function-p #'foo) =>  true
+      (setf (symbol-function 'foo)
+            (compile nil '(lambda () "replaced"))) =>  #<Compiled-Function>
+      (foo) =>  "replaced"
+
+Affected By::
+.............
+
+*error-output*,
+
+*macroexpand-hook*.
+
+The presence of macro definitions and proclamations.
+
+Exceptional Situations::
+........................
+
+The consequences are undefined if the lexical environment surrounding the
+function to be compiled contains any bindings other than those for macros,
+symbol macros, or declarations.
+
+For information about errors detected during the compilation process, see
+*Note Exceptional Situations in the Compiler::.
+
+See Also::
+..........
+
+*Note compile-file::
+
+
+File: gcl.info,  Node: eval,  Next: eval-when,  Prev: compile,  Up: Evaluation and Compilation Dictionary
+
+eval                                                             [Function]
+---------------------------------------------------------------------------
+
+`eval'  form =>  {result}*
+
+Arguments and Values::
+......................
+
+form--a form.
+
+results--the values yielded by the evaluation of form.
+
+Description::
+.............
+
+Evaluates form in the current dynamic environment and the null lexical
+environment.
+
+eval is a user interface to the evaluator.
+
+The evaluator expands macro calls as if through the use of macroexpand-1.
+
+Constants appearing in code processed by eval are not copied nor
+coalesced. The code resulting from the execution of eval references objects
+that are eql to the corresponding objects in the source code.
+
+Examples::
+..........
+
+      (setq form '(1+ a) a 999) =>  999
+      (eval form) =>  1000
+      (eval 'form) =>  (1+ A)
+      (let ((a '(this would break if eval used local value))) (eval form))
+     =>  1000
+
+See Also::
+..........
+
+macroexpand-1, *Note The Evaluation Model::
+
+Notes::
+.......
+
+To obtain the current dynamic value of a symbol, use of symbol-value is
+equivalent (and usually preferable) to use of eval.
+
+Note that an eval form involves two levels of evaluation for its argument.
+First, form is evaluated by the normal argument evaluation mechanism as
+would occur with any call.  The object that results from this normal
+argument evaluation becomes the value of the form parameter, and is then
+evaluated as part of the eval form.  For example:
+
+      (eval (list 'cdr (car '((quote (a . b)) c)))) =>  b
+
+The argument form (list 'cdr (car '((quote (a . b)) c))) is evaluated in
+the usual way to produce the argument (cdr (quote (a . b))); eval then
+evaluates its argument, (cdr (quote (a . b))), to produce b.  Since a
+single evaluation already occurs for any argument form in any function
+form, eval is sometimes said to perform "an extra level of evaluation."
+
+
+File: gcl.info,  Node: eval-when,  Next: load-time-value,  Prev: eval,  Up: Evaluation and Compilation Dictionary
+
+eval-when                                                [Special Operator]
+---------------------------------------------------------------------------
+
+`eval-when'  ({situation}*) {form}* =>  {result}*
+
+Arguments and Values::
+......................
+
+situation--One of the symbols :compile-toplevel , :load-toplevel , :execute
+, compile , load , or eval .
+
+The use of eval, compile, and load is deprecated.
+
+forms--an implicit progn.
+
+results--the values of the forms if they are executed, or nil if they are
+not.
+
+Description::
+.............
+
+The body of an eval-when form is processed as an implicit progn, but only
+in the situations listed.
+
+The use of the situations :compile-toplevel (or compile) and
+:load-toplevel (or load) controls whether and when evaluation occurs when
+eval-when appears as a top level form in code processed by compile-file.
+See *Note File Compilation::.
+
+The use of the situation :execute (or eval) controls whether evaluation
+occurs for other eval-when forms; that is, those that are not top level
+forms, or those in code processed by eval or compile.  If the :execute
+situation is specified in such a form, then the body forms are processed as
+an implicit progn; otherwise, the eval-when form returns nil.
+
+eval-when normally appears as a top level form, but it is meaningful for
+it to appear as a non-top-level form.  However, the compile-time side
+effects described in *Note Compilation:: only take place when eval-when
+appears as a top level form.
+
+Examples::
+..........
+
+One example of the use of eval-when is that for the compiler to be able to
+read a file properly when it uses user-defined reader macros, it is
+necessary to write
+
+      (eval-when (:compile-toplevel :load-toplevel :execute)
+        (set-macro-character #\$ #'(lambda (stream char)
+                                     (declare (ignore char))
+                                     (list 'dollar (read stream))))) =>  T
+
+This causes the call to set-macro-character to be executed in the
+compiler's execution environment, thereby modifying its reader syntax
+table.
+
+     ;;;     The EVAL-WHEN in this case is not at toplevel, so only the :EXECUTE
+     ;;;     keyword is considered. At compile time, this has no effect.
+     ;;;     At load time (if the LET is at toplevel), or at execution time
+     ;;;     (if the LET is embedded in some other form which does not execute
+     ;;;     until later) this sets (SYMBOL-FUNCTION 'FOO1) to a function which
+     ;;;     returns 1.
+      (let ((x 1))
+        (eval-when (:execute :load-toplevel :compile-toplevel)
+          (setf (symbol-function 'foo1) #'(lambda () x))))
+     
+     ;;;     If this expression occurs at the toplevel of a file to be compiled,
+     ;;;     it has BOTH a compile time AND a load-time effect of setting
+     ;;;     (SYMBOL-FUNCTION 'FOO2) to a function which returns 2.
+      (eval-when (:execute :load-toplevel :compile-toplevel)
+        (let ((x 2))
+          (eval-when (:execute :load-toplevel :compile-toplevel)
+            (setf (symbol-function 'foo2) #'(lambda () x)))))
+     
+     ;;;     If this expression occurs at the toplevel of a file to be compiled,
+     ;;;     it has BOTH a compile time AND a load-time effect of setting the
+     ;;;     function cell of FOO3 to a function which returns 3.
+      (eval-when (:execute :load-toplevel :compile-toplevel)
+        (setf (symbol-function 'foo3) #'(lambda () 3)))
+     
+     ;;; #4: This always does nothing. It simply returns NIL.
+      (eval-when (:compile-toplevel)
+        (eval-when (:compile-toplevel)
+          (print 'foo4)))
+     
+     ;;;     If this form occurs at toplevel of a file to be compiled, FOO5 is
+     ;;;     printed at compile time. If this form occurs in a non-top-level
+     ;;;     position, nothing is printed at compile time. Regardless of context,
+     ;;;     nothing is ever printed at load time or execution time.
+      (eval-when (:compile-toplevel)
+        (eval-when (:execute)
+          (print 'foo5)))
+     
+     ;;;     If this form occurs at toplevel of a file to be compiled, FOO6 is
+     ;;;     printed at compile time.  If this form occurs in a non-top-level
+     ;;;     position, nothing is printed at compile time. Regardless of context,
+     ;;;     nothing is ever printed at load time or execution time.
+      (eval-when (:execute :load-toplevel)
+        (eval-when (:compile-toplevel)
+          (print 'foo6)))
+
+See Also::
+..........
+
+*Note compile-file:: , *Note Compilation::
+
+Notes::
+.......
+
+The following effects are logical consequences of the definition of
+eval-when:
+
+*
+     Execution of a single eval-when expression executes the body code at
+     most once.
+
+*
+     Macros intended for use in top level forms should be written so that
+     side-effects are done by the forms in the macro expansion.  The
+     macro-expander itself should not do the side-effects.
+
+     For example:
+
+     Wrong:
+
+           (defmacro foo ()
+             (really-foo)
+             `(really-foo))
+
+     Right:
+
+           (defmacro foo ()
+             `(eval-when (:compile-toplevel :execute :load-toplevel) (really-foo)))
+
+     Adherence to this convention means that such macros behave
+     intuitively when appearing as non-top-level forms.
+
+*
+     Placing a variable binding around an eval-when reliably captures the
+     binding because the compile-time-too mode cannot occur (i.e.,
+     introducing a variable binding means that the eval-when is not a top
+     level form).  For example,
+
+           (let ((x 3))
+             (eval-when (:execute :load-toplevel :compile-toplevel) (print x)))
+
+     prints 3 at execution (i.e., load) time, and does not print anything
+     at compile time.  This is important so that expansions of defun and
+     defmacro can be done in terms of eval-when and can correctly capture
+     the lexical environment.
+
+           (defun bar (x) (defun foo () (+ x 3)))
+
+     might expand into
+
+           (defun bar (x)
+             (progn (eval-when (:compile-toplevel)
+                      (compiler::notice-function-definition 'foo '(x)))
+                    (eval-when (:execute :load-toplevel)
+                      (setf (symbol-function 'foo) #'(lambda () (+ x 3))))))
+
+     which would be treated by the above rules the same as
+
+           (defun bar (x)
+             (setf (symbol-function 'foo) #'(lambda () (+ x 3))))
+
+     when the definition of bar is not a top level form.
+
+
+File: gcl.info,  Node: load-time-value,  Next: quote,  Prev: eval-when,  Up: Evaluation and Compilation Dictionary
+
+load-time-value                                          [Special Operator]
+---------------------------------------------------------------------------
+
+`load-time-value'  form &optional read-only-p =>  object
+
+Arguments and Values::
+......................
+
+form--a form; evaluated as described below.
+
+read-only-p--a boolean; not evaluated.
+
+object--the primary value resulting from evaluating form.
+
+Description::
+.............
+
+load-time-value provides a mechanism for delaying evaluation of form until
+the expression is in the run-time environment; see *Note Compilation::.
+
+Read-only-p designates whether the result can be considered a constant
+object.  If t, the result is a read-only quantity that can, if appropriate
+to the implementation, be copied into read-only space and/or coalesced
+with similar constant objects from other programs.  If nil (the default),
+the result must be neither copied nor coalesced; it must be considered to
+be potentially modifiable data.
+
+If a load-time-value expression is processed by compile-file, the compiler
+performs its normal semantic processing (such as macro expansion and
+translation into machine code) on form, but arranges for the execution of
+form to occur at load time in a null lexical environment, with the result
+of this evaluation then being treated as a literal object at run time.  It
+is guaranteed that the evaluation of form will take place only once when
+the file is loaded, but the order of evaluation with respect to the
+evaluation of top level forms in the file is implementation-dependent.
+
+If a load-time-value expression appears within a function compiled with
+compile, the form is evaluated at compile time in a null lexical
+environment.  The result of this compile-time evaluation is treated as a
+literal object in the compiled code.
+
+If a load-time-value expression is processed by eval, form is evaluated in
+a null lexical environment, and one value is returned.  Implementations
+that implicitly compile (or partially compile) expressions processed by
+eval might evaluate form only once, at the time this compilation is
+performed.
+
+If the same list (load-time-value form) is evaluated or compiled more than
+once, it is implementation-dependent whether form is evaluated only once
+or is evaluated more than once.  This can happen both when an expression
+being evaluated or compiled shares substructure, and when the same form is
+processed by eval or compile multiple times.  Since a load-time-value
+expression can be referenced in more than one place and can be evaluated
+multiple times by eval, it is implementation-dependent whether each
+execution returns a fresh object or returns the same object as some other
+execution.  Users must use caution when destructively modifying the
+resulting object.
+
+If two lists (load-time-value form) that are the same under equal but are
+not identical are evaluated or compiled, their values always come from
+distinct evaluations of form.  Their values may not be coalesced unless
+read-only-p is t.
+
+Examples::
+..........
+
+     ;;; The function INCR1 always returns the same value, even in different images.
+     ;;; The function INCR2 always returns the same value in a given image,
+     ;;; but the value it returns might vary from image to image.
+     (defun incr1 (x) (+ x #.(random 17)))
+     (defun incr2 (x) (+ x (load-time-value (random 17))))
+     
+     ;;; The function FOO1-REF references the nth element of the first of
+     ;;; the *FOO-ARRAYS* that is available at load time.  It is permissible for
+     ;;; that array to be modified (e.g., by SET-FOO1-REF); FOO1-REF will see the
+     ;;; updated values.
+     (defvar *foo-arrays* (list (make-array 7) (make-array 8)))
+     (defun foo1-ref (n) (aref (load-time-value (first *my-arrays*) nil) n))
+     (defun set-foo1-ref (n val)
+       (setf (aref (load-time-value (first *my-arrays*) nil) n) val))
+     
+     ;;; The function BAR1-REF references the nth element of the first of
+     ;;; the *BAR-ARRAYS* that is available at load time.  The programmer has
+     ;;; promised that the array will be treated as read-only, so the system
+     ;;; can copy or coalesce the array.
+     (defvar *bar-arrays* (list (make-array 7) (make-array 8)))
+     (defun bar1-ref (n) (aref (load-time-value (first *my-arrays*) t) n))
+     
+     ;;; This use of LOAD-TIME-VALUE permits the indicated vector to be coalesced
+     ;;; even though NIL was specified, because the object was already read-only
+     ;;; when it was written as a literal vector rather than created by a constructor.
+     ;;; User programs must treat the vector v as read-only.
+     (defun baz-ref (n)
+       (let ((v (load-time-value #(A B C) nil)))
+         (values (svref v n) v)))
+     
+     ;;; This use of LOAD-TIME-VALUE permits the indicated vector to be coalesced
+     ;;; even though NIL was specified in the outer situation because T was specified
+     ;;; in the inner situation.  User programs must treat the vector v as read-only.
+     (defun baz-ref (n)
+       (let ((v (load-time-value (load-time-value (vector 1 2 3) t) nil)))
+         (values (svref v n) v)))
+
+See Also::
+..........
+
+*Note compile-file:: , *Note compile:: , *Note eval:: , *Note Minimal
+Compilation::, *Note Compilation::
+
+Notes::
+.......
+
+load-time-value must appear outside of quoted structure in a "for
+evaluation" position.  In situations which would appear to call for use of
+load-time-value within a quoted structure, the backquote reader macro is
+probably called for; see *Note Backquote::.
+
+Specifying nil for read-only-p is not a way to force an object to become
+modifiable if it has already been made read-only.  It is only a way to say
+that, for an object that is modifiable, this operation is not intended to
+make that object read-only.
+
+
+File: gcl.info,  Node: quote,  Next: compiler-macro-function,  Prev: load-time-value,  Up: Evaluation and Compilation Dictionary
+
+quote                                                    [Special Operator]
+---------------------------------------------------------------------------
+
+`quote'  object =>  object
+
+Arguments and Values::
+......................
+
+object--an object; not evaluated.
+
+Description::
+.............
+
+The quote special operator just returns object.
+
+The consequences are undefined if literal objects (including quoted
+objects) are destructively modified.
+
+Examples::
+..........
+
+      (setq a 1) =>  1
+      (quote (setq a 3)) =>  (SETQ A 3)
+      a =>  1
+      'a =>  A
+      ''a =>  (QUOTE A)
+      '''a =>  (QUOTE (QUOTE A))
+      (setq a 43) =>  43
+      (list a (cons a 3)) =>  (43 (43 . 3))
+      (list (quote a) (quote (cons a 3))) =>  (A (CONS A 3))
+      1 =>  1
+      '1 =>  1
+      "foo" =>  "foo"
+      '"foo" =>  "foo"
+      (car '(a b)) =>  A
+      '(car '(a b)) =>  (CAR (QUOTE (A B)))
+      #(car '(a b)) =>  #(CAR (QUOTE (A B)))
+      '#(car '(a b)) =>  #(CAR (QUOTE (A B)))
+
+See Also::
+..........
+
+*Note Evaluation::, *Note Single-Quote::,
+
+*Note Compiler Terminology::
+
+Notes::
+.......
+
+The textual notation 'object is equivalent to (quote object); see *Note
+Compiler Terminology::.
+
+Some objects, called self-evaluating objects, do not require quotation by
+quote.  However, symbols and lists are used to represent parts of programs,
+and so would not be useable as constant data in a program without quote.
+Since quote suppresses the evaluation of these objects, they become data
+rather than program.
+
+
+File: gcl.info,  Node: compiler-macro-function,  Next: define-compiler-macro,  Prev: quote,  Up: Evaluation and Compilation Dictionary
+
+compiler-macro-function                                          [Accessor]
+---------------------------------------------------------------------------
+
+`compiler-macro-function'  name &optional environment =>  function
+
+(setf (`         compiler-macro-function' name &optional environment)
+new-function)
+Arguments and Values::
+......................
+
+name--a function name.
+
+environment--an environment object.
+
+function, new-function--a compiler macro function, or nil.
+
+Description::
+.............
+
+Accesses the compiler macro function named name, if any, in the
+environment.
+
+A value of nil denotes the absence of a compiler macro function named name.
+
+Exceptional Situations::
+........................
+
+The consequences are undefined if environment is non-nil in a use of setf
+of compiler-macro-function.
+
+See Also::
+..........
+
+*Note define-compiler-macro:: , *Note Compiler Macros::
+

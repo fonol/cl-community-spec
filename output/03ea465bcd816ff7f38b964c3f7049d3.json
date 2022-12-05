@@ -1,0 +1,65 @@
+{
+    "name": "find-symbol",
+    "prev": "export",
+    "next": "find-package",
+    "up": "Packages Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "find-symbol"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "find-symbol",
+                    "text": " string &optional package =>  symbol, status\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "string",
+                    "desc": "a string."
+                },
+                {
+                    "name": "package",
+                    "desc": "a package designator.The default is the current package.\n"
+                },
+                {
+                    "name": "symbol",
+                    "desc": "a symbol accessible in the package, or nil."
+                },
+                {
+                    "name": "status",
+                    "desc": "one of :inherited, :external, :internal, or nil."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "find-symbol locates a symbol whose name is string in a package.  If a\nsymbol named string is found in package, directly or by inheritance, the\nsymbol found is returned as the first value; the second value is as\nfollows:\n:internal\n     If the symbol is present in package as an internal symbol.\n:external\n     If the symbol is present in package as an external symbol.\n:inherited\n     If the symbol is inherited by package through use-package, but is not\n     present in package.\nIf no such symbol is accessible in package, both values are nil.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (find-symbol \"NEVER-BEFORE-USED\") =>  NIL, NIL\n      (find-symbol \"NEVER-BEFORE-USED\") =>  NIL, NIL\n      (intern \"NEVER-BEFORE-USED\") =>  NEVER-BEFORE-USED, NIL\n      (intern \"NEVER-BEFORE-USED\") =>  NEVER-BEFORE-USED, :INTERNAL\n      (find-symbol \"NEVER-BEFORE-USED\") =>  NEVER-BEFORE-USED, :INTERNAL\n      (find-symbol \"never-before-used\") =>  NIL, NIL\n      (find-symbol \"CAR\" 'common-lisp-user) =>  CAR, :INHERITED\n      (find-symbol \"CAR\" 'common-lisp) =>  CAR, :EXTERNAL\n      (find-symbol \"NIL\" 'common-lisp-user) =>  NIL, :INHERITED\n      (find-symbol \"NIL\" 'common-lisp) =>  NIL, :EXTERNAL\n      (find-symbol \"NIL\" (prog1 (make-package \"JUST-TESTING\" :use '())\n                                (intern \"NIL\" \"JUST-TESTING\")))\n     =>  JUST-TESTING::NIL, :INTERNAL\n      (export 'just-testing::nil 'just-testing)\n      (find-symbol \"NIL\" 'just-testing) =>  JUST-TESTING:NIL, :EXTERNAL\n      (find-symbol \"NIL\" \"KEYWORD\")\n     =>  NIL, NIL\n     OR=> :NIL, :EXTERNAL\n      (find-symbol (symbol-name :nil) \"KEYWORD\") =>  :NIL, :EXTERNAL\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "intern, import, export, use-package, unintern, unexport, unuse-package\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note intern:: , *Note find-all-symbols::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "find-symbol is operationally equivalent to intern, except that it never\ncreates a new symbol.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: find-symbol,  Next: find-package,  Prev: export,  Up: Packages Dictionary\n\nfind-symbol                                                      [Function]\n---------------------------------------------------------------------------\n\n`find-symbol'  string &optional package =>  symbol, status\n\nArguments and Values::\n......................\n\nstring--a string.\n\npackage--a package designator.\n\nThe default is the current package.\n\nsymbol--a symbol accessible in the package, or nil.\n\nstatus--one of :inherited, :external, :internal, or nil.\n\nDescription::\n.............\n\nfind-symbol locates a symbol whose name is string in a package.  If a\nsymbol named string is found in package, directly or by inheritance, the\nsymbol found is returned as the first value; the second value is as\nfollows:\n\n:internal\n     If the symbol is present in package as an internal symbol.\n\n:external\n     If the symbol is present in package as an external symbol.\n\n:inherited\n     If the symbol is inherited by package through use-package, but is not\n     present in package.\n\nIf no such symbol is accessible in package, both values are nil.\n\nExamples::\n..........\n\n      (find-symbol \"NEVER-BEFORE-USED\") =>  NIL, NIL\n      (find-symbol \"NEVER-BEFORE-USED\") =>  NIL, NIL\n      (intern \"NEVER-BEFORE-USED\") =>  NEVER-BEFORE-USED, NIL\n      (intern \"NEVER-BEFORE-USED\") =>  NEVER-BEFORE-USED, :INTERNAL\n      (find-symbol \"NEVER-BEFORE-USED\") =>  NEVER-BEFORE-USED, :INTERNAL\n      (find-symbol \"never-before-used\") =>  NIL, NIL\n      (find-symbol \"CAR\" 'common-lisp-user) =>  CAR, :INHERITED\n      (find-symbol \"CAR\" 'common-lisp) =>  CAR, :EXTERNAL\n      (find-symbol \"NIL\" 'common-lisp-user) =>  NIL, :INHERITED\n      (find-symbol \"NIL\" 'common-lisp) =>  NIL, :EXTERNAL\n      (find-symbol \"NIL\" (prog1 (make-package \"JUST-TESTING\" :use '())\n                                (intern \"NIL\" \"JUST-TESTING\")))\n     =>  JUST-TESTING::NIL, :INTERNAL\n      (export 'just-testing::nil 'just-testing)\n      (find-symbol \"NIL\" 'just-testing) =>  JUST-TESTING:NIL, :EXTERNAL\n      (find-symbol \"NIL\" \"KEYWORD\")\n     =>  NIL, NIL\n     OR=> :NIL, :EXTERNAL\n      (find-symbol (symbol-name :nil) \"KEYWORD\") =>  :NIL, :EXTERNAL\n\nAffected By::\n.............\n\nintern, import, export, use-package, unintern, unexport, unuse-package\n\nSee Also::\n..........\n\n*Note intern:: , *Note find-all-symbols::\n\nNotes::\n.......\n\nfind-symbol is operationally equivalent to intern, except that it never\ncreates a new symbol.\n\n"
+}

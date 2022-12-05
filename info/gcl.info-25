@@ -1,0 +1,1401 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: Creating Conditions,  Next: Printing Conditions,  Prev: Condition Types,  Up: Condition System Concepts
+
+Creating Conditions
+-------------------
+
+The function make-condition can be used to construct a condition object
+explicitly.  Functions such as error, cerror, signal, and warn operate on
+conditions and might create condition objects implicitly.  Macros such as
+ccase, ctypecase, ecase, etypecase, check-type, and assert might also
+implicitly create (and signal) conditions.
+
+* Menu:
+
+* Condition Designators::
+
+
+File: gcl.info,  Node: Condition Designators,  Prev: Creating Conditions,  Up: Creating Conditions
+
+Condition Designators
+.....................
+
+A number of the functions in the condition system take arguments which are
+identified as condition designators .  By convention, those arguments are
+notated as
+
+datum &rest arguments
+
+Taken together, the datum and the arguments are "designators for a
+condition of default type default-type." How the denoted condition is
+computed depends on the type of the datum:
+
+* If the datum is a symbol
+     naming a condition type ...  The denoted condition is the result of
+
+           (apply #'make-condition datum arguments)
+
+* If the datum is a format control ...
+     The denoted condition is the result of
+
+           (make-condition defaulted-type
+                           :format-control datum
+                           :format-arguments arguments)
+
+     where the defaulted-type is a subtype of default-type.
+
+* If the datum is a condition ...
+     The denoted condition is the datum itself.  In this case, unless
+     otherwise specified by the description of the operator in question,
+     the arguments must be null; that is, the consequences are undefined
+     if any arguments were supplied.
+
+Note that the default-type gets used only in the case where the datum
+string is supplied.  In the other situations, the resulting condition is
+not necessarily of type default-type.
+
+Here are some illustrations of how different condition designators can
+denote equivalent condition objects:
+
+     (let ((c (make-condition 'arithmetic-error :operator '/ :operands '(7 0))))
+       (error c))
+     == (error 'arithmetic-error :operator '/ :operands '(7 0))
+     
+     (error "Bad luck.")
+     == (error 'simple-error :format-control "Bad luck." :format-arguments '())
+
+
+File: gcl.info,  Node: Printing Conditions,  Next: Signaling and Handling Conditions,  Prev: Creating Conditions,  Up: Condition System Concepts
+
+Printing Conditions
+-------------------
+
+If the :report argument to define-condition is used, a print function is
+defined that is called whenever the defined condition is printed while the
+value of *print-escape* is false.  This function is called the condition
+reporter ; the text which it outputs is called a report message .
+
+When a condition is printed and *print-escape* is false, the condition
+reporter for the condition is invoked.  Conditions are printed
+automatically by functions such as invoke-debugger, break, and warn.
+
+When *print-escape* is true, the object should print in an abbreviated
+fashion according to the style of the implementation (e.g., by
+print-unreadable-object).  It is not required that a condition can be
+recreated by reading its printed representation.
+
+No function is provided for directly accessing or invoking condition
+reporters.
+
+* Menu:
+
+* Recommended Style in Condition Reporting::
+* Capitalization and Punctuation in Condition Reports::
+* Leading and Trailing Newlines in Condition Reports::
+* Embedded Newlines in Condition Reports::
+* Note about Tabs in Condition Reports::
+* Mentioning Containing Function in Condition Reports::
+
+
+File: gcl.info,  Node: Recommended Style in Condition Reporting,  Next: Capitalization and Punctuation in Condition Reports,  Prev: Printing Conditions,  Up: Printing Conditions
+
+Recommended Style in Condition Reporting
+........................................
+
+In order to ensure a properly aesthetic result when presenting report
+messages to the user, certain stylistic conventions are recommended.
+
+There are stylistic recommendations for the content of the messages output
+by condition reporters, but there are no formal requirements on those
+programs.  If a program violates the recommendations for some message, the
+display of that message might be less aesthetic than if the guideline had
+been observed, but the program is still considered a conforming program.
+
+The requirements on a program or implementation which invokes a condition
+reporter are somewhat stronger.  A conforming program must be permitted to
+assume that if these style guidelines are followed, proper aesthetics will
+be maintained.  Where appropriate, any specific requirements on such
+routines are explicitly mentioned below.
+
+
+File: gcl.info,  Node: Capitalization and Punctuation in Condition Reports,  Next: Leading and Trailing Newlines in Condition Reports,  Prev: Recommended Style in Condition Reporting,  Up: Printing Conditions
+
+Capitalization and Punctuation in Condition Reports
+...................................................
+
+It is recommended that a report message be a complete sentences, in the
+proper case and correctly punctuated.  In English, for example, this means
+the first letter should be uppercase, and there should be a trailing
+period.
+
+      (error "This is a message")  ; Not recommended
+      (error "this is a message.") ; Not recommended
+     
+      (error "This is a message.") ; Recommended instead
+
+
+File: gcl.info,  Node: Leading and Trailing Newlines in Condition Reports,  Next: Embedded Newlines in Condition Reports,  Prev: Capitalization and Punctuation in Condition Reports,  Up: Printing Conditions
+
+Leading and Trailing Newlines in Condition Reports
+..................................................
+
+It is recommended that a report message not begin with any introductory
+text, such as "Error: " or "Warning: " or even just freshline or newline.
+Such text is added, if appropriate to the context, by the routine invoking
+the condition reporter.
+
+It is recommended that a report message not be followed by a trailing
+freshline or newline.  Such text is added, if appropriate to the context,
+by the routine invoking the condition reporter.
+
+      (error "This is a message.~
+      (error "~&This is a message.")   ; Not recommended
+      (error "~&This is a message.~
+     
+      (error "This is a message.")     ; Recommended instead
+
+
+File: gcl.info,  Node: Embedded Newlines in Condition Reports,  Next: Note about Tabs in Condition Reports,  Prev: Leading and Trailing Newlines in Condition Reports,  Up: Printing Conditions
+
+Embedded Newlines in Condition Reports
+......................................
+
+Especially if it is long, it is permissible and appropriate for a report
+message to contain one or more embedded newlines.
+
+If the calling routine conventionally inserts some additional prefix (such
+as "Error: " or ";; Error: ") on the first line of the message, it must
+also assure that an appropriate prefix will be added to each subsequent
+line of the output, so that the left edge of the message output by the
+condition reporter will still be properly aligned.
+
+      (defun test ()
+        (error "This is an error message.~%It has two lines."))
+     
+      ;; Implementation A
+      (test)
+      This is an error message.
+      It has two lines.
+     
+      ;; Implementation B
+      (test)
+      ;; Error: This is an error message.
+      ;;        It has two lines.
+     
+      ;; Implementation C
+      (test)
+      >> Error: This is an error message.
+                It has two lines.
+
+
+File: gcl.info,  Node: Note about Tabs in Condition Reports,  Next: Mentioning Containing Function in Condition Reports,  Prev: Embedded Newlines in Condition Reports,  Up: Printing Conditions
+
+Note about Tabs in Condition Reports
+....................................
+
+Because the indentation of a report message might be shifted to the right
+or left by an arbitrary amount, special care should be taken with the
+semi-standard character <Tab> (in those implementations that support such
+a character).  Unless the implementation specifically defines its behavior
+in this context, its use should be avoided.
+
+
+File: gcl.info,  Node: Mentioning Containing Function in Condition Reports,  Prev: Note about Tabs in Condition Reports,  Up: Printing Conditions
+
+Mentioning Containing Function in Condition Reports
+...................................................
+
+The name of the containing function should generally not be mentioned in
+report messages.  It is assumed that the debugger will make this
+information accessible in situations where it is necessary and appropriate.
+
+
+File: gcl.info,  Node: Signaling and Handling Conditions,  Next: Assertions,  Prev: Printing Conditions,  Up: Condition System Concepts
+
+Signaling and Handling Conditions
+---------------------------------
+
+The operation of the condition system depends on the ordering of active
+applicable handlers from most recent to least recent.
+
+Each handler is associated with a type specifier that must designate a
+subtype of type condition.  A handler is said to be applicable to a
+condition if that condition is of the type designated by the associated
+type specifier.
+
+Active handlers are established by using handler-bind (or an abstraction
+based on handler-bind, such as handler-case or ignore-errors).
+
+Active handlers can be established within the dynamic scope of other
+active handlers.  At any point during program execution, there is a set of
+active handlers.  When a condition is signaled, the most recent active
+applicable handler for that condition is selected from this set.  Given a
+condition, the order of recentness of active applicable handlers is
+defined by the following two rules:
+
+1.
+     Each handler in a set of active handlers H_1 is more recent than
+     every handler in a set H_2 if the handlers in H_2 were active when
+     the handlers in H_1 were established.
+
+2.
+     Let h_1 and h_2 be two applicable active handlers established by the
+     same form. Then h_1 is more recent than h_2 if h_1 was defined to the
+     left of h_2 in the form that established them.
+
+Once a handler in a handler binding form (such as handler-bind or
+handler-case) has been selected, all handlers in that form become inactive
+for the remainder of the signaling process.  While the selected handler
+runs, no other handler established by that form is active. That is, if the
+handler declines, no other handler established by that form will be
+considered for possible invocation.
+
+Figure 9-4 shows operators relating to the handling of conditions.
+
+  handler-bind  handler-case  ignore-errors  
+
+  Figure 9-4: Operators relating to handling conditions.
+
+
+* Menu:
+
+* Signaling::
+* Resignaling a Condition::
+* Restarts::
+* Interactive Use of Restarts::
+* Interfaces to Restarts::
+* Restart Tests::
+* Associating a Restart with a Condition::
+
+
+File: gcl.info,  Node: Signaling,  Next: Resignaling a Condition,  Prev: Signaling and Handling Conditions,  Up: Signaling and Handling Conditions
+
+Signaling
+.........
+
+When a condition is signaled, the most recent applicable active handler is
+invoked.  Sometimes a handler will decline by simply returning without a
+transfer of control.  In such cases, the next most recent applicable
+active handler is invoked.
+
+If there are no applicable handlers for a condition that has been
+signaled, or if all applicable handlers decline, the condition is
+unhandled.
+
+The functions cerror and error invoke the interactive condition handler
+(the debugger) rather than return if the condition being signaled,
+regardless of its type, is unhandled.  In contrast, signal returns nil if
+the condition being signaled, regardless of its type, is unhandled.
+
+The variable *break-on-signals* can be used to cause the debugger to be
+entered before the signaling process begins.
+
+Figure 9-5 shows defined names relating to the signaling of conditions.
+
+  *break-on-signals*  error   warn     cerror              signal        
+
+  Figure 9-5: Defined names relating to signaling conditions.
+
+
+
+File: gcl.info,  Node: Resignaling a Condition,  Next: Restarts,  Prev: Signaling,  Up: Signaling and Handling Conditions
+
+Resignaling a Condition
+.......................
+
+During the dynamic extent of the signaling process for a particular
+condition object, signaling the same condition object again is permitted
+if and only if the situation represented in both cases are the same.
+
+For example, a handler might legitimately signal the condition object that
+is its argument in order to allow outer handlers first opportunity to
+handle the condition.  (Such a handlers is sometimes called a "default
+handler.") This action is permitted because the situation which the second
+signaling process is addressing is really the same situation.
+
+On the other hand, in an implementation that implemented asynchronous
+keyboard events by interrupting the user process with a call to signal, it
+would not be permissible for two distinct asynchronous keyboard events to
+signal identical condition objects at the same time for different
+situations.
+
+
+File: gcl.info,  Node: Restarts,  Next: Interactive Use of Restarts,  Prev: Resignaling a Condition,  Up: Signaling and Handling Conditions
+
+Restarts
+........
+
+The interactive condition handler returns only through non-local transfer
+of control to specially defined restarts that can be set up either by the
+system or by user code.  Transferring control to a restart is called
+"invoking" the restart.  Like handlers, active restarts are established
+dynamically, and only active restarts can be invoked.  An active restart
+can be invoked by the user from the debugger or by a program by using
+invoke-restart.
+
+A restart contains a function to be called when the restart is invoked, an
+optional name that can be used to find or invoke the restart, and an
+optional set of interaction information for the debugger to use to enable
+the user to manually invoke a restart.
+
+The name of a restart is used by invoke-restart. Restarts that can be
+invoked only within the debugger do not need names.
+
+Restarts can be established by using restart-bind, restart-case, and
+with-simple-restart.  A restart function can itself invoke any other
+restart that was active at the time of establishment of the restart of
+which the function is part.
+
+The restarts established by a restart-bind form, a restart-case form, or a
+with-simple-restart form have dynamic extent which extends for the
+duration of that form's execution.
+
+Restarts of the same name can be ordered from least recent to most recent
+according to the following two rules:
+
+1.
+     Each restart in a set of active restarts R_1 is more recent than
+     every restart in a set R_2 if the restarts in R_2 were active when
+     the  restarts in R_1 were established.
+
+2.
+     Let r_1 and r_2 be two active restarts with the same name established
+     by the same form. Then r_1 is more recent than r_2 if r_1 was defined
+     to the left of r_2 in the form that established them.
+
+If a restart is invoked but does not transfer control, the values
+resulting from the restart function are returned by the function that
+invoked the restart, either invoke-restart or invoke-restart-interactively.
+
+
+File: gcl.info,  Node: Interactive Use of Restarts,  Next: Interfaces to Restarts,  Prev: Restarts,  Up: Signaling and Handling Conditions
+
+Interactive Use of Restarts
+...........................
+
+For interactive handling, two pieces of information are needed from a
+restart: a report function and an interactive function.
+
+The report function is used by a program such as the debugger to present a
+description of the action the restart will take.  The report function is
+specified and established by the :report-function keyword to restart-bind
+or the :report keyword to restart-case.
+
+The interactive function, which can be specified using the
+:interactive-function keyword to restart-bind or :interactive keyword to
+restart-case, is used when the restart is invoked interactively, such as
+from the debugger, to produce a suitable list of arguments.
+
+invoke-restart invokes the most recently established restart whose name is
+the same as the first argument to invoke-restart.  If a restart is invoked
+interactively by the debugger and  does not transfer control but rather
+returns values, the precise action of the debugger on those values is
+implementation-defined.
+
+
+File: gcl.info,  Node: Interfaces to Restarts,  Next: Restart Tests,  Prev: Interactive Use of Restarts,  Up: Signaling and Handling Conditions
+
+Interfaces to Restarts
+......................
+
+Some restarts have functional interfaces, such as abort, continue,
+muffle-warning, store-value, and use-value.  They are ordinary functions
+that use find-restart and invoke-restart internally, that have the same
+name as the restarts they manipulate, and that are provided simply for
+notational convenience.
+
+Figure 9-6 shows defined names relating to restarts.
+
+  abort             invoke-restart-interactively  store-value          
+  compute-restarts  muffle-warning                use-value            
+  continue          restart-bind                  with-simple-restart  
+  find-restart      restart-case                                       
+  invoke-restart    restart-name                                       
+
+            Figure 9-6: Defined names relating to restarts.           
+
+
+
+File: gcl.info,  Node: Restart Tests,  Next: Associating a Restart with a Condition,  Prev: Interfaces to Restarts,  Up: Signaling and Handling Conditions
+
+Restart Tests
+.............
+
+Each restart has an associated test, which is a function of one argument
+(a condition or nil) which returns true if the restart should be visible
+in the current situation.  This test is created by the :test-function
+option to restart-bind or the :test option to restart-case.
+
+
+File: gcl.info,  Node: Associating a Restart with a Condition,  Prev: Restart Tests,  Up: Signaling and Handling Conditions
+
+Associating a Restart with a Condition
+......................................
+
+A restart can be "associated with" a condition explicitly by
+with-condition-restarts, or implicitly by restart-case.  Such an
+assocation has dynamic extent.
+
+A single restart may be associated with several conditions at the same
+time.  A single condition may have several associated restarts at the same
+time.
+
+Active restarts associated with a particular condition can be detected by
+calling a function such as find-restart, supplying that condition as the
+condition argument.  Active restarts can also be detected without regard
+to any associated condition by calling such a function without a condition
+argument, or by supplying a value of nil for such an argument.
+
+
+File: gcl.info,  Node: Assertions,  Next: Notes about the Condition System's Background,  Prev: Signaling and Handling Conditions,  Up: Condition System Concepts
+
+Assertions
+----------
+
+Conditional signaling of conditions based on such things as key match,
+form evaluation, and type are handled by assertion operators.  Figure 9-7
+shows operators relating to assertions.
+
+  assert  check-type  ecase         ccase   ctypecase   etypecase  
+
+  Figure 9-7: Operators relating to assertions.
+
+
+
+File: gcl.info,  Node: Notes about the Condition System's Background,  Prev: Assertions,  Up: Condition System Concepts
+
+Notes about the Condition System's Background
+---------------------------------------------
+
+For a background reference to the abstract concepts detailed in this
+section, see Exceptional Situations in Lisp.  The details of that paper
+are not binding on this document, but may be helpful in establishing a
+conceptual basis for understanding this material.
+
+
+File: gcl.info,  Node: Conditions Dictionary,  Prev: Condition System Concepts,  Up: Conditions
+
+Conditions Dictionary
+=====================
+
+* Menu:
+
+* condition::
+* warning::
+* style-warning::
+* serious-condition::
+* error (Condition Type)::
+* cell-error::
+* cell-error-name::
+* parse-error::
+* storage-condition::
+* assert::
+* error::
+* cerror::
+* check-type::
+* simple-error::
+* invalid-method-error::
+* method-combination-error::
+* signal::
+* simple-condition::
+* simple-condition-format-control::
+* warn::
+* simple-warning::
+* invoke-debugger::
+* break::
+* *debugger-hook*::
+* *break-on-signals*::
+* handler-bind::
+* handler-case::
+* ignore-errors::
+* define-condition::
+* make-condition::
+* restart::
+* compute-restarts::
+* find-restart::
+* invoke-restart::
+* invoke-restart-interactively::
+* restart-bind::
+* restart-case::
+* restart-name::
+* with-condition-restarts::
+* with-simple-restart::
+* abort::
+* continue::
+* muffle-warning::
+* store-value::
+* use-value::
+* abort::
+
+
+File: gcl.info,  Node: condition,  Next: warning,  Prev: Conditions Dictionary,  Up: Conditions Dictionary
+
+condition                                                  [Condition Type]
+---------------------------------------------------------------------------
+
+[Reviewer Note by Barrett: I think CONDITION-RESTARTS is not fully
+integrated.]
+
+Class Precedence List::
+.......................
+
+condition, t
+
+Description::
+.............
+
+All types of conditions, whether error or non-error, must inherit from
+this type.
+
+No additional subtype relationships among the specified subtypes of type
+condition are allowed, except when explicitly mentioned in the text;
+however implementations are permitted to introduce additional types and
+one of these types can be a subtype of any number of the subtypes of type
+condition.
+
+Whether a user-defined condition type has slots that are accessible by
+with-slots is implementation-dependent.  Furthermore, even in an
+implementation in which user-defined condition types would have slots, it
+is implementation-dependent whether any condition types defined in this
+document have such slots or, if they do, what their names might be; only
+the reader functions documented by this specification may be relied upon
+by portable code.
+
+Conforming code must observe the following restrictions related to
+conditions:
+
+*
+     define-condition, not defclass, must be used to define new condition
+     types.
+
+*
+     make-condition, not make-instance, must be used to create condition
+     objects explicitly.
+
+*
+     The :report option of define-condition, not defmethod for
+     print-object, must be used to define a condition reporter.
+
+*
+     slot-value, slot-boundp, slot-makunbound, and with-slots must not be
+     used on condition objects.  Instead, the appropriate accessor
+     functions (defined by define-condition) should be used.
+
+
+File: gcl.info,  Node: warning,  Next: style-warning,  Prev: condition,  Up: Conditions Dictionary
+
+warning                                                    [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+warning, condition, t
+
+Description::
+.............
+
+The type warning consists of all types of warnings.
+
+See Also::
+..........
+
+style-warning
+
+
+File: gcl.info,  Node: style-warning,  Next: serious-condition,  Prev: warning,  Up: Conditions Dictionary
+
+style-warning                                              [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+style-warning, warning, condition, t
+
+Description::
+.............
+
+The type style-warning includes those conditions that represent situations
+involving code that is conforming code but that is nevertheless considered
+to be faulty or substandard.
+
+See Also::
+..........
+
+*Note muffle-warning::
+
+Notes::
+.......
+
+An implementation might signal such a condition if it encounters code that
+uses deprecated features or that appears unaesthetic or inefficient.
+
+An `unused variable' warning must be of type style-warning.
+
+In general, the question of whether code is faulty or substandard is a
+subjective decision to be made by the facility processing that code.  The
+intent is that whenever such a facility wishes to complain about code on
+such subjective grounds, it should use this condition type so that any
+clients who wish to redirect or muffle superfluous warnings can do so
+without risking that they will be redirecting or muffling other, more
+serious warnings.
+
+
+File: gcl.info,  Node: serious-condition,  Next: error (Condition Type),  Prev: style-warning,  Up: Conditions Dictionary
+
+serious-condition                                          [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+serious-condition, condition, t
+
+Description::
+.............
+
+All conditions serious enough to require interactive intervention if not
+handled should inherit from the type serious-condition.  This condition
+type is provided primarily so that it may be included as a superclass of
+other condition types; it is not intended to be signaled directly.
+
+Notes::
+.......
+
+Signaling a serious condition does not itself force entry into the
+debugger.   However, except in the unusual situation where the programmer
+can assure that no harm will come from failing to handle a serious
+condition, such a condition is usually signaled with error rather than
+signal in order to assure that the program does not continue without
+handling the condition.  (And conversely, it is conventional to use signal
+rather than error to signal conditions which are not serious conditions,
+since normally the failure to handle a non-serious condition is not reason
+enough for the debugger to be entered.)
+
+
+File: gcl.info,  Node: error (Condition Type),  Next: cell-error,  Prev: serious-condition,  Up: Conditions Dictionary
+
+error                                                      [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+error, serious-condition, condition, t
+
+Description::
+.............
+
+The type error consists of all conditions that represent errors.
+
+
+File: gcl.info,  Node: cell-error,  Next: cell-error-name,  Prev: error (Condition Type),  Up: Conditions Dictionary
+
+cell-error                                                 [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+cell-error, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type cell-error consists of error conditions that occur during a
+location access.   The name of the offending cell is initialized by the
+:name initialization argument to make-condition, and is accessed by the
+function cell-error-name.
+
+See Also::
+..........
+
+*Note cell-error-name::
+
+
+File: gcl.info,  Node: cell-error-name,  Next: parse-error,  Prev: cell-error,  Up: Conditions Dictionary
+
+cell-error-name                                                  [Function]
+---------------------------------------------------------------------------
+
+`cell-error-name'  condition =>  name
+
+Arguments and Values::
+......................
+
+condition--a condition of type cell-error.
+
+name--an object.
+
+Description::
+.............
+
+Returns the name of the offending cell involved in the situation
+represented by condition.
+
+The nature of the result depends on the specific type of condition.  For
+example, if the condition is of type unbound-variable, the result is the
+name of the unbound variable which was being accessed, if the condition is
+of type undefined-function, this is the name of the undefined function
+which was being accessed, and if the condition is of type unbound-slot,
+this is the name of the slot which was being accessed.
+
+See Also::
+..........
+
+cell-error, unbound-slot, unbound-variable, undefined-function, *Note
+Condition System Concepts::
+
+
+File: gcl.info,  Node: parse-error,  Next: storage-condition,  Prev: cell-error-name,  Up: Conditions Dictionary
+
+parse-error                                                [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+parse-error, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type parse-error consists of error conditions that are related to
+parsing.
+
+See Also::
+..........
+
+*Note parse-namestring:: , *Note reader-error::
+
+
+File: gcl.info,  Node: storage-condition,  Next: assert,  Prev: parse-error,  Up: Conditions Dictionary
+
+storage-condition                                          [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+storage-condition, serious-condition, condition, t
+
+Description::
+.............
+
+The type storage-condition consists of serious conditions that relate to
+problems with memory management that are potentially due to
+implementation-dependent limits rather than semantic errors in conforming
+programs, and that typically warrant entry to the debugger if not handled.
+Depending on the details of the implementation, these might include such
+problems as stack overflow, memory region overflow, and storage exhausted.
+
+Notes::
+.......
+
+While some Common Lisp operations might signal storage-condition because
+they are defined to create objects, it is unspecified whether operations
+that are not defined to create objects create them anyway and so might
+also signal storage-condition.  Likewise, the evaluator itself might
+create objects and so might signal storage-condition.  (The natural
+assumption might be that such object creation is naturally inefficient,
+but even that is implementation-dependent.) In general, the entire
+question of how storage allocation is done is implementation-dependent,
+and so any operation might signal storage-condition at any time.  Because
+such a condition is indicative of a limitation of the implementation or of
+the image rather than an error in a program, objects of type
+storage-condition are not of type error.
+
+
+File: gcl.info,  Node: assert,  Next: error,  Prev: storage-condition,  Up: Conditions Dictionary
+
+assert                                                              [Macro]
+---------------------------------------------------------------------------
+
+`assert'  test-form [({place}*) [datum-form {argument-form}*]]
+=>  nil
+
+Arguments and Values::
+......................
+
+test-form--a form; always evaluated.
+
+place--a place; evaluated if an error is signaled.
+
+datum-form--a form that evaluates to a datum.  Evaluated each time an
+error is to be signaled, or not at all if no error is to be signaled.
+
+argument-form--a form that evaluates to an argument.  Evaluated each time
+an error is to be signaled, or not at all if no error is to be signaled.
+
+datum, arguments--designators for a condition of default type error.
+(These designators are the result of evaluating datum-form and each of the
+argument-forms.)
+
+Description::
+.............
+
+assert assures that test-form evaluates to true.  If test-form evaluates
+to false, assert signals a correctable error (denoted by datum and
+arguments).  Continuing from this error using the continue restart makes
+it possible for the user to alter the values of the places before assert
+evaluates test-form again.  If the value of test-form is non-nil, assert
+returns nil.
+
+The places are generalized references to data upon which test-form depends,
+whose values can be changed by the user in attempting to correct the error.
+Subforms of each place are only evaluated if an error is signaled, and
+might be re-evaluated if the error is re-signaled (after continuing without
+actually fixing the problem).
+
+The order of evaluation of the places is not specified; see *Note
+Evaluation of Subforms to Places::.
+
+If a place form is supplied that produces more values than there are store
+variables, the extra values are ignored. If the supplied form produces
+fewer values than there are store variables, the missing values are set to
+nil.
+
+Examples::
+..........
+
+      (setq x (make-array '(3 5) :initial-element 3))
+     =>  #2A((3 3 3 3 3) (3 3 3 3 3) (3 3 3 3 3))
+      (setq y (make-array '(3 5) :initial-element 7))
+     =>  #2A((7 7 7 7 7) (7 7 7 7 7) (7 7 7 7 7))
+      (defun matrix-multiply (a b)
+        (let ((*print-array* nil))
+          (assert (and (= (array-rank a) (array-rank b) 2)
+                       (= (array-dimension a 1) (array-dimension b 0)))
+                  (a b)
+                  "Cannot multiply ~S by ~S." a b)
+                 (really-matrix-multiply a b))) =>  MATRIX-MULTIPLY
+      (matrix-multiply x y)
+      |>  Correctable error in MATRIX-MULTIPLY:
+      |>  Cannot multiply #<ARRAY ...> by #<ARRAY ...>.
+      |>  Restart options:
+      |>   1: You will be prompted for one or more new values.
+      |>   2: Top level.
+      |>  Debug> |>>:continue 1<<|
+      |>  Value for A: |>>x<<|
+      |>  Value for B: |>>(make-array '(5 3) :initial-element 6)<<|
+     =>  #2A((54 54 54 54 54)
+            (54 54 54 54 54)
+            (54 54 54 54 54)
+            (54 54 54 54 54)
+            (54 54 54 54 54))
+
+      (defun double-safely (x) (assert (numberp x) (x)) (+ x x))
+      (double-safely 4)
+     =>  8
+     
+      (double-safely t)
+      |>  Correctable error in DOUBLE-SAFELY: The value of (NUMBERP X) must be non-NIL.
+      |>  Restart options:
+      |>   1: You will be prompted for one or more new values.
+      |>   2: Top level.
+      |>  Debug> |>>:continue 1<<|
+      |>  Value for X: |>>7<<|
+     =>  14
+
+Affected By::
+.............
+
+*break-on-signals*
+
+The set of active condition handlers.
+
+See Also::
+..........
+
+*Note check-type:: , *Note error:: , *Note Generalized Reference::
+
+Notes::
+.......
+
+The debugger need not include the test-form in the error message, and the
+places should not be included in the message, but they should be made
+available for the user's perusal.  If the user gives the "continue"
+command, the values of any of the references can be altered.  The details
+of this depend on the implementation's style of user interface.
+
+
+File: gcl.info,  Node: error,  Next: cerror,  Prev: assert,  Up: Conditions Dictionary
+
+error                                                            [Function]
+---------------------------------------------------------------------------
+
+`error'  datum &rest arguments =>  #<NoValue>
+
+Arguments and Values::
+......................
+
+datum, arguments--designators for a condition of default type simple-error.
+
+Description::
+.............
+
+error effectively invokes signal on the denoted condition.
+
+If the condition is not handled, (invoke-debugger condition) is done.  As
+a consequence of calling invoke-debugger, error cannot directly return;
+the only exit from error can come by non-local transfer of control in a
+handler or by use of an interactive debugging command.
+
+Examples::
+..........
+
+      (defun factorial (x)
+        (cond ((or (not (typep x 'integer)) (minusp x))
+               (error "~S is not a valid argument to FACTORIAL." x))
+              ((zerop x) 1)
+              (t (* x (factorial (- x 1))))))
+     =>  FACTORIAL
+     (factorial 20)
+     =>  2432902008176640000
+     (factorial -1)
+      |>  Error: -1 is not a valid argument to FACTORIAL.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Return to Lisp Toplevel.
+      |>  Debug>
+
+      (setq a 'fred)
+     =>  FRED
+      (if (numberp a) (1+ a) (error "~S is not a number." A))
+      |>  Error: FRED is not a number.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Return to Lisp Toplevel.
+      |>  Debug> |>>:Continue 1<<|
+      |>  Return to Lisp Toplevel.
+     
+      (define-condition not-a-number (error)
+                        ((argument :reader not-a-number-argument :initarg :argument))
+        (:report (lambda (condition stream)
+                   (format stream "~S is not a number."
+                           (not-a-number-argument condition)))))
+     =>  NOT-A-NUMBER
+     
+      (if (numberp a) (1+ a) (error 'not-a-number :argument a))
+      |>  Error: FRED is not a number.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Return to Lisp Toplevel.
+      |>  Debug> |>>:Continue 1<<|
+      |>  Return to Lisp Toplevel.
+
+Side Effects::
+..............
+
+Handlers for the specified condition, if any, are invoked and might have
+side effects.  Program execution might stop, and the debugger might be
+entered.
+
+Affected By::
+.............
+
+Existing handler bindings.
+
+*break-on-signals*
+
+Signals an error of type type-error if datum and arguments are not
+designators for a condition.
+
+See Also::
+..........
+
+*Note cerror:: , *Note signal:: , *Note format:: , *Note ignore-errors:: ,
+*break-on-signals*, *Note handler-bind:: , *Note Condition System
+Concepts::
+
+Notes::
+.......
+
+Some implementations may provide debugger commands for interactively
+returning from individual stack frames.  However, it should be possible
+for the programmer to feel confident about writing code like:
+
+      (defun wargames:no-win-scenario ()
+        (if (error "pushing the button would be stupid."))
+        (push-the-button))
+
+In this scenario, there should be no chance that error will return and the
+button will get pushed.
+
+While the meaning of this program is clear and it might be proven `safe'
+by a formal theorem prover, such a proof is no guarantee that the program
+is safe to execute.  Compilers have been known to have bugs, computers to
+have signal glitches, and human beings to manually intervene in ways that
+are not always possible to predict.  Those kinds of errors, while beyond
+the scope of the condition system to formally model, are not beyond the
+scope of things that should seriously be considered when writing code that
+could have the kinds of sweeping effects hinted at by this example.
+
+
+File: gcl.info,  Node: cerror,  Next: check-type,  Prev: error,  Up: Conditions Dictionary
+
+cerror                                                           [Function]
+---------------------------------------------------------------------------
+
+`cerror'  continue-format-control datum &rest arguments =>  nil
+
+Arguments and Values::
+......................
+
+Continue-format-control--a format control.
+
+[Reviewer Note by Barmar: What is continue-format-control used for??]
+
+datum, arguments--designators for a condition of default type simple-error.
+
+Description::
+.............
+
+cerror effectively invokes error on the condition named by datum.  As with
+any function that implicitly calls error, if the condition is not handled,
+(invoke-debugger condition) is executed.  While signaling is going on, and
+while in the debugger if it is reached, it is possible to continue code
+execution (i.e., to return from cerror) using the continue restart.
+
+If datum is a condition, arguments can be supplied, but are used only in
+conjunction with the continue-format-control.
+
+Examples::
+..........
+
+      (defun real-sqrt (n)
+        (when (minusp n)
+          (setq n (- n))
+          (cerror "Return sqrt(~D) instead." "Tried to take sqrt(-~D)." n))
+        (sqrt n))
+     
+      (real-sqrt 4)
+     =>  2.0
+     
+      (real-sqrt -9)
+      |>  Correctable error in REAL-SQRT: Tried to take sqrt(-9).
+      |>  Restart options:
+      |>   1: Return sqrt(9) instead.
+      |>   2: Top level.
+      |>  Debug> |>>:continue 1<<|
+     =>  3.0
+     
+      (define-condition not-a-number (error)
+        ((argument :reader not-a-number-argument :initarg :argument))
+        (:report (lambda (condition stream)
+                   (format stream "~S is not a number."
+                           (not-a-number-argument condition)))))
+     
+      (defun assure-number (n)
+        (loop (when (numberp n) (return n))
+              (cerror "Enter a number."
+                      'not-a-number :argument n)
+              (format t "~&Type a number: ")
+              (setq n (read))
+              (fresh-line)))
+     
+      (assure-number 'a)
+      |>  Correctable error in ASSURE-NUMBER: A is not a number.
+      |>  Restart options:
+      |>   1: Enter a number.
+      |>   2: Top level.
+      |>  Debug> |>>:continue 1<<|
+      |>  Type a number: |>>1/2<<|
+     =>  1/2
+     
+      (defun assure-large-number (n)
+        (loop (when (and (numberp n) (> n 73)) (return n))
+              (cerror "Enter a number~:[~; a bit larger than ~D~]."
+                      "~*~A is not a large number."
+                      (numberp n) n)
+              (format t "~&Type a large number: ")
+              (setq n (read))
+              (fresh-line)))
+     
+      (assure-large-number 10000)
+     =>  10000
+     
+      (assure-large-number 'a)
+      |>  Correctable error in ASSURE-LARGE-NUMBER: A is not a large number.
+      |>  Restart options:
+      |>   1: Enter a number.
+      |>   2: Top level.
+      |>  Debug> |>>:continue 1<<|
+      |>  Type a large number: |>>88<<|
+     =>  88
+     
+      (assure-large-number 37)
+      |>  Correctable error in ASSURE-LARGE-NUMBER: 37 is not a large number.
+      |>  Restart options:
+      |>   1: Enter a number a bit larger than 37.
+      |>   2: Top level.
+      |>  Debug> |>>:continue 1<<|
+      |>  Type a large number: |>>259<<|
+     =>  259
+     
+      (define-condition not-a-large-number (error)
+        ((argument :reader not-a-large-number-argument :initarg :argument))
+        (:report (lambda (condition stream)
+                   (format stream "~S is not a large number."
+                           (not-a-large-number-argument condition)))))
+     
+      (defun assure-large-number (n)
+        (loop (when (and (numberp n) (> n 73)) (return n))
+              (cerror "Enter a number~3*~:[~; a bit larger than ~*~D~]."
+                      'not-a-large-number
+                      :argument n
+                      :ignore (numberp n)
+                      :ignore n
+                      :allow-other-keys t)
+              (format t "~&Type a large number: ")
+              (setq n (read))
+              (fresh-line)))
+     
+      (assure-large-number 'a)
+      |>  Correctable error in ASSURE-LARGE-NUMBER: A is not a large number.
+      |>  Restart options:
+      |>   1: Enter a number.
+      |>   2: Top level.
+      |>  Debug> |>>:continue 1<<|
+      |>  Type a large number: |>>88<<|
+     =>  88
+     
+      (assure-large-number 37)
+      |>  Correctable error in ASSURE-LARGE-NUMBER: A is not a large number.
+      |>  Restart options:
+      |>   1: Enter a number a bit larger than 37.
+      |>   2: Top level.
+      |>  Debug> |>>:continue 1<<|
+      |>  Type a large number: |>>259<<|
+     =>  259
+
+Affected By::
+.............
+
+*break-on-signals*.
+
+Existing handler bindings.
+
+See Also::
+..........
+
+*Note error:: , *Note format:: , *Note handler-bind:: ,
+*break-on-signals*, simple-type-error
+
+Notes::
+.......
+
+If datum is a condition type rather than a string, the format directive ~*
+may be especially useful in the continue-format-control in order to ignore
+the keywords in the initialization argument list.  For example:
+
+     (cerror "enter a new value to replace ~*~s"
+             'not-a-number
+             :argument a)
+
+
+File: gcl.info,  Node: check-type,  Next: simple-error,  Prev: cerror,  Up: Conditions Dictionary
+
+check-type                                                          [Macro]
+---------------------------------------------------------------------------
+
+`check-type'  place typespec [string] =>  nil
+
+Arguments and Values::
+......................
+
+place--a place.
+
+typespec--a type specifier.
+
+string--a string; evaluated.
+
+Description::
+.............
+
+check-type signals a correctable error of type type-error if the contents
+of place are not of the type typespec.
+
+check-type can return only if the store-value restart is invoked, either
+explicitly from a handler or implicitly as one of the options offered by
+the debugger.  If the store-value restart is invoked, check-type stores
+the new value that is the argument to the restart invocation (or that is
+prompted for interactively by the debugger) in place and starts over,
+checking the type of the new value and signaling another error if it is
+still not of the desired type.
+
+The first time place is evaluated, it is evaluated by normal evaluation
+rules.  It is later evaluated as a place if the type check fails and the
+store-value restart is used; see *Note Evaluation of Subforms to Places::.
+
+string should be an English description of the type, starting with an
+indefinite article ("a" or "an").  If string is not supplied, it is
+computed automatically from typespec.  The automatically generated message
+mentions place, its contents, and the desired type.  An implementation may
+choose to generate a somewhat differently worded error message if it
+recognizes that place is of a particular form, such as one of the
+arguments to the function that called check-type.  string is allowed
+because some applications of check-type may require a more specific
+description of what is wanted than can be generated automatically from
+typespec.
+
+Examples::
+..........
+
+      (setq aardvarks '(sam harry fred))
+     =>  (SAM HARRY FRED)
+      (check-type aardvarks (array * (3)))
+      |>  Error: The value of AARDVARKS, (SAM HARRY FRED),
+      |>         is not a 3-long array.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Specify a value to use instead.
+      |>   2: Return to Lisp Toplevel.
+      |>  Debug> |>>:CONTINUE 1<<|
+      |>  Use Value: |>>#(SAM FRED HARRY)<<|
+     =>  NIL
+      aardvarks
+     =>  #<ARRAY-T-3 13571>
+      (map 'list #'identity aardvarks)
+     =>  (SAM FRED HARRY)
+      (setq aardvark-count 'foo)
+     =>  FOO
+      (check-type aardvark-count (integer 0 *) "A positive integer")
+      |>  Error: The value of AARDVARK-COUNT, FOO, is not a positive integer.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Specify a value to use instead.
+      |>   2: Top level.
+      |>  Debug> |>>:CONTINUE 2<<|
+
+      (defmacro define-adder (name amount)
+        (check-type name (and symbol (not null)) "a name for an adder function")
+        (check-type amount integer)
+        `(defun ,name (x) (+ x ,amount)))
+     
+      (macroexpand '(define-adder add3 3))
+     =>  (defun add3 (x) (+ x 3))
+     
+      (macroexpand '(define-adder 7 7))
+      |>  Error: The value of NAME, 7, is not a name for an adder function.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Specify a value to use instead.
+      |>   2: Top level.
+      |>  Debug> |>>:Continue 1<<|
+      |>  Specify a value to use instead.
+      |>  Type a form to be evaluated and used instead: |>>'ADD7<<|
+     =>  (defun add7 (x) (+ x 7))
+     
+      (macroexpand '(define-adder add5 something))
+      |>  Error: The value of AMOUNT, SOMETHING, is not an integer.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Specify a value to use instead.
+      |>   2: Top level.
+      |>  Debug> |>>:Continue 1<<|
+      |>  Type a form to be evaluated and used instead: |>>5<<|
+     =>  (defun add5 (x) (+ x 5))
+
+Control is transferred to a handler.
+
+Side Effects::
+..............
+
+The debugger might be entered.
+
+Affected By::
+.............
+
+*break-on-signals*
+
+The implementation.
+
+See Also::
+..........
+
+*Note Condition System Concepts::
+
+Notes::
+.......
+
+      (check-type place typespec)
+      == (assert (typep place 'typespec) (place)
+                 'type-error :datum place :expected-type 'typespec)
+
+
+File: gcl.info,  Node: simple-error,  Next: invalid-method-error,  Prev: check-type,  Up: Conditions Dictionary
+
+simple-error                                               [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+simple-error, simple-condition, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type simple-error consists of conditions that are signaled by error or
+cerror when a
+
+format control
+
+is supplied as the function's first argument.
+
+
+File: gcl.info,  Node: invalid-method-error,  Next: method-combination-error,  Prev: simple-error,  Up: Conditions Dictionary
+
+invalid-method-error                                             [Function]
+---------------------------------------------------------------------------
+
+`invalid-method-error'  method format-control &rest args =>
+implementation-dependent
+
+Arguments and Values::
+......................
+
+method--a method.
+
+format-control--a format control.
+
+args--format arguments for the format-control.
+
+Description::
+.............
+
+The function invalid-method-error is used to signal an error of type error
+when there is an applicable method whose qualifiers are not valid for the
+method combination type.  The error message is constructed by using the
+format-control suitable for format and any args to it.  Because an
+implementation may need to add additional contextual information to the
+error message, invalid-method-error should be called only within the
+dynamic extent of a method combination function.
+
+The function invalid-method-error is called automatically when a method
+fails to satisfy every qualifier pattern and predicate in a
+define-method-combination form.  A method combination function that
+imposes additional restrictions should call invalid-method-error
+explicitly if it encounters a method it cannot accept.
+
+Whether invalid-method-error returns to its caller or exits via throw is
+implementation-dependent.
+
+Side Effects::
+..............
+
+The debugger might be entered.
+
+Affected By::
+.............
+
+*break-on-signals*
+
+See Also::
+..........
+
+*Note define-method-combination::
+

@@ -1,0 +1,1086 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: Closures and Lexical Binding,  Next: Shadowing,  Prev: Lambda Expressions,  Up: Evaluation
+
+Closures and Lexical Binding
+----------------------------
+
+A lexical closure is a function that can refer to and alter the values of
+lexical bindings established by binding forms that textually include the
+function definition.
+
+Consider this code, where x is not declared special:
+
+      (defun two-funs (x)
+        (list (function (lambda () x))
+              (function (lambda (y) (setq x y)))))
+      (setq funs (two-funs 6))
+      (funcall (car funs)) =>  6
+      (funcall (cadr funs) 43) =>  43
+      (funcall (car funs)) =>  43
+
+The function special form coerces a lambda expression into a closure in
+which the lexical environment in effect when the special form is evaluated
+is captured along with the lambda expression.
+
+The function two-funs returns a list of two functions, each of which
+refers to the binding of the variable x created on entry to the function
+two-funs when it was called.  This variable has the value 6 initially, but
+setq can alter this binding.  The lexical closure created for the first
+lambda expression does not "snapshot" the value 6 for x when the closure
+is created; rather it captures the binding of x.  The second function can
+be used to alter the value in the same (captured) binding (to 43, in the
+example), and this altered variable binding then affects the value
+returned by the first function.
+
+In situations where a closure of a lambda expression over the same set of
+bindings may be produced more than once, the various resulting closures may
+or may not be identical, at the discretion of the implementation.  That
+is, two functions that are behaviorally indistinguishable might or might
+not be identical.  Two functions that are behaviorally distinguishable are
+distinct.  For example:
+
+      (let ((x 5) (funs '()))
+        (dotimes (j 10)
+          (push #'(lambda (z)
+                    (if (null z) (setq x 0) (+ x z)))
+                funs))
+        funs)
+
+The result of the above form is a list of ten closures.  Each requires
+only the binding of x.  It is the same binding in each case, but the ten
+closure objects might or might not be identical.  On the other hand, the
+result of the form
+
+      (let ((funs '()))
+        (dotimes (j 10)
+          (let ((x 5))
+            (push (function (lambda (z)
+                             (if (null z) (setq x 0) (+ x z))))
+                  funs)))
+       funs)
+
+is also a list of ten closures.  However, in this case no two of the
+closure objects can be identical because each closure is closed over a
+distinct binding of x, and these bindings can be behaviorally
+distinguished because of the use of setq.
+
+The result of the form
+
+      (let ((funs '()))
+        (dotimes (j 10)
+          (let ((x 5))
+            (push (function (lambda (z) (+ x z)))
+                 funs)))
+        funs)
+
+is a list of ten closure objects that might or might not be identical.  A
+different binding of x is involved for each closure, but the bindings
+cannot be distinguished because their values are the same and immutable
+(there being no occurrence of setq on x).  A compiler could internally
+transform the form to
+
+      (let ((funs '()))
+        (dotimes (j 10)
+          (push (function (lambda (z) (+ 5 z)))
+                funs))
+       funs)
+
+where the closures may be identical.
+
+It is possible that a closure does not close over any variable bindings.
+In the code fragment
+
+      (mapcar (function (lambda (x) (+ x 2))) y)
+
+the function (lambda (x) (+ x 2)) contains no references to any outside
+object. In this case, the same closure might be returned for all
+evaluations of the function form.
+
+
+File: gcl.info,  Node: Shadowing,  Next: Extent,  Prev: Closures and Lexical Binding,  Up: Evaluation
+
+Shadowing
+---------
+
+If two forms that establish lexical bindings with the same name N are
+textually nested, then references to N within the inner form refer to the
+binding established by the inner form; the inner binding for N shadows the
+outer binding for N.  Outside the inner form but inside the outer one,
+references to N refer to the binding established by the outer form.  For
+example:
+
+      (defun test (x z)
+        (let ((z (* x 2)))
+          (print z))
+        z)
+
+The binding of the variable z by let shadows the parameter binding for the
+function test.  The reference to the variable z in the print form refers
+to the let binding.  The reference to z at the end of the function test
+refers to the parameter named z.
+
+Constructs that are lexically scoped act as if new names were generated
+for each object on each execution.  Therefore, dynamic shadowing cannot
+occur.  For example:
+
+      (defun contorted-example (f g x)
+        (if (= x 0)
+            (funcall f)
+            (block here
+               (+ 5 (contorted-example g
+                                       #'(lambda () (return-from here 4))
+                                       (- x 1))))))
+
+Consider the call (contorted-example nil nil 2).  This produces 4.  During
+the course of execution, there are three calls to contorted-example,
+interleaved with two blocks:
+
+      (contorted-example nil nil 2)
+        (block here_1 ...)
+          (contorted-example nil #'(lambda () (return-from here_1 4)) 1)
+            (block here_2 ...)
+              (contorted-example #'(lambda () (return-from here_1 4))
+                                 #'(lambda () (return-from here_2 4))
+                                 0)
+                  (funcall f)
+                         where f =>  #'(lambda () (return-from here_1 4))
+                      (return-from here_1 4)
+
+At the time the funcall is executed there are two block exit points
+outstanding, each apparently named here.  The return-from form executed as
+a result of the funcall operation refers to the outer outstanding exit
+point (here_1), not the inner one (here_2).  It refers to that exit point
+textually visible at the point of execution of function (here abbreviated
+by the #' syntax) that resulted in creation of the function object
+actually invoked by funcall.
+
+If, in this example, one were to change the (funcall f) to (funcall g),
+then the value of the call (contorted-example nil nil 2) would be 9.  The
+value would change because funcall would cause the execution of
+(return-from here_2 4), thereby causing a return from the inner exit point
+(here_2).  When that occurs, the value 4 is returned from the middle
+invocation of contorted-example, 5 is added to that to get 9, and that
+value is returned from the outer block and the outermost call to
+contorted-example.  The point is that the choice of exit point returned
+from has nothing to do with its being innermost or outermost; rather, it
+depends on the lexical environment that is packaged up with a lambda
+expression when function is executed.
+
+
+File: gcl.info,  Node: Extent,  Next: Return Values,  Prev: Shadowing,  Up: Evaluation
+
+Extent
+------
+
+Contorted-example works only because the function named by f is invoked
+during the extent of the exit point.  Once the flow of execution has left
+the block, the exit point is disestablished.  For example:
+
+      (defun invalid-example ()
+        (let ((y (block here #'(lambda (z) (return-from here z)))))
+          (if (numberp y) y (funcall y 5))))
+
+One might expect the call (invalid-example) to produce 5 by the following
+incorrect reasoning: let binds y to the value of block; this value is a
+function resulting from the lambda expression.  Because y is not a number,
+it is invoked on the value 5.  The return-from should then return this
+value from the exit point named here, thereby exiting from the block again
+and giving y the value 5 which, being a number, is then returned as the
+value of the call to invalid-example.
+
+The argument fails only because exit points have dynamic extent.  The
+argument is correct up to the execution of return-from.  The execution of
+return-from should signal an error of type control-error, however, not
+because it cannot refer to the exit point, but because it does correctly
+refer to an exit point and that exit point has been disestablished.
+
+A reference by name to a dynamic exit point binding such as a catch tag
+refers to the most recently established binding of that name that has not
+been disestablished.  For example:
+
+      (defun fun1 (x)
+        (catch 'trap (+ 3 (fun2 x))))
+      (defun fun2 (y)
+        (catch 'trap (* 5 (fun3 y))))
+      (defun fun3 (z)
+        (throw 'trap z))
+
+Consider the call (fun1 7).  The result is 10.  At the time the throw is
+executed, there are two outstanding catchers with the name trap: one
+established within procedure fun1, and the other within procedure fun2.
+The latter is the more recent, and so the value 7 is returned from catch
+in fun2.  Viewed from within fun3, the catch in fun2 shadows the one in
+fun1.  Had fun2 been defined as
+
+      (defun fun2 (y)
+        (catch 'snare (* 5 (fun3 y))))
+
+then the two exit points would have different names, and therefore the one
+in fun1 would not be shadowed.  The result would then have been 7.
+
+
+File: gcl.info,  Node: Return Values,  Prev: Extent,  Up: Evaluation
+
+Return Values
+-------------
+
+Ordinarily the result of calling a function is a single object.
+Sometimes, however, it is convenient for a function to compute several
+objects and return them.
+
+In order to receive other than exactly one value from a form, one of
+several special forms or macros must be used to request those values.  If
+a form produces multiple values which were not requested in this way, then
+the first value is given to the caller and all others are discarded; if
+the form produces zero values, then the caller receives nil as a value.
+
+Figure 3-5 lists some operators for receiving multiple values_2.  These
+operators can be used to specify one or more forms to evaluate and where
+to put the values returned by those forms.
+
+  multiple-value-bind  multiple-value-prog1  return-from  
+  multiple-value-call  multiple-value-setq   throw        
+  multiple-value-list  return                             
+
+  Figure 3-5: Some operators applicable to receiving multiple values
+
+
+The function values can produce multiple values_2.  (values) returns zero
+values; (values form) returns the primary value returned by form; (values
+form1 form2) returns two values, the primary value of form1 and the
+primary value of form2; and so on.
+
+See multiple-values-limit and values-list.
+
+
+File: gcl.info,  Node: Compilation,  Next: Declarations,  Prev: Evaluation,  Up: Evaluation and Compilation
+
+Compilation
+===========
+
+* Menu:
+
+* Compiler Terminology::
+* Compilation Semantics::
+* File Compilation::
+* Literal Objects in Compiled Files::
+* Exceptional Situations in the Compiler::
+
+
+File: gcl.info,  Node: Compiler Terminology,  Next: Compilation Semantics,  Prev: Compilation,  Up: Compilation
+
+Compiler Terminology
+--------------------
+
+The following terminology is used in this section.
+
+The compiler is a utility that translates code into an
+implementation-dependent form that might be represented or executed
+efficiently.  The term compiler refers to both of the functions compile
+and compile-file.
+
+The term compiled code refers to objects representing compiled programs,
+such as objects constructed by compile or by load when loading a compiled
+file.
+
+The term implicit compilation refers to compilation performed during
+evaluation.
+
+The term literal object refers to a quoted object or a self-evaluating
+object or an object that is a substructure of such an object.  A constant
+variable is not itself a literal object.
+
+The term coalesce is defined as follows.  Suppose A and B are two literal
+constants in the source code, and that A' and B' are the corresponding
+objects in the compiled code.  If A' and B' are eql but A and B are not
+eql, then it is said that A and B have been coalesced by the compiler.
+
+The term minimal compilation refers to actions the compiler must take at
+compile time. These actions are specified in *Note Compilation Semantics::.
+
+The verb process refers to performing minimal compilation, determining the
+time of evaluation for a form, and possibly evaluating that form (if
+required).
+
+The term further compilation refers to implementation-dependent
+compilation beyond minimal compilation.  That is, processing does not
+imply complete compilation.  Block compilation and generation of
+machine-specific instructions are examples of further compilation.
+Further compilation is permitted to take place at run time.
+
+Four different environments relevant to compilation are distinguished: the
+startup environment, the compilation environment, the evaluation
+environment, and the run-time environment.
+
+The startup environment is the environment of the Lisp image from which
+the compiler was invoked.
+
+The compilation environment is maintained by the compiler and is used to
+hold definitions and declarations to be used internally by the compiler.
+Only those parts of a definition needed for correct compilation are saved.
+The compilation environment is used as the environment argument to macro
+expanders called by the compiler. It is unspecified whether a definition
+available in the compilation environment can be used in an evaluation
+initiated in the startup environment or evaluation environment.
+
+The evaluation environment is a run-time environment in which macro
+expanders and code specified by eval-when to be evaluated are evaluated.
+All evaluations initiated by the compiler take place in the evaluation
+environment.
+
+The run-time environment is the environment in which the program being
+compiled will be executed.
+
+The compilation environment inherits from the evaluation environment, and
+the compilation environment and evaluation environment might be identical.
+The evaluation environment inherits from the startup environment, and the
+startup environment and evaluation environment might be identical.
+
+The term compile time refers to the duration of time that the compiler is
+processing source code.  At compile time, only the compilation environment
+and  the evaluation environment are available.
+
+The term compile-time definition refers to a definition in the compilation
+environment.  For example, when compiling a file, the definition of a
+function might be retained in the compilation environment if it is
+declared inline.  This definition might not be available in the evaluation
+environment.
+
+The term run time refers to the duration of time that the loader is
+loading compiled code or compiled code is being executed.  At run time,
+only the run-time environment is available.
+
+The term run-time definition refers to a definition in the run-time
+environment.
+
+The term run-time compiler refers to the function compile or implicit
+compilation, for which the compilation and run-time environments are
+maintained in the same Lisp image.  Note that when the run-time compiler
+is used, the run-time environment and startup environment are the same.
+
+
+File: gcl.info,  Node: Compilation Semantics,  Next: File Compilation,  Prev: Compiler Terminology,  Up: Compilation
+
+Compilation Semantics
+---------------------
+
+Conceptually, compilation is a process that traverses code, performs
+certain kinds of syntactic and semantic analyses using information (such
+as proclamations and macro definitions) present in the compilation
+environment, and produces equivalent, possibly more efficient code.
+
+* Menu:
+
+* Compiler Macros::
+* Purpose of Compiler Macros::
+* Naming of Compiler Macros::
+* When Compiler Macros Are Used::
+* Notes about the Implementation of Compiler Macros::
+* Minimal Compilation::
+* Semantic Constraints::
+
+
+File: gcl.info,  Node: Compiler Macros,  Next: Purpose of Compiler Macros,  Prev: Compilation Semantics,  Up: Compilation Semantics
+
+Compiler Macros
+...............
+
+A compiler macro can be defined for a name that also names a function or
+macro.  That is, it is possible for a function name to name both a
+function and a compiler macro.
+
+A function name names a compiler macro if compiler-macro-function is true
+of the function name in the lexical environment in which it appears.
+Creating a lexical binding for the function name not only creates a new
+local function or macro definition, but also shadows_2 the compiler macro.
+
+The function returned by compiler-macro-function is a function of two
+arguments, called the expansion function.  To expand a compiler macro, the
+expansion function is invoked by calling the macroexpand hook with the
+expansion function as its first argument, the entire compiler macro form
+as its second argument, and the current compilation environment (or with
+the current lexical environment, if the form is being processed by
+something other than compile-file) as its third argument.  The macroexpand
+hook, in turn, calls the expansion function with the form as its first
+argument and the environment as its second argument.  The return value
+from the expansion function, which is passed through by the macroexpand
+hook, might either be the same form, or else a form that can, at the
+discretion of the code doing the expansion, be used in place of the
+original form.
+
+  *macroexpand-hook*  compiler-macro-function  define-compiler-macro  
+
+        Figure 3-6: Defined names applicable to compiler macros      
+
+
+
+File: gcl.info,  Node: Purpose of Compiler Macros,  Next: Naming of Compiler Macros,  Prev: Compiler Macros,  Up: Compilation Semantics
+
+Purpose of Compiler Macros
+..........................
+
+The purpose of the compiler macro facility is to permit selective source
+code transformations as optimization advice to the compiler.  When a
+compound form is being processed (as by the compiler), if the operator
+names a compiler macro then the compiler macro function may be invoked on
+the form, and the resulting expansion recursively processed in preference
+to performing the usual processing on the original form according to its
+normal interpretation as a function form or macro form.
+
+A compiler macro function, like a macro function, is a function of two
+arguments: the entire call form and the environment. Unlike an ordinary
+macro function, a compiler macro function can decline to provide an
+expansion merely by returning a value that is the same as the original
+form.  The consequences are undefined if a compiler macro function
+destructively modifies any part of its form argument.
+
+The form passed to the compiler macro function can either be a list whose
+car is the function name, or a list whose car is funcall and whose cadr is
+a list (function name); note that this affects destructuring of the form
+argument by the compiler macro function.  define-compiler-macro arranges
+for destructuring of arguments to be performed correctly for both possible
+formats.
+
+When compile-file chooses to expand a top level form that is a compiler
+macro form, the expansion is also treated as a top level form for the
+purposes of eval-when processing; see *Note Processing of Top Level
+Forms::.
+
+
+File: gcl.info,  Node: Naming of Compiler Macros,  Next: When Compiler Macros Are Used,  Prev: Purpose of Compiler Macros,  Up: Compilation Semantics
+
+Naming of Compiler Macros
+.........................
+
+Compiler macros may be defined for function names that name macros as well
+as functions.
+
+Compiler macro definitions are strictly global.  There is no provision for
+defining local compiler macros in the way that macrolet defines local
+macros.  Lexical bindings of a function name shadow any compiler macro
+definition associated with the name as well as its global function or
+macro definition.
+
+Note that the presence of a compiler macro definition does not affect the
+values returned by
+
+functions that access function definitions (e.g., fboundp) or macro
+definitions (e.g., macroexpand).  Compiler macros are global, and the
+function compiler-macro-function is sufficient to resolve their interaction
+with other lexical and global definitions.
+
+
+File: gcl.info,  Node: When Compiler Macros Are Used,  Next: Notes about the Implementation of Compiler Macros,  Prev: Naming of Compiler Macros,  Up: Compilation Semantics
+
+When Compiler Macros Are Used
+.............................
+
+The presence of a compiler macro definition for a function or macro
+indicates that it is desirable for the compiler to use the expansion of
+the compiler macro instead of the original function form or macro form.
+However, no language processor (compiler, evaluator, or other code walker)
+is ever required to actually invoke compiler macro functions, or to make
+use of the resulting expansion if it does invoke a compiler macro function.
+
+When the compiler encounters a form during processing that represents a
+call to a compiler macro name (that is not declared notinline), the
+compiler might expand the compiler macro, and might use the expansion in
+place of the original form.
+
+When eval encounters a form during processing that represents a call to a
+compiler macro name (that is not declared notinline), eval might expand
+the compiler macro, and might use the expansion in place of the original
+form.
+
+There are two situations in which a compiler macro definition must not be
+applied by any language processor:
+
+*
+     The global function name binding associated with the compiler macro
+     is shadowed by a lexical binding of the function name.
+
+*
+     The function name has been declared or proclaimed notinline and the
+     call form appears within the scope of the declaration.
+
+It is unspecified whether compiler macros are expanded or used in any other
+situations.
+
+
+File: gcl.info,  Node: Notes about the Implementation of Compiler Macros,  Next: Minimal Compilation,  Prev: When Compiler Macros Are Used,  Up: Compilation Semantics
+
+Notes about the Implementation of Compiler Macros
+.................................................
+
+Although it is technically permissible, as described above, for eval to
+treat compiler macros in the same situations as compiler might, this is
+not necessarily a good idea in interpreted implementations.
+
+Compiler macros exist for the purpose of trading compile-time speed for
+run-time speed.  Programmers who write compiler macros tend to assume that
+the compiler macros can take more time than normal functions and macros in
+order to produce code which is especially optimal for use at run time.
+Since eval in an interpreted implementation might perform semantic
+analysis of the same form multiple times, it might be inefficient in
+general for the implementation to choose to call compiler macros on every
+such evaluation.
+
+Nevertheless, the decision about what to do in these situations is left to
+each implementation.
+
+
+File: gcl.info,  Node: Minimal Compilation,  Next: Semantic Constraints,  Prev: Notes about the Implementation of Compiler Macros,  Up: Compilation Semantics
+
+Minimal Compilation
+...................
+
+Minimal compilation is defined as follows:
+
+*
+     All compiler macro calls appearing in the source code being compiled
+     are expanded, if at all, at compile time; they will not be expanded
+     at run time.
+
+*
+     All macro and symbol macro calls appearing in the source code being
+     compiled are expanded at compile time in such a way that they will
+     not be expanded again at run time.  macrolet
+
+     and symbol-macrolet
+
+     are effectively replaced by forms corresponding to their bodies in
+     which calls to macros are replaced by their expansions.
+
+*
+     The first argument in a load-time-value
+
+     form in source code processed by compile
+
+     is evaluated at compile time; in source code processed by compile-file
+     , the compiler arranges for it to be evaluated at load time.  In
+     either case, the result of the evaluation is remembered and used
+     later as the value of the load-time-value form at execution time.
+
+
+File: gcl.info,  Node: Semantic Constraints,  Prev: Minimal Compilation,  Up: Compilation Semantics
+
+Semantic Constraints
+....................
+
+All conforming programs must obey the following constraints, which are
+designed to minimize the observable differences between compiled and
+interpreted programs:
+
+*
+     Definitions of any referenced macros must be present in the
+     compilation environment.  Any form that is a list beginning with a
+     symbol that does not name a special operator or a macro defined in the
+     compilation environment is treated by the compiler as a function call.
+
+*
+     Special proclamations for dynamic variables must be made in the
+     compilation environment.  Any binding for which there is no special
+     declaration or proclamation in the compilation environment is treated
+     by the compiler as a lexical binding.
+
+*
+     The definition of a function that is defined and declared inline in
+     the compilation environment must be the same at run time.
+
+*
+     Within a function named F, the compiler may (but is not required to)
+     assume that an apparent recursive call to a function named F refers
+     to the same definition of F, unless that function has been declared
+     notinline.  The consequences of redefining such a recursively defined
+     function F while it is executing are undefined.
+
+*
+     A call within a file to a named function that is defined in the same
+     file refers to that function, unless that function has been declared
+     notinline.  The consequences are unspecified if functions are
+     redefined individually at run time or multiply defined in the same
+     file.
+
+*
+     The argument syntax and number of return values for all functions
+     whose ftype is declared at compile time must remain the same at run
+     time.
+
+*
+     Constant variables defined in the compilation environment must have a
+     similar value at run time.  A reference to a constant variable in
+     source code is equivalent to a reference to a literal object that is
+     the value of the constant variable.
+
+*
+     Type definitions made with deftype or defstruct in the compilation
+     environment must retain the same definition at run time.  Classes
+     defined by defclass in the compilation environment must be defined at
+     run time to have the same superclasses and same metaclass.
+
+     This implies that subtype/supertype relationships of type specifiers
+     must not change between compile time and run time.
+
+*
+     Type declarations present in the compilation environment must
+     accurately describe the corresponding values at run time; otherwise,
+     the consequences are undefined.  It is permissible for an unknown
+     type to appear in a declaration at compile time, though a warning
+     might be signaled in such a case.
+
+*
+     Except in the situations explicitly listed above, a function defined
+     in the evaluation environment is permitted to have a different
+     definition or a different signature at run time, and the run-time
+     definition prevails.
+
+Conforming programs should not be written using any additional assumptions
+about consistency between the run-time environment and the startup,
+evaluation, and compilation environments.
+
+Except where noted, when a compile-time and a run-time definition are
+different, one of the following occurs at run time:
+
+*
+     an error of type error is signaled
+
+*
+     the compile-time definition prevails
+
+*
+     the run-time definition prevails
+
+If the compiler processes a function form whose operator is not defined at
+compile time, no error is signaled at compile time.
+
+
+File: gcl.info,  Node: File Compilation,  Next: Literal Objects in Compiled Files,  Prev: Compilation Semantics,  Up: Compilation
+
+File Compilation
+----------------
+
+The function compile-file performs compilation of forms in a file
+following the rules specified in *Note Compilation Semantics::, and
+produces an output file that can be loaded by using load.
+
+Normally, the top level forms appearing in a file compiled with
+compile-file are evaluated only when the resulting compiled file is
+loaded, and not when the file is compiled.  However, it is typically the
+case that some forms in the file need to be evaluated at compile time so
+the remainder of the file can be read and compiled correctly.
+
+The eval-when special form can be used to control whether a top level form
+is evaluated at compile time, load time, or both.  It is possible to
+specify any of three situations with eval-when, denoted by the symbols
+:compile-toplevel, :load-toplevel, and :execute.  For top level eval-when
+forms, :compile-toplevel specifies that the compiler must evaluate the
+body at compile time, and :load-toplevel specifies that the compiler must
+arrange to evaluate the body at load time. For non-top level eval-when
+forms, :execute specifies that the body must be executed in the run-time
+environment.
+
+The behavior of this form can be more precisely understood in terms of a
+model of how compile-file processes forms in a file to be compiled. There
+are two processing modes, called "not-compile-time" and "compile-time-too".
+
+Successive forms are read from the file by compile-file and processed in
+not-compile-time mode; in this mode, compile-file arranges for forms to be
+evaluated only at load time and not at compile time.  When compile-file is
+in compile-time-too mode, forms are evaluated both at compile time and
+load time.
+
+* Menu:
+
+* Processing of Top Level Forms::
+* Processing of Defining Macros::
+* Constraints on Macros and Compiler Macros::
+
+
+File: gcl.info,  Node: Processing of Top Level Forms,  Next: Processing of Defining Macros,  Prev: File Compilation,  Up: File Compilation
+
+Processing of Top Level Forms
+.............................
+
+Processing of top level forms in the file compiler is defined as follows:
+
+1.
+     If the form is a compiler macro form (not disabled by a notinline
+     declaration), the implementation might or might not choose to compute
+     the compiler macro expansion of the form and, having performed the
+     expansion, might or might not choose to process the result as a top
+     level form in the same processing mode (compile-time-too or
+     not-compile-time).  If it declines to obtain or use the expansion, it
+     must process the original form.
+
+2.
+     If the form is a macro form, its macro expansion is computed and
+     processed as a top level form in the same processing mode
+     (compile-time-too or not-compile-time).
+
+3.
+     If the form is a progn form, each of its body forms is sequentially
+     processed as a top level form in the same processing mode.
+
+4.
+     If the form is a locally, macrolet, or symbol-macrolet, compile-file
+     establishes the appropriate bindings and processes the body forms as
+     top level forms with those bindings in effect in the same processing
+     mode.  (Note that this implies that the lexical environment in which
+     top level forms are processed is not necessarily the null lexical
+     environment.)
+
+5.
+     If the form is an eval-when form, it is handled according to Figure
+     3-7.
+
+     plus .5 fil \offinterlineskip
+       CT   LT   E    Mode  Action    New Mode          
+       _________________________________________________
+       Yes  Yes  --  --   Process   compile-time-too  
+       No   Yes  Yes   CTT  Process   compile-time-too  
+       No   Yes  Yes   NCT  Process   not-compile-time  
+       No   Yes  No   --   Process   not-compile-time  
+       Yes  No   --  --   Evaluate  --               
+       No   No   Yes   CTT  Evaluate  --               
+       No   No   Yes   NCT  Discard   --               
+       No   No   No   --   Discard   --               
+
+       Figure 3-7: EVAL-WHEN processing
+
+     Column CT   indicates whether :compile-toplevel is specified.  Column
+     LT   indicates whether :load-toplevel is specified.  Column E
+     indicates whether :execute is specified.  Column Mode indicates the
+     processing mode; a dash (--) indicates that the processing mode is
+     not relevant.
+
+     The Action column specifies one of three actions:
+
+
+          Process: process the body as top level forms in the specified
+          mode.
+
+
+          Evaluate: evaluate the body in the dynamic execution context of
+          the compiler, using the evaluation environment as the global
+          environment and the lexical environment in which the eval-when
+          appears.
+
+
+          Discard: ignore the form.
+
+     The New Mode column indicates the new processing mode.  A dash (--)
+     indicates the compiler remains in its current mode.
+
+6.
+     Otherwise, the form is a top level form that is not one of the
+     special cases.  In compile-time-too mode, the compiler first
+     evaluates the form in the evaluation environment and then minimally
+     compiles it.  In not-compile-time mode, the form is simply minimally
+     compiled.  All subforms are treated as non-top-level forms.
+
+     Note that top level forms are processed in the order in which they
+     textually appear in the file and that each top level form read by the
+     compiler is processed before the next is read.  However, the order of
+     processing (including macro expansion) of subforms that are not top
+     level forms and the order of further compilation is unspecified as
+     long as Common Lisp semantics are preserved.
+
+eval-when forms cause compile-time evaluation only at top level.  Both
+:compile-toplevel and :load-toplevel situation specifications are ignored
+for non-top-level forms. For non-top-level forms, an eval-when specifying
+the :execute situation is treated as an implicit progn including the forms
+in the body of the eval-when form; otherwise, the forms in the body are
+ignored.
+
+
+File: gcl.info,  Node: Processing of Defining Macros,  Next: Constraints on Macros and Compiler Macros,  Prev: Processing of Top Level Forms,  Up: File Compilation
+
+Processing of Defining Macros
+.............................
+
+Defining macros (such as defmacro or defvar) appearing within a file being
+processed by compile-file normally have compile-time side effects which
+affect how subsequent forms in the same file are compiled.  A convenient
+model for explaining how these side effects happen is that the defining
+macro expands into one or more eval-when forms, and that the calls which
+cause the compile-time side effects to happen appear in the body of an
+(eval-when (:compile-toplevel) ...) form.
+
+The compile-time side effects may cause information about the definition to
+be stored differently than if the defining macro had been processed in the
+`normal' way (either interpretively or by loading the compiled file).
+
+In particular, the information stored by the defining macros at compile
+time might or might not be available to the interpreter (either during or
+after compilation), or during subsequent calls to the compiler.  For
+example, the following code is nonportable because it assumes that the
+compiler stores the macro definition of foo where it is available to the
+interpreter:
+
+      (defmacro foo (x) `(car ,x))
+      (eval-when (:execute :compile-toplevel :load-toplevel)
+        (print (foo '(a b c))))
+
+A portable way to do the same thing would be to include the macro
+definition inside the eval-when form, as in:
+
+      (eval-when (:execute :compile-toplevel :load-toplevel)
+        (defmacro foo (x) `(car ,x))
+        (print (foo '(a b c))))
+
+Figure 3-8 lists macros that make definitions available both in the
+compilation and run-time environments.  It is not specified whether
+definitions made available in the compilation environment are available in
+the evaluation environment, nor is it specified whether they are available
+in subsequent compilation units or subsequent invocations of the compiler.
+As with eval-when, these compile-time side effects happen only when the
+defining macros appear at top level.
+
+  declaim                define-modify-macro   defsetf    
+  defclass               define-setf-expander  defstruct  
+  defconstant            defmacro              deftype    
+  define-compiler-macro  defpackage            defvar     
+  define-condition       defparameter                     
+
+  Figure 3-8: Defining Macros That Affect the Compile-Time Environment
+
+
+
+File: gcl.info,  Node: Constraints on Macros and Compiler Macros,  Prev: Processing of Defining Macros,  Up: File Compilation
+
+Constraints on Macros and Compiler Macros
+.........................................
+
+Except where explicitly stated otherwise, no macro defined in the Common
+Lisp standard produces an expansion that could cause any of the subforms
+of the macro form to be treated as top level forms.  If an implementation
+also provides a special operator definition of a Common Lisp macro, the
+special operator definition must be semantically equivalent in this
+respect.
+
+Compiler macro expansions must also have the same top level evaluation
+semantics as the form which they replace.  This is of concern both to
+conforming implementations and to conforming programs.
+
+
+File: gcl.info,  Node: Literal Objects in Compiled Files,  Next: Exceptional Situations in the Compiler,  Prev: File Compilation,  Up: Compilation
+
+Literal Objects in Compiled Files
+---------------------------------
+
+The functions eval and compile are required to ensure that literal objects
+referenced within the resulting interpreted or compiled code objects are
+the same as the corresponding objects in the source code.  compile-file,
+on the other hand, must produce a compiled file that, when loaded with
+load, constructs the objects defined by the source code and produces
+references to them.
+
+In the case of compile-file, objects constructed by load of the compiled
+file cannot be spoken of as being the same as the objects constructed at
+compile time, because the compiled file may be loaded into a different
+Lisp image than the one in which it was compiled.  This section defines
+the concept of similarity which relates objects in the evaluation
+environment to the corresponding objects in the run-time environment.
+
+The constraints on literal objects described in this section apply only to
+compile-file; eval and compile do not copy or coalesce constants.
+
+* Menu:
+
+* Externalizable Objects::
+* Similarity of Literal Objects::
+* Similarity of Aggregate Objects::
+* Definition of Similarity::
+* Extensions to Similarity Rules::
+* Additional Constraints on Externalizable Objects::
+
+
+File: gcl.info,  Node: Externalizable Objects,  Next: Similarity of Literal Objects,  Prev: Literal Objects in Compiled Files,  Up: Literal Objects in Compiled Files
+
+Externalizable Objects
+......................
+
+The fact that the file compiler represents literal objects externally in a
+compiled file and must later reconstruct suitable equivalents of those
+objects when that file is loaded imposes a need for constraints on the
+nature of the objects that can be used as literal objects in code to be
+processed by the file compiler.
+
+An object that can be used as a literal object in code to be processed by
+the file compiler is called an externalizable object .
+
+We define that two objects are similar if they satisfy a two-place
+conceptual equivalence predicate (defined below), which is independent of
+the Lisp image so that the two objects in different Lisp images can be
+understood to be equivalent under this predicate.  Further, by inspecting
+the definition of this conceptual predicate, the programmer can anticipate
+what aspects of an object are reliably preserved by file compilation.
+
+The file compiler must cooperate with the loader in order to assure that
+in each case where an externalizable object is processed as a literal
+object, the loader will construct a similar object.
+
+The set of objects that are externalizable objects are those for which the
+new conceptual term "similar" is defined, such that when a compiled file
+is loaded, an object can be constructed which can be shown to be similar
+to the original object which existed at the time the file compiler was
+operating.
+
+
+File: gcl.info,  Node: Similarity of Literal Objects,  Next: Similarity of Aggregate Objects,  Prev: Externalizable Objects,  Up: Literal Objects in Compiled Files
+
+Similarity of Literal Objects
+.............................
+
+
+File: gcl.info,  Node: Similarity of Aggregate Objects,  Next: Definition of Similarity,  Prev: Similarity of Literal Objects,  Up: Literal Objects in Compiled Files
+
+Similarity of Aggregate Objects
+...............................
+
+Of the types over which similarity is defined, some are treated as
+aggregate objects.  For these types, similarity is defined recursively.
+We say that an object of these types has certain "basic qualities" and to
+satisfy the similarity relationship, the values of the corresponding
+qualities of the two objects must also be similar.
+
+
+File: gcl.info,  Node: Definition of Similarity,  Next: Extensions to Similarity Rules,  Prev: Similarity of Aggregate Objects,  Up: Literal Objects in Compiled Files
+
+Definition of Similarity
+........................
+
+Two objects S (in source code) and C (in compiled code) are defined to be
+similar if and only if they are both of one of the types listed here (or
+defined by the implementation) and they both satisfy all additional
+requirements of similarity indicated for that type.
+
+number
+     Two numbers S and C are similar if they are of the same type and
+     represent the same mathematical value.
+
+character
+     Two simple characters S and C are similar if they have similar code
+     attributes.
+
+     Implementations providing additional, implementation-defined
+     attributes must define whether and how non-simple characters can be
+     regarded as similar.
+
+symbol
+     Two apparently uninterned symbols S and C are similar if their names
+     are similar.
+
+     Two interned symbols S and C are similar if their names are similar,
+     and if either S is accessible in the current package at compile time
+     and C is accessible in the current package at load time, or C is
+     accessible in the package that is similar to the home package of S.
+
+     (Note that similarity of symbols is dependent on neither the current
+     readtable nor how the function read would parse the characters in the
+     name of the symbol.)
+
+package
+     Two packages S and C are similar if their names are similar.
+
+     Note that although a package object is an externalizable object, the
+     programmer is responsible for ensuring that the corresponding package
+     is already in existence when code referencing it as a literal object
+     is loaded.  The loader finds the corresponding package object as if
+     by calling find-package with that name as an argument.  An error is
+     signaled by the loader if no package exists at load time.
+
+random-state
+     Two random states S and C are similar if S would always produce the
+     same sequence of pseudo-random numbers as a copy_5 of C when given as
+     the random-state argument to the function random, assuming equivalent
+     limit arguments in each case.
+
+     (Note that since C has been processed by the file compiler, it cannot
+     be used directly as an argument to random because random would
+     perform a side effect.)
+
+cons
+     Two conses, S and C, are similar if the car_2 of S is similar to the
+     car_2 of C, and the cdr_2 of S is similar to the cdr_2 of C.
+
+array
+     Two one-dimensional arrays, S and C, are similar if the length of S
+     is similar to the length of C, the actual array element type of S is
+     similar to the actual array element type of C, and each active
+     element of S is similar to the corresponding element of C.
+
+     Two arrays of rank other than one, S and C, are similar if the rank
+     of S is similar to the rank of C, each dimension_1 of S is similar to
+     the corresponding dimension_1 of C, the actual array element type of
+     S is similar to the actual array element type of C, and each element
+     of S is similar to the corresponding element of C.
+
+     In addition, if S is a simple array, then C must also be a simple
+     array.  If S is a displaced array, has a fill pointer, or is actually
+     adjustable, C is permitted to lack any or all of these qualities.
+
+hash-table
+     Two hash tables S and C are similar if they meet the following three
+     requirements:
+
+    1.
+          They both have the same test (e.g., they are both eql hash
+          tables).
+
+    2.
+          There is a unique one-to-one correspondence between the keys of
+          the two hash tables, such that the corresponding keys are
+          similar.
+
+    3.
+          For all keys, the values associated with two corresponding keys
+          are similar.
+
+     If there is more than one possible one-to-one correspondence between
+     the keys of S and C, the consequences are unspecified.  A conforming
+     program cannot use a table such as S as an externalizable constant.
+
+pathname
+     Two pathnames S and C are similar if all corresponding pathname
+     components are similar.
+
+function
+     Functions are not externalizable objects.
+
+structure-object and standard-object
+     A general-purpose concept of similarity does not exist for structures
+     and standard objects.  However, a conforming program is permitted to
+     define a make-load-form method for any class K defined by that
+     program that is a subclass of either structure-object or
+     standard-object.  The effect of such a method is to define that an
+     object S of type K in source code is similar to an object C of type K
+     in compiled code if C was constructed from code produced by calling
+     make-load-form on S.
+
+
+File: gcl.info,  Node: Extensions to Similarity Rules,  Next: Additional Constraints on Externalizable Objects,  Prev: Definition of Similarity,  Up: Literal Objects in Compiled Files
+
+Extensions to Similarity Rules
+..............................
+
+Some objects, such as streams, readtables, and methods are not
+externalizable objects under the definition of similarity given above.
+That is, such objects may not portably appear as literal objects in code
+to be processed by the file compiler.
+
+An implementation is permitted to extend the rules of similarity, so that
+other kinds of objects are externalizable objects for that implementation.
+
+If for some kind of object, similarity is neither defined by this
+specification nor by the implementation, then the file compiler must
+signal an error upon encountering such an object as a literal constant.
+

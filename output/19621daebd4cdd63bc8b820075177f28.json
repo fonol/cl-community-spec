@@ -1,0 +1,61 @@
+{
+    "name": "setf",
+    "prev": "get-setf-expansion",
+    "next": "shiftf",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "setf, psetf"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "setf",
+                    "text": " {!pair}* =>  {result}*\n"
+                },
+                {
+                    "name": "psetf",
+                    "text": " {!pair}* =>  nil\n\npair ::=place newvalue\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "place",
+                    "desc": "a place."
+                },
+                {
+                    "name": "newvalue",
+                    "desc": "a form."
+                },
+                {
+                    "name": "results",
+                    "desc": "the multiple values_2 returned by the storing form for the last"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "setf changes the value of place to be newvalue.\n(setf place newvalue) expands into an update form that stores the result\nof evaluating newvalue into the location referred to by place.  Some place\nforms involve uses of accessors that take optional arguments.  Whether\nthose optional arguments are permitted by setf, or what their use is, is\nup to the setf expander function and is not under the control of setf.\nThe documentation for any function that accepts &optional, &rest, or &key\narguments and that claims to be usable with setf must specify how those\narguments are treated.\nIf more than one pair is supplied, the pairs are processed sequentially;\nthat is,\n      (setf place-1 newvalue-1\n            place-2 newvalue-2\n            ...\n            place-N newvalue-N)\nis precisely equivalent to\n      (progn (setf place-1 newvalue-1)\n             (setf place-2 newvalue-2)\n             ...\n             (setf place-N newvalue-N))\nFor psetf, if more than one pair is supplied then the assignments of new\nvalues to places are done in parallel.  More precisely, all subforms (in\nboth the place and newvalue forms) that are to be evaluated are evaluated\nfrom left to right; after all evaluations have been performed, all of the\nassignments are performed in an unpredictable order.\nFor detailed treatment of the expansion of setf and psetf, see *Note Kinds\nof Places::.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq x (cons 'a 'b) y (list 1 2 3)) =>  (1 2 3)\n      (setf (car x) 'x (cadr y) (car x) (cdr x) y) =>  (1 X 3)\n      x =>  (X 1 X 3)\n      y =>  (1 X 3)\n      (setq x (cons 'a 'b) y (list 1 2 3)) =>  (1 2 3)\n      (psetf (car x) 'x (cadr y) (car x) (cdr x) y) =>  NIL\n      x =>  (X 1 A 3)\n      y =>  (1 A 3)\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "define-setf-expander, defsetf, *macroexpand-hook*\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note define-setf-expander:: , *Note defsetf:: , macroexpand-1, *Note\nrotatef:: , *Note shiftf:: , *Note Generalized Reference::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: setf,  Next: shiftf,  Prev: get-setf-expansion,  Up: Data and Control Flow Dictionary\n\nsetf, psetf                                                         [Macro]\n---------------------------------------------------------------------------\n\n`setf'  {!pair}* =>  {result}*\n\n`psetf'  {!pair}* =>  nil\n\npair ::=place newvalue\n\nArguments and Values::\n......................\n\nplace--a place.\n\nnewvalue--a form.\n\nresults--the multiple values_2 returned by the storing form for the last\nplace, or nil if there are no pairs.\n\nDescription::\n.............\n\nsetf changes the value of place to be newvalue.\n\n(setf place newvalue) expands into an update form that stores the result\nof evaluating newvalue into the location referred to by place.  Some place\nforms involve uses of accessors that take optional arguments.  Whether\nthose optional arguments are permitted by setf, or what their use is, is\nup to the setf expander function and is not under the control of setf.\nThe documentation for any function that accepts &optional, &rest, or &key\narguments and that claims to be usable with setf must specify how those\narguments are treated.\n\nIf more than one pair is supplied, the pairs are processed sequentially;\nthat is,\n\n      (setf place-1 newvalue-1\n            place-2 newvalue-2\n            ...\n            place-N newvalue-N)\n\nis precisely equivalent to\n\n      (progn (setf place-1 newvalue-1)\n             (setf place-2 newvalue-2)\n             ...\n             (setf place-N newvalue-N))\n\nFor psetf, if more than one pair is supplied then the assignments of new\nvalues to places are done in parallel.  More precisely, all subforms (in\nboth the place and newvalue forms) that are to be evaluated are evaluated\nfrom left to right; after all evaluations have been performed, all of the\nassignments are performed in an unpredictable order.\n\nFor detailed treatment of the expansion of setf and psetf, see *Note Kinds\nof Places::.\n\nExamples::\n..........\n\n      (setq x (cons 'a 'b) y (list 1 2 3)) =>  (1 2 3)\n      (setf (car x) 'x (cadr y) (car x) (cdr x) y) =>  (1 X 3)\n      x =>  (X 1 X 3)\n      y =>  (1 X 3)\n      (setq x (cons 'a 'b) y (list 1 2 3)) =>  (1 2 3)\n      (psetf (car x) 'x (cadr y) (car x) (cdr x) y) =>  NIL\n      x =>  (X 1 A 3)\n      y =>  (1 A 3)\n\nAffected By::\n.............\n\ndefine-setf-expander, defsetf, *macroexpand-hook*\n\nSee Also::\n..........\n\n*Note define-setf-expander:: , *Note defsetf:: , macroexpand-1, *Note\nrotatef:: , *Note shiftf:: , *Note Generalized Reference::\n\n"
+}

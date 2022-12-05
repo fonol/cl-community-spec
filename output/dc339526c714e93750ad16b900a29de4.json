@@ -1,0 +1,65 @@
+{
+    "name": "namestring",
+    "prev": "*default-pathname-defaults*",
+    "next": "parse-namestring",
+    "up": "Filenames Dictionary",
+    "header": {
+        "type": null,
+        "text": "host-namestring, enough-namestring"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "namestring",
+                    "text": " pathname =>  namestring\n"
+                },
+                {
+                    "name": "file-namestring",
+                    "text": " pathname =>  namestring\n\n"
+                },
+                {
+                    "name": "directory-namestring",
+                    "text": " pathname =>  namestring\n\n"
+                },
+                {
+                    "name": "host-namestring",
+                    "text": " pathname =>  namestring\n\n"
+                },
+                {
+                    "name": "enough-namestring",
+                    "text": " pathname &optional defaults =>  namestring\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "pathname",
+                    "desc": "a pathname designator."
+                },
+                {
+                    "name": "defaults",
+                    "desc": "a pathname designator.The default is the value of *default-pathname-defaults*.\n"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "These functions convert pathname into a namestring.  The name represented\nby pathname is returned as a namestring in an implementation-dependent\ncanonical form.\nnamestring returns the full form of pathname.\nfile-namestring returns just the name, type, and version components of\npathname.\ndirectory-namestring returns the directory name portion.\nhost-namestring returns the host name.\nenough-namestring returns an abbreviated namestring that is just\nsufficient to identify the file named by pathname when considered relative\nto the defaults.  It is required that\n      (merge-pathnames (enough-namestring pathname defaults) defaults)\n     == (merge-pathnames (parse-namestring pathname nil defaults) defaults)\nin all cases, and the result of enough-namestring is the shortest\nreasonable string that will satisfy this criterion.\nIt is not necessarily possible to construct a valid namestring by\nconcatenating some of the three shorter namestrings in some order.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (namestring \"getty\")\n     =>  \"getty\"\n      (setq q (make-pathname :host \"kathy\"\n                              :directory\n                                (pathname-directory *default-pathname-defaults*)\n                              :name \"getty\"))\n     =>  #S(PATHNAME :HOST \"kathy\" :DEVICE NIL :DIRECTORY directory-name\n            :NAME \"getty\" :TYPE NIL :VERSION NIL)\n      (file-namestring q) =>  \"getty\"\n      (directory-namestring q) =>  directory-name\n      (host-namestring q) =>  \"kathy\"\n      ;;;Using Unix syntax and the wildcard conventions used by the\n      ;;;particular version of Unix on which this example was created:\n      (namestring\n        (translate-pathname \"/usr/dmr/hacks/frob.l\"\n                            \"/usr/d*/hacks/*.l\"\n                            \"/usr/d*/backup/hacks/backup-*.*\"))\n     =>  \"/usr/dmr/backup/hacks/backup-frob.l\"\n      (namestring\n        (translate-pathname \"/usr/dmr/hacks/frob.l\"\n                            \"/usr/d*/hacks/fr*.l\"\n                            \"/usr/d*/backup/hacks/backup-*.*\"))\n     =>  \"/usr/dmr/backup/hacks/backup-ob.l\"\n      ;;;This is similar to the above example but uses two different hosts,\n      ;;;U: which is a Unix and V: which is a VMS.  Note the translation\n      ;;;of file type and alphabetic case conventions.\n      (namestring\n        (translate-pathname \"U:/usr/dmr/hacks/frob.l\"\n                            \"U:/usr/d*/hacks/*.l\"\n                            \"V:SYS$DISK:[D*.BACKUP.HACKS]BACKUP-*.*\"))\n     =>  \"V:SYS$DISK:[DMR.BACKUP.HACKS]BACKUP-FROB.LSP\"\n      (namestring\n        (translate-pathname \"U:/usr/dmr/hacks/frob.l\"\n                            \"U:/usr/d*/hacks/fr*.l\"\n                            \"V:SYS$DISK:[D*.BACKUP.HACKS]BACKUP-*.*\"))\n     =>  \"V:SYS$DISK:[DMR.BACKUP.HACKS]BACKUP-OB.LSP\"\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note truename:: , *Note merge-pathnames:: , pathname, logical-pathname,\n*Note File System Concepts::,\n*Note Pathnames as Filenames::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: namestring,  Next: parse-namestring,  Prev: *default-pathname-defaults*,  Up: Filenames Dictionary\n\nnamestring, file-namestring, directory-namestring,\n--------------------------------------------------\n\nhost-namestring, enough-namestring\n----------------------------------\n\n                                                                [Function]\n\n`namestring'  pathname =>  namestring\n\n`file-namestring'  pathname =>  namestring\n\n`directory-namestring'  pathname =>  namestring\n\n`host-namestring'  pathname =>  namestring\n\n`enough-namestring'  pathname &optional defaults =>  namestring\n\nArguments and Values::\n......................\n\npathname--a pathname designator.\n\ndefaults--a pathname designator.\n\nThe default is the value of *default-pathname-defaults*.\n\nnamestring--a string or nil.\n\n[Editorial Note by KMP: Under what circumstances can NIL be returned??]\n\nDescription::\n.............\n\nThese functions convert pathname into a namestring.  The name represented\nby pathname is returned as a namestring in an implementation-dependent\ncanonical form.\n\nnamestring returns the full form of pathname.\n\nfile-namestring returns just the name, type, and version components of\npathname.\n\ndirectory-namestring returns the directory name portion.\n\nhost-namestring returns the host name.\n\nenough-namestring returns an abbreviated namestring that is just\nsufficient to identify the file named by pathname when considered relative\nto the defaults.  It is required that\n\n      (merge-pathnames (enough-namestring pathname defaults) defaults)\n     == (merge-pathnames (parse-namestring pathname nil defaults) defaults)\n\nin all cases, and the result of enough-namestring is the shortest\nreasonable string that will satisfy this criterion.\n\nIt is not necessarily possible to construct a valid namestring by\nconcatenating some of the three shorter namestrings in some order.\n\nExamples::\n..........\n\n      (namestring \"getty\")\n     =>  \"getty\"\n      (setq q (make-pathname :host \"kathy\"\n                              :directory\n                                (pathname-directory *default-pathname-defaults*)\n                              :name \"getty\"))\n     =>  #S(PATHNAME :HOST \"kathy\" :DEVICE NIL :DIRECTORY directory-name\n            :NAME \"getty\" :TYPE NIL :VERSION NIL)\n      (file-namestring q) =>  \"getty\"\n      (directory-namestring q) =>  directory-name\n      (host-namestring q) =>  \"kathy\"\n\n      ;;;Using Unix syntax and the wildcard conventions used by the\n      ;;;particular version of Unix on which this example was created:\n      (namestring\n        (translate-pathname \"/usr/dmr/hacks/frob.l\"\n                            \"/usr/d*/hacks/*.l\"\n                            \"/usr/d*/backup/hacks/backup-*.*\"))\n     =>  \"/usr/dmr/backup/hacks/backup-frob.l\"\n      (namestring\n        (translate-pathname \"/usr/dmr/hacks/frob.l\"\n                            \"/usr/d*/hacks/fr*.l\"\n                            \"/usr/d*/backup/hacks/backup-*.*\"))\n     =>  \"/usr/dmr/backup/hacks/backup-ob.l\"\n     \n      ;;;This is similar to the above example but uses two different hosts,\n      ;;;U: which is a Unix and V: which is a VMS.  Note the translation\n      ;;;of file type and alphabetic case conventions.\n      (namestring\n        (translate-pathname \"U:/usr/dmr/hacks/frob.l\"\n                            \"U:/usr/d*/hacks/*.l\"\n                            \"V:SYS$DISK:[D*.BACKUP.HACKS]BACKUP-*.*\"))\n     =>  \"V:SYS$DISK:[DMR.BACKUP.HACKS]BACKUP-FROB.LSP\"\n      (namestring\n        (translate-pathname \"U:/usr/dmr/hacks/frob.l\"\n                            \"U:/usr/d*/hacks/fr*.l\"\n                            \"V:SYS$DISK:[D*.BACKUP.HACKS]BACKUP-*.*\"))\n     =>  \"V:SYS$DISK:[DMR.BACKUP.HACKS]BACKUP-OB.LSP\"\n\nSee Also::\n..........\n\n*Note truename:: , *Note merge-pathnames:: , pathname, logical-pathname,\n*Note File System Concepts::,\n\n*Note Pathnames as Filenames::\n\n"
+}

@@ -1,0 +1,1150 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: Tilde E-> Exponential Floating-Point,  Next: Tilde G-> General Floating-Point,  Prev: Tilde F-> Fixed-Format Floating-Point,  Up: FORMAT Floating-Point Printers
+
+Tilde E: Exponential Floating-Point
+...................................
+
+The next arg is printed as a float in exponential notation.
+
+The full form is ~w,d,e,k,overflowchar,padchar,exponentcharE.  The
+parameter w is the width of the field to be printed; d is the number of
+digits to print after the decimal point; e is the number of digits to use
+when printing the exponent; k is a scale factor that defaults to one (not
+zero).
+
+Exactly w characters will be output.  First, leading copies of the
+character padchar (which defaults to a space) are printed, if necessary,
+to pad the field on the left.  If the arg is negative, then a minus sign
+is printed; if the arg is not negative, then a plus sign is printed if and
+only if the @ modifier was supplied.  Then a sequence of digits containing
+a single embedded decimal point is printed.  The form of this sequence of
+digits depends on the scale factor k.  If k is zero, then d digits are
+printed after the decimal point, and a single zero digit appears before
+the decimal point if the total field width will permit it.  If k is
+positive, then it must be strictly less than d+2;  k significant digits
+are printed before the decimal point, and d- k+1 digits are printed after
+the decimal point.  If k is negative, then it must be strictly greater
+than - d; a single zero digit appears before the decimal point if the
+total field width will permit it, and after the decimal point are printed
+first - k zeros and then d+k significant digits.  The printed fraction
+must be properly rounded.  When rounding up and rounding down would
+produce printed values equidistant from the scaled value of arg, then the
+implementation is free to use either one.  For example, printing the
+argument 637.5 using the format ~8,2E may correctly produce either 6.37E+2
+or 6.38E+2.
+
+Following the digit sequence, the exponent is printed.  First the
+character parameter exponentchar is printed; if this parameter is omitted,
+then the exponent marker that prin1 would use is printed, as determined
+from the type of the float and the current value of
+*read-default-float-format*.  Next, either a plus sign or a minus sign is
+printed, followed by e digits representing the power of ten by which the
+printed fraction must be multiplied to properly represent the rounded
+value of arg.
+
+If it is impossible to print the value in the required format in a field
+of width w, possibly because k is too large or too small or because the
+exponent cannot be printed in e character positions, then one of two
+actions is taken.  If the parameter overflowchar is supplied, then w
+copies of that parameter are printed instead of the scaled value of arg.
+If the overflowchar parameter is omitted, then the scaled value is printed
+using more than w characters, as many more as may be needed; if the
+problem is that d is too small for the supplied k or that e is too small,
+then a larger value is used for d or e as may be needed.
+
+If the w parameter is omitted, then the field is of variable width.  In
+effect a value is chosen for w in such a way that no leading pad
+characters need to be printed.
+
+If the parameter d is omitted, then there is no constraint on the number
+of digits to appear.  A value is chosen for d in such a way that as many
+digits as possible may be printed subject to the width constraint imposed
+by the parameter w, the constraint of the scale factor k, and the
+constraint that no trailing zero digits may appear in the fraction, except
+that if the fraction to be printed is zero then a single zero digit should
+appear after the decimal point.
+
+If the parameter e is omitted, then the exponent is printed using the
+smallest number of digits necessary to represent its value.
+
+If all of w, d, and e are omitted, then the effect is to print the value
+using ordinary free-format exponential-notation output; prin1 uses
+
+a similar
+
+format for any non-zero number whose magnitude is less than 10^-3 or
+greater than or equal to 10^7.
+
+The only difference is that the ~E directive always prints a plus or minus
+sign in front of the exponent, while prin1 omits the plus sign if the
+exponent is non-negative.
+
+If arg is a rational number, then it is coerced to be a single float and
+then printed.  Alternatively, an implementation is permitted to process a
+rational number by any other method that has essentially the same behavior
+but avoids loss of precision or overflow because of the coercion.  If w
+and d are unsupplied and the number has no exact decimal representation,
+for example 1/3, some precision cutoff must be chosen by the
+implementation since only a finite number of digits may be printed.
+
+If arg is a complex number or some non-numeric object, then it is printed
+using the format directive ~wD, thereby printing it in decimal radix and a
+minimum field width of w.
+
+~E binds *print-escape* to false
+
+and *print-readably* to false.
+
+
+File: gcl.info,  Node: Tilde G-> General Floating-Point,  Next: Tilde Dollarsign-> Monetary Floating-Point,  Prev: Tilde E-> Exponential Floating-Point,  Up: FORMAT Floating-Point Printers
+
+Tilde G: General Floating-Point
+...............................
+
+The next arg is printed as a float in either fixed-format or exponential
+notation as appropriate.
+
+The full form is ~w,d,e,k,overflowchar,padchar,exponentcharG.  The format
+in which to print arg depends on the magnitude (absolute value) of the
+arg.  Let n be an integer such that 10^n-1 \le |arg| < 10^n.  Let ee equal
+e+2, or 4 if e is omitted.  Let ww equal w- ee, or nil if w is omitted.
+If d is omitted, first let q be the number of digits needed to print arg
+with no loss of information and without leading or trailing zeros; then
+let d equal (max q (min n 7)).  Let dd equal d- n.
+
+If 0 \le dd \le d, then arg is printed as if by the format directives
+
+~ww,dd,,overflowchar,padcharF~ee@T
+
+Note that the scale factor k is not passed to the ~F directive.  For all
+other values of dd, arg is printed as if by the format directive
+
+~w,d,e,k,overflowchar,padchar,exponentcharE
+
+In either case, an @ modifier is supplied to the ~F or ~E directive if and
+only if one was supplied to the ~G directive.
+
+~G binds *print-escape* to false
+
+and *print-readably* to false.
+
+
+File: gcl.info,  Node: Tilde Dollarsign-> Monetary Floating-Point,  Prev: Tilde G-> General Floating-Point,  Up: FORMAT Floating-Point Printers
+
+Tilde Dollarsign: Monetary Floating-Point
+.........................................
+
+The next arg is printed as a float in fixed-format notation.
+
+The full form is ~d,n,w,padchar$.  The parameter d is the number of digits
+to print after the decimal point (default value 2); n is the minimum
+number of digits to print before the decimal point (default value 1); w is
+the minimum total width of the field to be printed (default value 0).
+
+First padding and the sign are output.  If the arg is negative, then a
+minus sign is printed; if the arg is not negative, then a plus sign is
+printed if and only if the @ modifier was supplied.  If the : modifier is
+used, the sign appears before any padding, and otherwise after the padding.
+If w is supplied and the number of other characters to be output is less
+than w, then copies of padchar (which defaults to a space) are output to
+make the total field width equal w.  Then n digits are printed for the
+integer part of arg, with leading zeros if necessary; then a decimal point;
+then d digits of fraction, properly rounded.
+
+If the magnitude of arg is so large that more than m digits would have to
+be printed, where m is the larger of w and 100, then an implementation is
+free, at its discretion, to print the number using exponential notation
+instead, as if by the directive ~w,q,,,,padcharE, where w and padchar are
+present or omitted according to whether they were present or omitted in
+the ~$ directive, and where q=d+n- 1, where d and n are the (possibly
+default) values given to the ~$ directive.
+
+If arg is a rational number, then it is coerced to be a single float and
+then printed.  Alternatively, an implementation is permitted to process a
+rational number by any other method that has essentially the same behavior
+but avoids loss of precision or overflow because of the coercion.
+
+If arg is a complex number or some non-numeric object, then it is printed
+using the format directive ~wD, thereby printing it in decimal radix and a
+minimum field width of w.
+
+~$ binds *print-escape* to false
+
+and *print-readably* to false.
+
+
+File: gcl.info,  Node: FORMAT Printer Operations,  Next: FORMAT Pretty Printer Operations,  Prev: FORMAT Floating-Point Printers,  Up: Formatted Output
+
+FORMAT Printer Operations
+-------------------------
+
+* Menu:
+
+* Tilde A-> Aesthetic::
+* Tilde S-> Standard::
+* Tilde W-> Write::
+
+
+File: gcl.info,  Node: Tilde A-> Aesthetic,  Next: Tilde S-> Standard,  Prev: FORMAT Printer Operations,  Up: FORMAT Printer Operations
+
+Tilde A: Aesthetic
+..................
+
+An arg, any object, is printed without escape characters (as by princ).
+If arg is a string, its characters will be output verbatim.  If arg is nil
+it will be printed as nil; the colon modifier (~:A) will cause an arg of
+nil to be printed as (), but if arg is a composite structure, such as a
+list or vector, any contained occurrences of nil will still be printed as
+nil.
+
+~mincolA inserts spaces on the right, if necessary, to make the width at
+least mincol columns.  The @ modifier causes the spaces to be inserted on
+the left rather than the right.
+
+~mincol,colinc,minpad,padcharA is the full form of ~A, which allows
+control of the padding.  The string is padded on the right (or on the left
+if the @ modifier is used) with at least minpad copies of padchar; padding
+characters are then inserted colinc characters at a time until the total
+width is at least mincol.  The defaults are 0 for mincol and minpad, 1 for
+colinc, and the space character for padchar.
+
+~A binds *print-escape* to false,
+
+and *print-readably* to false.
+
+
+File: gcl.info,  Node: Tilde S-> Standard,  Next: Tilde W-> Write,  Prev: Tilde A-> Aesthetic,  Up: FORMAT Printer Operations
+
+Tilde S: Standard
+.................
+
+This is just like ~A, but arg is printed with escape characters (as by
+prin1 rather than princ).  The output is therefore suitable for input to
+read.  ~S accepts all the arguments and modifiers that ~A does.
+
+~S binds *print-escape* to t.
+
+
+File: gcl.info,  Node: Tilde W-> Write,  Prev: Tilde S-> Standard,  Up: FORMAT Printer Operations
+
+Tilde W: Write
+..............
+
+An argument, any object, is printed obeying every printer control variable
+(as by write).  In addition, ~W interacts correctly with depth
+abbreviation, by not resetting the depth counter to zero.  ~W does not
+accept parameters.  If given the colon modifier, ~W binds *print-pretty*
+to true.  If given the at-sign modifier, ~W binds *print-level* and
+*print-length* to nil.
+
+~W provides automatic support for the detection of circularity and
+sharing.  If the value of *print-circle* is not nil and ~W is applied to
+an argument that is a circular (or shared) reference, an appropriate #n#
+marker is inserted in the output instead of printing the argument.
+
+
+File: gcl.info,  Node: FORMAT Pretty Printer Operations,  Next: FORMAT Layout Control,  Prev: FORMAT Printer Operations,  Up: Formatted Output
+
+FORMAT Pretty Printer Operations
+--------------------------------
+
+The following constructs provide access to the pretty printer:
+
+* Menu:
+
+* Tilde Underscore-> Conditional Newline::
+* Tilde Less-Than-Sign-> Logical Block::
+* Tilde I-> Indent::
+* Tilde Slash-> Call Function::
+
+
+File: gcl.info,  Node: Tilde Underscore-> Conditional Newline,  Next: Tilde Less-Than-Sign-> Logical Block,  Prev: FORMAT Pretty Printer Operations,  Up: FORMAT Pretty Printer Operations
+
+Tilde Underscore: Conditional Newline
+.....................................
+
+Without any modifiers, ~_ is the same as (pprint-newline :linear).  ~@_
+is the same as (pprint-newline :miser).  ~:_  is the same as
+(pprint-newline :fill).  ~:@_ is the same as (pprint-newline :mandatory).
+
+
+File: gcl.info,  Node: Tilde Less-Than-Sign-> Logical Block,  Next: Tilde I-> Indent,  Prev: Tilde Underscore-> Conditional Newline,  Up: FORMAT Pretty Printer Operations
+
+Tilde Less-Than-Sign: Logical Block
+...................................
+
+~<...~:>
+
+If ~:> is used to terminate a ~<...~>, the directive is equivalent to a
+call to pprint-logical-block.  The argument corresponding to the ~<...~:>
+directive is treated in the same way as the list argument to
+pprint-logical-block, thereby providing automatic support for non-list
+arguments and the detection of circularity, sharing, and depth
+abbreviation.  The portion of the control-string nested within the ~<...~:>
+specifies the :prefix (or :per-line-prefix), :suffix, and body of the
+pprint-logical-block.
+
+The control-string portion enclosed by ~<...~:> can be divided into
+segments ~<prefix~;body~;suffix~:> by ~; directives.  If the first section
+is terminated by ~@;, it specifies a per-line prefix rather than a simple
+prefix.  The prefix and suffix cannot contain format directives.  An error
+is signaled if either the prefix or suffix fails to be a constant string
+or if the enclosed portion is divided into more than three segments.
+
+If the enclosed portion is divided into only two segments, the suffix
+defaults to the null string.  If the enclosed portion consists of only a
+single segment, both the prefix and the suffix default to the null string.
+If the colon modifier is used (i.e., ~:<...~:>), the prefix and suffix
+default to "(" and ")" (respectively) instead of the null string.
+
+The body segment can be any arbitrary format string.  This format string
+is applied to the elements of the list corresponding to the ~<...~:>
+directive as a whole.  Elements are extracted from this list using
+pprint-pop, thereby providing automatic support for malformed lists, and
+the detection of circularity, sharing, and length abbreviation.  Within
+the body segment, ~^ acts like pprint-exit-if-list-exhausted.
+
+~<...~:> supports a feature not supported by pprint-logical-block.  If
+~:@> is used to terminate the directive (i.e., ~<...~:@>), then a
+fill-style conditional newline is automatically inserted after each group
+of blanks immediately contained in the body (except for blanks after a
+~<Newline> directive).  This makes it easy to achieve the equivalent of
+paragraph filling.
+
+If the at-sign modifier is used with ~<...~:>, the entire remaining
+argument list is passed to the directive as its argument.  All of the
+remaining arguments are always consumed by ~@<...~:>, even if they are not
+all used by the format string nested in the directive.  Other than the
+difference in its argument, ~@<...~:> is exactly the same as ~<...~:>
+except that circularity detection is not applied if ~@<...~:> is
+encountered at top level in a format string.  This ensures that
+circularity detection is applied only to data lists, not to format
+argument lists.
+
+" . #n#" is printed if circularity or sharing has to be indicated for its
+argument as a whole.
+
+To a considerable extent, the basic form of the directive ~<...~> is
+incompatible with the dynamic control of the arrangement of output by ~W,
+~_, ~<...~:>, ~I, and ~:T.  As a result, an error is signaled if any of
+these directives is nested within ~<...~>.  Beyond this, an error is also
+signaled if the ~<...~:;...~> form of ~<...~> is used in the same format
+string with ~W, ~_, ~<...~:>, ~I, or ~:T.
+
+See also *Note Tilde Less-Than-Sign-> Justification::.
+
+
+File: gcl.info,  Node: Tilde I-> Indent,  Next: Tilde Slash-> Call Function,  Prev: Tilde Less-Than-Sign-> Logical Block,  Up: FORMAT Pretty Printer Operations
+
+Tilde I: Indent
+...............
+
+~nI  is the same as (pprint-indent :block n).
+
+~n:I is the same as (pprint-indent :current n).  In both cases, n defaults
+to zero, if it is omitted.
+
+
+File: gcl.info,  Node: Tilde Slash-> Call Function,  Prev: Tilde I-> Indent,  Up: FORMAT Pretty Printer Operations
+
+Tilde Slash: Call Function
+..........................
+
+~/name/
+
+User defined functions can be called from within a format string by using
+the directive ~/name/.  The colon modifier, the at-sign modifier, and
+arbitrarily many parameters can be specified with the ~/name/ directive.
+name can be any arbitrary string that does not contain a "/".  All of the
+characters in name are treated as if they were upper case.  If name
+contains a single colon (:) or double colon (::), then everything up to
+but not including the first ":" or "::" is taken to be a string that names
+a package.  Everything after the first ":" or "::" (if any) is taken to be
+a string that names a symbol.  The function corresponding to a ~/name/
+directive is obtained by looking up the symbol that has the indicated name
+in the indicated package.  If name does not contain a ":" or "::", then
+the whole name string is looked up in the COMMON-LISP-USER package.
+
+When a ~/name/ directive is encountered, the indicated function is called
+with four or more arguments.  The first four arguments are: the output
+stream, the format argument corresponding to the directive, a generalized
+boolean that is true if the colon modifier was used, and a generalized
+boolean that is true if the at-sign modifier was used.  The remaining
+arguments consist of any parameters specified with the directive.  The
+function should print the argument appropriately.  Any values returned by
+the function are ignored.
+
+The three functions pprint-linear, pprint-fill, and pprint-tabular are
+specifically designed so that they can be called by ~/.../ (i.e.,
+~/pprint-linear/, ~/pprint-fill/, and ~/pprint-tabular/).  In particular
+they take colon and at-sign arguments.
+
+
+File: gcl.info,  Node: FORMAT Layout Control,  Next: FORMAT Control-Flow Operations,  Prev: FORMAT Pretty Printer Operations,  Up: Formatted Output
+
+FORMAT Layout Control
+---------------------
+
+* Menu:
+
+* Tilde T-> Tabulate::
+* Tilde Less-Than-Sign-> Justification::
+* Tilde Greater-Than-Sign-> End of Justification::
+
+
+File: gcl.info,  Node: Tilde T-> Tabulate,  Next: Tilde Less-Than-Sign-> Justification,  Prev: FORMAT Layout Control,  Up: FORMAT Layout Control
+
+Tilde T: Tabulate
+.................
+
+This spaces over to a given column.  ~colnum,colincT will output
+sufficient spaces to move the cursor to column colnum.  If the cursor is
+already at or beyond column colnum, it will output spaces to move it to
+column colnum+k*colinc for the smallest positive integer k possible,
+unless colinc is zero, in which case no spaces are output if the cursor is
+already at or beyond column colnum.  colnum and colinc default to 1.
+
+If for some reason the current absolute column position cannot be
+determined by direct inquiry, format may be able to deduce the current
+column position by noting that certain directives (such as ~%, or ~&, or ~A
+with the argument being a string containing a newline) cause the column
+position to be reset to zero, and counting the number of characters
+emitted since that point.  If that fails, format may attempt a similar
+deduction on the riskier assumption that the destination was at column
+zero when format was invoked.  If even this heuristic fails or is
+implementationally inconvenient, at worst the ~T operation will simply
+output two spaces.
+
+~@T performs relative tabulation.  ~colrel,colinc@T outputs colrel spaces
+and then outputs the smallest non-negative number of additional spaces
+necessary to move the cursor to a column that is a multiple of colinc.
+For example, the directive ~3,8@T outputs three spaces and then moves the
+cursor to a "standard multiple-of-eight tab stop" if not at one already.
+If the current output column cannot be determined, however, then colinc is
+ignored, and exactly colrel spaces are output.
+
+If the colon modifier is used with the ~T directive, the tabbing
+computation is done relative to the horizontal position where the section
+immediately containing the directive begins, rather than with respect to a
+horizontal position of zero.  The numerical parameters are both
+interpreted as being in units of ems and both default to 1.  ~n,m:T is the
+same as (pprint-tab :section n m).  ~n,m:@T is the same as (pprint-tab
+:section-relative n m).
+
+
+File: gcl.info,  Node: Tilde Less-Than-Sign-> Justification,  Next: Tilde Greater-Than-Sign-> End of Justification,  Prev: Tilde T-> Tabulate,  Up: FORMAT Layout Control
+
+Tilde Less-Than-Sign: Justification
+...................................
+
+~mincol,colinc,minpad,padchar<str~>
+
+This justifies the text produced by processing str within a field at least
+mincol columns wide.  str may be divided up into segments with ~;, in
+which case the spacing is evenly divided between the text segments.
+
+With no modifiers, the leftmost text segment is left justified in the
+field, and the rightmost text segment is right justified.  If there is
+only one text element, as a special case, it is right justified.  The :
+modifier causes spacing to be introduced before the first text segment;
+the @ modifier causes spacing to be added after the last.  The minpad
+parameter (default 0) is the minimum number of padding characters to be
+output between each segment.  The padding character is supplied by padchar,
+which defaults to the space character.  If the total width needed to
+satisfy these constraints is greater than mincol, then the width used is
+mincol+k*colinc for the smallest possible non-negative integer value k.
+colinc defaults to 1, and mincol defaults to 0.
+
+Note that str may include format directives.  All the clauses in str are
+processed in order; it is the resulting pieces of text that are justified.
+
+The ~^  directive may be used to terminate processing of the clauses
+prematurely, in which case only the completely processed clauses are
+justified.
+
+If the first clause of a ~< is terminated with ~:; instead of ~;, then it
+is used in a special way.  All of the clauses are processed (subject to ~^
+, of course), but the first one is not used in performing the spacing and
+padding.  When the padded result has been determined, then if it will fit
+on the current line of output, it is output, and the text for the first
+clause is discarded.  If, however, the padded text will not fit on the
+current line, then the text segment for the first clause is output before
+the padded text.  The first clause ought to contain a newline (such as a
+~% directive).  The first clause is always processed, and so any arguments
+it refers to will be used; the decision is whether to use the resulting
+segment of text, not whether to process the first clause.  If the ~:; has
+a prefix parameter n, then the padded text must fit on the current line
+with n character positions to spare to avoid outputting the first clause's
+text.  For example, the control string
+
+      "~
+
+can be used to print a list of items separated by commas without breaking
+items over line boundaries, beginning each line with ;; .  The prefix
+parameter 1 in ~1:; accounts for the width of the comma that will follow
+the justified item if it is not the last element in the list, or the period
+if it is.  If ~:; has a second prefix parameter, then it is used as the
+width of the line, thus overriding the natural line width of the output
+stream.  To make the preceding example use a line width of 50, one would
+write
+
+      "~
+
+If the second argument is not supplied, then format uses the line width of
+the destination output stream.  If this cannot be determined (for example,
+when producing a string result), then format uses 72 as the line length.
+
+See also *Note Tilde Less-Than-Sign-> Logical Block::.
+
+
+File: gcl.info,  Node: Tilde Greater-Than-Sign-> End of Justification,  Prev: Tilde Less-Than-Sign-> Justification,  Up: FORMAT Layout Control
+
+Tilde Greater-Than-Sign: End of Justification
+.............................................
+
+~> terminates a ~<.  The consequences of using it elsewhere are undefined.
+
+
+File: gcl.info,  Node: FORMAT Control-Flow Operations,  Next: FORMAT Miscellaneous Operations,  Prev: FORMAT Layout Control,  Up: Formatted Output
+
+FORMAT Control-Flow Operations
+------------------------------
+
+* Menu:
+
+* Tilde Asterisk-> Go-To::
+* Tilde Left-Bracket-> Conditional Expression::
+* Tilde Right-Bracket-> End of Conditional Expression::
+* Tilde Left-Brace-> Iteration::
+* Tilde Right-Brace-> End of Iteration::
+* Tilde Question-Mark-> Recursive Processing::
+
+
+File: gcl.info,  Node: Tilde Asterisk-> Go-To,  Next: Tilde Left-Bracket-> Conditional Expression,  Prev: FORMAT Control-Flow Operations,  Up: FORMAT Control-Flow Operations
+
+Tilde Asterisk: Go-To
+.....................
+
+The next arg is ignored.  ~n* ignores the next n arguments.
+
+~:* backs up in the list of arguments so that the argument last processed
+will be processed again.  ~n:* backs up n arguments.
+
+When within a ~{ construct (see below), the ignoring (in either direction)
+is relative to the list of arguments being processed by the iteration.
+
+~n@* goes to the nth arg, where 0 means the first one; n defaults to 0, so
+~@* goes back to the first arg.  Directives after a ~n@* will take
+arguments in sequence beginning with the one gone to.  When within a ~{
+construct, the "goto" is relative to the list of arguments being processed
+by the iteration.
+
+
+File: gcl.info,  Node: Tilde Left-Bracket-> Conditional Expression,  Next: Tilde Right-Bracket-> End of Conditional Expression,  Prev: Tilde Asterisk-> Go-To,  Up: FORMAT Control-Flow Operations
+
+Tilde Left-Bracket: Conditional Expression
+..........................................
+
+~[str0~;str1~;...~;strn~]
+
+This is a set of control strings, called clauses, one of which is chosen
+and used.  The clauses are separated by ~; and the construct is terminated
+by ~].  For example,
+
+"~[Siamese~;Manx~;Persian~] Cat"
+
+The argth clause is selected, where the first clause is number 0.  If a
+prefix parameter is given (as ~n[), then the parameter is used instead of
+an argument.  If arg is out of range then no clause is selected and no
+error is signaled.  After the selected alternative has been processed, the
+control string continues after the ~].
+
+~[str0~;str1~;...~;strn~:;default~] has a default case.  If the last ~;
+used to separate clauses is ~:; instead, then the last clause is an else
+clause that is performed if no other clause is selected.  For example:
+
+"~[Siamese~;Manx~;Persian~:;Alley~] Cat"
+
+~:[alternative~;consequent~] selects the alternative control string if arg
+is false, and selects the consequent control string otherwise.
+
+~@[consequent~] tests the argument.  If it is true, then the argument is
+not used up by the ~[ command but remains as the next one to be processed,
+and the one clause consequent is processed.  If the arg is false, then the
+argument is used up, and the clause is not processed.  The clause
+therefore should normally use exactly one argument, and may expect it to
+be non-nil.  For example:
+
+      (setq *print-level* nil *print-length* 5)
+      (format nil
+             "~@[ print level = ~D~]~@[ print length = ~D~]"
+             *print-level* *print-length*)
+     =>   " print length = 5"
+
+Note also that
+
+      (format stream "...~@[str~]..." ...)
+     == (format stream "...~:[~;~:*str~]..." ...)
+
+The combination of ~[ and # is useful, for example, for dealing with
+English conventions for printing lists:
+
+      (setq foo "Items:~#[ none~; ~S~; ~S and ~S~
+                ~:;~@{~#[~; and~] ~S~^ ,~}~].")
+      (format nil foo) =>   "Items: none."
+      (format nil foo 'foo) =>   "Items: FOO."
+      (format nil foo 'foo 'bar) =>   "Items: FOO and BAR."
+      (format nil foo 'foo 'bar 'baz) =>   "Items: FOO, BAR, and BAZ."
+      (format nil foo 'foo 'bar 'baz 'quux) =>   "Items: FOO, BAR, BAZ, and QUUX."
+
+
+File: gcl.info,  Node: Tilde Right-Bracket-> End of Conditional Expression,  Next: Tilde Left-Brace-> Iteration,  Prev: Tilde Left-Bracket-> Conditional Expression,  Up: FORMAT Control-Flow Operations
+
+Tilde Right-Bracket: End of Conditional Expression
+..................................................
+
+~] terminates a ~[.  The consequences of using it elsewhere are undefined.
+
+
+File: gcl.info,  Node: Tilde Left-Brace-> Iteration,  Next: Tilde Right-Brace-> End of Iteration,  Prev: Tilde Right-Bracket-> End of Conditional Expression,  Up: FORMAT Control-Flow Operations
+
+Tilde Left-Brace: Iteration
+...........................
+
+~{str~}
+
+This is an iteration construct.  The argument should be a list, which is
+used as a set of arguments as if for a recursive call to format.  The
+string str is used repeatedly as the control string.  Each iteration can
+absorb as many elements of the list as it likes as arguments; if str uses
+up two arguments by itself, then two elements of the list will get used up
+each time around the loop.  If before any iteration step the list is
+empty, then the iteration is terminated.  Also, if a prefix parameter n is
+given, then there will be at most n repetitions of processing of str.
+Finally, the ~^  directive can be used to terminate the iteration
+prematurely.
+
+For example:
+
+      (format nil "The winners are:~{ ~S~}."
+              '(fred harry jill))
+     =>  "The winners are: FRED HARRY JILL."
+      (format nil "Pairs:~{ <~S,~S>~}."
+              '(a 1 b 2 c 3))
+     =>  "Pairs: <A,1> <B,2> <C,3>."
+
+~:{ str~}   is similar, but the argument should be a list of sublists.  At
+each repetition step, one sublist is used as the set of arguments for
+processing str; on the next repetition, a new sublist is used, whether or
+not all of the last sublist had been processed.  For example:
+
+      (format nil "Pairs:~:{ <~S,~S>~} ."
+                      '((a 1) (b 2) (c 3)))
+     =>  "Pairs: <A,1> <B,2> <C,3>."
+
+~@{ str~}  is similar to ~{ str~}  , but instead of using one argument
+that is a list, all the remaining arguments are used as the list of
+arguments for the iteration.  Example:
+
+      (format nil "Pairs:~@{ <~S,~S>~} ." 'a 1 'b 2 'c 3)
+     =>  "Pairs: <A,1> <B,2> <C,3>."
+
+If the iteration is terminated before all the remaining arguments are
+consumed, then any arguments not processed by the iteration remain to be
+processed by any directives following the iteration construct.
+
+~:@{ str~}   combines the features of ~:{ str~}   and ~@{ str~}  .  All
+the remaining arguments are used, and each one must be a list.  On each
+iteration, the next argument is used as a list of arguments to str.
+Example:
+
+      (format nil "Pairs:~:@{ <~S,~S>~} ."
+                   '(a 1) '(b 2) '(c 3))
+     =>  "Pairs: <A,1> <B,2> <C,3>."
+
+Terminating the repetition construct with ~:}  instead of ~}   forces str
+to be processed at least once, even if the initial list of arguments is
+null. However, this will not override an explicit prefix parameter of zero.
+
+If str is empty, then an argument is used as str.  It must be a format
+control and precede any arguments processed by the iteration.  As an
+example, the following are equivalent:
+
+         (apply #'format stream string arguments)
+      == (format stream "~1{~:}" string arguments)
+
+This will use string as a formatting string.  The ~1{  says it will be
+processed at most once, and the ~:}  says it will be processed at least
+once.  Therefore it is processed exactly once, using arguments as the
+arguments.  This case may be handled more clearly by the ~? directive, but
+this general feature of ~{   is more powerful than ~?.
+
+
+File: gcl.info,  Node: Tilde Right-Brace-> End of Iteration,  Next: Tilde Question-Mark-> Recursive Processing,  Prev: Tilde Left-Brace-> Iteration,  Up: FORMAT Control-Flow Operations
+
+Tilde Right-Brace: End of Iteration
+...................................
+
+~} terminates a ~{.  The consequences of using it elsewhere are undefined.
+
+
+File: gcl.info,  Node: Tilde Question-Mark-> Recursive Processing,  Prev: Tilde Right-Brace-> End of Iteration,  Up: FORMAT Control-Flow Operations
+
+Tilde Question-Mark: Recursive Processing
+.........................................
+
+The next arg must be a format control, and the one after it a list; both
+are consumed by the ~? directive.  The two are processed as a
+control-string, with the elements of the list as the arguments.  Once the
+recursive processing has been finished, the processing of the control
+string containing the ~? directive is resumed.  Example:
+
+      (format nil "~? ~D" "<~A ~D>" '("Foo" 5) 7) =>  "<Foo 5> 7"
+      (format nil "~? ~D" "<~A ~D>" '("Foo" 5 14) 7) =>  "<Foo 5> 7"
+
+Note that in the second example three arguments are supplied to the format
+string "<~A ~D>", but only two are processed and the third is therefore
+ignored.
+
+With the @ modifier, only one arg is directly consumed.  The arg must be a
+string; it is processed as part of the control string as if it had
+appeared in place of the ~@? construct, and any directives in the
+recursively processed control string may consume arguments of the control
+string containing the ~@?  directive.  Example:
+
+      (format nil "~@? ~D" "<~A ~D>" "Foo" 5 7) =>  "<Foo 5> 7"
+      (format nil "~@? ~D" "<~A ~D>" "Foo" 5 14 7) =>  "<Foo 5> 14"
+
+
+File: gcl.info,  Node: FORMAT Miscellaneous Operations,  Next: FORMAT Miscellaneous Pseudo-Operations,  Prev: FORMAT Control-Flow Operations,  Up: Formatted Output
+
+FORMAT Miscellaneous Operations
+-------------------------------
+
+* Menu:
+
+* Tilde Left-Paren-> Case Conversion::
+* Tilde Right-Paren-> End of Case Conversion::
+* Tilde P-> Plural::
+
+
+File: gcl.info,  Node: Tilde Left-Paren-> Case Conversion,  Next: Tilde Right-Paren-> End of Case Conversion,  Prev: FORMAT Miscellaneous Operations,  Up: FORMAT Miscellaneous Operations
+
+Tilde Left-Paren: Case Conversion
+.................................
+
+~(str~)
+
+The contained control string str is processed, and what it produces is
+subject to case conversion.
+
+With no flags, every uppercase character is converted to the corresponding
+lowercase character.
+
+~:( capitalizes all words, as if by string-capitalize.
+
+~@( capitalizes just the first word and forces the rest to lower case.
+
+~:@( converts every lowercase character to the corresponding uppercase
+character.
+
+In this example ~@( is used to cause the first word produced by ~@R to be
+capitalized:
+
+      (format nil "~@R ~(~@R~)" 14 14)
+     =>  "XIV xiv"
+      (defun f (n) (format nil "~@(~R~) error~:P detected." n)) =>  F
+      (f 0) =>  "Zero errors detected."
+      (f 1) =>  "One error detected."
+      (f 23) =>  "Twenty-three errors detected."
+
+When case conversions appear nested, the outer conversion dominates, as
+illustrated in the following example:
+
+      (format nil "~@(how is ~:(BOB SMITH~)?~)")
+      =>  "How is bob smith?"
+      NOT=> "How is Bob Smith?"
+
+
+File: gcl.info,  Node: Tilde Right-Paren-> End of Case Conversion,  Next: Tilde P-> Plural,  Prev: Tilde Left-Paren-> Case Conversion,  Up: FORMAT Miscellaneous Operations
+
+Tilde Right-Paren: End of Case Conversion
+.........................................
+
+~) terminates a ~(.  The consequences of using it elsewhere are undefined.
+
+
+File: gcl.info,  Node: Tilde P-> Plural,  Prev: Tilde Right-Paren-> End of Case Conversion,  Up: FORMAT Miscellaneous Operations
+
+Tilde P: Plural
+...............
+
+If arg is not eql to the integer 1, a lowercase s is printed; if arg is
+eql to 1, nothing is printed.  If arg is a floating-point 1.0, the s is
+printed.
+
+~:P does the same thing, after doing a ~:* to back up one argument; that
+is, it prints a lowercase s if the previous argument was not 1.
+
+~@P prints y if the argument is 1, or ies if it is not.  ~:@P does the
+same thing, but backs up first.
+
+      (format nil "~D tr~:@P/~D win~:P" 7 1) =>  "7 tries/1 win"
+      (format nil "~D tr~:@P/~D win~:P" 1 0) =>  "1 try/0 wins"
+      (format nil "~D tr~:@P/~D win~:P" 1 3) =>  "1 try/3 wins"
+
+
+File: gcl.info,  Node: FORMAT Miscellaneous Pseudo-Operations,  Next: Additional Information about FORMAT Operations,  Prev: FORMAT Miscellaneous Operations,  Up: Formatted Output
+
+FORMAT Miscellaneous Pseudo-Operations
+--------------------------------------
+
+* Menu:
+
+* Tilde Semicolon-> Clause Separator::
+* Tilde Circumflex-> Escape Upward::
+* Tilde Newline-> Ignored Newline::
+
+
+File: gcl.info,  Node: Tilde Semicolon-> Clause Separator,  Next: Tilde Circumflex-> Escape Upward,  Prev: FORMAT Miscellaneous Pseudo-Operations,  Up: FORMAT Miscellaneous Pseudo-Operations
+
+Tilde Semicolon: Clause Separator
+.................................
+
+This separates clauses in ~[ and ~< constructs.  The consequences of using
+it elsewhere are undefined.
+
+
+File: gcl.info,  Node: Tilde Circumflex-> Escape Upward,  Next: Tilde Newline-> Ignored Newline,  Prev: Tilde Semicolon-> Clause Separator,  Up: FORMAT Miscellaneous Pseudo-Operations
+
+Tilde Circumflex: Escape Upward
+...............................
+
+~^
+
+This is an escape construct.  If there are no more arguments remaining to
+be processed, then the immediately enclosing ~{   or ~< construct is
+terminated.  If there is no such enclosing construct, then the entire
+formatting operation is terminated.  In the ~< case, the formatting is
+performed, but no more segments are processed before doing the
+justification.  ~^  may appear anywhere in a ~{   construct.
+
+      (setq donestr "Done.~^ ~D warning~:P.~^ ~D error~:P.")
+     =>  "Done.~^ ~D warning~:P.~^ ~D error~:P."
+      (format nil donestr) =>  "Done."
+      (format nil donestr 3) =>  "Done. 3 warnings."
+      (format nil donestr 1 5) =>  "Done. 1 warning. 5 errors."
+
+If a prefix parameter is given, then termination occurs if the parameter
+is zero.  (Hence ~^ is equivalent to ~#^.)  If two parameters are given,
+termination occurs if they are equal.
+
+[Reviewer Note by Barmar: Which equality predicate?]  If three parameters
+are given, termination occurs if the first is less than or equal to the
+second and the second is less than or equal to the third.  Of course, this
+is useless if all the prefix parameters are constants; at least one of
+them should be a # or a V parameter.
+
+If ~^ is used within a ~:{   construct, then it terminates the current
+iteration step because in the standard case it tests for remaining
+arguments of the current step only; the next iteration step commences
+immediately.  ~:^ is used to terminate the iteration process.
+
+~:^ may be used only if the command it would terminate is ~:{   or ~:@{  .
+The entire iteration process is terminated if and only if the sublist that
+is supplying the arguments for the current iteration step is the last
+sublist in the case of ~:{ , or the last format argument in the case of
+~:@{  .  ~:^ is not equivalent to ~#:^; the latter terminates the entire
+iteration if and only if no arguments remain for the current iteration
+step.  For example:
+
+      (format nil "~:{ ~@?~:^ ...~} " '(("a") ("b"))) =>  "a...b"
+
+If ~^ appears within a control string being processed under the control of
+a ~? directive, but not within any ~{   or ~< construct within that string,
+then the string being processed will be terminated, thereby ending
+processing of the ~? directive.  Processing then continues within the
+string containing the ~? directive at the point following that directive.
+
+If ~^ appears within a ~[ or ~( construct, then all the commands up to the
+~^ are properly selected or case-converted, the ~[ or ~( processing is
+terminated, and the outward search continues for a ~{   or ~< construct to
+be terminated.  For example:
+
+      (setq tellstr "~@(~@[~R~]~^ ~A!~)")
+     =>  "~@(~@[~R~]~^ ~A!~)"
+      (format nil tellstr 23) =>  "Twenty-three!"
+      (format nil tellstr nil "losers") =>  " Losers!"
+      (format nil tellstr 23 "losers") =>  "Twenty-three losers!"
+
+Following are examples of the use of ~^ within a ~< construct.
+
+      (format nil "~15<~S~;~^~S~;~^~S~>" 'foo)
+     =>   "            FOO"
+      (format nil "~15<~S~;~^~S~;~^~S~>" 'foo 'bar)
+     =>   "FOO         BAR"
+      (format nil "~15<~S~;~^~S~;~^~S~>" 'foo 'bar 'baz)
+     =>   "FOO   BAR   BAZ"
+
+
+File: gcl.info,  Node: Tilde Newline-> Ignored Newline,  Prev: Tilde Circumflex-> Escape Upward,  Up: FORMAT Miscellaneous Pseudo-Operations
+
+Tilde Newline: Ignored Newline
+..............................
+
+Tilde immediately followed by a newline ignores the newline and any
+following non-newline whitespace_1 characters.  With a :, the newline is
+ignored, but any following whitespace_1 is left in place.  With an @, the
+newline is left in place, but any following whitespace_1 is ignored.  For
+example:
+
+      (defun type-clash-error (fn nargs argnum right-type wrong-type)
+        (format *error-output*
+                "~&~S requires its ~:[~:R~;~*~]~
+                argument to be of type ~S,~
+                with an argument of type ~S.~
+                fn (eql nargs 1) argnum right-type wrong-type))
+      (type-clash-error 'aref nil 2 'integer 'vector)  prints:
+     AREF requires its second argument to be of type INTEGER,
+     but it was called with an argument of type VECTOR.
+     NIL
+      (type-clash-error 'car 1 1 'list 'short-float)  prints:
+     CAR requires its argument to be of type LIST,
+     but it was called with an argument of type SHORT-FLOAT.
+     NIL
+
+Note that in this example newlines appear in the output only as specified
+by the ~& and ~% directives; the actual newline characters in the control
+string are suppressed because each is preceded by a tilde.
+
+
+File: gcl.info,  Node: Additional Information about FORMAT Operations,  Next: Examples of FORMAT,  Prev: FORMAT Miscellaneous Pseudo-Operations,  Up: Formatted Output
+
+Additional Information about FORMAT Operations
+----------------------------------------------
+
+* Menu:
+
+* Nesting of FORMAT Operations::
+* Missing and Additional FORMAT Arguments::
+* Additional FORMAT Parameters::
+* Undefined FORMAT Modifier Combinations::
+
+
+File: gcl.info,  Node: Nesting of FORMAT Operations,  Next: Missing and Additional FORMAT Arguments,  Prev: Additional Information about FORMAT Operations,  Up: Additional Information about FORMAT Operations
+
+Nesting of FORMAT Operations
+............................
+
+The case-conversion, conditional, iteration, and justification constructs
+can contain other formatting constructs by bracketing them.  These
+constructs must nest properly with respect to each other.  For example, it
+is not legitimate to put the start of a case-conversion construct in each
+arm of a conditional and the end of the case-conversion construct outside
+the conditional:
+
+      (format nil "~:[abc~:@(def~;ghi~
+     :@(jkl~]mno~)" x) ;Invalid!
+
+This notation is invalid because the ~[...~;...~] and ~(...~) constructs
+are not properly nested.
+
+The processing indirection caused by the ~? directive is also a kind of
+nesting for the purposes of this rule of proper nesting.  It is not
+permitted to start a bracketing construct within a string processed under
+control of a ~?  directive and end the construct at some point after the
+~? construct in the string containing that construct, or vice versa.  For
+example, this situation is invalid:
+
+      (format nil "~@?ghi~)" "abc~@(def") ;Invalid!
+
+This notation is invalid because the ~?  and ~(...~) constructs are not
+properly nested.
+
+
+File: gcl.info,  Node: Missing and Additional FORMAT Arguments,  Next: Additional FORMAT Parameters,  Prev: Nesting of FORMAT Operations,  Up: Additional Information about FORMAT Operations
+
+Missing and Additional FORMAT Arguments
+.......................................
+
+The consequences are undefined if no arg remains for a directive requiring
+an argument.  However, it is permissible for one or more args to remain
+unprocessed by a directive; such args are ignored.
+
+
+File: gcl.info,  Node: Additional FORMAT Parameters,  Next: Undefined FORMAT Modifier Combinations,  Prev: Missing and Additional FORMAT Arguments,  Up: Additional Information about FORMAT Operations
+
+Additional FORMAT Parameters
+............................
+
+The consequences are undefined if a format directive is given more
+parameters than it is described here as accepting.
+
+
+File: gcl.info,  Node: Undefined FORMAT Modifier Combinations,  Prev: Additional FORMAT Parameters,  Up: Additional Information about FORMAT Operations
+
+Undefined FORMAT Modifier Combinations
+......................................
+
+The consequences are undefined if colon or at-sign modifiers are given to
+a directive in a combination not specifically described here as being
+meaningful.
+
+
+File: gcl.info,  Node: Examples of FORMAT,  Next: Notes about FORMAT,  Prev: Additional Information about FORMAT Operations,  Up: Formatted Output
+
+Examples of FORMAT
+------------------
+
+      (format nil "foo") =>  "foo"
+      (setq x 5) =>  5
+      (format nil "The answer is ~D." x) =>  "The answer is 5."
+      (format nil "The answer is ~3D." x) =>  "The answer is   5."
+      (format nil "The answer is ~3,'0D." x) =>  "The answer is 005."
+      (format nil "The answer is ~:D." (expt 47 x))
+     =>  "The answer is 229,345,007."
+      (setq y "elephant") =>  "elephant"
+      (format nil "Look at the ~A!" y) =>  "Look at the elephant!"
+      (setq n 3) =>  3
+      (format nil "~D item~:P found." n) =>  "3 items found."
+      (format nil "~R dog~:[s are~; is~] here." n (= n 1))
+     =>  "three dogs are here."
+      (format nil "~R dog~:*~[s are~; is~:;s are~] here." n)
+     =>  "three dogs are here."
+      (format nil "Here ~[are~;is~:;are~] ~:*~R pupp~:@P." n)
+     =>  "Here are three puppies."
+
+      (defun foo (x)
+        (format nil "~6,2F|~6,2,1,'*F|~6,2,,'?F|~6F|~,2F|~F"
+                x x x x x x)) =>  FOO
+      (foo 3.14159)  =>  "  3.14| 31.42|  3.14|3.1416|3.14|3.14159"
+      (foo -3.14159) =>  " -3.14|-31.42| -3.14|-3.142|-3.14|-3.14159"
+      (foo 100.0)    =>  "100.00|******|100.00| 100.0|100.00|100.0"
+      (foo 1234.0)   =>  "1234.00|******|??????|1234.0|1234.00|1234.0"
+      (foo 0.006)    =>  "  0.01|  0.06|  0.01| 0.006|0.01|0.006"
+
+      (defun foo (x)
+         (format nil
+                "~9,2,1,,'*E|~10,3,2,2,'?,,'$E|~
+                 ~9,3,2,-2,'
+                x x x x))
+      (foo 3.14159)  =>  "  3.14E+0| 31.42$-01|+.003E+03|  3.14E+0"
+      (foo -3.14159) =>  " -3.14E+0|-31.42$-01|-.003E+03| -3.14E+0"
+      (foo 1100.0)   =>  "  1.10E+3| 11.00$+02|+.001E+06|  1.10E+3"
+      (foo 1100.0L0) =>  "  1.10L+3| 11.00$+02|+.001L+06|  1.10L+3"
+      (foo 1.1E13)   =>  "*********| 11.00$+12|+.001E+16| 1.10E+13"
+      (foo 1.1L120)  =>  "*********|??????????|
+      (foo 1.1L1200) =>  "*********|??????????|
+
+As an example of the effects of varying the scale factor, the code
+
+      (dotimes (k 13)
+        (format t "~
+                (- k 5) (- k 5) 3.14159))
+
+produces the following output:
+
+     Scale factor -5: | 0.000003E+06|
+     Scale factor -4: | 0.000031E+05|
+     Scale factor -3: | 0.000314E+04|
+     Scale factor -2: | 0.003142E+03|
+     Scale factor -1: | 0.031416E+02|
+     Scale factor  0: | 0.314159E+01|
+     Scale factor  1: | 3.141590E+00|
+     Scale factor  2: | 31.41590E-01|
+     Scale factor  3: | 314.1590E-02|
+     Scale factor  4: | 3141.590E-03|
+     Scale factor  5: | 31415.90E-04|
+     Scale factor  6: | 314159.0E-05|
+     Scale factor  7: | 3141590.E-06|
+
+      (defun foo (x)
+        (format nil "~9,2,1,,'*G|~9,3,2,3,'?,,'$G|~9,3,2,0,'
+               x x x x))
+      (foo 0.0314159) =>  "  3.14E-2|314.2$-04|0.314E-01|  3.14E-2"
+      (foo 0.314159)  =>  "  0.31   |0.314    |0.314    | 0.31    "
+      (foo 3.14159)   =>  "   3.1   | 3.14    | 3.14    |  3.1    "
+      (foo 31.4159)   =>  "   31.   | 31.4    | 31.4    |  31.    "
+      (foo 314.159)   =>  "  3.14E+2| 314.    | 314.    |  3.14E+2"
+      (foo 3141.59)   =>  "  3.14E+3|314.2$+01|0.314E+04|  3.14E+3"
+      (foo 3141.59L0) =>  "  3.14L+3|314.2$+01|0.314L+04|  3.14L+3"
+      (foo 3.14E12)   =>  "*********|314.0$+10|0.314E+13| 3.14E+12"
+      (foo 3.14L120)  =>  "*********|?????????|
+      (foo 3.14L1200) =>  "*********|?????????|
+
+      (format nil "~10<foo~;bar~>")   =>  "foo    bar"
+      (format nil "~10:<foo~;bar~>")  =>  "  foo  bar"
+      (format nil "~10<foobar~>")     =>  "    foobar"
+      (format nil "~10:<foobar~>")    =>  "    foobar"
+      (format nil "~10:@<foo~;bar~>") =>  "  foo bar "
+      (format nil "~10@<foobar~>")    =>  "foobar    "
+      (format nil "~10:@<foobar~>")   =>  "  foobar  "
+
+       (FORMAT NIL "Written to ~A." #P"foo.bin")
+       =>  "Written to foo.bin."
+
+
+File: gcl.info,  Node: Notes about FORMAT,  Prev: Examples of FORMAT,  Up: Formatted Output
+
+Notes about FORMAT
+------------------
+
+Formatted output is performed not only by format, but by certain other
+functions that accept a format control the way format does.  For example,
+error-signaling functions such as cerror accept format controls.
+
+Note that the meaning of nil and t as destinations to format are different
+than those of nil and t as stream designators.
+
+The ~^ should appear only at the beginning of a ~< clause, because it
+aborts the entire clause in which it appears (as well as all following
+clauses).
+
+
+File: gcl.info,  Node: Printer Dictionary,  Prev: Formatted Output,  Up: Printer
+
+Printer Dictionary
+==================
+
+* Menu:
+
+* copy-pprint-dispatch::
+* formatter::
+* pprint-dispatch::
+* pprint-exit-if-list-exhausted::
+* pprint-fill::
+* pprint-indent::
+* pprint-logical-block::
+* pprint-newline::
+* pprint-pop::
+* pprint-tab::
+* print-object::
+* print-unreadable-object::
+* set-pprint-dispatch::
+* write::
+* write-to-string::
+* *print-array*::
+* *print-base*::
+* *print-case*::
+* *print-circle*::
+* *print-escape*::
+* *print-gensym*::
+* *print-level*::
+* *print-lines*::
+* *print-miser-width*::
+* *print-pprint-dispatch*::
+* *print-pretty*::
+* *print-readably*::
+* *print-right-margin*::
+* print-not-readable::
+* print-not-readable-object::
+* format::
+

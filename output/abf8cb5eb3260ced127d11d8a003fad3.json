@@ -1,0 +1,41 @@
+{
+    "name": "*package*",
+    "prev": "packagep",
+    "next": "package-error",
+    "up": "Packages Dictionary",
+    "header": {
+        "type": "Variable",
+        "text": "*package*"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Value Type",
+            "text": "a package object.\n"
+        },
+        {
+            "type": "Initial Value",
+            "text": "the COMMON-LISP-USER package.\n"
+        },
+        {
+            "type": "Description",
+            "text": "Whatever package object is currently the value of *package* is referred to\nas the current package.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (in-package \"COMMON-LISP-USER\") =>  #<PACKAGE \"COMMON-LISP-USER\">\n      *package* =>  #<PACKAGE \"COMMON-LISP-USER\">\n      (make-package \"SAMPLE-PACKAGE\" :use '(\"COMMON-LISP\"))\n     =>  #<PACKAGE \"SAMPLE-PACKAGE\">\n      (list\n        (symbol-package\n          (let ((*package* (find-package 'sample-package)))\n            (setq *some-symbol* (read-from-string \"just-testing\"))))\n        *package*)\n     =>  (#<PACKAGE \"SAMPLE-PACKAGE\"> #<PACKAGE \"COMMON-LISP-USER\">)\n      (list (symbol-package (read-from-string \"just-testing\"))\n            *package*)\n     =>  (#<PACKAGE \"COMMON-LISP-USER\"> #<PACKAGE \"COMMON-LISP-USER\">)\n      (eq 'foo (intern \"FOO\")) =>  true\n      (eq 'foo (let ((*package* (find-package 'sample-package)))\n                 (intern \"FOO\")))\n     =>  false\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "load, compile-file, in-package\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note compile-file:: , *Note in-package:: , *Note load:: , *Note package::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: *package*,  Next: package-error,  Prev: packagep,  Up: Packages Dictionary\n\n*package*                                                        [Variable]\n---------------------------------------------------------------------------\n\nValue Type::\n............\n\na package object.\n\nInitial Value::\n...............\n\nthe COMMON-LISP-USER package.\n\nDescription::\n.............\n\nWhatever package object is currently the value of *package* is referred to\nas the current package.\n\nExamples::\n..........\n\n      (in-package \"COMMON-LISP-USER\") =>  #<PACKAGE \"COMMON-LISP-USER\">\n      *package* =>  #<PACKAGE \"COMMON-LISP-USER\">\n      (make-package \"SAMPLE-PACKAGE\" :use '(\"COMMON-LISP\"))\n     =>  #<PACKAGE \"SAMPLE-PACKAGE\">\n      (list\n        (symbol-package\n          (let ((*package* (find-package 'sample-package)))\n            (setq *some-symbol* (read-from-string \"just-testing\"))))\n        *package*)\n     =>  (#<PACKAGE \"SAMPLE-PACKAGE\"> #<PACKAGE \"COMMON-LISP-USER\">)\n      (list (symbol-package (read-from-string \"just-testing\"))\n            *package*)\n     =>  (#<PACKAGE \"COMMON-LISP-USER\"> #<PACKAGE \"COMMON-LISP-USER\">)\n      (eq 'foo (intern \"FOO\")) =>  true\n      (eq 'foo (let ((*package* (find-package 'sample-package)))\n                 (intern \"FOO\")))\n     =>  false\n\nAffected By::\n.............\n\nload, compile-file, in-package\n\nSee Also::\n..........\n\n*Note compile-file:: , *Note in-package:: , *Note load:: , *Note package::\n\n"
+}

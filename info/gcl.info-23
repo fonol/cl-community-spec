@@ -1,0 +1,1280 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: defmethod,  Next: find-class,  Prev: defgeneric,  Up: Objects Dictionary
+
+defmethod                                                           [Macro]
+---------------------------------------------------------------------------
+
+`defmethod'  function-name {method-qualifier}* specialized-lambda-list
+[[{declaration}* | documentation]] {form}*
+=>  new-method
+
+function-name::= {symbol | (setf symbol)}
+
+method-qualifier::= non-list
+
+ specialized-lambda-list::= ({var | (var parameter-specializer-name)}*
+                             [&optional {var | (var [initform [supplied-p-parameter] ])}*]
+                             [&rest var]
+                             [&key{var | ({var | (keywordvar)} [initform [supplied-p-parameter] ])}*
+                                          [&allow-other-keys] ]
+                             [&aux {var | (var [initform] )}*] )
+ parameter-specializer-name::= symbol | (eql eql-specializer-form)
+Arguments and Values::
+......................
+
+declaration--a declare expression; not evaluated.
+
+documentation--a string; not evaluated.
+
+var--a variable name.
+
+eql-specializer-form--a form.
+
+Form--a form.
+
+Initform--a form.
+
+Supplied-p-parameter--variable name.
+
+new-method--the new method object.
+
+Description::
+.............
+
+The macro defmethod defines a method on a generic function.
+
+If (fboundp function-name) is nil, a generic function is created with
+default values for the argument precedence order (each argument is more
+specific than the arguments to its right in the argument list), for the
+generic function class (the class standard-generic-function), for the
+method class (the class standard-method), and for the method combination
+type (the standard method combination type).  The lambda list of the
+generic function is congruent with the lambda list of the method being
+defined; if the defmethod form mentions keyword arguments, the lambda list
+of the generic function will mention &key (but no keyword arguments).  If
+function-name names an ordinary function, a macro, or a special operator,
+an error is signaled.
+
+If a generic function is currently named by function-name, the lambda list
+of the method must be congruent with the lambda list of the generic
+function.  If this condition does not hold, an error is signaled.  For a
+definition of congruence in this context, see *Note Congruent Lambda-lists
+for all Methods of a Generic Function::.
+
+Each method-qualifier argument is an object that is used by method
+combination to identify the given method.  The method combination type
+might further restrict what a method qualifier can be.  The standard
+method combination type allows for unqualified methods and methods whose
+sole qualifier is one of the keywords :before, :after, or :around.
+
+The specialized-lambda-list argument is like an ordinary lambda list
+except that the names of required parameters can be replaced by
+specialized parameters.  A specialized parameter is a list of the form
+(var parameter-specializer-name).  Only required parameters can be
+specialized.  If parameter-specializer-name is a symbol it names a class;
+if it is a list, it is of the form (eql eql-specializer-form).  The
+parameter specializer name (eql eql-specializer-form) indicates that the
+corresponding argument must be eql to the object that is the value of
+eql-specializer-form for the method to be applicable.  The
+eql-specializer-form is evaluated at the time that the expansion of the
+defmethod macro is evaluated.  If no parameter specializer name is
+specified for a given required parameter, the parameter specializer
+defaults to the class t.  For further discussion, see *Note Introduction
+to Methods::.
+
+The form arguments specify the method body.  The body of the method is
+enclosed in an implicit block.  If function-name is a symbol, this block
+bears the same name as the generic function.  If function-name is a list
+of the form (setf symbol), the name of the block is symbol.
+
+The class of the method object that is created is that given by the method
+class option of the generic function on which the method is defined.
+
+If the generic function already has a method that agrees with the method
+being defined on parameter specializers and qualifiers, defmethod replaces
+the existing method with the one now being defined.  For a definition of
+agreement in this context.  see *Note Agreement on Parameter Specializers
+and Qualifiers::.
+
+The parameter specializers are derived from the parameter specializer
+names as described in *Note Introduction to Methods::.
+
+The expansion of the defmethod macro "refers to" each specialized
+parameter (see the description of ignore within the description of
+declare).  This includes parameters that have an explicit parameter
+specializer name of t.  This means that a compiler warning does not occur
+if the body of the method does not refer to a specialized parameter, while
+a warning might occur if the body of the method does not refer to an
+unspecialized parameter.  For this reason, a parameter that specializes on
+t is not quite synonymous with an unspecialized parameter in this context.
+
+Declarations at the head of the method body that apply to the method's
+lambda variables are treated as bound declarations whose scope is the same
+as the corresponding bindings.
+
+Declarations at the head of the method body that apply to the functional
+bindings of call-next-method or next-method-p apply to references to those
+functions within the method body forms.  Any outer bindings of the
+function names call-next-method and next-method-p, and declarations
+associated with such bindings are shadowed_2 within the method body forms.
+
+The scope of free declarations at the head of the method body is the
+entire method body, which includes any implicit local function definitions
+but excludes initialization forms for the lambda variables.
+
+defmethod is not required to perform any compile-time side effects.  In
+particular, the methods are not installed for invocation during
+compilation.  An implementation may choose to store information about the
+generic function for the purposes of compile-time error-checking (such as
+checking the number of arguments on calls, or noting that a definition for
+the function name has been seen).
+
+Documentation is attached as a documentation string to the method object.
+
+Affected By::
+.............
+
+The definition of the referenced generic function.
+
+Exceptional Situations::
+........................
+
+If function-name names an ordinary function, a macro, or a special
+operator, an error of type error is signaled.
+
+If a generic function is currently named by function-name, the lambda list
+of the method must be congruent with the lambda list of the generic
+function, or an error of type error is signaled.
+
+See Also::
+..........
+
+*Note defgeneric:: , *Note documentation; (setf documentation):: , *Note
+Introduction to Methods::, *Note Congruent Lambda-lists for all Methods of
+a Generic Function::, *Note Agreement on Parameter Specializers and
+Qualifiers::, *Note Syntactic Interaction of Documentation Strings and
+Declarations::
+
+
+File: gcl.info,  Node: find-class,  Next: next-method-p,  Prev: defmethod,  Up: Objects Dictionary
+
+find-class                                                       [Accessor]
+---------------------------------------------------------------------------
+
+`find-class'  symbol &optional errorp environment =>  class
+
+(setf (`         find-class' symbol &optional errorp environment)
+new-class)
+Arguments and Values::
+......................
+
+symbol--a symbol.
+
+errorp--a generalized boolean.  The default is true.
+
+environment - same as the &environment argument to macro expansion
+functions and is used to distinguish between compile-time and run-time
+environments.
+
+The &environment argument has dynamic extent; the consequences are
+undefined if the &environment argument is referred to outside the dynamic
+extent of the macro expansion function.
+
+class--a class object, or nil.
+
+Description::
+.............
+
+Returns the class object named by the symbol in the environment.  If there
+is no such class, nil is returned if errorp is false; otherwise, if errorp
+is true, an error is signaled.
+
+The class associated with a particular symbol can be changed by using setf
+with find-class;
+
+or, if the new class given to setf is nil, the class association is removed
+(but the class object itself is not affected).
+
+The results are undefined if the user attempts to change
+
+or remove
+
+the class associated with a symbol that is defined as a type specifier in
+this standard.  See *Note Integrating Types and Classes::.
+
+When using setf of find-class, any errorp argument is evaluated for
+effect, but any values it returns are ignored; the errorp parameter is
+permitted primarily so that the environment parameter can be used.
+
+The environment might be used to distinguish between a compile-time and a
+run-time environment.
+
+Exceptional Situations::
+........................
+
+If there is no such class and errorp is true, find-class signals an error
+of type error.
+
+See Also::
+..........
+
+*Note defmacro:: , *Note Integrating Types and Classes::
+
+
+File: gcl.info,  Node: next-method-p,  Next: call-method,  Prev: find-class,  Up: Objects Dictionary
+
+next-method-p                                              [Local Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`next-method-p'  <no arguments> =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+The locally defined function next-method-p can be used
+
+within the body forms (but not the lambda list)
+
+defined by a method-defining form to determine whether a next method
+exists.
+
+The function next-method-p has lexical scope and indefinite extent.
+
+Whether or not next-method-p is fbound in the global environment is
+implementation-dependent; however, the restrictions on redefinition and
+shadowing of next-method-p are the same as for symbols in the COMMON-LISP
+package which are fbound in the global environment.  The consequences of
+attempting to use next-method-p outside of a method-defining form are
+undefined.
+
+See Also::
+..........
+
+*Note call-next-method:: , *Note defmethod:: , *Note call-method;
+make-method::
+
+
+File: gcl.info,  Node: call-method,  Next: call-next-method,  Prev: next-method-p,  Up: Objects Dictionary
+
+call-method, make-method                                      [Local Macro]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`call-method'  method &optional next-method-list =>  {result}*
+
+`make-method'  form =>  method-object
+
+Arguments and Values::
+......................
+
+method--a method object, or a list (see below); not evaluated.
+
+method-object--a method object.
+
+next-method-list--a list of method objects; not evaluated.
+
+results--the values returned by the method invocation.
+
+Description::
+.............
+
+The macro call-method is used in method combination.  It hides the
+implementation-dependent details of how methods are called. The macro
+call-method has lexical scope and can only be used within an effective
+method form.
+
+[Editorial Note by KMP: This next paragraph still needs some work.]
+
+Whether or not call-method is fbound in the global environment is
+implementation-dependent; however, the restrictions on redefinition and
+shadowing of call-method are the same as for symbols in the COMMON-LISP
+package which are fbound in the global environment.  The consequences of
+attempting to use call-method outside of an effective method form are
+undefined.
+
+The macro call-method invokes the specified method, supplying it with
+arguments and with definitions for call-next-method and for next-method-p.
+If the invocation of call-method is lexically inside of a make-method, the
+arguments are those that were supplied to that method.  Otherwise the
+arguments are those that were supplied to the generic function.  The
+definitions of call-next-method and next-method-p rely on the specified
+next-method-list.
+
+If method is a list, the first element of the list must be the symbol
+make-method and the second element must be a form.  Such a list specifies
+a method object whose method function has a body that is the given form.
+
+Next-method-list can contain method objects or lists, the first element of
+which must be the symbol make-method and the second element of which must
+be a form.
+
+Those are the only two places where make-method can be used.  The form
+used with make-method is evaluated in the null lexical environment
+augmented with a local macro definition for call-method and with bindings
+named by symbols not accessible from the COMMON-LISP-USER package.
+
+The call-next-method function available to method will call the first
+method in next-method-list.  The call-next-method function available in
+that method, in turn, will call the second method in next-method-list, and
+so on, until the list of next methods is exhausted.
+
+If next-method-list is not supplied, the call-next-method function
+available to method signals an error of type control-error and the
+next-method-p function available to method returns nil.
+
+Examples::
+..........
+
+See Also::
+..........
+
+*Note call-next-method:: , *Note define-method-combination:: , *Note
+next-method-p::
+
+
+File: gcl.info,  Node: call-next-method,  Next: compute-applicable-methods,  Prev: call-method,  Up: Objects Dictionary
+
+call-next-method                                           [Local Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`call-next-method'  &rest args =>  {result}*
+
+Arguments and Values::
+......................
+
+arg--an object.
+
+results--the values returned by the method it calls.
+
+Description::
+.............
+
+The function call-next-method can be used
+
+within the body forms (but not the lambda list)
+
+of a method defined by a method-defining form to call the next method.
+
+If there is no next method, the generic function no-next-method is called.
+
+The type of method combination used determines which methods can invoke
+call-next-method.  The standard method combination type allows
+call-next-method to be used within primary methods and around methods.
+For generic functions using a type of method combination defined by the
+short form of define-method-combination, call-next-method can be used in
+around methods only.
+
+When call-next-method is called with no arguments, it passes the current
+method's original arguments to the next method.  Neither argument
+defaulting, nor using setq, nor rebinding variables with the same names as
+parameters of the method affects the values call-next-method passes to the
+method it calls.
+
+When call-next-method is called with arguments, the next method is called
+with those arguments.
+
+If call-next-method is called with arguments but omits optional arguments,
+the next method called defaults those arguments.
+
+The function call-next-method returns any values that are returned by the
+next method.
+
+The function call-next-method has lexical scope and indefinite extent and
+can only be used within the body of a method defined by a method-defining
+form.
+
+Whether or not call-next-method is fbound in the global environment is
+implementation-dependent; however, the restrictions on redefinition and
+shadowing of call-next-method are the same as for symbols in the
+COMMON-LISP package which are fbound in the global environment.  The
+consequences of attempting to use call-next-method outside of a
+method-defining form are undefined.
+
+Affected By::
+.............
+
+defmethod, call-method, define-method-combination.
+
+Exceptional Situations::
+........................
+
+When providing arguments to call-next-method, the following rule must be
+satisfied or an error of type error should be signaled: the ordered set of
+applicable methods for a changed set of arguments for call-next-method
+must be the same as the ordered set of applicable methods for the original
+arguments to the generic function.  Optimizations of the error checking
+are possible, but they must not change the semantics of call-next-method.
+
+See Also::
+..........
+
+*Note define-method-combination:: , *Note defmethod:: , *Note
+next-method-p:: , *Note no-next-method:: , *Note call-method; make-method::
+, *Note Method Selection and Combination::, *Note Standard Method
+Combination::, *Note Built-in Method Combination Types::
+
+
+File: gcl.info,  Node: compute-applicable-methods,  Next: define-method-combination,  Prev: call-next-method,  Up: Objects Dictionary
+
+compute-applicable-methods                      [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`compute-applicable-methods'  generic-function function-arguments =>
+methods
+
+Method Signatures::
+...................
+
+`compute-applicable-methods'  (generic-function standard-generic-function)
+
+Arguments and Values::
+......................
+
+generic-function--a generic function.
+
+function-arguments--a list of arguments for the generic-function.
+
+methods--a list of method objects.
+
+Description::
+.............
+
+Given a generic-function and a set of function-arguments, the function
+compute-applicable-methods returns the set of methods that are applicable
+for those arguments sorted according to precedence order.  See *Note
+Method Selection and Combination::.
+
+Affected By::
+.............
+
+defmethod
+
+See Also::
+..........
+
+*Note Method Selection and Combination::
+
+
+File: gcl.info,  Node: define-method-combination,  Next: find-method,  Prev: compute-applicable-methods,  Up: Objects Dictionary
+
+define-method-combination                                           [Macro]
+---------------------------------------------------------------------------
+
+`define-method-combination'  name [[!short-form-option]]
+=>  name
+
+`define-method-combination'  name lambda-list ({method-group-specifier}*)
+[(:arguments . args-lambda-list)] [(:generic-function
+generic-function-symbol)] [[{declaration}* | documentation]] {form}*
+=>  name
+
+short-form-option ::=:documentation documentation | 
+                      :identity-with-one-argument identity-with-one-argument |
+                      :operator operator
+
+method-group-specifier ::=(name {{qualifier-pattern}^+ | predicate} [[!long-form-option]])
+
+long-form-option ::=:description description |
+                     :order order |
+                     :required required-p
+
+Arguments and Values::
+......................
+
+args-lambda-list-- a define-method-combination arguments lambda list.
+
+declaration--a declare expression; not evaluated.
+
+description--a format control.
+
+documentation--a string; not evaluated.
+
+forms--an implicit progn that must compute and return the form that
+specifies how the methods are combined, that is, the effective method.
+
+generic-function-symbol--a symbol.
+
+identity-with-one-argument--a generalized boolean.
+
+lambda-list--ordinary lambda list.
+
+name--a symbol.  Non-keyword, non-nil symbols are usually used.
+
+operator--an operator.  Name and operator are often the same symbol.  This
+is the default, but it is not required.
+
+order--:most-specific-first or :most-specific-last; evaluated.
+
+predicate--a symbol that names a function of one argument that returns a
+generalized boolean.
+
+qualifier-pattern--a list, or the symbol *.
+
+required-p--a generalized boolean.
+
+Description::
+.............
+
+The macro define-method-combination is used to define new types of method
+combination.
+
+There are two forms of define-method-combination.  The short form is a
+simple facility for the cases that are expected to be most commonly
+needed.  The long form is more powerful but more verbose.  It resembles
+defmacro in that the body is an expression, usually using backquote, that
+computes a form.  Thus arbitrary control structures can be implemented.
+The long form also allows arbitrary processing of method qualifiers.
+
+Short Form
+     The short form syntax of define-method-combination is recognized when
+     the second subform is a non-nil symbol or is not present.  When the
+     short form is used, name is defined as a type of method combination
+     that produces a Lisp form (operator method-call method-call ...).
+     The operator is a symbol that can be the name of a function, macro,
+     or special operator.  The operator can be supplied by a keyword
+     option; it defaults to name.
+
+     Keyword options for the short form are the following:
+
+    *
+          The :documentation option is used to document the
+          method-combination type; see description of long form below.
+
+    *
+          The :identity-with-one-argument option enables an optimization
+          when its value is true (the default is false).  If there is
+          exactly one applicable method and it is a primary method, that
+          method serves as the effective method and operator is not called.
+          This optimization avoids the need to create a new effective
+          method and avoids the overhead of a function call.  This option
+          is designed to be used with operators such as progn, and, +, and
+          max.
+
+    *
+          The :operator option specifies the name of the operator.  The
+          operator argument is a symbol that can be the name of a function,
+          macro, or special form.
+
+     These types of method combination require exactly one qualifier per
+     method.  An error is signaled if there are applicable methods with no
+     qualifiers or with qualifiers that are not supported by the method
+     combination type.
+
+     A method combination procedure defined in this way recognizes two
+     roles for methods.  A method whose one qualifier is the symbol naming
+     this type of method combination is defined to be a primary method.  At
+     least one primary method must be applicable or an error is signaled.
+     A method with :around as its one qualifier is an auxiliary method
+     that behaves the same as an around method in standard method
+     combination.  The function call-next-method can only be used in
+     around methods; it cannot be used in primary methods defined by the
+     short form of the define-method-combination macro.
+
+     A method combination procedure defined in this way accepts an optional
+     argument named order, which defaults to :most-specific-first.  A
+     value of :most-specific-last reverses the order of the primary
+     methods without affecting the order of the auxiliary methods.
+
+     The short form automatically includes error checking and support for
+     around methods.
+
+     For a discussion of built-in method combination types, see *Note
+     Built-in Method Combination Types::.
+
+Long Form
+     The long form syntax of define-method-combination is recognized when
+     the second subform is a list.
+
+     The lambda-list receives any arguments provided after the name of the
+     method combination type in the :method-combination option to
+     defgeneric.
+
+     A list of method group specifiers follows.  Each specifier selects a
+     subset of the applicable methods to play a particular role, either by
+     matching their qualifiers against some patterns or by testing their
+     qualifiers with a predicate.  These method group specifiers define
+     all method qualifiers that can be used with this type of method
+     combination.
+
+     The car of each method-group-specifier is a symbol which names a
+     variable.  During the execution of the forms in the body of
+     define-method-combination, this variable is bound to a list of the
+     methods in the method group.  The methods in this list occur in the
+     order specified by the :order option.
+
+     If qualifier-pattern is a symbol it must be *.  A method matches a
+     qualifier-pattern if the method's list of qualifiers is equal to the
+     qualifier-pattern (except that the symbol * in a qualifier-pattern
+     matches anything).  Thus a qualifier-pattern can be one of the
+     following: the empty list, which matches unqualified methods; the
+     symbol *, which matches all methods; a true list, which matches
+     methods with the same number of qualifiers as the length of the list
+     when each qualifier matches the corresponding list element; or a
+     dotted list that ends in the symbol * (the * matches any number of
+     additional qualifiers).
+
+     Each applicable method is tested against the qualifier-patterns and
+     predicates in left-to-right order.  As soon as a qualifier-pattern
+     matches or a predicate returns true, the method becomes a member of
+     the corresponding method group and no further tests are made.  Thus
+     if a method could be a member of more than one method group, it joins
+     only the first such group.  If a method group has more than one
+     qualifier-pattern, a method need only satisfy one of the
+     qualifier-patterns to be a member of the group.
+
+     The name of a predicate function can appear instead of
+     qualifier-patterns in a method group specifier.  The predicate is
+     called for each method that has not been assigned to an earlier
+     method group; it is called with one argument, the method's qualifier
+     list.  The predicate should return true if the method is to be a
+     member of the method group.  A predicate can be distinguished from a
+     qualifier-pattern because it is a symbol other than nil or *.
+
+     If there is an applicable method that does not fall into any method
+     group, the function invalid-method-error is called.
+
+     Method group specifiers can have keyword options following the
+     qualifier patterns or predicate.  Keyword options can be
+     distinguished from additional qualifier patterns because they are
+     neither lists nor the symbol *.  The keyword options are as follows:
+
+    *
+          The :description option is used to provide a description of the
+          role of methods in the method group.  Programming environment
+          tools use (apply #'format stream format-control
+          (method-qualifiers method)) to print this description, which is
+          expected to be concise.  This keyword option allows the
+          description of a method qualifier to be defined in the same
+          module that defines the meaning of the method qualifier.  In
+          most cases, format-control will not contain any format
+          directives, but they are available for generality.  If
+          :description is not supplied, a default description is generated
+          based on the variable name and the qualifier patterns and on
+          whether this method group includes the unqualified methods.
+
+    *
+          The :order option specifies the order of methods.  The order
+          argument is a form that evaluates to :most-specific-first or
+          :most-specific-last.  If it evaluates to any other value, an
+          error is signaled.  If :order is not supplied, it defaults to
+          :most-specific-first.
+
+    *
+          The :required option specifies whether at least one method in
+          this method group is required.  If its value is true and the
+          method group is empty (that is, no applicable methods match the
+          qualifier patterns or satisfy the predicate), an error is
+          signaled.  If :required is not supplied, it defaults to nil.
+
+     The use of method group specifiers provides a convenient syntax to
+     select methods, to divide them among the possible roles, and to
+     perform the necessary error checking.  It is possible to perform
+     further filtering of methods in the body forms by using normal
+     list-processing operations and the functions method-qualifiers and
+     invalid-method-error.  It is permissible to use setq on the variables
+     named in the method group specifiers and to bind additional
+     variables.  It is also possible to bypass the method group specifier
+     mechanism and do everything in the body forms.  This is accomplished
+     by writing a single method group with * as its only qualifier-pattern;
+     the variable is then bound to a list of all of the applicable
+     methods, in most-specific-first order.
+
+     The body forms compute and return the form that specifies how the
+     methods are combined, that is, the effective method.  The effective
+     method is evaluated in the null lexical environment augmented with a
+     local macro definition for call-method and with bindings named by
+     symbols not accessible from the COMMON-LISP-USER package.  Given a
+     method object in one of the lists produced by the method group
+     specifiers and a list of next methods, call-method will invoke the
+     method such that call-next-method has available the next methods.
+
+     When an effective method has no effect other than to call a single
+     method, some implementations employ an optimization that uses the
+     single method directly as the effective method, thus avoiding the need
+     to create a new effective method.  This optimization is active when
+     the effective method form consists entirely of an invocation of the
+     call-method macro whose first subform is a method object and whose
+     second subform is nil or unsupplied.  Each define-method-combination
+     body is responsible for stripping off redundant invocations of progn,
+     and, multiple-value-prog1, and the like, if this optimization is
+     desired.
+
+     The list (:arguments . lambda-list) can appear before any
+     declarations or documentation string.  This form is useful when the
+     method combination type performs some specific behavior as part of
+     the combined method and that behavior needs access to the arguments to
+     the generic function.  Each parameter variable defined by lambda-list
+     is bound to a form that can be inserted into the effective method.
+     When this form is evaluated during execution of the effective method,
+     its value is the corresponding argument to the generic function; the
+     consequences of using such a form as the place in a setf form are
+     undefined.
+
+     Argument correspondence is computed by dividing the :arguments
+     lambda-list and the generic function lambda-list into three sections:
+     the required parameters, the optional parameters, and the keyword and
+     rest parameters.  The arguments supplied to the generic function for
+     a particular call are also divided into three sections; the required
+     arguments section contains as many arguments as the generic function
+     has required parameters, the optional arguments section contains as
+     many arguments as the generic function has optional parameters, and
+     the keyword/rest arguments section contains the remaining arguments.
+     Each parameter in the required and optional sections of the
+     :arguments lambda-list accesses the argument at the same position in
+     the corresponding section of the arguments.  If the section of the
+     :arguments lambda-list is shorter, extra arguments are ignored.  If
+     the section of the :arguments lambda-list is longer, excess required
+     parameters are bound to forms that evaluate to nil and excess
+     optional parameters are bound to their initforms.  The keyword
+     parameters and rest parameters in the :arguments lambda-list access
+     the keyword/rest section of the arguments.  If the :arguments
+     lambda-list contains &key, it behaves as if it also contained
+     &allow-other-keys.
+
+     In addition, &whole var can be placed first in the :arguments
+     lambda-list.  It causes var to be bound to a form that evaluates to a
+     list of all of the arguments supplied to the generic function.  This
+     is different from &rest because it accesses all of the arguments, not
+     just the keyword/rest arguments.
+
+     Erroneous conditions detected by the body should be reported with
+     method-combination-error or invalid-method-error; these functions add
+     any necessary contextual information to the error message and will
+     signal the appropriate error.
+
+     The body forms are evaluated inside of the bindings created by the
+     lambda list and method group specifiers.
+
+     [Reviewer Note by Barmar: Are they inside or outside the :ARGUMENTS
+     bindings?] Declarations at the head of the body are positioned
+     directly inside of bindings created by the lambda list and outside of
+     the bindings of the method group variables.  Thus method group
+     variables cannot be declared in this way.  locally may be used around
+     the body, however.
+
+     Within the body forms, generic-function-symbol is bound to the
+     generic function object.
+
+     Documentation is attached as a documentation string to name (as kind
+     method-combination) and to the method combination object.
+
+     Note that two methods with identical specializers, but with different
+     qualifiers, are not ordered by the algorithm described in Step 2 of
+     the method selection and combination process described in *Note
+     Method Selection and Combination::.  Normally the two methods play
+     different roles in the effective method because they have different
+     qualifiers, and no matter how they are ordered in the result of Step
+     2, the effective method is the same.  If the two methods play the same
+     role and their order matters,
+
+     [Reviewer Note by Barmar: How does the system know when the order
+     matters?] an error is signaled.  This happens as part of the
+     qualifier pattern matching in define-method-combination.
+
+If a define-method-combination form appears as a top level form, the
+compiler must make the method combination name be recognized as a valid
+method combination name in subsequent defgeneric forms.  However, the
+method combination is executed no earlier than when the
+define-method-combination form is executed, and possibly as late as the
+time that generic functions that use the method combination are executed.
+
+Examples::
+..........
+
+Most examples of the long form of define-method-combination also
+illustrate the use of the related functions that are provided as part of
+the declarative method combination facility.
+
+     ;;; Examples of the short form of define-method-combination
+     
+      (define-method-combination and :identity-with-one-argument t)
+     
+      (defmethod func and ((x class1) y) ...)
+     
+     ;;; The equivalent of this example in the long form is:
+     
+      (define-method-combination and
+              (&optional (order :most-specific-first))
+              ((around (:around))
+               (primary (and) :order order :required t))
+        (let ((form (if (rest primary)
+                        `(and ,@(mapcar #'(lambda (method)
+                                            `(call-method ,method))
+                                        primary))
+                        `(call-method ,(first primary)))))
+          (if around
+              `(call-method ,(first around)
+                            (,@(rest around)
+                             (make-method ,form)))
+              form)))
+     
+     ;;; Examples of the long form of define-method-combination
+     
+     ;The default method-combination technique
+      (define-method-combination standard ()
+              ((around (:around))
+               (before (:before))
+               (primary () :required t)
+               (after (:after)))
+        (flet ((call-methods (methods)
+                 (mapcar #'(lambda (method)
+                             `(call-method ,method))
+                         methods)))
+          (let ((form (if (or before after (rest primary))
+                          `(multiple-value-prog1
+                             (progn ,@(call-methods before)
+                                    (call-method ,(first primary)
+                                                 ,(rest primary)))
+                             ,@(call-methods (reverse after)))
+                          `(call-method ,(first primary)))))
+            (if around
+                `(call-method ,(first around)
+                              (,@(rest around)
+                               (make-method ,form)))
+                form))))
+     
+     ;A simple way to try several methods until one returns non-nil
+      (define-method-combination or ()
+              ((methods (or)))
+        `(or ,@(mapcar #'(lambda (method)
+                           `(call-method ,method))
+                       methods)))
+     
+     ;A more complete version of the preceding
+      (define-method-combination or
+              (&optional (order ':most-specific-first))
+              ((around (:around))
+               (primary (or)))
+        ;; Process the order argument
+        (case order
+          (:most-specific-first)
+          (:most-specific-last (setq primary (reverse primary)))
+          (otherwise (method-combination-error "~S is an invalid order.~@
+          :most-specific-first and :most-specific-last are the possible values."
+                                               order)))
+        ;; Must have a primary method
+        (unless primary
+          (method-combination-error "A primary method is required."))
+        ;; Construct the form that calls the primary methods
+        (let ((form (if (rest primary)
+                        `(or ,@(mapcar #'(lambda (method)
+                                           `(call-method ,method))
+                                       primary))
+                        `(call-method ,(first primary)))))
+          ;; Wrap the around methods around that form
+          (if around
+              `(call-method ,(first around)
+                            (,@(rest around)
+                             (make-method ,form)))
+              form)))
+     
+     ;The same thing, using the :order and :required keyword options
+      (define-method-combination or
+              (&optional (order ':most-specific-first))
+              ((around (:around))
+               (primary (or) :order order :required t))
+        (let ((form (if (rest primary)
+                        `(or ,@(mapcar #'(lambda (method)
+                                           `(call-method ,method))
+                                       primary))
+                        `(call-method ,(first primary)))))
+          (if around
+              `(call-method ,(first around)
+                            (,@(rest around)
+                             (make-method ,form)))
+              form)))
+     
+     ;This short-form call is behaviorally identical to the preceding
+      (define-method-combination or :identity-with-one-argument t)
+     
+     ;Order methods by positive integer qualifiers
+     ;:around methods are disallowed to keep the example small
+      (define-method-combination example-method-combination ()
+              ((methods positive-integer-qualifier-p))
+        `(progn ,@(mapcar #'(lambda (method)
+                              `(call-method ,method))
+                          (stable-sort methods #'<
+                            :key #'(lambda (method)
+                                     (first (method-qualifiers method)))))))
+     
+      (defun positive-integer-qualifier-p (method-qualifiers)
+        (and (= (length method-qualifiers) 1)
+             (typep (first method-qualifiers) '(integer 0 *))))
+     
+     ;;; Example of the use of :arguments
+      (define-method-combination progn-with-lock ()
+              ((methods ()))
+        (:arguments object)
+        `(unwind-protect
+             (progn (lock (object-lock ,object))
+                    ,@(mapcar #'(lambda (method)
+                                  `(call-method ,method))
+                              methods))
+           (unlock (object-lock ,object))))
+
+Side Effects::
+..............
+
+The compiler is not required to perform any compile-time side-effects.
+
+Exceptional Situations::
+........................
+
+Method combination types defined with the short form require exactly one
+qualifier per method.  An error of type error is signaled if there are
+applicable methods with no qualifiers or with qualifiers that are not
+supported by the method combination type.  At least one primary method
+must be applicable or an error of type error is signaled.
+
+If an applicable method does not fall into any method group, the system
+signals an error of type error indicating that the method is invalid for
+the kind of method combination in use.
+
+If the value of the :required option is true and the method group is empty
+(that is, no applicable methods match the qualifier patterns or satisfy
+the predicate), an error of type error is signaled.
+
+If the :order option evaluates to a value other than :most-specific-first
+or :most-specific-last, an error of type error is signaled.
+
+See Also::
+..........
+
+*Note call-method; make-method:: , *Note call-next-method:: , *Note
+documentation; (setf documentation):: , *Note method-qualifiers:: , *Note
+method-combination-error:: , *Note invalid-method-error:: , *Note
+defgeneric:: , *Note Method Selection and Combination::, *Note Built-in
+Method Combination Types::, *Note Syntactic Interaction of Documentation
+Strings and Declarations::
+
+Notes::
+.......
+
+The :method-combination option of defgeneric is used to specify that a
+generic function should use a particular method combination type.  The
+first argument to the :method-combination option is the name of a method
+combination type and the remaining arguments are options for that type.
+
+
+File: gcl.info,  Node: find-method,  Next: add-method,  Prev: define-method-combination,  Up: Objects Dictionary
+
+find-method                                     [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`find-method'  generic-function method-qualifiers specializers &optional
+errorp
+=>  method
+
+Method Signatures::
+...................
+
+`find-method'  (generic-function standard-generic-function)
+method-qualifiers specializers &optional errorp
+
+Arguments and Values::
+......................
+
+generic-function--a generic function.
+
+method-qualifiers--a list.
+
+specializers--a list.
+
+errorp--a generalized boolean.  The default is true.
+
+method--a method object, or nil.
+
+Description::
+.............
+
+The generic function find-method takes a generic function and returns the
+method object that agrees on qualifiers and parameter specializers with
+the method-qualifiers and specializers arguments of find-method.
+Method-qualifiers  contains the method qualifiers for the method.  The
+order of the method qualifiers is significant.  For a definition of
+agreement in this context, see *Note Agreement on Parameter Specializers
+and Qualifiers::.
+
+The specializers argument contains the parameter specializers for the
+method. It must correspond in length to the number of required arguments
+of the generic function, or an error is signaled.  This means that to
+obtain the default method on a given generic-function, a list whose
+elements are the class t must be given.
+
+If there is no such method and errorp is true, find-method signals an
+error.  If there is no such method and errorp is false, find-method
+returns nil.
+
+Examples::
+..........
+
+      (defmethod some-operation ((a integer) (b float)) (list a b))
+     =>  #<STANDARD-METHOD SOME-OPERATION (INTEGER FLOAT) 26723357>
+      (find-method #'some-operation '() (mapcar #'find-class '(integer float)))
+     =>  #<STANDARD-METHOD SOME-OPERATION (INTEGER FLOAT) 26723357>
+      (find-method #'some-operation '() (mapcar #'find-class '(integer integer)))
+      |>  Error: No matching method
+      (find-method #'some-operation '() (mapcar #'find-class '(integer integer)) nil)
+     =>  NIL
+
+Affected By::
+.............
+
+add-method, defclass, defgeneric, defmethod
+
+Exceptional Situations::
+........................
+
+If the specializers argument does not correspond in length to the number
+of required arguments of the generic-function, an an error of type error
+is signaled.
+
+If there is no such method and errorp is true, find-method signals an
+error of type error.
+
+See Also::
+..........
+
+*Note Agreement on Parameter Specializers and Qualifiers::
+
+
+File: gcl.info,  Node: add-method,  Next: initialize-instance,  Prev: find-method,  Up: Objects Dictionary
+
+add-method                                      [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`add-method'  generic-function method =>  generic-function
+
+Method Signatures::
+...................
+
+`add-method'  (generic-function standard-generic-function) (method method)
+
+Arguments and Values::
+......................
+
+generic-function--a generic function object.
+
+method--a method object.
+
+Description::
+.............
+
+The generic function add-method adds a method to a generic function.
+
+If method agrees with an existing method of generic-function on parameter
+specializers and qualifiers, the existing method is replaced.
+
+Exceptional Situations::
+........................
+
+The lambda list of the method function of method must be congruent with
+the lambda list of generic-function, or an error of type error is signaled.
+
+If method is a method object of another generic function, an error of type
+error is signaled.
+
+See Also::
+..........
+
+*Note defmethod:: , *Note defgeneric:: , *Note find-method:: , *Note
+remove-method:: , *Note Agreement on Parameter Specializers and
+Qualifiers::
+
+
+File: gcl.info,  Node: initialize-instance,  Next: class-name,  Prev: add-method,  Up: Objects Dictionary
+
+initialize-instance                             [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`initialize-instance'  instance &rest initargs &key &allow-other-keys =>
+instance
+
+Method Signatures::
+...................
+
+`initialize-instance'  (instance standard-object) &rest initargs
+
+Arguments and Values::
+......................
+
+instance--an object.
+
+initargs--a defaulted initialization argument list.
+
+Description::
+.............
+
+Called by make-instance to initialize a newly created instance.  The
+generic function is called with the new instance and the defaulted
+initialization argument list.
+
+The system-supplied primary method on initialize-instance initializes the
+slots of the instance with values according to the initargs and the
+:initform forms of the slots.  It does this by calling the generic
+function shared-initialize with the following arguments: the instance, t
+(this indicates that all slots for which no initialization arguments are
+provided should be initialized according to their :initform forms), and
+the initargs.
+
+Programmers can define methods for initialize-instance to specify actions
+to be taken when an instance is initialized.  If only after methods are
+defined, they will be run after the system-supplied primary method for
+initialization and therefore will not interfere with the default behavior
+of initialize-instance.
+
+See Also::
+..........
+
+*Note Shared-Initialize:: , *Note make-instance:: , *Note slot-boundp:: ,
+*Note slot-makunbound:: , *Note Object Creation and Initialization::,
+*Note Rules for Initialization Arguments::, *Note Declaring the Validity
+of Initialization Arguments::
+
+
+File: gcl.info,  Node: class-name,  Next: (setf class-name),  Prev: initialize-instance,  Up: Objects Dictionary
+
+class-name                                      [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`class-name'  class =>  name
+
+Method Signatures::
+...................
+
+`class-name'  (class class)
+
+Arguments and Values::
+......................
+
+class--a class object.
+
+name--a symbol.
+
+Description::
+.............
+
+Returns the name of the given class.
+
+See Also::
+..........
+
+*Note find-class:: , *Note Classes::
+
+Notes::
+.......
+
+If S is a symbol such that S =(class-name C) and C =(find-class S), then S
+is the proper name of C.  For further discussion, see *Note Classes::.
+
+The name of an anonymous class is nil.
+
+
+File: gcl.info,  Node: (setf class-name),  Next: class-of,  Prev: class-name,  Up: Objects Dictionary
+
+(setf class-name)                               [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`(setf class-name)'  new-value class =>  new-value
+
+Method Signatures::
+...................
+
+`(setf class-name)'  new-value (class class)
+
+Arguments and Values::
+......................
+
+new-value--a symbol.
+
+class--a class.
+
+Description::
+.............
+
+The generic function (setf class-name) sets the name of a class object.
+
+See Also::
+..........
+
+*Note find-class:: , proper name, *Note Classes::
+
+
+File: gcl.info,  Node: class-of,  Next: unbound-slot,  Prev: (setf class-name),  Up: Objects Dictionary
+
+class-of                                                         [Function]
+---------------------------------------------------------------------------
+
+`class-of'  object =>  class
+
+Arguments and Values::
+......................
+
+object--an object.
+
+class--a class object.
+
+Description::
+.............
+
+Returns the class of which the object is a direct instance.
+
+Examples::
+..........
+
+      (class-of 'fred) =>  #<BUILT-IN-CLASS SYMBOL 610327300>
+      (class-of 2/3) =>  #<BUILT-IN-CLASS RATIO 610326642>
+     
+      (defclass book () ()) =>  #<STANDARD-CLASS BOOK 33424745>
+      (class-of (make-instance 'book)) =>  #<STANDARD-CLASS BOOK 33424745>
+     
+      (defclass novel (book) ()) =>  #<STANDARD-CLASS NOVEL 33424764>
+      (class-of (make-instance 'novel)) =>  #<STANDARD-CLASS NOVEL 33424764>
+     
+      (defstruct kons kar kdr) =>  KONS
+      (class-of (make-kons :kar 3 :kdr 4)) =>  #<STRUCTURE-CLASS KONS 250020317>
+
+See Also::
+..........
+
+*Note make-instance:: , *Note type-of::
+

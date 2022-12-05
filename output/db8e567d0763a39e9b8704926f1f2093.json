@@ -1,0 +1,61 @@
+{
+    "name": "define-modify-macro",
+    "prev": "progn",
+    "next": "defsetf",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "define-modify-macro"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "define-modify-macro",
+                    "text": " name lambda-list function [documentation] =>  name\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "name",
+                    "desc": "a symbol."
+                },
+                {
+                    "name": "lambda-list",
+                    "desc": "a define-modify-macro lambda list"
+                },
+                {
+                    "name": "function",
+                    "desc": "a symbol."
+                },
+                {
+                    "name": "documentation",
+                    "desc": "a string; not evaluated."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "define-modify-macro defines a macro named name to read and write a place.\nThe arguments to the new macro are a place, followed by the arguments that\nare supplied in lambda-list.\nMacros defined with define-modify-macro correctly pass the environment\nparameter to\nget-setf-expansion.\nWhen the macro is invoked, function is applied to the old contents of the\nplace and the lambda-list arguments to obtain the new value, and the place\nis updated to contain the result.\nExcept for the issue of avoiding multiple evaluation (see below), the\nexpansion of a define-modify-macro is equivalent to the following:\n      (defmacro name (reference . lambda-list)\n        documentation\n        `(setf ,reference\n               (function ,reference ,arg1 ,arg2 ...)))\nwhere arg1, arg2, ..., are the parameters appearing in lambda-list;\nappropriate provision is made for a rest parameter.\nThe subforms of the macro calls defined by define-modify-macro are\nevaluated as specified in *Note Evaluation of Subforms to Places::.\nDocumentation is attached as a documentation string to name (as kind\nfunction) and to the macro function.\nIf a define-modify-macro form appears as a top level form, the compiler\nmust store the macro definition at compile time, so that occurrences of\nthe macro later on in the file can be expanded correctly.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (define-modify-macro appendf (&rest args)\n         append \"Append onto list\") =>  APPENDF\n      (setq x '(a b c) y x) =>  (A B C)\n      (appendf x '(d e f) '(1 2 3)) =>  (A B C D E F 1 2 3)\n      x =>  (A B C D E F 1 2 3)\n      y =>  (A B C)\n      (define-modify-macro new-incf (&optional (delta 1)) +)\n      (define-modify-macro unionf (other-set &rest keywords) union)\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "A macro definition is assigned to name.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note defsetf:: ,\n*Note define-setf-expander:: ,\n*Note documentation; (setf documentation):: , *Note Syntactic Interaction\nof Documentation Strings and Declarations::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: define-modify-macro,  Next: defsetf,  Prev: progn,  Up: Data and Control Flow Dictionary\n\ndefine-modify-macro                                                 [Macro]\n---------------------------------------------------------------------------\n\n`define-modify-macro'  name lambda-list function [documentation] =>  name\n\nArguments and Values::\n......................\n\nname--a symbol.\n\nlambda-list--a define-modify-macro lambda list\n\nfunction--a symbol.\n\ndocumentation--a string; not evaluated.\n\nDescription::\n.............\n\ndefine-modify-macro defines a macro named name to read and write a place.\n\nThe arguments to the new macro are a place, followed by the arguments that\nare supplied in lambda-list.\n\nMacros defined with define-modify-macro correctly pass the environment\nparameter to\n\nget-setf-expansion.\n\nWhen the macro is invoked, function is applied to the old contents of the\nplace and the lambda-list arguments to obtain the new value, and the place\nis updated to contain the result.\n\nExcept for the issue of avoiding multiple evaluation (see below), the\nexpansion of a define-modify-macro is equivalent to the following:\n\n      (defmacro name (reference . lambda-list)\n        documentation\n        `(setf ,reference\n               (function ,reference ,arg1 ,arg2 ...)))\n\nwhere arg1, arg2, ..., are the parameters appearing in lambda-list;\nappropriate provision is made for a rest parameter.\n\nThe subforms of the macro calls defined by define-modify-macro are\nevaluated as specified in *Note Evaluation of Subforms to Places::.\n\nDocumentation is attached as a documentation string to name (as kind\nfunction) and to the macro function.\n\nIf a define-modify-macro form appears as a top level form, the compiler\nmust store the macro definition at compile time, so that occurrences of\nthe macro later on in the file can be expanded correctly.\n\nExamples::\n..........\n\n      (define-modify-macro appendf (&rest args)\n         append \"Append onto list\") =>  APPENDF\n      (setq x '(a b c) y x) =>  (A B C)\n      (appendf x '(d e f) '(1 2 3)) =>  (A B C D E F 1 2 3)\n      x =>  (A B C D E F 1 2 3)\n      y =>  (A B C)\n      (define-modify-macro new-incf (&optional (delta 1)) +)\n      (define-modify-macro unionf (other-set &rest keywords) union)\n\nSide Effects::\n..............\n\nA macro definition is assigned to name.\n\nSee Also::\n..........\n\n*Note defsetf:: ,\n\n*Note define-setf-expander:: ,\n\n*Note documentation; (setf documentation):: , *Note Syntactic Interaction\nof Documentation Strings and Declarations::\n\n"
+}

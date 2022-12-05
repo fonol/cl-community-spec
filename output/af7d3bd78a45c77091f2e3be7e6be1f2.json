@@ -1,0 +1,65 @@
+{
+    "name": "call-method",
+    "prev": "next-method-p",
+    "next": "call-next-method",
+    "up": "Objects Dictionary",
+    "header": {
+        "type": "Local Macro",
+        "text": "call-method, make-method"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "call-method",
+                    "text": " method &optional next-method-list =>  {result}*\n"
+                },
+                {
+                    "name": "make-method",
+                    "text": " form =>  method-object\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "method",
+                    "desc": "a method object, or a list (see below); not evaluated."
+                },
+                {
+                    "name": "method-object",
+                    "desc": "a method object."
+                },
+                {
+                    "name": "next-method-list",
+                    "desc": "a list of method objects; not evaluated."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values returned by the method invocation."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "The macro call-method is used in method combination.  It hides the\nimplementation-dependent details of how methods are called. The macro\ncall-method has lexical scope and can only be used within an effective\nmethod form.\n[Editorial Note by KMP: This next paragraph still needs some work.]\nWhether or not call-method is fbound in the global environment is\nimplementation-dependent; however, the restrictions on redefinition and\nshadowing of call-method are the same as for symbols in the COMMON-LISP\npackage which are fbound in the global environment.  The consequences of\nattempting to use call-method outside of an effective method form are\nundefined.\nThe macro call-method invokes the specified method, supplying it with\narguments and with definitions for call-next-method and for next-method-p.\nIf the invocation of call-method is lexically inside of a make-method, the\narguments are those that were supplied to that method.  Otherwise the\narguments are those that were supplied to the generic function.  The\ndefinitions of call-next-method and next-method-p rely on the specified\nnext-method-list.\nIf method is a list, the first element of the list must be the symbol\nmake-method and the second element must be a form.  Such a list specifies\na method object whose method function has a body that is the given form.\nNext-method-list can contain method objects or lists, the first element of\nwhich must be the symbol make-method and the second element of which must\nbe a form.\nThose are the only two places where make-method can be used.  The form\nused with make-method is evaluated in the null lexical environment\naugmented with a local macro definition for call-method and with bindings\nnamed by symbols not accessible from the COMMON-LISP-USER package.\nThe call-next-method function available to method will call the first\nmethod in next-method-list.  The call-next-method function available in\nthat method, in turn, will call the second method in next-method-list, and\nso on, until the list of next methods is exhausted.\nIf next-method-list is not supplied, the call-next-method function\navailable to method signals an error of type control-error and the\nnext-method-p function available to method returns nil.\n"
+        },
+        {
+            "type": "Examples",
+            "text": ""
+        },
+        {
+            "type": "See Also",
+            "text": "*Note call-next-method:: , *Note define-method-combination:: , *Note\nnext-method-p::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: call-method,  Next: call-next-method,  Prev: next-method-p,  Up: Objects Dictionary\n\ncall-method, make-method                                      [Local Macro]\n---------------------------------------------------------------------------\n\nSyntax::\n........\n\n`call-method'  method &optional next-method-list =>  {result}*\n\n`make-method'  form =>  method-object\n\nArguments and Values::\n......................\n\nmethod--a method object, or a list (see below); not evaluated.\n\nmethod-object--a method object.\n\nnext-method-list--a list of method objects; not evaluated.\n\nresults--the values returned by the method invocation.\n\nDescription::\n.............\n\nThe macro call-method is used in method combination.  It hides the\nimplementation-dependent details of how methods are called. The macro\ncall-method has lexical scope and can only be used within an effective\nmethod form.\n\n[Editorial Note by KMP: This next paragraph still needs some work.]\n\nWhether or not call-method is fbound in the global environment is\nimplementation-dependent; however, the restrictions on redefinition and\nshadowing of call-method are the same as for symbols in the COMMON-LISP\npackage which are fbound in the global environment.  The consequences of\nattempting to use call-method outside of an effective method form are\nundefined.\n\nThe macro call-method invokes the specified method, supplying it with\narguments and with definitions for call-next-method and for next-method-p.\nIf the invocation of call-method is lexically inside of a make-method, the\narguments are those that were supplied to that method.  Otherwise the\narguments are those that were supplied to the generic function.  The\ndefinitions of call-next-method and next-method-p rely on the specified\nnext-method-list.\n\nIf method is a list, the first element of the list must be the symbol\nmake-method and the second element must be a form.  Such a list specifies\na method object whose method function has a body that is the given form.\n\nNext-method-list can contain method objects or lists, the first element of\nwhich must be the symbol make-method and the second element of which must\nbe a form.\n\nThose are the only two places where make-method can be used.  The form\nused with make-method is evaluated in the null lexical environment\naugmented with a local macro definition for call-method and with bindings\nnamed by symbols not accessible from the COMMON-LISP-USER package.\n\nThe call-next-method function available to method will call the first\nmethod in next-method-list.  The call-next-method function available in\nthat method, in turn, will call the second method in next-method-list, and\nso on, until the list of next methods is exhausted.\n\nIf next-method-list is not supplied, the call-next-method function\navailable to method signals an error of type control-error and the\nnext-method-p function available to method returns nil.\n\nExamples::\n..........\n\nSee Also::\n..........\n\n*Note call-next-method:: , *Note define-method-combination:: , *Note\nnext-method-p::\n\n"
+}

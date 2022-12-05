@@ -1,0 +1,69 @@
+{
+    "name": "gentemp",
+    "prev": "*gensym-counter*",
+    "next": "symbol-function",
+    "up": "Symbols Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "gentemp"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "gentemp",
+                    "text": " &optional prefix package =>  new-symbol\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "prefix",
+                    "desc": "a string.  The default is \"T\"."
+                },
+                {
+                    "name": "package",
+                    "desc": "a package designator.  The default is the current package."
+                },
+                {
+                    "name": "new-symbol",
+                    "desc": "a fresh, interned symbol."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "gentemp creates and returns a fresh symbol, interned in the indicated\npackage.  The symbol is guaranteed to be one that was not previously\naccessible in package.  It is neither bound nor fbound, and has a null\nproperty list.\nThe name of the new-symbol is the concatenation of the prefix and a\nsuffix, which is taken from an internal counter used only by gentemp.  (If\na symbol by that name is already accessible in package, the counter is\nincremented as many times as is necessary to produce a name that is not\nalready the name of a symbol accessible in package.)\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (gentemp) =>  T1298\n      (gentemp \"FOO\") =>  FOO1299\n      (find-symbol \"FOO1300\") =>  NIL, NIL\n      (gentemp \"FOO\") =>  FOO1300\n      (find-symbol \"FOO1300\") =>  FOO1300, :INTERNAL\n      (intern \"FOO1301\") =>  FOO1301, :INTERNAL\n      (gentemp \"FOO\") =>  FOO1302\n      (gentemp) =>  T1303\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "Its internal counter is incremented one or more times.\nInterns the new-symbol in package.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "The current state of its internal counter, and the current state of the\npackage.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should signal an error of type type-error if prefix is not a string.\nShould signal an error of type type-error if package is not a package\ndesignator.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note gensym::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The function gentemp is deprecated.\nIf package is the KEYWORD package, the result is an external symbol of\npackage.  Otherwise, the result is an internal symbol of package.\nThe gentemp internal counter is independent of *gensym-counter*, the\ncounter used by gensym.  There is no provision for accessing the gentemp\ninternal counter.\nJust because gentemp creates a symbol which did not previously exist does\nnot mean that such a symbol might not be seen in the future (e.g., in a\ndata file--perhaps even created by the same program in another session).\nAs such, this symbol is not truly unique in the same sense as a gensym\nwould be.  In particular, programs which do automatic code generation\nshould be careful not to attach global attributes to such generated\nsymbols (e.g., special declarations) and then write them into a file\nbecause such global attributes might, in a different session, end up\napplying to other symbols that were automatically generated on another day\nfor some other purpose.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: gentemp,  Next: symbol-function,  Prev: *gensym-counter*,  Up: Symbols Dictionary\n\ngentemp                                                          [Function]\n---------------------------------------------------------------------------\n\n`gentemp'  &optional prefix package =>  new-symbol\n\nArguments and Values::\n......................\n\nprefix--a string.  The default is \"T\".\n\npackage--a package designator.  The default is the current package.\n\nnew-symbol--a fresh, interned symbol.\n\nDescription::\n.............\n\ngentemp creates and returns a fresh symbol, interned in the indicated\npackage.  The symbol is guaranteed to be one that was not previously\naccessible in package.  It is neither bound nor fbound, and has a null\nproperty list.\n\nThe name of the new-symbol is the concatenation of the prefix and a\nsuffix, which is taken from an internal counter used only by gentemp.  (If\na symbol by that name is already accessible in package, the counter is\nincremented as many times as is necessary to produce a name that is not\nalready the name of a symbol accessible in package.)\n\nExamples::\n..........\n\n      (gentemp) =>  T1298\n      (gentemp \"FOO\") =>  FOO1299\n      (find-symbol \"FOO1300\") =>  NIL, NIL\n      (gentemp \"FOO\") =>  FOO1300\n      (find-symbol \"FOO1300\") =>  FOO1300, :INTERNAL\n      (intern \"FOO1301\") =>  FOO1301, :INTERNAL\n      (gentemp \"FOO\") =>  FOO1302\n      (gentemp) =>  T1303\n\nSide Effects::\n..............\n\nIts internal counter is incremented one or more times.\n\nInterns the new-symbol in package.\n\nAffected By::\n.............\n\nThe current state of its internal counter, and the current state of the\npackage.\n\nExceptional Situations::\n........................\n\nShould signal an error of type type-error if prefix is not a string.\nShould signal an error of type type-error if package is not a package\ndesignator.\n\nSee Also::\n..........\n\n*Note gensym::\n\nNotes::\n.......\n\nThe function gentemp is deprecated.\n\nIf package is the KEYWORD package, the result is an external symbol of\npackage.  Otherwise, the result is an internal symbol of package.\n\nThe gentemp internal counter is independent of *gensym-counter*, the\ncounter used by gensym.  There is no provision for accessing the gentemp\ninternal counter.\n\nJust because gentemp creates a symbol which did not previously exist does\nnot mean that such a symbol might not be seen in the future (e.g., in a\ndata file--perhaps even created by the same program in another session).\nAs such, this symbol is not truly unique in the same sense as a gensym\nwould be.  In particular, programs which do automatic code generation\nshould be careful not to attach global attributes to such generated\nsymbols (e.g., special declarations) and then write them into a file\nbecause such global attributes might, in a different session, end up\napplying to other symbols that were automatically generated on another day\nfor some other purpose.\n\n"
+}

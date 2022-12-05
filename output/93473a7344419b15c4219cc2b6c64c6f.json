@@ -1,0 +1,57 @@
+{
+    "name": "import",
+    "prev": "find-all-symbols",
+    "next": "list-all-packages",
+    "up": "Packages Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "import"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "import",
+                    "text": " symbols &optional package =>  t\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "symbols",
+                    "desc": "a designator for a list of symbols."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "import adds symbol or symbols to the internals of package, checking for\nname conflicts with existing symbols either present in package or\naccessible to it.  Once the symbols have been imported, they may be\nreferenced in the importing package without the use of a package prefix\nwhen using the Lisp reader.\nA name conflict in import between the symbol being imported and a symbol\ninherited from some other package can be resolved in favor of the symbol\nbeing imported by making it a shadowing symbol, or in favor of the symbol\nalready accessible by not doing the import.  A name conflict in import\nwith a symbol already present in the package may be resolved by\nuninterning that symbol, or by not doing the import.\nThe imported symbol is not automatically exported from the current\npackage, but if it is already present and external, then the fact that it\nis external is not changed.\nIf any symbol to be imported has no home package (i.e., (symbol-package\nsymbol) =>  nil), import sets the home package of the symbol to package.\nIf the symbol is already present in the importing package, import has no\neffect.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (import 'common-lisp::car (make-package 'temp :use nil)) =>  T\n      (find-symbol \"CAR\" 'temp) =>  CAR, :INTERNAL\n      (find-symbol \"CDR\" 'temp) =>  NIL, NIL\nThe form (import 'editor:buffer) takes the external symbol named buffer in\nthe EDITOR package (this symbol was located when the form was read by the\nLisp reader) and adds it to the current package as an internal symbol. The\nsymbol buffer is then present in the current package.\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "The package system is modified.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "Current state of the package system.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "import signals a correctable error of type package-error if any of the\nsymbols to be imported has the same name (under string=) as some distinct\nsymbol (under eql) already accessible in the package, even if the conflict\nis with a shadowing symbol of the package.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note shadow:: , *Note export::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: import,  Next: list-all-packages,  Prev: find-all-symbols,  Up: Packages Dictionary\n\nimport                                                           [Function]\n---------------------------------------------------------------------------\n\n`import'  symbols &optional package =>  t\n\nArguments and Values::\n......................\n\nsymbols--a designator for a list of symbols.\n\npackage--a package designator.\n\nThe default is the current package.\n\nDescription::\n.............\n\nimport adds symbol or symbols to the internals of package, checking for\nname conflicts with existing symbols either present in package or\naccessible to it.  Once the symbols have been imported, they may be\nreferenced in the importing package without the use of a package prefix\nwhen using the Lisp reader.\n\nA name conflict in import between the symbol being imported and a symbol\ninherited from some other package can be resolved in favor of the symbol\nbeing imported by making it a shadowing symbol, or in favor of the symbol\nalready accessible by not doing the import.  A name conflict in import\nwith a symbol already present in the package may be resolved by\nuninterning that symbol, or by not doing the import.\n\nThe imported symbol is not automatically exported from the current\npackage, but if it is already present and external, then the fact that it\nis external is not changed.\n\nIf any symbol to be imported has no home package (i.e., (symbol-package\nsymbol) =>  nil), import sets the home package of the symbol to package.\n\nIf the symbol is already present in the importing package, import has no\neffect.\n\nExamples::\n..........\n\n      (import 'common-lisp::car (make-package 'temp :use nil)) =>  T\n      (find-symbol \"CAR\" 'temp) =>  CAR, :INTERNAL\n      (find-symbol \"CDR\" 'temp) =>  NIL, NIL\n\nThe form (import 'editor:buffer) takes the external symbol named buffer in\nthe EDITOR package (this symbol was located when the form was read by the\nLisp reader) and adds it to the current package as an internal symbol. The\nsymbol buffer is then present in the current package.\n\nSide Effects::\n..............\n\nThe package system is modified.\n\nAffected By::\n.............\n\nCurrent state of the package system.\n\nExceptional Situations::\n........................\n\nimport signals a correctable error of type package-error if any of the\nsymbols to be imported has the same name (under string=) as some distinct\nsymbol (under eql) already accessible in the package, even if the conflict\nis with a shadowing symbol of the package.\n\nSee Also::\n..........\n\n*Note shadow:: , *Note export::\n\n"
+}

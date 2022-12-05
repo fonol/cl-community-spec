@@ -1,0 +1,81 @@
+{
+    "name": "read-from-string",
+    "prev": "read-delimited-list",
+    "next": "readtable-case",
+    "up": "Reader Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "read-from-string"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "read-from-string",
+                    "text": " string &optional eof-error-p eof-value &key start endpreserve-whitespace\n=>  object, position\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "string",
+                    "desc": "a string."
+                },
+                {
+                    "name": "eof-error-p",
+                    "desc": "a generalized boolean.  The default is true."
+                },
+                {
+                    "name": "eof-value",
+                    "desc": "an object.The default is nil.\n"
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of string.  The defaults for start"
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of string.  The defaults for startand end are 0 and nil, respectively.\n"
+                },
+                {
+                    "name": "preserve-whitespace",
+                    "desc": "a generalized boolean.  The default is false."
+                },
+                {
+                    "name": "object",
+                    "desc": "an object (parsed by the Lisp reader) or the eof-value."
+                },
+                {
+                    "name": "position",
+                    "desc": "an integer greater than or equal to zero, and less than or equal"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Parses the printed representation of an object from the subsequence of\nstring bounded by start and end, as if read had been called on an input\nstream containing those same characters.\nIf preserve-whitespace is true, the operation will preserve whitespace_2\nas read-preserving-whitespace would do.\nIf an object is successfully parsed, the primary value, object, is the\nobject that was parsed.  If eof-error-p is false and if the end of the\nsubstring is reached, eof-value is returned.\nThe secondary value, position, is the index of the first character in the\nbounded string that was not read.  The position may depend upon the value\nof preserve-whitespace.  If the entire string was read, the position\nreturned is either the length of the string or one greater than the length\nof the string.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (read-from-string \" 1 3 5\" t nil :start 2) =>  3, 5\n      (read-from-string \"(a b c)\") =>  (A B C), 7\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If the end of the supplied substring occurs before an object can be read,\nan error is signaled if eof-error-p is true.  An error is signaled if the\nend of the substring occurs in the middle of an incomplete object.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note read; read-preserving-whitespace:: , read-preserving-whitespace\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The reason that position is allowed to be beyond the length of the string\nis to permit (but not require) the implementation to work by simulating\nthe effect of a trailing delimiter at the end of the bounded string.  When\npreserve-whitespace is true, the position might count the simulated\ndelimiter.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: read-from-string,  Next: readtable-case,  Prev: read-delimited-list,  Up: Reader Dictionary\n\nread-from-string                                                 [Function]\n---------------------------------------------------------------------------\n\n`read-from-string'  string &optional eof-error-p eof-value &key start end\npreserve-whitespace\n=>  object, position\n\nArguments and Values::\n......................\n\nstring--a string.\n\neof-error-p--a generalized boolean.  The default is true.\n\neof-value--an object.\n\nThe default is nil.\n\nstart, end--bounding index designators of string.  The defaults for start\nand end are 0 and nil, respectively.\n\npreserve-whitespace--a generalized boolean.  The default is false.\n\nobject--an object (parsed by the Lisp reader) or the eof-value.\n\nposition--an integer greater than or equal to zero, and less than or equal\nto one more than the length of the string.\n\nDescription::\n.............\n\nParses the printed representation of an object from the subsequence of\nstring bounded by start and end, as if read had been called on an input\nstream containing those same characters.\n\nIf preserve-whitespace is true, the operation will preserve whitespace_2\nas read-preserving-whitespace would do.\n\nIf an object is successfully parsed, the primary value, object, is the\nobject that was parsed.  If eof-error-p is false and if the end of the\nsubstring is reached, eof-value is returned.\n\nThe secondary value, position, is the index of the first character in the\nbounded string that was not read.  The position may depend upon the value\nof preserve-whitespace.  If the entire string was read, the position\nreturned is either the length of the string or one greater than the length\nof the string.\n\nExamples::\n..........\n\n      (read-from-string \" 1 3 5\" t nil :start 2) =>  3, 5\n      (read-from-string \"(a b c)\") =>  (A B C), 7\n\nExceptional Situations::\n........................\n\nIf the end of the supplied substring occurs before an object can be read,\nan error is signaled if eof-error-p is true.  An error is signaled if the\nend of the substring occurs in the middle of an incomplete object.\n\nSee Also::\n..........\n\n*Note read; read-preserving-whitespace:: , read-preserving-whitespace\n\nNotes::\n.......\n\nThe reason that position is allowed to be beyond the length of the string\nis to permit (but not require) the implementation to work by simulating\nthe effect of a trailing delimiter at the end of the bounded string.  When\npreserve-whitespace is true, the position might count the simulated\ndelimiter.\n\n"
+}

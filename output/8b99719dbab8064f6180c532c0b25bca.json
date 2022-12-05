@@ -1,0 +1,57 @@
+{
+    "name": "psetq",
+    "prev": "setq",
+    "next": "block",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "psetq"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "psetq",
+                    "text": " {!pair}* =>  nil\npair ::=var form\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Pronunciation",
+            "text": "psetq: pronounced \\vrule width 1pt height 2pt depth 2pt\\kern -1pt\\raise\n6pt\\vrule width 1pt height 2pt depth 2ptp\\=e'set ,ky\\\"u\n"
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "var",
+                    "desc": "a symbol naming a variable other than a constant variable."
+                },
+                {
+                    "name": "form",
+                    "desc": "a form."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Assigns values to variables.\nThis is just like setq, except that the assignments happen \"in parallel.\"\nThat is, first all of the forms are evaluated, and only then are the\nvariables set to the resulting values.  In this way, the assignment to one\nvariable does not affect the value computation of another in the way that\nwould occur with setq's sequential assignment.\nIf any var refers to a binding made by symbol-macrolet, then that var is\ntreated as if psetf (not psetq) had been used.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      ;; A simple use of PSETQ to establish values for variables.\n      ;; As a matter of style, many programmers would prefer SETQ\n      ;; in a simple situation like this where parallel assignment\n      ;; is not needed, but the two have equivalent effect.\n      (psetq a 1 b 2 c 3) =>  NIL\n      a =>  1\n      b =>  2\n      c =>  3\n      ;; Use of PSETQ to update values by parallel assignment.\n      ;; The effect here is very different than if SETQ had been used.\n      (psetq a (1+ b) b (1+ a) c (+ a b)) =>  NIL\n      a =>  3\n      b =>  2\n      c =>  3\n      ;; Use of PSETQ on a symbol macro.\n      (let ((x (list 10 20 30)))\n        (symbol-macrolet ((y (car x)) (z (cadr x)))\n          (psetq y (1+ z) z (1+ y))\n          (list x y z)))\n     =>  ((21 11 30) 21 11)\n      ;; Use of parallel assignment to swap values of A and B.\n      (let ((a 1) (b 2))\n        (psetq a b  b a)\n        (values a b))\n     =>  2, 1\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "The values of forms are assigned to vars.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "psetf, *Note setq::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: psetq,  Next: block,  Prev: setq,  Up: Data and Control Flow Dictionary\n\npsetq                                                               [Macro]\n---------------------------------------------------------------------------\n\n`psetq'  {!pair}* =>  nil\n\npair ::=var form\n\nPronunciation::\n...............\n\npsetq: pronounced \\vrule width 1pt height 2pt depth 2pt\\kern -1pt\\raise\n6pt\\vrule width 1pt height 2pt depth 2ptp\\=e'set ,ky\\\"u\n\nArguments and Values::\n......................\n\nvar--a symbol naming a variable other than a constant variable.\n\nform--a form.\n\nDescription::\n.............\n\nAssigns values to variables.\n\nThis is just like setq, except that the assignments happen \"in parallel.\"\nThat is, first all of the forms are evaluated, and only then are the\nvariables set to the resulting values.  In this way, the assignment to one\nvariable does not affect the value computation of another in the way that\nwould occur with setq's sequential assignment.\n\nIf any var refers to a binding made by symbol-macrolet, then that var is\ntreated as if psetf (not psetq) had been used.\n\nExamples::\n..........\n\n      ;; A simple use of PSETQ to establish values for variables.\n      ;; As a matter of style, many programmers would prefer SETQ\n      ;; in a simple situation like this where parallel assignment\n      ;; is not needed, but the two have equivalent effect.\n      (psetq a 1 b 2 c 3) =>  NIL\n      a =>  1\n      b =>  2\n      c =>  3\n     \n      ;; Use of PSETQ to update values by parallel assignment.\n      ;; The effect here is very different than if SETQ had been used.\n      (psetq a (1+ b) b (1+ a) c (+ a b)) =>  NIL\n      a =>  3\n      b =>  2\n      c =>  3\n     \n      ;; Use of PSETQ on a symbol macro.\n      (let ((x (list 10 20 30)))\n        (symbol-macrolet ((y (car x)) (z (cadr x)))\n          (psetq y (1+ z) z (1+ y))\n          (list x y z)))\n     =>  ((21 11 30) 21 11)\n     \n      ;; Use of parallel assignment to swap values of A and B.\n      (let ((a 1) (b 2))\n        (psetq a b  b a)\n        (values a b))\n     =>  2, 1\n\nSide Effects::\n..............\n\nThe values of forms are assigned to vars.\n\nSee Also::\n..........\n\npsetf, *Note setq::\n\n"
+}

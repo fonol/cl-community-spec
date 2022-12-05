@@ -1,0 +1,65 @@
+{
+    "name": "remprop",
+    "prev": "get",
+    "next": "boundp",
+    "up": "Symbols Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "remprop"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "remprop",
+                    "text": " symbol indicator =>  generalized-boolean\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "symbol",
+                    "desc": "a symbol."
+                },
+                {
+                    "name": "indicator",
+                    "desc": "an object."
+                },
+                {
+                    "name": "generalized-boolean",
+                    "desc": "a generalized boolean."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "remprop removes from the property list_2 of symbol a property_1 with a\nproperty indicator identical to indicator.\nIf there are multiple properties_1 with the identical key, remprop only\nremoves the first such property.\nremprop returns false if no such property was found, or true if a property\nwas found.\nThe property indicator and the corresponding property value are removed in\nan undefined order by destructively splicing the property list.\nThe permissible side-effects correspond to those permitted for remf, such\nthat:\n      (remprop x y) == (remf (symbol-plist x) y)\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq test (make-symbol \"PSEUDO-PI\")) =>  #:PSEUDO-PI\n      (symbol-plist test) =>  ()\n      (setf (get test 'constant) t) =>  T\n      (setf (get test 'approximation) 3.14) =>  3.14\n      (setf (get test 'error-range) 'noticeable) =>  NOTICEABLE\n      (symbol-plist test)\n     =>  (ERROR-RANGE NOTICEABLE APPROXIMATION 3.14 CONSTANT T)\n      (setf (get test 'approximation) nil) =>  NIL\n      (symbol-plist test)\n     =>  (ERROR-RANGE NOTICEABLE APPROXIMATION NIL CONSTANT T)\n      (get test 'approximation) =>  NIL\n      (remprop test 'approximation) =>  true\n      (get test 'approximation) =>  NIL\n      (symbol-plist test)\n     =>  (ERROR-RANGE NOTICEABLE CONSTANT T)\n      (remprop test 'approximation) =>  NIL\n      (symbol-plist test)\n     =>  (ERROR-RANGE NOTICEABLE CONSTANT T)\n      (remprop test 'error-range) =>  true\n      (setf (get test 'approximation) 3) =>  3\n      (symbol-plist test)\n     =>  (APPROXIMATION 3 CONSTANT T)\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "The property list of symbol is modified.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should signal an error of type type-error if symbol is not a symbol.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note remf:: , *Note symbol-plist::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Numbers and characters are not recommended for use as indicators in\nportable code since remprop tests with eq rather than eql, and\nconsequently the effect of using such indicators is\nimplementation-dependent.  Of course, if you've gotten as far as needing\nto remove such a property, you don't have much choice--the time to have\nbeen thinking about this was when you used setf of get to establish the\nproperty.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: remprop,  Next: boundp,  Prev: get,  Up: Symbols Dictionary\n\nremprop                                                          [Function]\n---------------------------------------------------------------------------\n\n`remprop'  symbol indicator =>  generalized-boolean\n\nArguments and Values::\n......................\n\nsymbol--a symbol.\n\nindicator--an object.\n\ngeneralized-boolean--a generalized boolean.\n\nDescription::\n.............\n\nremprop removes from the property list_2 of symbol a property_1 with a\nproperty indicator identical to indicator.\n\nIf there are multiple properties_1 with the identical key, remprop only\nremoves the first such property.\n\nremprop returns false if no such property was found, or true if a property\nwas found.\n\nThe property indicator and the corresponding property value are removed in\nan undefined order by destructively splicing the property list.\n\nThe permissible side-effects correspond to those permitted for remf, such\nthat:\n\n      (remprop x y) == (remf (symbol-plist x) y)\n\nExamples::\n..........\n\n      (setq test (make-symbol \"PSEUDO-PI\")) =>  #:PSEUDO-PI\n      (symbol-plist test) =>  ()\n      (setf (get test 'constant) t) =>  T\n      (setf (get test 'approximation) 3.14) =>  3.14\n      (setf (get test 'error-range) 'noticeable) =>  NOTICEABLE\n      (symbol-plist test)\n     =>  (ERROR-RANGE NOTICEABLE APPROXIMATION 3.14 CONSTANT T)\n      (setf (get test 'approximation) nil) =>  NIL\n      (symbol-plist test)\n     =>  (ERROR-RANGE NOTICEABLE APPROXIMATION NIL CONSTANT T)\n      (get test 'approximation) =>  NIL\n      (remprop test 'approximation) =>  true\n      (get test 'approximation) =>  NIL\n      (symbol-plist test)\n     =>  (ERROR-RANGE NOTICEABLE CONSTANT T)\n      (remprop test 'approximation) =>  NIL\n      (symbol-plist test)\n     =>  (ERROR-RANGE NOTICEABLE CONSTANT T)\n      (remprop test 'error-range) =>  true\n      (setf (get test 'approximation) 3) =>  3\n      (symbol-plist test)\n     =>  (APPROXIMATION 3 CONSTANT T)\n\nSide Effects::\n..............\n\nThe property list of symbol is modified.\n\nExceptional Situations::\n........................\n\nShould signal an error of type type-error if symbol is not a symbol.\n\nSee Also::\n..........\n\n*Note remf:: , *Note symbol-plist::\n\nNotes::\n.......\n\nNumbers and characters are not recommended for use as indicators in\nportable code since remprop tests with eq rather than eql, and\nconsequently the effect of using such indicators is\nimplementation-dependent.  Of course, if you've gotten as far as needing\nto remove such a property, you don't have much choice--the time to have\nbeen thinking about this was when you used setf of get to establish the\nproperty.\n\n"
+}

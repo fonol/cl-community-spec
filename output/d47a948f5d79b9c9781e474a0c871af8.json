@@ -1,0 +1,53 @@
+{
+    "name": "integer-length",
+    "prev": "ash",
+    "next": "integerp",
+    "up": "Numbers Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "integer-length"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "integer-length",
+                    "text": " integer =>  number-of-bits\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "integer",
+                    "desc": "an integer."
+                },
+                {
+                    "name": "number-of-bits",
+                    "desc": "a non-negative integer."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns the number of bits needed to represent integer in binary\ntwo's-complement format.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (integer-length 0) =>  0\n      (integer-length 1) =>  1\n      (integer-length 3) =>  2\n      (integer-length 4) =>  3\n      (integer-length 7) =>  3\n      (integer-length -1) =>  0\n      (integer-length -4) =>  2\n      (integer-length -7) =>  3\n      (integer-length -8) =>  3\n      (integer-length (expt 2 9)) =>  10\n      (integer-length (1- (expt 2 9))) =>  9\n      (integer-length (- (expt 2 9))) =>  9\n      (integer-length (- (1+ (expt 2 9)))) =>  10\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should signal an error of type type-error if integer is not an integer.\n"
+        },
+        {
+            "type": "Notes",
+            "text": "This function could have been defined by:\n     (defun integer-length (integer)\n       (ceiling (log (if (minusp integer)\n                         (- integer)\n                         (1+ integer))\n                     2)))\nIf integer is non-negative, then its value can be represented in unsigned\nbinary form in a field whose width in bits is no smaller than\n(integer-length integer).  Regardless of the sign of integer, its value\ncan be represented in signed binary two's-complement form in a field whose\nwidth in bits is no smaller than (+ (integer-length integer) 1).\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: integer-length,  Next: integerp,  Prev: ash,  Up: Numbers Dictionary\n\ninteger-length                                                   [Function]\n---------------------------------------------------------------------------\n\n`integer-length'  integer =>  number-of-bits\n\nArguments and Values::\n......................\n\ninteger--an integer.\n\nnumber-of-bits--a non-negative integer.\n\nDescription::\n.............\n\nReturns the number of bits needed to represent integer in binary\ntwo's-complement format.\n\nExamples::\n..........\n\n      (integer-length 0) =>  0\n      (integer-length 1) =>  1\n      (integer-length 3) =>  2\n      (integer-length 4) =>  3\n      (integer-length 7) =>  3\n      (integer-length -1) =>  0\n      (integer-length -4) =>  2\n      (integer-length -7) =>  3\n      (integer-length -8) =>  3\n      (integer-length (expt 2 9)) =>  10\n      (integer-length (1- (expt 2 9))) =>  9\n      (integer-length (- (expt 2 9))) =>  9\n      (integer-length (- (1+ (expt 2 9)))) =>  10\n\nExceptional Situations::\n........................\n\nShould signal an error of type type-error if integer is not an integer.\n\nNotes::\n.......\n\nThis function could have been defined by:\n\n     (defun integer-length (integer)\n       (ceiling (log (if (minusp integer)\n                         (- integer)\n                         (1+ integer))\n                     2)))\n\nIf integer is non-negative, then its value can be represented in unsigned\nbinary form in a field whose width in bits is no smaller than\n(integer-length integer).  Regardless of the sign of integer, its value\ncan be represented in signed binary two's-complement form in a field whose\nwidth in bits is no smaller than (+ (integer-length integer) 1).\n\n"
+}

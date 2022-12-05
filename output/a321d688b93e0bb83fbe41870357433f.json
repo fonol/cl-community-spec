@@ -1,0 +1,65 @@
+{
+    "name": "read-byte",
+    "prev": "streamp",
+    "next": "write-byte",
+    "up": "Streams Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "read-byte"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "read-byte",
+                    "text": " stream &optional eof-error-p eof-value =>  byte\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "stream",
+                    "desc": "a binary input stream."
+                },
+                {
+                    "name": "eof-error-p",
+                    "desc": "a generalized boolean.  The default is true."
+                },
+                {
+                    "name": "eof-value",
+                    "desc": "an object.  The default is nil."
+                },
+                {
+                    "name": "byte",
+                    "desc": "an integer, or the eof-value."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "read-byte reads and returns one byte from stream.\nIf an end of file_2 occurs and eof-error-p is false, the eof-value is\nreturned.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (with-open-file (s \"temp-bytes\"\n                          :direction :output\n                          :element-type 'unsigned-byte)\n         (write-byte 101 s)) =>  101\n      (with-open-file (s \"temp-bytes\" :element-type 'unsigned-byte)\n         (format t \"~S ~S\" (read-byte s) (read-byte s nil 'eof)))\n      |>  101 EOF\n     =>  NIL\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "Modifies stream.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should signal an error of type type-error if stream is not a stream.\nShould signal an error of type error if stream is not  a binary input\nstream.\nIf there are no bytes remaining in the stream and eof-error-p is true, an\nerror of type end-of-file is signaled.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note read-char:: ,\n*Note read-sequence:: ,\n*Note write-byte::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: read-byte,  Next: write-byte,  Prev: streamp,  Up: Streams Dictionary\n\nread-byte                                                        [Function]\n---------------------------------------------------------------------------\n\n`read-byte'  stream &optional eof-error-p eof-value =>  byte\n\nArguments and Values::\n......................\n\nstream--a binary input stream.\n\neof-error-p--a generalized boolean.  The default is true.\n\neof-value--an object.  The default is nil.\n\nbyte--an integer, or the eof-value.\n\nDescription::\n.............\n\nread-byte reads and returns one byte from stream.\n\nIf an end of file_2 occurs and eof-error-p is false, the eof-value is\nreturned.\n\nExamples::\n..........\n\n      (with-open-file (s \"temp-bytes\"\n                          :direction :output\n                          :element-type 'unsigned-byte)\n         (write-byte 101 s)) =>  101\n      (with-open-file (s \"temp-bytes\" :element-type 'unsigned-byte)\n         (format t \"~S ~S\" (read-byte s) (read-byte s nil 'eof)))\n      |>  101 EOF\n     =>  NIL\n\nSide Effects::\n..............\n\nModifies stream.\n\nExceptional Situations::\n........................\n\nShould signal an error of type type-error if stream is not a stream.\n\nShould signal an error of type error if stream is not  a binary input\nstream.\n\nIf there are no bytes remaining in the stream and eof-error-p is true, an\nerror of type end-of-file is signaled.\n\nSee Also::\n..........\n\n*Note read-char:: ,\n\n*Note read-sequence:: ,\n\n*Note write-byte::\n\n"
+}

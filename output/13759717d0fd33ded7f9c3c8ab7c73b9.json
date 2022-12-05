@@ -1,0 +1,73 @@
+{
+    "name": "with-open-file",
+    "prev": "stream-external-format",
+    "next": "close",
+    "up": "Streams Dictionary",
+    "header": {
+        "type": "macro",
+        "text": "with-open-file"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "with-open-file",
+                    "text": " (stream filespec {options}*) {declaration}* {form}*=>  results\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "filespec",
+                    "desc": "a pathname designator.options - forms; evaluated.\n"
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values returned by the forms."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "with-open-file uses open to create a file stream\nto file named by filespec.  Filespec is the name of the file to be opened.\nOptions are used as keyword arguments to open.\nThe stream object to which the stream variable is bound has dynamic extent;\nits extent ends when the form is exited.\nwith-open-file evaluates the forms as an implicit progn with stream bound\nto\nthe value returned by open.\nWhen control leaves the body, either normally or abnormally (such as by\nuse of throw), the file is automatically closed.  If a new output file is\nbeing written, and control leaves abnormally, the file is aborted and the\nfile system is left, so far as possible, as if the file had never been\nopened.\nIt is possible by the use of :if-exists nil or :if-does-not-exist nil for\nstream to be bound to nil.\nUsers of :if-does-not-exist nil should check for a valid stream.\nThe consequences are undefined if an attempt is made to assign the stream\nvariable.  The compiler may choose to issue a warning if such an attempt\nis detected.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq p (merge-pathnames \"test\"))\n     =>  #<PATHNAME :HOST NIL :DEVICE device-name :DIRECTORY directory-name\n         :NAME \"test\" :TYPE NIL :VERSION :NEWEST>\n      (with-open-file (s p :direction :output :if-exists :supersede)\n         (format s \"Here are a couple~\n      (with-open-file (s p)\n         (do ((l (read-line s) (read-line s nil 'eof)))\n             ((eq l 'eof) \"Reached end of file.\")\n          (format t \"~&*** ~A~\n      |>  *** Here are a couple\n      |>  *** of test data lines\n     =>  \"Reached end of file.\"\n     ;; Normally one would not do this intentionally because it is\n     ;; not perspicuous, but beware when using :IF-DOES-NOT-EXIST NIL\n     ;; that this doesn't happen to you accidentally...\n      (with-open-file (foo \"no-such-file\" :if-does-not-exist nil)\n        (read foo))\n      |>  |>>hello?<<|\n     =>  HELLO? ;This value was read from the terminal, not a file!\n     ;; Here's another bug to avoid...\n      (with-open-file (foo \"no-such-file\" :direction :output :if-does-not-exist nil)\n        (format foo \"Hello\"))\n     =>  \"Hello\" ;FORMAT got an argument of NIL!\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "Creates a stream to the file named by filename (upon entry), and closes\nthe stream (upon exit).  In some implementations, the file might be locked\nin some way while it is open.  If the stream is an output stream, a file\nmight be created.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "The host computer's file system.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "See the function open.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note open:: , *Note close:: , pathname, logical-pathname,\n*Note Pathnames as Filenames::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: with-open-file,  Next: close,  Prev: stream-external-format,  Up: Streams Dictionary\n\nwith-open-file                                                      [macro]\n---------------------------------------------------------------------------\n\nSyntax::\n........\n\n`with-open-file'  (stream filespec {options}*) {declaration}* {form}*\n=>  results\n\nArguments and Values::\n......................\n\nstream - a variable.\n\nfilespec--a pathname designator.\n\noptions - forms; evaluated.\n\ndeclaration--a declare expression; not evaluated.\n\nforms--an implicit progn.\n\nresults--the values returned by the forms.\n\nDescription::\n.............\n\nwith-open-file uses open to create a file stream\n\nto file named by filespec.  Filespec is the name of the file to be opened.\nOptions are used as keyword arguments to open.\n\nThe stream object to which the stream variable is bound has dynamic extent;\nits extent ends when the form is exited.\n\nwith-open-file evaluates the forms as an implicit progn with stream bound\nto\n\nthe value returned by open.\n\nWhen control leaves the body, either normally or abnormally (such as by\nuse of throw), the file is automatically closed.  If a new output file is\nbeing written, and control leaves abnormally, the file is aborted and the\nfile system is left, so far as possible, as if the file had never been\nopened.\n\nIt is possible by the use of :if-exists nil or :if-does-not-exist nil for\nstream to be bound to nil.\n\nUsers of :if-does-not-exist nil should check for a valid stream.\n\nThe consequences are undefined if an attempt is made to assign the stream\nvariable.  The compiler may choose to issue a warning if such an attempt\nis detected.\n\nExamples::\n..........\n\n      (setq p (merge-pathnames \"test\"))\n     =>  #<PATHNAME :HOST NIL :DEVICE device-name :DIRECTORY directory-name\n         :NAME \"test\" :TYPE NIL :VERSION :NEWEST>\n      (with-open-file (s p :direction :output :if-exists :supersede)\n         (format s \"Here are a couple~\n      (with-open-file (s p)\n         (do ((l (read-line s) (read-line s nil 'eof)))\n             ((eq l 'eof) \"Reached end of file.\")\n          (format t \"~&*** ~A~\n      |>  *** Here are a couple\n      |>  *** of test data lines\n     =>  \"Reached end of file.\"\n\n     ;; Normally one would not do this intentionally because it is\n     ;; not perspicuous, but beware when using :IF-DOES-NOT-EXIST NIL\n     ;; that this doesn't happen to you accidentally...\n      (with-open-file (foo \"no-such-file\" :if-does-not-exist nil)\n        (read foo))\n      |>  |>>hello?<<|\n     =>  HELLO? ;This value was read from the terminal, not a file!\n     \n     ;; Here's another bug to avoid...\n      (with-open-file (foo \"no-such-file\" :direction :output :if-does-not-exist nil)\n        (format foo \"Hello\"))\n     =>  \"Hello\" ;FORMAT got an argument of NIL!\n\nSide Effects::\n..............\n\nCreates a stream to the file named by filename (upon entry), and closes\nthe stream (upon exit).  In some implementations, the file might be locked\nin some way while it is open.  If the stream is an output stream, a file\nmight be created.\n\nAffected By::\n.............\n\nThe host computer's file system.\n\nExceptional Situations::\n........................\n\nSee the function open.\n\nSee Also::\n..........\n\n*Note open:: , *Note close:: , pathname, logical-pathname,\n\n*Note Pathnames as Filenames::\n\n"
+}

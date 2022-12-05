@@ -1,0 +1,53 @@
+{
+    "name": "define-symbol-macro",
+    "prev": "macroexpand",
+    "next": "symbol-macrolet",
+    "up": "Evaluation and Compilation Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "define-symbol-macro"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "define-symbol-macro",
+                    "text": " symbol expansion=>  symbol\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "symbol",
+                    "desc": "a symbol."
+                },
+                {
+                    "name": "expansion",
+                    "desc": "a form."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Provides a mechanism for globally affecting the macro expansion of the\nindicated symbol.\nGlobally establishes an expansion function for the symbol macro named by\nsymbol.  The only guaranteed property of an expansion function for a\nsymbol macro is that when it is applied to the form and the environment it\nreturns the correct expansion.  (In particular, it is\nimplementation-dependent whether the expansion is conceptually stored in\nthe expansion function, the environment, or both.)\nEach global reference to symbol (i.e., not shadowed_2 by a binding for a\nvariable or symbol macro named by the same symbol) is expanded by the\nnormal macro expansion process; see *Note Symbols as Forms::.  The\nexpansion of a symbol macro is subject to further macro expansion in the\nsame lexical environment as the symbol macro reference, exactly analogous\nto normal macros.\nThe consequences are unspecified if a special declaration is made for\nsymbol while in the scope of this definition (i.e., when it is not\nshadowed_2 by a binding for a variable or symbol macro named by the same\nsymbol).\nAny use of setq to set the value of the symbol while in the scope of this\ndefinition is treated as if it were a setf.  psetq of symbol is treated as\nif it were a psetf, and multiple-value-setq is treated as if it were a\nsetf of values.\nA binding for a symbol macro can be shadowed_2 by let or symbol-macrolet.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "     (defvar *things* (list 'alpha 'beta 'gamma)) =>  *THINGS*\n     (define-symbol-macro thing1 (first *things*)) =>  THING1\n     (define-symbol-macro thing2 (second *things*)) =>  THING2\n     (define-symbol-macro thing3 (third *things*)) =>  THING3\n     thing1 =>  ALPHA\n     (setq thing1 'ONE) =>  ONE\n     *things* =>  (ONE BETA GAMMA)\n     (multiple-value-setq (thing2 thing3) (values 'two 'three)) =>  TWO\n     thing3 =>  THREE\n     *things* =>  (ONE TWO THREE)\n     (list thing2 (let ((thing2 2)) thing2)) =>  (TWO 2)\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If symbol is already defined as a global variable, an error of type\nprogram-error is signaled.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note symbol-macrolet:: , *Note macroexpand; macroexpand-1::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: define-symbol-macro,  Next: symbol-macrolet,  Prev: macroexpand,  Up: Evaluation and Compilation Dictionary\n\ndefine-symbol-macro                                                 [Macro]\n---------------------------------------------------------------------------\n\n`define-symbol-macro'  symbol expansion\n=>  symbol\n\nArguments and Values::\n......................\n\nsymbol--a symbol.\n\nexpansion--a form.\n\nDescription::\n.............\n\nProvides a mechanism for globally affecting the macro expansion of the\nindicated symbol.\n\nGlobally establishes an expansion function for the symbol macro named by\nsymbol.  The only guaranteed property of an expansion function for a\nsymbol macro is that when it is applied to the form and the environment it\nreturns the correct expansion.  (In particular, it is\nimplementation-dependent whether the expansion is conceptually stored in\nthe expansion function, the environment, or both.)\n\nEach global reference to symbol (i.e., not shadowed_2 by a binding for a\nvariable or symbol macro named by the same symbol) is expanded by the\nnormal macro expansion process; see *Note Symbols as Forms::.  The\nexpansion of a symbol macro is subject to further macro expansion in the\nsame lexical environment as the symbol macro reference, exactly analogous\nto normal macros.\n\nThe consequences are unspecified if a special declaration is made for\nsymbol while in the scope of this definition (i.e., when it is not\nshadowed_2 by a binding for a variable or symbol macro named by the same\nsymbol).\n\nAny use of setq to set the value of the symbol while in the scope of this\ndefinition is treated as if it were a setf.  psetq of symbol is treated as\nif it were a psetf, and multiple-value-setq is treated as if it were a\nsetf of values.\n\nA binding for a symbol macro can be shadowed_2 by let or symbol-macrolet.\n\nExamples::\n..........\n\n     (defvar *things* (list 'alpha 'beta 'gamma)) =>  *THINGS*\n     \n     (define-symbol-macro thing1 (first *things*)) =>  THING1\n     (define-symbol-macro thing2 (second *things*)) =>  THING2\n     (define-symbol-macro thing3 (third *things*)) =>  THING3\n     \n     thing1 =>  ALPHA\n     (setq thing1 'ONE) =>  ONE\n     *things* =>  (ONE BETA GAMMA)\n     (multiple-value-setq (thing2 thing3) (values 'two 'three)) =>  TWO\n     thing3 =>  THREE\n     *things* =>  (ONE TWO THREE)\n     \n     (list thing2 (let ((thing2 2)) thing2)) =>  (TWO 2)\n\nExceptional Situations::\n........................\n\nIf symbol is already defined as a global variable, an error of type\nprogram-error is signaled.\n\nSee Also::\n..........\n\n*Note symbol-macrolet:: , *Note macroexpand; macroexpand-1::\n\n"
+}

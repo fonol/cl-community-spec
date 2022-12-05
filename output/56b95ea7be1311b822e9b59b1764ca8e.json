@@ -1,0 +1,41 @@
+{
+    "name": "*print-case*",
+    "prev": "*print-base*",
+    "next": "*print-circle*",
+    "up": "Printer Dictionary",
+    "header": {
+        "type": "Variable",
+        "text": "*print-case*"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Value Type",
+            "text": "One of the symbols :upcase, :downcase, or :capitalize.\n"
+        },
+        {
+            "type": "Initial Value",
+            "text": "The symbol :upcase.\n"
+        },
+        {
+            "type": "Description",
+            "text": "The value of *print-case* controls the case (upper, lower, or mixed) in\nwhich to print any uppercase characters in the names of symbols when\nvertical-bar syntax is not used.\n*print-case* has an effect at all times when the value of *print-escape*\nis false. *print-case* also has an effect when the value of *print-escape*\nis true unless inside an escape context (i.e., unless between\nvertical-bars or after a slash).\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defun test-print-case ()\n        (dolist (*print-case* '(:upcase :downcase :capitalize))\n          (format t \"~&~S ~S~\n     =>  TEST-PC\n     ;; Although the choice of which characters to escape is specified by\n     ;; *PRINT-CASE*, the choice of how to escape those characters\n     ;; (i.e., whether single escapes or multiple escapes are used)\n     ;; is implementation-dependent.  The examples here show two of the\n     ;; many valid ways in which escaping might appear.\n      (test-print-case) ;Implementation A\n      |>  THIS-AND-THAT |And-something-elSE|\n      |>  this-and-that a\\n\\d-\\s\\o\\m\\e\\t\\h\\i\\n\\g-\\e\\lse\n      |>  This-And-That A\\n\\d-\\s\\o\\m\\e\\t\\h\\i\\n\\g-\\e\\lse\n     =>  NIL\n      (test-print-case) ;Implementation B\n      |>  THIS-AND-THAT |And-something-elSE|\n      |>  this-and-that a|nd-something-el|se\n      |>  This-And-That A|nd-something-el|se\n     =>  NIL\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note write; prin1; print; pprint; princ::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "read normally converts lowercase characters appearing in symbols to\ncorresponding uppercase characters, so that internally print names\nnormally contain only uppercase characters.\nIf *print-escape* is true, lowercase characters in the name of a symbol\nare always printed in lowercase, and are preceded by a single escape\ncharacter or enclosed by multiple escape characters; uppercase characters\nin the name of a symbol are printed in upper case, in lower case, or in\nmixed case so as to capitalize words, according to the value of\n*print-case*.  The convention for what constitutes a \"word\" is the same as\nfor string-capitalize.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: *print-case*,  Next: *print-circle*,  Prev: *print-base*,  Up: Printer Dictionary\n\n*print-case*                                                     [Variable]\n---------------------------------------------------------------------------\n\nValue Type::\n............\n\nOne of the symbols :upcase, :downcase, or :capitalize.\n\nInitial Value::\n...............\n\nThe symbol :upcase.\n\nDescription::\n.............\n\nThe value of *print-case* controls the case (upper, lower, or mixed) in\nwhich to print any uppercase characters in the names of symbols when\nvertical-bar syntax is not used.\n\n*print-case* has an effect at all times when the value of *print-escape*\nis false. *print-case* also has an effect when the value of *print-escape*\nis true unless inside an escape context (i.e., unless between\nvertical-bars or after a slash).\n\nExamples::\n..........\n\n      (defun test-print-case ()\n        (dolist (*print-case* '(:upcase :downcase :capitalize))\n          (format t \"~&~S ~S~\n     =>  TEST-PC\n     ;; Although the choice of which characters to escape is specified by\n     ;; *PRINT-CASE*, the choice of how to escape those characters\n     ;; (i.e., whether single escapes or multiple escapes are used)\n     ;; is implementation-dependent.  The examples here show two of the\n     ;; many valid ways in which escaping might appear.\n      (test-print-case) ;Implementation A\n      |>  THIS-AND-THAT |And-something-elSE|\n      |>  this-and-that a\\n\\d-\\s\\o\\m\\e\\t\\h\\i\\n\\g-\\e\\lse\n      |>  This-And-That A\\n\\d-\\s\\o\\m\\e\\t\\h\\i\\n\\g-\\e\\lse\n     =>  NIL\n      (test-print-case) ;Implementation B\n      |>  THIS-AND-THAT |And-something-elSE|\n      |>  this-and-that a|nd-something-el|se\n      |>  This-And-That A|nd-something-el|se\n     =>  NIL\n\nSee Also::\n..........\n\n*Note write; prin1; print; pprint; princ::\n\nNotes::\n.......\n\nread normally converts lowercase characters appearing in symbols to\ncorresponding uppercase characters, so that internally print names\nnormally contain only uppercase characters.\n\nIf *print-escape* is true, lowercase characters in the name of a symbol\nare always printed in lowercase, and are preceded by a single escape\ncharacter or enclosed by multiple escape characters; uppercase characters\nin the name of a symbol are printed in upper case, in lower case, or in\nmixed case so as to capitalize words, according to the value of\n*print-case*.  The convention for what constitutes a \"word\" is the same as\nfor string-capitalize.\n\n"
+}

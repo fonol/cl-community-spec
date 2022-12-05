@@ -1,0 +1,53 @@
+{
+    "name": "array-row-major-index",
+    "prev": "array-rank",
+    "next": "array-total-size",
+    "up": "Arrays Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "array-row-major-index"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "array-row-major-index",
+                    "text": " array &rest subscripts =>  index\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "array",
+                    "desc": "an array."
+                },
+                {
+                    "name": "subscripts",
+                    "desc": "a list of valid array indices for the array."
+                },
+                {
+                    "name": "index",
+                    "desc": "a valid array row-major index for the array."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Computes the position according to the row-major ordering of array for the\nelement that is specified by subscripts, and returns the offset of the\nelement in the computed position from the beginning of array.\nFor a one-dimensional array, the result of array-row-major-index equals\nsubscript.\narray-row-major-index ignores fill pointers.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq a (make-array '(4 7) :element-type '(unsigned-byte 8)))\n      (array-row-major-index a 1 2) =>  9\n      (array-row-major-index\n         (make-array '(2 3 4)\n                     :element-type '(unsigned-byte 8)\n                     :displaced-to a\n                     :displaced-index-offset 4)\n         0 2 1) =>  9\n"
+        },
+        {
+            "type": "Notes",
+            "text": "A possible definition of array-row-major-index, with no error-checking, is\n      (defun array-row-major-index (a &rest subscripts)\n        (apply #'+ (maplist #'(lambda (x y)\n                                 (* (car x) (apply #'* (cdr y))))\n                            subscripts\n                            (array-dimensions a))))\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: array-row-major-index,  Next: array-total-size,  Prev: array-rank,  Up: Arrays Dictionary\n\narray-row-major-index                                            [Function]\n---------------------------------------------------------------------------\n\n`array-row-major-index'  array &rest subscripts =>  index\n\nArguments and Values::\n......................\n\narray--an array.\n\nsubscripts--a list of valid array indices for the array.\n\nindex--a valid array row-major index for the array.\n\nDescription::\n.............\n\nComputes the position according to the row-major ordering of array for the\nelement that is specified by subscripts, and returns the offset of the\nelement in the computed position from the beginning of array.\n\nFor a one-dimensional array, the result of array-row-major-index equals\nsubscript.\n\narray-row-major-index ignores fill pointers.\n\nExamples::\n..........\n\n      (setq a (make-array '(4 7) :element-type '(unsigned-byte 8)))\n      (array-row-major-index a 1 2) =>  9\n      (array-row-major-index\n         (make-array '(2 3 4)\n                     :element-type '(unsigned-byte 8)\n                     :displaced-to a\n                     :displaced-index-offset 4)\n         0 2 1) =>  9\n\nNotes::\n.......\n\nA possible definition of array-row-major-index, with no error-checking, is\n\n      (defun array-row-major-index (a &rest subscripts)\n        (apply #'+ (maplist #'(lambda (x y)\n                                 (* (car x) (apply #'* (cdr y))))\n                            subscripts\n                            (array-dimensions a))))\n\n"
+}

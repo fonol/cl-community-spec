@@ -1,0 +1,1306 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: Standard Metaclasses,  Prev: Introduction to Classes,  Up: Introduction to Classes
+
+Standard Metaclasses
+....................
+
+The object system provides a number of predefined metaclasses.  These
+include the classes standard-class, built-in-class, and structure-class:
+
+*
+     The class standard-class is the default class of classes defined by
+     defclass.
+
+*
+     The class built-in-class is the class whose instances are classes
+     that have special implementations with restricted capabilities.  Any
+     class that corresponds to a standard type might be an instance of
+     built-in-class.  The predefined type specifiers that are required to
+     have corresponding classes are listed in Figure~4-8.  It is
+     implementation-dependent whether each of these classes is implemented
+     as a built-in class.
+
+*
+     All classes defined by means of defstruct are instances of the class
+     structure-class.
+
+
+File: gcl.info,  Node: Defining Classes,  Next: Creating Instances of Classes,  Prev: Introduction to Classes,  Up: Classes
+
+Defining Classes
+----------------
+
+The macro defclass is used to define a new named class.
+
+The definition of a class includes:
+
+*
+     The name of the new class.  For newly-defined classes this name is a
+     proper name.
+
+*
+     The list of the direct superclasses of the new class.
+
+*
+     A set of slot specifiers .  Each slot specifier includes the name of
+     the slot and zero or more slot options.  A slot option pertains only
+     to a single slot.  If a class definition contains two slot specifiers
+     with the same name, an error is signaled.
+
+*
+     A set of class options.  Each class option pertains to the class as a
+     whole.
+
+The slot options and class options of the defclass form provide mechanisms
+for the following:
+
+*
+     Supplying a default initial value form for a given slot.
+
+*
+     Requesting that methods for generic functions be automatically
+     generated for reading or writing slots.
+
+*
+     Controlling whether a given slot is shared by all instances of the
+     class or whether each instance of the class has its own slot.
+
+*
+     Supplying a set of initialization arguments and initialization
+     argument defaults to be used in instance creation.
+
+*
+     Indicating that the metaclass is to be other than the default.  The
+     :metaclass option is reserved for future use; an implementation can
+     be extended to make use of the :metaclass option.
+
+*
+     Indicating the expected type for the value stored in the slot.
+
+*
+     Indicating the documentation string for the slot.
+
+
+File: gcl.info,  Node: Creating Instances of Classes,  Next: Inheritance,  Prev: Defining Classes,  Up: Classes
+
+Creating Instances of Classes
+-----------------------------
+
+The generic function make-instance creates and returns a new instance of a
+class.  The object system provides several mechanisms for specifying how a
+new instance is to be initialized.  For example, it is possible to specify
+the initial values for slots in newly created instances either by giving
+arguments to make-instance or by providing default initial values.
+Further initialization activities can be performed by methods written for
+generic functions that are part of the initialization protocol.  The
+complete initialization protocol is described in *Note Object Creation and
+Initialization::.
+
+
+File: gcl.info,  Node: Inheritance,  Next: Determining the Class Precedence List,  Prev: Creating Instances of Classes,  Up: Classes
+
+Inheritance
+-----------
+
+A class can inherit methods, slots, and some defclass options from its
+superclasses.  Other sections describe the inheritance of methods, the
+inheritance of slots and slot options, and the inheritance of class
+options.
+
+* Menu:
+
+* Examples of Inheritance::
+* Inheritance of Class Options::
+
+
+File: gcl.info,  Node: Examples of Inheritance,  Next: Inheritance of Class Options,  Prev: Inheritance,  Up: Inheritance
+
+Examples of Inheritance
+.......................
+
+      (defclass C1 ()
+          ((S1 :initform 5.4 :type number)
+           (S2 :allocation :class)))
+     
+      (defclass C2 (C1)
+          ((S1 :initform 5 :type integer)
+           (S2 :allocation :instance)
+           (S3 :accessor C2-S3)))
+
+Instances of the class C1 have a local slot named S1, whose default
+initial value is 5.4 and whose value should always be a number.  The class
+C1 also has a shared slot named S2.
+
+There is a local slot named S1 in instances of C2.  The default initial
+value of S1 is 5.  The value of S1 should always be of type (and integer
+number).  There are also local slots named S2 and S3 in instances of C2.
+The class C2 has a method for C2-S3 for reading the value of slot S3;
+there is also a method for (setf C2-S3) that writes the value of S3.
+
+
+File: gcl.info,  Node: Inheritance of Class Options,  Prev: Examples of Inheritance,  Up: Inheritance
+
+Inheritance of Class Options
+............................
+
+The :default-initargs class option is inherited.  The set of defaulted
+initialization arguments for a class is the union of the sets of
+initialization arguments supplied in the :default-initargs class options
+of the class and its superclasses.  When more than one default initial
+value form is supplied for a given initialization argument, the default
+initial value form that is used is the one supplied by the class that is
+most specific according to the class precedence list.
+
+If a given :default-initargs class option specifies an initialization
+argument of the same name more than once, an error of type program-error
+is signaled.
+
+
+File: gcl.info,  Node: Determining the Class Precedence List,  Next: Redefining Classes,  Prev: Inheritance,  Up: Classes
+
+Determining the Class Precedence List
+-------------------------------------
+
+The defclass form for a class provides a total ordering on that class and
+its direct superclasses.  This ordering is called the local precedence
+order .  It is an ordered list of the class and its direct superclasses.
+The class precedence list for a class C is a total ordering on C and its
+superclasses that is consistent with the local precedence orders for each
+of C and its superclasses.
+
+A class precedes its direct superclasses, and a direct superclass precedes
+all other direct superclasses specified to its right in the superclasses
+list of the defclass form.  For every class C, define
+
+                R_C={(C,C_1),(C_1,C_2),...,(C_{n-1},C_n)}
+
+where C_1,...,C_n are the direct superclasses of C in the order in which
+they are mentioned in the defclass form. These ordered pairs generate the
+total ordering on the class C and its direct superclasses.
+
+Let S_C be the set of C and its superclasses. Let R be
+
+                         R=\bigcup_{c\in S_C}R_c
+
+.
+
+[Reviewer Note by Barmar: "Consistent" needs to be defined, or maybe we
+should say "logically consistent"?]
+
+The set R might or might not generate a partial ordering, depending on
+whether the R_c, c\in S_C, are consistent; it is assumed that they are
+consistent and that R generates a partial ordering.  When the R_c are not
+consistent, it is said that R is inconsistent.
+
+To compute the class precedence list for~C, topologically sort the
+elements of S_C with respect to the partial ordering generated by R.  When
+the topological sort must select a class from a set of two or more
+classes, none of which are preceded by other classes with respect to~R,
+the class selected is chosen deterministically, as described below.
+
+If R is inconsistent, an error is signaled.
+
+* Menu:
+
+* Topological Sorting::
+* Examples of Class Precedence List Determination::
+
+
+File: gcl.info,  Node: Topological Sorting,  Next: Examples of Class Precedence List Determination,  Prev: Determining the Class Precedence List,  Up: Determining the Class Precedence List
+
+Topological Sorting
+...................
+
+Topological sorting proceeds by finding a class C in~S_C such that no
+other class precedes that element according to the elements in~R.  The
+class C is placed first in the result.  Remove C from S_C, and remove all
+pairs of the form (C,D), D\in S_C, from R. Repeat the process, adding
+classes with no predecessors to the end of the result.  Stop when no
+element can be found that has no predecessor.
+
+If S_C is not empty and the process has stopped, the set R is
+inconsistent. If every class in the finite set of classes is preceded by
+another, then R contains a loop. That is, there is a chain of classes
+C_1,...,C_n such that C_i precedes C_{i+1}, 1<= i<n, and C_n precedes C_1.
+
+Sometimes there are several classes from S_C with no predecessors.  In
+this case select the one that has a direct subclass rightmost in the class
+precedence list computed so far.  (If there is no such candidate class, R
+does not generate a partial ordering--the R_c, c\in S_C, are inconsistent.)
+
+In more precise terms, let {N_1,...,N_m}, m>= 2, be the classes from S_C
+with no predecessors.  Let (C_1... C_n), n>= 1, be the class precedence
+list constructed so far.  C_1 is the most specific class, and C_n is the
+least specific.  Let 1<= j<= n be the largest number such that there
+exists an i where 1<= i<= m and N_i is a direct superclass of C_j; N_i is
+placed next.
+
+The effect of this rule for selecting from a set of classes with no
+predecessors is that the classes in a simple superclass chain are adjacent
+in the class precedence list and that classes in each relatively separated
+subgraph are adjacent in the class precedence list.  For example, let T_1
+and T_2 be subgraphs whose only element in common is the class J.  Suppose
+that no superclass of J appears in either T_1 or T_2, and that J is in the
+superclass chain of every class in both T_1 and T_2.  Let C_1 be the
+bottom of T_1; and let C_2 be the bottom of T_2.  Suppose C is a class
+whose direct superclasses are C_1 and C_2 in that order, then the class
+precedence list for C starts with C and is followed by all classes in T_1
+except J.  All the classes of T_2 are next.  The class J and its
+superclasses appear last.
+
+
+File: gcl.info,  Node: Examples of Class Precedence List Determination,  Prev: Topological Sorting,  Up: Determining the Class Precedence List
+
+Examples of Class Precedence List Determination
+...............................................
+
+This example determines a class precedence list for the class pie.  The
+following classes are defined:
+
+      (defclass pie (apple cinnamon) ())
+     
+      (defclass apple (fruit) ())
+     
+      (defclass cinnamon (spice) ())
+     
+      (defclass fruit (food) ())
+     
+      (defclass spice (food) ())
+     
+      (defclass food () ())
+
+The set S_{pie}~= {pie, apple, cinnamon, fruit, spice, food,
+standard-object, t}. The set R~= {(pie, apple), (apple, cinnamon), (apple,
+fruit), (cinnamon, spice), \break (fruit, food), (spice, food), (food,
+standard-object), (standard-object, t)}.
+
+The class pie is not preceded by anything, so it comes first; the result
+so far is (pie).  Remove pie from S and pairs mentioning pie from R to get
+S~= {apple, cinnamon, fruit, spice, food, standard-object, t} and
+R~=~{(apple, cinnamon), (apple, fruit), (cinnamon, spice),\break (fruit,
+food), (spice, food), (food, standard-object), (standard-object, t)}.
+
+The class apple is not preceded by anything, so it is next; the result is
+(pie apple). Removing apple and the relevant pairs results in S~=
+{cinnamon, fruit, spice, food, standard-object, t} and R~= {(cinnamon,
+spice), (fruit, food), (spice, food), (food, standard-object),\break
+(standard-object, t)}.
+
+The classes cinnamon and fruit are not preceded by anything, so the one
+with a direct subclass rightmost in the class precedence list computed so
+far goes next.  The class apple is a direct subclass of fruit, and the
+class pie is a direct subclass of cinnamon.  Because apple appears to the
+right of pie in the class precedence list, fruit goes next, and the result
+so far is (pie apple fruit).  S~= {cinnamon, spice, food, standard-object,
+t}; R~= {(cinnamon, spice), (spice, food),\break (food, standard-object),
+(standard-object, t)}.
+
+The class cinnamon is next, giving the result so far as (pie apple fruit
+cinnamon).  At this point S~= {spice, food, standard-object, t}; R~=
+{(spice, food), (food, standard-object), (standard-object, t)}.
+
+The classes spice, food, standard-object, and t are added in that order,
+and the class precedence list is (pie apple fruit cinnamon spice food
+standard-object t).
+
+It is possible to write a set of class definitions that cannot be ordered.
+ For example:
+
+      (defclass new-class (fruit apple) ())
+     
+      (defclass apple (fruit) ())
+
+The class fruit must precede apple because the local ordering of
+superclasses must be preserved.  The class apple must precede fruit
+because a class always precedes its own superclasses.  When this situation
+occurs, an error is signaled, as happens here when the system tries to
+compute the class precedence list of new-class.
+
+The following might appear to be a conflicting set of definitions:
+
+      (defclass pie (apple cinnamon) ())
+     
+      (defclass pastry (cinnamon apple) ())
+     
+      (defclass apple () ())
+     
+      (defclass cinnamon () ())
+
+The class precedence list for pie is (pie apple cinnamon standard-object
+t).
+
+The class precedence list for pastry is (pastry cinnamon apple
+standard-object t).
+
+It is not a problem for apple to precede cinnamon in the ordering of the
+superclasses of pie but not in the ordering for pastry.  However, it is
+not possible to build a new class that has both pie and pastry as
+superclasses.
+
+
+File: gcl.info,  Node: Redefining Classes,  Next: Integrating Types and Classes,  Prev: Determining the Class Precedence List,  Up: Classes
+
+Redefining Classes
+------------------
+
+A class that is a direct instance of standard-class can be redefined if
+the new class is also a direct instance of standard-class.  Redefining a
+class modifies the existing class object to reflect the new class
+definition; it does not create a new class object for the class.  Any
+method object created by a :reader, :writer, or :accessor option specified
+by the old defclass form is removed from the corresponding generic
+function.  Methods specified by the new defclass form are added.
+
+When the class C is redefined, changes are propagated to its instances and
+to instances of any of its subclasses.  Updating such an instance occurs
+at an implementation-dependent time, but no later than the next time a slot
+of that instance is read or written.  Updating an instance does not change
+its identity as defined by the function eq.  The updating process may
+change the slots of that particular instance, but it does not create a new
+instance.  Whether updating an instance consumes storage is
+implementation-dependent.
+
+Note that redefining a class may cause slots to be added or deleted.  If a
+class is redefined in a way that changes the set of local slots accessible
+in instances, the instances are updated.  It is implementation-dependent
+whether instances are updated if a class is redefined in a way that does
+not change the set of local slots accessible in instances.
+
+The value of a slot that is specified as shared both in the old class and
+in the new class is retained.  If such a shared slot was unbound in the
+old class, it is unbound in the new class.  Slots that were local in the
+old class and that are shared in the new class are initialized.  Newly
+added shared slots are initialized.
+
+Each newly added shared slot is set to the result of evaluating the
+captured initialization form for the slot that was specified in the
+defclass form for the new class.  If there was no initialization form, the
+slot is unbound.
+
+If a class is redefined in such a way that the set of local slots
+accessible in an instance of the class is changed, a two-step process of
+updating the instances of the class takes place.  The process may be
+explicitly started by invoking the generic function
+make-instances-obsolete.  This two-step process can happen in other
+circumstances in some implementations.  For example, in some
+implementations this two-step process is triggered if the order of slots
+in storage is changed.
+
+The first step modifies the structure of the instance by adding new local
+slots and discarding local slots that are not defined in the new version
+of the class.  The second step initializes the newly-added local slots and
+performs any other user-defined actions. These two steps are further
+specified in the next two sections.
+
+* Menu:
+
+* Modifying the Structure of Instances::
+* Initializing Newly Added Local Slots (Redefining Classes)::
+* Customizing Class Redefinition::
+
+
+File: gcl.info,  Node: Modifying the Structure of Instances,  Next: Initializing Newly Added Local Slots (Redefining Classes),  Prev: Redefining Classes,  Up: Redefining Classes
+
+Modifying the Structure of Instances
+....................................
+
+[Reviewer Note by Barmar: What about shared slots that are deleted?]
+
+The first step modifies the structure of instances of the redefined class
+to conform to its new class definition.  Local slots specified by the new
+class definition that are not specified as either local or shared by the
+old class are added, and slots not specified as either local or shared by
+the new class definition that are specified as local by the old class are
+discarded.  The names of these added and discarded slots are passed as
+arguments to update-instance-for-redefined-class as described in the next
+section.
+
+The values of local slots specified by both the new and old classes are
+retained. If such a local slot was unbound, it remains unbound.
+
+The value of a slot that is specified as shared in the old class and as
+local in the new class is retained.  If such a shared slot was unbound,
+the local slot is unbound.
+
+
+File: gcl.info,  Node: Initializing Newly Added Local Slots (Redefining Classes),  Next: Customizing Class Redefinition,  Prev: Modifying the Structure of Instances,  Up: Redefining Classes
+
+Initializing Newly Added Local Slots
+....................................
+
+The second step initializes the newly added local slots and performs any
+other user-defined actions.  This step is implemented by the generic
+function update-instance-for-redefined-class, which is called after
+completion of the first step of modifying the structure of the instance.
+
+The generic function update-instance-for-redefined-class takes four
+required arguments: the instance being updated after it has undergone the
+first step, a list of the names of local slots that were added, a list of
+the names of local slots that were discarded, and a property list
+containing the slot names and values of slots that were discarded and had
+values.  Included among the discarded slots are slots that were local in
+the old class and that are shared in the new class.
+
+The generic function update-instance-for-redefined-class also takes any
+number of initialization arguments.  When it is called by the system to
+update an instance whose class has been redefined, no initialization
+arguments are provided.
+
+There is a system-supplied primary method for
+update-instance-for-redefined-class whose parameter specializer for its
+instance argument is the class standard-object.  First this method checks
+the validity of initialization arguments and signals an error if an
+initialization argument is supplied that is not declared as valid.  (For
+more information, see *Note Declaring the Validity of Initialization
+Arguments::.) Then it calls the generic function shared-initialize with
+the following arguments: the instance, the list of names of the newly
+added slots, and the initialization arguments it received.
+
+
+File: gcl.info,  Node: Customizing Class Redefinition,  Prev: Initializing Newly Added Local Slots (Redefining Classes),  Up: Redefining Classes
+
+Customizing Class Redefinition
+..............................
+
+[Reviewer Note by Barmar: This description is hard to follow.]
+
+Methods for update-instance-for-redefined-class may be defined to specify
+actions to be taken when an instance is updated.  If only after methods
+for update-instance-for-redefined-class are defined, they will be run
+after the system-supplied primary method for initialization and therefore
+will not interfere with the default behavior of
+update-instance-for-redefined-class.  Because no initialization arguments
+are passed to update-instance-for-redefined-class when it is called by the
+system, the initialization forms for slots that are filled by before
+methods for update-instance-for-redefined-class will not be evaluated by
+shared-initialize.
+
+Methods for shared-initialize may be defined to customize class
+redefinition.  For more information, see *Note Shared-Initialize::.
+
+
+File: gcl.info,  Node: Integrating Types and Classes,  Prev: Redefining Classes,  Up: Classes
+
+Integrating Types and Classes
+-----------------------------
+
+The object system maps the space of classes into the space of types.
+Every class that has a proper name has a corresponding type with the same
+name.
+
+The proper name of every class is a valid type specifier.  In addition,
+every class object is a valid type specifier.  Thus the expression (typep
+object class) evaluates to true if the class of object is class itself or
+a subclass of class.  The evaluation of the expression (subtypep class1
+class2) returns the values true and true if class1 is a subclass of class2
+or if they are the same class; otherwise it returns the values false and
+true.  If  I is an instance of some class C named S and C is an instance
+of standard-class, the evaluation of the expression (type-of I\/) returns S
+if S is the proper name of C; otherwise, it returns C.
+
+Because the names of classes and class objects are type specifiers, they
+may be used in the special form the and in type declarations.
+
+Many but not all of the predefined type specifiers have a corresponding
+class with the same proper name as the type.  These type specifiers are
+listed in Figure~4-8.  For example, the type array has a corresponding
+class named array.  No type specifier that is a list, such as (vector
+double-float 100), has a corresponding class.  The operator deftype does
+not create any classes.
+
+Each class that corresponds to a predefined type specifier can be
+implemented in one of three ways, at the discretion of each implementation.
+It can be a standard class, a structure class,
+
+or a system class.
+
+A built-in class is one whose generalized instances have restricted
+capabilities or special representations.  Attempting to use defclass to
+define subclasses of a built-in-class signals an error.  Calling
+make-instance to create a generalized instance of a built-in class signals
+an error.  Calling slot-value on a generalized instance of a built-in
+class signals an error.  Redefining a built-in class or using change-class
+to change the class of an object to or from a built-in class signals an
+error.  However, built-in classes can be used as parameter specializers in
+methods.
+
+It is possible to determine whether a class is a built-in class by
+checking the metaclass.  A standard class  is an instance of the class
+standard-class, a built-in class  is an instance of the class
+built-in-class, and a structure class is an instance of the class
+structure-class.
+
+Each structure type created by defstruct without using the :type option
+has a corresponding class.  This class is a generalized instance of the
+class structure-class.  The :include option of defstruct creates a direct
+subclass of the class that corresponds to the included structure type.
+
+It is implementation-dependent whether slots are involved in the operation
+of functions defined in this specification on instances of classes defined
+in this specification, except when slots are explicitly defined by this
+specification.
+
+If in a particular implementation a class defined in this specification
+has slots that are not defined by this specfication, the names of these
+slots must not be external symbols of packages defined in this
+specification nor otherwise accessible in the CL-USER package.
+
+The purpose of specifying that many of the standard type specifiers have a
+corresponding class is to enable users to write methods that discriminate
+on these types.  Method selection requires that a class precedence list
+can be determined for each class.
+
+The hierarchical relationships among the type specifiers are mirrored by
+relationships among the classes corresponding to those types.
+
+Figure~4-8 lists the set of classes that correspond to predefined type
+specifiers.
+
+ arithmetic-error                 generic-function   simple-error              
+ array                            hash-table         simple-type-error         
+ bit-vector                       integer            simple-warning            
+ broadcast-stream                 list               standard-class            
+ built-in-class                   logical-pathname   standard-generic-function 
+ cell-error                       method             standard-method           
+ character                        method-combination standard-object           
+ class                            null               storage-condition         
+ complex                          number             stream                    
+ concatenated-stream              package            stream-error              
+ condition                        package-error      string                    
+ cons                             parse-error        string-stream             
+ control-error                    pathname           structure-class           
+ division-by-zero                 print-not-readable structure-object          
+ echo-stream                      program-error      style-warning             
+ end-of-file                      random-state       symbol                    
+ error                            ratio              synonym-stream            
+ file-error                       rational           t                         
+ file-stream                      reader-error       two-way-stream            
+ float                            readtable          type-error                
+ floating-point-inexact           real               unbound-slot              
+ floating-point-invalid-operation restart            unbound-variable          
+ floating-point-overflow          sequence           undefined-function        
+ floating-point-underflow         serious-condition  vector                    
+ function                         simple-condition   warning                   
+
+       Figure 4-8: Classes that correspond to pre-defined type specifiers      
+
+
+The class precedence list information specified in the entries for each of
+these classes are those that are required by the object system.
+
+Individual implementations may be extended to define other type specifiers
+to have a corresponding class.  Individual implementations may be extended
+to add other subclass relationships and to add other elements to the class
+precedence lists as long as they do not violate the type relationships and
+disjointness requirements specified by this standard.  A standard class
+defined with no direct superclasses is guaranteed to be disjoint from all
+of the classes in the table, except for the class named t.
+
+
+File: gcl.info,  Node: Types and Classes Dictionary,  Prev: Classes,  Up: Types and Classes
+
+Types and Classes Dictionary
+============================
+
+* Menu:
+
+* nil (Type)::
+* boolean::
+* function (System Class)::
+* compiled-function::
+* generic-function::
+* standard-generic-function::
+* class::
+* built-in-class::
+* structure-class::
+* standard-class::
+* method::
+* standard-method::
+* structure-object::
+* standard-object::
+* method-combination::
+* t (System Class)::
+* satisfies::
+* member::
+* not (Type Specifier)::
+* and (Type Specifier)::
+* or (Type Specifier)::
+* values (Type Specifier)::
+* eql (Type Specifier)::
+* coerce::
+* deftype::
+* subtypep::
+* type-of::
+* typep::
+* type-error::
+* type-error-datum::
+* simple-type-error::
+
+
+File: gcl.info,  Node: nil (Type),  Next: boolean,  Prev: Types and Classes Dictionary,  Up: Types and Classes Dictionary
+
+nil                                                                  [Type]
+---------------------------------------------------------------------------
+
+Supertypes::
+............
+
+all types
+
+Description::
+.............
+
+The type nil contains no objects and so is also called the empty type.
+The type nil is a subtype of every type.  No object is of type nil.
+
+Notes::
+.......
+
+The type containing the object nil is the type null, not the type nil.
+
+
+File: gcl.info,  Node: boolean,  Next: function (System Class),  Prev: nil (Type),  Up: Types and Classes Dictionary
+
+boolean                                                              [Type]
+---------------------------------------------------------------------------
+
+Supertypes::
+............
+
+boolean, symbol, t
+
+Description::
+.............
+
+The type boolean contains the symbols t and nil, which represent true and
+false, respectively.
+
+See Also::
+..........
+
+t (constant variable), nil (constant variable), *Note if:: , *Note not:: ,
+*Note complement::
+
+Notes::
+.......
+
+Conditional operations, such as if, permit the use of generalized booleans,
+not just booleans; any non-nil value, not just t, counts as true for a
+generalized boolean.  However, as a matter of convention, the symbol t is
+considered the canonical value to use even for a generalized boolean when
+no better choice presents itself.
+
+
+File: gcl.info,  Node: function (System Class),  Next: compiled-function,  Prev: boolean,  Up: Types and Classes Dictionary
+
+function                                                     [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+function, t
+
+Description::
+.............
+
+A function is an object that represents code to be executed when an
+appropriate number of arguments is supplied.  A function is produced by
+the function special form, the function coerce,
+
+or the function compile.  A function can be directly invoked by using it
+as the first argument to funcall, apply, or multiple-value-call.
+
+Compound Type Specifier Kind::
+..............................
+
+Specializing.
+
+Compound Type Specifier Syntax::
+................................
+
+(`function'{[arg-typespec [value-typespec]]})
+
+arg-typespec ::=({typespec}*                    [&optional {typespec}*] 
+                  [&rest typespec] 
+                  [&key {(keyword typespec)}*])
+
+Compound Type Specifier Arguments::
+...................................
+
+typespec--a type specifier.
+
+value-typespec--a type specifier.
+
+Compound Type Specifier Description::
+.....................................
+
+[Editorial Note by KMP: Isn't there some context info about ftype
+declarations to be merged here?]
+
+[Editorial Note by KMP: This could still use some cleaning up.]
+
+[Editorial Note by Sandra: Still need clarification about what happens if
+the number of arguments doesn't match the FUNCTION type declaration.]
+
+The list form of the function type-specifier can be used only for
+declaration and not for discrimination.  Every element of this type is a
+function that accepts arguments of the types specified by the  argj-types
+and returns values that are members of the types specified by value-type.
+The &optional, &rest, &key,
+
+and &allow-other-keys
+
+markers can appear in the list of argument types.
+
+The type specifier provided with &rest is the type of each actual
+argument, not the type of the corresponding variable.
+
+The &key parameters should be supplied as lists of the form (keyword type).
+The keyword must be a valid keyword-name symbol as must be supplied in the
+actual arguments of a call.
+
+This is usually a symbol in the KEYWORD package but can be any symbol.
+
+When &key is given in a function type specifier lambda list, the keyword
+parameters given are exhaustive unless &allow-other-keys is also present.
+&allow-other-keys is an indication that other keyword arguments might
+actually be supplied and, if supplied, can be used.  For example, the type
+of the function make-list could be declared as follows:
+
+      (function ((integer 0) &key (:initial-element t)) list)
+
+The value-type can be a values type specifier in order to indicate the
+types of multiple values.
+
+Consider a declaration of the following form:
+
+      (ftype (function (arg0-type arg1-type ...) val-type) f))
+
+Any form (f arg0 arg1 ...) within the scope of that declaration is
+equivalent to the following:
+
+      (the val-type (f (the arg0-type arg0) (the arg1-type arg1) ...))
+
+That is, the consequences are undefined if any of the arguments are not of
+the specified types or the result is not of the specified type. In
+particular, if any argument is not of the correct type, the result is not
+guaranteed to be of the specified type.
+
+Thus, an ftype declaration for a function describes calls to the function,
+not the actual definition of the function.
+
+Consider a declaration of the following form:
+
+      (type (function (arg0-type arg1-type ...) val-type) fn-valued-variable)
+
+This declaration has the interpretation that, within the scope of the
+declaration, the consequences are unspecified if the value of
+fn-valued-variable is called with arguments not of the specified types;
+the value resulting from a valid call will be of type val-type.
+
+As with variable type declarations, nested declarations imply
+intersections of types, as follows:
+*
+     Consider the following two declarations of ftype:
+
+           (ftype (function (arg0-type1 arg1-type1 ...) val-type1) f))
+
+     and
+
+           (ftype (function (arg0-type2 arg1-type2 ...) val-type2) f))
+
+     If both these declarations are in effect, then within the shared
+     scope of the declarations, calls to f can be treated as if f were
+     declared as follows:
+
+           (ftype (function ((and arg0-type1 arg0-type2) (and arg1-type1 arg1-type2 ...) ...)
+                            (and val-type1 val-type2))
+                  f))
+
+     It is permitted to ignore one or all of the ftype declarations in
+     force.
+
+*
+     If two (or more) type declarations are in effect for a variable, and
+     they are both function declarations, the declarations combine
+     similarly.
+
+
+File: gcl.info,  Node: compiled-function,  Next: generic-function,  Prev: function (System Class),  Up: Types and Classes Dictionary
+
+compiled-function                                                    [Type]
+---------------------------------------------------------------------------
+
+Supertypes::
+............
+
+compiled-function, function, t
+
+Description::
+.............
+
+Any function may be considered by an implementation to be a a compiled
+function if it contains no references to macros that must be expanded at
+run time, and it contains no unresolved references to load time values.
+See *Note Compilation Semantics::.
+
+Functions whose definitions appear lexically within a file that has been
+compiled with compile-file and then loaded with load are of type
+compiled-function.
+
+Functions produced by the compile function are of type compiled-function.
+
+Other functions might also be of type compiled-function.
+
+
+File: gcl.info,  Node: generic-function,  Next: standard-generic-function,  Prev: compiled-function,  Up: Types and Classes Dictionary
+
+generic-function                                             [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+generic-function, function, t
+
+Description::
+.............
+
+A generic function is a function whose behavior depends on the classes or
+identities of the arguments supplied to it.  A generic function object
+contains a set of methods, a lambda list, a method combination type, and
+other information.  The methods define the class-specific behavior and
+operations of the generic function; a method is said to specialize a
+generic function.  When invoked, a generic function executes a subset of
+its methods based on the classes or identities of its arguments.
+
+A generic function can be used in the same ways that an ordinary function
+can be used; specifically, a generic function can be used as an argument
+to funcall and apply, and can be given a global or a local name.
+
+
+File: gcl.info,  Node: standard-generic-function,  Next: class,  Prev: generic-function,  Up: Types and Classes Dictionary
+
+standard-generic-function                                    [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+standard-generic-function, generic-function, function, t
+
+Description::
+.............
+
+The class standard-generic-function is the default class of generic
+functions established by defmethod, ensure-generic-function, defgeneric,
+
+and defclass forms.
+
+
+File: gcl.info,  Node: class,  Next: built-in-class,  Prev: standard-generic-function,  Up: Types and Classes Dictionary
+
+class                                                        [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+class,
+
+standard-object,
+
+t
+
+Description::
+.............
+
+The type class represents objects that determine the structure and
+behavior of their instances. Associated with an object of type class is
+information describing its place in the directed acyclic graph of classes,
+its slots, and its options.
+
+
+File: gcl.info,  Node: built-in-class,  Next: structure-class,  Prev: class,  Up: Types and Classes Dictionary
+
+built-in-class                                               [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+built-in-class, class,
+
+standard-object,
+
+t
+
+Description::
+.............
+
+A built-in class is a class whose instances have restricted capabilities
+or special representations.  Attempting to use defclass to define
+subclasses of a built-in class signals an error of type error.  Calling
+make-instance to create an instance of a built-in class signals an error
+of type error.  Calling slot-value on an instance of a built-in class
+signals an error of type error.  Redefining a built-in class or using
+change-class to change the class of an instance to or from a built-in
+class signals an error of type error.  However, built-in classes can be
+used as parameter specializers in methods.
+
+
+File: gcl.info,  Node: structure-class,  Next: standard-class,  Prev: built-in-class,  Up: Types and Classes Dictionary
+
+structure-class                                              [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+structure-class, class,
+
+standard-object,
+
+t
+
+Description::
+.............
+
+All classes defined by means of defstruct are instances of the class
+structure-class.
+
+
+File: gcl.info,  Node: standard-class,  Next: method,  Prev: structure-class,  Up: Types and Classes Dictionary
+
+standard-class                                               [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+standard-class, class,
+
+standard-object,
+
+t
+
+Description::
+.............
+
+The class standard-class is the default class of classes defined by
+defclass.
+
+
+File: gcl.info,  Node: method,  Next: standard-method,  Prev: standard-class,  Up: Types and Classes Dictionary
+
+method                                                       [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+method, t
+
+Description::
+.............
+
+A method is an object that represents a modular part of the behavior of a
+generic function.
+
+A method contains code to implement the method's behavior, a sequence of
+parameter specializers that specify when the given method is applicable,
+and a sequence of qualifiers that is used by the method combination
+facility to distinguish among methods.  Each required parameter of each
+method has an associated parameter specializer, and the method will be
+invoked only on arguments that satisfy its parameter specializers.
+
+The method combination facility controls the selection of methods, the
+order in which they are run, and the values that are returned by the
+generic function.  The object system offers a default method combination
+type and provides a facility for declaring new types of method combination.
+
+See Also::
+..........
+
+*Note Generic Functions and Methods::
+
+
+File: gcl.info,  Node: standard-method,  Next: structure-object,  Prev: method,  Up: Types and Classes Dictionary
+
+standard-method                                              [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+standard-method, method,
+
+standard-object,
+
+t
+
+Description::
+.............
+
+The class standard-method is the default class of methods defined by the
+defmethod and defgeneric forms.
+
+
+File: gcl.info,  Node: structure-object,  Next: standard-object,  Prev: standard-method,  Up: Types and Classes Dictionary
+
+structure-object                                                    [Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+structure-object, t
+
+Description::
+.............
+
+The class structure-object is an instance of structure-class and is a
+superclass of every class that is an instance of structure-class except
+itself, and is a superclass of every class that is defined by defstruct.
+
+See Also::
+..........
+
+*Note defstruct:: , *Note Sharpsign S::, *Note Printing Structures::
+
+
+File: gcl.info,  Node: standard-object,  Next: method-combination,  Prev: structure-object,  Up: Types and Classes Dictionary
+
+standard-object                                                     [Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+standard-object, t
+
+Description::
+.............
+
+The class standard-object is an instance of standard-class and is a
+superclass of every class that is an instance of standard-class except
+itself.
+
+
+File: gcl.info,  Node: method-combination,  Next: t (System Class),  Prev: standard-object,  Up: Types and Classes Dictionary
+
+method-combination                                           [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+method-combination, t
+
+Description::
+.............
+
+Every method combination object is an indirect instance of the class
+method-combination.  A method combination object represents the
+information about the method combination being used by a generic function.
+A method combination object contains information about both the type of
+method combination and the arguments being used with that type.
+
+
+File: gcl.info,  Node: t (System Class),  Next: satisfies,  Prev: method-combination,  Up: Types and Classes Dictionary
+
+t                                                            [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+t
+
+Description::
+.............
+
+The set of all objects.  The type t is a supertype of every type,
+including itself. Every object is of type t.
+
+
+File: gcl.info,  Node: satisfies,  Next: member,  Prev: t (System Class),  Up: Types and Classes Dictionary
+
+satisfies                                                  [Type Specifier]
+---------------------------------------------------------------------------
+
+Compound Type Specifier Kind::
+..............................
+
+Predicating.
+
+Compound Type Specifier Syntax::
+................................
+
+(`satisfies'{predicate-name})
+
+Compound Type Specifier Arguments::
+...................................
+
+predicate-name--a symbol.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the set of all objects that satisfy the predicate
+predicate-name, which must be a symbol whose global function definition is
+a one-argument predicate.  A name is required for predicate-name; lambda
+expressions are not allowed.  For example, the type specifier (and integer
+(satisfies evenp)) denotes the set of all even integers.  The form (typep
+x '(satisfies p)) is equivalent to (if (p x) t nil).
+
+The argument is required.  The symbol * can be the argument, but it
+denotes itself (the symbol *), and does not represent an unspecified value.
+
+The symbol satisfies is not valid as a type specifier.
+
+
+File: gcl.info,  Node: member,  Next: not (Type Specifier),  Prev: satisfies,  Up: Types and Classes Dictionary
+
+member                                                     [Type Specifier]
+---------------------------------------------------------------------------
+
+Compound Type Specifier Kind::
+..............................
+
+Combining.
+
+Compound Type Specifier Syntax::
+................................
+
+(`member'{{object}*})
+
+Compound Type Specifier Arguments::
+...................................
+
+object--an object.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the set containing the named objects. An object is of this
+type if and only if it is eql to one of the specified objects.
+
+The type specifiers (member) and nil are equivalent.  * can be among the
+objects, but if so it denotes itself (the symbol *) and does not represent
+an unspecified value.  The symbol member is not valid as a type specifier;
+and, specifically, it is not an abbreviation for either (member) or
+(member *).
+
+See Also::
+..........
+
+the type eql
+
+
+File: gcl.info,  Node: not (Type Specifier),  Next: and (Type Specifier),  Prev: member,  Up: Types and Classes Dictionary
+
+not                                                        [Type Specifier]
+---------------------------------------------------------------------------
+
+Compound Type Specifier Kind::
+..............................
+
+Combining.
+
+Compound Type Specifier Syntax::
+................................
+
+(`not'{typespec})
+
+Compound Type Specifier Arguments::
+...................................
+
+typespec--a type specifier.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the set of all objects that are not of the type typespec.
+
+The argument is required, and cannot be *.
+
+The symbol not is not valid as a type specifier.
+
+
+File: gcl.info,  Node: and (Type Specifier),  Next: or (Type Specifier),  Prev: not (Type Specifier),  Up: Types and Classes Dictionary
+
+and                                                        [Type Specifier]
+---------------------------------------------------------------------------
+
+Compound Type Specifier Kind::
+..............................
+
+Combining.
+
+Compound Type Specifier Syntax::
+................................
+
+(`and'{{typespec}*})
+
+Compound Type Specifier Arguments::
+...................................
+
+typespec--a type specifier.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the set of all objects of the type determined by the
+intersection of the typespecs.
+
+* is not permitted as an argument.
+
+The type specifiers (and) and t are equivalent.  The symbol and is not
+valid as a type specifier, and, specifically, it is not an abbreviation
+for (and).
+
+
+File: gcl.info,  Node: or (Type Specifier),  Next: values (Type Specifier),  Prev: and (Type Specifier),  Up: Types and Classes Dictionary
+
+or                                                         [Type Specifier]
+---------------------------------------------------------------------------
+
+Compound Type Specifier Kind::
+..............................
+
+Combining.
+
+Compound Type Specifier Syntax::
+................................
+
+(`or'{{typespec}*})
+
+Compound Type Specifier Arguments::
+...................................
+
+typespec--a type specifier.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the set of all objects of the type determined by the union of
+the typespecs.  For example, the type list by definition is the same as
+(or null cons).  Also, the value returned by position is an object of type
+(or null (integer 0 *)); i.e., either nil or a non-negative integer.
+
+* is not permitted as an argument.
+
+The type specifiers (or) and nil are equivalent.  The symbol or is not
+valid as a type specifier; and, specifically, it is not an abbreviation
+for (or).
+

@@ -1,0 +1,1299 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: Sharpsign,  Next: Re-Reading Abbreviated Expressions,  Prev: Comma,  Up: Standard Macro Characters
+
+Sharpsign
+---------
+
+Sharpsign is a non-terminating dispatching macro character.  It reads an
+optional sequence of digits and then one more character, and uses that
+character to select a function to run as a reader macro function.
+
+The standard syntax includes constructs introduced by the # character.
+The syntax of these constructs is as follows: a character that identifies
+the type of construct is followed by arguments in some form.  If the
+character is a letter, its case is not important; #O and #o are considered
+to be equivalent, for example.
+
+Certain # constructs allow an unsigned decimal number to appear between
+the # and the character.
+
+The reader macros associated with the dispatching macro character # are
+described later in this section and summarized in Figure 2-19.
+
+  dispatch char  purpose                  dispatch char  purpose                
+  Backspace      signals error            {              undefined*             
+  Tab            signals error            }              undefined*             
+  Newline        signals error            +              read-time conditional  
+  Linefeed       signals error            -              read-time conditional  
+  Page           signals error            .              read-time evaluation   
+  Return         signals error            /              undefined              
+  Space          signals error            A, a           array                  
+  !              undefined*               B, b           binary rational        
+  "              undefined                C, c           complex number         
+  #              reference to = label     D, d           undefined              
+  $             undefined                E, e           undefined              
+  %              undefined                F, f           undefined              
+  &              undefined                G, g           undefined              
+  '              function abbreviation    H, h           undefined              
+  (              simple vector            I, i           undefined              
+  )              signals error            J, j           undefined              
+  *              bit vector               K, k           undefined              
+  ,              undefined                L, l           undefined              
+  :              uninterned symbol        M, m           undefined              
+  ;              undefined                N, n           undefined              
+  <              signals error            O, o           octal rational         
+  =              labels following object  P, p           pathname               
+  >              undefined                Q, q           undefined              
+  ?              undefined*               R, r           radix-n rational       
+  @              undefined                S, s           structure              
+  [              undefined*               T, t           undefined              
+  \              character object         U, u           undefined              
+  ]              undefined*               V, v           undefined              
+  ^            undefined                W, w           undefined              
+  _              undefined                X, x           hexadecimal rational   
+  `              undefined                Y, y           undefined              
+  |              balanced comment         Z, z           undefined              
+  ~              undefined                Rubout         undefined              
+
+           Figure 2-19: Standard # Dispatching Macro Character Syntax         
+
+
+The combinations marked by an asterisk (*) are explicitly reserved to the
+user.  No conforming implementation defines them.
+
+Note also that digits do not appear in the preceding table.  This is
+because the notations #0, #1, ..., #9 are reserved for another purpose
+which occupies the same syntactic space.  When a digit follows a sharpsign,
+it is not treated as a dispatch character.  Instead, an unsigned integer
+argument is accumulated and passed as an argument to the reader macro for
+the character that follows the digits.  For example, #2A((1 2) (3 4)) is a
+use of #A with an argument of 2.
+
+* Menu:
+
+* Sharpsign Backslash::
+* Sharpsign Single-Quote::
+* Sharpsign Left-Parenthesis::
+* Sharpsign Asterisk::
+* Examples of Sharpsign Asterisk::
+* Sharpsign Colon::
+* Sharpsign Dot::
+* Sharpsign B::
+* Sharpsign O::
+* Sharpsign X::
+* Sharpsign R::
+* Sharpsign C::
+* Sharpsign A::
+* Sharpsign S::
+* Sharpsign P::
+* Sharpsign Equal-Sign::
+* Sharpsign Sharpsign::
+* Sharpsign Plus::
+* Sharpsign Minus::
+* Sharpsign Vertical-Bar::
+* Examples of Sharpsign Vertical-Bar::
+* Notes about Style for Sharpsign Vertical-Bar::
+* Sharpsign Less-Than-Sign::
+* Sharpsign Whitespace::
+* Sharpsign Right-Parenthesis::
+
+
+File: gcl.info,  Node: Sharpsign Backslash,  Next: Sharpsign Single-Quote,  Prev: Sharpsign,  Up: Sharpsign
+
+Sharpsign Backslash
+...................
+
+Syntax: #\<<x>>
+
+When the token x is a single character long, this parses as the literal
+character char.  Uppercase and lowercase letters are distinguished after
+#\; #\A and #\a denote different character objects.  Any single character
+works after #\, even those that are normally special to read, such as
+left-parenthesis and right-parenthesis.
+
+In the single character case, the x must be followed by a non-constituent
+character.  After #\ is read, the reader backs up over the slash and then
+reads a token, treating the initial slash as a single escape character
+(whether it really is or not in the current readtable).
+
+When the token x is more than one character long, the x must have the
+syntax of a symbol with no embedded package markers.  In this case, the
+sharpsign backslash notation parses as the character whose name is
+(string-upcase x); see *Note Character Names::.
+
+For information about how the Lisp printer prints character objects, see
+*Note Printing Characters::.
+
+
+File: gcl.info,  Node: Sharpsign Single-Quote,  Next: Sharpsign Left-Parenthesis,  Prev: Sharpsign Backslash,  Up: Sharpsign
+
+Sharpsign Single-Quote
+......................
+
+Any expression preceded by #' (sharpsign followed by single-quote), as in
+#'expression, is treated by the Lisp reader as an abbreviation for and
+parsed identically to the expression (function expression).  See function.
+For example,
+
+     (apply #'+ l) == (apply (function +) l)
+
+
+File: gcl.info,  Node: Sharpsign Left-Parenthesis,  Next: Sharpsign Asterisk,  Prev: Sharpsign Single-Quote,  Up: Sharpsign
+
+Sharpsign Left-Parenthesis
+..........................
+
+#( and ) are used to notate a simple vector.
+
+If an unsigned decimal integer appears between the # and (, it specifies
+explicitly the length of the vector.  The consequences are undefined if
+the number of objects specified before the closing ) exceeds the unsigned
+decimal integer.  If the number of objects supplied before the closing )
+is less than the unsigned decimal integer but greater than zero, the last
+object is used to fill all remaining elements of the vector.
+
+[Editorial Note by Barmar: This should say "signals...".] The consequences
+are undefined if the unsigned decimal integer is non-zero and number of
+objects supplied before the closing ) is zero.  For example,
+
+      #(a b c c c c)
+      #6(a b c c c c)
+      #6(a b c)
+      #6(a b c c)
+
+all mean the same thing: a vector of length 6 with elements a, b, and four
+occurrences of c.  Other examples follow:
+
+      #(a b c)               ;A vector of length 3
+      #(2 3 5 7 11 13 17 19 23 29 31 37 41 43 47)
+                             ;A vector containing the primes below 50
+      #()                    ;An empty vector
+
+The notation #() denotes an empty vector, as does #0().
+
+For information on how the Lisp printer prints vectors, see *Note Printing
+Strings::, *Note Printing Bit Vectors::, or *Note Printing Other Vectors::.
+
+
+File: gcl.info,  Node: Sharpsign Asterisk,  Next: Examples of Sharpsign Asterisk,  Prev: Sharpsign Left-Parenthesis,  Up: Sharpsign
+
+Sharpsign Asterisk
+..................
+
+Syntax: #*<<bits>>
+
+A simple bit vector is constructed containing the indicated bits (0's and
+1's), where the leftmost bit has index zero and the subsequent bits have
+increasing indices.
+
+Syntax: #<<n>>*<<bits>>
+
+With an argument n, the vector to be created is of length n.  If the
+number of bits is less than n but greater than zero, the last bit is used
+to fill all remaining bits of the bit vector.
+
+The notations #* and #0* each denote an empty bit vector.
+
+Regardless of whether the optional numeric argument n is provided, the
+token that follows the asterisk is delimited by a normal token delimiter.
+However, (unless the value of *read-suppress* is true) an error of type
+reader-error is signaled if that token is not composed entirely of 0's and
+1's, or if n was supplied and the token is composed of more than n bits,
+or if n is greater than one, but no bits were specified.  Neither a single
+escape nor a multiple escape is permitted in this token.
+
+For information on how the Lisp printer prints bit vectors, see *Note
+Printing Bit Vectors::.
+
+
+File: gcl.info,  Node: Examples of Sharpsign Asterisk,  Next: Sharpsign Colon,  Prev: Sharpsign Asterisk,  Up: Sharpsign
+
+Examples of Sharpsign Asterisk
+..............................
+
+For example,
+       #*101111
+      #6*101111
+      #6*101
+      #6*1011
+
+all mean the same thing: a vector of length 6 with elements 1, 0, 1, 1, 1,
+and 1.
+
+For example:
+
+      #*         ;An empty bit-vector
+
+
+File: gcl.info,  Node: Sharpsign Colon,  Next: Sharpsign Dot,  Prev: Examples of Sharpsign Asterisk,  Up: Sharpsign
+
+Sharpsign Colon
+...............
+
+Syntax:  #:<<symbol-name>>
+
+#: introduces an uninterned symbol whose name is symbol-name.  Every time
+this syntax is encountered, a distinct uninterned symbol is created.  The
+symbol-name must have the syntax of a symbol with no package prefix.
+
+For information on how the Lisp reader prints uninterned symbols, see
+*Note Printing Symbols::.
+
+
+File: gcl.info,  Node: Sharpsign Dot,  Next: Sharpsign B,  Prev: Sharpsign Colon,  Up: Sharpsign
+
+Sharpsign Dot
+.............
+
+#.foo is read as the object resulting from the evaluation of the object
+represented by foo.  The evaluation is done during the read process, when
+the #. notation is encountered.  The #. syntax therefore performs a
+read-time evaluation of foo.
+
+The normal effect of #. is inhibited when the value of *read-eval* is
+false.
+
+In that situation, an error of type reader-error is signaled.
+
+For an object that does not have a convenient printed representation, a
+form that computes the object can be given using the #. notation.
+
+
+File: gcl.info,  Node: Sharpsign B,  Next: Sharpsign O,  Prev: Sharpsign Dot,  Up: Sharpsign
+
+Sharpsign B
+...........
+
+#Brational reads rational in binary (radix 2).  For example,
+
+      #B1101 == 13 ;1101_2
+      #b101/11 == 5/3
+
+The consequences are undefined if the token immediately following the #B
+does not have the syntax of a binary (i.e., radix 2) rational.
+
+
+File: gcl.info,  Node: Sharpsign O,  Next: Sharpsign X,  Prev: Sharpsign B,  Up: Sharpsign
+
+Sharpsign O
+...........
+
+#Orational reads rational in octal (radix 8).  For example,
+
+      #o37/15 == 31/13
+      #o777 == 511
+      #o105 == 69 ;105_8
+
+The consequences are undefined if the token immediately following the #O
+does not have the syntax of an octal (i.e., radix 8) rational.
+
+
+File: gcl.info,  Node: Sharpsign X,  Next: Sharpsign R,  Prev: Sharpsign O,  Up: Sharpsign
+
+Sharpsign X
+...........
+
+#Xrational reads rational in hexadecimal (radix 16).  The digits above 9
+are the letters A through F (the lowercase letters a through f are also
+acceptable).  For example,
+
+      #xF00 == 3840
+      #x105 == 261 ;105_{16}
+
+The consequences are undefined if the token immediately following the #X
+does not have the syntax of a hexadecimal (i.e., radix 16) rational.
+
+
+File: gcl.info,  Node: Sharpsign R,  Next: Sharpsign C,  Prev: Sharpsign X,  Up: Sharpsign
+
+Sharpsign R
+...........
+
+#nR
+
+#radixRrational reads rational in radix radix.  radix must consist of only
+digits that are interpreted as an integer in decimal radix; its value must
+be between 2 and 36 (inclusive).  Only valid digits for the specified
+radix may be used.
+
+For example, #3r102 is another way of writing 11 (decimal), and #11R32 is
+another way of writing 35 (decimal).  For radices larger than 10, letters
+of the alphabet are used in order for the digits after 9.  No alternate #
+notation exists for the decimal radix since a decimal point suffices.
+
+Figure 2-20 contains examples of the use of #B, #O, #X, and #R.
+
+  #2r11010101  ;Another way of writing 213 decimal  
+  #b11010101   ;Ditto                               
+  #b+11010101  ;Ditto                               
+  #o325        ;Ditto, in octal radix               
+  #xD5         ;Ditto, in hexadecimal radix         
+  #16r+D5      ;Ditto                               
+  #o-300       ;Decimal -192, written in base 8     
+  #3r-21010    ;Same thing in base 3                
+  #25R-7H      ;Same thing in base 25               
+  #xACCEDED    ;181202413, in hexadecimal radix     
+
+        Figure 2-20: Radix Indicator Example       
+
+
+The consequences are undefined if the token immediately following the #nR
+does not have the syntax of a rational in radix n.
+
+
+File: gcl.info,  Node: Sharpsign C,  Next: Sharpsign A,  Prev: Sharpsign R,  Up: Sharpsign
+
+Sharpsign C
+...........
+
+#C reads a following object, which must be a list of length two whose
+elements are both reals.  These reals denote, respectively, the real and
+imaginary parts of a complex number.
+
+If the two parts as notated are not of the same data type, then they are
+converted according to the rules of floating-point contagion described in
+*Note Contagion in Numeric Operations::.
+
+#C(real imag) is equivalent to #.(complex (quote real) (quote imag)),
+except that #C is not affected by *read-eval*.  See the function complex.
+
+Figure 2-21 contains examples of the use of #C.
+
+  #C(3.0s1 2.0s-1)  ;A complex with small float parts.                
+  #C(5 -3)          ;A "Gaussian integer"                             
+  #C(5/3 7.0)       ;Will be converted internally to #C(1.66666 7.0)  
+  #C(0 1)           ;The imaginary unit; that is, i.                  
+
+                  Figure 2-21: Complex Number Example                
+
+
+For further information, see *Note Printing Complexes:: and *Note Syntax
+of a Complex::.
+
+
+File: gcl.info,  Node: Sharpsign A,  Next: Sharpsign S,  Prev: Sharpsign C,  Up: Sharpsign
+
+Sharpsign A
+...........
+
+#nA
+
+#nAobject constructs an n-dimensional array, using object as the value of
+the :initial-contents argument to make-array.
+
+For example, #2A((0 1 5) (foo 2 (hot dog))) represents a 2-by-3 matrix:
+
+      0       1       5
+      foo     2       (hot dog)
+
+In contrast, #1A((0 1 5) (foo 2 (hot dog))) represents a vector of length 2
+whose elements are lists:
+
+      (0 1 5) (foo 2 (hot dog))
+
+#0A((0 1 5) (foo 2 (hot dog))) represents a zero-dimensional array whose
+sole element is a list:
+
+      ((0 1 5) (foo 2 (hot dog)))
+
+#0A foo represents a zero-dimensional array whose sole element is the
+symbol foo.  The notation #1A foo is not valid because foo is not a
+sequence.
+
+If some dimension of the array whose representation is being parsed is
+found to be 0, all dimensions to the right (i.e., the higher numbered
+dimensions) are also considered to be 0.
+
+For information on how the Lisp printer prints arrays, see *Note Printing
+Strings::, *Note Printing Bit Vectors::, *Note Printing Other Vectors::,
+or *Note Printing Other Arrays::.
+
+
+File: gcl.info,  Node: Sharpsign S,  Next: Sharpsign P,  Prev: Sharpsign A,  Up: Sharpsign
+
+Sharpsign S
+...........
+
+#s(name slot1 value1 slot2 value2 ...) denotes a structure.  This is valid
+only if name is the name of a structure type already defined by defstruct
+and if the structure type has a standard constructor function.  Let cm
+stand for the name of this constructor function; then this syntax is
+equivalent to
+
+      #.(cm keyword1 'value1 keyword2 'value2 ...)
+
+where each keywordj is the result of computing
+
+      (intern (string slotj) (find-package 'keyword))
+
+The net effect is that the constructor function is called with the
+specified slots having the specified values.
+
+(This coercion feature is deprecated; in the future, keyword names will be
+taken in the package they are read in, so symbols that are actually in the
+KEYWORD package should be used if that is what is desired.)
+
+Whatever object the constructor function returns is returned by the #S
+syntax.
+
+For information on how the Lisp printer prints structures, see *Note
+Printing Structures::.
+
+
+File: gcl.info,  Node: Sharpsign P,  Next: Sharpsign Equal-Sign,  Prev: Sharpsign S,  Up: Sharpsign
+
+Sharpsign P
+...........
+
+#P reads a following object, which must be a string.
+
+#P<<expression>> is equivalent to #.(parse-namestring '<<expression>>),
+except that #P is not affected by *read-eval*.
+
+For information on how the Lisp printer prints pathnames, see *Note
+Printing Pathnames::.
+
+
+File: gcl.info,  Node: Sharpsign Equal-Sign,  Next: Sharpsign Sharpsign,  Prev: Sharpsign P,  Up: Sharpsign
+
+Sharpsign Equal-Sign
+....................
+
+#n=
+
+#n=object reads as whatever object has object as its printed
+representation.  However, that object is labeled by n, a required unsigned
+decimal integer, for possible reference by the syntax #n#.  The scope of
+the label is the expression being read by the outermost call to read;
+within this expression, the same label may not appear twice.
+
+
+File: gcl.info,  Node: Sharpsign Sharpsign,  Next: Sharpsign Plus,  Prev: Sharpsign Equal-Sign,  Up: Sharpsign
+
+Sharpsign Sharpsign
+...................
+
+#n#
+
+#n#, where n is a required unsigned decimal integer, provides a reference
+to some object labeled by #n=; that is, #n# represents a pointer to the
+same (eq) object labeled by #n=.  For example, a structure created in the
+variable y by this code:
+
+      (setq x (list 'p 'q))
+      (setq y (list (list 'a 'b) x 'foo x))
+      (rplacd (last y) (cdr y))
+
+could be represented in this way:
+
+      ((a b) . #1=(#2=(p q) foo #2# . #1#))
+
+Without this notation, but with *print-length* set to 10 and
+*print-circle* set to nil, the structure would print in this way:
+
+      ((a b) (p q) foo (p q) (p q) foo (p q) (p q) foo (p q) ...)
+
+A reference #n# may only occur after a label #n=; forward references are
+not permitted.  The reference may not appear as the labeled object itself
+(that is, #n=#n#) may not be written because the object labeled by #n= is
+not well defined in this case.
+
+
+File: gcl.info,  Node: Sharpsign Plus,  Next: Sharpsign Minus,  Prev: Sharpsign Sharpsign,  Up: Sharpsign
+
+Sharpsign Plus
+..............
+
+#+ provides a read-time conditionalization facility; the syntax is #+test
+expression.  If the feature expression test succeeds, then this textual
+notation represents an object whose printed representation is expression.
+If the feature expression test fails, then this textual notation is
+treated as whitespace_2; that is, it is as if the "#+ test expression" did
+not appear and only a space appeared in its place.
+
+For a detailed description of success and failure in feature expressions,
+see *Note Feature Expressions::.
+
+#+ operates by first reading the feature expression and then skipping over
+the form if the feature expression fails.
+
+While reading the test, the current package is the KEYWORD package.
+
+Skipping over the form is accomplished by binding *read-suppress* to true
+and then calling read.
+
+For examples, see *Note Examples of Feature Expressions::.
+
+
+File: gcl.info,  Node: Sharpsign Minus,  Next: Sharpsign Vertical-Bar,  Prev: Sharpsign Plus,  Up: Sharpsign
+
+Sharpsign Minus
+...............
+
+#- is like #+ except that it skips the expression if the test succeeds;
+that is,
+
+     #-test expression == #+(not test) expression
+
+For examples, see *Note Examples of Feature Expressions::.
+
+
+File: gcl.info,  Node: Sharpsign Vertical-Bar,  Next: Examples of Sharpsign Vertical-Bar,  Prev: Sharpsign Minus,  Up: Sharpsign
+
+Sharpsign Vertical-Bar
+......................
+
+#|...|# is treated as a comment by the reader.  It must be balanced with
+respect to other occurrences of #| and |#, but otherwise may contain any
+characters whatsoever.
+
+
+File: gcl.info,  Node: Examples of Sharpsign Vertical-Bar,  Next: Notes about Style for Sharpsign Vertical-Bar,  Prev: Sharpsign Vertical-Bar,  Up: Sharpsign
+
+Examples of Sharpsign Vertical-Bar
+..................................
+
+The following are some examples that exploit the #|...|# notation:
+
+     ;;; In this example, some debugging code is commented out with #|...|#
+     ;;; Note that this kind of comment can occur in the middle of a line
+     ;;; (because a delimiter marks where the end of the comment occurs)
+     ;;; where a semicolon comment can only occur at the end of a line
+     ;;; (because it comments out the rest of the line).
+      (defun add3 (n) #|(format t "~&Adding 3 to ~D." n)|# (+ n 3))
+     
+     ;;; The examples that follow show issues related to #| ... |# nesting.
+     
+     ;;; In this first example, #| and |# always occur properly paired,
+     ;;; so nesting works naturally.
+      (defun mention-fun-fact-1a ()
+        (format t "CL uses ; and #|...|# in comments."))
+     =>  MENTION-FUN-FACT-1A
+      (mention-fun-fact-1a)
+      |>  CL uses ; and #|...|# in comments.
+     =>  NIL
+      #| (defun mention-fun-fact-1b ()
+           (format t "CL uses ; and #|...|# in comments.")) |#
+      (fboundp 'mention-fun-fact-1b) =>  NIL
+     
+     ;;; In this example, vertical-bar followed by sharpsign needed to appear
+     ;;; in a string without any matching sharpsign followed by vertical-bar
+     ;;; having preceded this.  To compensate, the programmer has included a
+     ;;; slash separating the two characters.  In case 2a, the slash is
+     ;;; unnecessary but harmless, but in case 2b, the slash is critical to
+     ;;; allowing the outer #| ... |# pair match.  If the slash were not present,
+     ;;; the outer comment would terminate prematurely.
+      (defun mention-fun-fact-2a ()
+        (format t "Don't use |\# unmatched or you'll get in trouble!"))
+     =>  MENTION-FUN-FACT-2A
+      (mention-fun-fact-2a)
+      |>  Don't use |# unmatched or you'll get in trouble!
+     =>  NIL
+      #| (defun mention-fun-fact-2b ()
+           (format t "Don't use |\# unmatched or you'll get in trouble!") |#
+      (fboundp 'mention-fun-fact-2b) =>  NIL
+     
+     ;;; In this example, the programmer attacks the mismatch problem in a
+     ;;; different way.  The sharpsign vertical bar in the comment is not needed
+     ;;; for the correct parsing of the program normally (as in case 3a), but
+     ;;; becomes important to avoid premature termination of a comment when such
+     ;;; a program is commented out (as in case 3b).
+      (defun mention-fun-fact-3a () ; #|
+        (format t "Don't use |# unmatched or you'll get in trouble!"))
+     =>  MENTION-FUN-FACT-3A
+      (mention-fun-fact-3a)
+      |>  Don't use |# unmatched or you'll get in trouble!
+     =>  NIL
+      #|
+      (defun mention-fun-fact-3b () ; #|
+        (format t "Don't use |# unmatched or you'll get in trouble!"))
+      |#
+      (fboundp 'mention-fun-fact-3b) =>  NIL
+
+
+File: gcl.info,  Node: Notes about Style for Sharpsign Vertical-Bar,  Next: Sharpsign Less-Than-Sign,  Prev: Examples of Sharpsign Vertical-Bar,  Up: Sharpsign
+
+Notes about Style for Sharpsign Vertical-Bar
+............................................
+
+Some text editors that purport to understand Lisp syntax treat any |...|
+as balanced pairs that cannot nest (as if they were just balanced pairs of
+the multiple escapes used in notating certain symbols).  To compensate for
+this deficiency, some programmers use the notation #||...#||...||#...||#
+instead of #|...#|...|#...|#.   Note that this alternate usage is not a
+different reader macro; it merely exploits the fact that the additional
+vertical-bars occur within the comment in a way that tricks certain text
+editor into better supporting nested comments.  As such, one might
+sometimes see code like:
+
+      #|| (+ #|| 3 ||# 4 5) ||#
+
+Such code is equivalent to:
+
+      #| (+ #| 3 |# 4 5) |#
+
+
+File: gcl.info,  Node: Sharpsign Less-Than-Sign,  Next: Sharpsign Whitespace,  Prev: Notes about Style for Sharpsign Vertical-Bar,  Up: Sharpsign
+
+Sharpsign Less-Than-Sign
+........................
+
+#< is not valid reader syntax.  The Lisp reader will signal an error
+
+of type reader-error
+
+on encountering #<.  This syntax is typically used in the printed
+representation of objects that cannot be read back in.
+
+
+File: gcl.info,  Node: Sharpsign Whitespace,  Next: Sharpsign Right-Parenthesis,  Prev: Sharpsign Less-Than-Sign,  Up: Sharpsign
+
+Sharpsign Whitespace
+....................
+
+# followed immediately by whitespace_1 is not valid reader syntax.  The
+Lisp reader will signal an error of type reader-error if it encounters the
+reader macro notation #<Newline> or #<Space>.
+
+
+File: gcl.info,  Node: Sharpsign Right-Parenthesis,  Prev: Sharpsign Whitespace,  Up: Sharpsign
+
+Sharpsign Right-Parenthesis
+...........................
+
+This is not valid reader syntax.
+
+The Lisp reader will signal an error
+
+of type reader-error
+
+upon encountering #).
+
+
+File: gcl.info,  Node: Re-Reading Abbreviated Expressions,  Prev: Sharpsign,  Up: Standard Macro Characters
+
+Re-Reading Abbreviated Expressions
+----------------------------------
+
+Note that the Lisp reader will generally signal an error of type
+reader-error when reading an expression_2 that has been abbreviated
+because of length or level limits (see *print-level*, *print-length*, and
+*print-lines*) due to restrictions on "..", "...", "#" followed by
+whitespace_1, and "#)".
+
+
+File: gcl.info,  Node: Evaluation and Compilation,  Next: Types and Classes,  Prev: Syntax,  Up: Top
+
+Evaluation and Compilation
+**************************
+
+* Menu:
+
+* Evaluation::
+* Compilation::
+* Declarations::
+* Lambda Lists::
+* Error Checking in Function Calls::
+* Traversal Rules and Side Effects::
+* Destructive Operations::
+* Evaluation and Compilation Dictionary::
+
+
+File: gcl.info,  Node: Evaluation,  Next: Compilation,  Prev: Evaluation and Compilation,  Up: Evaluation and Compilation
+
+Evaluation
+==========
+
+Execution of code can be accomplished by a variety of means ranging from
+direct interpretation of a form representing a program to invocation of
+compiled code produced by a compiler.
+
+Evaluation is the process by which a program is executed in Common Lisp.
+The mechanism of evaluation is manifested both implicitly through the
+effect of the Lisp read-eval-print loop, and  explicitly through the
+presence of the functions eval, compile, compile-file, and load.  Any of
+these facilities might share the same execution strategy, or each might
+use a different one.
+
+The behavior of a conforming program processed by eval and by compile-file
+might differ; see *Note Semantic Constraints::.
+
+Evaluation can be understood in terms of a model in which an interpreter
+recursively traverses a form performing each step of the computation as it
+goes.  This model, which describes the semantics of Common Lisp programs,
+is described in *Note The Evaluation Model::.
+
+* Menu:
+
+* Introduction to Environments::
+* The Evaluation Model::
+* Lambda Expressions::
+* Closures and Lexical Binding::
+* Shadowing::
+* Extent::
+* Return Values::
+
+
+File: gcl.info,  Node: Introduction to Environments,  Next: The Evaluation Model,  Prev: Evaluation,  Up: Evaluation
+
+Introduction to Environments
+----------------------------
+
+A binding is an association between a name and that which the name
+denotes.  Bindings are established in a lexical environment or a dynamic
+environment by particular special operators.
+
+An environment is a set of bindings and other information used during
+evaluation (e.g., to associate meanings with names).
+
+Bindings in an environment are partitioned into namespaces .  A single
+name can simultaneously have more than one associated binding per
+environment, but can have only one associated binding per namespace.
+
+* Menu:
+
+* The Global Environment::
+* Dynamic Environments::
+* Lexical Environments::
+* The Null Lexical Environment::
+* Environment Objects::
+
+
+File: gcl.info,  Node: The Global Environment,  Next: Dynamic Environments,  Prev: Introduction to Environments,  Up: Introduction to Environments
+
+The Global Environment
+......................
+
+The global environment is that part of an environment that contains
+bindings with both indefinite scope and indefinite extent.  The global
+environment contains, among other things, the following:
+
+*
+     bindings of dynamic variables and constant variables.
+
+*
+     bindings of functions, macros, and special operators.
+
+*
+     bindings of compiler macros.
+
+*
+     bindings of type and class names
+
+*
+     information about proclamations.
+
+
+File: gcl.info,  Node: Dynamic Environments,  Next: Lexical Environments,  Prev: The Global Environment,  Up: Introduction to Environments
+
+Dynamic Environments
+....................
+
+A dynamic environment for evaluation is that part of an environment that
+contains bindings whose duration is bounded by points of establishment and
+disestablishment within the execution of the form that established the
+binding.  A dynamic environment contains, among other things, the
+following:
+
+*
+     bindings for dynamic variables.
+
+*
+     information about active catch tags.
+
+*
+     information about exit points established by unwind-protect.
+
+*
+     information about active handlers and restarts.
+
+The dynamic environment that is active at any given point in the execution
+of a program is referred to by definite reference as "the current dynamic
+environment," or sometimes as just "the dynamic environment."
+
+Within a given namespace, a name is said to be bound in a dynamic
+environment if there is a binding associated with its name in the dynamic
+environment or, if not, there is a binding associated with its name in the
+global environment.
+
+
+File: gcl.info,  Node: Lexical Environments,  Next: The Null Lexical Environment,  Prev: Dynamic Environments,  Up: Introduction to Environments
+
+Lexical Environments
+....................
+
+A lexical environment for evaluation at some position in a program is that
+part of the environment that contains information having lexical scope
+within the forms containing that position.  A lexical environment
+contains, among other things, the following:
+
+*
+     bindings of lexical variables and symbol macros.
+
+*
+     bindings of functions and macros.  (Implicit in this is information
+     about those compiler macros that are locally disabled.)
+
+*
+     bindings of block tags.
+
+*
+     bindings of go tags.
+
+*
+     information about declarations.
+
+The lexical environment that is active at any given position in a program
+being semantically processed is referred to by definite reference as "the
+current lexical environment," or sometimes as just "the lexical
+environment."
+
+Within a given namespace, a name is said to be bound in a lexical
+environment if there is a binding associated with its name in the lexical
+environment or, if not, there is a binding associated with its name in the
+global environment.
+
+
+File: gcl.info,  Node: The Null Lexical Environment,  Next: Environment Objects,  Prev: Lexical Environments,  Up: Introduction to Environments
+
+The Null Lexical Environment
+............................
+
+The null lexical environment is equivalent to the global environment.
+
+Although in general the representation of an environment object is
+implementation-dependent, nil can be used in any situation where an
+environment object is called for in order to denote the null lexical
+environment.
+
+
+File: gcl.info,  Node: Environment Objects,  Prev: The Null Lexical Environment,  Up: Introduction to Environments
+
+Environment Objects
+...................
+
+Some operators make use of an object, called an environment object , that
+represents the set of lexical bindings needed to perform semantic analysis
+on a form in a given lexical environment.  The set of bindings in an
+environment object may be a subset of the bindings that would be needed to
+actually perform an evaluation; for example, values associated with
+variable names and function names in the corresponding lexical environment
+might not be available in an environment object.
+
+The type and nature of an environment object is implementation-dependent.
+The values of environment parameters to macro functions are examples of
+environment objects.
+
+The object nil when used as an environment object denotes the null lexical
+environment; see *Note The Null Lexical Environment::.
+
+
+File: gcl.info,  Node: The Evaluation Model,  Next: Lambda Expressions,  Prev: Introduction to Environments,  Up: Evaluation
+
+The Evaluation Model
+--------------------
+
+A Common Lisp system evaluates forms with respect to lexical, dynamic, and
+global environments.  The following sections describe the components of
+the Common Lisp evaluation model.
+
+* Menu:
+
+* Form Evaluation::
+* Symbols as Forms::
+* Lexical Variables::
+* Dynamic Variables::
+* Constant Variables::
+* Symbols Naming Both Lexical and Dynamic Variables::
+* Conses as Forms::
+* Special Forms::
+* Macro Forms::
+* Function Forms::
+* Lambda Forms::
+* Self-Evaluating Objects::
+* Examples of Self-Evaluating Objects::
+
+
+File: gcl.info,  Node: Form Evaluation,  Next: Symbols as Forms,  Prev: The Evaluation Model,  Up: The Evaluation Model
+
+Form Evaluation
+...............
+
+Forms fall into three categories: symbols, conses, and self-evaluating
+objects.  The following sections explain these categories.
+
+
+File: gcl.info,  Node: Symbols as Forms,  Next: Lexical Variables,  Prev: Form Evaluation,  Up: The Evaluation Model
+
+Symbols as Forms
+................
+
+If a form is a symbol, then it is either a symbol macro or a variable.
+
+The symbol names a symbol macro if there is a binding of the symbol as a
+symbol macro in the current lexical environment
+
+(see define-symbol-macro and symbol-macrolet).
+
+If the symbol is a symbol macro, its expansion function is obtained.  The
+expansion function is a function of two arguments, and is invoked by
+calling the macroexpand hook with the expansion function as its first
+argument, the symbol as its second argument, and an environment object
+(corresponding to the current lexical environment) as its third argument.
+The macroexpand hook, in turn, calls the expansion function with the form
+as its first argument and the environment as its second argument.  The
+value of the expansion function, which is passed through by the
+macroexpand hook, is a form.  This resulting form is processed in place of
+the original symbol.
+
+If a form is a symbol that is not a symbol macro, then it is the name of a
+variable, and the value of that variable is returned. There are three
+kinds of variables: lexical variables, dynamic variables, and constant
+variables.  A variable can store one object.  The main operations on a
+variable are to read_1 and to write_1 its value.
+
+An error of type unbound-variable should be signaled if an unbound
+variable is referenced.
+
+Non-constant variables can be assigned by using setq or bound_3 by using
+let.  Figure 3-1 lists some defined names that are applicable to
+assigning, binding, and defining variables.
+
+  boundp        let                  progv         
+  defconstant   let*                 psetq         
+  defparameter  makunbound           set           
+  defvar        multiple-value-bind  setq          
+  lambda        multiple-value-setq  symbol-value  
+
+  Figure 3-1: Some Defined Names Applicable to Variables
+
+
+The following is a description of each kind of variable.
+
+
+File: gcl.info,  Node: Lexical Variables,  Next: Dynamic Variables,  Prev: Symbols as Forms,  Up: The Evaluation Model
+
+Lexical Variables
+.................
+
+A lexical variable is a variable that can be referenced only within the
+lexical scope of the form that establishes that variable; lexical
+variables have lexical scope.  Each time a form creates a lexical binding
+of a variable, a fresh binding is established.
+
+Within the scope of a binding for a lexical variable name, uses of that
+name as a variable are considered to be references to that binding except
+where the variable is shadowed_2 by a form that establishes a fresh
+binding for that variable name, or by a form that locally declares the
+name special.
+
+A lexical variable always has a value.  There is no operator that
+introduces a binding for a lexical variable without giving it an initial
+value, nor is there any operator that can make a lexical variable be
+unbound.
+
+Bindings of lexical variables are found in the lexical environment.
+
+
+File: gcl.info,  Node: Dynamic Variables,  Next: Constant Variables,  Prev: Lexical Variables,  Up: The Evaluation Model
+
+Dynamic Variables
+.................
+
+A variable is a dynamic variable if one of the following conditions hold:
+
+*
+     It is locally declared or globally proclaimed special.
+
+*
+     It occurs textually within a form that creates a dynamic binding for
+     a variable of the same name, and the binding is not shadowed_2 by a
+     form that creates a lexical binding of the same variable name.
+
+A dynamic variable can be referenced at any time in any program; there is
+no textual limitation on references to dynamic variables.  At any given
+time, all dynamic variables with a given name refer to exactly one
+binding, either in the dynamic environment or in the global environment.
+
+The value part of the binding for a dynamic variable might be empty; in
+this case, the dynamic variable is said to have no value, or to be
+unbound.  A dynamic variable can be made unbound by using makunbound.
+
+The effect of binding a dynamic variable is to create a new binding to
+which all references to that dynamic variable in any program refer for the
+duration of the evaluation of the form that creates the dynamic binding.
+
+A dynamic variable can be referenced outside the dynamic extent of a form
+that binds it.  Such a variable is sometimes called a "global variable"
+but is still in all respects just a dynamic variable whose binding happens
+to exist in the global environment rather than in some dynamic environment.
+
+A dynamic variable is unbound unless and until explicitly assigned a
+value, except for those variables whose initial value is defined in this
+specification or by an implementation.
+
+
+File: gcl.info,  Node: Constant Variables,  Next: Symbols Naming Both Lexical and Dynamic Variables,  Prev: Dynamic Variables,  Up: The Evaluation Model
+
+Constant Variables
+..................
+
+Certain variables, called constant variables, are reserved as "named
+constants." The consequences are undefined if an attempt is made to assign
+a value to, or create a binding for a constant variable, except that a
+`compatible' redefinition of a constant variable using defconstant is
+permitted; see the macro defconstant.
+
+Keywords, symbols defined by Common Lisp or the implementation as constant
+(such as nil, t, and pi), and symbols declared as constant using
+defconstant are constant variables.
+
+
+File: gcl.info,  Node: Symbols Naming Both Lexical and Dynamic Variables,  Next: Conses as Forms,  Prev: Constant Variables,  Up: The Evaluation Model
+
+Symbols Naming Both Lexical and Dynamic Variables
+.................................................
+
+The same symbol can name both a lexical variable and a dynamic variable,
+but never in the same lexical environment.
+
+In the following example, the symbol x is used, at different times, as the
+name of a lexical variable and as the name of a dynamic variable.
+
+      (let ((x 1))            ;Binds a special variable X
+        (declare (special x))
+        (let ((x 2))          ;Binds a lexical variable X
+          (+ x                ;Reads a lexical variable X
+             (locally (declare (special x))
+                      x))))   ;Reads a special variable X
+     =>  3
+
+
+File: gcl.info,  Node: Conses as Forms,  Next: Special Forms,  Prev: Symbols Naming Both Lexical and Dynamic Variables,  Up: The Evaluation Model
+
+Conses as Forms
+...............
+
+A cons that is used as a form is called a compound form.
+
+If the car of that compound form is a symbol, that symbol is the name of
+an operator, and the form is either a special form, a macro form, or a
+function form, depending on the function binding of the operator in the
+current lexical environment.  If the operator is neither a special operator
+nor a macro name, it is assumed to be a function name (even if there is no
+definition for such a function).
+
+If the car of the compound form is not a symbol, then that car must be a
+lambda expression, in which case the compound form is a lambda form.
+
+How a compound form is processed depends on whether it is classified as a
+special form, a macro form, a function form, or a lambda form.
+
+
+File: gcl.info,  Node: Special Forms,  Next: Macro Forms,  Prev: Conses as Forms,  Up: The Evaluation Model
+
+Special Forms
+.............
+
+A special form is a form with special syntax, special evaluation rules, or
+both, possibly manipulating the evaluation environment, control flow, or
+both.  A special operator has access to the current lexical environment
+and the current dynamic environment.  Each special operator defines the
+manner in which its subexpressions are treated--which are forms, which are
+special syntax, etc.
+
+Some special operators create new lexical or dynamic environments for use
+during the evaluation of subforms of the special form.  For example, block
+creates a new lexical environment that is the same as the one in force at
+the point of evaluation of the block form with the addition of a binding
+of the block name to an exit point from the block.
+
+The set of special operator names is fixed in Common Lisp; no way is
+provided for the user to define a special operator.  Figure 3-2 lists all
+of the Common Lisp symbols that have definitions as special operators.
+
+  block      let*                  return-from      
+  catch      load-time-value       setq             
+  eval-when  locally               symbol-macrolet  
+  flet       macrolet              tagbody          
+  function   multiple-value-call   the              
+  go         multiple-value-prog1  throw            
+  if         progn                 unwind-protect   
+  labels     progv                                  
+  let        quote                                  
+
+      Figure 3-2: Common Lisp Special Operators    
+
+
+
+File: gcl.info,  Node: Macro Forms,  Next: Function Forms,  Prev: Special Forms,  Up: The Evaluation Model
+
+Macro Forms
+...........
+
+If the operator names a macro, its associated macro function is applied to
+the entire form and the result of that application is used in place of the
+original form.
+
+Specifically, a symbol names a macro in a given lexical environment if
+macro-function is true of the symbol and that environment.  The function
+returned by macro-function is a function of two arguments, called the
+expansion function.  The expansion function is invoked by calling the
+macroexpand hook with the expansion function as its first argument, the
+entire macro form as its second argument, and an environment object
+(corresponding to the current lexical environment) as its third argument.
+The macroexpand hook, in turn, calls the expansion function with the form
+as its first argument and the environment as its second argument.  The
+value of the expansion function, which is passed through by the
+macroexpand hook, is a form.  The returned form is evaluated in place of
+the original form.
+
+The consequences are undefined if a macro function destructively modifies
+any part of its form argument.
+
+A macro name is not a function designator, and cannot be used as the
+function argument to functions such as apply, funcall, or map.
+
+An implementation is free to implement a Common Lisp special operator as a
+macro.  An implementation is free to implement any macro operator as a
+special operator, but only if an equivalent definition of the macro is
+also provided.
+
+Figure 3-3 lists some defined names that are applicable to macros.
+
+  *macroexpand-hook*  macro-function  macroexpand-1  
+  defmacro            macroexpand     macrolet       
+
+    Figure 3-3: Defined names applicable to macros  
+
+
+
+File: gcl.info,  Node: Function Forms,  Next: Lambda Forms,  Prev: Macro Forms,  Up: The Evaluation Model
+
+Function Forms
+..............
+
+If the operator is a symbol naming a function, the form represents a
+function form, and the cdr of the list contains the forms which when
+evaluated will supply the arguments passed to the function.
+
+When a function name is not defined, an error of type undefined-function
+should be signaled at run time; see *Note Semantic Constraints::.
+
+A function form is evaluated as follows:
+
+The subforms in the cdr of the original form are evaluated in
+left-to-right order in the current lexical and dynamic environments.  The
+primary value of each such evaluation becomes an argument to the named
+function; any additional values returned by the subforms are discarded.
+
+The functional value of the operator is retrieved from the lexical
+environment, and that function is invoked with the indicated arguments.
+
+Although the order of evaluation of the argument subforms themselves is
+strictly left-to-right, it is not specified whether the definition of the
+operator in a function form is looked up before the evaluation of the
+argument subforms, after the evaluation of the argument subforms, or
+between the evaluation of any two argument subforms if there is more than
+one such argument subform.  For example, the following might return 23
+or~24.
+
+      (defun foo (x) (+ x 3))
+      (defun bar () (setf (symbol-function 'foo) #'(lambda (x) (+ x 4))))
+      (foo (progn (bar) 20))
+
+A binding for a function name can be established in one of several ways.
+A binding for a function name in the global environment can be established
+by defun, setf of fdefinition, setf of symbol-function,
+ensure-generic-function, defmethod (implicitly, due to
+ensure-generic-function), or defgeneric.  A binding for a function name in
+the lexical environment can be established by flet or labels.
+
+Figure 3-4 lists some defined names that are applicable to functions.
+
+  apply                 fdefinition  mapcan               
+  call-arguments-limit  flet         mapcar               
+  complement            fmakunbound  mapcon               
+  constantly            funcall      mapl                 
+  defgeneric            function     maplist              
+  defmethod             functionp    multiple-value-call  
+  defun                 labels       reduce               
+  fboundp               map          symbol-function      
+
+      Figure 3-4: Some function-related defined names    
+
+
+
+File: gcl.info,  Node: Lambda Forms,  Next: Self-Evaluating Objects,  Prev: Function Forms,  Up: The Evaluation Model
+
+Lambda Forms
+............
+
+A lambda form is similar to a function form, except that the function name
+is replaced by a lambda expression.
+
+A lambda form is equivalent to using funcall of a lexical closure of the
+lambda expression on the given arguments.  (In practice, some compilers
+are more likely to produce inline code for a lambda form than for an
+arbitrary named function that has been declared inline; however, such a
+difference is not semantic.)
+
+For further information, see *Note Lambda Expressions::.
+
+
+File: gcl.info,  Node: Self-Evaluating Objects,  Next: Examples of Self-Evaluating Objects,  Prev: Lambda Forms,  Up: The Evaluation Model
+
+Self-Evaluating Objects
+.......................
+
+A form that is neither a symbol nor a cons is defined to be a
+self-evaluating object.  Evaluating such an object yields the same object
+as a result.
+
+Certain specific symbols and conses might also happen to be
+"self-evaluating" but only as a special case of a more general set of
+rules for the evaluation of symbols and conses; such objects are not
+considered to be self-evaluating objects.
+
+The consequences are undefined if literal objects (including
+self-evaluating objects) are destructively modified.
+
+
+File: gcl.info,  Node: Examples of Self-Evaluating Objects,  Prev: Self-Evaluating Objects,  Up: The Evaluation Model
+
+Examples of Self-Evaluating Objects
+...................................
+
+Numbers, pathnames, and arrays are examples of self-evaluating objects.
+
+      3 =>  3
+      #c(2/3 5/8) =>  #C(2/3 5/8)
+      #p"S:[BILL]OTHELLO.TXT" =>  #P"S:[BILL]OTHELLO.TXT"
+      #(a b c) =>  #(A B C)
+      "fred smith" =>  "fred smith"
+
+
+File: gcl.info,  Node: Lambda Expressions,  Next: Closures and Lexical Binding,  Prev: The Evaluation Model,  Up: Evaluation
+
+Lambda Expressions
+------------------
+
+In a lambda expression, the body is evaluated in a lexical environment
+that is formed by adding the binding of each parameter in the lambda list
+with the corresponding value from the arguments to the current lexical
+environment.
+
+For further discussion of how bindings are established based on the lambda
+list, see *Note Lambda Lists::.
+
+The body of a lambda expression is an implicit progn; the values it
+returns are returned by the lambda expression.
+

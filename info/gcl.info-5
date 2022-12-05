@@ -1,0 +1,1201 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: Macro Characters,  Next: Multiple Escape Characters,  Prev: Invalid Characters,  Up: Character Syntax Types
+
+Macro Characters
+................
+
+When the Lisp reader encounters a macro character on an input stream,
+special parsing of subsequent characters on the input stream is performed.
+
+A macro character has an associated function called a reader macro function
+that implements its specialized parsing behavior.  An association of this
+kind can be established or modified under control of a conforming program
+by using the functions set-macro-character and
+set-dispatch-macro-character.
+
+Upon encountering a macro character, the Lisp reader calls its reader
+macro function, which parses one specially formatted object from the input
+stream.  The function either returns the parsed object, or else it returns
+no values to indicate that the characters scanned by the function are
+being ignored (e.g., in the case of a comment).  Examples of macro
+characters are backquote, single-quote, left-parenthesis, and
+right-parenthesis.
+
+A macro character is either terminating or non-terminating.  The
+difference between terminating and non-terminating macro characters lies
+in what happens when such characters occur in the middle of a token.  If a
+non-terminating macro character occurs in the middle of a token, the
+function associated with the non-terminating macro character is not called,
+and the non-terminating macro character does not terminate the token's
+name; it becomes part of the name as if the macro character were really a
+constituent character.  A terminating macro character terminates any token,
+and its associated reader macro function is called no matter where the
+character appears.  The only non-terminating macro character in standard
+syntax is sharpsign.
+
+If a character is a dispatching macro character C_1, its reader macro
+function is a function supplied by the implementation.  This function
+reads decimal digit characters until a non-digit C_2 is read.  If any
+digits were read, they are converted into a corresponding integer infix
+parameter P; otherwise, the infix parameter P is nil.  The terminating
+non-digit C_2 is a character (sometimes called a "sub-character" to
+emphasize its subordinate role in the dispatching) that is looked up in
+the dispatch table associated with the dispatching macro character C_1.
+The reader macro function associated with the sub-character C_2 is invoked
+with three arguments: the stream, the sub-character C_2, and the infix
+parameter P.  For more information about dispatch characters, see the
+function set-dispatch-macro-character.
+
+For information about the macro characters that are available in standard
+syntax, see *Note Standard Macro Characters::.
+
+
+File: gcl.info,  Node: Multiple Escape Characters,  Next: Examples of Multiple Escape Characters,  Prev: Macro Characters,  Up: Character Syntax Types
+
+Multiple Escape Characters
+..........................
+
+A pair of multiple escape characters is used to indicate that an enclosed
+sequence of characters, including possible macro characters and
+whitespace_2 characters, are to be treated as alphabetic_2 characters with
+case preserved.  Any single escape and multiple escape characters that are
+to appear in the sequence must be preceded by a single escape character.
+
+Vertical-bar is a multiple escape character in standard syntax.
+
+
+File: gcl.info,  Node: Examples of Multiple Escape Characters,  Next: Single Escape Character,  Prev: Multiple Escape Characters,  Up: Character Syntax Types
+
+Examples of Multiple Escape Characters
+......................................
+
+      ;; The following examples assume the readtable case of *readtable*
+      ;; and *print-case* are both :upcase.
+      (eq 'abc 'ABC) =>  true
+      (eq 'abc '|ABC|) =>  true
+      (eq 'abc 'a|B|c) =>  true
+      (eq 'abc '|abc|) =>  false
+
+
+File: gcl.info,  Node: Single Escape Character,  Next: Examples of Single Escape Characters,  Prev: Examples of Multiple Escape Characters,  Up: Character Syntax Types
+
+Single Escape Character
+.......................
+
+A single escape is used to indicate that the next character is to be
+treated as an alphabetic_2 character with its case preserved, no matter
+what the character is or which constituent traits it has.
+
+Slash is a single escape character in standard syntax.
+
+
+File: gcl.info,  Node: Examples of Single Escape Characters,  Next: Whitespace Characters,  Prev: Single Escape Character,  Up: Character Syntax Types
+
+Examples of Single Escape Characters
+....................................
+
+      ;; The following examples assume the readtable case of *readtable*
+      ;; and *print-case* are both :upcase.
+      (eq 'abc '\A\B\C) =>  true
+      (eq 'abc 'a\Bc) =>  true
+      (eq 'abc '\ABC) =>  true
+      (eq 'abc '\abc) =>  false
+
+
+File: gcl.info,  Node: Whitespace Characters,  Next: Examples of Whitespace Characters,  Prev: Examples of Single Escape Characters,  Up: Character Syntax Types
+
+Whitespace Characters
+.....................
+
+Whitespace_2 characters are used to separate tokens.
+
+Space and newline are whitespace_2 characters in standard syntax.
+
+
+File: gcl.info,  Node: Examples of Whitespace Characters,  Prev: Whitespace Characters,  Up: Character Syntax Types
+
+Examples of Whitespace Characters
+.................................
+
+      (length '(this-that)) =>  1
+      (length '(this - that)) =>  3
+      (length '(a
+                b)) =>  2
+      (+ 34) =>  34
+      (+ 3 4) =>  7
+
+
+File: gcl.info,  Node: Reader Algorithm,  Next: Interpretation of Tokens,  Prev: Character Syntax,  Up: Syntax
+
+Reader Algorithm
+================
+
+This section describes the algorithm used by the Lisp reader to parse
+objects from an input character stream, including how the Lisp reader
+processes macro characters.
+
+When dealing with tokens, the reader's basic function is to distinguish
+representations of symbols from those of numbers.  When a token is
+accumulated, it is assumed to represent a number if it satisfies the
+syntax for numbers listed in Figure~2-9.  If it does not represent a
+number, it is then assumed to be a potential number if it satisfies the
+rules governing the syntax for a potential number.  If a valid token is
+neither a representation of a number nor a potential number, it represents
+a symbol.
+
+The algorithm performed by the Lisp reader is as follows:
+
+1.
+     If at end of file, end-of-file processing is performed as specified
+     in read.  Otherwise, one character, x,  is read from the input
+     stream, and dispatched according to the syntax type of x to one of
+     steps 2 to 7.
+
+2.
+     If x is an invalid character, an error of type reader-error is
+     signaled.
+
+3.
+     If x is a whitespace_2 character, then it is discarded and step 1 is
+     re-entered.
+
+4.
+     If x is a terminating or non-terminating macro character then its
+     associated reader macro function is called with two arguments, the
+     input stream and x.
+
+     The reader macro function may read characters from the input stream;
+     if it does, it will see those characters following the macro
+     character.  The Lisp reader may be invoked recursively from the
+     reader macro function.
+
+     The reader macro function must not have any side effects other than
+     on the input stream; because of backtracking and restarting of the
+     read operation, front ends to the Lisp reader (e.g., "editors" and
+     "rubout handlers") may cause the reader macro function to be called
+     repeatedly during the reading of a single expression in which x only
+     appears once.
+
+     The reader macro function may return zero values or one value.  If
+     one value is returned, then that value is returned as the result of
+     the read operation; the algorithm is done.  If zero values are
+     returned, then step 1 is re-entered.
+
+5.
+     If x is a single escape character then the next character, y, is
+     read, or an error of type end-of-file is signaled if at the end of
+     file.  y is treated as if it is a constituent whose only constituent
+     trait is alphabetic_2.  y is used to begin a token, and step 8 is
+     entered.
+
+6.
+     If x is a multiple escape character then a token (initially
+     containing no characters) is  begun and step 9 is entered.
+
+7.
+     If x is a constituent character, then it begins a token.  After the
+     token is read in, it will be interpreted either as a Lisp object or
+     as being of invalid syntax.  If the token represents an object, that
+     object is returned as the result of the read operation.  If the token
+     is of invalid syntax, an error is signaled.  If x is a character with
+     case, it might be replaced with the corresponding character of the
+     opposite case, depending on the readtable case of the current
+     readtable, as outlined in *Note Effect of Readtable Case on the Lisp
+     Reader::.  X is used to begin a token, and step 8 is entered.
+
+8.
+     At this point a token is being accumulated, and an even number of
+     multiple escape characters have been encountered.  If at end of file,
+     step 10 is entered.  Otherwise, a character, y, is read, and one of
+     the following actions is performed according to its syntax type:
+
+    *
+          If y is a constituent or non-terminating macro character:
+         -
+               If y is a character with case, it might be replaced with
+               the corresponding character of the opposite case, depending
+               on the readtable case of the current readtable, as outlined
+               in *Note Effect of Readtable Case on the Lisp Reader::.
+
+         -
+               Y is appended to the token being built.
+
+         -
+               Step 8 is repeated.
+
+    *
+          If y is a single escape character, then the next character, z,
+          is read, or an error of type end-of-file is signaled if at end
+          of file.  Z is treated as if it is a constituent whose only
+          constituent trait is alphabetic_2.  Z is appended to the token
+          being built, and step 8 is repeated.
+
+    *
+          If y is a multiple escape character, then step 9 is entered.
+
+    *
+          If y is an invalid character, an error of type reader-error is
+          signaled.
+
+    *
+          If y is a terminating macro character, then it terminates the
+          token.  First the character y is unread (see unread-char), and
+          then step 10 is entered.
+
+    *
+          If y is a whitespace_2 character, then it terminates the token.
+          First the character y is unread if appropriate (see
+          read-preserving-whitespace), and then step 10 is entered.
+
+9.
+     At this point a token is being accumulated, and an odd number of
+     multiple escape characters have been encountered.  If at end of file,
+     an error of type end-of-file is signaled.  Otherwise, a character, y,
+     is read, and one of the following actions is performed according to
+     its syntax type:
+
+    *
+          If y is a constituent, macro, or whitespace_2 character, y is
+          treated as a constituent whose only constituent trait is
+          alphabetic_2.  Y is appended to the token being built, and step
+          9 is repeated.
+
+    *
+          If y is a single escape character, then the next character, z,
+          is read, or an error of type end-of-file is signaled if at end
+          of file.  Z is treated as a constituent whose only constituent
+          trait is alphabetic_2.  Z is appended to the token being built,
+          and step 9 is repeated.
+
+    *
+          If y is a multiple escape character, then step 8 is entered.
+
+    *
+          If y is an invalid character, an error of type reader-error is
+          signaled.
+
+10.
+     An entire token has been accumulated.  The object represented by the
+     token is returned as the result of the read operation, or an error of
+     type reader-error is signaled if the token is not of valid syntax.
+
+
+File: gcl.info,  Node: Interpretation of Tokens,  Next: Standard Macro Characters,  Prev: Reader Algorithm,  Up: Syntax
+
+Interpretation of Tokens
+========================
+
+* Menu:
+
+* Numbers as Tokens::
+* Constructing Numbers from Tokens::
+* The Consing Dot::
+* Symbols as Tokens::
+* Valid Patterns for Tokens::
+* Package System Consistency Rules::
+
+
+File: gcl.info,  Node: Numbers as Tokens,  Next: Constructing Numbers from Tokens,  Prev: Interpretation of Tokens,  Up: Interpretation of Tokens
+
+Numbers as Tokens
+-----------------
+
+When a token is read, it is interpreted as a number or symbol.  The token
+is interpreted as a number if it satisfies the syntax for numbers
+specified in Figure 2-9.
+
+ numeric-token ::= !integer | !ratio | !float                                              
+ integer       ::= [sign] {decimal-digit}^+ decimal-point | [sign] {digit}^+               
+ ratio         ::= [sign] {digit}^+ slash {digit}^+                                        
+ float         ::= [sign] {decimal-digit}* decimal-point {decimal-digit}^+ [!exponent]   
+                   | [sign] {decimal-digit}^+ [decimal-point {decimal-digit}*] !exponent 
+ exponent      ::= exponent-marker [sign] {digit}^+                                        
+ sign--a sign.   slash--a slash  decimal-point--a dot.
+ exponent-marker--an exponent marker.   decimal-digit--a digit in radix 10.
+ digit--a digit in the current input radix.
+
+  Figure 2-9: Syntax for Numeric Tokens
+
+* Menu:
+
+* Potential Numbers as Tokens::
+* Escape Characters and Potential Numbers::
+* Examples of Potential Numbers::
+
+
+File: gcl.info,  Node: Potential Numbers as Tokens,  Next: Escape Characters and Potential Numbers,  Prev: Numbers as Tokens,  Up: Numbers as Tokens
+
+Potential Numbers as Tokens
+...........................
+
+To allow implementors and future Common Lisp standards to extend the
+syntax of numbers, a syntax for potential numbers is defined that is more
+general than the syntax for numbers.  A token is a potential number if it
+satisfies all of the following requirements:
+
+1.
+     The token consists entirely of digits, signs, ratio markers, decimal
+     points (.), extension characters (^ or _), and number markers.  A
+     number marker is a letter.  Whether a letter may be treated as a
+     number marker depends on context, but no letter that is adjacent to
+     another letter may ever be treated as a number marker.  Exponent
+     markers are number markers.
+
+2.
+     The token contains at least one digit.  Letters may be considered to
+     be digits, depending on the current input base, but only in tokens
+     containing no decimal points.
+
+3.
+     The token begins with a digit, sign, decimal point, or extension
+     character,
+
+     [Reviewer Note by Barmar: This section is unnecessary because the
+     first bullet already omits discussion of a colon (package marker).]
+     but not a package marker.  The syntax involving a leading package
+     marker followed by a potential number is not well-defined. The
+     consequences of the use of notation such as :1, :1/2, and :2^3 in a
+     position where an expression appropriate for read is expected are
+     unspecified.
+
+4.
+     The token does not end with a sign.
+
+If a potential number has number syntax, a number of the appropriate type
+is constructed and returned, if the number is representable in an
+implementation.  A number will not be representable in an implementation
+if it is outside the boundaries set by the implementation-dependent
+constants for numbers.  For example, specifying too large or too small an
+exponent for a float may make the number impossible to represent in the
+implementation.  A ratio with denominator zero (such as -35/000) is not
+represented in any implementation.  When a token with the syntax of a
+number cannot be converted to an internal number, an error of type
+reader-error is signaled.  An error must not be signaled for specifying
+too many significant digits for a float; a truncated or rounded value
+should be produced.
+
+If there is an ambiguity as to whether a letter should be treated as a
+digit or as a number marker, the letter is treated as a digit.
+
+
+File: gcl.info,  Node: Escape Characters and Potential Numbers,  Next: Examples of Potential Numbers,  Prev: Potential Numbers as Tokens,  Up: Numbers as Tokens
+
+Escape Characters and Potential Numbers
+.......................................
+
+A potential number cannot contain any escape characters.  An escape
+character robs the following character of all syntactic qualities, forcing
+it to be strictly alphabetic_2 and therefore unsuitable for use in a
+potential number.  For example, all of the following representations are
+interpreted as symbols, not numbers:
+
+      \256   25\64   1.0\E6   |100|   3\.14159   |3/4|   3\/4   5||
+
+In each case, removing the escape character (or characters) would cause
+the token to be a potential number.
+
+
+File: gcl.info,  Node: Examples of Potential Numbers,  Prev: Escape Characters and Potential Numbers,  Up: Numbers as Tokens
+
+Examples of Potential Numbers
+.............................
+
+As examples, the tokens in Figure 2-10 are potential numbers, but they are
+not actually numbers, and so are reserved tokens; a conforming
+implementation is permitted, but not required, to define their meaning.
+
+  1b5000                       777777q                1.7J  -3/4+6.7J  12/25/83  
+  27^19                      3^4/5                6//7  3.1.2.6    ^-43^   
+  3.141_592_653_589_793_238_4  -3.7+2.6i-6.17j+19.6k  
+
+                     Figure 2-10: Examples of reserved tokens                   
+
+
+The tokens in Figure 2-11 are not potential numbers; they are always
+treated as symbols:
+
+  /     /5     +  1+  1-        foo+  ab.cd  _  ^   ^/-  
+
+  Figure 2-11: Examples of symbols
+
+
+The tokens in Figure 2-12 are potential numbers if the current input base
+is 16, but they are always treated as symbols if the current input base is
+10.
+
+  bad-face  25-dec-83  a/b  fad_cafe  f^  
+
+  Figure 2-12: Examples of symbols or potential numbers
+
+
+
+File: gcl.info,  Node: Constructing Numbers from Tokens,  Next: The Consing Dot,  Prev: Numbers as Tokens,  Up: Interpretation of Tokens
+
+Constructing Numbers from Tokens
+--------------------------------
+
+A real is constructed directly from a corresponding numeric token; see
+Figure~2-9.
+
+A complex is notated as a #C (or #c) followed by a list of two reals; see
+*Note Sharpsign C::.
+
+The reader macros #B, #O, #X, and #R may also be useful in controlling the
+input radix in which rationals are parsed; see *Note Sharpsign B::, *Note
+Sharpsign O::, *Note Sharpsign X::, and *Note Sharpsign R::.
+
+This section summarizes the full syntax for numbers.
+
+* Menu:
+
+* Syntax of a Rational::
+* Syntax of an Integer::
+* Syntax of a Ratio::
+* Syntax of a Float::
+* Syntax of a Complex::
+
+
+File: gcl.info,  Node: Syntax of a Rational,  Next: Syntax of an Integer,  Prev: Constructing Numbers from Tokens,  Up: Constructing Numbers from Tokens
+
+Syntax of a Rational
+....................
+
+
+File: gcl.info,  Node: Syntax of an Integer,  Next: Syntax of a Ratio,  Prev: Syntax of a Rational,  Up: Constructing Numbers from Tokens
+
+Syntax of an Integer
+....................
+
+Integers can be written as a sequence of digits, optionally preceded by a
+sign and optionally followed by a decimal point; see Figure~2-9.  When a
+decimal point is used, the digits are taken to be in radix 10; when no
+decimal point is used, the digits are taken to be in radix given by the
+current input base.
+
+For information on how integers are printed, see *Note Printing Integers::.
+
+
+File: gcl.info,  Node: Syntax of a Ratio,  Next: Syntax of a Float,  Prev: Syntax of an Integer,  Up: Constructing Numbers from Tokens
+
+Syntax of a Ratio
+.................
+
+Ratios can be written as an optional sign followed by two non-empty
+sequences of digits separated by a slash; see Figure~2-9.  The second
+sequence may not consist entirely of zeros.  Examples of ratios are in
+Figure 2-13.
+
+  2/3                 ;This is in canonical form                  
+  4/6                 ;A non-canonical form for 2/3               
+  -17/23              ;A ratio preceded by a sign                 
+  -30517578125/32768  ;This is (-5/2)^15                        
+  10/5                ;The canonical form for this is 2           
+  #o-101/75           ;Octal notation for -65/61                  
+  #3r120/21           ;Ternary notation for 15/7                  
+  #Xbc/ad             ;Hexadecimal notation for 188/173           
+  #xFADED/FACADE      ;Hexadecimal notation for 1027565/16435934  
+
+                  Figure 2-13: Examples of Ratios                
+
+
+[Reviewer Note by Barmar: #o, #3r, #X, and #x mentioned above are not in
+the syntax rules defined just above that.]
+
+For information on how ratios are printed, see *Note Printing Ratios::.
+
+
+File: gcl.info,  Node: Syntax of a Float,  Next: Syntax of a Complex,  Prev: Syntax of a Ratio,  Up: Constructing Numbers from Tokens
+
+Syntax of a Float
+.................
+
+Floats can be written in either decimal fraction or computerized
+scientific notation: an optional sign, then a non-empty sequence of digits
+with an embedded decimal point, then an optional decimal exponent
+specification.  If there is no exponent specifier, then the decimal point
+is required, and there must be digits after it.  The exponent specifier
+consists of an exponent marker, an optional sign, and a non-empty sequence
+of digits.  If no exponent specifier is present, or if the exponent marker
+e (or E) is used, then the format specified by *read-default-float-format*
+is used.  See Figure~2-9.
+
+An implementation may provide one or more kinds of float that collectively
+make up the type float.  The letters s, f, d, and l (or their respective
+uppercase equivalents) explicitly specify the use of the types
+short-float, single-float, double-float, and long-float, respectively.
+
+The internal format used for an external representation depends only on
+the exponent marker, and not on the number of decimal digits in the
+external representation.
+
+Figure 2-14 contains examples of notations for floats:
+
+  0.0       ;Floating-point zero in default format                          
+  0E0       ;As input, this is also floating-point zero in default format.  
+            ;As output, this would appear as 0.0.                           
+  0e0       ;As input, this is also floating-point zero in default format.  
+            ;As output, this would appear as 0.0.                           
+  -.0       ;As input, this might be a zero or a minus zero,                
+            ; depending on whether the implementation supports              
+            ; a distinct minus zero.                                        
+            ;As output, 0.0 is zero and -0.0 is minus zero.                 
+  0.        ;On input, the integer zero--not a floating-point number!      
+            ;Whether this appears as 0 or 0. on output depends              
+            ;on the value of *print-radix*.                                 
+  0.0s0     ;A floating-point zero in short format                          
+  0s0       ;As input, this is a floating-point zero in short format.       
+            ;As output, such a zero would appear as 0.0s0                   
+            ; (or as 0.0 if short-float was the default format).            
+  6.02E+23  ;Avogadro's number, in default format                           
+  602E+21   ;Also Avogadro's number, in default format                      
+
+               Figure 2-14: Examples of Floating-point numbers             
+
+
+For information on how floats are printed, see *Note Printing Floats::.
+
+
+File: gcl.info,  Node: Syntax of a Complex,  Prev: Syntax of a Float,  Up: Constructing Numbers from Tokens
+
+Syntax of a Complex
+...................
+
+A complex has a Cartesian structure, with a real part and an imaginary
+part each of which is a
+
+real.
+
+The parts of a complex are not necessarily floats but both parts must be
+of the same type:
+
+[Editorial Note by KMP: This is not the same as saying they must be the
+same type.  Maybe we mean they are of the same `precision' or `format'?
+GLS had suggestions which are not yet merged.] either both are rationals,
+or both are of the same float subtype.  When constructing a complex, if
+the specified parts are not the same type, the parts are converted to be
+the same type internally (i.e., the rational part is converted to a float).
+An object of type (complex rational) is converted internally and
+represented thereafter as a rational if its imaginary part is an integer
+whose value is 0.
+
+For further information, see *Note Sharpsign C:: and *Note Printing
+Complexes::.
+
+
+File: gcl.info,  Node: The Consing Dot,  Next: Symbols as Tokens,  Prev: Constructing Numbers from Tokens,  Up: Interpretation of Tokens
+
+The Consing Dot
+---------------
+
+If a token consists solely of dots (with no escape characters), then an
+error of type reader-error is signaled, except in one circumstance: if the
+token is a single dot and appears in a situation where dotted pair
+notation permits a dot, then it is accepted as part of such syntax and no
+error is signaled.  See *Note Left-Parenthesis::.
+
+
+File: gcl.info,  Node: Symbols as Tokens,  Next: Valid Patterns for Tokens,  Prev: The Consing Dot,  Up: Interpretation of Tokens
+
+Symbols as Tokens
+-----------------
+
+Any token that is not a potential number, does not contain a package
+marker, and does not consist entirely of dots will always be interpreted
+as a symbol.  Any token that is a potential number but does not fit the
+number syntax is a reserved token and has an implementation-dependent
+interpretation.  In all other cases, the token is construed to be the name
+of a symbol.
+
+Examples of the printed representation of symbols are in Figure 2-15.  For
+presentational simplicity, these examples assume that the readtable case
+of the current readtable is :upcase.
+
+  FROBBOZ         The symbol whose name is FROBBOZ.                
+  frobboz         Another way to notate the same symbol.           
+  fRObBoz         Yet another way to notate it.                    
+  unwind-protect  A symbol with a hyphen in its name.              
+  +$             The symbol named +$.                            
+  1+              The symbol named 1+.                             
+  +1              This is the integer 1, not a symbol.             
+  pascal_style    This symbol has an underscore in its name.       
+  file.rel.43     This symbol has periods in its name.             
+  \(              The symbol whose name is (.                      
+  \+1             The symbol whose name is +1.                     
+  +\1             Also the symbol whose name is +1.                
+  \frobboz        The symbol whose name is fROBBOZ.                
+  3.14159265\s0   The symbol whose name is 3.14159265s0.           
+  3.14159265\S0   A different symbol, whose name is 3.14159265S0.  
+  3.14159265s0    A possible short float approximation to \pi.     
+
+  Figure 2-15: Examples of the printed representation of symbols (Part 1 of 2)
+
+
+  APL\\360               The symbol whose name is APL\360.       
+  apl\\360               Also the symbol whose name is APL\360.  
+  \(b^2\)\ -\ 4*a*c    The name is (B^2) - 4*A*C.            
+                         Parentheses and two spaces in it.       
+  \(\b^2\)\ -\4*\a*\c  The name is (b^2) - 4*a*c.            
+                         Letters explicitly lowercase.           
+  |"|                    The same as writing \".                 
+  |(b^2) - 4*a*c|      The name is (b^2) - 4*a*c.            
+  |frobboz|              The name is frobboz, not FROBBOZ.       
+  |APL\360|              The name is APL360.                     
+  |APL\\360|             The name is APL\360.                    
+  |apl\\360|             The name is apl\360.                    
+  |\|\||                 Same as \|\| --the name is ||.          
+  |(B^2) - 4*A*C|      The name is (B^2) - 4*A*C.            
+                         Parentheses and two spaces in it.       
+  |(b^2) - 4*a*c|      The name is (b^2) - 4*a*c.            
+
+  Figure 2-16: Examples of the printed representation of symbols (Part 2 of 2)
+
+
+In the process of parsing a symbol, it is implementation-dependent which
+implementation-defined attributes are removed from the characters forming
+a token that represents a symbol.
+
+When parsing the syntax for a symbol, the Lisp reader looks up the name of
+that symbol in the current package.  This lookup may involve looking in
+other packages whose external symbols are inherited by the current
+package.  If the name is found, the corresponding symbol is returned.  If
+the name is not found (that is, there is no symbol of that name accessible
+in the current package), a new symbol is created and is placed in the
+current package as an internal symbol.  The current package becomes the
+owner (home package) of the symbol, and the symbol becomes interned in the
+current package.  If the name is later read again while this same package
+is current, the same symbol will be found and returned.
+
+
+File: gcl.info,  Node: Valid Patterns for Tokens,  Next: Package System Consistency Rules,  Prev: Symbols as Tokens,  Up: Interpretation of Tokens
+
+Valid Patterns for Tokens
+-------------------------
+
+The valid patterns for tokens are summarized in Figure 2-17.
+
+  nnnnn              a number                                           
+  xxxxx              a symbol in the current package                    
+  :xxxxx             a symbol in the the KEYWORD package                
+  ppppp:xxxxx        an external symbol in the ppppp package            
+  ppppp::xxxxx       a (possibly internal) symbol in the ppppp package  
+  :nnnnn             undefined                                          
+  ppppp:nnnnn        undefined                                          
+  ppppp::nnnnn       undefined                                          
+  ::aaaaa            undefined                                          
+  aaaaa:             undefined                                          
+  aaaaa:aaaaa:aaaaa  undefined                                          
+
+                 Figure 2-17: Valid patterns for tokens                
+
+
+Note that nnnnn has number syntax, neither xxxxx nor ppppp has number
+syntax, and aaaaa has any syntax.
+
+A summary of rules concerning package markers follows.  In each case,
+examples are offered to illustrate the case; for presentational
+simplicity, the examples assume that the readtable case of the current
+readtable is :upcase.
+
+1.
+     If there is a single package marker, and it occurs at the beginning
+     of the token, then the token is interpreted as a symbol in the
+     KEYWORD package.  It also sets the symbol-value of the newly-created
+     symbol to that same symbol so that the symbol will self-evaluate.
+
+     For example, :bar, when read, interns BAR as an external symbol in
+     the KEYWORD package.
+
+2.
+     If there is a single package marker not at the beginning or end of the
+     token, then it divides the token into two parts.  The first part
+     specifies a package; the second part is the name of an external symbol
+     available in that package.
+
+     For example, foo:bar, when read, looks up BAR among the external
+     symbols of the package named FOO.
+
+3.
+     If there are two adjacent package markers not at the beginning or end
+     of the token, then they divide the token into two parts.  The first
+     part specifies a package; the second part is the name of a symbol
+     within that package (possibly an internal symbol).
+
+     For example, foo::bar, when read, interns BAR in the package named
+     FOO.
+
+4.
+     If the token contains no package markers, and does not have potential
+     number syntax, then the entire token is the name of the symbol.  The
+     symbol is looked up in the current package.
+
+     For example, bar, when read, interns BAR in the current package.
+
+5.
+     The consequences are unspecified if any other pattern of package
+     markers in a token is used.  All other uses of package markers within
+     names of symbols are not defined by this standard but are reserved
+     for implementation-dependent use.
+
+For example, assuming the readtable case of the current readtable is
+:upcase, editor:buffer refers to the external symbol named BUFFER present
+in the package named editor, regardless of whether there is a symbol named
+BUFFER in the current package.  If there is no package named editor, or if
+no symbol named BUFFER is present in editor, or if BUFFER is not exported
+by editor, the reader signals a correctable error.  If editor::buffer is
+seen, the effect is exactly the same as reading buffer with the EDITOR
+package being the current package.
+
+
+File: gcl.info,  Node: Package System Consistency Rules,  Prev: Valid Patterns for Tokens,  Up: Interpretation of Tokens
+
+Package System Consistency Rules
+--------------------------------
+
+The following rules apply to the package system as long as the value of
+*package* is not changed:
+
+Read-read consistency
+     Reading the same symbol name always results in the same symbol.
+
+Print-read consistency
+     An interned symbol always prints as a sequence of characters that,
+     when read back in, yields the same symbol.
+
+     For information about how the Lisp printer treats symbols, see *Note
+     Printing Symbols::.
+
+Print-print consistency
+     If two interned symbols are not the same, then their printed
+     representations will be different sequences of characters.
+
+These rules are true regardless of any implicit interning.  As long as the
+current package is not changed, results are reproducible regardless of the
+order of loading files or the exact history of what symbols were typed in
+when.  If the value of *package* is changed and then changed back to the
+previous value, consistency is maintained.  The rules can be violated by
+changing the value of *package*, forcing a change to symbols or to packages
+or to both by continuing from an error, or calling one of the following
+functions: unintern, unexport, shadow, shadowing-import, or unuse-package.
+
+An inconsistency only applies if one of the restrictions is violated
+between two of the named symbols.  shadow, unexport, unintern, and
+shadowing-import can only affect the consistency of symbols with the same
+names (under string=) as the ones supplied as arguments.
+
+
+File: gcl.info,  Node: Standard Macro Characters,  Prev: Interpretation of Tokens,  Up: Syntax
+
+Standard Macro Characters
+=========================
+
+If the reader encounters a macro character, then its associated reader
+macro function is invoked and may produce an object to be returned.  This
+function may read the characters following the macro character in the
+stream in any syntax and return the object represented by that syntax.
+
+Any character can be made to be a macro character.  The macro characters
+defined initially in a conforming implementation include the following:
+
+* Menu:
+
+* Left-Parenthesis::
+* Right-Parenthesis::
+* Single-Quote::
+* Semicolon::
+* Double-Quote::
+* Backquote::
+* Comma::
+* Sharpsign::
+* Re-Reading Abbreviated Expressions::
+
+
+File: gcl.info,  Node: Left-Parenthesis,  Next: Right-Parenthesis,  Prev: Standard Macro Characters,  Up: Standard Macro Characters
+
+Left-Parenthesis
+----------------
+
+The left-parenthesis initiates reading of a list.  read is called
+recursively to read successive objects until a right parenthesis is found
+in the input stream.  A list of the objects read is returned.  Thus
+
+      (a b c)
+
+is read as a list of three objects (the symbols a, b, and c).  The right
+parenthesis need not immediately follow the printed representation of the
+last object; whitespace_2 characters and comments may precede it.
+
+If no objects precede the right parenthesis, it reads as a list of zero
+objects (the empty list).
+
+If a token that is just a dot not immediately preceded by an escape
+character is read after some object then exactly one more object must
+follow the dot, possibly preceded or followed by whitespace_2 or a comment,
+followed by the right parenthesis:
+
+      (a b c . d)
+
+This means that the cdr of the last cons in the list is not nil, but
+rather the object whose representation followed the dot.  The above
+example might have been the result of evaluating
+
+      (cons 'a (cons 'b (cons 'c 'd)))
+
+Similarly,
+
+      (cons 'this-one 'that-one) =>  (this-one . that-one)
+
+It is permissible for the object following the dot to be a list:
+
+      (a b c d . (e f . (g))) == (a b c d e f g)
+
+For information on how the Lisp printer prints lists and conses, see *Note
+Printing Lists and Conses::.
+
+
+File: gcl.info,  Node: Right-Parenthesis,  Next: Single-Quote,  Prev: Left-Parenthesis,  Up: Standard Macro Characters
+
+Right-Parenthesis
+-----------------
+
+The right-parenthesis is invalid except when used in conjunction with the
+left parenthesis character.  For more information, see *Note Reader
+Algorithm::.
+
+
+File: gcl.info,  Node: Single-Quote,  Next: Semicolon,  Prev: Right-Parenthesis,  Up: Standard Macro Characters
+
+Single-Quote
+------------
+
+Syntax:  '<<exp>>
+
+A single-quote introduces an expression to be "quoted." Single-quote
+followed by an expression exp is treated by the Lisp reader as an
+abbreviation for and is parsed identically to the expression (quote exp).
+See the special operator quote.
+
+* Menu:
+
+* Examples of Single-Quote::
+
+
+File: gcl.info,  Node: Examples of Single-Quote,  Prev: Single-Quote,  Up: Single-Quote
+
+Examples of Single-Quote
+........................
+
+      'foo =>  FOO
+      ''foo =>  (QUOTE FOO)
+      (car ''foo) =>  QUOTE
+
+
+File: gcl.info,  Node: Semicolon,  Next: Double-Quote,  Prev: Single-Quote,  Up: Standard Macro Characters
+
+Semicolon
+---------
+
+Syntax: ;<<text>>
+
+A semicolon introduces characters that are to be ignored, such as
+comments.  The semicolon and all characters up to and including the next
+newline or end of file are ignored.
+
+* Menu:
+
+* Examples of Semicolon::
+* Notes about Style for Semicolon::
+* Use of Single Semicolon::
+* Use of Double Semicolon::
+* Use of Triple Semicolon::
+* Use of Quadruple Semicolon::
+* Examples of Style for Semicolon::
+
+
+File: gcl.info,  Node: Examples of Semicolon,  Next: Notes about Style for Semicolon,  Prev: Semicolon,  Up: Semicolon
+
+Examples of Semicolon
+.....................
+
+      (+ 3 ; three
+         4)
+     =>  7
+
+
+File: gcl.info,  Node: Notes about Style for Semicolon,  Next: Use of Single Semicolon,  Prev: Examples of Semicolon,  Up: Semicolon
+
+Notes about Style for Semicolon
+...............................
+
+Some text editors make assumptions about desired indentation based on the
+number of semicolons that begin a comment.  The following style
+conventions are common, although not by any means universal.
+
+
+File: gcl.info,  Node: Use of Single Semicolon,  Next: Use of Double Semicolon,  Prev: Notes about Style for Semicolon,  Up: Semicolon
+
+Use of Single Semicolon
+.......................
+
+Comments that begin with a single semicolon are all aligned to the same
+column at the right (sometimes called the "comment column").  The text of
+such a comment generally applies only to the line on which it appears.
+Occasionally two or three contain a single sentence together; this is
+sometimes indicated by indenting all but the first with an additional
+space (after the semicolon).
+
+
+File: gcl.info,  Node: Use of Double Semicolon,  Next: Use of Triple Semicolon,  Prev: Use of Single Semicolon,  Up: Semicolon
+
+Use of Double Semicolon
+.......................
+
+Comments that begin with a double semicolon are all aligned to the same
+level of indentation as a form would be at that same position in the code.
+The text of such a comment usually describes the state of the program at
+the point where the comment occurs, the code which follows the comment, or
+both.
+
+
+File: gcl.info,  Node: Use of Triple Semicolon,  Next: Use of Quadruple Semicolon,  Prev: Use of Double Semicolon,  Up: Semicolon
+
+Use of Triple Semicolon
+.......................
+
+Comments that begin with a triple semicolon are all aligned to the left
+margin.  Usually they are used prior to a definition or set of
+definitions, rather than within a definition.
+
+
+File: gcl.info,  Node: Use of Quadruple Semicolon,  Next: Examples of Style for Semicolon,  Prev: Use of Triple Semicolon,  Up: Semicolon
+
+Use of Quadruple Semicolon
+..........................
+
+Comments that begin with a quadruple semicolon are all aligned to the left
+margin, and generally contain only a short piece of text that serve as a
+title for the code which follows, and might be used in the header or
+footer of a program that prepares code for presentation as a hardcopy
+document.
+
+
+File: gcl.info,  Node: Examples of Style for Semicolon,  Prev: Use of Quadruple Semicolon,  Up: Semicolon
+
+Examples of Style for Semicolon
+...............................
+
+     ;;;; Math Utilities
+     
+     ;;; FIB computes the the Fibonacci function in the traditional
+     ;;; recursive way.
+     
+     (defun fib (n)
+       (check-type n integer)
+       ;; At this point we're sure we have an integer argument.
+       ;; Now we can get down to some serious computation.
+       (cond ((< n 0)
+              ;; Hey, this is just supposed to be a simple example.
+              ;; Did you really expect me to handle the general case?
+              (error "FIB got ~D as an argument." n))
+             ((< n 2) n)             ;fib[0]=0 and fib[1]=1
+             ;; The cheap cases didn't work.
+             ;; Nothing more to do but recurse.
+             (t (+ (fib (- n 1))     ;The traditional formula
+                   (fib (- n 2)))))) ; is fib[n-1]+fib[n-2].
+
+
+File: gcl.info,  Node: Double-Quote,  Next: Backquote,  Prev: Semicolon,  Up: Standard Macro Characters
+
+Double-Quote
+------------
+
+Syntax: "<<text>>"
+
+The double-quote is used to begin and end a string.  When a double-quote
+is encountered, characters are read from the input stream and accumulated
+until another double-quote is encountered.  If a single escape character
+is seen, the single escape character is discarded, the next character is
+accumulated, and accumulation continues.  The accumulated characters up to
+but not including the matching double-quote are made into a simple string
+and returned.
+
+It is implementation-dependent which attributes of the accumulated
+characters are removed in this process.
+
+Examples of the use of the double-quote character are in Figure 2-18.
+
+  "Foo"                      ;A string with three characters in it  
+  ""                         ;An empty string                       
+  "\"APL\\360?\" he cried."  ;A string with twenty characters       
+  "|x| = |-x|"               ;A ten-character string                
+
+          Figure 2-18: Examples of the use of double-quote         
+
+
+Note that to place a single escape character or a double-quote into a
+string, such a character must be preceded by a single escape character.
+Note, too, that a multiple escape character need not be quoted by a single
+escape character within a string.
+
+For information on how the Lisp printer prints strings, see *Note Printing
+Strings::.
+
+
+File: gcl.info,  Node: Backquote,  Next: Comma,  Prev: Double-Quote,  Up: Standard Macro Characters
+
+Backquote
+---------
+
+The backquote introduces a template of a data structure to be built.  For
+example, writing
+
+      `(cond ((numberp ,x) ,@y) (t (print ,x) ,@y))
+
+is roughly equivalent to writing
+
+      (list 'cond
+            (cons (list 'numberp x) y)
+            (list* 't (list 'print x) y))
+
+Where a comma occurs in the template, the expression following the comma
+is to be evaluated to produce an object to be inserted at that point.
+Assume b has the value 3, for example, then evaluating the form denoted by
+`(a b ,b ,(+ b 1) b) produces the result (a b 3 4 b).
+
+If a comma is immediately followed by an at-sign, then the form following
+the at-sign is evaluated to produce a list of objects.  These objects are
+then "spliced" into place in the template.  For example, if x has the
+value (a b c), then
+
+      `(x ,x ,@x foo ,(cadr x) bar ,(cdr x) baz ,@(cdr x))
+     =>  (x (a b c) a b c foo b bar (b c) baz b c)
+
+The backquote syntax can be summarized formally as follows.
+
+*
+     `basic is the same as 'basic, that is, (quote basic), for any
+     expression basic that is not a list or a general vector.
+
+*
+     `,form is the same as form, for any form, provided that the
+     representation of form does not begin with at-sign or dot.  (A
+     similar caveat holds for all occurrences of a form after a comma.)
+
+*
+     `,@form has undefined consequences.
+
+*
+     `(x1 x2 x3 ... xn . atom) may be interpreted to mean
+
+           (append [ x1] [ x2] [ x3] ... [ xn] (quote atom))
+
+     where the brackets are used to indicate a transformation of an xj as
+     follows:
+
+    -
+          [form] is interpreted as (list `form), which contains a
+          backquoted form that must then be further interpreted.
+
+    -
+          [,form] is interpreted as (list form).
+
+    -
+          [,@form] is interpreted as form.
+
+*
+     `(x1 x2 x3 ... xn) may be interpreted to mean the same as the
+     backquoted form `(x1 x2 x3 ... xn . nil), thereby reducing it to the
+     previous case.
+
+*
+     `(x1 x2 x3 ... xn . ,form) may be interpreted to mean
+
+           (append [ x1] [ x2] [ x3] ... [ xn] form)
+
+     where the brackets indicate a transformation of an xj as described
+     above.
+
+*
+     `(x1 x2 x3 ... xn . ,@form) has undefined consequences.
+
+*
+     `#(x1 x2 x3 ... xn) may be interpreted to mean (apply #'vector `(x1
+     x2 x3 ... xn)).
+
+Anywhere ",@" may be used, the syntax ",." may be used instead to indicate
+that it is permissible to operate destructively on the list structure
+produced by the form following the ",." (in effect, to use nconc instead
+of append).
+
+If the backquote syntax is nested, the innermost backquoted form should be
+expanded first.  This means that if several commas occur in a row, the
+leftmost one belongs to the innermost backquote.
+
+An implementation is free to interpret a backquoted form F_1 as any form
+F_2 that, when evaluated, will produce a result that is the same under
+equal as the result implied by the above definition, provided that the
+side-effect behavior of the substitute form F_2 is also consistent with
+the description given above.  The constructed copy of the template might
+or might not share list structure with the template itself.  As an
+example, the above definition implies that
+
+      `((,a b) ,c ,@d)
+
+will be interpreted as if it were
+
+      (append (list (append (list a) (list 'b) 'nil)) (list c) d 'nil)
+
+but it could also be legitimately interpreted to mean any of the following:
+
+      (append (list (append (list a) (list 'b))) (list c) d)
+      (append (list (append (list a) '(b))) (list c) d)
+      (list* (cons a '(b)) c d)
+      (list* (cons a (list 'b)) c d)
+      (append (list (cons a '(b))) (list c) d)
+      (list* (cons a '(b)) c (copy-list d))
+
+* Menu:
+
+* Notes about Backquote::
+
+
+File: gcl.info,  Node: Notes about Backquote,  Prev: Backquote,  Up: Backquote
+
+Notes about Backquote
+.....................
+
+Since the exact manner in which the Lisp reader will parse an expression
+involving the backquote reader macro is not specified, an implementation
+is free to choose any representation that preserves the semantics
+described.
+
+Often an implementation will choose a representation that facilitates
+pretty printing of the expression, so that (pprint `(a ,b)) will display
+`(a ,b) and not, for example, (list 'a b).  However, this is not a
+requirement.
+
+Implementors who have no particular reason to make one choice or another
+might wish to refer to IEEE Standard for the Scheme Programming Language,
+which identifies a popular choice of representation for such expressions
+that might provide useful to be useful compatibility for some user
+communities.  There is no requirement, however, that any conforming
+implementation use this particular representation.  This information is
+provided merely for cross-reference purposes.
+
+
+File: gcl.info,  Node: Comma,  Next: Sharpsign,  Prev: Backquote,  Up: Standard Macro Characters
+
+Comma
+-----
+
+The comma is part of the backquote syntax; see *Note Backquote::.  Comma
+is invalid if used other than inside the body of a backquote expression as
+described above.
+

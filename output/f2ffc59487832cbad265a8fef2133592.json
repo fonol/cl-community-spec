@@ -1,0 +1,53 @@
+{
+    "name": "formatter",
+    "prev": "copy-pprint-dispatch",
+    "next": "pprint-dispatch",
+    "up": "Printer Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "formatter"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "formatter",
+                    "text": " control-string =>  function\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "control-string",
+                    "desc": "a format string; not evaluated."
+                },
+                {
+                    "name": "function",
+                    "desc": "a function."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns a function which has behavior equivalent to:\n       #'(lambda (*standard-output* &rest arguments)\n           (apply #'format t control-string arguments)\n           arguments-tail)\nwhere arguments-tail is either the tail of arguments which has as its car\nthe argument that would be processed next if there were more format\ndirectives in the control-string, or else nil if no more arguments follow\nthe most recently processed argument.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "     (funcall (formatter \"~&~A~A\") *standard-output* 'a 'b 'c)\n      |>  AB\n     =>  (C)\n     (format t (formatter \"~&~A~A\") 'a 'b 'c)\n      |>  AB\n     =>  NIL\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Might signal an error (at macro expansion time or at run time) if the\nargument is not a valid format string.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note format::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: formatter,  Next: pprint-dispatch,  Prev: copy-pprint-dispatch,  Up: Printer Dictionary\n\nformatter                                                           [Macro]\n---------------------------------------------------------------------------\n\n`formatter'  control-string =>  function\n\nArguments and Values::\n......................\n\ncontrol-string--a format string; not evaluated.\n\nfunction--a function.\n\nDescription::\n.............\n\nReturns a function which has behavior equivalent to:\n\n       #'(lambda (*standard-output* &rest arguments)\n           (apply #'format t control-string arguments)\n           arguments-tail)\n\nwhere arguments-tail is either the tail of arguments which has as its car\nthe argument that would be processed next if there were more format\ndirectives in the control-string, or else nil if no more arguments follow\nthe most recently processed argument.\n\nExamples::\n..........\n\n     (funcall (formatter \"~&~A~A\") *standard-output* 'a 'b 'c)\n      |>  AB\n     =>  (C)\n     \n     (format t (formatter \"~&~A~A\") 'a 'b 'c)\n      |>  AB\n     =>  NIL\n\nExceptional Situations::\n........................\n\nMight signal an error (at macro expansion time or at run time) if the\nargument is not a valid format string.\n\nSee Also::\n..........\n\n*Note format::\n\n"
+}

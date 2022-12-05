@@ -1,0 +1,77 @@
+{
+    "name": "with-input-from-string",
+    "prev": "make-string-output-stream",
+    "next": "with-output-to-string",
+    "up": "Streams Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "with-input-from-string"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "with-input-from-string",
+                    "text": " (var string &key index start end) {declaration}*{form}*\n=>  {result}*\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "var",
+                    "desc": "a variable name."
+                },
+                {
+                    "name": "string",
+                    "desc": "a form; evaluated to produce a string."
+                },
+                {
+                    "name": "index",
+                    "desc": "a place."
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of string.  The defaults for start"
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of string.  The defaults for startand end are 0 and nil, respectively.\n"
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "result",
+                    "desc": "the values returned by the forms."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Creates an\ninput string stream,\nprovides an opportunity to perform operations on the stream (returning\nzero or more values), and then closes the string stream.\nString is evaluated first, and var is bound to a character input string\nstream that supplies characters from the subsequence of the resulting\nstring bounded by start and end.  The body is executed as an implicit\nprogn.\nThe input string stream is automatically closed on exit from\nwith-input-from-string, no matter whether the exit is normal or abnormal.\nThe input string stream to which the variable var is bound has dynamic\nextent; its extent ends when the form is exited.\nThe index is a pointer within the string to be advanced.  If\nwith-input-from-string is exited normally, then index will have as its\nvalue the index into the string indicating the first character not read\nwhich is (length string) if all characters were used.  The place specified\nby index is not updated as reading progresses, but only at the end of the\noperation.\nstart and index may both specify the same variable, which is a pointer\nwithin the string to be advanced, perhaps repeatedly by some containing\nloop.\nThe consequences are undefined if an attempt is made to assign the\nvariable var.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (with-input-from-string (s \"XXX1 2 3 4xxx\"\n                                  :index ind\n                                  :start 3 :end 10)\n         (+ (read s) (read s) (read s))) =>  6\n      ind =>  9\n      (with-input-from-string (s \"Animal Crackers\" :index j :start 6)\n        (read s)) =>  CRACKERS\nThe variable j is set to 15.\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "The value of the place named by index, if any, is modified.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note make-string-input-stream:: ,\n*Note Traversal Rules and Side Effects::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: with-input-from-string,  Next: with-output-to-string,  Prev: make-string-output-stream,  Up: Streams Dictionary\n\nwith-input-from-string                                              [Macro]\n---------------------------------------------------------------------------\n\n`with-input-from-string'  (var string &key index start end) {declaration}*\n{form}*\n=>  {result}*\n\nArguments and Values::\n......................\n\nvar--a variable name.\n\nstring--a form; evaluated to produce a string.\n\nindex--a place.\n\nstart, end--bounding index designators of string.  The defaults for start\nand end are 0 and nil, respectively.\n\ndeclaration--a declare expression; not evaluated.\n\nforms--an implicit progn.\n\nresult--the values returned by the forms.\n\nDescription::\n.............\n\nCreates an\n\ninput string stream,\n\nprovides an opportunity to perform operations on the stream (returning\nzero or more values), and then closes the string stream.\n\nString is evaluated first, and var is bound to a character input string\nstream that supplies characters from the subsequence of the resulting\nstring bounded by start and end.  The body is executed as an implicit\nprogn.\n\nThe input string stream is automatically closed on exit from\nwith-input-from-string, no matter whether the exit is normal or abnormal.\n\nThe input string stream to which the variable var is bound has dynamic\nextent; its extent ends when the form is exited.\n\nThe index is a pointer within the string to be advanced.  If\nwith-input-from-string is exited normally, then index will have as its\nvalue the index into the string indicating the first character not read\nwhich is (length string) if all characters were used.  The place specified\nby index is not updated as reading progresses, but only at the end of the\noperation.\n\nstart and index may both specify the same variable, which is a pointer\nwithin the string to be advanced, perhaps repeatedly by some containing\nloop.\n\nThe consequences are undefined if an attempt is made to assign the\nvariable var.\n\nExamples::\n..........\n\n      (with-input-from-string (s \"XXX1 2 3 4xxx\"\n                                  :index ind\n                                  :start 3 :end 10)\n         (+ (read s) (read s) (read s))) =>  6\n      ind =>  9\n      (with-input-from-string (s \"Animal Crackers\" :index j :start 6)\n        (read s)) =>  CRACKERS\n\nThe variable j is set to 15.\n\nSide Effects::\n..............\n\nThe value of the place named by index, if any, is modified.\n\nSee Also::\n..........\n\n*Note make-string-input-stream:: ,\n\n*Note Traversal Rules and Side Effects::\n\n"
+}

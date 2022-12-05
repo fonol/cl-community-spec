@@ -1,0 +1,1152 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: Additional Constraints on Externalizable Objects,  Prev: Extensions to Similarity Rules,  Up: Literal Objects in Compiled Files
+
+Additional Constraints on Externalizable Objects
+................................................
+
+If two literal objects appearing in the source code for a single file
+processed with the file compiler are the identical, the corresponding
+objects in the compiled code must also be the identical.
+
+With the exception of symbols and packages, any two literal objects in
+code being processed by the file compiler may be coalesced if and only if
+they are similar; if they are either both symbols or both packages, they
+may only be coalesced if and only if they are identical.
+
+Objects containing circular references can be externalizable objects.  The
+file compiler is required to preserve eqlness of substructures within a
+file.  Preserving eqlness means that subobjects that are the same in the
+source code must be the same in the corresponding compiled code.
+
+In addition, the following are constraints on the handling of literal
+objects by the file compiler:
+
+
+     array: If an array in the source code is a simple array, then the
+     corresponding array in the compiled code will also be a simple array.
+     If an array in the source code is displaced, has a fill pointer, or
+     is actually adjustable, the corresponding array in the compiled code
+     might lack any or all of these qualities. If an array in the source
+     code has a fill pointer, then the corresponding array in the compiled
+     code might be only the size implied by the fill pointer.
+
+
+     packages: The loader is required to find the corresponding package
+     object as if by calling find-package with the package name as an
+     argument.  An error of type package-error is signaled if no package
+     of that name exists at load time.
+
+
+     random-state: A constant random state object cannot be used as the
+     state argument to the function random because random modifies this
+     data structure.
+
+
+     structure, standard-object: Objects of type structure-object and
+     standard-object may appear in compiled constants if there is an
+     appropriate make-load-form method defined for that type.
+
+     The file compiler calls make-load-form on any object that is
+     referenced as a literal object if the object is a generalized
+     instance of standard-object, structure-object, condition, or any of a
+     (possibly empty) implementation-dependent set of other classes.  The
+     file compiler only calls make-load-form once for any given object
+     within a single file.
+
+
+     symbol: In order to guarantee that compiled files can be loaded
+     correctly, users must ensure that the packages referenced in those
+     files are defined consistently at compile time and load time.
+     Conforming programs must satisfy the following requirements:
+
+    1.
+          The current package when a top level form in the file is
+          processed by compile-file must be the same as the current package
+          when the code corresponding to that top level form in the
+          compiled file is executed by load.  In particular:
+
+         a.
+               Any top level form in a file that alters the current
+               package must change it to a package of the same name both
+               at compile time and at load time.
+
+         b.
+               If the first non-atomic top level form in the file is not
+               an in-package form, then the current package at the time
+               load is called must be a package with the same name as the
+               package that was the current package at the time
+               compile-file was called.
+
+    2.
+          For all symbols appearing lexically within a top level form that
+          were accessible in the package that was the current package
+          during processing of that top level form at compile time, but
+          whose home package was another package, at load time there must
+          be a symbol with the same name that is accessible in both the
+          load-time current package and in the package with the same name
+          as the compile-time home package.
+
+    3.
+          For all symbols represented in the compiled file that were
+          external symbols in their home package at compile time, there
+          must be a symbol with the same name that is an external symbol
+          in the package with the same name at load time.
+
+     If any of these conditions do not hold, the package in which the
+     loader looks for the affected symbols is unspecified.
+     Implementations are permitted to signal an error or to define this
+     behavior.
+
+
+File: gcl.info,  Node: Exceptional Situations in the Compiler,  Prev: Literal Objects in Compiled Files,  Up: Compilation
+
+Exceptional Situations in the Compiler
+--------------------------------------
+
+compile and compile-file are permitted to signal errors and warnings,
+including errors due to compile-time processing of (eval-when
+(:compile-toplevel) ...) forms, macro expansion, and conditions signaled
+by the compiler itself.
+
+Conditions of type error might be signaled by the compiler in situations
+where the compilation cannot proceed without intervention.
+
+In addition to situations for which the standard specifies that conditions
+of type warning must or might be signaled, warnings might be signaled in
+situations where the compiler can determine that the consequences are
+undefined or that a run-time error will be signaled.  Examples of this
+situation are as follows: violating type declarations, altering or
+assigning the value of a constant defined with defconstant, calling
+built-in Lisp functions with a wrong number of arguments or malformed
+keyword argument lists, and using unrecognized declaration specifiers.
+
+The compiler is permitted to issue warnings about matters of programming
+style as conditions of type style-warning.  Examples of this situation are
+as follows: redefining a function using a different argument list, calling
+a function with a wrong number of arguments, not declaring ignore of a
+local variable that is not referenced, and referencing a variable declared
+ignore.
+
+Both compile and compile-file are permitted (but not required) to
+establish a handler for conditions of type error.  For example, they might
+signal a warning, and restart compilation from some
+implementation-dependent point in order to let the compilation proceed
+without manual intervention.
+
+Both compile and compile-file return three values, the second two
+indicating whether the source code being compiled contained errors and
+whether style warnings were issued.
+
+Some warnings might be deferred until the end of compilation.  See
+with-compilation-unit.
+
+
+File: gcl.info,  Node: Declarations,  Next: Lambda Lists,  Prev: Compilation,  Up: Evaluation and Compilation
+
+Declarations
+============
+
+Declarations provide a way of specifying information for use by program
+processors, such as the evaluator or the compiler.
+
+Local declarations
+
+can be embedded in executable code using declare.  Global declarations ,
+or proclamations , are established by proclaim or declaim.
+
+The the special form provides a shorthand notation for making a local
+declaration about the type of the value of a given form.
+
+The consequences are undefined if a program violates a declaration or a
+proclamation.
+
+* Menu:
+
+* Minimal Declaration Processing Requirements::
+* Declaration Specifiers::
+* Declaration Identifiers::
+* Declaration Scope::
+
+
+File: gcl.info,  Node: Minimal Declaration Processing Requirements,  Next: Declaration Specifiers,  Prev: Declarations,  Up: Declarations
+
+Minimal Declaration Processing Requirements
+-------------------------------------------
+
+In general, an implementation is free to ignore declaration specifiers
+except for the declaration , notinline , safety , and special declaration
+specifiers.
+
+A declaration declaration must suppress warnings about unrecognized
+declarations of the kind that it declares.  If an implementation does not
+produce warnings about unrecognized declarations, it may safely ignore
+this declaration.
+
+A notinline declaration must be recognized by any implementation that
+supports inline functions or compiler macros in order to disable those
+facilities.  An implementation that does not use inline functions or
+compiler macros may safely ignore this declaration.
+
+A safety declaration that increases the current safety level must always
+be recognized.  An implementation that always processes code as if safety
+were high may safely ignore this declaration.
+
+A special declaration must be processed by all implementations.
+
+
+File: gcl.info,  Node: Declaration Specifiers,  Next: Declaration Identifiers,  Prev: Minimal Declaration Processing Requirements,  Up: Declarations
+
+Declaration Specifiers
+----------------------
+
+A declaration specifier is an expression that can appear at top level of a
+declare expression or a declaim form, or as the argument to proclaim.  It
+is a list whose car is a declaration identifier, and whose cdr is data
+interpreted according to rules specific to the declaration identifier.
+
+
+File: gcl.info,  Node: Declaration Identifiers,  Next: Declaration Scope,  Prev: Declaration Specifiers,  Up: Declarations
+
+Declaration Identifiers
+-----------------------
+
+Figure 3-9 shows a list of all declaration identifiers
+
+defined by this standard.
+
+  declaration     ignore     special  
+  dynamic-extent  inline     type     
+  ftype           notinline           
+  ignorable       optimize            
+
+  Figure 3-9: Common Lisp Declaration Identifiers
+
+
+An implementation is free to support other (implementation-defined)
+declaration identifiers as well.  A warning might be issued if a
+declaration identifier is not among those defined above, is not defined by
+the implementation, is not a type name, and has not been declared in a
+declaration proclamation.
+
+* Menu:
+
+* Shorthand notation for Type Declarations::
+
+
+File: gcl.info,  Node: Shorthand notation for Type Declarations,  Prev: Declaration Identifiers,  Up: Declaration Identifiers
+
+Shorthand notation for Type Declarations
+........................................
+
+A type specifier can be used as a declaration identifier.  (type-specifier
+{var}*) is taken as shorthand for (type type-specifier {var}*).
+
+
+File: gcl.info,  Node: Declaration Scope,  Prev: Declaration Identifiers,  Up: Declarations
+
+Declaration Scope
+-----------------
+
+Declarations can be divided into two kinds: those that apply to the
+bindings of variables or functions; and those that do not apply to
+bindings.
+
+A declaration that appears at the head of a binding form and applies to a
+variable or function binding made by that form is called a bound
+declaration ; such a declaration affects both the binding and any
+references within the scope of the declaration.
+
+Declarations that are not bound declarations are called free declarations .
+
+A free declaration in a form F1 that applies to a binding for a name N
+established by some form F2 of which F1 is a subform affects only
+references to N within F1; it does not to apply to other references to N
+outside of F1, nor does it affect the manner in which the binding of N by
+F2 is established.
+
+Declarations that do not apply to bindings can only appear as free
+declarations.
+
+The scope of a bound declaration is the same as the lexical scope of the
+binding to which it applies; for special variables, this means the scope
+that the binding would have had had it been a lexical binding.
+
+Unless explicitly stated otherwise, the scope of a free declaration
+includes only the body subforms of the form at whose head it appears, and
+no other subforms.  The scope of free declarations specifically does not
+include initialization forms for bindings established by the form
+containing the declarations.
+
+Some iteration forms include step, end-test, or result subforms that are
+also included in the scope of declarations that appear in the iteration
+form.  Specifically, the iteration forms and subforms involved are:
+
+*
+     do, do*: step-forms, end-test-form, and result-forms.
+
+*
+     dolist, dotimes: result-form
+
+*
+     do-all-symbols, do-external-symbols, do-symbols: result-form
+
+* Menu:
+
+* Examples of Declaration Scope::
+
+
+File: gcl.info,  Node: Examples of Declaration Scope,  Prev: Declaration Scope,  Up: Declaration Scope
+
+Examples of Declaration Scope
+.............................
+
+Here is an example illustrating the scope of bound declarations.
+
+      (let ((x 1))                ;[1] 1st occurrence of x
+        (declare (special x))     ;[2] 2nd occurrence of x
+        (let ((x 2))              ;[3] 3rd occurrence of x
+          (let ((old-x x)         ;[4] 4th occurrence of x
+                (x 3))            ;[5] 5th occurrence of x
+            (declare (special x)) ;[6] 6th occurrence of x
+            (list old-x x))))     ;[7] 7th occurrence of x
+     =>  (2 3)
+
+The first occurrence of x establishes a dynamic binding of x because of
+the special declaration for x in the second line.  The third occurrence of
+x establishes a lexical binding of x (because there is no special
+declaration in the corresponding let form).  The fourth occurrence of x x
+is a reference to the lexical binding of x established in the third line.
+The fifth occurrence of x establishes a dynamic binding of x for the body
+of the let form that begins on that line because of the special
+declaration for x in the sixth line. The reference to x in the fourth line
+is not affected by the special declaration in the sixth line because that
+reference is not within the "would-be lexical scope" of the variable x in
+the fifth line.  The reference to x in the seventh line is a reference to
+the dynamic binding of x established in the fifth line.
+
+Here is another example, to illustrate the scope of a free declaration.
+In the following:
+
+      (lambda (&optional (x (foo 1))) ;[1]
+        (declare (notinline foo))     ;[2]
+        (foo x))                      ;[3]
+
+the call to foo in the first line might be compiled inline even though the
+call to foo in the third line must not be.  This is because the notinline
+declaration for foo in the second line applies only to the body on the
+third line.  In order to suppress inlining for both calls, one might write:
+
+      (locally (declare (notinline foo)) ;[1]
+        (lambda (&optional (x (foo 1)))  ;[2]
+          (foo x)))                      ;[3]
+
+or, alternatively:
+
+      (lambda (&optional                               ;[1]
+                 (x (locally (declare (notinline foo)) ;[2]
+                      (foo 1))))                       ;[3]
+        (declare (notinline foo))                      ;[4]
+        (foo x))                                       ;[5]
+
+Finally, here is an example that shows the scope of declarations in an
+iteration form.
+
+      (let ((x  1))                     ;[1]
+        (declare (special x))           ;[2]
+          (let ((x 2))                  ;[3]
+            (dotimes (i x x)            ;[4]
+              (declare (special x)))))  ;[5]
+     =>  1
+
+In this example, the first reference to x on the fourth line is to the
+lexical binding of x established on the third line.  However, the second
+occurrence of x on the fourth line lies within the scope of the free
+declaration on the fifth line (because this is the result-form of the
+dotimes) and therefore refers to the dynamic binding of x.
+
+
+File: gcl.info,  Node: Lambda Lists,  Next: Error Checking in Function Calls,  Prev: Declarations,  Up: Evaluation and Compilation
+
+Lambda Lists
+============
+
+A lambda list is a list that specifies a set of parameters (sometimes
+called lambda variables) and a protocol for receiving values for those
+parameters.
+
+There are several kinds of lambda lists.
+
+ Context                                     Kind of Lambda List                             
+ defun form                                  ordinary lambda list                            
+ defmacro form                               macro lambda list                               
+ lambda expression                           ordinary lambda list                            
+ flet local function definition              ordinary lambda list                            
+ labels local function definition            ordinary lambda list                            
+ handler-case clause specification           ordinary lambda list                            
+ restart-case clause specification           ordinary lambda list                            
+ macrolet local macro definition             macro lambda list                               
+ define-method-combination                   ordinary lambda list                            
+ define-method-combination :arguments option define-method-combination arguments lambda list 
+ defstruct :constructor option               boa lambda list                                 
+ defgeneric form                             generic function lambda list                    
+ defgeneric method clause                    specialized lambda list                         
+ defmethod form                              specialized lambda list                         
+ defsetf form                                defsetf lambda list                             
+ define-setf-expander form                   macro lambda list                               
+ deftype form                                deftype lambda list                             
+ destructuring-bind form                     destructuring lambda list                       
+ define-compiler-macro form                  macro lambda list                               
+ define-modify-macro form                    define-modify-macro lambda list                 
+
+                         Figure 3-10: What Kind of Lambda Lists to Use                       
+
+
+Figure 3-11 lists some defined names that are applicable to lambda lists.
+
+  lambda-list-keywords  lambda-parameters-limit    
+
+  Figure 3-11: Defined names applicable to lambda lists
+
+
+* Menu:
+
+* Ordinary Lambda Lists::
+* Generic Function Lambda Lists::
+* Specialized Lambda Lists::
+* Macro Lambda Lists::
+* Destructuring Lambda Lists::
+* Boa Lambda Lists::
+* Defsetf Lambda Lists::
+* Deftype Lambda Lists::
+* Define-modify-macro Lambda Lists::
+* Define-method-combination Arguments Lambda Lists::
+* Syntactic Interaction of Documentation Strings and Declarations::
+
+
+File: gcl.info,  Node: Ordinary Lambda Lists,  Next: Generic Function Lambda Lists,  Prev: Lambda Lists,  Up: Lambda Lists
+
+Ordinary Lambda Lists
+---------------------
+
+An ordinary lambda list is used to describe how a set of arguments is
+received by an ordinary function.  The defined names in Figure 3-12 are
+those which use ordinary lambda lists:
+
+  define-method-combination  handler-case  restart-case  
+  defun                      labels                      
+  flet                       lambda                      
+
+  Figure 3-12: Standardized Operators that use Ordinary Lambda Lists
+
+
+An ordinary lambda list can contain the lambda list keywords shown in
+Figure 3-13.
+
+  &allow-other-keys  &key       &rest  
+  &aux               &optional         
+
+  Figure 3-13: Lambda List Keywords used by Ordinary Lambda Lists
+
+
+Each element of a lambda list is either a parameter specifier or a lambda
+list keyword.  Implementations are free to provide additional lambda list
+keywords.  For a list of all lambda list keywords used by the
+implementation, see lambda-list-keywords.
+
+The syntax for ordinary lambda lists is as follows:
+
+lambda-list ::=({var}*
+                 [&optional {var | (var [init-form [supplied-p-parameter]])}*]
+                 [&rest var]
+                 [&key {var | ({var | (keyword-name var)} [init-form [supplied-p-parameter]])}* pt [&allow-other-keys]]
+                 [&aux {var | (var [init-form])}*])                
+
+A var or supplied-p-parameter must be a symbol that is not the name of a
+constant variable.
+
+An init-form can be any form.  Whenever any init-form is evaluated for any
+parameter specifier, that form may refer to any parameter variable to the
+left of the specifier in which the init-form appears, including any
+supplied-p-parameter variables, and may rely on the fact that no other
+parameter variable has yet been bound (including its own parameter
+variable).
+
+A keyword-name can be any symbol, but by convention is normally a
+keyword_1; all standardized functions follow that convention.
+
+An ordinary lambda list has five parts, any or all of which may be empty.
+For information about the treatment of argument mismatches, see *Note
+Error Checking in Function Calls::.
+
+* Menu:
+
+* Specifiers for the required parameters::
+* Specifiers for optional parameters::
+* A specifier for a rest parameter::
+* Specifiers for keyword parameters::
+* Suppressing Keyword Argument Checking::
+* Examples of Suppressing Keyword Argument Checking::
+* Specifiers for &aux variables::
+* Examples of Ordinary Lambda Lists::
+
+
+File: gcl.info,  Node: Specifiers for the required parameters,  Next: Specifiers for optional parameters,  Prev: Ordinary Lambda Lists,  Up: Ordinary Lambda Lists
+
+Specifiers for the required parameters
+......................................
+
+These are all the parameter specifiers up to the first lambda list keyword;
+if there are no lambda list keywords, then all the specifiers are for
+required parameters.  Each required parameter is specified by a parameter
+variable var.  var is bound as a lexical variable unless it is declared
+special.
+
+If there are n required parameters (n may be zero), there must be at least
+n passed arguments, and the required parameters are bound to the first n
+passed arguments; see *Note Error Checking in Function Calls::.  The other
+parameters are then processed using any remaining arguments.
+
+
+File: gcl.info,  Node: Specifiers for optional parameters,  Next: A specifier for a rest parameter,  Prev: Specifiers for the required parameters,  Up: Ordinary Lambda Lists
+
+Specifiers for optional parameters
+..................................
+
+If &optional is present, the optional parameter specifiers are those
+following &optional up to the next lambda list keyword or the end of the
+list.  If optional parameters are specified, then each one is processed as
+follows.  If any unprocessed arguments remain, then the parameter variable
+var is bound to the next remaining argument, just as for a required
+parameter.  If no arguments remain, however, then init-form is evaluated,
+and the parameter variable is bound to the resulting value (or to nil if
+no init-form appears in the parameter specifier).  If another variable
+name supplied-p-parameter appears in the specifier, it is bound to true if
+an argument had been available, and to false if no argument remained (and
+therefore init-form had to be evaluated).  Supplied-p-parameter is bound
+not to an argument but to a value indicating whether or not an argument
+had been supplied for the corresponding var.
+
+
+File: gcl.info,  Node: A specifier for a rest parameter,  Next: Specifiers for keyword parameters,  Prev: Specifiers for optional parameters,  Up: Ordinary Lambda Lists
+
+A specifier for a rest parameter
+................................
+
+&rest, if present, must be followed by a single rest parameter specifier,
+which in turn must be followed by another lambda list keyword or the end
+of the lambda list.  After all optional parameter specifiers have been
+processed, then there may or may not be a rest parameter.  If there is a
+rest parameter, it is bound to a list of all as-yet-unprocessed arguments.
+If no unprocessed arguments remain, the rest parameter is bound to the
+empty list.  If there is no rest parameter and there are no keyword
+parameters, then an error should be signaled if any unprocessed arguments
+remain; see *Note Error Checking in Function Calls::.  The value of a rest
+parameter is permitted, but not required, to share structure with the last
+argument to apply.
+
+
+File: gcl.info,  Node: Specifiers for keyword parameters,  Next: Suppressing Keyword Argument Checking,  Prev: A specifier for a rest parameter,  Up: Ordinary Lambda Lists
+
+Specifiers for keyword parameters
+.................................
+
+If &key is present, all specifiers up to the next lambda list keyword or
+the end of the list are keyword parameter specifiers.  When keyword
+parameters are processed, the same arguments are processed that would be
+made into a list for a rest parameter.  It is permitted to specify both
+&rest and &key.  In this case the remaining arguments are used for both
+purposes; that is, all remaining arguments are made into a list for the
+rest parameter, and are also processed for the &key parameters.
+
+If &key is specified, there must remain an even number of arguments; see
+*Note Odd Number of Keyword Arguments::.
+
+These arguments are considered as pairs, the first argument in each pair
+being interpreted as a name and the second as the corresponding value.
+The first object of each pair must be a symbol; see *Note Invalid Keyword
+Arguments::.  The keyword parameter specifiers may optionally be followed
+by the lambda list keyword &allow-other-keys.
+
+In each keyword parameter specifier must be a name var for the parameter
+variable.
+
+If the var appears alone or in a (var init-form) combination, the keyword
+name used when matching arguments to parameters is a symbol in the KEYWORD
+package whose name is the same (under string=) as var's.  If the notation
+((keyword-name var) init-form) is used, then the keyword name used to
+match arguments to parameters is keyword-name, which may be a symbol in
+any package.  (Of course, if it is not a symbol in the KEYWORD package, it
+does not necessarily self-evaluate, so care must be taken when calling the
+function to make sure that normal evaluation still yields the keyword
+name.)
+
+Thus
+
+      (defun foo (&key radix (type 'integer)) ...)
+
+means exactly the same as
+
+      (defun foo (&key ((:radix radix)) ((:type type) 'integer)) ...)
+
+The keyword parameter specifiers are, like all parameter specifiers,
+effectively processed from left to right.  For each keyword parameter
+specifier, if there is an argument pair whose name matches that
+specifier's name (that is, the names are eq), then the parameter variable
+for that specifier is bound to the second item (the value) of that
+argument pair.  If more than one such argument pair matches, the leftmost
+argument pair is used.  If no such argument pair exists, then the
+init-form for that specifier is evaluated and the parameter variable is
+bound to that value (or to nil if no init-form was specified).
+supplied-p-parameter is treated as for &optional parameters: it is bound
+to true if there was a matching argument pair, and to false otherwise.
+
+Unless keyword argument checking is suppressed, an argument pair must a
+name matched by a parameter specifier; see *Note Unrecognized Keyword
+Arguments::.
+
+If keyword argument checking is suppressed, then it is permitted for an
+argument pair to match no parameter specifier, and the argument pair is
+ignored, but such an argument pair is accessible through the rest
+parameter if one was supplied.  The purpose of these mechanisms is to
+allow sharing of argument lists among several lambda expressions and to
+allow either the caller or the called lambda expression to specify that
+such sharing may be taking place.
+
+Note that if &key is present, a keyword argument of :allow-other-keys is
+always permitted--regardless of whether the associated value is true or
+false.  However, if the value is false, other non-matching keywords are
+not tolerated (unless &allow-other-keys was used).
+
+Furthermore, if the receiving argument list specifies a regular argument
+which would be flagged by :allow-other-keys, then :allow-other-keys has
+both its special-cased meaning (identifying whether additional keywords
+are permitted) and its normal meaning (data flow into the function in
+question).
+
+
+File: gcl.info,  Node: Suppressing Keyword Argument Checking,  Next: Examples of Suppressing Keyword Argument Checking,  Prev: Specifiers for keyword parameters,  Up: Ordinary Lambda Lists
+
+Suppressing Keyword Argument Checking
+.....................................
+
+If &allow-other-keys was specified in the lambda list of a function,
+keyword_2 argument checking is suppressed in calls to that function.
+
+If the :allow-other-keys argument is true in a call to a function,
+keyword_2 argument checking is suppressed in that call.
+
+The :allow-other-keys argument is permissible in all situations involving
+keyword_2 arguments, even when its associated value is false.
+
+
+File: gcl.info,  Node: Examples of Suppressing Keyword Argument Checking,  Next: Specifiers for @b{&aux} variables,  Prev: Suppressing Keyword Argument Checking,  Up: Ordinary Lambda Lists
+
+Examples of Suppressing Keyword Argument Checking
+.................................................
+
+     ;;; The caller can supply :ALLOW-OTHER-KEYS T to suppress checking.
+      ((lambda (&key x) x) :x 1 :y 2 :allow-other-keys t) =>  1
+     ;;; The callee can use &ALLOW-OTHER-KEYS to suppress checking.
+      ((lambda (&key x &allow-other-keys) x) :x 1 :y 2) =>  1
+     ;;; :ALLOW-OTHER-KEYS NIL is always permitted.
+      ((lambda (&key) t) :allow-other-keys nil) =>  T
+     ;;; As with other keyword arguments, only the left-most pair
+     ;;; named :ALLOW-OTHER-KEYS has any effect.
+      ((lambda (&key x) x)
+       :x 1 :y 2 :allow-other-keys t :allow-other-keys nil)
+     =>  1
+     ;;; Only the left-most pair named :ALLOW-OTHER-KEYS has any effect,
+     ;;; so in safe code this signals a PROGRAM-ERROR (and might enter the
+     ;;; debugger).  In unsafe code, the consequences are undefined.
+      ((lambda (&key x) x)                   ;This call is not valid
+       :x 1 :y 2 :allow-other-keys nil :allow-other-keys t)
+
+
+File: gcl.info,  Node: Specifiers for @b{&aux} variables,  Next: Examples of Ordinary Lambda Lists,  Prev: Examples of Suppressing Keyword Argument Checking,  Up: Ordinary Lambda Lists
+
+Specifiers for &aux variables
+.............................
+
+These are not really parameters.  If the lambda list keyword &aux is
+present, all specifiers after it are auxiliary variable specifiers.  After
+all parameter specifiers have been processed, the auxiliary variable
+specifiers (those following &aux) are processed from left to right.  For
+each one, init-form is evaluated and var is bound to that value (or to nil
+if no init-form was specified).  &aux variable processing is analogous to
+let* processing.
+
+      (lambda (x y &aux (a (car x)) (b 2) c) (list x y a b c))
+         == (lambda (x y) (let* ((a (car x)) (b 2) c) (list x y a b c)))
+
+
+File: gcl.info,  Node: Examples of Ordinary Lambda Lists,  Prev: Specifiers for @b{&aux} variables,  Up: Ordinary Lambda Lists
+
+Examples of Ordinary Lambda Lists
+.................................
+
+Here are some examples involving optional parameters and rest parameters:
+
+      ((lambda (a b) (+ a (* b 3))) 4 5) =>  19
+      ((lambda (a &optional (b 2)) (+ a (* b 3))) 4 5) =>  19
+      ((lambda (a &optional (b 2)) (+ a (* b 3))) 4) =>  10
+      ((lambda (&optional (a 2 b) (c 3 d) &rest x) (list a b c d x)))
+     =>  (2 NIL 3 NIL NIL)
+      ((lambda (&optional (a 2 b) (c 3 d) &rest x) (list a b c d x)) 6)
+     =>  (6 T 3 NIL NIL)
+      ((lambda (&optional (a 2 b) (c 3 d) &rest x) (list a b c d x)) 6 3)
+     =>  (6 T 3 T NIL)
+      ((lambda (&optional (a 2 b) (c 3 d) &rest x) (list a b c d x)) 6 3 8)
+     =>  (6 T 3 T (8))
+      ((lambda (&optional (a 2 b) (c 3 d) &rest x) (list a b c d x))
+       6 3 8 9 10 11)
+     =>  (6 t 3 t (8 9 10 11))
+
+Here are some examples involving keyword parameters:
+
+      ((lambda (a b &key c d) (list a b c d)) 1 2) =>  (1 2 NIL NIL)
+      ((lambda (a b &key c d) (list a b c d)) 1 2 :c 6) =>  (1 2 6 NIL)
+      ((lambda (a b &key c d) (list a b c d)) 1 2 :d 8) =>  (1 2 NIL 8)
+      ((lambda (a b &key c d) (list a b c d)) 1 2 :c 6 :d 8) =>  (1 2 6 8)
+      ((lambda (a b &key c d) (list a b c d)) 1 2 :d 8 :c 6) =>  (1 2 6 8)
+      ((lambda (a b &key c d) (list a b c d)) :a 1 :d 8 :c 6) =>  (:a 1 6 8)
+      ((lambda (a b &key c d) (list a b c d)) :a :b :c :d) =>  (:a :b :d NIL)
+      ((lambda (a b &key ((:sea c)) d) (list a b c d)) 1 2 :sea 6) =>  (1 2 6 NIL)
+      ((lambda (a b &key ((c c)) d) (list a b c d)) 1 2 'c 6) =>  (1 2 6 NIL)
+
+Here are some examples involving optional parameters, rest parameters, and
+keyword parameters together:
+
+      ((lambda (a &optional (b 3) &rest x &key c (d a))
+         (list a b c d x)) 1)
+     =>  (1 3 NIL 1 ())
+      ((lambda (a &optional (b 3) &rest x &key c (d a))
+         (list a b c d x)) 1 2)
+     =>  (1 2 NIL 1 ())
+      ((lambda (a &optional (b 3) &rest x &key c (d a))
+         (list a b c d x)) :c 7)
+     =>  (:c 7 NIL :c ())
+      ((lambda (a &optional (b 3) &rest x &key c (d a))
+         (list a b c d x)) 1 6 :c 7)
+     =>  (1 6 7 1 (:c 7))
+      ((lambda (a &optional (b 3) &rest x &key c (d a))
+         (list a b c d x)) 1 6 :d 8)
+     =>  (1 6 NIL 8 (:d 8))
+      ((lambda (a &optional (b 3) &rest x &key c (d a))
+         (list a b c d x)) 1 6 :d 8 :c 9 :d 10)
+     =>  (1 6 9 8 (:d 8 :c 9 :d 10))
+
+As an example of the use of &allow-other-keys and :allow-other-keys,
+consider a function that takes two named arguments of its own and also
+accepts additional named arguments to be passed to make-array:
+
+      (defun array-of-strings (str dims &rest named-pairs
+                               &key (start 0) end &allow-other-keys)
+        (apply #'make-array dims
+               :initial-element (subseq str start end)
+               :allow-other-keys t
+               named-pairs))
+
+This function takes a string and dimensioning information and returns an
+array of the specified dimensions, each of whose elements is the specified
+string.  However, :start and :end named arguments may be used to specify
+that a substring of the given string should be used.  In addition, the
+presence of &allow-other-keys in the lambda list indicates that the caller
+may supply additional named arguments; the rest parameter provides access
+to them.  These additional named arguments are passed to make-array.  The
+function make-array normally does not allow the named arguments :start and
+:end to be used, and an error should be signaled if such named arguments
+are supplied to make-array.  However, the presence in the call to
+make-array of the named argument :allow-other-keys with a true value
+causes any extraneous named arguments, including :start and :end, to be
+acceptable and ignored.
+
+
+File: gcl.info,  Node: Generic Function Lambda Lists,  Next: Specialized Lambda Lists,  Prev: Ordinary Lambda Lists,  Up: Lambda Lists
+
+Generic Function Lambda Lists
+-----------------------------
+
+A generic function lambda list is used to describe the overall shape of
+the argument list to be accepted by a generic function.  Individual method
+signatures might contribute additional keyword parameters to the lambda
+list of the effective method.
+
+A generic function lambda list is used by defgeneric.
+
+A generic function lambda list has the following syntax:
+
+lambda-list ::=({var}*                  [&optional {var | (var)}*]
+                 [&rest var]
+                 [&key {var | ({var | (keyword-name var)})}* pt [&allow-other-keys]])
+               
+
+A generic function lambda list can contain the lambda list keywords shown
+in Figure 3-14.
+
+  &allow-other-keys  &optional       &key               &rest        
+
+  Figure 3-14: Lambda List Keywords used by Generic Function Lambda Lists
+
+
+A generic function lambda list differs from an ordinary lambda list in the
+following ways:
+
+Required arguments
+     Zero or more required parameters must be specified.
+
+Optional and keyword arguments
+     Optional parameters and keyword parameters may not have default
+     initial value forms nor use supplied-p parameters.
+
+Use of &aux
+     The use of &aux is not allowed.
+
+
+File: gcl.info,  Node: Specialized Lambda Lists,  Next: Macro Lambda Lists,  Prev: Generic Function Lambda Lists,  Up: Lambda Lists
+
+Specialized Lambda Lists
+------------------------
+
+A specialized lambda list is used to specialize a method for a particular
+signature and to describe how arguments matching that signature are
+received by the method.  The defined names in Figure 3-15 use specialized
+lambda lists in some way; see the dictionary entry for each for
+information about how.
+
+  defmethod  defgeneric    
+
+  Figure 3-15: Standardized Operators that use Specialized Lambda Lists
+
+
+A specialized lambda list can contain the lambda list keywords shown in
+Figure 3-16.
+
+  &allow-other-keys  &key       &rest  
+  &aux               &optional         
+
+  Figure 3-16: Lambda List Keywords used by Specialized Lambda Lists
+
+
+A specialized lambda list is syntactically the same as an ordinary lambda
+list except that each required parameter may optionally be associated with
+a class or object for which that parameter is specialized.
+
+lambda-list ::=({var | (var [specializer])}*
+                [&optional {var | (var [init-form [supplied-p-parameter]])}*]
+                [&rest var]
+                [&key {var | ({var | (keyword-name var)} [init-form [supplied-p-parameter]])}* [&allow-other-keys]]
+                [&aux {var | (var [init-form])}*])                
+
+
+File: gcl.info,  Node: Macro Lambda Lists,  Next: Destructuring Lambda Lists,  Prev: Specialized Lambda Lists,  Up: Lambda Lists
+
+Macro Lambda Lists
+------------------
+
+A macro lambda list is used in describing macros defined by the operators
+in Figure 3-17.
+
+  define-compiler-macro  defmacro  macrolet  
+  define-setf-expander                       
+
+  Figure 3-17: Operators that use Macro Lambda Lists
+
+
+With the additional restriction that an environment parameter may appear
+only once (at any of the positions indicated), a macro lambda list has the
+following syntax:
+
+reqvars ::={var | !pattern}*
+
+optvars ::=[&optional {var | ({var | !pattern} [init-form [supplied-p-parameter]])}*]
+
+restvar ::=[{&rest | &body} {var | !pattern}]
+
+keyvars ::=[&key {var | ({var | (keyword-name {var | !pattern})} [init-form [supplied-p-parameter]])}*
+            [&allow-other-keys]]
+
+auxvars ::=[&aux {var | (var [init-form])}*]
+
+envvar ::=[&environment var]
+
+wholevar ::=[&whole var]
+
+lambda-list ::=(!wholevar !envvar !reqvars !envvar !optvars !envvar
+                !restvar !envvar !keyvars !envvar !auxvars !envvar) |
+                (!wholevar !envvar !reqvars !envvar !optvars !envvar . var)
+
+pattern ::=(!wholevar !reqvars !optvars !restvar !keyvars !auxvars) |
+            (!wholevar !reqvars !optvars . var)
+
+A macro lambda list can contain the lambda list keywords shown in Figure
+3-18.
+
+  &allow-other-keys  &environment  &rest   
+  &aux               &key          &whole  
+  &body              &optional             
+
+  Figure 3-18: Lambda List Keywords used by Macro Lambda Lists
+
+
+Optional parameters (introduced by &optional) and keyword parameters
+(introduced by &key) can be supplied in a macro lambda list, just as in an
+ordinary lambda list.  Both may contain default initialization forms and
+supplied-p parameters.
+
+&body
+
+is identical in function to &rest, but it can be used to inform certain
+output-formatting and editing functions that the remainder of the form is
+treated as a body, and should be indented accordingly.  Only one of &body
+or &rest can be used at any particular level; see *Note Destructuring by
+Lambda Lists::.
+
+&body can appear at any level of a macro lambda list; for details, see
+*Note Destructuring by Lambda Lists::.
+
+&whole
+
+is followed by a single variable that is bound to the entire macro-call
+form; this is the value that the macro function receives as its first
+argument.
+
+If &whole and a following variable appear, they must appear first in
+lambda-list,
+
+before any other parameter or lambda list keyword.
+
+&whole can appear at any level of a macro lambda list.  At inner levels,
+the &whole variable is bound to the corresponding part of the argument, as
+with &rest, but unlike &rest, other arguments are also allowed.  The use
+of &whole does not affect the pattern of arguments specified.
+
+&environment
+
+is followed by a single variable that is bound to an environment
+representing the lexical environment in which the macro call is to be
+interpreted.  This environment should be used with
+
+macro-function,
+
+get-setf-expansion,
+
+compiler-macro-function,
+
+and macroexpand (for example) in computing the expansion of the macro, to
+ensure that any lexical bindings or definitions established in the
+compilation environment are taken into account.
+
+&environment can only appear at the top level of a macro lambda list, and
+can only appear once, but can appear anywhere in that list;
+
+the &environment parameter is bound along with &whole before any other
+variables in the lambda list, regardless of where &environment appears in
+the lambda list.
+
+The object that is bound to the environment parameter has dynamic extent.
+
+Destructuring allows a macro lambda list to express the structure of a
+macro call syntax.  If no lambda list keywords appear, then the macro
+lambda list is a tree containing parameter names at the leaves.  The
+pattern and the macro form must have compatible tree structure; that is,
+their tree structure must be equivalent, or it must differ only in that
+some leaves of the pattern match non-atomic objects of the macro form.
+
+For information about error detection in this situation, see *Note
+Destructuring Mismatch::.
+
+A destructuring lambda list (whether at top level or embedded) can be
+dotted, ending in a parameter name.  This situation is treated exactly as
+if the parameter name that ends the list had appeared preceded by &rest.
+
+It is permissible for a macro form (or a subexpression of a macro form) to
+be a dotted list only  when (... &rest var) or (... . var) is used to match
+it. It is the responsibility of the macro to recognize and deal with such
+situations.
+
+[Editorial Note by KMP: Apparently the dotted-macro-forms cleanup doesn't
+allow for the macro to `manually' notice dotted forms and fix them as well.
+It shouldn't be required that this be done only by &REST or a dotted
+pattern; it should only matter that ultimately the non-macro result of a
+full-macro expansion not contain dots.  Anyway, I plan to address this
+editorially unless someone raises an objection.]
+
+* Menu:
+
+* Destructuring by Lambda Lists::
+* Data-directed Destructuring by Lambda Lists::
+* Examples of Data-directed Destructuring by Lambda Lists::
+* Lambda-list-directed Destructuring by Lambda Lists::
+
+
+File: gcl.info,  Node: Destructuring by Lambda Lists,  Next: Data-directed Destructuring by Lambda Lists,  Prev: Macro Lambda Lists,  Up: Macro Lambda Lists
+
+Destructuring by Lambda Lists
+.............................
+
+Anywhere in a macro lambda list where a parameter name can appear, and
+where ordinary lambda list syntax (as described in *Note Ordinary Lambda
+Lists::) does not otherwise allow a list, a destructuring lambda list can
+appear in place of the parameter name.  When this is done, then the
+argument that would match the parameter is treated as a (possibly dotted)
+list, to be used as an argument list for satisfying the parameters in the
+embedded lambda list.  This is known as destructuring.
+
+Destructuring is the process of decomposing a compound object into its
+component parts, using an abbreviated, declarative syntax, rather than
+writing it out by hand using the primitive component-accessing functions.
+Each component part is bound to a variable.
+
+A destructuring operation requires an object to be decomposed, a pattern
+that specifies what components are to be extracted, and the names of the
+variables whose values are to be the components.
+
+
+File: gcl.info,  Node: Data-directed Destructuring by Lambda Lists,  Next: Examples of Data-directed Destructuring by Lambda Lists,  Prev: Destructuring by Lambda Lists,  Up: Macro Lambda Lists
+
+Data-directed Destructuring by Lambda Lists
+...........................................
+
+In data-directed destructuring, the pattern is a sample object of the type
+to be decomposed.  Wherever a component is to be extracted, a symbol
+appears in the pattern; this symbol is the name of the variable whose
+value will be that component.
+
+
+File: gcl.info,  Node: Examples of Data-directed Destructuring by Lambda Lists,  Next: Lambda-list-directed Destructuring by Lambda Lists,  Prev: Data-directed Destructuring by Lambda Lists,  Up: Macro Lambda Lists
+
+Examples of Data-directed Destructuring by Lambda Lists
+.......................................................
+
+An example pattern is
+
+(a b c)
+
+which destructures a list of three elements.  The variable a is assigned
+to the first element, b to the second, etc.  A more complex example is
+
+((first . rest) . more)
+
+The important features of data-directed destructuring are its syntactic
+simplicity and the ability to extend it to lambda-list-directed
+destructuring.
+
+
+File: gcl.info,  Node: Lambda-list-directed Destructuring by Lambda Lists,  Prev: Examples of Data-directed Destructuring by Lambda Lists,  Up: Macro Lambda Lists
+
+Lambda-list-directed Destructuring by Lambda Lists
+..................................................
+
+An extension of data-directed destructuring of trees is
+lambda-list-directed destructuring.  This derives from the analogy between
+the three-element destructuring pattern
+
+(first second third)
+
+and the three-argument lambda list
+
+(first second third)
+
+Lambda-list-directed destructuring is identical to data-directed
+destructuring if no lambda list keywords appear in the pattern.  Any list
+in the pattern (whether a sub-list or the whole pattern itself) that
+contains a lambda list keyword is interpreted specially.  Elements of the
+list to the left of the first lambda list keyword are treated as
+destructuring patterns, as usual, but the remaining elements of the list
+are treated like a function's lambda list except that where a variable
+would normally be required, an arbitrary destructuring pattern is allowed.
+Note that in case of ambiguity, lambda list syntax is preferred over
+destructuring syntax.  Thus, after &optional a list of elements is a list
+of a destructuring pattern and a default value form.
+
+The detailed behavior of each lambda list keyword in a
+lambda-list-directed destructuring pattern is as follows:
+
+&optional
+     Each following element is a variable or a list of a destructuring
+     pattern, a default value form, and a supplied-p variable.  The
+     default value and the supplied-p variable can be omitted.  If the
+     list being destructured ends early, so that it does not have an
+     element to match against this destructuring (sub)-pattern, the
+     default form is evaluated and destructured instead.  The supplied-p
+     variable receives the value nil if the default form is used, t
+     otherwise.
+
+&rest, &body
+     The next element is a destructuring pattern that matches the rest of
+     the list.  &body is identical to &rest but declares that what is
+     being matched is a list of forms that constitutes the body of form.
+     This next element must be the last unless a lambda list keyword
+     follows it.
+
+&aux
+     The remaining elements are not destructuring patterns at all, but are
+     auxiliary variable bindings.
+
+&whole
+     The next element is a destructuring pattern that matches the entire
+     form in a macro, or the entire subexpression at inner levels.
+
+&key
+     Each following element is one of
+
+          a variable,
+
+    or
+          a list of a variable, an optional initialization form, and an
+          optional supplied-p variable.
+
+    or
+          a list of a list of a keyword and a destructuring pattern, an
+          optional initialization form, and an optional supplied-p
+          variable.
+
+     The rest of the list being destructured is taken to be alternating
+     keywords and values and is taken apart appropriately.
+
+&allow-other-keys
+     Stands by itself.
+
+
+File: gcl.info,  Node: Destructuring Lambda Lists,  Next: Boa Lambda Lists,  Prev: Macro Lambda Lists,  Up: Lambda Lists
+
+Destructuring Lambda Lists
+--------------------------
+
+A destructuring lambda list is used by destructuring-bind.
+
+Destructuring lambda lists are closely related to macro lambda lists; see
+*Note Macro Lambda Lists::.  A destructuring lambda list can contain all
+of the lambda list keywords listed for macro lambda lists except for
+&environment, and supports destructuring in the same way.  Inner lambda
+lists nested within a macro lambda list have the syntax of destructuring
+lambda lists.
+
+A destructuring lambda list has the following syntax:
+
+reqvars ::={var | !lambda-list}*
+
+optvars ::=[&optional {var | ({var | !lambda-list} [init-form [supplied-p-parameter]])}*]
+
+restvar ::=[{&rest | &body} {var | !lambda-list}]
+
+keyvars ::=[&key {var | ({var | (keyword-name {var | !lambda-list})} [init-form [supplied-p-parameter]])}*
+            [&allow-other-keys]]
+
+auxvars ::=[&aux {var | (var [init-form])}*]
+
+envvar ::=[&environment var]
+
+wholevar ::=[&whole var]
+
+lambda-list ::=(!wholevar !reqvars !optvars !restvar !keyvars !auxvars) |
+                (!wholevar !reqvars !optvars . var)
+

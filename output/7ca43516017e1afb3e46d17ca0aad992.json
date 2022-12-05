@@ -1,0 +1,21 @@
+{
+    "name": "Examples of Transfer of Control during a Destructive Operation",
+    "prev": "Transfer of Control during a Destructive Operation",
+    "next": null,
+    "up": "Transfer of Control during a Destructive Operation",
+    "header": {
+        "type": null,
+        "text": null
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Examples of Transfer of Control during a Destructive Operation",
+            "text": "The following examples illustrate some of the many ways in which the\nimplementation-dependent nature of the modification can manifest itself.\n      (let ((a (list 2 1 4 3 7 6 'five)))\n        (ignore-errors (sort a #'<))\n        a)\n     =>  (1 2 3 4 6 7 FIVE)\n     OR=> (2 1 4 3 7 6 FIVE)\n     OR=> (2)\n      (prog foo ((a (list 1 2 3 4 5 6 7 8 9 10)))\n        (sort a #'(lambda (x y) (if (zerop (random 5)) (return-from foo a) (> x y)))))\n     =>  (1 2 3 4 5 6 7 8 9 10)\n     OR=> (3 4 5 6 2 7 8 9 10 1)\n     OR=> (1 2 4 3)\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: Examples of Transfer of Control during a Destructive Operation,  Prev: Transfer of Control during a Destructive Operation,  Up: Transfer of Control during a Destructive Operation\n\nExamples of Transfer of Control during a Destructive Operation\n..............................................................\n\nThe following examples illustrate some of the many ways in which the\nimplementation-dependent nature of the modification can manifest itself.\n\n      (let ((a (list 2 1 4 3 7 6 'five)))\n        (ignore-errors (sort a #'<))\n        a)\n     =>  (1 2 3 4 6 7 FIVE)\n     OR=> (2 1 4 3 7 6 FIVE)\n     OR=> (2)\n     \n      (prog foo ((a (list 1 2 3 4 5 6 7 8 9 10)))\n        (sort a #'(lambda (x y) (if (zerop (random 5)) (return-from foo a) (> x y)))))\n     =>  (1 2 3 4 5 6 7 8 9 10)\n     OR=> (3 4 5 6 2 7 8 9 10 1)\n     OR=> (1 2 4 3)\n\n"
+}

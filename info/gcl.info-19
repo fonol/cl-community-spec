@@ -1,0 +1,1227 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: do,  Next: dotimes,  Prev: Iteration Dictionary,  Up: Iteration Dictionary
+
+do, do*                                                             [Macro]
+---------------------------------------------------------------------------
+
+`do'  ({var | (var [init-form [step-form]])}*) (end-test-form
+{result-form}*) {declaration}* {tag | statement}*
+=>  {result}*
+
+`do*'  ({var | (var [init-form [step-form]])}*) (end-test-form
+{result-form}*) {declaration}* {tag | statement}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+var--a symbol.
+
+init-form--a form.
+
+step-form--a form.
+
+end-test-form--a form.
+
+result-forms--an implicit progn.
+
+declaration--a declare expression; not evaluated.
+
+tag--a go tag; not evaluated.
+
+statement--a compound form; evaluated as described below.
+
+results--if a return or return-from form is executed, the values passed
+from that form; otherwise, the values returned by the result-forms.
+
+Description::
+.............
+
+do iterates over a group of statements while a test condition holds.  do
+accepts an arbitrary number of iteration vars which are bound within the
+iteration and stepped in parallel.  An initial value may be supplied for
+each iteration variable by use of an init-form.  Step-forms may be used to
+specify how the vars should be updated on succeeding iterations through
+the loop.  Step-forms may be used both to generate successive values or to
+accumulate results.  If the end-test-form condition is met prior to an
+execution of the body, the iteration terminates.  Tags label statements.
+
+do* is exactly like do except that the bindings and steppings of the vars
+are performed sequentially rather than in parallel.
+
+Before the first iteration, all the init-forms are evaluated, and each var
+is bound to the value of its respective init-form, if supplied.  This is a
+binding, not an assignment; when the loop terminates, the old values of
+those variables will be restored.  For do, all of the init-forms are
+evaluated before any var is bound. The init-forms can refer to the
+bindings of the vars visible before beginning execution of do.  For do*,
+the first init-form is evaluated, then the first var is bound to that
+value, then the second init-form is evaluated, then the second var is
+bound, and so on; in general, the kth init-form can refer to the new
+binding of the jth var if j < k, and otherwise to the old binding of the
+jth var.
+
+At the beginning of each iteration, after processing the variables, the
+end-test-form is evaluated.  If the result is false, execution proceeds
+with the body of the do (or do*) form.  If the result is true, the
+result-forms are evaluated in order as an implicit progn, and then do or
+do* returns.
+
+At the beginning of each iteration other than the first, vars are updated
+as follows.  All the step-forms, if supplied, are evaluated, from left to
+right, and the resulting values are assigned to the respective vars.  Any
+var that has no associated step-form is not assigned to.  For do, all the
+step-forms are evaluated before any var is updated; the assignment of
+values to vars is done in parallel, as if by psetq.  Because all of the
+step-forms are evaluated before any of the vars are altered, a step-form
+when evaluated always has access to the old values of all the vars, even
+if other step-forms precede it.  For do*, the first step-form is
+evaluated, then the value is assigned to the first var, then the second
+step-form is evaluated, then the value is assigned to the second var, and
+so on; the assignment of values to variables is done sequentially, as if
+by setq.  For either do or do*, after the vars have been updated, the
+end-test-form is evaluated as described above, and the iteration continues.
+
+The remainder of the do (or do*) form constitutes an implicit tagbody.
+Tags may appear within the body of a do loop for use by go statements
+appearing in the body (but such go statements may not appear in the
+variable specifiers, the end-test-form, or the result-forms).  When the
+end of a do body is reached, the next iteration cycle (beginning with the
+evaluation of step-forms) occurs.
+
+An implicit block named nil surrounds the entire do (or do*) form.  A
+return statement may be used at any point to exit the loop immediately.
+
+Init-form  is an initial value for the var with which it is associated.
+If init-form is omitted, the initial value of var is nil.  If a
+declaration is supplied for a var, init-form must be consistent with the
+declaration.
+
+Declarations can appear at the beginning of a do (or do*) body.  They
+apply to code in the do (or do*) body, to the bindings of the do (or do*)
+vars, to the step-forms, to the end-test-form, and to the result-forms.
+
+Examples::
+..........
+
+      (do ((temp-one 1 (1+ temp-one))
+            (temp-two 0 (1- temp-two)))
+           ((> (- temp-one temp-two) 5) temp-one)) =>  4
+     
+      (do ((temp-one 1 (1+ temp-one))
+            (temp-two 0 (1+ temp-one)))
+           ((= 3 temp-two) temp-one)) =>  3
+     
+      (do* ((temp-one 1 (1+ temp-one))
+             (temp-two 0 (1+ temp-one)))
+            ((= 3 temp-two) temp-one)) =>  2
+     
+      (do ((j 0 (+ j 1)))
+          (nil)                       ;Do forever.
+        (format t "~
+        (let ((item (read)))
+          (if (null item) (return)   ;Process items until NIL seen.
+              (format t "~&Output ~D: ~S" j item))))
+      |>  Input 0: |>>banana<<|
+      |>  Output 0: BANANA
+      |>  Input 1: |>>(57 boxes)<<|
+      |>  Output 1: (57 BOXES)
+      |>  Input 2: |>>NIL<<|
+     =>  NIL
+     
+      (setq a-vector (vector 1 nil 3 nil))
+      (do ((i 0 (+ i 1))     ;Sets every null element of a-vector to zero.
+           (n (array-dimension a-vector 0)))
+          ((= i n))
+        (when (null (aref a-vector i))
+          (setf (aref a-vector i) 0))) =>  NIL
+     a-vector =>  #(1 0 3 0)
+
+      (do ((x e (cdr x))
+           (oldx x x))
+          ((null x))
+        body)
+
+is an example of parallel assignment to index variables.  On the first
+iteration, the value of oldx is whatever value x had before the do was
+entered.  On succeeding iterations, oldx contains the value that x had on
+the previous iteration.
+
+      (do ((x foo (cdr x))
+           (y bar (cdr y))
+           (z '() (cons (f (car x) (car y)) z)))
+          ((or (null x) (null y))
+           (nreverse z)))
+
+does the same thing as (mapcar #'f foo bar).  The step computation for z
+is an example of the fact that variables are stepped in parallel.  Also,
+the body of the loop is empty.
+
+      (defun list-reverse (list)
+             (do ((x list (cdr x))
+                  (y '() (cons (car x) y)))
+                 ((endp x) y)))
+
+As an example of nested iterations, consider a data structure that is a
+list of conses. The car of each cons is a list of symbols, and the cdr of
+each cons is a list of equal length containing corresponding values.  Such
+a data structure is similar to an association list, but is divided into
+"frames"; the overall structure resembles a rib-cage.  A lookup function
+on such a data structure might be:
+
+      (defun ribcage-lookup (sym ribcage)
+             (do ((r ribcage (cdr r)))
+                 ((null r) nil)
+               (do ((s (caar r) (cdr s))
+                    (v (cdar r) (cdr v)))
+                   ((null s))
+                 (when (eq (car s) sym)
+                   (return-from ribcage-lookup (car v)))))) =>  RIBCAGE-LOOKUP
+
+See Also::
+..........
+
+other iteration functions ( *Note dolist:: , *Note dotimes:: , and *Note
+loop:: ) and more primitive functionality ( *Note tagbody:: , *Note go:: ,
+*Note block:: , *Note return:: ,
+
+*Note let; let*:: , and *Note setq:: )
+
+Notes::
+.......
+
+If end-test-form is nil, the test will never succeed.  This provides an
+idiom for "do forever": the body of the do or do* is executed repeatedly.
+The infinite loop can be terminated by the use of return, return-from, go
+to an outer level, or throw.
+
+A do form may be explained in terms of the more primitive forms block,
+return, let, loop, tagbody, and psetq as follows:
+
+      (block nil
+        (let ((var1 init1)
+              (var2 init2)
+              ...
+              (varn initn))
+          declarations
+          (loop (when end-test (return (progn . result)))
+                (tagbody . tagbody)
+                (psetq var1 step1
+                       var2 step2
+                       ...
+                       varn stepn))))
+
+do* is similar, except that let* and setq replace the let and psetq,
+respectively.
+
+
+File: gcl.info,  Node: dotimes,  Next: dolist,  Prev: do,  Up: Iteration Dictionary
+
+dotimes                                                             [Macro]
+---------------------------------------------------------------------------
+
+`dotimes'  (var count-form [result-form]) {declaration}* {tag | statement}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+var--a symbol.
+
+count-form--a form.
+
+result-form--a form.
+
+declaration--a declare expression; not evaluated.
+
+tag--a go tag; not evaluated.
+
+statement--a compound form; evaluated as described below.
+
+results--if a return or return-from form is executed, the values passed
+from that form; otherwise, the values returned by the result-form or nil
+if there is no result-form.
+
+Description::
+.............
+
+dotimes iterates over a series of integers.
+
+dotimes evaluates count-form, which should produce an integer.  If
+count-form is zero or negative, the body is not executed.  dotimes then
+executes the body once for each integer from 0 up to but not including the
+value of count-form, in the order in which the tags and statements occur,
+with var bound to each integer.  Then result-form is evaluated.  At the
+time result-form is processed, var is bound to the number of times the
+body was executed.  Tags label statements.
+
+An implicit block named nil surrounds dotimes.  return may be used to
+terminate the loop immediately without performing any further iterations,
+returning zero or more values.
+
+The body of the loop is an implicit tagbody; it may contain tags to serve
+as the targets of go statements.  Declarations may appear before the body
+of the loop.
+
+The scope of the binding of var does not include the count-form, but the
+result-form is included.
+
+It is implementation-dependent whether dotimes establishes a new binding
+of var on each iteration or whether it establishes a binding for var once
+at the beginning and then assigns it on any subsequent iterations.
+
+Examples::
+..........
+
+      (dotimes (temp-one 10 temp-one)) =>  10
+      (setq temp-two 0) =>  0
+      (dotimes (temp-one 10 t) (incf temp-two)) =>  T
+      temp-two =>  10
+
+Here is an example of the use of dotimes in processing strings:
+
+     ;;; True if the specified subsequence of the string is a
+     ;;; palindrome (reads the same forwards and backwards).
+      (defun palindromep (string &optional
+                                (start 0)
+                                (end (length string)))
+        (dotimes (k (floor (- end start) 2) t)
+         (unless (char-equal (char string (+ start k))
+                             (char string (- end k 1)))
+           (return nil))))
+      (palindromep "Able was I ere I saw Elba") =>  T
+      (palindromep "A man, a plan, a canal--Panama!") =>  NIL
+      (remove-if-not #'alpha-char-p          ;Remove punctuation.
+                    "A man, a plan, a canal--Panama!")
+     =>  "AmanaplanacanalPanama"
+      (palindromep
+       (remove-if-not #'alpha-char-p
+                     "A man, a plan, a canal--Panama!")) =>  T
+      (palindromep
+       (remove-if-not
+        #'alpha-char-p
+        "Unremarkable was I ere I saw Elba Kramer, nu?")) =>  T
+      (palindromep
+       (remove-if-not
+        #'alpha-char-p
+        "A man, a plan, a cat, a ham, a yak,
+                       a yam, a hat, a canal--Panama!")) =>  T
+
+See Also::
+..........
+
+*Note do; do*:: , *Note dolist:: , *Note tagbody::
+
+Notes::
+.......
+
+go may be used within the body of dotimes to transfer control to a
+statement labeled by a tag.
+
+
+File: gcl.info,  Node: dolist,  Next: loop,  Prev: dotimes,  Up: Iteration Dictionary
+
+dolist                                                              [Macro]
+---------------------------------------------------------------------------
+
+`dolist'  (var list-form [result-form]) {declaration}* {tag | statement}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+var--a symbol.
+
+list-form--a form.
+
+result-form--a form.
+
+declaration--a declare expression; not evaluated.
+
+tag--a go tag; not evaluated.
+
+statement--a compound form; evaluated as described below.
+
+results--if a return or return-from form is executed, the values passed
+from that form; otherwise, the values returned by the result-form or nil
+if there is no result-form.
+
+Description::
+.............
+
+dolist iterates over the elements of a list.  The body of dolist is like a
+tagbody.  It consists of a series of tags and statements.
+
+dolist evaluates list-form, which should produce a list. It then executes
+the body once for each element in the list, in the order in which the tags
+and statements occur, with var bound to the element.  Then result-form is
+evaluated.  tags label statements.
+
+At the time result-form is processed, var is bound to nil.
+
+An implicit block named nil surrounds dolist.  return may be used to
+terminate the loop immediately without performing any further iterations,
+returning zero or more values.
+
+The scope of the binding of var does not include the list-form, but the
+result-form is included.
+
+It is implementation-dependent whether dolist establishes a new binding of
+var on each iteration or whether it establishes a binding for var once at
+the beginning and then assigns it on any subsequent iterations.
+
+Examples::
+..........
+
+      (setq temp-two '()) =>  NIL
+      (dolist (temp-one '(1 2 3 4) temp-two) (push temp-one temp-two)) =>  (4 3 2 1)
+     
+      (setq temp-two 0) =>  0
+      (dolist (temp-one '(1 2 3 4)) (incf temp-two)) =>  NIL
+      temp-two =>  4
+     
+      (dolist (x '(a b c d)) (prin1 x) (princ " "))
+      |>  A B C D
+     =>  NIL
+
+See Also::
+..........
+
+*Note do; do*:: , *Note dotimes:: , *Note tagbody:: ,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+go may be used within the body of dolist to transfer control to a
+statement labeled by a tag.
+
+
+File: gcl.info,  Node: loop,  Next: loop-finish,  Prev: dolist,  Up: Iteration Dictionary
+
+loop                                                                [Macro]
+---------------------------------------------------------------------------
+
+The "simple" loop form:
+
+`loop'  {compound-form}* =>  {result}*
+
+The "extended" loop form:
+
+`loop'  [!name-clause] {!variable-clause}* {!main-clause}* =>  {result}*
+
+name-clause ::=named name
+
+variable-clause ::=!with-clause | !initial-final | !for-as-clause
+
+with-clause ::=with var1 [type-spec] [= form1] {and var2 [type-spec] [= form2]}*
+
+main-clause ::=!unconditional | !accumulation | !conditional | !termination-test | !initial-final
+
+initial-final ::=initially {compound-form}^+ | finally {compound-form}^+
+
+unconditional ::={do | doing} {compound-form}^+ | return {form | it}
+
+accumulation ::=!list-accumulation | !numeric-accumulation
+
+list-accumulation ::={collect | collecting | append | appending | nconc | nconcing} {form | it} 
+                      [into simple-var]
+
+numeric-accumulation ::={count | counting | sum | summing | }                          maximize | maximizing | minimize | minimizing {form | it} 
+                         [into simple-var] [type-spec]
+
+conditional ::={if | when | unless} form !selectable-clause {and !selectable-clause}* 
+                [else !selectable-clause {and !selectable-clause}*] 
+                [end]
+
+selectable-clause ::=!unconditional | !accumulation | !conditional
+
+termination-test ::=while form | until form | repeat form | always form | never form | thereis form
+
+for-as-clause ::={for | as} !for-as-subclause {and !for-as-subclause}*
+
+for-as-subclause ::=!for-as-arithmetic | !for-as-in-list | !for-as-on-list | !for-as-equals-then |
+                     !for-as-across | !for-as-hash | !for-as-package
+
+for-as-arithmetic ::=var [type-spec] !for-as-arithmetic-subclause
+
+for-as-arithmetic-subclause ::=!arithmetic-up | !arithmetic-downto | !arithmetic-downfrom
+
+arithmetic-up ::=[[{from | upfrom} form1 | {to | upto | below} form2 | by form3]]^+
+
+arithmetic-downto ::=[[{from form1}^1 | {{downto | above} form2}^1 | by form3]]
+
+arithmetic-downfrom ::=[[{downfrom form1}^1 | {to | downto | above} form2 | by form3]]
+
+for-as-in-list ::=var [type-spec] in form1 [by step-fun]
+
+for-as-on-list ::=var [type-spec] on form1 [by step-fun]
+
+for-as-equals-then ::=var [type-spec] = form1 [then form2]
+
+for-as-across ::=var [type-spec] across vector
+
+for-as-hash ::=var [type-spec] being {each | the} 
+                {{hash-key | hash-keys} {in | of} hash-table 
+                [using (hash-value other-var)] | 
+                {hash-value | hash-values} {in | of} hash-table 
+                [using (hash-key other-var)]}
+
+for-as-package ::=var [type-spec] being {each | the} 
+                   {symbol | symbols |
+                   present-symbol | present-symbols |
+                   external-symbol | external-symbols} 
+                   [{in | of} package]
+
+type-spec ::=!simple-type-spec | !destructured-type-spec
+
+simple-type-spec ::=fixnum | float | t | nil
+
+destructured-type-spec ::=of-type d-type-spec
+
+d-type-spec ::=type-specifier | (d-type-spec . d-type-spec)
+
+var ::=!d-var-spec
+
+var1 ::=!d-var-spec
+
+var2 ::=!d-var-spec
+
+other-var ::=!d-var-spec
+
+d-var-spec ::=simple-var | nil | (!d-var-spec . !d-var-spec)
+
+Arguments and Values::
+......................
+
+compound-form--a compound form.
+
+name--a symbol.
+
+simple-var--a symbol (a variable name).
+
+form, form1, form2, form3--a form.
+
+step-fun--a form that evaluates to a function of one argument.
+
+vector--a form that evaluates to a vector.
+
+hash-table--a form that evaluates to a hash table.
+
+package--a form that evaluates to a package designator.
+
+type-specifier--a type specifier.  This might be either an atomic type
+specifier or a compound type specifier, which introduces some additional
+complications to proper parsing in the face of destructuring; for further
+information, see *Note Destructuring::.
+
+result--an object.
+
+Description::
+.............
+
+For details, see *Note The LOOP Facility::.
+
+Examples::
+..........
+
+     ;; An example of the simple form of LOOP.
+      (defun sqrt-advisor ()
+        (loop (format t "~&Number: ")
+              (let ((n (parse-integer (read-line) :junk-allowed t)))
+                (when (not n) (return))
+                (format t "~&The square root of ~D is ~D.~
+     =>  SQRT-ADVISOR
+      (sqrt-advisor)
+      |>  Number: |>>5[<--~]<<|
+      |>  The square root of 5 is 2.236068.
+      |>  Number: |>>4[<--~]<<|
+      |>  The square root of 4 is 2.
+      |>  Number: |>>done[<--~]<<|
+     =>  NIL
+     
+     ;; An example of the extended form of LOOP.
+      (defun square-advisor ()
+        (loop as n = (progn (format t "~&Number: ")
+                            (parse-integer (read-line) :junk-allowed t))
+              while n
+              do (format t "~&The square of ~D is ~D.~
+     =>  SQUARE-ADVISOR
+      (square-advisor)
+      |>  Number: |>>4[<--~]<<|
+      |>  The square of 4 is 16.
+      |>  Number: |>>23[<--~]<<|
+      |>  The square of 23 is 529.
+      |>  Number: |>>done[<--~]<<|
+     =>  NIL
+     
+     ;; Another example of the extended form of LOOP.
+      (loop for n from 1 to 10
+            when (oddp n)
+              collect n)
+     =>  (1 3 5 7 9)
+
+See Also::
+..........
+
+*Note do; do*:: , *Note dolist:: , *Note dotimes:: , *Note return:: ,
+*Note go:: , *Note throw:: , *Note Destructuring::
+
+Notes::
+.......
+
+Except that loop-finish cannot be used within a simple loop form, a simple
+loop form is related to an extended loop form in the following way:
+
+      (loop {compound-form}*) == (loop do {compound-form}*)
+
+
+File: gcl.info,  Node: loop-finish,  Prev: loop,  Up: Iteration Dictionary
+
+loop-finish                                                   [Local Macro]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`loop-finish'  <no arguments> =>  #<NoValue>
+
+Description::
+.............
+
+The loop-finish macro can be used lexically within an extended loop form
+to terminate that form "normally." That is, it transfers control to the
+loop epilogue of the lexically innermost extended loop form.  This permits
+execution of any finally clause (for effect) and the return of any
+accumulated result.
+
+Examples::
+..........
+
+     ;; Terminate the loop, but return the accumulated count.
+      (loop for i in '(1 2 3 stop-here 4 5 6)
+            when (symbolp i) do (loop-finish)
+            count i)
+     =>  3
+     
+     ;; The preceding loop is equivalent to:
+      (loop for i in '(1 2 3 stop-here 4 5 6)
+            until (symbolp i)
+            count i)
+     =>  3
+     
+     ;; While LOOP-FINISH can be used can be used in a variety of
+     ;; situations it is really most needed in a situation where a need
+     ;; to exit is detected at other than the loop's `top level'
+     ;; (where UNTIL or WHEN often work just as well), or where some
+     ;; computation must occur between the point where a need to exit is
+     ;; detected and the point where the exit actually occurs.  For example:
+      (defun tokenize-sentence (string)
+        (macrolet ((add-word (wvar svar)
+                     `(when ,wvar
+                        (push (coerce (nreverse ,wvar) 'string) ,svar)
+                        (setq ,wvar nil))))
+          (loop with word = '() and sentence = '() and endpos = nil
+                for i below (length string)
+                do (let ((char (aref string i)))
+                     (case char
+                       (#\Space (add-word word sentence))
+                       (#\. (setq endpos (1+ i)) (loop-finish))
+                       (otherwise (push char word))))
+                finally (add-word word sentence)
+                        (return (values (nreverse sentence) endpos)))))
+     =>  TOKENIZE-SENTENCE
+     
+      (tokenize-sentence "this is a sentence. this is another sentence.")
+     =>  ("this" "is" "a" "sentence"), 19
+     
+      (tokenize-sentence "this is a sentence")
+     =>  ("this" "is" "a" "sentence"), NIL
+
+Side Effects::
+..............
+
+Transfers control.
+
+Exceptional Situations::
+........................
+
+Whether or not loop-finish is fbound in the global environment is
+implementation-dependent; however, the restrictions on redefinition and
+shadowing of loop-finish are the same as for symbols in the COMMON-LISP
+package which are fbound in the global environment.  The consequences of
+attempting to use loop-finish outside of loop are undefined.
+
+See Also::
+..........
+
+*Note loop:: , *Note The LOOP Facility::
+
+Notes::
+.......
+
+
+File: gcl.info,  Node: Objects,  Next: Structures,  Prev: Iteration,  Up: Top
+
+Objects
+*******
+
+* Menu:
+
+* Object Creation and Initialization::
+* Changing the Class of an Instance::
+* Reinitializing an Instance::
+* Meta-Objects::
+* Slots::
+* Generic Functions and Methods::
+* Objects Dictionary::
+
+
+File: gcl.info,  Node: Object Creation and Initialization,  Next: Changing the Class of an Instance,  Prev: Objects,  Up: Objects
+
+Object Creation and Initialization
+==================================
+
+The generic function make-instance creates and returns a new instance of a
+class.  The first argument is a class or the name of a class, and the
+remaining arguments form an initialization argument list .
+
+The initialization of a new instance consists of several distinct steps,
+including the following: combining the explicitly supplied initialization
+arguments with default values for the unsupplied initialization arguments,
+checking the validity of the initialization arguments, allocating storage
+for the instance, filling slots with values, and executing user-supplied
+methods that perform additional initialization.  Each step of
+make-instance is implemented by a generic function to provide a mechanism
+for customizing that step.  In addition, make-instance is itself a generic
+function and thus also can be customized.
+
+The object system specifies system-supplied primary methods for each step
+and thus specifies a well-defined standard behavior for the entire
+initialization process.  The standard behavior provides four simple
+mechanisms for controlling initialization:
+
+*
+     Declaring a symbol to be an initialization argument for a slot.  An
+     initialization argument is declared by using the :initarg slot option
+     to defclass.  This provides a mechanism for supplying a value for a
+     slot in a call to make-instance.
+
+*
+     Supplying a default value form for an initialization argument.
+     Default value forms for initialization arguments are defined by using
+     the :default-initargs class option to defclass.  If an initialization
+     argument is not explicitly provided as an argument to make-instance,
+     the default value form is evaluated in the lexical environment of the
+     defclass form that defined it, and the resulting value is used as the
+     value of the initialization argument.
+
+*
+     Supplying a default initial value form for a slot.  A default initial
+     value form for a slot is defined by using the :initform slot option
+     to defclass.  If no initialization argument associated with that slot
+     is given as an argument to make-instance or is defaulted by
+     :default-initargs, this default initial value form is evaluated in
+     the lexical environment of the defclass form that defined it, and the
+     resulting value is stored in the slot.  The :initform form for a
+     local slot may be used when creating an instance, when updating an
+     instance to conform to a redefined class, or when updating an
+     instance to conform to the definition of a different class. The
+     :initform form for a shared slot may be used when defining or
+     re-defining the class.
+
+*
+     Defining methods for initialize-instance and shared-initialize.  The
+     slot-filling behavior described above is implemented by a
+     system-supplied primary method for initialize-instance which invokes
+     shared-initialize. The generic function shared-initialize implements
+     the parts of initialization shared by these four situations: when
+     making an instance, when re-initializing an instance, when updating
+     an instance to conform to a redefined class, and when updating an
+     instance to conform to the definition of a different class. The
+     system-supplied primary method for shared-initialize directly
+     implements the slot-filling behavior described above, and
+     initialize-instance simply invokes shared-initialize.
+
+* Menu:
+
+* Initialization Arguments::
+* Declaring the Validity of Initialization Arguments::
+* Defaulting of Initialization Arguments::
+* Rules for Initialization Arguments::
+* Shared-Initialize::
+* Initialize-Instance::
+* Definitions of Make-Instance and Initialize-Instance::
+
+
+File: gcl.info,  Node: Initialization Arguments,  Next: Declaring the Validity of Initialization Arguments,  Prev: Object Creation and Initialization,  Up: Object Creation and Initialization
+
+Initialization Arguments
+------------------------
+
+An initialization argument controls object creation and initialization.
+It is often convenient to use keyword symbols to name initialization
+arguments, but the name of an initialization argument can be any symbol,
+including nil.  An initialization argument can be used in two ways: to
+fill a slot with a value or to provide an argument for an initialization
+method.  A single initialization argument can be used for both purposes.
+
+An initialization argument list is a property list of initialization
+argument names and values.  Its structure is identical to a property list
+and also to the portion of an argument list processed for &key parameters.
+As in those lists, if an initialization argument name appears more than
+once in an initialization argument list, the leftmost occurrence supplies
+the value and the remaining occurrences are ignored.  The arguments to
+make-instance (after the first argument) form an initialization argument
+list.
+
+An initialization argument can be associated with a slot.  If the
+initialization argument has a value in the initialization argument list,
+the value is stored into the slot of the newly created object, overriding
+any :initform form associated with the slot.  A single initialization
+argument can initialize more than one slot.  An initialization argument
+that initializes a shared slot stores its value into the shared slot,
+replacing any previous value.
+
+An initialization argument can be associated with a method.  When an
+object is created and a particular initialization argument is supplied,
+the generic functions initialize-instance, shared-initialize, and
+allocate-instance are called with that initialization argument's name and
+value as a keyword argument pair.  If a value for the initialization
+argument is not supplied in the initialization argument list, the method's
+lambda list supplies a default value.
+
+Initialization arguments are used in four situations: when making an
+instance, when re-initializing an instance, when updating an instance to
+conform to a redefined class, and when updating an instance to conform to
+the definition of a different class.
+
+Because initialization arguments are used to control the creation and
+initialization of an instance of some particular class, we say that an
+initialization argument is "an initialization argument for" that class.
+
+
+File: gcl.info,  Node: Declaring the Validity of Initialization Arguments,  Next: Defaulting of Initialization Arguments,  Prev: Initialization Arguments,  Up: Object Creation and Initialization
+
+Declaring the Validity of Initialization Arguments
+--------------------------------------------------
+
+Initialization arguments are checked for validity in each of the four
+situations that use them.  An initialization argument may be valid in one
+situation and not another. For example, the system-supplied primary method
+for make-instance defined for the class standard-class checks the validity
+of its initialization arguments and signals an error if an initialization
+argument is supplied that is not declared as valid in that situation.
+
+There are two means for declaring initialization arguments valid.
+
+*
+     Initialization arguments that fill slots are declared as valid by the
+     :initarg slot option to defclass.  The :initarg slot option is
+     inherited from superclasses.  Thus the set of valid initialization
+     arguments that fill slots for a class is the union of the
+     initialization arguments that fill slots declared as valid by that
+     class and its superclasses.  Initialization arguments that fill slots
+     are valid in all four contexts.
+
+*
+     Initialization arguments that supply arguments to methods are
+     declared as valid by defining those methods.  The keyword name of
+     each keyword parameter specified in the method's lambda list becomes
+     an initialization argument for all classes for which the method is
+     applicable.
+
+     The presence of &allow-other-keys in the lambda list of an applicable
+     method disables validity checking of initialization arguments.
+
+     Thus method inheritance controls the set of valid initialization
+     arguments that supply arguments to methods.  The generic functions
+     for which method definitions serve to declare initialization
+     arguments valid are as follows:
+    -
+          Making an instance of a class: allocate-instance,
+          initialize-instance, and shared-initialize.  Initialization
+          arguments declared as valid by these methods are valid when
+          making an instance of a class.
+
+    -
+          Re-initializing an instance: reinitialize-instance and
+          shared-initialize.  Initialization arguments declared as valid
+          by these methods are valid when re-initializing an instance.
+
+    -
+          Updating an instance to conform to a redefined class:
+          update-instance-for-redefined-class and shared-initialize.
+          Initialization arguments declared as valid by these methods are
+          valid when updating an instance to conform to a redefined class.
+
+    -
+          Updating an instance to conform to the definition of a different
+          class: update-instance-for-different-class and shared-initialize.
+          Initialization arguments declared as valid by these methods are
+          valid when updating an instance to conform to the definition of
+          a different class.
+
+The set of valid initialization arguments for a class is the set of valid
+initialization arguments that either fill slots or supply arguments to
+methods, along with the predefined initialization argument
+:allow-other-keys.  The default value for :allow-other-keys is nil.
+
+Validity checking of initialization arguments is disabled if the value of
+the initialization argument :allow-other-keys is true.
+
+
+File: gcl.info,  Node: Defaulting of Initialization Arguments,  Next: Rules for Initialization Arguments,  Prev: Declaring the Validity of Initialization Arguments,  Up: Object Creation and Initialization
+
+Defaulting of Initialization Arguments
+--------------------------------------
+
+A default value form can be supplied for an initialization argument by
+using the :default-initargs class option.  If an initialization argument
+is declared valid by some particular class, its default  value form might
+be specified by a different class.  In this case :default-initargs is used
+to supply a default value for an inherited initialization argument.
+
+The :default-initargs option is used only to provide default values for
+initialization arguments; it does not declare a symbol as a valid
+initialization argument name.  Furthermore, the :default-initargs option
+is used only to provide default values for initialization arguments when
+making an instance.
+
+The argument to the :default-initargs class option is a list of
+alternating initialization argument names and forms.  Each form is the
+default  value form for the corresponding initialization argument.  The
+default  value form of an initialization argument is used and evaluated
+only if that initialization argument does not appear in the arguments to
+make-instance and is not defaulted by a more specific class.  The default
+value form is evaluated in the lexical environment of the defclass form
+that supplied it; the resulting value is used as the initialization
+argument's value.
+
+The initialization arguments supplied to make-instance are combined with
+defaulted initialization arguments to produce a defaulted initialization
+argument list. A defaulted initialization argument list is a list of
+alternating initialization argument names and values in which unsupplied
+initialization arguments are defaulted and in which the explicitly
+supplied initialization arguments appear earlier in the list than the
+defaulted initialization arguments.  Defaulted initialization arguments
+are ordered according to the order in the class precedence list of the
+classes that supplied the default values.
+
+There is a distinction between the purposes of the :default-initargs and
+the :initform options with respect to the initialization of slots.  The
+:default-initargs class option provides a mechanism for the user to give a
+default  value form for an initialization argument without knowing whether
+the initialization argument initializes a slot or is passed to a method.
+If that initialization argument is not explicitly supplied in a call to
+make-instance, the default  value form is used, just as if it had been
+supplied in the call.  In contrast, the :initform slot option provides a
+mechanism for the user to give a default initial value form for a slot.
+An :initform form is used to initialize a slot only if no initialization
+argument associated with that slot is given as an argument to
+make-instance or is defaulted by :default-initargs.
+
+The order of evaluation of default value forms for initialization
+arguments and the order of evaluation of :initform forms are undefined.
+If the order of evaluation is important, initialize-instance or
+shared-initialize methods should be used instead.
+
+
+File: gcl.info,  Node: Rules for Initialization Arguments,  Next: Shared-Initialize,  Prev: Defaulting of Initialization Arguments,  Up: Object Creation and Initialization
+
+Rules for Initialization Arguments
+----------------------------------
+
+The :initarg slot option may be specified more than once for a given slot.
+
+The following rules specify when initialization arguments may be multiply
+defined:
+
+*
+     A given initialization argument can be used to initialize more than
+     one slot if the same initialization argument name appears in more
+     than one :initarg slot option.
+
+*
+     A given initialization argument name can appear in the lambda list of
+     more than one initialization method.
+
+*
+     A given initialization argument name can appear both in an :initarg
+     slot option and in the lambda list of an initialization method.
+
+[Reviewer Note by The next three paragraphs could be replaced by "If two
+or more initialization arguments that initialize the same slot appear in
+the defaulted initialization argument list, the leftmost of these supplies
+the value, even if they have different names."  And the rest would follow
+from the rules above.]
+
+If two or more initialization arguments that initialize the same slot are
+given in the arguments to make-instance, the leftmost of these
+initialization arguments in the initialization argument list supplies the
+value, even if the initialization arguments have different names.
+
+If two or more different initialization arguments that initialize the same
+slot have default values and none is given explicitly in the arguments to
+make-instance, the initialization argument that appears in a
+:default-initargs class option in the most specific of the classes
+supplies the value. If a single :default-initargs class option specifies
+two or more initialization arguments that initialize the same slot and
+none is given explicitly in the arguments to make-instance, the leftmost in
+the :default-initargs class option supplies the value, and the values of
+the remaining default value forms are ignored.
+
+Initialization arguments given explicitly in the arguments to
+make-instance appear to the left of defaulted initialization arguments.
+Suppose that the classes C_1 and C_2 supply the values of defaulted
+initialization arguments for different slots, and suppose that C_1 is more
+specific than C_2; then the defaulted initialization argument whose value
+is supplied by C_1 is to the left of the defaulted initialization argument
+whose value is supplied by C_2 in the defaulted initialization argument
+list.  If a single :default-initargs class option supplies the values of
+initialization arguments for two different slots, the initialization
+argument whose value is specified farther to the left in the
+:default-initargs class option appears farther to the left in the
+defaulted initialization argument list.
+
+[Reviewer Note by Barmar: End of claim made three paragraphs back.]
+
+If a slot has both an :initform form and an :initarg slot option, and the
+initialization argument is defaulted using :default-initargs or is
+supplied to make-instance, the captured :initform form is neither used nor
+evaluated.
+
+The following is an example of the above rules:
+
+      (defclass q () ((x :initarg a)))
+      (defclass r (q) ((x :initarg b))
+        (:default-initargs a 1 b 2))
+
+                                     
+
+                                 Defaulted                                     
+      Form                         Initialization Argument List Contents of Slot X 
+      _____________________________________________________________________________
+      (make-instance 'r)           (a 1 b 2)                    1                  
+      (make-instance 'r 'a 3)      (a 3 b 2)                    3                  
+      (make-instance 'r 'b 4)      (b 4 a 1)                    4                  
+      (make-instance 'r 'a 1 'a 2) (a 1 a 2 b 2)                1                  
+
+
+
+File: gcl.info,  Node: Shared-Initialize,  Next: Initialize-Instance,  Prev: Rules for Initialization Arguments,  Up: Object Creation and Initialization
+
+Shared-Initialize
+-----------------
+
+The generic function shared-initialize is used to fill the slots of an
+instance using initialization arguments and :initform forms when an
+instance is created, when an instance is re-initialized, when an instance
+is updated to conform to a redefined class, and when an instance is
+updated to conform to a different class.  It uses standard method
+combination. It takes the following arguments: the instance to be
+initialized, a specification of a set of names of slots accessible in that
+instance, and any number of initialization arguments.  The arguments after
+the first two must form an initialization argument list.
+
+The second argument to shared-initialize may be one of the following:
+
+*
+     It can be a (possibly empty) list of slot names, which specifies the
+     set of those slot names.
+
+*
+     It can be the symbol t, which specifies the set of all of the slots.
+
+There is a system-supplied primary method for shared-initialize whose
+first parameter specializer is the class standard-object.  This method
+behaves as follows on each slot, whether shared or local:
+
+*
+     If an initialization argument in the initialization argument list
+     specifies a value for that slot, that value is stored into the slot,
+     even if a value has already been stored in the slot before the method
+     is run.  The affected slots are independent of which slots are
+     indicated by the second argument to shared-initialize.
+
+*
+     Any slots indicated by the second argument that are still unbound at
+     this point are initialized according to their :initform forms.  For
+     any such slot that has an :initform form, that form is evaluated in
+     the lexical environment of its defining defclass form and the result
+     is stored into the slot.  For example, if a before method stores a
+     value in the slot, the :initform form will not be used to supply a
+     value for the slot.  If the second argument specifies a name that
+     does not correspond to any slots accessible in the instance, the
+     results are unspecified.
+
+*
+     The rules mentioned in *Note Rules for Initialization Arguments:: are
+     obeyed.
+
+The generic function shared-initialize is called by the system-supplied
+primary methods for reinitialize-instance,
+update-instance-for-different-class, update-instance-for-redefined-class,
+and initialize-instance.  Thus, methods can be written for
+shared-initialize to specify actions that should be taken in all of these
+contexts.
+
+
+File: gcl.info,  Node: Initialize-Instance,  Next: Definitions of Make-Instance and Initialize-Instance,  Prev: Shared-Initialize,  Up: Object Creation and Initialization
+
+Initialize-Instance
+-------------------
+
+The generic function initialize-instance is called by make-instance to
+initialize a newly created instance.  It uses standard method combination.
+Methods for initialize-instance can be defined in order to perform any
+initialization that cannot be achieved simply by supplying initial values
+for slots.
+
+During initialization, initialize-instance is invoked after the following
+actions have been taken:
+
+*
+     The defaulted initialization argument list has been computed by
+     combining the supplied initialization argument list with any default
+     initialization arguments for the class.
+
+*
+     The validity of the defaulted initialization argument list has been
+     checked.  If any of the initialization arguments has not been
+     declared as valid, an error is signaled.
+
+*
+     A new instance whose slots are unbound has been created.
+
+The generic function initialize-instance is called with the new instance
+and the defaulted initialization arguments.  There is a system-supplied
+primary method for initialize-instance whose parameter specializer is the
+class standard-object.  This method calls the generic function
+shared-initialize to fill in the slots according to the initialization
+arguments and the :initform forms for the slots; the generic function
+shared-initialize is called with the following arguments: the instance, t,
+and the defaulted initialization arguments.
+
+Note that initialize-instance provides the defaulted initialization
+argument list in its call to shared-initialize, so the first step
+performed by the system-supplied primary method for shared-initialize
+takes into account both the initialization arguments provided in the call
+to make-instance and the defaulted initialization argument list.
+
+Methods for initialize-instance can be defined to specify actions to be
+taken when an instance is initialized.  If only after methods for
+initialize-instance are defined, they will be run after the
+system-supplied primary method for initialization and therefore will not
+interfere with the default behavior of initialize-instance.
+
+The object system provides two functions that are useful in the bodies of
+initialize-instance methods.  The function slot-boundp returns a generic
+boolean value that indicates whether a specified slot has a value; this
+provides a mechanism for writing after methods for initialize-instance
+that initialize slots only if they have not already been initialized.  The
+function slot-makunbound causes the slot to have no value.
+
+
+File: gcl.info,  Node: Definitions of Make-Instance and Initialize-Instance,  Prev: Initialize-Instance,  Up: Object Creation and Initialization
+
+Definitions of Make-Instance and Initialize-Instance
+----------------------------------------------------
+
+The generic function make-instance behaves as if it were defined as
+follows, except that certain optimizations are permitted:
+
+      (defmethod make-instance ((class standard-class) &rest initargs)
+        ...
+        (let ((instance (apply #'allocate-instance class initargs)))
+          (apply #'initialize-instance instance initargs)
+          instance))
+     
+      (defmethod make-instance ((class-name symbol) &rest initargs)
+        (apply #'make-instance (find-class class-name) initargs))
+
+The elided code in the definition of make-instance augments the initargs
+with any defaulted initialization arguments and checks the resulting
+initialization arguments to determine whether an initialization argument
+was supplied that neither filled a slot nor supplied an argument to an
+applicable method.
+
+The generic function initialize-instance behaves as if it were defined as
+follows, except that certain optimizations are permitted:
+
+      (defmethod initialize-instance ((instance standard-object) &rest initargs)
+        (apply #'shared-initialize instance t initargs)))
+
+These procedures can be customized.
+
+Customizing at the Programmer Interface level includes using the
+:initform, :initarg, and :default-initargs options to defclass, as well as
+defining methods for make-instance, allocate-instance, and
+initialize-instance.  It is also possible to define methods for
+shared-initialize, which would be invoked by the generic functions
+reinitialize-instance, update-instance-for-redefined-class,
+update-instance-for-different-class, and initialize-instance.  The
+meta-object level supports additional customization.
+
+Implementations are permitted to make certain optimizations to
+initialize-instance and shared-initialize.  The description of
+shared-initialize in Chapter~7 mentions the possible optimizations.
+
+
+File: gcl.info,  Node: Changing the Class of an Instance,  Next: Reinitializing an Instance,  Prev: Object Creation and Initialization,  Up: Objects
+
+Changing the Class of an Instance
+=================================
+
+The function change-class can be used to change the class of an instance
+from its current class, C_{from}, to a different class, C_{to}; it changes
+the structure of the instance to conform to the definition of the class
+C_{to}.
+
+Note that changing the class of an instance may cause slots to be added or
+deleted.  Changing the class of an instance does not change its identity
+as defined by the eq function.
+
+When change-class is invoked on an instance, a two-step updating process
+takes place.  The first step modifies the structure of the instance by
+adding new local slots and discarding local slots that are not specified
+in the new version of the instance.  The second step initializes the newly
+added local slots and performs any other user-defined actions. These two
+steps are further described in the two following sections.
+
+* Menu:
+
+* Modifying the Structure of the Instance::
+* Initializing Newly Added Local Slots (Changing the Class of an Instance)::
+* Customizing the Change of Class of an Instance::
+
+
+File: gcl.info,  Node: Modifying the Structure of the Instance,  Next: Initializing Newly Added Local Slots (Changing the Class of an Instance),  Prev: Changing the Class of an Instance,  Up: Changing the Class of an Instance
+
+Modifying the Structure of the Instance
+---------------------------------------
+
+In order to make the instance conform to the class C_{to}, local slots
+specified by the class C_{to} that are not specified by the class C_{from}
+are added, and local slots not specified by the class C_{to} that are
+specified by the class C_{from} are discarded.
+
+The values of local slots specified by both the class C_{to} and the class
+C_{from} are retained. If such a local slot was unbound, it remains
+unbound.
+
+The values of slots specified as shared in the class C_{from} and as local
+in the class C_{to} are retained.
+
+This first step of the update does not affect the values of any shared
+slots.
+

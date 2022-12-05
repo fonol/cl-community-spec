@@ -1,0 +1,45 @@
+{
+    "name": "with-standard-io-syntax",
+    "prev": "set-syntax-from-char",
+    "next": "*read-base*",
+    "up": "Reader Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "with-standard-io-syntax"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "with-standard-io-syntax",
+                    "text": " {form}* =>  {result}*\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values returned by the forms."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Within the dynamic extent of the body of forms, all reader/printer control\nvariables, including any implementation-defined ones not specified by this\nstandard, are bound to values that produce standard read/print behavior.\nThe values for the variables specified by this standard are listed in\nFigure 23-1.\n[Reviewer Note by Barrett: *print-pprint-dispatch* should probably be\nmentioned here, too.]\n  Variable                     Value                               \n  *package*                    The CL-USER package                 \n  *print-array*                t                                   \n  *print-base*                 10                                  \n  *print-case*                 :upcase                             \n  *print-circle*               nil                                 \n  *print-escape*               t                                   \n  *print-gensym*               t                                   \n  *print-length*               nil                                 \n  *print-level*                nil                                 \n  *print-lines*                nil                                 \n  *print-miser-width*          nil                                 \n  *print-pprint-dispatch*      The standard pprint dispatch table  \n  *print-pretty*               nil                                 \n  *print-radix*                nil                                 \n  *print-readably*             t                                   \n  *print-right-margin*         nil                                 \n  *read-base*                  10                                  \n  *read-default-float-format*  single-float                        \n  *read-eval*                  t                                   \n  *read-suppress*              nil                                 \n  *readtable*                  The standard readtable              \n         Figure 23-1: Values of standard control variables        \n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (with-open-file (file pathname :direction :output)\n        (with-standard-io-syntax\n          (print data file)))\n     ;;; ... Later, in another Lisp:\n      (with-open-file (file pathname :direction :input)\n        (with-standard-io-syntax\n          (setq data (read file))))\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: with-standard-io-syntax,  Next: *read-base*,  Prev: set-syntax-from-char,  Up: Reader Dictionary\n\nwith-standard-io-syntax                                             [Macro]\n---------------------------------------------------------------------------\n\n`with-standard-io-syntax'  {form}* =>  {result}*\n\nArguments and Values::\n......................\n\nforms--an implicit progn.\n\nresults--the values returned by the forms.\n\nDescription::\n.............\n\nWithin the dynamic extent of the body of forms, all reader/printer control\nvariables, including any implementation-defined ones not specified by this\nstandard, are bound to values that produce standard read/print behavior.\nThe values for the variables specified by this standard are listed in\nFigure 23-1.\n\n[Reviewer Note by Barrett: *print-pprint-dispatch* should probably be\nmentioned here, too.]\n\n  Variable                     Value                               \n  *package*                    The CL-USER package                 \n  *print-array*                t                                   \n  *print-base*                 10                                  \n  *print-case*                 :upcase                             \n  *print-circle*               nil                                 \n  *print-escape*               t                                   \n  *print-gensym*               t                                   \n  *print-length*               nil                                 \n  *print-level*                nil                                 \n  *print-lines*                nil                                 \n  *print-miser-width*          nil                                 \n  *print-pprint-dispatch*      The standard pprint dispatch table  \n  *print-pretty*               nil                                 \n  *print-radix*                nil                                 \n  *print-readably*             t                                   \n  *print-right-margin*         nil                                 \n  *read-base*                  10                                  \n  *read-default-float-format*  single-float                        \n  *read-eval*                  t                                   \n  *read-suppress*              nil                                 \n  *readtable*                  The standard readtable              \n\n         Figure 23-1: Values of standard control variables        \n\n\nExamples::\n..........\n\n      (with-open-file (file pathname :direction :output)\n        (with-standard-io-syntax\n          (print data file)))\n     \n     ;;; ... Later, in another Lisp:\n     \n      (with-open-file (file pathname :direction :input)\n        (with-standard-io-syntax\n          (setq data (read file))))\n\n"
+}

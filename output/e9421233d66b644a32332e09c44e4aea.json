@@ -1,0 +1,57 @@
+{
+    "name": "make-symbol",
+    "prev": "keywordp",
+    "next": "copy-symbol",
+    "up": "Symbols Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "make-symbol"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "make-symbol",
+                    "text": " name =>  new-symbol\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "name",
+                    "desc": "a string."
+                },
+                {
+                    "name": "new-symbol",
+                    "desc": "a fresh, uninterned symbol."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "make-symbol creates and returns a fresh, uninterned symbol whose name is\nthe given name.  The new-symbol is neither bound nor fbound and has a null\nproperty list.\nIt is implementation-dependent whether the string that becomes the\nnew-symbol's name is the given name or a copy of it.  Once a string has\nbeen given as the name argument to make-symbol, the consequences are\nundefined if a subsequent attempt is made to alter that string.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq temp-string \"temp\") =>  \"temp\"\n      (setq temp-symbol (make-symbol temp-string)) =>  #:|temp|\n      (symbol-name temp-symbol) =>  \"temp\"\n      (eq (symbol-name temp-symbol) temp-string) =>  implementation-dependent\n      (find-symbol \"temp\") =>  NIL, NIL\n      (eq (make-symbol temp-string) (make-symbol temp-string)) =>  false\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should signal an error of type type-error if name is not a string.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note copy-symbol::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "No attempt is made by make-symbol to convert the case of the name to\nuppercase.  The only case conversion which ever occurs for symbols is done\nby the Lisp reader.  The program interface to symbol creation retains case,\nand the program interface to interning symbols is case-sensitive.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: make-symbol,  Next: copy-symbol,  Prev: keywordp,  Up: Symbols Dictionary\n\nmake-symbol                                                      [Function]\n---------------------------------------------------------------------------\n\n`make-symbol'  name =>  new-symbol\n\nArguments and Values::\n......................\n\nname--a string.\n\nnew-symbol--a fresh, uninterned symbol.\n\nDescription::\n.............\n\nmake-symbol creates and returns a fresh, uninterned symbol whose name is\nthe given name.  The new-symbol is neither bound nor fbound and has a null\nproperty list.\n\nIt is implementation-dependent whether the string that becomes the\nnew-symbol's name is the given name or a copy of it.  Once a string has\nbeen given as the name argument to make-symbol, the consequences are\nundefined if a subsequent attempt is made to alter that string.\n\nExamples::\n..........\n\n      (setq temp-string \"temp\") =>  \"temp\"\n      (setq temp-symbol (make-symbol temp-string)) =>  #:|temp|\n      (symbol-name temp-symbol) =>  \"temp\"\n      (eq (symbol-name temp-symbol) temp-string) =>  implementation-dependent\n      (find-symbol \"temp\") =>  NIL, NIL\n      (eq (make-symbol temp-string) (make-symbol temp-string)) =>  false\n\nExceptional Situations::\n........................\n\nShould signal an error of type type-error if name is not a string.\n\nSee Also::\n..........\n\n*Note copy-symbol::\n\nNotes::\n.......\n\nNo attempt is made by make-symbol to convert the case of the name to\nuppercase.  The only case conversion which ever occurs for symbols is done\nby the Lisp reader.  The program interface to symbol creation retains case,\nand the program interface to interning symbols is case-sensitive.\n\n"
+}

@@ -1,0 +1,1632 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: logand,  Next: logbitp,  Prev: boole-1,  Up: Numbers Dictionary
+
+logand,  logandc1, logandc2, logeqv,  logior,
+---------------------------------------------
+
+lognand, lognor,   lognot,   logorc1, logorc2,
+----------------------------------------------
+
+logxor
+------
+
+                                                                [Function]
+
+`logand'  &rest integers =>  result-integer
+
+`logandc'  1 =>  integer-1 integer-2 result-integer `logandc'  2 =>
+integer-1 integer-2 result-integer `logeqv'  &rest integers =>
+result-integer
+
+`logior'  &rest integers =>  result-integer
+
+`lognand'  integer-1 integer-2 =>  result-integer
+
+`lognor'  integer-1 integer-2 =>  result-integer
+
+`lognot'  integer =>  result-integer
+
+`logorc'  1 =>  integer-1 integer-2 result-integer `logorc'  2 =>
+integer-1 integer-2 result-integer `logxor'  &rest integers =>
+result-integer
+
+Arguments and Values::
+......................
+
+integers--integers.
+
+integer--an integer.
+
+integer-1--an integer.
+
+integer-2--an integer.
+
+result-integer--an integer.
+
+Description::
+.............
+
+The functions logandc1, logandc2, logand, logeqv, logior, lognand, lognor,
+lognot, logorc1, logorc2, and logxor perform bit-wise logical operations
+on their arguments, that are treated as if they were binary.
+
+Figure 12-17 lists the meaning of each of the functions.  Where an
+`identity' is shown, it indicates the value yielded by the function when
+no arguments are supplied.
+
+  Function  Identity  Operation performed                         
+  logandc1  --       and complement of integer-1 with integer-2  
+  logandc2  --       and integer-1 with complement of integer-2  
+  logand    -1        and                                         
+  logeqv    -1        equivalence (exclusive nor)                 
+  logior    0         inclusive or                                
+  lognand   --       complement of integer-1 and integer-2       
+  lognor    --       complement of integer-1 or integer-2        
+  lognot    --       complement                                  
+  logorc1   --       or complement of integer-1 with integer-2   
+  logorc2   --       or integer-1 with complement of integer-2   
+  logxor    0         exclusive or                                
+
+       Figure 12-17: Bit-wise Logical Operations on Integers     
+
+
+Negative integers are treated as if they were in two's-complement notation.
+
+Examples::
+..........
+
+      (logior 1 2 4 8) =>  15
+      (logxor 1 3 7 15) =>  10
+      (logeqv) =>  -1
+      (logand 16 31) =>  16
+      (lognot 0) =>  -1
+      (lognot 1) =>  -2
+      (lognot -1) =>  0
+      (lognot (1+ (lognot 1000))) =>  999
+     
+     ;;; In the following example, m is a mask.  For each bit in
+     ;;; the mask that is a 1, the corresponding bits in x and y are
+     ;;; exchanged.  For each bit in the mask that is a 0, the
+     ;;; corresponding bits of x and y are left unchanged.
+      (flet ((show (m x y)
+               (format t "~
+                       m x y)))
+        (let ((m #o007750)
+              (x #o452576)
+              (y #o317407))
+          (show m x y)
+          (let ((z (logand (logxor x y) m)))
+            (setq x (logxor z x))
+            (setq y (logxor z y))
+            (show m x y))))
+      |>  m = #o007750
+      |>  x = #o452576
+      |>  y = #o317407
+      |> 
+      |>  m = #o007750
+      |>  x = #o457426
+      |>  y = #o312557
+     =>  NIL
+
+Exceptional Situations::
+........................
+
+Should signal type-error if any argument is not an integer.
+
+See Also::
+..........
+
+*Note boole::
+
+Notes::
+.......
+
+(logbitp k -1) returns true for all values of k.
+
+Because the following functions are not associative, they take exactly two
+arguments rather than any number of arguments.
+
+      (lognand n1 n2) == (lognot (logand n1 n2))
+      (lognor n1 n2) == (lognot (logior n1 n2))
+      (logandc1 n1 n2) == (logand (lognot n1) n2)
+      (logandc2 n1 n2) == (logand n1 (lognot n2))
+      (logiorc1 n1 n2) == (logior (lognot n1) n2)
+      (logiorc2 n1 n2) == (logior n1 (lognot n2))
+      (logbitp j (lognot x)) == (not (logbitp j x))
+
+
+File: gcl.info,  Node: logbitp,  Next: logcount,  Prev: logand,  Up: Numbers Dictionary
+
+logbitp                                                          [Function]
+---------------------------------------------------------------------------
+
+`logbitp'  index integer =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+index--a non-negative integer.
+
+integer--an integer.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+logbitp is used to test the value of a particular bit in integer, that is
+treated as if it were binary.  The value of logbitp is true if the bit in
+integer whose index is index (that is, its weight is 2^index) is a
+one-bit; otherwise it is false.
+
+Negative integers are treated as if they were in two's-complement notation.
+
+Examples::
+..........
+
+      (logbitp 1 1) =>  false
+      (logbitp 0 1) =>  true
+      (logbitp 3 10) =>  true
+      (logbitp 1000000 -1) =>  true
+      (logbitp 2 6) =>  true
+      (logbitp 0 6) =>  false
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if index is not a non-negative
+integer.  Should signal an error of type type-error if integer is not an
+integer.
+
+Notes::
+.......
+
+      (logbitp k n) == (ldb-test (byte 1 k) n)
+
+
+File: gcl.info,  Node: logcount,  Next: logtest,  Prev: logbitp,  Up: Numbers Dictionary
+
+logcount                                                         [Function]
+---------------------------------------------------------------------------
+
+`logcount'  integer =>  number-of-on-bits
+
+Arguments and Values::
+......................
+
+integer--an integer.
+
+number-of-on-bits--a non-negative integer.
+
+Description::
+.............
+
+Computes and returns the number of bits in the two's-complement binary
+representation of integer that are `on' or `set'.  If integer is negative,
+the 0 bits are counted; otherwise, the 1 bits are counted.
+
+Examples::
+..........
+
+      (logcount 0) =>  0
+      (logcount -1) =>  0
+      (logcount 7) =>  3
+      (logcount  13) =>  3 ;Two's-complement binary: ...0001101
+      (logcount -13) =>  2 ;Two's-complement binary: ...1110011
+      (logcount  30) =>  4 ;Two's-complement binary: ...0011110
+      (logcount -30) =>  4 ;Two's-complement binary: ...1100010
+      (logcount (expt 2 100)) =>  1
+      (logcount (- (expt 2 100))) =>  100
+      (logcount (- (1+ (expt 2 100)))) =>  1
+
+Exceptional Situations::
+........................
+
+Should signal type-error if its argument is not an integer.
+
+Notes::
+.......
+
+Even if the implementation does not represent integers internally in two's
+complement binary, logcount behaves as if it did.
+
+The following identity always holds:
+
+         (logcount x)
+      == (logcount (- (+ x 1)))
+      == (logcount (lognot x))
+
+
+File: gcl.info,  Node: logtest,  Next: byte,  Prev: logcount,  Up: Numbers Dictionary
+
+logtest                                                          [Function]
+---------------------------------------------------------------------------
+
+`logtest'  integer-1 integer-2 =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+integer-1--an integer.
+
+integer-2--an integer.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if any of the bits designated by the 1's in integer-1 is 1 in
+integer-2; otherwise it is false.  integer-1 and integer-2 are treated as
+if they were binary.
+
+Negative integer-1 and integer-2 are treated as if they were represented
+in two's-complement binary.
+
+Examples::
+..........
+
+      (logtest 1 7) =>  true
+      (logtest 1 2) =>  false
+      (logtest -2 -1) =>  true
+      (logtest 0 -1) =>  false
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if integer-1 is not an integer.
+Should signal an error of type type-error if integer-2 is not an integer.
+
+Notes::
+.......
+
+      (logtest x y) == (not (zerop (logand x y)))
+
+
+File: gcl.info,  Node: byte,  Next: deposit-field,  Prev: logtest,  Up: Numbers Dictionary
+
+byte, byte-size, byte-position                                   [Function]
+---------------------------------------------------------------------------
+
+`byte'  size position =>  bytespec
+
+`byte-size'  bytespec =>  size
+
+`byte-position'  bytespec =>  position
+
+Arguments and Values::
+......................
+
+size, position--a non-negative integer.
+
+bytespec--a byte specifier.
+
+Description::
+.............
+
+byte returns a byte specifier that indicates a byte of width size and
+whose bits have weights 2^position + size - 1\/ through 2^position, and
+whose representation is implementation-dependent.
+
+byte-size returns the number of bits specified by bytespec.
+
+byte-position returns the position specified by bytespec.
+
+Examples::
+..........
+
+      (setq b (byte 100 200)) =>  #<BYTE-SPECIFIER size 100 position 200>
+      (byte-size b) =>  100
+      (byte-position b) =>  200
+
+See Also::
+..........
+
+*Note ldb:: , *Note dpb::
+
+Notes::
+.......
+
+      (byte-size (byte j k)) == j
+      (byte-position (byte j k)) == k
+
+A byte of size of 0 is permissible; it refers to a byte of width zero.
+For example,
+
+      (ldb (byte 0 3) #o7777) =>  0
+      (dpb #o7777 (byte 0 3) 0) =>  0
+
+
+File: gcl.info,  Node: deposit-field,  Next: dpb,  Prev: byte,  Up: Numbers Dictionary
+
+deposit-field                                                    [Function]
+---------------------------------------------------------------------------
+
+`deposit-field'  newbyte bytespec integer =>  result-integer
+
+Arguments and Values::
+......................
+
+newbyte--an integer.
+
+bytespec--a byte specifier.
+
+integer--an integer.
+
+result-integer--an integer.
+
+Description::
+.............
+
+Replaces a field of bits within integer; specifically, returns an integer
+that contains the bits of newbyte within the byte specified by bytespec,
+and elsewhere contains the bits of integer.
+
+Examples::
+..........
+
+      (deposit-field 7 (byte 2 1) 0) =>  6
+      (deposit-field -1 (byte 4 0) 0) =>  15
+      (deposit-field 0 (byte 2 1) -3) =>  -7
+
+See Also::
+..........
+
+*Note byte; byte-size; byte-position:: , *Note dpb::
+
+Notes::
+.......
+
+      (logbitp j (deposit-field m (byte s p) n))
+      == (if (and (>= j p) (< j (+ p s)))
+             (logbitp j m)
+             (logbitp j n))
+
+deposit-field is to mask-field as dpb           is to ldb.
+
+
+File: gcl.info,  Node: dpb,  Next: ldb,  Prev: deposit-field,  Up: Numbers Dictionary
+
+dpb                                                              [Function]
+---------------------------------------------------------------------------
+
+`dpb'  newbyte bytespec integer =>  result-integer
+
+Pronunciation::
+...............
+
+pronounced ,de  'pib or pronounced ,de  'pe b or pronounced 'd\=e 'p\=e
+'b\=e
+
+Arguments and Values::
+......................
+
+newbyte--an integer.
+
+bytespec--a byte specifier.
+
+integer--an integer.
+
+result-integer--an integer.
+
+Description::
+.............
+
+dpb (deposit byte) is used to replace a field of bits within integer.  dpb
+returns an integer that is the same as integer except in the bits
+specified by bytespec.
+
+Let s be the size specified by bytespec; then the low s bits of newbyte
+appear in the result in the byte specified by bytespec.  Newbyte is
+interpreted as being right-justified, as if it were the result of ldb.
+
+Examples::
+..........
+
+      (dpb 1 (byte 1 10) 0) =>  1024
+      (dpb -2 (byte 2 10) 0) =>  2048
+      (dpb 1 (byte 2 10) 2048) =>  1024
+
+See Also::
+..........
+
+*Note byte; byte-size; byte-position:: , *Note deposit-field:: , *Note
+ldb::
+
+Notes::
+.......
+
+      (logbitp j (dpb m (byte s p) n))
+      == (if (and (>= j p) (< j (+ p s)))
+             (logbitp (- j p) m)
+             (logbitp j n))
+
+In general,
+
+      (dpb x (byte 0 y) z) =>  z
+
+for all valid values of x, y, and z.
+
+Historically, the name "dpb" comes from a DEC PDP-10 assembly language
+instruction meaning "deposit byte."
+
+
+File: gcl.info,  Node: ldb,  Next: ldb-test,  Prev: dpb,  Up: Numbers Dictionary
+
+ldb                                                              [Accessor]
+---------------------------------------------------------------------------
+
+`ldb'  bytespec integer =>  byte
+
+(setf (` ldb' bytespec place) new-byte)
+Pronunciation::
+...............
+
+pronounced 'lid ib or pronounced 'lid e b or pronounced 'el 'd\=e 'b\=e
+
+Arguments and Values::
+......................
+
+bytespec--a byte specifier.
+
+integer--an integer.
+
+byte, new-byte--a non-negative integer.
+
+Description::
+.............
+
+ldb extracts and returns the byte of integer specified by bytespec.
+
+ldb returns an integer in which the bits with weights 2^(s-1) through 2^0
+are the same as those in integer with weights 2^(p+s-1) through 2^p, and
+all other bits zero; s is (byte-size bytespec) and p is (byte-position
+bytespec).
+
+setf may be used with ldb to modify a byte within the integer that is
+stored in a given place.
+
+The order of evaluation, when an ldb form is supplied to setf, is exactly
+left-to-right.
+
+The effect is to perform a dpb operation and then store the result back
+into the place.
+
+Examples::
+..........
+
+      (ldb (byte 2 1) 10) =>  1
+      (setq a (list 8)) =>  (8)
+      (setf (ldb (byte 2 1) (car a)) 1) =>  1
+      a =>  (10)
+
+See Also::
+..........
+
+*Note byte; byte-size; byte-position:: , byte-position, byte-size, *Note
+dpb::
+
+Notes::
+.......
+
+      (logbitp j (ldb (byte s p) n))
+         == (and (< j s) (logbitp (+ j p) n))
+
+In general,
+
+      (ldb (byte 0 x) y) =>  0
+
+for all valid values of x and y.
+
+Historically, the name "ldb" comes from a DEC PDP-10 assembly language
+instruction meaning "load byte."
+
+
+File: gcl.info,  Node: ldb-test,  Next: mask-field,  Prev: ldb,  Up: Numbers Dictionary
+
+ldb-test                                                         [Function]
+---------------------------------------------------------------------------
+
+`ldb-test'  bytespec integer =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+bytespec--a byte specifier.
+
+integer--an integer.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if any of the bits of the byte in integer specified by
+bytespec is non-zero; otherwise returns false.
+
+Examples::
+..........
+
+      (ldb-test (byte 4 1) 16) =>  true
+      (ldb-test (byte 3 1) 16) =>  false
+      (ldb-test (byte 3 2) 16) =>  true
+
+See Also::
+..........
+
+*Note byte; byte-size; byte-position:: , *Note ldb:: , *Note zerop::
+
+Notes::
+.......
+
+      (ldb-test bytespec n) ==
+      (not (zerop (ldb bytespec n))) ==
+      (logtest (ldb bytespec -1) n)
+
+
+File: gcl.info,  Node: mask-field,  Next: most-positive-fixnum,  Prev: ldb-test,  Up: Numbers Dictionary
+
+mask-field                                                       [Accessor]
+---------------------------------------------------------------------------
+
+`mask-field'  bytespec integer =>  masked-integer
+
+(setf (`         mask-field' bytespec place) new-masked-integer)
+Arguments and Values::
+......................
+
+bytespec--a byte specifier.
+
+integer--an integer.
+
+masked-integer, new-masked-integer--a non-negative integer.
+
+Description::
+.............
+
+mask-field performs a "mask" operation on integer.  It returns an integer
+that has the same bits as integer in the byte specified by bytespec, but
+that has zero-bits everywhere else.
+
+setf may be used with mask-field to modify a byte within the integer that
+is stored in a given place.  The effect is to perform a deposit-field
+operation and then store the result back into the place.
+
+Examples::
+..........
+
+      (mask-field (byte 1 5) -1) =>  32
+      (setq a 15) =>  15
+      (mask-field (byte 2 0) a) =>  3
+      a =>  15
+      (setf (mask-field (byte 2 0) a) 1) =>  1
+      a =>  13
+
+See Also::
+..........
+
+*Note byte; byte-size; byte-position:: , *Note ldb::
+
+Notes::
+.......
+
+      (ldb bs (mask-field bs n)) == (ldb bs n)
+      (logbitp j (mask-field (byte s p) n))
+        == (and (>= j p) (< j s) (logbitp j n))
+      (mask-field bs n) == (logand n (dpb -1 bs 0))
+
+
+File: gcl.info,  Node: most-positive-fixnum,  Next: decode-float,  Prev: mask-field,  Up: Numbers Dictionary
+
+most-positive-fixnum, most-negative-fixnum              [Constant Variable]
+---------------------------------------------------------------------------
+
+Constant Value::
+................
+
+implementation-dependent.
+
+Description::
+.............
+
+most-positive-fixnum is that fixnum closest in value to positive infinity
+provided by the implementation,
+
+and greater than or equal to both 2^15 - 1 and array-dimension-limit.
+
+most-negative-fixnum is that fixnum closest in value to negative infinity
+provided by the implementation,
+
+and less than or equal to -2^15.
+
+
+File: gcl.info,  Node: decode-float,  Next: float,  Prev: most-positive-fixnum,  Up: Numbers Dictionary
+
+decode-float, scale-float, float-radix, float-sign,
+---------------------------------------------------
+
+float-digits, float-precision, integer-decode-float
+---------------------------------------------------
+
+                                                                [Function]
+
+`decode-float'  float =>  significand, exponent, sign
+
+`scale-float'  float integer =>  scaled-float
+
+`float-radix'  float =>  float-radix
+
+`float-sign'  float-1 &optional float-2 =>  signed-float
+
+`float-digits'  float =>  digits1
+
+`float-precision'  float =>  digits2
+
+`integer-decode-float'  float =>  significand, exponent, integer-sign
+
+Arguments and Values::
+......................
+
+digits1--a non-negative integer.
+
+digits2--a non-negative integer.
+
+exponent--an integer.
+
+float--a float.
+
+float-1--a float.
+
+float-2--a float.
+
+float-radix--an integer.
+
+integer--a non-negative integer.
+
+integer-sign--the integer -1, or the integer 1.
+
+scaled-float--a float.
+
+sign--A float of the same type as float but numerically equal to 1.0 or
+-1.0.
+
+signed-float--a float.
+
+significand--a float.
+
+Description::
+.............
+
+decode-float computes three values that characterize float.  The first
+value is of the same type as float and represents the significand.  The
+second value represents the exponent to which the radix (notated in this
+description by b) must be raised to obtain the value that, when multiplied
+with the first result, produces the absolute value of float.  If float is
+zero, any integer value may be returned, provided that the identity shown
+for scale-float holds.  The third value is of the same type as float and
+is 1.0 if float is greater than or equal to zero or -1.0 otherwise.
+
+decode-float divides float by an integral power of b so as to bring its
+value between 1/b (inclusive) and~1 (exclusive), and returns the quotient
+as the first value.  If float is zero, however, the result equals the
+absolute value of float (that is, if there is a negative zero, its
+significand is considered to be a positive zero).
+
+scale-float returns (* float (expt (float b float) integer))\/, where b is
+the radix of the floating-point representation. float is not necessarily
+between 1/b and~1.
+
+float-radix returns the radix of float.
+
+float-sign returns a number z such that z and float-1 have the same sign
+and also such that z and float-2 have the same absolute value.  If float-2
+is not supplied, its value is (float 1 float-1).  If an implementation has
+distinct representations for negative zero and positive zero, then
+(float-sign -0.0) =>  -1.0.
+
+float-digits returns the number of radix b digits used in the
+representation of float (including any implicit digits, such as a "hidden
+bit").
+
+float-precision returns the number of significant radix b digits present
+in float; if float is a float zero, then the result is an integer zero.
+
+For normalized floats, the results of float-digits and float-precision are
+the same, but the precision is less than the number of representation
+digits for a denormalized or zero number.
+
+integer-decode-float computes three values that characterize float - the
+significand scaled so as to be an integer, and the same last two values
+that are returned by decode-float.  If float is zero, integer-decode-float
+returns zero as the first value.  The second value bears the same
+relationship to the first value as for decode-float:
+
+      (multiple-value-bind (signif expon sign)
+                           (integer-decode-float f)
+        (scale-float (float signif f) expon)) == (abs f)
+
+Examples::
+..........
+
+      ;; Note that since the purpose of this functionality is to expose
+      ;; details of the implementation, all of these examples are necessarily
+      ;; very implementation-dependent.  Results may vary widely.
+      ;; Values shown here are chosen consistently from one particular implementation.
+      (decode-float .5) =>  0.5, 0, 1.0
+      (decode-float 1.0) =>  0.5, 1, 1.0
+      (scale-float 1.0 1) =>  2.0
+      (scale-float 10.01 -2) =>  2.5025
+      (scale-float 23.0 0) =>  23.0
+      (float-radix 1.0) =>  2
+      (float-sign 5.0) =>  1.0
+      (float-sign -5.0) =>  -1.0
+      (float-sign 0.0) =>  1.0
+      (float-sign 1.0 0.0) =>  0.0
+      (float-sign 1.0 -10.0) =>  10.0
+      (float-sign -1.0 10.0) =>  -10.0
+      (float-digits 1.0) =>  24
+      (float-precision 1.0) =>  24
+      (float-precision least-positive-single-float) =>  1
+      (integer-decode-float 1.0) =>  8388608, -23, 1
+
+Affected By::
+.............
+
+The implementation's representation for floats.
+
+Exceptional Situations::
+........................
+
+The functions decode-float, float-radix, float-digits, float-precision,
+and integer-decode-float should signal an error if their only argument is
+not a float.
+
+The function scale-float should signal an error if its first argument is
+not a float or if its second argument is not an integer.
+
+The function float-sign should signal an error if its first argument is
+not a float or if its second argument is supplied but is not a float.
+
+Notes::
+.......
+
+The product of the first result of decode-float or integer-decode-float,
+of the radix raised to the power of the second result, and of the third
+result is exactly equal to the value of float.
+
+      (multiple-value-bind (signif expon sign)
+                           (decode-float f)
+        (scale-float signif expon))
+     == (abs f)
+
+and
+
+      (multiple-value-bind (signif expon sign)
+                           (decode-float f)
+        (* (scale-float signif expon) sign))
+     == f
+
+
+File: gcl.info,  Node: float,  Next: floatp,  Prev: decode-float,  Up: Numbers Dictionary
+
+float                                                            [Function]
+---------------------------------------------------------------------------
+
+`float'  number &optional prototype =>  float
+
+Arguments and Values::
+......................
+
+number--a real.
+
+prototype--a float.
+
+float--a float.
+
+Description::
+.............
+
+float converts a
+
+real
+
+number to a float.
+
+If a prototype is supplied, a float is returned that is mathematically
+equal to number but has the same format as prototype.
+
+If prototype is not supplied, then if the number is already a float, it is
+returned; otherwise, a float is returned that is mathematically equal to
+number but is a single float.
+
+Examples::
+..........
+
+      (float 0) =>  0.0
+      (float 1 .5) =>  1.0
+      (float 1.0) =>  1.0
+      (float 1/2) =>  0.5
+     =>  1.0d0
+     OR=> 1.0
+      (eql (float 1.0 1.0d0) 1.0d0) =>  true
+
+See Also::
+..........
+
+*Note coerce::
+
+
+File: gcl.info,  Node: floatp,  Next: most-positive-short-float,  Prev: float,  Up: Numbers Dictionary
+
+floatp                                                           [Function]
+---------------------------------------------------------------------------
+
+`floatp'  object generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type float; otherwise, returns false.
+
+Examples::
+..........
+
+      (floatp 1.2d2) =>  true
+      (floatp 1.212) =>  true
+      (floatp 1.2s2) =>  true
+      (floatp (expt 2 130)) =>  false
+
+Notes::
+.......
+
+      (floatp object) == (typep object 'float)
+
+
+File: gcl.info,  Node: most-positive-short-float,  Next: short-float-epsilon,  Prev: floatp,  Up: Numbers Dictionary
+
+most-positive-short-float, least-positive-short-float,
+------------------------------------------------------
+
+least-positive-normalized-short-float,
+--------------------------------------
+
+most-positive-double-float, least-positive-double-float,
+--------------------------------------------------------
+
+least-positive-normalized-double-float,
+---------------------------------------
+
+most-positive-long-float, least-positive-long-float,
+----------------------------------------------------
+
+least-positive-normalized-long-float,
+-------------------------------------
+
+most-positive-single-float, least-positive-single-float,
+--------------------------------------------------------
+
+least-positive-normalized-single-float,
+---------------------------------------
+
+most-negative-short-float, least-negative-short-float,
+------------------------------------------------------
+
+least-negative-normalized-short-float,
+--------------------------------------
+
+most-negative-single-float, least-negative-single-float,
+--------------------------------------------------------
+
+least-negative-normalized-single-float,
+---------------------------------------
+
+most-negative-double-float, least-negative-double-float,
+--------------------------------------------------------
+
+least-negative-normalized-double-float,
+---------------------------------------
+
+most-negative-long-float, least-negative-long-float,
+----------------------------------------------------
+
+least-negative-normalized-long-float
+------------------------------------
+
+                                                       [Constant Variable]
+
+Constant Value::
+................
+
+implementation-dependent.
+
+Description::
+.............
+
+These constant variables provide a way for programs to examine the
+implementation-defined limits for the various float formats.
+
+Of these variables, each which has "-normalized" in its name must have a
+value which is a normalized float, and each which does not have
+"-normalized" in its name may have a value which is either a normalized
+float or a denormalized float, as appropriate.
+
+Of these variables, each which has "short-float" in its name must have a
+value which is a short float, each which has "single-float" in its name
+must have a value which is a single float, each which has "double-float"
+in its name must have a value which is a double float, and each which has
+"long-float" in its name must have a value which is a long float.
+
+*
+     most-positive-short-float, most-positive-single-float,
+     most-positive-double-float, most-positive-long-float
+
+     Each of these constant variables has as its value the positive float
+     of the largest magnitude (closest in value to, but not equal to,
+     positive infinity) for the float format implied by its name.
+
+*
+     least-positive-short-float, least-positive-normalized-short-float,
+     least-positive-single-float, least-positive-normalized-single-float,
+     least-positive-double-float, least-positive-normalized-double-float,
+     least-positive-long-float, least-positive-normalized-long-float
+
+     Each of these constant variables has as its value the smallest
+     positive (nonzero) float for the float format implied by its name.
+
+*
+     least-negative-short-float, least-negative-normalized-short-float,
+     least-negative-single-float, least-negative-normalized-single-float,
+     least-negative-double-float, least-negative-normalized-double-float,
+     least-negative-long-float, least-negative-normalized-long-float
+
+     Each of these constant variables has as its value the negative
+     (nonzero) float of the smallest magnitude for the float format
+     implied by its name.  (If an implementation supports minus zero as a
+     different object from positive zero, this value must not be minus
+     zero.)
+
+*
+     most-negative-short-float, most-negative-single-float,
+     most-negative-double-float, most-negative-long-float
+
+     Each of these constant variables has as its value the negative float
+     of the largest magnitude (closest in value to, but not equal to,
+     negative infinity) for the float format implied by its name.
+
+Notes::
+.......
+
+
+File: gcl.info,  Node: short-float-epsilon,  Next: arithmetic-error,  Prev: most-positive-short-float,  Up: Numbers Dictionary
+
+short-float-epsilon, short-float-negative-epsilon,
+--------------------------------------------------
+
+single-float-epsilon, single-float-negative-epsilon,
+----------------------------------------------------
+
+double-float-epsilon, double-float-negative-epsilon,
+----------------------------------------------------
+
+long-float-epsilon, long-float-negative-epsilon
+-----------------------------------------------
+
+                                                       [Constant Variable]
+
+Constant Value::
+................
+
+implementation-dependent.
+
+Description::
+.............
+
+The value of each of the constants short-float-epsilon,
+single-float-epsilon, double-float-epsilon, and long-float-epsilon is the
+smallest positive float \epsilon of the given format, such that the
+following expression is true when evaluated:
+
+(not (= (float 1 \epsilon) (+ (float 1 \epsilon) \epsilon)))\/
+
+The value of each of the constants short-float-negative-epsilon,
+single-float-negative-epsilon, double-float-negative-epsilon, and
+long-float-negative-epsilon is the smallest positive float \epsilon of the
+given format, such that the following expression is true when evaluated:
+
+(not (= (float 1 \epsilon) (- (float 1 \epsilon) \epsilon)))\/
+
+
+File: gcl.info,  Node: arithmetic-error,  Next: arithmetic-error-operands,  Prev: short-float-epsilon,  Up: Numbers Dictionary
+
+arithmetic-error                                           [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+arithmetic-error, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type arithmetic-error consists of error conditions that occur during
+arithmetic operations.  The operation and operands are initialized with
+the initialization arguments named :operation and :operands to
+make-condition, and are accessed by the functions
+arithmetic-error-operation and arithmetic-error-operands.
+
+See Also::
+..........
+
+arithmetic-error-operation, *Note arithmetic-error-operands;
+arithmetic-error-operation::
+
+
+File: gcl.info,  Node: arithmetic-error-operands,  Next: division-by-zero,  Prev: arithmetic-error,  Up: Numbers Dictionary
+
+arithmetic-error-operands, arithmetic-error-operation            [Function]
+---------------------------------------------------------------------------
+
+`arithmetic-error-operands'  condition =>  operands
+
+`arithmetic-error-operation'  condition =>  operation
+
+Arguments and Values::
+......................
+
+condition--a condition of type arithmetic-error.
+
+operands--a list.
+
+operation--a function designator.
+
+Description::
+.............
+
+arithmetic-error-operands returns a list of the operands which were used
+in the offending call to the operation that signaled the condition.
+
+arithmetic-error-operation returns a list of the offending operation in
+the offending call that signaled the condition.
+
+See Also::
+..........
+
+arithmetic-error, *Note Conditions::
+
+Notes::
+.......
+
+
+File: gcl.info,  Node: division-by-zero,  Next: floating-point-invalid-operation,  Prev: arithmetic-error-operands,  Up: Numbers Dictionary
+
+division-by-zero                                           [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+division-by-zero, arithmetic-error, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type division-by-zero consists of error conditions that occur because
+of division by zero.
+
+
+File: gcl.info,  Node: floating-point-invalid-operation,  Next: floating-point-inexact,  Prev: division-by-zero,  Up: Numbers Dictionary
+
+floating-point-invalid-operation                           [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+floating-point-invalid-operation, arithmetic-error, error,
+serious-condition, condition, t
+
+Description::
+.............
+
+The type floating-point-invalid-operation consists of error conditions
+that occur because of certain floating point traps.
+
+It is implementation-dependent whether floating point traps occur, and
+whether or how they may be enabled or disabled.  Therefore, conforming
+code may establish handlers for this condition, but must not depend on its
+being signaled.
+
+
+File: gcl.info,  Node: floating-point-inexact,  Next: floating-point-overflow,  Prev: floating-point-invalid-operation,  Up: Numbers Dictionary
+
+floating-point-inexact                                     [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+floating-point-inexact, arithmetic-error, error, serious-condition,
+condition, t
+
+Description::
+.............
+
+The type floating-point-inexact consists of error conditions that occur
+because of certain floating point traps.
+
+It is implementation-dependent whether floating point traps occur, and
+whether or how they may be enabled or disabled.  Therefore, conforming
+code may establish handlers for this condition, but must not depend on its
+being signaled.
+
+
+File: gcl.info,  Node: floating-point-overflow,  Next: floating-point-underflow,  Prev: floating-point-inexact,  Up: Numbers Dictionary
+
+floating-point-overflow                                    [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+floating-point-overflow, arithmetic-error, error, serious-condition,
+condition, t
+
+Description::
+.............
+
+The type floating-point-overflow consists of error conditions that occur
+because of floating-point overflow.
+
+
+File: gcl.info,  Node: floating-point-underflow,  Prev: floating-point-overflow,  Up: Numbers Dictionary
+
+floating-point-underflow                                   [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+floating-point-underflow, arithmetic-error, error, serious-condition,
+condition, t
+
+Description::
+.............
+
+The type floating-point-underflow consists of error conditions that occur
+because of floating-point underflow.
+
+
+File: gcl.info,  Node: Characters,  Next: Conses,  Prev: Numbers (Numbers),  Up: Top
+
+Characters
+**********
+
+* Menu:
+
+* Character Concepts::
+* Characters Dictionary::
+
+
+File: gcl.info,  Node: Character Concepts,  Next: Characters Dictionary,  Prev: Characters,  Up: Characters
+
+Character Concepts
+==================
+
+* Menu:
+
+* Introduction to Characters::
+* Introduction to Scripts and Repertoires::
+* Character Attributes::
+* Character Categories::
+* Identity of Characters::
+* Ordering of Characters::
+* Character Names::
+* Treatment of Newline during Input and Output::
+* Character Encodings::
+* Documentation of Implementation-Defined Scripts::
+
+
+File: gcl.info,  Node: Introduction to Characters,  Next: Introduction to Scripts and Repertoires,  Prev: Character Concepts,  Up: Character Concepts
+
+Introduction to Characters
+--------------------------
+
+A character is an object that represents a unitary token (e.g., a letter,
+a special symbol, or a "control character") in an aggregate quantity of
+text (e.g., a string or a text stream).
+
+Common Lisp allows an implementation to provide support for international
+language characters as well as characters used in specialized arenas
+(e.g., mathematics).
+
+The following figures contain lists of defined names applicable to
+characters.
+
+Figure 13-1 lists some defined names relating to character attributes and
+character predicates.
+
+  alpha-char-p     char-not-equal     char>            
+  alphanumericp    char-not-greaterp  char>=           
+  both-case-p      char-not-lessp     digit-char-p     
+  char-code-limit  char/=             graphic-char-p   
+  char-equal       char<              lower-case-p     
+  char-greaterp    char<=             standard-char-p  
+  char-lessp       char=              upper-case-p     
+
+       Figure 13-1: Character defined names - 1      
+
+
+Figure 13-2 lists some character construction and conversion defined names.
+
+  char-code      char-name    code-char   
+  char-downcase  char-upcase  digit-char  
+  char-int       character    name-char   
+
+  Figure 13-2: Character defined names - 2
+
+
+
+File: gcl.info,  Node: Introduction to Scripts and Repertoires,  Next: Character Attributes,  Prev: Introduction to Characters,  Up: Character Concepts
+
+Introduction to Scripts and Repertoires
+---------------------------------------
+
+* Menu:
+
+* Character Scripts::
+* Character Repertoires::
+
+
+File: gcl.info,  Node: Character Scripts,  Next: Character Repertoires,  Prev: Introduction to Scripts and Repertoires,  Up: Introduction to Scripts and Repertoires
+
+Character Scripts
+.................
+
+A script is one of possibly several sets that form an exhaustive partition
+of the type character.
+
+The number of such sets and boundaries between them is
+implementation-defined.  Common Lisp does not require these sets to be
+types, but an implementation is permitted to define such types as an
+extension.  Since no character from one script can ever be a member of
+another script, it is generally more useful to speak about character
+repertoires.
+
+Although the term "script" is chosen for definitional compatibility with
+ISO terminology, no conforming implementation is required to use any
+particular scripts standardized by ISO or by any other standards
+organization.
+
+Whether and how the script or scripts used by any given implementation are
+named is implementation-dependent.
+
+
+File: gcl.info,  Node: Character Repertoires,  Prev: Character Scripts,  Up: Introduction to Scripts and Repertoires
+
+Character Repertoires
+.....................
+
+A repertoire is a type specifier for a subtype of type character.
+
+This term is generally used when describing a collection of characters
+independent of their coding.  Characters in repertoires are only identified
+by name, by glyph, or by character description.
+
+A repertoire can contain characters from several scripts, and a character
+can appear in more than one repertoire.
+
+For some examples of repertoires, see the coded character standards ISO
+8859/1, ISO 8859/2, and ISO 6937/2.  Note, however, that although the term
+"repertoire" is chosen for definitional compatibility with ISO
+terminology, no conforming implementation is required to use repertoires
+standardized by ISO or any other standards organization.
+
+
+File: gcl.info,  Node: Character Attributes,  Next: Character Categories,  Prev: Introduction to Scripts and Repertoires,  Up: Character Concepts
+
+Character Attributes
+--------------------
+
+Characters have only one standardized attribute: a code.  A character's
+code is a non-negative integer.  This code is composed from a character
+script and a character label in an implementation-dependent way.  See the
+functions char-code and code-char.
+
+Additional, implementation-defined attributes of characters are also
+permitted so that, for example, two characters with the same code may
+differ in some other, implementation-defined way.
+
+For any implementation-defined attribute there is a distinguished value
+called the null value for that attribute.  A character for which each
+implementation-defined attribute has the null value for that attribute is
+called a simple character.  If the implementation has no
+implementation-defined attributes, then all characters are simple
+characters.
+
+
+File: gcl.info,  Node: Character Categories,  Next: Identity of Characters,  Prev: Character Attributes,  Up: Character Concepts
+
+Character Categories
+--------------------
+
+There are several (overlapping) categories of characters that have no
+formally associated type but that are nevertheless useful to name.  They
+include graphic characters, alphabetic_1 characters, characters with case
+(uppercase and lowercase characters), numeric characters, alphanumeric
+characters, and digits (in a given radix).
+
+For each implementation-defined attribute of a character, the
+documentation for that implementation must specify whether characters that
+differ only in that attribute are permitted to differ in whether are not
+they are members of one of the aforementioned categories.
+
+Note that these terms are defined independently of any special syntax
+which might have been enabled in the current readtable.
+
+* Menu:
+
+* Graphic Characters::
+* Alphabetic Characters::
+* Characters With Case::
+* Uppercase Characters::
+* Lowercase Characters::
+* Corresponding Characters in the Other Case::
+* Case of Implementation-Defined Characters::
+* Numeric Characters::
+* Alphanumeric Characters::
+* Digits in a Radix::
+
+
+File: gcl.info,  Node: Graphic Characters,  Next: Alphabetic Characters,  Prev: Character Categories,  Up: Character Categories
+
+Graphic Characters
+..................
+
+Characters that are classified as graphic , or displayable, are each
+associated with a glyph, a visual representation of the character.
+
+A graphic character is one that has a standard textual representation as a
+single glyph, such as A or * or =.  Space, which effectively has a blank
+glyph, is defined to be a graphic.
+
+Of the standard characters, newline is non-graphic and all others are
+graphic; see *Note Standard Characters::.
+
+Characters that are not graphic are called non-graphic .
+
+Non-graphic characters are sometimes informally called ``formatting
+characters" or "control characters."
+
+#\Backspace, #\Tab, #\Rubout, #\Linefeed, #\Return, and #\Page, if they
+are supported by the implementation, are non-graphic.
+
+
+File: gcl.info,  Node: Alphabetic Characters,  Next: Characters With Case,  Prev: Graphic Characters,  Up: Character Categories
+
+Alphabetic Characters
+.....................
+
+The alphabetic_1 characters are a subset of the graphic characters.  Of
+the standard characters, only these are the alphabetic_1 characters:
+
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+
+a b c d e f g h i j k l m n o p q r s t u v w x y z
+
+Any implementation-defined character that has case must be alphabetic_1.
+For each implementation-defined graphic character that has no case, it is
+implementation-defined whether that character is alphabetic_1.
+
+
+File: gcl.info,  Node: Characters With Case,  Next: Uppercase Characters,  Prev: Alphabetic Characters,  Up: Character Categories
+
+Characters With Case
+....................
+
+The characters with case are a subset of the alphabetic_1 characters.  A
+character with case has the property of being either uppercase or
+lowercase.  Every character with case is in one-to-one correspondence with
+some other character with the opposite case.
+
+
+File: gcl.info,  Node: Uppercase Characters,  Next: Lowercase Characters,  Prev: Characters With Case,  Up: Character Categories
+
+Uppercase Characters
+....................
+
+An uppercase character is one that has a corresponding lowercase character
+that is different (and can be obtained using char-downcase).
+
+Of the standard characters, only these are uppercase characters:
+
+A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+
+
+File: gcl.info,  Node: Lowercase Characters,  Next: Corresponding Characters in the Other Case,  Prev: Uppercase Characters,  Up: Character Categories
+
+Lowercase Characters
+....................
+
+A lowercase character is one that has a corresponding uppercase character
+that is different (and can be obtained using char-upcase).
+
+Of the standard characters, only these are lowercase characters:
+
+a b c d e f g h i j k l m n o p q r s t u v w x y z
+
+
+File: gcl.info,  Node: Corresponding Characters in the Other Case,  Next: Case of Implementation-Defined Characters,  Prev: Lowercase Characters,  Up: Character Categories
+
+Corresponding Characters in the Other Case
+..........................................
+
+The uppercase standard characters A through Z mentioned above respectively
+correspond to the lowercase standard characters a through z mentioned
+above.  For example, the uppercase character E corresponds to the
+lowercase character e, and vice versa.
+
+
+File: gcl.info,  Node: Case of Implementation-Defined Characters,  Next: Numeric Characters,  Prev: Corresponding Characters in the Other Case,  Up: Character Categories
+
+Case of Implementation-Defined Characters
+.........................................
+
+An implementation may define that other implementation-defined graphic
+characters have case.  Such definitions must always be done in pairs--one
+uppercase character in one-to-one correspondence with one lowercase
+character.
+
+
+File: gcl.info,  Node: Numeric Characters,  Next: Alphanumeric Characters,  Prev: Case of Implementation-Defined Characters,  Up: Character Categories
+
+Numeric Characters
+..................
+
+The numeric characters are a subset of the graphic characters.  Of the
+standard characters, only these are numeric characters:
+
+0 1 2 3 4 5 6 7 8 9
+
+For each implementation-defined graphic character that has no case, the
+implementation must define whether or not it is a numeric character.
+
+
+File: gcl.info,  Node: Alphanumeric Characters,  Next: Digits in a Radix,  Prev: Numeric Characters,  Up: Character Categories
+
+Alphanumeric Characters
+.......................
+
+The set of alphanumeric characters is the union of the set of alphabetic_1
+characters and the set of numeric characters.
+
+
+File: gcl.info,  Node: Digits in a Radix,  Prev: Alphanumeric Characters,  Up: Character Categories
+
+Digits in a Radix
+.................
+
+What qualifies as a digit depends on the radix (an integer between 2 and
+36, inclusive).  The potential digits are:
+
+0 1 2 3 4 5 6 7 8 9 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+
+Their respective weights are 0, 1, 2, ... 35.  In any given radix n, only
+the first n potential digits are considered to be digits.  For example,
+the digits in radix 2  are 0 and 1, the digits in radix 10 are 0 through
+9, and the digits in radix 16 are 0 through F.
+
+Case is not significant in digits; for example, in radix 16, both F and f
+are digits with weight 15.
+
+
+File: gcl.info,  Node: Identity of Characters,  Next: Ordering of Characters,  Prev: Character Categories,  Up: Character Concepts
+
+Identity of Characters
+----------------------
+
+Two characters that are eql, char=, or char-equal are not necessarily eq.
+
+
+File: gcl.info,  Node: Ordering of Characters,  Next: Character Names,  Prev: Identity of Characters,  Up: Character Concepts
+
+Ordering of Characters
+----------------------
+
+The total ordering on characters is guaranteed to have the following
+properties:
+
+*
+     If two characters have the same implementation-defined attributes,
+     then their ordering by char< is consistent with the numerical
+     ordering by the predicate < on their code attributes.
+
+*
+     If two characters differ in any attribute, then they are not char=.
+
+     [Reviewer Note by Barmar: I wonder if we should say that the ordering
+     may be dependent on the implementation-defined attributes.]
+
+*
+     The total ordering is not necessarily the same as the total ordering
+     on the integers produced by applying char-int to the characters.
+
+*
+     While alphabetic_1 standard characters of a given case must obey a
+     partial ordering, they need not be contiguous; it is permissible for
+     uppercase and lowercase characters to be interleaved.  Thus (char<=
+     #\a x #\z) is not a valid way of determining whether or not x is a
+     lowercase character.
+
+Of the standard characters, those which are alphanumeric obey the
+following partial ordering:
+
+      A<B<C<D<E<F<G<H<I<J<K<L<M<N<O<P<Q<R<S<T<U<V<W<X<Y<Z
+      a<b<c<d<e<f<g<h<i<j<k<l<m<n<o<p<q<r<s<t<u<v<w<x<y<z
+      0<1<2<3<4<5<6<7<8<9
+      either 9<A or Z<0
+      either 9<a or z<0
+
+This implies that, for standard characters, alphabetic_1 ordering holds
+within each case (uppercase and lowercase), and that the numeric
+characters as a group are not interleaved with alphabetic characters.
+However, the ordering or possible interleaving of uppercase characters and
+lowercase characters is implementation-defined.
+
+
+File: gcl.info,  Node: Character Names,  Next: Treatment of Newline during Input and Output,  Prev: Ordering of Characters,  Up: Character Concepts
+
+Character Names
+---------------
+
+The following character names must be present in all conforming
+implementations:
+
+Newline
+     The character that represents the division between lines.  An
+     implementation must translate between #\Newline, a single-character
+     representation, and whatever external representation(s) may be used.
+
+Space
+     The space or blank character.
+
+The following names are semi-standard; if an implementation supports them,
+they should be used for the described characters and no others.
+
+Rubout
+     The rubout or delete character.
+
+Page
+     The form-feed or page-separator character.
+
+Tab
+     The tabulate character.
+
+Backspace
+     The backspace character.
+
+Return
+     The carriage return character.
+
+Linefeed
+     The line-feed character.
+
+In some implementations, one or more of these character names might denote
+a standard character; for example, #\Linefeed and #\Newline might be the
+same character in some implementations.
+

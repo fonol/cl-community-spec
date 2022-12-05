@@ -1,0 +1,53 @@
+{
+    "name": "logcount",
+    "prev": "logbitp",
+    "next": "logtest",
+    "up": "Numbers Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "logcount"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "logcount",
+                    "text": " integer =>  number-of-on-bits\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "integer",
+                    "desc": "an integer."
+                },
+                {
+                    "name": "number-of-on-bits",
+                    "desc": "a non-negative integer."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Computes and returns the number of bits in the two's-complement binary\nrepresentation of integer that are `on' or `set'.  If integer is negative,\nthe 0 bits are counted; otherwise, the 1 bits are counted.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (logcount 0) =>  0\n      (logcount -1) =>  0\n      (logcount 7) =>  3\n      (logcount  13) =>  3 ;Two's-complement binary: ...0001101\n      (logcount -13) =>  2 ;Two's-complement binary: ...1110011\n      (logcount  30) =>  4 ;Two's-complement binary: ...0011110\n      (logcount -30) =>  4 ;Two's-complement binary: ...1100010\n      (logcount (expt 2 100)) =>  1\n      (logcount (- (expt 2 100))) =>  100\n      (logcount (- (1+ (expt 2 100)))) =>  1\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should signal type-error if its argument is not an integer.\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Even if the implementation does not represent integers internally in two's\ncomplement binary, logcount behaves as if it did.\nThe following identity always holds:\n         (logcount x)\n      == (logcount (- (+ x 1)))\n      == (logcount (lognot x))\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: logcount,  Next: logtest,  Prev: logbitp,  Up: Numbers Dictionary\n\nlogcount                                                         [Function]\n---------------------------------------------------------------------------\n\n`logcount'  integer =>  number-of-on-bits\n\nArguments and Values::\n......................\n\ninteger--an integer.\n\nnumber-of-on-bits--a non-negative integer.\n\nDescription::\n.............\n\nComputes and returns the number of bits in the two's-complement binary\nrepresentation of integer that are `on' or `set'.  If integer is negative,\nthe 0 bits are counted; otherwise, the 1 bits are counted.\n\nExamples::\n..........\n\n      (logcount 0) =>  0\n      (logcount -1) =>  0\n      (logcount 7) =>  3\n      (logcount  13) =>  3 ;Two's-complement binary: ...0001101\n      (logcount -13) =>  2 ;Two's-complement binary: ...1110011\n      (logcount  30) =>  4 ;Two's-complement binary: ...0011110\n      (logcount -30) =>  4 ;Two's-complement binary: ...1100010\n      (logcount (expt 2 100)) =>  1\n      (logcount (- (expt 2 100))) =>  100\n      (logcount (- (1+ (expt 2 100)))) =>  1\n\nExceptional Situations::\n........................\n\nShould signal type-error if its argument is not an integer.\n\nNotes::\n.......\n\nEven if the implementation does not represent integers internally in two's\ncomplement binary, logcount behaves as if it did.\n\nThe following identity always holds:\n\n         (logcount x)\n      == (logcount (- (+ x 1)))\n      == (logcount (lognot x))\n\n"
+}

@@ -1,0 +1,93 @@
+{
+    "name": "rassoc",
+    "prev": "pairlis",
+    "next": "get-properties",
+    "up": "Conses Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "rassoc, rassoc-if, rassoc-if-not"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "rassoc",
+                    "text": " item      alist  &key key test test-not =>  entry\n"
+                },
+                {
+                    "name": "rassoc-if",
+                    "text": " predicate alist &key key =>  entry\n\n"
+                },
+                {
+                    "name": "rassoc-if-not",
+                    "text": " predicate alist &key key =>  entry\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "item",
+                    "desc": "an object."
+                },
+                {
+                    "name": "alist",
+                    "desc": "an association list."
+                },
+                {
+                    "name": "predicate",
+                    "desc": "a designator for a function of one argument that returns a"
+                },
+                {
+                    "name": "predicate",
+                    "desc": "a designator for a function of one argument that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "entry",
+                    "desc": "a cons that is an element of the alist, or nil."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "rassoc, rassoc-if, and rassoc-if-not return the first cons whose cdr\nsatisfies the test.  If no such cons is found, nil is returned.\nIf nil appears in alist in place of a pair, it is  ignored.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq alist '((1 . \"one\") (2 . \"two\") (3 . 3)))\n     =>  ((1 . \"one\") (2 . \"two\") (3 . 3))\n      (rassoc 3 alist) =>  (3 . 3)\n      (rassoc \"two\" alist) =>  NIL\n      (rassoc \"two\" alist :test 'equal) =>  (2 . \"two\")\n      (rassoc 1 alist :key #'(lambda (x) (if (numberp x) (/ x 3)))) =>  (3 . 3)\n      (rassoc 'a '((a . b) (b . c) (c . a) (z . a))) =>  (C . A)\n      (rassoc-if #'stringp alist) =>  (1 . \"one\")\n      (rassoc-if-not #'vectorp alist) =>  (3 . 3)\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note assoc; assoc-if; assoc-if-not:: ,\n*Note Traversal Rules and Side Effects::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The :test-not parameter is deprecated.\nThe function rassoc-if-not is deprecated.\nIt is possible to rplaca the result of rassoc, provided that it is not\nnil, in order to \"update\" alist.\nThe expressions\n      (rassoc item list :test fn)\nand\n      (find item list :test fn :key #'cdr)\nare equivalent in meaning, except when the item is nil and nil appears in\nplace of a pair in the alist.  See the function assoc.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: rassoc,  Next: get-properties,  Prev: pairlis,  Up: Conses Dictionary\n\nrassoc, rassoc-if, rassoc-if-not                                 [Function]\n---------------------------------------------------------------------------\n\n`rassoc'  item      alist  &key key test test-not =>  entry\n\n`rassoc-if'  predicate alist &key key =>  entry\n\n`rassoc-if-not'  predicate alist &key key =>  entry\n\nArguments and Values::\n......................\n\nitem--an object.\n\nalist--an association list.\n\npredicate--a designator for a function of one argument that returns a\ngeneralized boolean.\n\ntest--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\ntest-not--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nkey--a designator for a function of one argument, or nil.\n\nentry--a cons that is an element of the alist, or nil.\n\nDescription::\n.............\n\nrassoc, rassoc-if, and rassoc-if-not return the first cons whose cdr\nsatisfies the test.  If no such cons is found, nil is returned.\n\nIf nil appears in alist in place of a pair, it is  ignored.\n\nExamples::\n..........\n\n      (setq alist '((1 . \"one\") (2 . \"two\") (3 . 3)))\n     =>  ((1 . \"one\") (2 . \"two\") (3 . 3))\n      (rassoc 3 alist) =>  (3 . 3)\n      (rassoc \"two\" alist) =>  NIL\n      (rassoc \"two\" alist :test 'equal) =>  (2 . \"two\")\n      (rassoc 1 alist :key #'(lambda (x) (if (numberp x) (/ x 3)))) =>  (3 . 3)\n      (rassoc 'a '((a . b) (b . c) (c . a) (z . a))) =>  (C . A)\n      (rassoc-if #'stringp alist) =>  (1 . \"one\")\n      (rassoc-if-not #'vectorp alist) =>  (3 . 3)\n\nSee Also::\n..........\n\n*Note assoc; assoc-if; assoc-if-not:: ,\n\n*Note Traversal Rules and Side Effects::\n\nNotes::\n.......\n\nThe :test-not parameter is deprecated.\n\nThe function rassoc-if-not is deprecated.\n\nIt is possible to rplaca the result of rassoc, provided that it is not\nnil, in order to \"update\" alist.\n\nThe expressions\n\n      (rassoc item list :test fn)\n\nand\n\n      (find item list :test fn :key #'cdr)\n\nare equivalent in meaning, except when the item is nil and nil appears in\nplace of a pair in the alist.  See the function assoc.\n\n"
+}

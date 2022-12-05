@@ -1,0 +1,57 @@
+{
+    "name": "decode-universal-time",
+    "prev": "Environment Dictionary",
+    "next": "encode-universal-time",
+    "up": "Environment Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "decode-universal-time"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "decode-universal-time",
+                    "text": " universal-time &optional time-zone=>  second, minute, hour, date, month, year, day, daylight-p, zone\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "universal-time",
+                    "desc": "a universal time."
+                },
+                {
+                    "name": "time-zone",
+                    "desc": "a time zone."
+                },
+                {
+                    "name": "second, minute, hour, date, month, year, day, daylight-p, zone",
+                    "desc": "a decoded"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns the decoded time represented by the given universal time.\nIf time-zone is not supplied, it defaults to the current time zone\nadjusted for daylight saving time.\nIf time-zone is supplied, daylight saving time information is ignored.\nThe daylight saving time flag is nil if time-zone is supplied.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (decode-universal-time 0 0) =>  0, 0, 0, 1, 1, 1900, 0, false, 0\n     ;; The next two examples assume Eastern Daylight Time.\n      (decode-universal-time 2414296800 5) =>  0, 0, 1, 4, 7, 1976, 6, false, 5\n      (decode-universal-time 2414293200) =>  0, 0, 1, 4, 7, 1976, 6, true, 5\n     ;; This example assumes that the time zone is Eastern Daylight Time\n     ;; (and that the time zone is constant throughout the example).\n      (let* ((here (nth 8 (multiple-value-list (get-decoded-time)))) ;Time zone\n             (recently (get-universal-time))\n             (a (nthcdr 7 (multiple-value-list (decode-universal-time recently))))\n             (b (nthcdr 7 (multiple-value-list (decode-universal-time recently here)))))\n        (list a b (equal a b))) =>  ((T 5) (NIL 5) NIL)\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "Implementation-dependent mechanisms for calculating when or if daylight\nsavings time is in effect for any given session.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note encode-universal-time:: , *Note get-universal-time;\nget-decoded-time:: , *Note Time::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: decode-universal-time,  Next: encode-universal-time,  Prev: Environment Dictionary,  Up: Environment Dictionary\n\ndecode-universal-time                                            [Function]\n---------------------------------------------------------------------------\n\n`decode-universal-time'  universal-time &optional time-zone\n=>  second, minute, hour, date, month, year, day, daylight-p, zone\n\nArguments and Values::\n......................\n\nuniversal-time--a universal time.\n\ntime-zone--a time zone.\n\nsecond, minute, hour, date, month, year, day, daylight-p, zone--a decoded\ntime.\n\nDescription::\n.............\n\nReturns the decoded time represented by the given universal time.\n\nIf time-zone is not supplied, it defaults to the current time zone\nadjusted for daylight saving time.\n\nIf time-zone is supplied, daylight saving time information is ignored.\nThe daylight saving time flag is nil if time-zone is supplied.\n\nExamples::\n..........\n\n      (decode-universal-time 0 0) =>  0, 0, 0, 1, 1, 1900, 0, false, 0\n     \n     ;; The next two examples assume Eastern Daylight Time.\n      (decode-universal-time 2414296800 5) =>  0, 0, 1, 4, 7, 1976, 6, false, 5\n      (decode-universal-time 2414293200) =>  0, 0, 1, 4, 7, 1976, 6, true, 5\n     \n     ;; This example assumes that the time zone is Eastern Daylight Time\n     ;; (and that the time zone is constant throughout the example).\n      (let* ((here (nth 8 (multiple-value-list (get-decoded-time)))) ;Time zone\n             (recently (get-universal-time))\n             (a (nthcdr 7 (multiple-value-list (decode-universal-time recently))))\n             (b (nthcdr 7 (multiple-value-list (decode-universal-time recently here)))))\n        (list a b (equal a b))) =>  ((T 5) (NIL 5) NIL)\n\nAffected By::\n.............\n\nImplementation-dependent mechanisms for calculating when or if daylight\nsavings time is in effect for any given session.\n\nSee Also::\n..........\n\n*Note encode-universal-time:: , *Note get-universal-time;\nget-decoded-time:: , *Note Time::\n\n"
+}

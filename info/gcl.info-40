@@ -1,0 +1,1463 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: merge,  Next: remove,  Prev: concatenate,  Up: Sequences Dictionary
+
+merge                                                            [Function]
+---------------------------------------------------------------------------
+
+`merge'  result-type sequence-1 sequence-2 predicate &key key =>
+result-sequence
+
+Arguments and Values::
+......................
+
+result-type--a sequence type specifier.
+
+sequence-1--a sequence.
+
+sequence-2--a sequence.
+
+predicate--a designator for a function of two arguments that returns a
+generalized boolean.
+
+key--a designator for a function of one argument, or nil.
+
+result-sequence--a proper sequence of type result-type.
+
+Description::
+.............
+
+Destructively merges sequence-1 with sequence-2 according to an order
+determined by the predicate.  merge determines the relationship between
+two elements by giving keys extracted from the sequence elements to the
+predicate.
+
+The first argument to the predicate function is an element of sequence-1
+as returned by the key (if supplied); the second argument is an element of
+sequence-2 as returned by the key (if supplied).  Predicate should return
+true if and only if its first argument is strictly less than the second
+(in some appropriate sense).  If the first argument is greater than or
+equal to the second (in the appropriate sense), then predicate should
+return false.  merge considers two elements x and y to be equal if
+(funcall predicate x y) and (funcall predicate y x) both yield false.
+
+The argument to the key is the sequence element.  Typically, the return
+value of the key becomes the argument to predicate.  If key is not
+supplied or nil, the sequence element itself is used.  The key may be
+executed more than once for each sequence element, and its side effects
+may occur in any order.
+
+If key and predicate return, then the merging operation will terminate.
+The result of merging two sequences x and y is a new sequence of type
+result-type z, such that the length of z is the sum of the lengths of x
+and y, and z contains all the elements of x and y.  If x1 and x2 are two
+elements of x, and x1 precedes x2 in x, then x1 precedes x2 in z, and
+similarly for elements of y.  In short, z is an interleaving of x and y.
+
+If x and y were correctly sorted according to the predicate, then z will
+also be correctly sorted.  If x or y is not so sorted, then z will not be
+sorted, but will nevertheless be an interleaving of x and y.
+
+The merging operation is guaranteed stable; if two or more elements are
+considered equal by the predicate, then the elements from sequence-1 will
+precede those from sequence-2 in the result.
+
+sequence-1 and/or sequence-2 may be destroyed.
+
+If the result-type is a subtype of list, the result will be a list.
+
+If the result-type is a subtype of vector, then if the implementation can
+determine the element type specified for the result-type, the element type
+of the resulting array is the result of upgrading that element type; or,
+if the implementation can determine that the element type is unspecified
+(or *), the element type of the resulting array is t; otherwise, an error
+is signaled.
+
+Examples::
+..........
+
+      (setq test1 (list 1 3 4 6 7))
+      (setq test2 (list 2 5 8))
+      (merge 'list test1 test2 #'<) =>  (1 2 3 4 5 6 7 8)
+      (setq test1 (copy-seq "BOY"))
+      (setq test2 (copy-seq :nosy"))
+      (merge 'string test1 test2 #'char-lessp) =>  "BnOosYy"
+      (setq test1 (vector ((red . 1) (blue . 4))))
+      (setq test2 (vector ((yellow . 2) (green . 7))))
+      (merge 'vector test1 test2 #'< :key #'cdr)
+     =>  #((RED . 1) (YELLOW . 2) (BLUE . 4) (GREEN . 7))
+
+      (merge '(vector * 4) '(1 5) '(2 4 6) #'<) should signal an error
+
+Exceptional Situations::
+........................
+
+An error must be signaled if the result-type is neither a recognizable
+subtype of list, nor a recognizable subtype of vector.
+
+An error of type type-error should be signaled if result-type specifies
+the number of elements and the sum of the lengths of sequence-1 and
+sequence-2 is different from that number.
+
+See Also::
+..........
+
+*Note sort; stable-sort:: , stable-sort,
+
+*Note Compiler Terminology::,
+
+*Note Traversal Rules and Side Effects::
+
+
+File: gcl.info,  Node: remove,  Next: remove-duplicates,  Prev: merge,  Up: Sequences Dictionary
+
+remove, remove-if, remove-if-not,
+---------------------------------
+
+delete, delete-if, delete-if-not
+--------------------------------
+
+                                                                [Function]
+
+`remove'  item sequence &key from-end test test-not start end count key =>
+result-sequence
+
+`remove-if'  test sequence &key from-end start end count key =>
+result-sequence
+
+`remove-if-not'  test sequence &key from-end start end count key =>
+result-sequence
+
+`delete'  item sequence &key from-end test test-not start end count key =>
+result-sequence
+
+`delete-if'  test sequence &key from-end start end count key =>
+result-sequence
+
+`delete-if-not'  test sequence &key from-end start end count key =>
+result-sequence
+
+Arguments and Values::
+......................
+
+item--an object.
+
+sequence--a proper sequence.
+
+test--a designator for a function of one argument that returns a
+generalized boolean.
+
+from-end--a generalized boolean.  The default is false.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+start, end--bounding index designators of sequence.  The defaults for
+start and end are 0 and nil, respectively.
+
+count--an integer or nil.
+
+The default is nil.
+
+key--a designator for a function of one argument, or nil.
+
+result-sequence--a sequence.
+
+Description::
+.............
+
+remove, remove-if, and remove-if-not return a sequence from which the
+elements that satisfy the test have been removed.
+
+delete, delete-if, and delete-if-not are like remove, remove-if, and
+remove-if-not respectively, but they may modify sequence.
+
+If sequence is a vector, the result is a vector that has the same actual
+array element type as sequence.  The result might or might not be simple,
+and might or might not be identical to sequence.  If sequence is a list,
+the result is a list.
+
+Supplying a from-end of true matters only when the count is provided; in
+that case only the rightmost count elements satisfying the test are
+deleted.
+
+Count, if supplied, limits the number of elements removed or deleted; if
+more than count elements satisfy the test, then of these elements only the
+leftmost or rightmost, depending on from-end, are deleted or removed, as
+many as specified by count.
+
+If count is supplied and negative, the behavior is as if zero had been
+supplied instead.
+
+If count is nil, all matching items are affected.
+
+For all these functions, elements not removed or deleted occur in the same
+order in the result as they did in sequence.
+
+remove, remove-if, remove-if-not return a sequence of the same type as
+sequence that has the same elements except that those in the subsequence
+bounded by start and end and satisfying the test have been removed.  This
+is a non-destructive operation. If any elements need to be removed, the
+result will be a copy.  The result of remove may share with sequence; the
+result may be identical to the input sequence if no elements need to be
+removed.
+
+delete, delete-if, and delete-if-not return a sequence of the same type as
+sequence that has the same elements except that those in the subsequence
+bounded by start and end and satisfying the test have been deleted.
+Sequence may be destroyed and used to construct the result; however, the
+result might or might not be identical to sequence.
+
+delete, when sequence is a list, is permitted to setf any part, car or
+cdr, of the top-level list structure in that sequence.  When sequence is a
+vector,  delete is permitted to change the dimensions of the vector and to
+slide its elements into new positions without permuting them to produce
+the resulting vector.
+
+delete-if is constrained to behave exactly as follows:
+
+      (delete nil sequence
+                  :test #'(lambda (ignore item) (funcall test item))
+                  ...)
+
+Examples::
+..........
+
+      (remove 4 '(1 3 4 5 9)) =>  (1 3 5 9)
+      (remove 4 '(1 2 4 1 3 4 5)) =>  (1 2 1 3 5)
+      (remove 4 '(1 2 4 1 3 4 5) :count 1) =>  (1 2 1 3 4 5)
+      (remove 4 '(1 2 4 1 3 4 5) :count 1 :from-end t) =>  (1 2 4 1 3 5)
+      (remove 3 '(1 2 4 1 3 4 5) :test #'>) =>  (4 3 4 5)
+      (setq lst '(list of four elements)) =>  (LIST OF FOUR ELEMENTS)
+      (setq lst2 (copy-seq lst)) =>  (LIST OF FOUR ELEMENTS)
+      (setq lst3 (delete 'four lst)) =>  (LIST OF ELEMENTS)
+      (equal lst lst2) =>  false
+      (remove-if #'oddp '(1 2 4 1 3 4 5)) =>  (2 4 4)
+      (remove-if #'evenp '(1 2 4 1 3 4 5) :count 1 :from-end t)
+     =>  (1 2 4 1 3 5)
+      (remove-if-not #'evenp '(1 2 3 4 5 6 7 8 9) :count 2 :from-end t)
+     =>  (1 2 3 4 5 6 8)
+      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)
+      (delete 4 tester) =>  (1 2 1 3 5)
+      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)
+      (delete 4 tester :count 1) =>  (1 2 1 3 4 5)
+      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)
+      (delete 4 tester :count 1 :from-end t) =>  (1 2 4 1 3 5)
+      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)
+      (delete 3 tester :test #'>) =>  (4 3 4 5)
+      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)
+      (delete-if #'oddp tester) =>  (2 4 4)
+      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)
+      (delete-if #'evenp tester :count 1 :from-end t) =>  (1 2 4 1 3 5)
+      (setq tester (list 1 2 3 4 5 6)) =>  (1 2 3 4 5 6)
+      (delete-if #'evenp tester) =>  (1 3 5)
+      tester =>  implementation-dependent
+
+      (setq foo (list 'a 'b 'c)) =>  (A B C)
+      (setq bar (cdr foo)) =>  (B C)
+      (setq foo (delete 'b foo)) =>  (A C)
+      bar =>  ((C)) or ...
+      (eq (cdr foo) (car bar)) =>  T or ...
+
+Side Effects::
+..............
+
+For delete, delete-if, and delete-if-not, sequence may be destroyed and
+used to construct the result.
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if sequence is
+not a proper sequence.
+
+See Also::
+..........
+
+*Note Compiler Terminology::,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not argument is deprecated.
+
+The functions delete-if-not and remove-if-not are deprecated.
+
+
+File: gcl.info,  Node: remove-duplicates,  Prev: remove,  Up: Sequences Dictionary
+
+remove-duplicates, delete-duplicates                             [Function]
+---------------------------------------------------------------------------
+
+`remove-duplicates'  sequence &key from-end test test-not start end key
+=>  result-sequence
+
+`delete-duplicates'  sequence &key from-end test test-not start end key
+=>  result-sequence
+
+Arguments and Values::
+......................
+
+sequence--a proper sequence.
+
+from-end--a generalized boolean.  The default is false.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+start, end--bounding index designators of sequence.  The defaults for
+start and end are 0 and nil, respectively.
+
+key--a designator for a function of one argument, or nil.
+
+result-sequence--a sequence.
+
+Description::
+.............
+
+remove-duplicates returns a modified copy of sequence from which any
+element that matches another element occurring in sequence has been
+removed.
+
+If sequence is a vector, the result is a vector that has the same actual
+array element type as sequence.  The result might or might not be simple,
+and might or might not be identical to sequence.  If sequence is a list,
+the result is a list.
+
+delete-duplicates is like remove-duplicates, but delete-duplicates may
+modify sequence.
+
+The elements of sequence are compared pairwise, and if any two match, then
+the one occurring earlier in sequence is discarded, unless from-end is
+true, in which case the one later in sequence is discarded.
+
+remove-duplicates and delete-duplicates return a sequence of the same type
+as sequence with enough elements removed so that no two of the remaining
+elements match.  The order of the elements remaining in the result is the
+same as the order in which they appear in sequence.
+
+remove-duplicates returns a sequence that may share with sequence or may
+be identical to sequence if no elements need to be removed.
+
+delete-duplicates, when sequence is a list, is permitted to setf any part,
+car or cdr, of the top-level list structure in that sequence.  When
+sequence is a vector, delete-duplicates is permitted to change the
+dimensions of the vector and to slide its elements into new positions
+without permuting them to produce the resulting vector.
+
+Examples::
+..........
+
+      (remove-duplicates "aBcDAbCd" :test #'char-equal :from-end t) =>  "aBcD"
+      (remove-duplicates '(a b c b d d e)) =>  (A C B D E)
+      (remove-duplicates '(a b c b d d e) :from-end t) =>  (A B C D E)
+      (remove-duplicates '((foo #\a) (bar #\%) (baz #\A))
+          :test #'char-equal :key #'cadr) =>  ((BAR #\%) (BAZ #\A))
+      (remove-duplicates '((foo #\a) (bar #\%) (baz #\A))
+          :test #'char-equal :key #'cadr :from-end t) =>  ((FOO #\a) (BAR #\%))
+      (setq tester (list 0 1 2 3 4 5 6))
+      (delete-duplicates tester :key #'oddp :start 1 :end 6) =>  (0 4 5 6)
+
+Side Effects::
+..............
+
+delete-duplicates might destructively modify sequence.
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if sequence is not a proper
+sequence.
+
+See Also::
+..........
+
+*Note Compiler Terminology::,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not argument is deprecated.
+
+These functions are useful for converting sequence into a canonical form
+suitable for representing a set.
+
+
+File: gcl.info,  Node: Hash Tables,  Next: Filenames,  Prev: Sequences,  Up: Top
+
+Hash Tables
+***********
+
+* Menu:
+
+* Hash Table Concepts::
+* Hash Tables Dictionary::
+
+
+File: gcl.info,  Node: Hash Table Concepts,  Next: Hash Tables Dictionary,  Prev: Hash Tables,  Up: Hash Tables
+
+Hash Table Concepts
+===================
+
+* Menu:
+
+* Hash-Table Operations::
+* Modifying Hash Table Keys::
+
+
+File: gcl.info,  Node: Hash-Table Operations,  Next: Modifying Hash Table Keys,  Prev: Hash Table Concepts,  Up: Hash Table Concepts
+
+Hash-Table Operations
+---------------------
+
+Figure 18-1 lists some defined names that are applicable to hash tables.
+The following rules apply to hash tables.
+
+-
+     A hash table can only associate one value with a given key. If an
+     attempt is made to add a second value for a given key, the second
+     value will replace the first.  Thus, adding a value to a hash table
+     is a destructive operation; the hash table is modified.
+
+-
+     There are four kinds of hash tables: those whose keys are compared
+     with eq, those whose keys are compared with eql, those whose keys are
+     compared with equal, and
+
+     those whose keys are compared with equalp.
+
+-
+     Hash tables are created by make-hash-table.  gethash is used to look
+     up a key and find the associated value.  New entries are added to
+     hash tables using setf with gethash.  remhash is used to remove an
+     entry.  For example:
+
+           (setq a (make-hash-table)) =>  #<HASH-TABLE EQL 0/120 32536573>
+           (setf (gethash 'color a) 'brown) =>  BROWN
+           (setf (gethash 'name a) 'fred) =>  FRED
+           (gethash 'color a) =>  BROWN, true
+           (gethash 'name a) =>  FRED, true
+           (gethash 'pointy a) =>  NIL, false
+
+     In this example, the symbols color and name are being used as keys,
+     and the symbols brown and fred are being used as the associated
+     values.  The hash table has two items in it, one of which associates
+     from color to brown, and the other of which associates from name to
+     fred.
+
+-
+     A key or a value may be any object.
+
+-
+     The existence of an entry in the hash table can be determined from
+     the secondary value returned by gethash.
+
+  clrhash           hash-table-p     remhash  
+  gethash           make-hash-table  sxhash   
+  hash-table-count  maphash                   
+
+     Figure 18-1: Hash-table defined names   
+
+
+
+File: gcl.info,  Node: Modifying Hash Table Keys,  Prev: Hash-Table Operations,  Up: Hash Table Concepts
+
+Modifying Hash Table Keys
+-------------------------
+
+The function supplied as the :test argument to make-hash-table specifies
+the `equivalence test' for the hash table it creates.
+
+An object is `visibly modified' with regard to an equivalence test if
+there exists some set of objects (or potential objects) which are
+equivalent to the object before the modification but are no longer
+equivalent afterwards.
+
+If an object O_1 is used as a key in a hash table H and is then visibly
+modified with regard to the equivalence test of H, then the consequences
+are unspecified if O_1, or any object O_2 equivalent to O_1 under the
+equivalence test (either before or after the modification), is used as a
+key in further operations on H.  The consequences of using O_1 as a key
+are unspecified even if O_1 is visibly modified and then later modified
+again in such a way as to undo the visible modification.
+
+Following are specifications of the modifications which are visible to the
+equivalence tests which must be supported by hash tables.  The
+modifications are described in terms of modification of components, and
+are defined recursively.  Visible modifications of components of the
+object are visible modifications of the object.
+
+* Menu:
+
+* Visible Modification of Objects with respect to EQ and EQL::
+* Visible Modification of Objects with respect to EQUAL::
+* Visible Modification of Conses with respect to EQUAL::
+* Visible Modification of Bit Vectors and Strings with respect to EQUAL::
+* Visible Modification of Objects with respect to EQUALP::
+* Visible Modification of Structures with respect to EQUALP::
+* Visible Modification of Arrays with respect to EQUALP::
+* Visible Modification of Hash Tables with respect to EQUALP::
+* Visible Modifications by Language Extensions::
+
+
+File: gcl.info,  Node: Visible Modification of Objects with respect to EQ and EQL,  Next: Visible Modification of Objects with respect to EQUAL,  Prev: Modifying Hash Table Keys,  Up: Modifying Hash Table Keys
+
+Visible Modification of Objects with respect to EQ and EQL
+..........................................................
+
+No standardized function is provided that is capable of visibly modifying
+an object with regard to eq or eql.
+
+
+File: gcl.info,  Node: Visible Modification of Objects with respect to EQUAL,  Next: Visible Modification of Conses with respect to EQUAL,  Prev: Visible Modification of Objects with respect to EQ and EQL,  Up: Modifying Hash Table Keys
+
+Visible Modification of Objects with respect to EQUAL
+.....................................................
+
+As a consequence of the behavior for equal, the rules for visible
+modification of objects not explicitly mentioned in this section are
+inherited from those in *Note Visible Modification of Objects with respect
+to EQ and EQL::.
+
+
+File: gcl.info,  Node: Visible Modification of Conses with respect to EQUAL,  Next: Visible Modification of Bit Vectors and Strings with respect to EQUAL,  Prev: Visible Modification of Objects with respect to EQUAL,  Up: Modifying Hash Table Keys
+
+Visible Modification of Conses with respect to EQUAL
+....................................................
+
+Any visible change to the car or the cdr of a cons is considered a visible
+modification with regard to equal.
+
+
+File: gcl.info,  Node: Visible Modification of Bit Vectors and Strings with respect to EQUAL,  Next: Visible Modification of Objects with respect to EQUALP,  Prev: Visible Modification of Conses with respect to EQUAL,  Up: Modifying Hash Table Keys
+
+Visible Modification of Bit Vectors and Strings with respect to EQUAL
+.....................................................................
+
+For a vector of type bit-vector or of type string, any visible change to
+an active element of the vector, or to the length of the vector (if it is
+actually adjustable or has a fill pointer) is considered a visible
+modification with regard to equal.
+
+
+File: gcl.info,  Node: Visible Modification of Objects with respect to EQUALP,  Next: Visible Modification of Structures with respect to EQUALP,  Prev: Visible Modification of Bit Vectors and Strings with respect to EQUAL,  Up: Modifying Hash Table Keys
+
+Visible Modification of Objects with respect to EQUALP
+......................................................
+
+As a consequence of the behavior for equalp, the rules for visible
+modification of objects not explicitly mentioned in this section are
+inherited from those in *Note Visible Modification of Objects with respect
+to EQUAL::.
+
+
+File: gcl.info,  Node: Visible Modification of Structures with respect to EQUALP,  Next: Visible Modification of Arrays with respect to EQUALP,  Prev: Visible Modification of Objects with respect to EQUALP,  Up: Modifying Hash Table Keys
+
+Visible Modification of Structures with respect to EQUALP
+.........................................................
+
+Any visible change to a slot of a structure is considered a visible
+modification with regard to equalp.
+
+
+File: gcl.info,  Node: Visible Modification of Arrays with respect to EQUALP,  Next: Visible Modification of Hash Tables with respect to EQUALP,  Prev: Visible Modification of Structures with respect to EQUALP,  Up: Modifying Hash Table Keys
+
+Visible Modification of Arrays with respect to EQUALP
+.....................................................
+
+In an array, any visible change to an active element, to the fill pointer
+(if the array can and does have one), or to the dimensions (if the array
+is actually adjustable) is considered a visible modification with regard
+to equalp.
+
+
+File: gcl.info,  Node: Visible Modification of Hash Tables with respect to EQUALP,  Next: Visible Modifications by Language Extensions,  Prev: Visible Modification of Arrays with respect to EQUALP,  Up: Modifying Hash Table Keys
+
+Visible Modification of Hash Tables with respect to EQUALP
+..........................................................
+
+In a hash table, any visible change to the count of entries in the hash
+table, to the keys, or to the values associated with the keys is
+considered a visible modification with regard to equalp.
+
+Note that the visibility of modifications to the keys depends on the
+equivalence test of the hash table, not on the specification of equalp.
+
+
+File: gcl.info,  Node: Visible Modifications by Language Extensions,  Prev: Visible Modification of Hash Tables with respect to EQUALP,  Up: Modifying Hash Table Keys
+
+Visible Modifications by Language Extensions
+............................................
+
+Implementations that extend the language by providing additional mutator
+functions (or additional behavior for existing mutator functions) must
+document how the use of these extensions interacts with equivalence tests
+and hash table searches.
+
+Implementations that extend the language by defining additional acceptable
+equivalence tests for hash tables (allowing additional values for the :test
+argument to make-hash-table) must document the visible components of these
+tests.
+
+
+File: gcl.info,  Node: Hash Tables Dictionary,  Prev: Hash Table Concepts,  Up: Hash Tables
+
+Hash Tables Dictionary
+======================
+
+* Menu:
+
+* hash-table::
+* make-hash-table::
+* hash-table-p::
+* hash-table-count::
+* hash-table-rehash-size::
+* hash-table-rehash-threshold::
+* hash-table-size::
+* hash-table-test::
+* gethash::
+* remhash::
+* maphash::
+* with-hash-table-iterator::
+* clrhash::
+* sxhash::
+
+
+File: gcl.info,  Node: hash-table,  Next: make-hash-table,  Prev: Hash Tables Dictionary,  Up: Hash Tables Dictionary
+
+hash-table                                                   [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+hash-table, t
+
+Description::
+.............
+
+Hash tables provide a way of mapping any object (a key) to an associated
+object (a value).
+
+See Also::
+..........
+
+*Note Hash Table Concepts::, *Note Printing Other Objects::
+
+Notes::
+.......
+
+The intent is that this mapping be implemented by a hashing mechanism,
+such as that described in Section 6.4 "Hashing" of The Art of Computer
+Programming, Volume 3 (pp506-549).  In spite of this intent, no conforming
+implementation is required to use any particular technique to implement
+the mapping.
+
+
+File: gcl.info,  Node: make-hash-table,  Next: hash-table-p,  Prev: hash-table,  Up: Hash Tables Dictionary
+
+make-hash-table                                                  [Function]
+---------------------------------------------------------------------------
+
+`make-hash-table'  &key test size rehash-size rehash-threshold =>
+hash-table
+
+Arguments and Values::
+......................
+
+test--a designator for one of the functions eq, eql, equal, or
+
+equalp.
+
+The default is eql.
+
+size--a non-negative integer.
+
+The default is implementation-dependent.
+
+rehash-size--a real of type (or (integer 1 *) (float (1.0) *)).  The
+default is implementation-dependent.
+
+rehash-threshold--a real of type (real 0 1).  The default is
+implementation-dependent.
+
+hash-table--a hash table.
+
+Description::
+.............
+
+Creates and returns a new hash table.
+
+test determines how keys are compared.  An object is said to be present in
+the hash-table if that object is the same under the test as the key for
+some entry in the hash-table.
+
+size is a hint to the implementation about how much initial space to
+allocate in the hash-table.
+
+This information, taken together with the rehash-threshold, controls the
+approximate number of entries which it should be possible to insert before
+the table has to grow.
+
+The actual size might be rounded up from size to the next `good' size; for
+example, some implementations might round to the next prime number.
+
+rehash-size specifies a minimum amount to increase the size of the
+hash-table when it becomes full enough to require rehashing; see
+rehash-theshold below.
+
+If rehash-size is an integer, the expected growth rate for the table is
+additive and the integer is the number of entries to add; if it is a float,
+the expected growth rate for the table is multiplicative and the float is
+the ratio of the new size to the old size.
+
+As with size, the actual size of the increase might be rounded up.
+
+rehash-threshold specifies how full the hash-table can get before it must
+grow.
+
+It specifies the maximum desired hash-table occupancy level.
+
+The values of rehash-size and rehash-threshold do not constrain the
+implementation to use any particular method for computing when and by how
+much the size of hash-table should be enlarged.  Such decisions are
+implementation-dependent, and these values only hints from the programmer
+to the implementation, and the implementation is permitted to ignore them.
+
+Examples::
+..........
+
+      (setq table (make-hash-table)) =>  #<HASH-TABLE EQL 0/120 46142754>
+      (setf (gethash "one" table) 1) =>  1
+      (gethash "one" table) =>  NIL, false
+      (setq table (make-hash-table :test 'equal)) =>  #<HASH-TABLE EQUAL 0/139 46145547>
+      (setf (gethash "one" table) 1) =>  1
+      (gethash "one" table) =>  1, T
+      (make-hash-table :rehash-size 1.5 :rehash-threshold 0.7)
+     =>  #<HASH-TABLE EQL 0/120 46156620>
+
+See Also::
+..........
+
+*Note gethash:: , hash-table
+
+
+File: gcl.info,  Node: hash-table-p,  Next: hash-table-count,  Prev: make-hash-table,  Up: Hash Tables Dictionary
+
+hash-table-p                                                     [Function]
+---------------------------------------------------------------------------
+
+`hash-table-p'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type hash-table; otherwise, returns false.
+
+Examples::
+..........
+
+      (setq table (make-hash-table)) =>  #<HASH-TABLE EQL 0/120 32511220>
+      (hash-table-p table) =>  true
+      (hash-table-p 37) =>  false
+      (hash-table-p '((a . 1) (b . 2))) =>  false
+
+Notes::
+.......
+
+      (hash-table-p object) == (typep object 'hash-table)
+
+
+File: gcl.info,  Node: hash-table-count,  Next: hash-table-rehash-size,  Prev: hash-table-p,  Up: Hash Tables Dictionary
+
+hash-table-count                                                 [Function]
+---------------------------------------------------------------------------
+
+`hash-table-count'  hash-table =>  count
+
+Arguments and Values::
+......................
+
+hash-table--a hash table.
+
+count--a non-negative integer.
+
+Description::
+.............
+
+Returns the number of entries in the hash-table.  If hash-table has just
+been created or newly cleared (see clrhash) the entry count is 0.
+
+Examples::
+..........
+
+      (setq table (make-hash-table)) =>  #<HASH-TABLE EQL 0/120 32115135>
+      (hash-table-count table) =>  0
+      (setf (gethash 57 table) "fifty-seven") =>  "fifty-seven"
+      (hash-table-count table) =>  1
+      (dotimes (i 100) (setf (gethash i table) i)) =>  NIL
+      (hash-table-count table) =>  100
+
+Affected By::
+.............
+
+clrhash, remhash, setf of gethash
+
+See Also::
+..........
+
+*Note hash-table-size::
+
+Notes::
+.......
+
+The following relationships are functionally correct, although in practice
+using hash-table-count is probably much faster:
+
+      (hash-table-count table) ==
+      (loop for value being the hash-values of table count t) ==
+      (let ((total 0))
+        (maphash #'(lambda (key value)
+                     (declare (ignore key value))
+                     (incf total))
+                 table)
+        total)
+
+
+File: gcl.info,  Node: hash-table-rehash-size,  Next: hash-table-rehash-threshold,  Prev: hash-table-count,  Up: Hash Tables Dictionary
+
+hash-table-rehash-size                                           [Function]
+---------------------------------------------------------------------------
+
+`hash-table-rehash-size'  hash-table =>  rehash-size
+
+Arguments and Values::
+......................
+
+hash-table--a hash table.
+
+rehash-size--a real of type (or (integer 1 *) (float (1.0) *)).
+
+Description::
+.............
+
+Returns the current rehash size of hash-table, suitable for use in a call
+to make-hash-table in order to produce a hash table with state
+corresponding to the current state of the hash-table.
+
+Examples::
+..........
+
+      (setq table (make-hash-table :size 100 :rehash-size 1.4))
+     =>  #<HASH-TABLE EQL 0/100 2556371>
+      (hash-table-rehash-size table) =>  1.4
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if hash-table is not a hash
+table.
+
+See Also::
+..........
+
+*Note make-hash-table:: , *Note hash-table-rehash-threshold::
+
+Notes::
+.......
+
+If the hash table was created with an integer rehash size, the result is
+an integer, indicating that the rate of growth of the hash-table when
+rehashed is intended to be additive; otherwise, the result is a float,
+indicating that the rate of growth of the hash-table when rehashed is
+intended to be multiplicative.  However, this value is only advice to the
+implementation; the actual amount by which the hash-table will grow upon
+rehash is implementation-dependent.
+
+
+File: gcl.info,  Node: hash-table-rehash-threshold,  Next: hash-table-size,  Prev: hash-table-rehash-size,  Up: Hash Tables Dictionary
+
+hash-table-rehash-threshold                                      [Function]
+---------------------------------------------------------------------------
+
+`hash-table-rehash-threshold'  hash-table =>  rehash-threshold
+
+Arguments and Values::
+......................
+
+hash-table--a hash table.
+
+rehash-threshold--a real of type (real 0 1).
+
+Description::
+.............
+
+Returns the current rehash threshold of hash-table, which is suitable for
+use in a call to make-hash-table in order to produce a hash table with
+state corresponding to the current state of the hash-table.
+
+Examples::
+..........
+
+      (setq table (make-hash-table :size 100 :rehash-threshold 0.5))
+     =>  #<HASH-TABLE EQL 0/100 2562446>
+      (hash-table-rehash-threshold table) =>  0.5
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if hash-table is not a hash
+table.
+
+See Also::
+..........
+
+*Note make-hash-table:: , *Note hash-table-rehash-size::
+
+
+File: gcl.info,  Node: hash-table-size,  Next: hash-table-test,  Prev: hash-table-rehash-threshold,  Up: Hash Tables Dictionary
+
+hash-table-size                                                  [Function]
+---------------------------------------------------------------------------
+
+`hash-table-size'  hash-table =>  size
+
+Arguments and Values::
+......................
+
+hash-table--a hash table.
+
+size--a non-negative integer.
+
+Description::
+.............
+
+Returns the current size of hash-table, which is suitable for use in a
+call to make-hash-table in order to produce a hash table with state
+corresponding to the current state of the hash-table.
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if hash-table is not a hash
+table.
+
+See Also::
+..........
+
+*Note hash-table-count:: , *Note make-hash-table::
+
+
+File: gcl.info,  Node: hash-table-test,  Next: gethash,  Prev: hash-table-size,  Up: Hash Tables Dictionary
+
+hash-table-test                                                  [Function]
+---------------------------------------------------------------------------
+
+`hash-table-test'  hash-table =>  test
+
+Arguments and Values::
+......................
+
+hash-table--a hash table.
+
+test--a function designator.  For the four standardized hash table test
+functions (see make-hash-table), the test value returned is always a
+symbol.  If an implementation permits additional tests, it is
+implementation-dependent whether such tests are returned as function
+objects or function names.
+
+Description::
+.............
+
+Returns the test used for comparing keys in hash-table.
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if hash-table is not a hash
+table.
+
+See Also::
+..........
+
+*Note make-hash-table::
+
+
+File: gcl.info,  Node: gethash,  Next: remhash,  Prev: hash-table-test,  Up: Hash Tables Dictionary
+
+gethash                                                          [Accessor]
+---------------------------------------------------------------------------
+
+`gethash'  key hash-table &optional default =>  value, present-p
+
+(setf (`         gethash' key hash-table &optional default) new-value)
+Arguments and Values::
+......................
+
+key--an object.
+
+hash-table--a hash table.
+
+default--an object.  The default is nil.
+
+value--an object.
+
+present-p--a generalized boolean.
+
+Description::
+.............
+
+Value is the object in hash-table whose key is the same as key under the
+hash-table's equivalence test.  If there is no such entry, value is the
+default.
+
+Present-p is true if an entry is found; otherwise, it is false.
+
+setf may be used with gethash to modify the value associated with a given
+key, or to add a new entry.
+
+When a gethash form is used as a setf place, any default which is supplied
+is evaluated according to normal left-to-right evaluation rules, but its
+value is ignored.
+
+Examples::
+..........
+
+      (setq table (make-hash-table)) =>  #<HASH-TABLE EQL 0/120 32206334>
+      (gethash 1 table) =>  NIL, false
+      (gethash 1 table 2) =>  2, false
+      (setf (gethash 1 table) "one") =>  "one"
+      (setf (gethash 2 table "two") "two") =>  "two"
+      (gethash 1 table) =>  "one", true
+      (gethash 2 table) =>  "two", true
+      (gethash nil table) =>  NIL, false
+      (setf (gethash nil table) nil) =>  NIL
+      (gethash nil table) =>  NIL, true
+      (defvar *counters* (make-hash-table)) =>  *COUNTERS*
+      (gethash 'foo *counters*) =>  NIL, false
+      (gethash 'foo *counters* 0) =>  0, false
+      (defmacro how-many (obj) `(values (gethash ,obj *counters* 0))) =>  HOW-MANY
+      (defun count-it (obj) (incf (how-many obj))) =>  COUNT-IT
+      (dolist (x '(bar foo foo bar bar baz)) (count-it x))
+      (how-many 'foo) =>  2
+      (how-many 'bar) =>  3
+      (how-many 'quux) =>  0
+
+See Also::
+..........
+
+*Note remhash::
+
+Notes::
+.......
+
+The secondary value, present-p, can be used to distinguish the absence of
+an entry from the presence of an entry that has a value of default.
+
+
+File: gcl.info,  Node: remhash,  Next: maphash,  Prev: gethash,  Up: Hash Tables Dictionary
+
+remhash                                                          [Function]
+---------------------------------------------------------------------------
+
+`remhash'  key hash-table =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+key--an object.
+
+hash-table--a hash table.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Removes the entry for key in hash-table, if any.  Returns true if there
+was such an entry, or false otherwise.
+
+Examples::
+..........
+
+      (setq table (make-hash-table)) =>  #<HASH-TABLE EQL 0/120 32115666>
+      (setf (gethash 100 table) "C") =>  "C"
+      (gethash 100 table) =>  "C", true
+      (remhash 100 table) =>  true
+      (gethash 100 table) =>  NIL, false
+      (remhash 100 table) =>  false
+
+Side Effects::
+..............
+
+The hash-table is modified.
+
+
+File: gcl.info,  Node: maphash,  Next: with-hash-table-iterator,  Prev: remhash,  Up: Hash Tables Dictionary
+
+maphash                                                          [Function]
+---------------------------------------------------------------------------
+
+`maphash'  function hash-table =>  nil
+
+Arguments and Values::
+......................
+
+function--a designator for a function of two arguments, the key and the
+value.
+
+hash-table--a hash table.
+
+Description::
+.............
+
+Iterates over all entries in the hash-table.  For each entry, the function
+is called with two arguments-the key and the value of that entry.
+
+The consequences are unspecified if any attempt is made to add or remove
+an entry from the hash-table while a maphash is in progress, with two
+exceptions: the function can use can use setf of gethash to change the
+value part of the entry currently being processed, or it can use remhash
+to remove that entry.
+
+Examples::
+..........
+
+      (setq table (make-hash-table)) =>  #<HASH-TABLE EQL 0/120 32304110>
+      (dotimes (i 10) (setf (gethash i table) i)) =>  NIL
+      (let ((sum-of-squares 0))
+         (maphash #'(lambda (key val)
+                      (let ((square (* val val)))
+                        (incf sum-of-squares square)
+                        (setf (gethash key table) square)))
+                  table)
+         sum-of-squares) =>  285
+      (hash-table-count table) =>  10
+      (maphash #'(lambda (key val)
+                    (when (oddp val) (remhash key table)))
+                table) =>  NIL
+      (hash-table-count table) =>  5
+      (maphash #'(lambda (k v) (print (list k v))) table)
+     (0 0)
+     (8 64)
+     (2 4)
+     (6 36)
+     (4 16)
+     =>  NIL
+
+Side Effects::
+..............
+
+None, other than any which might be done by the function.
+
+See Also::
+..........
+
+*Note loop:: , *Note with-hash-table-iterator:: ,
+
+*Note Traversal Rules and Side Effects::
+
+
+File: gcl.info,  Node: with-hash-table-iterator,  Next: clrhash,  Prev: maphash,  Up: Hash Tables Dictionary
+
+with-hash-table-iterator                                            [Macro]
+---------------------------------------------------------------------------
+
+`with-hash-table-iterator'  (name hash-table) {declaration}* {form}* =>
+{result}*
+
+Arguments and Values::
+......................
+
+name--a name suitable for the first argument to macrolet.
+
+hash-table--a form, evaluated once, that should produce a hash table.
+
+declaration--a declare expression; not evaluated.
+
+forms--an implicit progn.
+
+results--the values returned by forms.
+
+Description::
+.............
+
+Within the lexical scope of the body, name is defined via macrolet such
+that successive invocations of (name) return the items, one by one, from
+the hash table that is obtained by evaluating hash-table only once.
+
+An invocation (name) returns three values as follows:
+
+1.
+     A generalized boolean that is true if an entry is returned.
+
+2.
+     The key from the hash-table entry.
+
+3.
+     The value from the hash-table entry.
+
+After all entries have been returned by successive invocations of (name),
+then only one value is returned, namely nil.
+
+It is unspecified what happens if any of the implicit interior state of an
+iteration is returned outside the dynamic extent of the
+with-hash-table-iterator form such as by returning some closure over the
+invocation form.
+
+Any number of invocations of with-hash-table-iterator can be nested, and
+the body of the innermost one can invoke all of the locally established
+macros, provided all of those macros have distinct names.
+
+Examples::
+..........
+
+The following function should return t on any hash table, and signal an
+error if the usage of with-hash-table-iterator does not agree with the
+corresponding usage of maphash.
+
+      (defun test-hash-table-iterator (hash-table)
+        (let ((all-entries '())
+              (generated-entries '())
+              (unique (list nil)))
+          (maphash #'(lambda (key value) (push (list key value) all-entries))
+                   hash-table)
+          (with-hash-table-iterator (generator-fn hash-table)
+            (loop
+              (multiple-value-bind (more? key value) (generator-fn)
+                (unless more? (return))
+                (unless (eql value (gethash key hash-table unique))
+                  (error "Key ~S not found for value ~S" key value))
+                (push (list key value) generated-entries))))
+          (unless (= (length all-entries)
+                     (length generated-entries)
+                     (length (union all-entries generated-entries
+                                    :key #'car :test (hash-table-test hash-table))))
+            (error "Generated entries and Maphash entries don't correspond"))
+          t))
+
+The following could be an acceptable definition of maphash, implemented by
+with-hash-table-iterator.
+
+      (defun maphash (function hash-table)
+        (with-hash-table-iterator (next-entry hash-table)
+          (loop (multiple-value-bind (more key value) (next-entry)
+                  (unless more (return nil))
+                  (funcall function key value)))))
+
+Exceptional Situations::
+........................
+
+The consequences are undefined if the local function named name
+established by with-hash-table-iterator is called after it has returned
+false as its primary value.
+
+See Also::
+..........
+
+*Note Traversal Rules and Side Effects::
+
+
+File: gcl.info,  Node: clrhash,  Next: sxhash,  Prev: with-hash-table-iterator,  Up: Hash Tables Dictionary
+
+clrhash                                                          [Function]
+---------------------------------------------------------------------------
+
+`clrhash'  hash-table =>  hash-table
+
+Arguments and Values::
+......................
+
+hash-table--a hash table.
+
+Description::
+.............
+
+Removes all entries from hash-table, and then returns that empty hash
+table.
+
+Examples::
+..........
+
+      (setq table (make-hash-table)) =>  #<HASH-TABLE EQL 0/120 32004073>
+      (dotimes (i 100) (setf (gethash i table) (format nil "~R" i))) =>  NIL
+      (hash-table-count table) =>  100
+      (gethash 57 table) =>  "fifty-seven", true
+      (clrhash table) =>  #<HASH-TABLE EQL 0/120 32004073>
+      (hash-table-count table) =>  0
+      (gethash 57 table) =>  NIL, false
+
+Side Effects::
+..............
+
+The hash-table is modified.
+
+
+File: gcl.info,  Node: sxhash,  Prev: clrhash,  Up: Hash Tables Dictionary
+
+sxhash                                                           [Function]
+---------------------------------------------------------------------------
+
+`sxhash'  object =>  hash-code
+
+Arguments and Values::
+......................
+
+object--an object.
+
+hash-code--a non-negative fixnum.
+
+Description::
+.............
+
+sxhash returns a hash code for object.
+
+The manner in which the hash code is computed is implementation-dependent,
+but subject to certain constraints:
+
+1.
+     (equal x y) implies (= (sxhash x) (sxhash y)).
+
+2.
+     For any two objects, x and y, both of which are bit vectors,
+     characters, conses, numbers, pathnames, strings, or symbols, and
+     which are similar, (sxhash x) and (sxhash y) yield the same
+     mathematical value even if x and y exist in different Lisp images of
+     the same implementation.  See *Note Literal Objects in Compiled
+     Files::.
+
+3.
+     The hash-code for an object is always the same within a single
+     session provided that the object is not visibly modified with regard
+     to the equivalence test equal.  See *Note Modifying Hash Table Keys::.
+
+4.
+     The hash-code is intended for hashing.  This places no verifiable
+     constraint on a conforming implementation, but the intent is that an
+     implementation should make a good-faith effort to produce hash-codes
+     that are well distributed within the range of non-negative fixnums.
+
+5.
+     Computation of the hash-code must terminate, even if the object
+     contains circularities.
+
+Examples::
+..........
+
+      (= (sxhash (list 'list "ab")) (sxhash (list 'list "ab"))) =>  true
+      (= (sxhash "a") (sxhash (make-string 1 :initial-element #\a))) =>  true
+      (let ((r (make-random-state)))
+        (= (sxhash r) (sxhash (make-random-state r))))
+     =>  implementation-dependent
+
+Affected By::
+.............
+
+The implementation.
+
+Notes::
+.......
+
+Many common hashing needs are satisfied by make-hash-table and the related
+functions on hash tables.  sxhash is intended for use where the
+pre-defined abstractions are insufficient.  Its main intent is to allow
+the user a convenient means of implementing more complicated hashing
+paradigms than are provided through hash tables.
+
+The hash codes returned by sxhash are not necessarily related to any
+hashing strategy used by any other function in Common Lisp.
+
+For objects of types that equal compares with eq, item 3 requires that the
+hash-code be based on some immutable quality of the identity of the object.
+Another legitimate implementation technique would be to have sxhash assign
+(and cache) a random hash code for these objects, since there is no
+requirement that similar but non-eq objects have the same hash code.
+
+Although similarity is defined for symbols in terms of both the symbol's
+name and the packages in which the symbol is accessible, item 3 disallows
+using package information to compute the hash code, since changes to the
+package status of a symbol are not visible to equal.
+
+
+File: gcl.info,  Node: Filenames,  Next: Files,  Prev: Hash Tables,  Up: Top
+
+Filenames
+*********
+
+* Menu:
+
+* Overview of Filenames::
+* Pathnames::
+* Logical Pathnames::
+* Filenames Dictionary::
+
+
+File: gcl.info,  Node: Overview of Filenames,  Next: Pathnames,  Prev: Filenames,  Up: Filenames
+
+Overview of Filenames
+=====================
+
+There are many kinds of file systems, varying widely both in their
+superficial syntactic details, and in their underlying power and structure.
+The facilities provided by Common Lisp for referring to and manipulating
+files has been chosen to be compatible with many kinds of file systems,
+while at the same time minimizing the program-visible differences between
+kinds of file systems.
+
+Since file systems vary in their conventions for naming files, there are
+two distinct ways to represent filenames: as namestrings and as pathnames.
+
+* Menu:
+
+* Namestrings as Filenames::
+* Pathnames as Filenames::
+* Parsing Namestrings Into Pathnames::
+
+
+File: gcl.info,  Node: Namestrings as Filenames,  Next: Pathnames as Filenames,  Prev: Overview of Filenames,  Up: Overview of Filenames
+
+Namestrings as Filenames
+------------------------
+
+A namestring is a string that represents a filename.
+
+In general, the syntax of namestrings involves the use of
+implementation-defined conventions, usually those customary for the file
+system in which the named file resides.  The only exception is the syntax
+of a logical pathname namestring, which is defined in this specification;
+see *Note Syntax of Logical Pathname Namestrings::.
+
+A conforming program must never unconditionally use a literal namestring
+other than a logical pathname namestring because Common Lisp does not
+define any namestring syntax other than that for logical pathnames that
+would be guaranteed to be portable.  However, a conforming program can, if
+it is careful, successfully manipulate user-supplied data which contains
+or refers to non-portable namestrings.
+
+A namestring can be coerced to a pathname by the functions pathname or
+parse-namestring.
+

@@ -1,0 +1,69 @@
+{
+    "name": "symbol-macrolet",
+    "prev": "define-symbol-macro",
+    "next": "*macroexpand-hook*",
+    "up": "Evaluation and Compilation Dictionary",
+    "header": {
+        "type": "Special Operator",
+        "text": "symbol-macrolet"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "symbol-macrolet",
+                    "text": " ({(symbol expansion)}*) {declaration}* {form}*=>  {result}*\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "symbol",
+                    "desc": "a symbol."
+                },
+                {
+                    "name": "expansion",
+                    "desc": "a form."
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values returned by the forms."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "symbol-macrolet provides a mechanism for affecting the macro expansion\nenvironment for symbols.\nsymbol-macrolet lexically establishes expansion functions for each of the\nsymbol macros named by symbols.\nThe only guaranteed property of an expansion function for a symbol macro\nis that when it is applied to the form and the environment it returns the\ncorrect expansion.  (In particular, it is implementation-dependent whether\nthe expansion is conceptually stored in the expansion function, the\nenvironment, or both.)\nEach reference to symbol as a variable within the lexical scope of\nsymbol-macrolet is expanded by the normal macro expansion process; see\n*Note Symbols as Forms::.  The expansion of a symbol macro is subject to\nfurther macro expansion in the same lexical environment as the symbol\nmacro invocation, exactly analogous to normal macros.\nExactly the same declarations are allowed as for let with one exception:\nsymbol-macrolet signals an error if a special declaration names one of the\nsymbols being defined by symbol-macrolet.\nWhen the forms of the symbol-macrolet form are expanded, any use of setq\nto set the value of one of the specified variables is treated as if it\nwere a setf.  psetq of a symbol defined as a symbol macro is treated as if\nit were a psetf, and multiple-value-setq is treated as if it were a setf\nof values.\nThe use of symbol-macrolet can be shadowed by let.  In other words,\nsymbol-macrolet only substitutes for occurrences of symbol that would be\nin the scope of a lexical binding of symbol surrounding the forms.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "     ;;; The following is equivalent to\n     ;;;   (list 'foo (let ((x 'bar)) x)),\n     ;;; not\n     ;;;   (list 'foo (let (('foo 'bar)) 'foo))\n      (symbol-macrolet ((x 'foo))\n        (list x (let ((x 'bar)) x)))\n     =>  (foo bar)\n     NOT=> (foo foo)\n      (symbol-macrolet ((x '(foo x)))\n        (list x))\n     =>  ((FOO X))\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If an attempt is made to bind a symbol that is defined as a global\nvariable, an error of type program-error is signaled.\nIf declaration contains a special declaration that names one of the\nsymbols being bound by symbol-macrolet, an error of type program-error is\nsignaled.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note with-slots:: , *Note macroexpand; macroexpand-1::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The special form symbol-macrolet is the basic mechanism that is used to\nimplement with-slots.\nIf a symbol-macrolet form is a top level form, the forms are also\nprocessed as top level forms.  See *Note File Compilation::.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: symbol-macrolet,  Next: *macroexpand-hook*,  Prev: define-symbol-macro,  Up: Evaluation and Compilation Dictionary\n\nsymbol-macrolet                                          [Special Operator]\n---------------------------------------------------------------------------\n\n`symbol-macrolet'  ({(symbol expansion)}*) {declaration}* {form}*\n=>  {result}*\n\nArguments and Values::\n......................\n\nsymbol--a symbol.\n\nexpansion--a form.\n\ndeclaration--a declare expression; not evaluated.\n\nforms--an implicit progn.\n\nresults--the values returned by the forms.\n\nDescription::\n.............\n\nsymbol-macrolet provides a mechanism for affecting the macro expansion\nenvironment for symbols.\n\nsymbol-macrolet lexically establishes expansion functions for each of the\nsymbol macros named by symbols.\n\nThe only guaranteed property of an expansion function for a symbol macro\nis that when it is applied to the form and the environment it returns the\ncorrect expansion.  (In particular, it is implementation-dependent whether\nthe expansion is conceptually stored in the expansion function, the\nenvironment, or both.)\n\nEach reference to symbol as a variable within the lexical scope of\nsymbol-macrolet is expanded by the normal macro expansion process; see\n*Note Symbols as Forms::.  The expansion of a symbol macro is subject to\nfurther macro expansion in the same lexical environment as the symbol\nmacro invocation, exactly analogous to normal macros.\n\nExactly the same declarations are allowed as for let with one exception:\nsymbol-macrolet signals an error if a special declaration names one of the\nsymbols being defined by symbol-macrolet.\n\nWhen the forms of the symbol-macrolet form are expanded, any use of setq\nto set the value of one of the specified variables is treated as if it\nwere a setf.  psetq of a symbol defined as a symbol macro is treated as if\nit were a psetf, and multiple-value-setq is treated as if it were a setf\nof values.\n\nThe use of symbol-macrolet can be shadowed by let.  In other words,\nsymbol-macrolet only substitutes for occurrences of symbol that would be\nin the scope of a lexical binding of symbol surrounding the forms.\n\nExamples::\n..........\n\n     ;;; The following is equivalent to\n     ;;;   (list 'foo (let ((x 'bar)) x)),\n     ;;; not\n     ;;;   (list 'foo (let (('foo 'bar)) 'foo))\n      (symbol-macrolet ((x 'foo))\n        (list x (let ((x 'bar)) x)))\n     =>  (foo bar)\n     NOT=> (foo foo)\n     \n      (symbol-macrolet ((x '(foo x)))\n        (list x))\n     =>  ((FOO X))\n\nExceptional Situations::\n........................\n\nIf an attempt is made to bind a symbol that is defined as a global\nvariable, an error of type program-error is signaled.\n\nIf declaration contains a special declaration that names one of the\nsymbols being bound by symbol-macrolet, an error of type program-error is\nsignaled.\n\nSee Also::\n..........\n\n*Note with-slots:: , *Note macroexpand; macroexpand-1::\n\nNotes::\n.......\n\nThe special form symbol-macrolet is the basic mechanism that is used to\nimplement with-slots.\n\nIf a symbol-macrolet form is a top level form, the forms are also\nprocessed as top level forms.  See *Note File Compilation::.\n\n"
+}

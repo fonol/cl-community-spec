@@ -1,0 +1,73 @@
+{
+    "name": "defparameter",
+    "prev": "defconstant",
+    "next": "destructuring-bind",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "defparameter, defvar"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "defparameter",
+                    "text": " name         initial-value [documentation]  =>  name\n"
+                },
+                {
+                    "name": "defvar",
+                    "text": " name [initial-value [documentation]] =>  name\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "name",
+                    "desc": "a symbol; not evaluated."
+                },
+                {
+                    "name": "initial-value",
+                    "desc": "a form; for defparameter, it is always evaluated, but for"
+                },
+                {
+                    "name": "initial-value",
+                    "desc": "a form; for defparameter, it is always evaluated, but fordefvar it is evaluated only if name is not already bound.\n"
+                },
+                {
+                    "name": "documentation",
+                    "desc": "a string; not evaluated."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "defparameter and defvar establish name as a dynamic variable.\ndefparameter unconditionally assigns the initial-value to the dynamic\nvariable named name.  defvar, by contrast, assigns initial-value (if\nsupplied) to the dynamic variable named name only if name is not already\nbound.\nIf no initial-value is supplied, defvar leaves the value cell of the\ndynamic variable named name undisturbed; if name was previously bound, its\nold value persists, and if it was previously unbound, it remains unbound.\nIf documentation is supplied, it is attached to name as a documentation\nstring of kind variable.\ndefparameter and defvar normally appear as a top level form, but it is\nmeaningful for them to appear as non-top-level forms.  However, the\ncompile-time side effects described below only take place when they appear\nas top level forms.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defparameter *p* 1) =>  *P*\n      *p* =>  1\n      (constantp '*p*) =>  false\n      (setq *p* 2) =>  2\n      (defparameter *p* 3) =>  *P*\n      *p* =>  3\n      (defvar *v* 1) =>  *V*\n      *v* =>  1\n      (constantp '*v*) =>  false\n      (setq *v* 2) =>  2\n      (defvar *v* 3) =>  *V*\n      *v* =>  2\n      (defun foo ()\n        (let ((*p* 'p) (*v* 'v))\n          (bar))) =>  FOO\n      (defun bar () (list *p* *v*)) =>  BAR\n      (foo) =>  (P V)\nThe principal operational distinction between defparameter and defvar is\nthat defparameter makes an unconditional assignment to name, while defvar\nmakes a conditional one.  In practice, this means that defparameter is\nuseful in situations where loading or reloading the definition would want\nto pick up a new value of the variable, while defvar is used in situations\nwhere the old value would want to be retained if the file were loaded or\nreloaded.  For example, one might create a file which contained:\n      (defvar *the-interesting-numbers* '())\n      (defmacro define-interesting-number (name n)\n        `(progn (defvar ,name ,n)\n                (pushnew ,name *the-interesting-numbers*)\n                ',name))\n      (define-interesting-number *my-height* 168) ;cm\n      (define-interesting-number *my-weight* 13)  ;stones\nHere the initial value, (), for the variable *the-interesting-numbers* is\njust a seed that we are never likely to want to reset to something else\nonce something has been grown from it.  As such, we have used defvar to\navoid having the *interesting-numbers* information reset if the file is\nloaded a second time.  It is true that the two calls to\ndefine-interesting-number here would be reprocessed, but if there were\nadditional calls in another file, they would not be and that information\nwould be lost.  On the other hand, consider the following code:\n      (defparameter *default-beep-count* 3)\n      (defun beep (&optional (n *default-beep-count*))\n        (dotimes (i n) (si:\nHere we could easily imagine editing the code to change the initial value\nof *default-beep-count*, and then reloading the file to pick up the new\nvalue.  In order to make value updating easy, we have used defparameter.\nOn the other hand, there is potential value to using defvar in this\nsituation.  For example, suppose that someone had predefined an alternate\nvalue for *default-beep-count*, or had loaded the file and then manually\nchanged the value.  In both cases, if we had used defvar instead of\ndefparameter, those user preferences would not be overridden by\n(re)loading the file.\nThe choice of whether to use defparameter or defvar has visible\nconsequences to programs, but is nevertheless often made for subjective\nreasons.\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "If a defvar or defparameter form appears as a top level form, the compiler\nmust recognize that the name has been proclaimed special.  However, it\nmust neither evaluate the initial-value form nor assign the dynamic\nvariable named name at compile time.\nThere may be additional (implementation-defined) compile-time or run-time\nside effects, as long as such effects do not interfere with the correct\noperation of conforming programs.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "defvar is affected by whether name is already bound.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note declaim:: , *Note defconstant:: , *Note documentation; (setf\ndocumentation):: , *Note Compilation::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "It is customary to name dynamic variables with an asterisk at the\nbeginning and end of the name.  e.g., *foo* is a good name for a dynamic\nvariable, but not for a lexical variable; foo is a good name for a lexical\nvariable, but not for a dynamic variable.  This naming convention is\nobserved for all defined names in Common Lisp; however, neither conforming\nprograms nor conforming implementations are obliged to adhere to this\nconvention.\nThe intent of the permission for additional side effects is to allow\nimplementations to do normal \"bookkeeping\" that accompanies definitions.\nFor example, the macro expansion of a defvar or defparameter form might\ninclude code that arranges to record the name of the source file in which\nthe definition occurs.\ndefparameter and defvar might be defined as follows:\n      (defmacro defparameter (name initial-value\n                              &optional (documentation nil documentation-p))\n        `(progn (declaim (special ,name))\n                (setf (symbol-value ',name) ,initial-value)\n                ,(when documentation-p\n                   `(setf (documentation ',name 'variable) ',documentation))\n                ',name))\n      (defmacro defvar (name &optional\n                             (initial-value nil initial-value-p)\n                             (documentation nil documentation-p))\n        `(progn (declaim (special ,name))\n                ,(when initial-value-p\n                   `(unless (boundp ',name)\n                      (setf (symbol-value ',name) ,initial-value)))\n                ,(when documentation-p\n                   `(setf (documentation ',name 'variable) ',documentation))\n                ',name))\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: defparameter,  Next: destructuring-bind,  Prev: defconstant,  Up: Data and Control Flow Dictionary\n\ndefparameter, defvar                                                [Macro]\n---------------------------------------------------------------------------\n\n`defparameter'  name         initial-value [documentation]  =>  name\n\n`defvar'  name [initial-value [documentation]] =>  name\n\nArguments and Values::\n......................\n\nname--a symbol; not evaluated.\n\ninitial-value--a form; for defparameter, it is always evaluated, but for\ndefvar it is evaluated only if name is not already bound.\n\ndocumentation--a string; not evaluated.\n\nDescription::\n.............\n\ndefparameter and defvar establish name as a dynamic variable.\n\ndefparameter unconditionally assigns the initial-value to the dynamic\nvariable named name.  defvar, by contrast, assigns initial-value (if\nsupplied) to the dynamic variable named name only if name is not already\nbound.\n\nIf no initial-value is supplied, defvar leaves the value cell of the\ndynamic variable named name undisturbed; if name was previously bound, its\nold value persists, and if it was previously unbound, it remains unbound.\n\nIf documentation is supplied, it is attached to name as a documentation\nstring of kind variable.\n\ndefparameter and defvar normally appear as a top level form, but it is\nmeaningful for them to appear as non-top-level forms.  However, the\ncompile-time side effects described below only take place when they appear\nas top level forms.\n\nExamples::\n..........\n\n      (defparameter *p* 1) =>  *P*\n      *p* =>  1\n      (constantp '*p*) =>  false\n      (setq *p* 2) =>  2\n      (defparameter *p* 3) =>  *P*\n      *p* =>  3\n     \n      (defvar *v* 1) =>  *V*\n      *v* =>  1\n      (constantp '*v*) =>  false\n      (setq *v* 2) =>  2\n      (defvar *v* 3) =>  *V*\n      *v* =>  2\n     \n      (defun foo ()\n        (let ((*p* 'p) (*v* 'v))\n          (bar))) =>  FOO\n      (defun bar () (list *p* *v*)) =>  BAR\n      (foo) =>  (P V)\n\nThe principal operational distinction between defparameter and defvar is\nthat defparameter makes an unconditional assignment to name, while defvar\nmakes a conditional one.  In practice, this means that defparameter is\nuseful in situations where loading or reloading the definition would want\nto pick up a new value of the variable, while defvar is used in situations\nwhere the old value would want to be retained if the file were loaded or\nreloaded.  For example, one might create a file which contained:\n\n      (defvar *the-interesting-numbers* '())\n      (defmacro define-interesting-number (name n)\n        `(progn (defvar ,name ,n)\n                (pushnew ,name *the-interesting-numbers*)\n                ',name))\n      (define-interesting-number *my-height* 168) ;cm\n      (define-interesting-number *my-weight* 13)  ;stones\n\nHere the initial value, (), for the variable *the-interesting-numbers* is\njust a seed that we are never likely to want to reset to something else\nonce something has been grown from it.  As such, we have used defvar to\navoid having the *interesting-numbers* information reset if the file is\nloaded a second time.  It is true that the two calls to\ndefine-interesting-number here would be reprocessed, but if there were\nadditional calls in another file, they would not be and that information\nwould be lost.  On the other hand, consider the following code:\n\n      (defparameter *default-beep-count* 3)\n      (defun beep (&optional (n *default-beep-count*))\n        (dotimes (i n) (si:\n\nHere we could easily imagine editing the code to change the initial value\nof *default-beep-count*, and then reloading the file to pick up the new\nvalue.  In order to make value updating easy, we have used defparameter.\n\nOn the other hand, there is potential value to using defvar in this\nsituation.  For example, suppose that someone had predefined an alternate\nvalue for *default-beep-count*, or had loaded the file and then manually\nchanged the value.  In both cases, if we had used defvar instead of\ndefparameter, those user preferences would not be overridden by\n(re)loading the file.\n\nThe choice of whether to use defparameter or defvar has visible\nconsequences to programs, but is nevertheless often made for subjective\nreasons.\n\nSide Effects::\n..............\n\nIf a defvar or defparameter form appears as a top level form, the compiler\nmust recognize that the name has been proclaimed special.  However, it\nmust neither evaluate the initial-value form nor assign the dynamic\nvariable named name at compile time.\n\nThere may be additional (implementation-defined) compile-time or run-time\nside effects, as long as such effects do not interfere with the correct\noperation of conforming programs.\n\nAffected By::\n.............\n\ndefvar is affected by whether name is already bound.\n\nSee Also::\n..........\n\n*Note declaim:: , *Note defconstant:: , *Note documentation; (setf\ndocumentation):: , *Note Compilation::\n\nNotes::\n.......\n\nIt is customary to name dynamic variables with an asterisk at the\nbeginning and end of the name.  e.g., *foo* is a good name for a dynamic\nvariable, but not for a lexical variable; foo is a good name for a lexical\nvariable, but not for a dynamic variable.  This naming convention is\nobserved for all defined names in Common Lisp; however, neither conforming\nprograms nor conforming implementations are obliged to adhere to this\nconvention.\n\nThe intent of the permission for additional side effects is to allow\nimplementations to do normal \"bookkeeping\" that accompanies definitions.\nFor example, the macro expansion of a defvar or defparameter form might\ninclude code that arranges to record the name of the source file in which\nthe definition occurs.\n\ndefparameter and defvar might be defined as follows:\n\n      (defmacro defparameter (name initial-value\n                              &optional (documentation nil documentation-p))\n        `(progn (declaim (special ,name))\n                (setf (symbol-value ',name) ,initial-value)\n                ,(when documentation-p\n                   `(setf (documentation ',name 'variable) ',documentation))\n                ',name))\n      (defmacro defvar (name &optional\n                             (initial-value nil initial-value-p)\n                             (documentation nil documentation-p))\n        `(progn (declaim (special ,name))\n                ,(when initial-value-p\n                   `(unless (boundp ',name)\n                      (setf (symbol-value ',name) ,initial-value)))\n                ,(when documentation-p\n                   `(setf (documentation ',name 'variable) ',documentation))\n                ',name))\n\n"
+}

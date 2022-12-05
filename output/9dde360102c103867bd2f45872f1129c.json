@@ -1,0 +1,65 @@
+{
+    "name": "replace",
+    "prev": "mismatch",
+    "next": "substitute",
+    "up": "Sequences Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "replace"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "replace",
+                    "text": " sequence-1 sequence-2 &key start1 end1 start2 end2 =>sequence-1\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "sequence-1",
+                    "desc": "a sequence."
+                },
+                {
+                    "name": "sequence-2",
+                    "desc": "a sequence."
+                },
+                {
+                    "name": "start1, end1",
+                    "desc": "bounding index designators of sequence-1.  The defaults for"
+                },
+                {
+                    "name": "start1, end1",
+                    "desc": "bounding index designators of sequence-1.  The defaults forstart1 and end1 are 0 and nil, respectively.\n"
+                },
+                {
+                    "name": "start2, end2",
+                    "desc": "bounding index designators of sequence-2.  The defaults for"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Destructively modifies sequence-1 by replacing the elements of\nsubsequence-1 bounded by start1 and end1 with the elements of subsequence-2\nbounded by start2 and end2.\nSequence-1 is destructively modified by copying successive elements into\nit from sequence-2.  Elements of the subsequence of sequence-2 bounded by\nstart2 and end2 are copied into the subsequence of sequence-1 bounded by\nstart1 and end1.  If these subsequences are not of the same length, then\nthe shorter length determines how many elements are copied; the extra\nelements near the end of the longer subsequence are not involved in the\noperation.  The number of elements copied can be expressed as:\n      (min (- end1 start1) (- end2 start2))\nIf sequence-1 and sequence-2 are the same object and the region being\nmodified overlaps the region being copied from, then it is as if the\nentire source region were copied to another place and only then copied\nback into the target region.  However, if sequence-1 and sequence-2 are\nnot the same, but the region being modified overlaps the region being\ncopied from (perhaps because of shared list structure or displaced arrays),\nthen after the replace operation the subsequence of sequence-1 being\nmodified will have unpredictable contents.  It is an error if the elements\nof sequence-2 are not of a type that can be stored into sequence-1.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (replace \"abcdefghij\" \"0123456789\" :start1 4 :end1 7 :start2 4)\n     =>  \"abcd456hij\"\n      (setq lst \"012345678\") =>  \"012345678\"\n      (replace lst lst :start1 2 :start2 0) =>  \"010123456\"\n      lst =>  \"010123456\"\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "The sequence-1 is modified.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note fill::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: replace,  Next: substitute,  Prev: mismatch,  Up: Sequences Dictionary\n\nreplace                                                          [Function]\n---------------------------------------------------------------------------\n\n`replace'  sequence-1 sequence-2 &key start1 end1 start2 end2 =>\nsequence-1\n\nArguments and Values::\n......................\n\nsequence-1--a sequence.\n\nsequence-2--a sequence.\n\nstart1, end1--bounding index designators of sequence-1.  The defaults for\nstart1 and end1 are 0 and nil, respectively.\n\nstart2, end2--bounding index designators of sequence-2.  The defaults for\nstart2 and end2 are 0 and nil, respectively.\n\nDescription::\n.............\n\nDestructively modifies sequence-1 by replacing the elements of\nsubsequence-1 bounded by start1 and end1 with the elements of subsequence-2\nbounded by start2 and end2.\n\nSequence-1 is destructively modified by copying successive elements into\nit from sequence-2.  Elements of the subsequence of sequence-2 bounded by\nstart2 and end2 are copied into the subsequence of sequence-1 bounded by\nstart1 and end1.  If these subsequences are not of the same length, then\nthe shorter length determines how many elements are copied; the extra\nelements near the end of the longer subsequence are not involved in the\noperation.  The number of elements copied can be expressed as:\n\n      (min (- end1 start1) (- end2 start2))\n\nIf sequence-1 and sequence-2 are the same object and the region being\nmodified overlaps the region being copied from, then it is as if the\nentire source region were copied to another place and only then copied\nback into the target region.  However, if sequence-1 and sequence-2 are\nnot the same, but the region being modified overlaps the region being\ncopied from (perhaps because of shared list structure or displaced arrays),\nthen after the replace operation the subsequence of sequence-1 being\nmodified will have unpredictable contents.  It is an error if the elements\nof sequence-2 are not of a type that can be stored into sequence-1.\n\nExamples::\n..........\n\n      (replace \"abcdefghij\" \"0123456789\" :start1 4 :end1 7 :start2 4)\n     =>  \"abcd456hij\"\n      (setq lst \"012345678\") =>  \"012345678\"\n      (replace lst lst :start1 2 :start2 0) =>  \"010123456\"\n      lst =>  \"010123456\"\n\nSide Effects::\n..............\n\nThe sequence-1 is modified.\n\nSee Also::\n..........\n\n*Note fill::\n\n"
+}

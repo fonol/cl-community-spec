@@ -1,0 +1,61 @@
+{
+    "name": "break",
+    "prev": "invoke-debugger",
+    "next": "*debugger-hook*",
+    "up": "Conditions Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "break"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "break",
+                    "text": " &optional format-control &rest format-arguments =>  nil\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "format-control",
+                    "desc": "a format control.The default is implementation-dependent.\n"
+                },
+                {
+                    "name": "format-arguments",
+                    "desc": "format arguments for the format-control."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "break formats format-control and format-arguments and then goes directly\ninto the debugger without allowing any possibility of interception by\nprogrammed error-handling facilities.\nIf the continue restart is used while in the debugger, break immediately\nreturns nil without taking any unusual recovery action.\nbreak binds *debugger-hook* to nil before attempting to enter the debugger.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (break \"You got here with arguments: ~:S.\" '(FOO 37 A))\n      |>  BREAK: You got here with these arguments: FOO, 37, A.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Return from BREAK.\n      |>   2: Top level.\n      |>  Debug> :CONTINUE 1\n      |>  Return from BREAK.\n     =>  NIL\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "The debugger is entered.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "*debug-io*.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note error:: , *Note invoke-debugger:: .\n"
+        },
+        {
+            "type": "Notes",
+            "text": "break is used as a way of inserting temporary debugging \"breakpoints\" in a\nprogram, not as a way of signaling errors.  For this reason, break does\nnot take the continue-format-control argument that cerror takes.  This and\nthe lack of any possibility of interception by condition handling are the\nonly program-visible differences between break and cerror.\nThe user interface aspects of break and cerror are permitted to vary more\nwidely, in order to accomodate the interface needs of the implementation.\nFor example, it is permissible for a Lisp read-eval-print loop to be\nentered by break rather than the conventional debugger.\nbreak could be defined by:\n      (defun break (&optional (format-control \"Break\") &rest format-arguments)\n        (with-simple-restart (continue \"Return from BREAK.\")\n          (let ((*debugger-hook* nil))\n            (invoke-debugger\n                (make-condition 'simple-condition\n                                :format-control format-control\n                                :format-arguments format-arguments))))\n        nil)\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: break,  Next: *debugger-hook*,  Prev: invoke-debugger,  Up: Conditions Dictionary\n\nbreak                                                            [Function]\n---------------------------------------------------------------------------\n\n`break'  &optional format-control &rest format-arguments =>  nil\n\nArguments and Values::\n......................\n\nformat-control--a format control.\n\nThe default is implementation-dependent.\n\nformat-arguments--format arguments for the format-control.\n\nDescription::\n.............\n\nbreak formats format-control and format-arguments and then goes directly\ninto the debugger without allowing any possibility of interception by\nprogrammed error-handling facilities.\n\nIf the continue restart is used while in the debugger, break immediately\nreturns nil without taking any unusual recovery action.\n\nbreak binds *debugger-hook* to nil before attempting to enter the debugger.\n\nExamples::\n..........\n\n      (break \"You got here with arguments: ~:S.\" '(FOO 37 A))\n      |>  BREAK: You got here with these arguments: FOO, 37, A.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Return from BREAK.\n      |>   2: Top level.\n      |>  Debug> :CONTINUE 1\n      |>  Return from BREAK.\n     =>  NIL\n\nSide Effects::\n..............\n\nThe debugger is entered.\n\nAffected By::\n.............\n\n*debug-io*.\n\nSee Also::\n..........\n\n*Note error:: , *Note invoke-debugger:: .\n\nNotes::\n.......\n\nbreak is used as a way of inserting temporary debugging \"breakpoints\" in a\nprogram, not as a way of signaling errors.  For this reason, break does\nnot take the continue-format-control argument that cerror takes.  This and\nthe lack of any possibility of interception by condition handling are the\nonly program-visible differences between break and cerror.\n\nThe user interface aspects of break and cerror are permitted to vary more\nwidely, in order to accomodate the interface needs of the implementation.\nFor example, it is permissible for a Lisp read-eval-print loop to be\nentered by break rather than the conventional debugger.\n\nbreak could be defined by:\n\n      (defun break (&optional (format-control \"Break\") &rest format-arguments)\n        (with-simple-restart (continue \"Return from BREAK.\")\n          (let ((*debugger-hook* nil))\n            (invoke-debugger\n                (make-condition 'simple-condition\n                                :format-control format-control\n                                :format-arguments format-arguments))))\n        nil)\n\n"
+}

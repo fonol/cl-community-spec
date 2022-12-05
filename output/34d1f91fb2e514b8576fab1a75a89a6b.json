@@ -1,0 +1,45 @@
+{
+    "name": "go",
+    "prev": "catch",
+    "next": "return-from",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Special Operator",
+        "text": "go"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "go",
+                    "text": " tag =>  #<NoValue>\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "tag",
+                    "desc": "a go tag."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "go transfers control to the point in the body of an enclosing tagbody form\nlabeled by a tag eql to tag.  If there is no such tag  in the body, the\nbodies of lexically containing tagbody forms (if any) are examined as well.\nIf several tags are eql to tag, control is transferred to whichever\nmatching tag is contained in the innermost tagbody form that contains the\ngo.  The consequences are undefined if there is no matching tag lexically\nvisible to the point of the go.\nThe transfer of control initiated by go is performed as described in *Note\nTransfer of Control to an Exit Point::.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (tagbody\n        (setq val 2)\n        (go lp)\n        (incf val 3)\n        lp (incf val 4)) =>  NIL\n      val =>  6\nThe following is in error because there is a normal exit of the tagbody\nbefore the go is executed.\n      (let ((a nil))\n        (tagbody t (setq a #'(lambda () (go t))))\n        (funcall a))\nThe following is in error because the tagbody is passed over before the go\nform is executed.\n      (funcall (block nil\n                 (tagbody a (return #'(lambda () (go a))))))\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note tagbody::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: go,  Next: return-from,  Prev: catch,  Up: Data and Control Flow Dictionary\n\ngo                                                       [Special Operator]\n---------------------------------------------------------------------------\n\n`go'  tag =>  #<NoValue>\n\nArguments and Values::\n......................\n\ntag--a go tag.\n\nDescription::\n.............\n\ngo transfers control to the point in the body of an enclosing tagbody form\nlabeled by a tag eql to tag.  If there is no such tag  in the body, the\nbodies of lexically containing tagbody forms (if any) are examined as well.\nIf several tags are eql to tag, control is transferred to whichever\nmatching tag is contained in the innermost tagbody form that contains the\ngo.  The consequences are undefined if there is no matching tag lexically\nvisible to the point of the go.\n\nThe transfer of control initiated by go is performed as described in *Note\nTransfer of Control to an Exit Point::.\n\nExamples::\n..........\n\n      (tagbody\n        (setq val 2)\n        (go lp)\n        (incf val 3)\n        lp (incf val 4)) =>  NIL\n      val =>  6\n\nThe following is in error because there is a normal exit of the tagbody\nbefore the go is executed.\n\n      (let ((a nil))\n        (tagbody t (setq a #'(lambda () (go t))))\n        (funcall a))\n\nThe following is in error because the tagbody is passed over before the go\nform is executed.\n\n      (funcall (block nil\n                 (tagbody a (return #'(lambda () (go a))))))\n\nSee Also::\n..........\n\n*Note tagbody::\n\n"
+}

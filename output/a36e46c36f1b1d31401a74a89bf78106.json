@@ -1,0 +1,61 @@
+{
+    "name": "symbol-value",
+    "prev": "symbol-plist",
+    "next": "get",
+    "up": "Symbols Dictionary",
+    "header": {
+        "type": "Accessor",
+        "text": "symbol-value"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "symbol-value",
+                    "text": " symbol =>  value\n(setf (`         symbol-value' symbol) new-value)\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "symbol",
+                    "desc": "a symbol that must have a value."
+                },
+                {
+                    "name": "value, new-value",
+                    "desc": "an object."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Accesses the symbol's value cell.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setf (symbol-value 'a) 1) =>  1\n      (symbol-value 'a) =>  1\n      ;; SYMBOL-VALUE cannot see lexical variables.\n      (let ((a 2)) (symbol-value 'a)) =>  1\n      (let ((a 2)) (setq a 3) (symbol-value 'a)) =>  1\n      ;; SYMBOL-VALUE can see dynamic variables.\n      (let ((a 2))\n        (declare (special a))\n        (symbol-value 'a)) =>  2\n      (let ((a 2))\n        (declare (special a))\n        (setq a 3)\n        (symbol-value 'a)) =>  3\n      (let ((a 2))\n        (setf (symbol-value 'a) 3)\n        a) =>  2\n      a =>  3\n      (symbol-value 'a) =>  3\n      (let ((a 4))\n        (declare (special a))\n        (let ((b (symbol-value 'a)))\n          (setf (symbol-value 'a) 5)\n          (values a b))) =>  5, 4\n      a =>  3\n      (symbol-value :any-keyword) =>  :ANY-KEYWORD\n      (symbol-value 'nil) =>  NIL\n      (symbol-value '()) =>  NIL\n      ;; The precision of this next one is implementation-dependent.\n      (symbol-value 'pi) =>  3.141592653589793d0\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "makunbound, set, setq\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should signal an error of type type-error if symbol is not a symbol.\nShould signal unbound-variable if symbol is unbound and an attempt is made\nto read its value.  (No such error is signaled on an attempt to write its\nvalue.)\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note boundp:: , *Note makunbound:: , *Note set:: , *Note setq::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "symbol-value can be used to get the value of a constant variable.\nsymbol-value cannot access the value of a lexical variable.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: symbol-value,  Next: get,  Prev: symbol-plist,  Up: Symbols Dictionary\n\nsymbol-value                                                     [Accessor]\n---------------------------------------------------------------------------\n\n`symbol-value'  symbol =>  value\n\n(setf (`         symbol-value' symbol) new-value)\nArguments and Values::\n......................\n\nsymbol--a symbol that must have a value.\n\nvalue, new-value--an object.\n\nDescription::\n.............\n\nAccesses the symbol's value cell.\n\nExamples::\n..........\n\n      (setf (symbol-value 'a) 1) =>  1\n      (symbol-value 'a) =>  1\n      ;; SYMBOL-VALUE cannot see lexical variables.\n      (let ((a 2)) (symbol-value 'a)) =>  1\n      (let ((a 2)) (setq a 3) (symbol-value 'a)) =>  1\n      ;; SYMBOL-VALUE can see dynamic variables.\n      (let ((a 2))\n        (declare (special a))\n        (symbol-value 'a)) =>  2\n      (let ((a 2))\n        (declare (special a))\n        (setq a 3)\n        (symbol-value 'a)) =>  3\n      (let ((a 2))\n        (setf (symbol-value 'a) 3)\n        a) =>  2\n      a =>  3\n      (symbol-value 'a) =>  3\n      (let ((a 4))\n        (declare (special a))\n        (let ((b (symbol-value 'a)))\n          (setf (symbol-value 'a) 5)\n          (values a b))) =>  5, 4\n      a =>  3\n      (symbol-value :any-keyword) =>  :ANY-KEYWORD\n      (symbol-value 'nil) =>  NIL\n      (symbol-value '()) =>  NIL\n      ;; The precision of this next one is implementation-dependent.\n      (symbol-value 'pi) =>  3.141592653589793d0\n\nAffected By::\n.............\n\nmakunbound, set, setq\n\nExceptional Situations::\n........................\n\nShould signal an error of type type-error if symbol is not a symbol.\n\nShould signal unbound-variable if symbol is unbound and an attempt is made\nto read its value.  (No such error is signaled on an attempt to write its\nvalue.)\n\nSee Also::\n..........\n\n*Note boundp:: , *Note makunbound:: , *Note set:: , *Note setq::\n\nNotes::\n.......\n\nsymbol-value can be used to get the value of a constant variable.\nsymbol-value cannot access the value of a lexical variable.\n\n"
+}

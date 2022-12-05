@@ -1,0 +1,77 @@
+{
+    "name": "defsetf",
+    "prev": "define-modify-macro",
+    "next": "define-setf-expander",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "defsetf"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "defsetf",
+                    "text": " access-fn update-fn [documentation]=>  access-fn\n\nThe \"long form\":\n\n"
+                },
+                {
+                    "name": "defsetf",
+                    "text": " access-fn lambda-list ({store-variable}*) [[{declaration}* |\ndocumentation]] {form}*\n=>  access-fn\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "access-fn",
+                    "desc": "a symbol which names a function or a macro."
+                },
+                {
+                    "name": "update-fn",
+                    "desc": "a symbol naming a function or macro."
+                },
+                {
+                    "name": "lambda-list",
+                    "desc": "a defsetf lambda list."
+                },
+                {
+                    "name": "store-variable",
+                    "desc": "a symbol (a variable name)."
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "documentation",
+                    "desc": "a string; not evaluated."
+                },
+                {
+                    "name": "form",
+                    "desc": "a form."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "defsetf defines how to setf a place of the form (access-fn ...) for\nrelatively simple cases.  (See define-setf-expander for more general\naccess to this facility.)\nIt must be the case that the function or macro named by access-fn\nevaluates all of its arguments.\ndefsetf may take one of two forms, called the \"short form\" and the \"long\nform,\" which are distinguished by the type of the second argument.\nWhen the short form is used, update-fn must name a function (or macro)\nthat takes one more argument than access-fn takes.  When setf is given a\nplace that is a call on access-fn, it expands into a call on update-fn\nthat is given all the arguments to access-fn and also, as its last\nargument, the new value (which must be returned by update-fn as its value).\nThe long form defsetf resembles defmacro.  The lambda-list describes the\narguments of access-fn.  The store-variables describe the value\nor values\nto be stored into the place.  The body must compute the expansion of a\nsetf of a call on access-fn.\nThe expansion function is defined in the same lexical environment in which\nthe defsetf form appears.\nDuring the evaluation of the forms, the variables in the lambda-list and\nthe store-variables are bound to names of temporary variables, generated\nas if by gensym or gentemp, that will be bound by the expansion of setf to\nthe values of those subforms.  This binding permits the forms to be\nwritten without regard for order-of-evaluation issues.  defsetf arranges\nfor the temporary variables to be optimized out of the final result in\ncases where that is possible.\nThe body code in defsetf is implicitly enclosed in a block whose name is\naccess-fn\ndefsetf ensures that subforms of the place are evaluated exactly once.\nDocumentation is attached to access-fn as a documentation string of kind\nsetf.\nIf a defsetf form appears as a top level form, the compiler must make the\nsetf expander available so that it may be used to expand calls to setf\nlater on in the file.  Users must ensure that the forms, if any, can be\nevaluated at compile time if the access-fn is used in a place later in the\nsame file.  The compiler must make these setf expanders available to\ncompile-time calls to get-setf-expansion when its environment argument is\na value received as the environment parameter of a macro.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "The effect of\n      (defsetf symbol-value set)\nis built into the Common Lisp system.  This causes the form (setf\n(symbol-value foo) fu) to expand into (set foo fu).\nNote that\n      (defsetf car rplaca)\nwould be incorrect because rplaca does not return its last argument.\n      (defun middleguy (x) (nth (truncate (1- (list-length x)) 2) x)) =>  MIDDLEGUY\n      (defun set-middleguy (x v)\n         (unless (null x)\n           (rplaca (nthcdr (truncate (1- (list-length x)) 2) x) v))\n         v) =>  SET-MIDDLEGUY\n      (defsetf middleguy set-middleguy) =>  MIDDLEGUY\n      (setq a (list 'a 'b 'c 'd)\n            b (list 'x)\n            c (list 1 2 3 (list 4 5 6) 7 8 9)) =>  (1 2 3 (4 5 6) 7 8 9)\n      (setf (middleguy a) 3) =>  3\n      (setf (middleguy b) 7) =>  7\n      (setf (middleguy (middleguy c)) 'middleguy-symbol) =>  MIDDLEGUY-SYMBOL\n      a =>  (A 3 C D)\n      b =>  (7)\n      c =>  (1 2 3 (4 MIDDLEGUY-SYMBOL 6) 7 8 9)\nAn example of the use of the long form of defsetf:\n      (defsetf subseq (sequence start &optional end) (new-sequence)\n        `(progn (replace ,sequence ,new-sequence\n                         :start1 ,start :end1 ,end)\n                ,new-sequence)) =>  SUBSEQ\n      (defvar *xy* (make-array '(10 10)))\n      (defun xy (&key ((x x) 0) ((y y) 0)) (aref *xy* x y)) =>  XY\n      (defun set-xy (new-value &key ((x x) 0) ((y y) 0))\n        (setf (aref *xy* x y) new-value)) =>  SET-XY\n      (defsetf xy (&key ((x x) 0) ((y y) 0)) (store)\n        `(set-xy ,store 'x ,x 'y ,y)) =>  XY\n      (get-setf-expansion '(xy a b))\n     =>  (#:t0 #:t1),\n        (a b),\n        (#:store),\n        ((lambda (&key ((x #:x)) ((y #:y)))\n           (set-xy #:store 'x #:x 'y #:y))\n         #:t0 #:t1),\n        (xy #:t0 #:t1)\n      (xy 'x 1) =>  NIL\n      (setf (xy 'x 1) 1) =>  1\n      (xy 'x 1) =>  1\n      (let ((a 'x) (b 'y))\n        (setf (xy a 1 b 2) 3)\n        (setf (xy b 5 a 9) 14))\n     =>  14\n      (xy 'y 0 'x 1) =>  1\n      (xy 'x 1 'y 2) =>  3\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note documentation; (setf documentation):: , *Note setf; psetf:: ,\n*Note define-setf-expander:: , *Note get-setf-expansion:: ,\n*Note Generalized Reference::, *Note Syntactic Interaction of\nDocumentation Strings and Declarations::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "forms must include provision for returning the correct value (the value\nor values\nof store-variable).  This is handled by forms rather than by defsetf\nbecause in many cases this value can be returned at no extra cost, by\ncalling a function that simultaneously stores into the place and returns\nthe correct value.\nA setf of a call on access-fn also evaluates all of access-fn's arguments;\nit cannot treat any of them specially.  This means that defsetf cannot be\nused to describe how to store into a generalized reference to a byte, such\nas (ldb field reference).\ndefine-setf-expander\nis used to handle situations that do not fit the restrictions imposed by\ndefsetf and gives the user additional control.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: defsetf,  Next: define-setf-expander,  Prev: define-modify-macro,  Up: Data and Control Flow Dictionary\n\ndefsetf                                                             [Macro]\n---------------------------------------------------------------------------\n\nThe \"short form\":\n\n`defsetf'  access-fn update-fn [documentation]\n=>  access-fn\n\nThe \"long form\":\n\n`defsetf'  access-fn lambda-list ({store-variable}*) [[{declaration}* |\ndocumentation]] {form}*\n=>  access-fn\n\nArguments and Values::\n......................\n\naccess-fn--a symbol which names a function or a macro.\n\nupdate-fn--a symbol naming a function or macro.\n\nlambda-list--a defsetf lambda list.\n\nstore-variable--a symbol (a variable name).\n\ndeclaration--a declare expression; not evaluated.\n\ndocumentation--a string; not evaluated.\n\nform--a form.\n\nDescription::\n.............\n\ndefsetf defines how to setf a place of the form (access-fn ...) for\nrelatively simple cases.  (See define-setf-expander for more general\naccess to this facility.)\n\nIt must be the case that the function or macro named by access-fn\nevaluates all of its arguments.\n\ndefsetf may take one of two forms, called the \"short form\" and the \"long\nform,\" which are distinguished by the type of the second argument.\n\nWhen the short form is used, update-fn must name a function (or macro)\nthat takes one more argument than access-fn takes.  When setf is given a\nplace that is a call on access-fn, it expands into a call on update-fn\nthat is given all the arguments to access-fn and also, as its last\nargument, the new value (which must be returned by update-fn as its value).\n\nThe long form defsetf resembles defmacro.  The lambda-list describes the\narguments of access-fn.  The store-variables describe the value\n\nor values\n\nto be stored into the place.  The body must compute the expansion of a\nsetf of a call on access-fn.\n\nThe expansion function is defined in the same lexical environment in which\nthe defsetf form appears.\n\nDuring the evaluation of the forms, the variables in the lambda-list and\nthe store-variables are bound to names of temporary variables, generated\nas if by gensym or gentemp, that will be bound by the expansion of setf to\nthe values of those subforms.  This binding permits the forms to be\nwritten without regard for order-of-evaluation issues.  defsetf arranges\nfor the temporary variables to be optimized out of the final result in\ncases where that is possible.\n\nThe body code in defsetf is implicitly enclosed in a block whose name is\naccess-fn\n\ndefsetf ensures that subforms of the place are evaluated exactly once.\n\nDocumentation is attached to access-fn as a documentation string of kind\nsetf.\n\nIf a defsetf form appears as a top level form, the compiler must make the\nsetf expander available so that it may be used to expand calls to setf\nlater on in the file.  Users must ensure that the forms, if any, can be\nevaluated at compile time if the access-fn is used in a place later in the\nsame file.  The compiler must make these setf expanders available to\ncompile-time calls to get-setf-expansion when its environment argument is\na value received as the environment parameter of a macro.\n\nExamples::\n..........\n\nThe effect of\n\n      (defsetf symbol-value set)\n\nis built into the Common Lisp system.  This causes the form (setf\n(symbol-value foo) fu) to expand into (set foo fu).\n\nNote that\n\n      (defsetf car rplaca)\n\nwould be incorrect because rplaca does not return its last argument.\n\n      (defun middleguy (x) (nth (truncate (1- (list-length x)) 2) x)) =>  MIDDLEGUY\n      (defun set-middleguy (x v)\n         (unless (null x)\n           (rplaca (nthcdr (truncate (1- (list-length x)) 2) x) v))\n         v) =>  SET-MIDDLEGUY\n      (defsetf middleguy set-middleguy) =>  MIDDLEGUY\n      (setq a (list 'a 'b 'c 'd)\n            b (list 'x)\n            c (list 1 2 3 (list 4 5 6) 7 8 9)) =>  (1 2 3 (4 5 6) 7 8 9)\n      (setf (middleguy a) 3) =>  3\n      (setf (middleguy b) 7) =>  7\n      (setf (middleguy (middleguy c)) 'middleguy-symbol) =>  MIDDLEGUY-SYMBOL\n      a =>  (A 3 C D)\n      b =>  (7)\n      c =>  (1 2 3 (4 MIDDLEGUY-SYMBOL 6) 7 8 9)\n\nAn example of the use of the long form of defsetf:\n\n      (defsetf subseq (sequence start &optional end) (new-sequence)\n        `(progn (replace ,sequence ,new-sequence\n                         :start1 ,start :end1 ,end)\n                ,new-sequence)) =>  SUBSEQ\n\n      (defvar *xy* (make-array '(10 10)))\n      (defun xy (&key ((x x) 0) ((y y) 0)) (aref *xy* x y)) =>  XY\n      (defun set-xy (new-value &key ((x x) 0) ((y y) 0))\n        (setf (aref *xy* x y) new-value)) =>  SET-XY\n      (defsetf xy (&key ((x x) 0) ((y y) 0)) (store)\n        `(set-xy ,store 'x ,x 'y ,y)) =>  XY\n      (get-setf-expansion '(xy a b))\n     =>  (#:t0 #:t1),\n        (a b),\n        (#:store),\n        ((lambda (&key ((x #:x)) ((y #:y)))\n           (set-xy #:store 'x #:x 'y #:y))\n         #:t0 #:t1),\n        (xy #:t0 #:t1)\n      (xy 'x 1) =>  NIL\n      (setf (xy 'x 1) 1) =>  1\n      (xy 'x 1) =>  1\n      (let ((a 'x) (b 'y))\n        (setf (xy a 1 b 2) 3)\n        (setf (xy b 5 a 9) 14))\n     =>  14\n      (xy 'y 0 'x 1) =>  1\n      (xy 'x 1 'y 2) =>  3\n\nSee Also::\n..........\n\n*Note documentation; (setf documentation):: , *Note setf; psetf:: ,\n\n*Note define-setf-expander:: , *Note get-setf-expansion:: ,\n\n*Note Generalized Reference::, *Note Syntactic Interaction of\nDocumentation Strings and Declarations::\n\nNotes::\n.......\n\nforms must include provision for returning the correct value (the value\n\nor values\n\nof store-variable).  This is handled by forms rather than by defsetf\nbecause in many cases this value can be returned at no extra cost, by\ncalling a function that simultaneously stores into the place and returns\nthe correct value.\n\nA setf of a call on access-fn also evaluates all of access-fn's arguments;\nit cannot treat any of them specially.  This means that defsetf cannot be\nused to describe how to store into a generalized reference to a byte, such\nas (ldb field reference).\n\ndefine-setf-expander\n\nis used to handle situations that do not fit the restrictions imposed by\ndefsetf and gives the user additional control.\n\n"
+}

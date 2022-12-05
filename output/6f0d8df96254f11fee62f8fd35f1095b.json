@@ -1,0 +1,81 @@
+{
+    "name": "adjoin",
+    "prev": "intersection",
+    "next": "pushnew",
+    "up": "Conses Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "adjoin"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "adjoin",
+                    "text": " item list &key key test test-not =>  new-list\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "item",
+                    "desc": "an object."
+                },
+                {
+                    "name": "list",
+                    "desc": "a proper list."
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "new-list",
+                    "desc": "a list."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Tests whether item is the same as an existing element of list.  If the\nitem is not an existing element, adjoin adds it to list (as if by cons)\nand returns the resulting list; otherwise, nothing is added and the\noriginal list is returned.\nThe test, test-not, and key affect how it is determined whether item is\nthe same as an element of list.  For details, see *Note Satisfying a\nTwo-Argument Test::.\\ifvmode\\else\\endgraf \\ifdim \\prevdepth>-1000pt\n\\NIS\\parskip \\normalparskip\\relax\\fi\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq slist '()) =>  NIL\n      (adjoin 'a slist) =>  (A)\n      slist =>  NIL\n      (setq slist (adjoin '(test-item 1) slist)) =>  ((TEST-ITEM 1))\n      (adjoin '(test-item 1) slist) =>  ((TEST-ITEM 1) (TEST-ITEM 1))\n      (adjoin '(test-item 1) slist :test 'equal) =>  ((TEST-ITEM 1))\n      (adjoin '(new-test-item 1) slist :key #'cadr) =>  ((TEST-ITEM 1))\n      (adjoin '(new-test-item 1) slist) =>  ((NEW-TEST-ITEM 1) (TEST-ITEM 1))\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if list is not a\nproper list.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note pushnew:: ,\n*Note Traversal Rules and Side Effects::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The :test-not parameter is deprecated.\n      (adjoin item list :key fn)\n        == (if (member (fn item) list :key fn) list (cons item list))\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: adjoin,  Next: pushnew,  Prev: intersection,  Up: Conses Dictionary\n\nadjoin                                                           [Function]\n---------------------------------------------------------------------------\n\n`adjoin'  item list &key key test test-not =>  new-list\n\nArguments and Values::\n......................\n\nitem--an object.\n\nlist--a proper list.\n\ntest--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\ntest-not--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nkey--a designator for a function of one argument, or nil.\n\nnew-list--a list.\n\nDescription::\n.............\n\nTests whether item is the same as an existing element of list.  If the\nitem is not an existing element, adjoin adds it to list (as if by cons)\nand returns the resulting list; otherwise, nothing is added and the\noriginal list is returned.\n\nThe test, test-not, and key affect how it is determined whether item is\nthe same as an element of list.  For details, see *Note Satisfying a\nTwo-Argument Test::.\\ifvmode\\else\\endgraf \\ifdim \\prevdepth>-1000pt\n\\NIS\\parskip \\normalparskip\\relax\\fi\n\nExamples::\n..........\n\n      (setq slist '()) =>  NIL\n      (adjoin 'a slist) =>  (A)\n      slist =>  NIL\n      (setq slist (adjoin '(test-item 1) slist)) =>  ((TEST-ITEM 1))\n      (adjoin '(test-item 1) slist) =>  ((TEST-ITEM 1) (TEST-ITEM 1))\n      (adjoin '(test-item 1) slist :test 'equal) =>  ((TEST-ITEM 1))\n      (adjoin '(new-test-item 1) slist :key #'cadr) =>  ((TEST-ITEM 1))\n      (adjoin '(new-test-item 1) slist) =>  ((NEW-TEST-ITEM 1) (TEST-ITEM 1))\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if list is not a\nproper list.\n\nSee Also::\n..........\n\n*Note pushnew:: ,\n\n*Note Traversal Rules and Side Effects::\n\nNotes::\n.......\n\nThe :test-not parameter is deprecated.\n\n      (adjoin item list :key fn)\n        == (if (member (fn item) list :key fn) list (cons item list))\n\n"
+}

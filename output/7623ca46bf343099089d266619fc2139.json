@@ -1,0 +1,65 @@
+{
+    "name": "gethash",
+    "prev": "hash-table-test",
+    "next": "remhash",
+    "up": "Hash Tables Dictionary",
+    "header": {
+        "type": "Accessor",
+        "text": "gethash"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "gethash",
+                    "text": " key hash-table &optional default =>  value, present-p\n(setf (`         gethash' key hash-table &optional default) new-value)\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "key",
+                    "desc": "an object."
+                },
+                {
+                    "name": "hash-table",
+                    "desc": "a hash table."
+                },
+                {
+                    "name": "default",
+                    "desc": "an object.  The default is nil."
+                },
+                {
+                    "name": "value",
+                    "desc": "an object."
+                },
+                {
+                    "name": "present-p",
+                    "desc": "a generalized boolean."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Value is the object in hash-table whose key is the same as key under the\nhash-table's equivalence test.  If there is no such entry, value is the\ndefault.\nPresent-p is true if an entry is found; otherwise, it is false.\nsetf may be used with gethash to modify the value associated with a given\nkey, or to add a new entry.\nWhen a gethash form is used as a setf place, any default which is supplied\nis evaluated according to normal left-to-right evaluation rules, but its\nvalue is ignored.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq table (make-hash-table)) =>  #<HASH-TABLE EQL 0/120 32206334>\n      (gethash 1 table) =>  NIL, false\n      (gethash 1 table 2) =>  2, false\n      (setf (gethash 1 table) \"one\") =>  \"one\"\n      (setf (gethash 2 table \"two\") \"two\") =>  \"two\"\n      (gethash 1 table) =>  \"one\", true\n      (gethash 2 table) =>  \"two\", true\n      (gethash nil table) =>  NIL, false\n      (setf (gethash nil table) nil) =>  NIL\n      (gethash nil table) =>  NIL, true\n      (defvar *counters* (make-hash-table)) =>  *COUNTERS*\n      (gethash 'foo *counters*) =>  NIL, false\n      (gethash 'foo *counters* 0) =>  0, false\n      (defmacro how-many (obj) `(values (gethash ,obj *counters* 0))) =>  HOW-MANY\n      (defun count-it (obj) (incf (how-many obj))) =>  COUNT-IT\n      (dolist (x '(bar foo foo bar bar baz)) (count-it x))\n      (how-many 'foo) =>  2\n      (how-many 'bar) =>  3\n      (how-many 'quux) =>  0\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note remhash::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The secondary value, present-p, can be used to distinguish the absence of\nan entry from the presence of an entry that has a value of default.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: gethash,  Next: remhash,  Prev: hash-table-test,  Up: Hash Tables Dictionary\n\ngethash                                                          [Accessor]\n---------------------------------------------------------------------------\n\n`gethash'  key hash-table &optional default =>  value, present-p\n\n(setf (`         gethash' key hash-table &optional default) new-value)\nArguments and Values::\n......................\n\nkey--an object.\n\nhash-table--a hash table.\n\ndefault--an object.  The default is nil.\n\nvalue--an object.\n\npresent-p--a generalized boolean.\n\nDescription::\n.............\n\nValue is the object in hash-table whose key is the same as key under the\nhash-table's equivalence test.  If there is no such entry, value is the\ndefault.\n\nPresent-p is true if an entry is found; otherwise, it is false.\n\nsetf may be used with gethash to modify the value associated with a given\nkey, or to add a new entry.\n\nWhen a gethash form is used as a setf place, any default which is supplied\nis evaluated according to normal left-to-right evaluation rules, but its\nvalue is ignored.\n\nExamples::\n..........\n\n      (setq table (make-hash-table)) =>  #<HASH-TABLE EQL 0/120 32206334>\n      (gethash 1 table) =>  NIL, false\n      (gethash 1 table 2) =>  2, false\n      (setf (gethash 1 table) \"one\") =>  \"one\"\n      (setf (gethash 2 table \"two\") \"two\") =>  \"two\"\n      (gethash 1 table) =>  \"one\", true\n      (gethash 2 table) =>  \"two\", true\n      (gethash nil table) =>  NIL, false\n      (setf (gethash nil table) nil) =>  NIL\n      (gethash nil table) =>  NIL, true\n      (defvar *counters* (make-hash-table)) =>  *COUNTERS*\n      (gethash 'foo *counters*) =>  NIL, false\n      (gethash 'foo *counters* 0) =>  0, false\n      (defmacro how-many (obj) `(values (gethash ,obj *counters* 0))) =>  HOW-MANY\n      (defun count-it (obj) (incf (how-many obj))) =>  COUNT-IT\n      (dolist (x '(bar foo foo bar bar baz)) (count-it x))\n      (how-many 'foo) =>  2\n      (how-many 'bar) =>  3\n      (how-many 'quux) =>  0\n\nSee Also::\n..........\n\n*Note remhash::\n\nNotes::\n.......\n\nThe secondary value, present-p, can be used to distinguish the absence of\nan entry from the presence of an entry that has a value of default.\n\n"
+}

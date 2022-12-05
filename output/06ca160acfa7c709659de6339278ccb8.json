@@ -1,0 +1,21 @@
+{
+    "name": "Pretty Print Dispatch Tables",
+    "prev": "Compiling Format Strings",
+    "next": "Pretty Printer Margins",
+    "up": "Pretty Printer Concepts",
+    "header": {
+        "type": null,
+        "text": null
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Pretty Print Dispatch Tables",
+            "text": "A pprint dispatch table is a mapping from keys to pairs of values.  Each\nkey is a type specifier.  The values associated with a key are a\n\"function\" (specifically, a function designator or nil) and a \"numerical\npriority\" (specifically, a real).  Basic insertion and retrieval is done\nbased on the keys with the equality of keys being tested by equal.\nWhen *print-pretty* is true, the current pprint dispatch table (in\n*print-pprint-dispatch*) controls how objects are printed.  The\ninformation in this table takes precedence over all other mechanisms for\nspecifying how to print objects.  In particular, it has priority over\nuser-defined print-object methods\nbecause the current pprint dispatch table is consulted first.\nThe function is chosen from the current pprint dispatch table by finding\nthe highest priority function that is associated with a type specifier\nthat matches the object; if there is more than one such function, it is\nimplementation-dependent which is used.\nHowever, if there is no information in the table about how to pretty print\na particular kind of object, a function is invoked which uses print-object\nto print the object.  The value of *print-pretty* is still true when this\nfunction is called, and individual methods for print-object might still\nelect to produce output in a special format conditional on the value of\n*print-pretty*.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: Pretty Print Dispatch Tables,  Next: Pretty Printer Margins,  Prev: Compiling Format Strings,  Up: Pretty Printer Concepts\n\nPretty Print Dispatch Tables\n............................\n\nA pprint dispatch table is a mapping from keys to pairs of values.  Each\nkey is a type specifier.  The values associated with a key are a\n\"function\" (specifically, a function designator or nil) and a \"numerical\npriority\" (specifically, a real).  Basic insertion and retrieval is done\nbased on the keys with the equality of keys being tested by equal.\n\nWhen *print-pretty* is true, the current pprint dispatch table (in\n*print-pprint-dispatch*) controls how objects are printed.  The\ninformation in this table takes precedence over all other mechanisms for\nspecifying how to print objects.  In particular, it has priority over\nuser-defined print-object methods\n\nbecause the current pprint dispatch table is consulted first.\n\nThe function is chosen from the current pprint dispatch table by finding\nthe highest priority function that is associated with a type specifier\nthat matches the object; if there is more than one such function, it is\nimplementation-dependent which is used.\n\nHowever, if there is no information in the table about how to pretty print\na particular kind of object, a function is invoked which uses print-object\nto print the object.  The value of *print-pretty* is still true when this\nfunction is called, and individual methods for print-object might still\nelect to produce output in a special format conditional on the value of\n*print-pretty*.\n\n"
+}

@@ -1,0 +1,69 @@
+{
+    "name": "dolist",
+    "prev": "dotimes",
+    "next": "loop",
+    "up": "Iteration Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "dolist"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "dolist",
+                    "text": " (var list-form [result-form]) {declaration}* {tag | statement}*=>  {result}*\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "var",
+                    "desc": "a symbol."
+                },
+                {
+                    "name": "list-form",
+                    "desc": "a form."
+                },
+                {
+                    "name": "result-form",
+                    "desc": "a form."
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "tag",
+                    "desc": "a go tag; not evaluated."
+                },
+                {
+                    "name": "statement",
+                    "desc": "a compound form; evaluated as described below."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "dolist iterates over the elements of a list.  The body of dolist is like a\ntagbody.  It consists of a series of tags and statements.\ndolist evaluates list-form, which should produce a list. It then executes\nthe body once for each element in the list, in the order in which the tags\nand statements occur, with var bound to the element.  Then result-form is\nevaluated.  tags label statements.\nAt the time result-form is processed, var is bound to nil.\nAn implicit block named nil surrounds dolist.  return may be used to\nterminate the loop immediately without performing any further iterations,\nreturning zero or more values.\nThe scope of the binding of var does not include the list-form, but the\nresult-form is included.\nIt is implementation-dependent whether dolist establishes a new binding of\nvar on each iteration or whether it establishes a binding for var once at\nthe beginning and then assigns it on any subsequent iterations.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq temp-two '()) =>  NIL\n      (dolist (temp-one '(1 2 3 4) temp-two) (push temp-one temp-two)) =>  (4 3 2 1)\n      (setq temp-two 0) =>  0\n      (dolist (temp-one '(1 2 3 4)) (incf temp-two)) =>  NIL\n      temp-two =>  4\n      (dolist (x '(a b c d)) (prin1 x) (princ \" \"))\n      |>  A B C D\n     =>  NIL\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note do; do*:: , *Note dotimes:: , *Note tagbody:: ,\n*Note Traversal Rules and Side Effects::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "go may be used within the body of dolist to transfer control to a\nstatement labeled by a tag.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: dolist,  Next: loop,  Prev: dotimes,  Up: Iteration Dictionary\n\ndolist                                                              [Macro]\n---------------------------------------------------------------------------\n\n`dolist'  (var list-form [result-form]) {declaration}* {tag | statement}*\n=>  {result}*\n\nArguments and Values::\n......................\n\nvar--a symbol.\n\nlist-form--a form.\n\nresult-form--a form.\n\ndeclaration--a declare expression; not evaluated.\n\ntag--a go tag; not evaluated.\n\nstatement--a compound form; evaluated as described below.\n\nresults--if a return or return-from form is executed, the values passed\nfrom that form; otherwise, the values returned by the result-form or nil\nif there is no result-form.\n\nDescription::\n.............\n\ndolist iterates over the elements of a list.  The body of dolist is like a\ntagbody.  It consists of a series of tags and statements.\n\ndolist evaluates list-form, which should produce a list. It then executes\nthe body once for each element in the list, in the order in which the tags\nand statements occur, with var bound to the element.  Then result-form is\nevaluated.  tags label statements.\n\nAt the time result-form is processed, var is bound to nil.\n\nAn implicit block named nil surrounds dolist.  return may be used to\nterminate the loop immediately without performing any further iterations,\nreturning zero or more values.\n\nThe scope of the binding of var does not include the list-form, but the\nresult-form is included.\n\nIt is implementation-dependent whether dolist establishes a new binding of\nvar on each iteration or whether it establishes a binding for var once at\nthe beginning and then assigns it on any subsequent iterations.\n\nExamples::\n..........\n\n      (setq temp-two '()) =>  NIL\n      (dolist (temp-one '(1 2 3 4) temp-two) (push temp-one temp-two)) =>  (4 3 2 1)\n     \n      (setq temp-two 0) =>  0\n      (dolist (temp-one '(1 2 3 4)) (incf temp-two)) =>  NIL\n      temp-two =>  4\n     \n      (dolist (x '(a b c d)) (prin1 x) (princ \" \"))\n      |>  A B C D\n     =>  NIL\n\nSee Also::\n..........\n\n*Note do; do*:: , *Note dotimes:: , *Note tagbody:: ,\n\n*Note Traversal Rules and Side Effects::\n\nNotes::\n.......\n\ngo may be used within the body of dolist to transfer control to a\nstatement labeled by a tag.\n\n"
+}

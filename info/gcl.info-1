@@ -1,0 +1,2025 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: Top,  Next: Introduction (Introduction),  Prev: (dir),  Up: (dir)
+
+* Menu:
+
+* Introduction (Introduction)::
+* Syntax::
+* Evaluation and Compilation::
+* Types and Classes::
+* Data and Control Flow::
+* Iteration::
+* Objects::
+* Structures::
+* Conditions::
+* Symbols::
+* Packages::
+* Numbers (Numbers)::
+* Characters::
+* Conses::
+* Arrays::
+* Strings::
+* Sequences::
+* Hash Tables::
+* Filenames::
+* Files::
+* Streams::
+* Printer::
+* Reader::
+* System Construction::
+* Environment::
+* Glossary (Glossary)::
+* Appendix::
+
+
+* Introduction:
+
+* Scope::
+* Organization of the Document::
+* Referenced Publications::
+* Definitions::
+* Conformance::
+* Language Extensions::
+* Language Subsets::
+* Deprecated Language Features::
+* Symbols in the COMMON-LISP Package::
+
+* Scope, Purpose, and History:
+
+* Scope and Purpose::
+* History::
+
+* Definitions:
+
+* Notational Conventions::
+* Error Terminology::
+* Sections Not Formally Part Of This Standard::
+* Interpreting Dictionary Entries::
+
+* Notational Conventions:
+
+* Font Key::
+* Modified BNF Syntax::
+* Splicing in Modified BNF Syntax::
+* Indirection in Modified BNF Syntax::
+* Additional Uses for Indirect Definitions in Modified BNF Syntax::
+* Special Symbols::
+* Objects with Multiple Notations::
+* Case in Symbols::
+* Numbers (Objects with Multiple Notations)::
+* Use of the Dot Character::
+* NIL::
+* Designators::
+* Nonsense Words::
+
+* Interpreting Dictionary Entries:
+
+* The "Affected By" Section of a Dictionary Entry::
+* The "Arguments" Section of a Dictionary Entry::
+* The "Arguments and Values" Section of a Dictionary Entry::
+* The "Binding Types Affected" Section of a Dictionary Entry::
+* The "Class Precedence List" Section of a Dictionary Entry::
+* Dictionary Entries for Type Specifiers::
+* The "Compound Type Specifier Kind" Section of a Dictionary Entry::
+* The "Compound Type Specifier Syntax" Section of a Dictionary Entry::
+* The "Compound Type Specifier Arguments" Section of a Dictionary Entry::
+* The "Compound Type Specifier Description" Section of a Dictionary Entry::
+* The "Constant Value" Section of a Dictionary Entry::
+* The "Description" Section of a Dictionary Entry::
+* The "Examples" Section of a Dictionary Entry::
+* The "Exceptional Situations" Section of a Dictionary Entry::
+* The "Initial Value" Section of a Dictionary Entry::
+* The "Argument Precedence Order" Section of a Dictionary Entry::
+* The "Method Signature" Section of a Dictionary Entry::
+* The "Name" Section of a Dictionary Entry::
+* The "Notes" Section of a Dictionary Entry::
+* The "Pronunciation" Section of a Dictionary Entry::
+* The "See Also" Section of a Dictionary Entry::
+* The "Side Effects" Section of a Dictionary Entry::
+* The "Supertypes" Section of a Dictionary Entry::
+* The "Syntax" Section of a Dictionary Entry::
+* Special "Syntax" Notations for Overloaded Operators::
+* Naming Conventions for Rest Parameters::
+* Requiring Non-Null Rest Parameters in the "Syntax" Section::
+* Return values in the "Syntax" Section::
+* No Arguments or Values in the "Syntax" Section::
+* Unconditional Transfer of Control in the "Syntax" Section::
+* The "Valid Context" Section of a Dictionary Entry::
+* The "Value Type" Section of a Dictionary Entry::
+
+* Conformance:
+
+* Conforming Implementations::
+* Conforming Programs::
+
+* Conforming Implementations:
+
+* Required Language Features::
+* Documentation of Implementation-Dependent Features::
+* Documentation of Extensions::
+* Treatment of Exceptional Situations::
+* Resolution of Apparent Conflicts in Exceptional Situations::
+* Examples of Resolution of Apparent Conflict in Exceptional Situations::
+* Conformance Statement::
+
+* Conforming Programs:
+
+* Use of Implementation-Defined Language Features::
+* Use of Read-Time Conditionals::
+
+* Deprecated Language Features:
+
+* Deprecated Functions::
+* Deprecated Argument Conventions::
+* Deprecated Variables::
+* Deprecated Reader Syntax::
+
+* Syntax:
+
+* Character Syntax::
+* Reader Algorithm::
+* Interpretation of Tokens::
+* Standard Macro Characters::
+
+* Character Syntax:
+
+* Readtables::
+* Variables that affect the Lisp Reader::
+* Standard Characters::
+* Character Syntax Types::
+
+* Readtables:
+
+* The Current Readtable::
+* The Standard Readtable::
+* The Initial Readtable::
+
+* Character Syntax Types:
+
+* Constituent Characters::
+* Constituent Traits::
+* Invalid Characters::
+* Macro Characters::
+* Multiple Escape Characters::
+* Examples of Multiple Escape Characters::
+* Single Escape Character::
+* Examples of Single Escape Characters::
+* Whitespace Characters::
+* Examples of Whitespace Characters::
+
+* Interpretation of Tokens:
+
+* Numbers as Tokens::
+* Constructing Numbers from Tokens::
+* The Consing Dot::
+* Symbols as Tokens::
+* Valid Patterns for Tokens::
+* Package System Consistency Rules::
+
+* Numbers as Tokens:
+
+* Potential Numbers as Tokens::
+* Escape Characters and Potential Numbers::
+* Examples of Potential Numbers::
+
+* Constructing Numbers from Tokens:
+
+* Syntax of a Rational::
+* Syntax of an Integer::
+* Syntax of a Ratio::
+* Syntax of a Float::
+* Syntax of a Complex::
+
+* Standard Macro Characters:
+
+* Left-Parenthesis::
+* Right-Parenthesis::
+* Single-Quote::
+* Semicolon::
+* Double-Quote::
+* Backquote::
+* Comma::
+* Sharpsign::
+* Re-Reading Abbreviated Expressions::
+
+* Single-Quote:
+
+* Examples of Single-Quote::
+
+* Semicolon:
+
+* Examples of Semicolon::
+* Notes about Style for Semicolon::
+* Use of Single Semicolon::
+* Use of Double Semicolon::
+* Use of Triple Semicolon::
+* Use of Quadruple Semicolon::
+* Examples of Style for Semicolon::
+
+* Backquote:
+
+* Notes about Backquote::
+
+* Sharpsign:
+
+* Sharpsign Backslash::
+* Sharpsign Single-Quote::
+* Sharpsign Left-Parenthesis::
+* Sharpsign Asterisk::
+* Examples of Sharpsign Asterisk::
+* Sharpsign Colon::
+* Sharpsign Dot::
+* Sharpsign B::
+* Sharpsign O::
+* Sharpsign X::
+* Sharpsign R::
+* Sharpsign C::
+* Sharpsign A::
+* Sharpsign S::
+* Sharpsign P::
+* Sharpsign Equal-Sign::
+* Sharpsign Sharpsign::
+* Sharpsign Plus::
+* Sharpsign Minus::
+* Sharpsign Vertical-Bar::
+* Examples of Sharpsign Vertical-Bar::
+* Notes about Style for Sharpsign Vertical-Bar::
+* Sharpsign Less-Than-Sign::
+* Sharpsign Whitespace::
+* Sharpsign Right-Parenthesis::
+
+* Evaluation and Compilation:
+
+* Evaluation::
+* Compilation::
+* Declarations::
+* Lambda Lists::
+* Error Checking in Function Calls::
+* Traversal Rules and Side Effects::
+* Destructive Operations::
+* Evaluation and Compilation Dictionary::
+
+* Evaluation:
+
+* Introduction to Environments::
+* The Evaluation Model::
+* Lambda Expressions::
+* Closures and Lexical Binding::
+* Shadowing::
+* Extent::
+* Return Values::
+
+* Introduction to Environments:
+
+* The Global Environment::
+* Dynamic Environments::
+* Lexical Environments::
+* The Null Lexical Environment::
+* Environment Objects::
+
+* The Evaluation Model:
+
+* Form Evaluation::
+* Symbols as Forms::
+* Lexical Variables::
+* Dynamic Variables::
+* Constant Variables::
+* Symbols Naming Both Lexical and Dynamic Variables::
+* Conses as Forms::
+* Special Forms::
+* Macro Forms::
+* Function Forms::
+* Lambda Forms::
+* Self-Evaluating Objects::
+* Examples of Self-Evaluating Objects::
+
+* Compilation:
+
+* Compiler Terminology::
+* Compilation Semantics::
+* File Compilation::
+* Literal Objects in Compiled Files::
+* Exceptional Situations in the Compiler::
+
+* Compilation Semantics:
+
+* Compiler Macros::
+* Purpose of Compiler Macros::
+* Naming of Compiler Macros::
+* When Compiler Macros Are Used::
+* Notes about the Implementation of Compiler Macros::
+* Minimal Compilation::
+* Semantic Constraints::
+
+* File Compilation:
+
+* Processing of Top Level Forms::
+* Processing of Defining Macros::
+* Constraints on Macros and Compiler Macros::
+
+* Literal Objects in Compiled Files:
+
+* Externalizable Objects::
+* Similarity of Literal Objects::
+* Similarity of Aggregate Objects::
+* Definition of Similarity::
+* Extensions to Similarity Rules::
+* Additional Constraints on Externalizable Objects::
+
+* Declarations:
+
+* Minimal Declaration Processing Requirements::
+* Declaration Specifiers::
+* Declaration Identifiers::
+* Declaration Scope::
+
+* Declaration Identifiers:
+
+* Shorthand notation for Type Declarations::
+
+* Declaration Scope:
+
+* Examples of Declaration Scope::
+
+* Lambda Lists:
+
+* Ordinary Lambda Lists::
+* Generic Function Lambda Lists::
+* Specialized Lambda Lists::
+* Macro Lambda Lists::
+* Destructuring Lambda Lists::
+* Boa Lambda Lists::
+* Defsetf Lambda Lists::
+* Deftype Lambda Lists::
+* Define-modify-macro Lambda Lists::
+* Define-method-combination Arguments Lambda Lists::
+* Syntactic Interaction of Documentation Strings and Declarations::
+
+* Ordinary Lambda Lists:
+
+* Specifiers for the required parameters::
+* Specifiers for optional parameters::
+* A specifier for a rest parameter::
+* Specifiers for keyword parameters::
+* Suppressing Keyword Argument Checking::
+* Examples of Suppressing Keyword Argument Checking::
+* Specifiers for &aux variables::
+* Examples of Ordinary Lambda Lists::
+
+* Macro Lambda Lists:
+
+* Destructuring by Lambda Lists::
+* Data-directed Destructuring by Lambda Lists::
+* Examples of Data-directed Destructuring by Lambda Lists::
+* Lambda-list-directed Destructuring by Lambda Lists::
+
+* Error Checking in Function Calls:
+
+* Argument Mismatch Detection::
+
+* Argument Mismatch Detection:
+
+* Safe and Unsafe Calls::
+* Error Detection Time in Safe Calls::
+* Too Few Arguments::
+* Too Many Arguments::
+* Unrecognized Keyword Arguments::
+* Invalid Keyword Arguments::
+* Odd Number of Keyword Arguments::
+* Destructuring Mismatch::
+* Errors When Calling a Next Method::
+
+* Destructive Operations:
+
+* Modification of Literal Objects::
+* Transfer of Control during a Destructive Operation::
+
+* Transfer of Control during a Destructive Operation:
+
+* Examples of Transfer of Control during a Destructive Operation::
+
+* Evaluation and Compilation Dictionary:
+
+* lambda (Symbol)::
+* lambda::
+* compile::
+* eval::
+* eval-when::
+* load-time-value::
+* quote::
+* compiler-macro-function::
+* define-compiler-macro::
+* defmacro::
+* macro-function::
+* macroexpand::
+* define-symbol-macro::
+* symbol-macrolet::
+* *macroexpand-hook*::
+* proclaim::
+* declaim::
+* declare::
+* ignore::
+* dynamic-extent::
+* type::
+* inline::
+* ftype::
+* declaration::
+* optimize::
+* special::
+* locally::
+* the::
+* special-operator-p::
+* constantp::
+
+* Types and Classes:
+
+* Introduction (Types and Classes)::
+* Types::
+* Classes::
+* Types and Classes Dictionary::
+
+* Types:
+
+* Data Type Definition::
+* Type Relationships::
+* Type Specifiers::
+
+* Classes:
+
+* Introduction to Classes::
+* Defining Classes::
+* Creating Instances of Classes::
+* Inheritance::
+* Determining the Class Precedence List::
+* Redefining Classes::
+* Integrating Types and Classes::
+
+* Introduction to Classes:
+
+* Standard Metaclasses::
+
+* Inheritance:
+
+* Examples of Inheritance::
+* Inheritance of Class Options::
+
+* Determining the Class Precedence List:
+
+* Topological Sorting::
+* Examples of Class Precedence List Determination::
+
+* Redefining Classes:
+
+* Modifying the Structure of Instances::
+* Initializing Newly Added Local Slots (Redefining Classes)::
+* Customizing Class Redefinition::
+
+* Types and Classes Dictionary:
+
+* nil (Type)::
+* boolean::
+* function (System Class)::
+* compiled-function::
+* generic-function::
+* standard-generic-function::
+* class::
+* built-in-class::
+* structure-class::
+* standard-class::
+* method::
+* standard-method::
+* structure-object::
+* standard-object::
+* method-combination::
+* t (System Class)::
+* satisfies::
+* member::
+* not (Type Specifier)::
+* and (Type Specifier)::
+* or (Type Specifier)::
+* values (Type Specifier)::
+* eql (Type Specifier)::
+* coerce::
+* deftype::
+* subtypep::
+* type-of::
+* typep::
+* type-error::
+* type-error-datum::
+* simple-type-error::
+
+* Data and Control Flow:
+
+* Generalized Reference::
+* Transfer of Control to an Exit Point::
+* Data and Control Flow Dictionary::
+
+* Generalized Reference:
+
+* Overview of Places and Generalized Reference::
+* Kinds of Places::
+* Treatment of Other Macros Based on SETF::
+
+* Overview of Places and Generalized Reference:
+
+* Evaluation of Subforms to Places::
+* Examples of Evaluation of Subforms to Places::
+* Setf Expansions::
+* Examples of Setf Expansions::
+
+* Kinds of Places:
+
+* Variable Names as Places::
+* Function Call Forms as Places::
+* VALUES Forms as Places::
+* THE Forms as Places::
+* APPLY Forms as Places::
+* Setf Expansions and Places::
+* Macro Forms as Places::
+* Symbol Macros as Places::
+* Other Compound Forms as Places::
+
+* Data and Control Flow Dictionary:
+
+* apply::
+* defun::
+* fdefinition::
+* fboundp::
+* fmakunbound::
+* flet::
+* funcall::
+* function (Special Operator)::
+* function-lambda-expression::
+* functionp::
+* compiled-function-p::
+* call-arguments-limit::
+* lambda-list-keywords::
+* lambda-parameters-limit::
+* defconstant::
+* defparameter::
+* destructuring-bind::
+* let::
+* progv::
+* setq::
+* psetq::
+* block::
+* catch::
+* go::
+* return-from::
+* return::
+* tagbody::
+* throw::
+* unwind-protect::
+* nil::
+* not::
+* t::
+* eq::
+* eql::
+* equal::
+* equalp::
+* identity::
+* complement::
+* constantly::
+* every::
+* and::
+* cond::
+* if::
+* or::
+* when::
+* case::
+* typecase::
+* multiple-value-bind::
+* multiple-value-call::
+* multiple-value-list::
+* multiple-value-prog1::
+* multiple-value-setq::
+* values::
+* values-list::
+* multiple-values-limit::
+* nth-value::
+* prog::
+* prog1::
+* progn::
+* define-modify-macro::
+* defsetf::
+* define-setf-expander::
+* get-setf-expansion::
+* setf::
+* shiftf::
+* rotatef::
+* control-error::
+* program-error::
+* undefined-function::
+
+* Iteration:
+
+* The LOOP Facility::
+* Iteration Dictionary::
+
+* The LOOP Facility:
+
+* Overview of the Loop Facility::
+* Variable Initialization and Stepping Clauses::
+* Value Accumulation Clauses::
+* Termination Test Clauses::
+* Unconditional Execution Clauses::
+* Conditional Execution Clauses::
+* Miscellaneous Clauses::
+* Examples of Miscellaneous Loop Features::
+* Notes about Loop::
+
+* Overview of the Loop Facility:
+
+* Simple vs Extended Loop::
+* Simple Loop::
+* Extended Loop::
+* Loop Keywords::
+* Parsing Loop Clauses::
+* Expanding Loop Forms::
+* Summary of Loop Clauses::
+* Summary of Variable Initialization and Stepping Clauses::
+* Summary of Value Accumulation Clauses::
+* Summary of Termination Test Clauses::
+* Summary of Unconditional Execution Clauses::
+* Summary of Conditional Execution Clauses::
+* Summary of Miscellaneous Clauses::
+* Order of Execution::
+* Destructuring::
+* Restrictions on Side-Effects::
+
+* Variable Initialization and Stepping Clauses:
+
+* Iteration Control::
+* The for-as-arithmetic subclause::
+* Examples of for-as-arithmetic subclause::
+* The for-as-in-list subclause::
+* Examples of for-as-in-list subclause::
+* The for-as-on-list subclause::
+* Examples of for-as-on-list subclause::
+* The for-as-equals-then subclause::
+* Examples of for-as-equals-then subclause::
+* The for-as-across subclause::
+* Examples of for-as-across subclause::
+* The for-as-hash subclause::
+* The for-as-package subclause::
+* Examples of for-as-package subclause::
+* Local Variable Initializations::
+* Examples of WITH clause::
+
+* Value Accumulation Clauses:
+
+* Examples of COLLECT clause::
+* Examples of APPEND and NCONC clauses::
+* Examples of COUNT clause::
+* Examples of MAXIMIZE and MINIMIZE clauses::
+* Examples of SUM clause::
+
+* Termination Test Clauses:
+
+* Examples of REPEAT clause::
+* Examples of ALWAYS::
+* Examples of WHILE and UNTIL clauses::
+
+* Unconditional Execution Clauses:
+
+* Examples of unconditional execution::
+
+* Conditional Execution Clauses:
+
+* Examples of WHEN clause::
+
+* Miscellaneous Clauses:
+
+* Control Transfer Clauses::
+* Examples of NAMED clause::
+* Initial and Final Execution::
+
+* Examples of Miscellaneous Loop Features:
+
+* Examples of clause grouping::
+
+* Iteration Dictionary:
+
+* do::
+* dotimes::
+* dolist::
+* loop::
+* loop-finish::
+
+* Objects:
+
+* Object Creation and Initialization::
+* Changing the Class of an Instance::
+* Reinitializing an Instance::
+* Meta-Objects::
+* Slots::
+* Generic Functions and Methods::
+* Objects Dictionary::
+
+* Object Creation and Initialization:
+
+* Initialization Arguments::
+* Declaring the Validity of Initialization Arguments::
+* Defaulting of Initialization Arguments::
+* Rules for Initialization Arguments::
+* Shared-Initialize::
+* Initialize-Instance::
+* Definitions of Make-Instance and Initialize-Instance::
+
+* Changing the Class of an Instance:
+
+* Modifying the Structure of the Instance::
+* Initializing Newly Added Local Slots (Changing the Class of an Instance)::
+* Customizing the Change of Class of an Instance::
+
+* Reinitializing an Instance:
+
+* Customizing Reinitialization::
+
+* Meta-Objects:
+
+* Standard Meta-objects::
+
+* Slots:
+
+* Introduction to Slots::
+* Accessing Slots::
+* Inheritance of Slots and Slot Options::
+
+* Generic Functions and Methods:
+
+* Introduction to Generic Functions::
+* Introduction to Methods::
+* Agreement on Parameter Specializers and Qualifiers::
+* Congruent Lambda-lists for all Methods of a Generic Function::
+* Keyword Arguments in Generic Functions and Methods::
+* Method Selection and Combination::
+* Inheritance of Methods::
+
+* Keyword Arguments in Generic Functions and Methods:
+
+* Examples of Keyword Arguments in Generic Functions and Methods::
+
+* Method Selection and Combination:
+
+* Determining the Effective Method::
+* Selecting the Applicable Methods::
+* Sorting the Applicable Methods by Precedence Order::
+* Applying method combination to the sorted list of applicable methods::
+* Standard Method Combination::
+* Declarative Method Combination::
+* Built-in Method Combination Types::
+
+* Objects Dictionary:
+
+* function-keywords::
+* ensure-generic-function::
+* allocate-instance::
+* reinitialize-instance::
+* shared-initialize::
+* update-instance-for-different-class::
+* update-instance-for-redefined-class::
+* change-class::
+* slot-boundp::
+* slot-exists-p::
+* slot-makunbound::
+* slot-missing::
+* slot-unbound::
+* slot-value::
+* method-qualifiers::
+* no-applicable-method::
+* no-next-method::
+* remove-method::
+* make-instance::
+* make-instances-obsolete::
+* make-load-form::
+* make-load-form-saving-slots::
+* with-accessors::
+* with-slots::
+* defclass::
+* defgeneric::
+* defmethod::
+* find-class::
+* next-method-p::
+* call-method::
+* call-next-method::
+* compute-applicable-methods::
+* define-method-combination::
+* find-method::
+* add-method::
+* initialize-instance::
+* class-name::
+* (setf class-name)::
+* class-of::
+* unbound-slot::
+* unbound-slot-instance::
+
+* Structures:
+
+* Structures Dictionary::
+
+* Structures Dictionary:
+
+* defstruct::
+* copy-structure::
+
+* Conditions:
+
+* Condition System Concepts::
+* Conditions Dictionary::
+
+* Condition System Concepts:
+
+* Condition Types::
+* Creating Conditions::
+* Printing Conditions::
+* Signaling and Handling Conditions::
+* Assertions::
+* Notes about the Condition System's Background::
+
+* Condition Types:
+
+* Serious Conditions::
+
+* Creating Conditions:
+
+* Condition Designators::
+
+* Printing Conditions:
+
+* Recommended Style in Condition Reporting::
+* Capitalization and Punctuation in Condition Reports::
+* Leading and Trailing Newlines in Condition Reports::
+* Embedded Newlines in Condition Reports::
+* Note about Tabs in Condition Reports::
+* Mentioning Containing Function in Condition Reports::
+
+* Signaling and Handling Conditions:
+
+* Signaling::
+* Resignaling a Condition::
+* Restarts::
+* Interactive Use of Restarts::
+* Interfaces to Restarts::
+* Restart Tests::
+* Associating a Restart with a Condition::
+
+* Conditions Dictionary:
+
+* condition::
+* warning::
+* style-warning::
+* serious-condition::
+* error (Condition Type)::
+* cell-error::
+* cell-error-name::
+* parse-error::
+* storage-condition::
+* assert::
+* error::
+* cerror::
+* check-type::
+* simple-error::
+* invalid-method-error::
+* method-combination-error::
+* signal::
+* simple-condition::
+* simple-condition-format-control::
+* warn::
+* simple-warning::
+* invoke-debugger::
+* break::
+* *debugger-hook*::
+* *break-on-signals*::
+* handler-bind::
+* handler-case::
+* ignore-errors::
+* define-condition::
+* make-condition::
+* restart::
+* compute-restarts::
+* find-restart::
+* invoke-restart::
+* invoke-restart-interactively::
+* restart-bind::
+* restart-case::
+* restart-name::
+* with-condition-restarts::
+* with-simple-restart::
+* abort::
+* continue::
+* muffle-warning::
+* store-value::
+* use-value::
+* abort::
+
+* Symbols:
+
+* Symbol Concepts::
+* Symbols Dictionary::
+
+* Symbols Dictionary:
+
+* symbol::
+* keyword::
+* symbolp::
+* keywordp::
+* make-symbol::
+* copy-symbol::
+* gensym::
+* *gensym-counter*::
+* gentemp::
+* symbol-function::
+* symbol-name::
+* symbol-package::
+* symbol-plist::
+* symbol-value::
+* get::
+* remprop::
+* boundp::
+* makunbound::
+* set::
+* unbound-variable::
+
+* Packages:
+
+* Package Concepts::
+* Packages Dictionary::
+
+* Package Concepts:
+
+* Introduction to Packages::
+* Standardized Packages::
+
+* Introduction to Packages:
+
+* Package Names and Nicknames::
+* Symbols in a Package::
+* Internal and External Symbols::
+* Package Inheritance::
+* Accessibility of Symbols in a Package::
+* Locating a Symbol in a Package::
+* Prevention of Name Conflicts in Packages::
+
+* Standardized Packages:
+
+* The COMMON-LISP Package::
+* Constraints on the COMMON-LISP Package for Conforming Implementations::
+* Constraints on the COMMON-LISP Package for Conforming Programs::
+* Some Exceptions to Constraints on the COMMON-LISP Package for Conforming Programs::
+* The COMMON-LISP-USER Package::
+* The KEYWORD Package::
+* Interning a Symbol in the KEYWORD Package::
+* Notes about The KEYWORD Package::
+* Implementation-Defined Packages::
+
+* Packages Dictionary:
+
+* package::
+* export::
+* find-symbol::
+* find-package::
+* find-all-symbols::
+* import::
+* list-all-packages::
+* rename-package::
+* shadow::
+* shadowing-import::
+* delete-package::
+* make-package::
+* with-package-iterator::
+* unexport::
+* unintern::
+* in-package::
+* unuse-package::
+* use-package::
+* defpackage::
+* do-symbols::
+* intern::
+* package-name::
+* package-nicknames::
+* package-shadowing-symbols::
+* package-use-list::
+* package-used-by-list::
+* packagep::
+* *package*::
+* package-error::
+* package-error-package::
+
+* Numbers:
+
+* Number Concepts::
+* Numbers Dictionary::
+
+* Number Concepts:
+
+* Numeric Operations::
+* Implementation-Dependent Numeric Constants::
+* Rational Computations::
+* Floating-point Computations::
+* Complex Computations::
+* Interval Designators::
+* Random-State Operations::
+
+* Numeric Operations:
+
+* Associativity and Commutativity in Numeric Operations::
+* Examples of Associativity and Commutativity in Numeric Operations::
+* Contagion in Numeric Operations::
+* Viewing Integers as Bits and Bytes::
+* Logical Operations on Integers::
+* Byte Operations on Integers::
+
+* Rational Computations:
+
+* Rule of Unbounded Rational Precision::
+* Rule of Canonical Representation for Rationals::
+* Rule of Float Substitutability::
+
+* Floating-point Computations:
+
+* Rule of Float and Rational Contagion::
+* Examples of Rule of Float and Rational Contagion::
+* Rule of Float Approximation::
+* Rule of Float Underflow and Overflow::
+* Rule of Float Precision Contagion::
+
+* Complex Computations:
+
+* Rule of Complex Substitutability::
+* Rule of Complex Contagion::
+* Rule of Canonical Representation for Complex Rationals::
+* Examples of Rule of Canonical Representation for Complex Rationals::
+* Principal Values and Branch Cuts::
+
+* Numbers Dictionary:
+
+* number::
+* complex (System Class)::
+* real::
+* float (System Class)::
+* short-float::
+* rational::
+* ratio::
+* integer::
+* signed-byte::
+* unsigned-byte::
+* mod::
+* bit::
+* fixnum::
+* bignum::
+* =::
+* max::
+* minusp::
+* zerop::
+* floor::
+* sin::
+* asin::
+* pi::
+* sinh::
+* *::
+* +::
+* -::
+* /::
+* 1+::
+* abs::
+* evenp::
+* exp::
+* gcd::
+* incf::
+* lcm::
+* log::
+* mod::
+* signum::
+* sqrt::
+* random-state::
+* make-random-state::
+* random::
+* random-state-p::
+* *random-state*::
+* numberp::
+* cis::
+* complex::
+* complexp::
+* conjugate::
+* phase::
+* realpart::
+* upgraded-complex-part-type::
+* realp::
+* numerator::
+* rational::
+* rationalp::
+* ash::
+* integer-length::
+* integerp::
+* parse-integer::
+* boole::
+* boole-1::
+* logand::
+* logbitp::
+* logcount::
+* logtest::
+* byte::
+* deposit-field::
+* dpb::
+* ldb::
+* ldb-test::
+* mask-field::
+* most-positive-fixnum::
+* decode-float::
+* float::
+* floatp::
+* most-positive-short-float::
+* short-float-epsilon::
+* arithmetic-error::
+* arithmetic-error-operands::
+* division-by-zero::
+* floating-point-invalid-operation::
+* floating-point-inexact::
+* floating-point-overflow::
+* floating-point-underflow::
+
+* Characters:
+
+* Character Concepts::
+* Characters Dictionary::
+
+* Character Concepts:
+
+* Introduction to Characters::
+* Introduction to Scripts and Repertoires::
+* Character Attributes::
+* Character Categories::
+* Identity of Characters::
+* Ordering of Characters::
+* Character Names::
+* Treatment of Newline during Input and Output::
+* Character Encodings::
+* Documentation of Implementation-Defined Scripts::
+
+* Introduction to Scripts and Repertoires:
+
+* Character Scripts::
+* Character Repertoires::
+
+* Character Categories:
+
+* Graphic Characters::
+* Alphabetic Characters::
+* Characters With Case::
+* Uppercase Characters::
+* Lowercase Characters::
+* Corresponding Characters in the Other Case::
+* Case of Implementation-Defined Characters::
+* Numeric Characters::
+* Alphanumeric Characters::
+* Digits in a Radix::
+
+* Characters Dictionary:
+
+* character (System Class)::
+* base-char::
+* standard-char::
+* extended-char::
+* char=::
+* character::
+* characterp::
+* alpha-char-p::
+* alphanumericp::
+* digit-char::
+* digit-char-p::
+* graphic-char-p::
+* standard-char-p::
+* char-upcase::
+* upper-case-p::
+* char-code::
+* char-int::
+* code-char::
+* char-code-limit::
+* char-name::
+* name-char::
+
+* Conses:
+
+* Cons Concepts::
+* Conses Dictionary::
+
+* Cons Concepts:
+
+* Conses as Trees::
+* Conses as Lists::
+
+* Conses as Trees:
+
+* General Restrictions on Parameters that must be Trees::
+
+* Conses as Lists:
+
+* Lists as Association Lists::
+* Lists as Sets::
+* General Restrictions on Parameters that must be Lists::
+
+* Conses Dictionary:
+
+* list::
+* null (System Class)::
+* cons (System Class)::
+* atom (Type)::
+* cons::
+* consp::
+* atom::
+* rplaca::
+* car::
+* copy-tree::
+* sublis::
+* subst::
+* tree-equal::
+* copy-list::
+* list::
+* list-length::
+* listp::
+* make-list::
+* push::
+* pop::
+* first::
+* nth::
+* endp::
+* null::
+* nconc::
+* append::
+* revappend::
+* butlast::
+* last::
+* ldiff::
+* nthcdr::
+* rest::
+* member::
+* mapc::
+* acons::
+* assoc::
+* copy-alist::
+* pairlis::
+* rassoc::
+* get-properties::
+* getf::
+* remf::
+* intersection::
+* adjoin::
+* pushnew::
+* set-difference::
+* set-exclusive-or::
+* subsetp::
+* union::
+
+* Arrays:
+
+* Array Concepts::
+* Arrays Dictionary::
+
+* Array Concepts:
+
+* Array Elements::
+* Specialized Arrays::
+
+* Array Elements:
+
+* Array Indices::
+* Array Dimensions::
+* Implementation Limits on Individual Array Dimensions::
+* Array Rank::
+* Vectors::
+* Fill Pointers::
+* Multidimensional Arrays::
+* Storage Layout for Multidimensional Arrays::
+* Implementation Limits on Array Rank::
+
+* Specialized Arrays:
+
+* Array Upgrading::
+* Required Kinds of Specialized Arrays::
+
+* Arrays Dictionary:
+
+* array::
+* simple-array::
+* vector (System Class)::
+* simple-vector::
+* bit-vector::
+* simple-bit-vector::
+* make-array::
+* adjust-array::
+* adjustable-array-p::
+* aref::
+* array-dimension::
+* array-dimensions::
+* array-element-type::
+* array-has-fill-pointer-p::
+* array-displacement::
+* array-in-bounds-p::
+* array-rank::
+* array-row-major-index::
+* array-total-size::
+* arrayp::
+* fill-pointer::
+* row-major-aref::
+* upgraded-array-element-type::
+* array-dimension-limit::
+* array-rank-limit::
+* array-total-size-limit::
+* simple-vector-p::
+* svref::
+* vector::
+* vector-pop::
+* vector-push::
+* vectorp::
+* bit::
+* bit-and::
+* bit-vector-p::
+* simple-bit-vector-p::
+
+* Strings:
+
+* String Concepts::
+* Strings Dictionary::
+
+* String Concepts:
+
+* Implications of Strings Being Arrays::
+* Subtypes of STRING::
+
+* Strings Dictionary:
+
+* string (System Class)::
+* base-string::
+* simple-string::
+* simple-base-string::
+* simple-string-p::
+* char::
+* string::
+* string-upcase::
+* string-trim::
+* string=::
+* stringp::
+* make-string::
+
+* Sequences:
+
+* Sequence Concepts::
+* Rules about Test Functions::
+* Sequences Dictionary::
+
+* Sequence Concepts:
+
+* General Restrictions on Parameters that must be Sequences::
+
+* Rules about Test Functions:
+
+* Satisfying a Two-Argument Test::
+* Satisfying a One-Argument Test::
+
+* Satisfying a Two-Argument Test:
+
+* Examples of Satisfying a Two-Argument Test::
+
+* Satisfying a One-Argument Test:
+
+* Examples of Satisfying a One-Argument Test::
+
+* Sequences Dictionary:
+
+* sequence::
+* copy-seq::
+* elt::
+* fill::
+* make-sequence::
+* subseq::
+* map::
+* map-into::
+* reduce::
+* count::
+* length::
+* reverse::
+* sort::
+* find::
+* position::
+* search::
+* mismatch::
+* replace::
+* substitute::
+* concatenate::
+* merge::
+* remove::
+* remove-duplicates::
+
+* Hash Tables:
+
+* Hash Table Concepts::
+* Hash Tables Dictionary::
+
+* Hash Table Concepts:
+
+* Hash-Table Operations::
+* Modifying Hash Table Keys::
+
+* Modifying Hash Table Keys:
+
+* Visible Modification of Objects with respect to EQ and EQL::
+* Visible Modification of Objects with respect to EQUAL::
+* Visible Modification of Conses with respect to EQUAL::
+* Visible Modification of Bit Vectors and Strings with respect to EQUAL::
+* Visible Modification of Objects with respect to EQUALP::
+* Visible Modification of Structures with respect to EQUALP::
+* Visible Modification of Arrays with respect to EQUALP::
+* Visible Modification of Hash Tables with respect to EQUALP::
+* Visible Modifications by Language Extensions::
+
+* Hash Tables Dictionary:
+
+* hash-table::
+* make-hash-table::
+* hash-table-p::
+* hash-table-count::
+* hash-table-rehash-size::
+* hash-table-rehash-threshold::
+* hash-table-size::
+* hash-table-test::
+* gethash::
+* remhash::
+* maphash::
+* with-hash-table-iterator::
+* clrhash::
+* sxhash::
+
+* Filenames:
+
+* Overview of Filenames::
+* Pathnames::
+* Logical Pathnames::
+* Filenames Dictionary::
+
+* Overview of Filenames:
+
+* Namestrings as Filenames::
+* Pathnames as Filenames::
+* Parsing Namestrings Into Pathnames::
+
+* Pathnames:
+
+* Pathname Components::
+* Interpreting Pathname Component Values::
+* Merging Pathnames::
+
+* Pathname Components:
+
+* The Pathname Host Component::
+* The Pathname Device Component::
+* The Pathname Directory Component::
+* The Pathname Name Component::
+* The Pathname Type Component::
+* The Pathname Version Component::
+
+* Interpreting Pathname Component Values:
+
+* Strings in Component Values::
+* Special Characters in Pathname Components::
+* Case in Pathname Components::
+* Local Case in Pathname Components::
+* Common Case in Pathname Components::
+* Special Pathname Component Values::
+* NIL as a Component Value::
+* ->WILD as a Component Value::
+* ->UNSPECIFIC as a Component Value::
+* Relation between component values NIL and ->UNSPECIFIC::
+* Restrictions on Wildcard Pathnames::
+* Restrictions on Examining Pathname Components::
+* Restrictions on Examining a Pathname Host Component::
+* Restrictions on Examining a Pathname Device Component::
+* Restrictions on Examining a Pathname Directory Component::
+* Directory Components in Non-Hierarchical File Systems::
+* Restrictions on Examining a Pathname Name Component::
+* Restrictions on Examining a Pathname Type Component::
+* Restrictions on Examining a Pathname Version Component::
+* Notes about the Pathname Version Component::
+* Restrictions on Constructing Pathnames::
+
+* Merging Pathnames:
+
+* Examples of Merging Pathnames::
+
+* Logical Pathnames:
+
+* Syntax of Logical Pathname Namestrings::
+* Logical Pathname Components::
+
+* Syntax of Logical Pathname Namestrings:
+
+* Additional Information about Parsing Logical Pathname Namestrings::
+* The Host part of a Logical Pathname Namestring::
+* The Device part of a Logical Pathname Namestring::
+* The Directory part of a Logical Pathname Namestring::
+* The Type part of a Logical Pathname Namestring::
+* The Version part of a Logical Pathname Namestring::
+* Wildcard Words in a Logical Pathname Namestring::
+* Lowercase Letters in a Logical Pathname Namestring::
+* Other Syntax in a Logical Pathname Namestring::
+
+* Logical Pathname Components:
+
+* Unspecific Components of a Logical Pathname::
+* Null Strings as Components of a Logical Pathname::
+
+* Filenames Dictionary:
+
+* pathname (System Class)::
+* logical-pathname (System Class)::
+* pathname::
+* make-pathname::
+* pathnamep::
+* pathname-host::
+* load-logical-pathname-translations::
+* logical-pathname-translations::
+* logical-pathname::
+* *default-pathname-defaults*::
+* namestring::
+* parse-namestring::
+* wild-pathname-p::
+* pathname-match-p::
+* translate-logical-pathname::
+* translate-pathname::
+* merge-pathnames::
+
+* Files:
+
+* File System Concepts::
+* Files Dictionary::
+
+* File System Concepts:
+
+* Coercion of Streams to Pathnames::
+* File Operations on Open and Closed Streams::
+* Truenames::
+
+* Truenames:
+
+* Examples of Truenames::
+
+* Files Dictionary:
+
+* directory::
+* probe-file::
+* ensure-directories-exist::
+* truename::
+* file-author::
+* file-write-date::
+* rename-file::
+* delete-file::
+* file-error::
+* file-error-pathname::
+
+* Streams:
+
+* Stream Concepts::
+* Streams Dictionary::
+
+* Stream Concepts:
+
+* Introduction to Streams::
+* Stream Variables::
+* Stream Arguments to Standardized Functions::
+* Restrictions on Composite Streams::
+
+* Introduction to Streams:
+
+* Abstract Classifications of Streams (Introduction to Streams)::
+* Input::
+* Open and Closed Streams::
+* Interactive Streams::
+* Abstract Classifications of Streams::
+* File Streams::
+* Other Subclasses of Stream::
+
+* Streams Dictionary:
+
+* stream::
+* broadcast-stream::
+* concatenated-stream::
+* echo-stream::
+* file-stream::
+* string-stream::
+* synonym-stream::
+* two-way-stream::
+* input-stream-p::
+* interactive-stream-p::
+* open-stream-p::
+* stream-element-type::
+* streamp::
+* read-byte::
+* write-byte::
+* peek-char::
+* read-char::
+* read-char-no-hang::
+* terpri::
+* unread-char::
+* write-char::
+* read-line::
+* write-string::
+* read-sequence::
+* write-sequence::
+* file-length::
+* file-position::
+* file-string-length::
+* open::
+* stream-external-format::
+* with-open-file::
+* close::
+* with-open-stream::
+* listen::
+* clear-input::
+* finish-output::
+* y-or-n-p::
+* make-synonym-stream::
+* synonym-stream-symbol::
+* broadcast-stream-streams::
+* make-broadcast-stream::
+* make-two-way-stream::
+* two-way-stream-input-stream::
+* echo-stream-input-stream::
+* make-echo-stream::
+* concatenated-stream-streams::
+* make-concatenated-stream::
+* get-output-stream-string::
+* make-string-input-stream::
+* make-string-output-stream::
+* with-input-from-string::
+* with-output-to-string::
+* *debug-io*::
+* *terminal-io*::
+* stream-error::
+* stream-error-stream::
+* end-of-file::
+
+* Printer:
+
+* The Lisp Printer::
+* The Lisp Pretty Printer::
+* Formatted Output::
+* Printer Dictionary::
+
+* The Lisp Printer:
+
+* Overview of The Lisp Printer::
+* Printer Dispatching::
+* Default Print-Object Methods::
+* Examples of Printer Behavior::
+
+* Overview of The Lisp Printer:
+
+* Multiple Possible Textual Representations::
+* Printer Escaping::
+
+* Default Print-Object Methods:
+
+* Printing Numbers::
+* Printing Integers::
+* Printing Ratios::
+* Printing Floats::
+* Printing Complexes::
+* Note about Printing Numbers::
+* Printing Characters::
+* Printing Symbols::
+* Package Prefixes for Symbols::
+* Effect of Readtable Case on the Lisp Printer::
+* Examples of Effect of Readtable Case on the Lisp Printer::
+* Printing Strings::
+* Printing Lists and Conses::
+* Printing Bit Vectors::
+* Printing Other Vectors::
+* Printing Other Arrays::
+* Examples of Printing Arrays::
+* Printing Random States::
+* Printing Pathnames::
+* Printing Structures::
+* Printing Other Objects::
+
+* The Lisp Pretty Printer:
+
+* Pretty Printer Concepts::
+* Examples of using the Pretty Printer::
+* Notes about the Pretty Printer's Background::
+
+* Pretty Printer Concepts:
+
+* Dynamic Control of the Arrangement of Output::
+* Format Directive Interface::
+* Compiling Format Strings::
+* Pretty Print Dispatch Tables::
+* Pretty Printer Margins::
+
+* Formatted Output:
+
+* FORMAT Basic Output::
+* FORMAT Radix Control::
+* FORMAT Floating-Point Printers::
+* FORMAT Printer Operations::
+* FORMAT Pretty Printer Operations::
+* FORMAT Layout Control::
+* FORMAT Control-Flow Operations::
+* FORMAT Miscellaneous Operations::
+* FORMAT Miscellaneous Pseudo-Operations::
+* Additional Information about FORMAT Operations::
+* Examples of FORMAT::
+* Notes about FORMAT::
+
+* FORMAT Basic Output:
+
+* Tilde C-> Character::
+* Tilde Percent-> Newline::
+* Tilde Ampersand-> Fresh-Line::
+* Tilde Vertical-Bar-> Page::
+* Tilde Tilde-> Tilde::
+
+* FORMAT Radix Control:
+
+* Tilde R-> Radix::
+* Tilde D-> Decimal::
+* Tilde B-> Binary::
+* Tilde O-> Octal::
+* Tilde X-> Hexadecimal::
+
+* FORMAT Floating-Point Printers:
+
+* Tilde F-> Fixed-Format Floating-Point::
+* Tilde E-> Exponential Floating-Point::
+* Tilde G-> General Floating-Point::
+* Tilde Dollarsign-> Monetary Floating-Point::
+
+* FORMAT Printer Operations:
+
+* Tilde A-> Aesthetic::
+* Tilde S-> Standard::
+* Tilde W-> Write::
+
+* FORMAT Pretty Printer Operations:
+
+* Tilde Underscore-> Conditional Newline::
+* Tilde Less-Than-Sign-> Logical Block::
+* Tilde I-> Indent::
+* Tilde Slash-> Call Function::
+
+* FORMAT Layout Control:
+
+* Tilde T-> Tabulate::
+* Tilde Less-Than-Sign-> Justification::
+* Tilde Greater-Than-Sign-> End of Justification::
+
+* FORMAT Control-Flow Operations:
+
+* Tilde Asterisk-> Go-To::
+* Tilde Left-Bracket-> Conditional Expression::
+* Tilde Right-Bracket-> End of Conditional Expression::
+* Tilde Left-Brace-> Iteration::
+* Tilde Right-Brace-> End of Iteration::
+* Tilde Question-Mark-> Recursive Processing::
+
+* FORMAT Miscellaneous Operations:
+
+* Tilde Left-Paren-> Case Conversion::
+* Tilde Right-Paren-> End of Case Conversion::
+* Tilde P-> Plural::
+
+* FORMAT Miscellaneous Pseudo-Operations:
+
+* Tilde Semicolon-> Clause Separator::
+* Tilde Circumflex-> Escape Upward::
+* Tilde Newline-> Ignored Newline::
+
+* Additional Information about FORMAT Operations:
+
+* Nesting of FORMAT Operations::
+* Missing and Additional FORMAT Arguments::
+* Additional FORMAT Parameters::
+* Undefined FORMAT Modifier Combinations::
+
+* Printer Dictionary:
+
+* copy-pprint-dispatch::
+* formatter::
+* pprint-dispatch::
+* pprint-exit-if-list-exhausted::
+* pprint-fill::
+* pprint-indent::
+* pprint-logical-block::
+* pprint-newline::
+* pprint-pop::
+* pprint-tab::
+* print-object::
+* print-unreadable-object::
+* set-pprint-dispatch::
+* write::
+* write-to-string::
+* *print-array*::
+* *print-base*::
+* *print-case*::
+* *print-circle*::
+* *print-escape*::
+* *print-gensym*::
+* *print-level*::
+* *print-lines*::
+* *print-miser-width*::
+* *print-pprint-dispatch*::
+* *print-pretty*::
+* *print-readably*::
+* *print-right-margin*::
+* print-not-readable::
+* print-not-readable-object::
+* format::
+
+* Reader:
+
+* Reader Concepts::
+* Reader Dictionary::
+
+* Reader Concepts:
+
+* Dynamic Control of the Lisp Reader::
+* Effect of Readtable Case on the Lisp Reader::
+* Argument Conventions of Some Reader Functions::
+
+* Effect of Readtable Case on the Lisp Reader:
+
+* Examples of Effect of Readtable Case on the Lisp Reader::
+
+* Argument Conventions of Some Reader Functions:
+
+* The EOF-ERROR-P argument::
+* The RECURSIVE-P argument::
+
+* Reader Dictionary:
+
+* readtable::
+* copy-readtable::
+* make-dispatch-macro-character::
+* read::
+* read-delimited-list::
+* read-from-string::
+* readtable-case::
+* readtablep::
+* set-dispatch-macro-character::
+* set-macro-character::
+* set-syntax-from-char::
+* with-standard-io-syntax::
+* *read-base*::
+* *read-default-float-format*::
+* *read-eval*::
+* *read-suppress*::
+* *readtable*::
+* reader-error::
+
+* System Construction:
+
+* System Construction Concepts::
+* System Construction Dictionary::
+
+* System Construction Concepts:
+
+* Loading::
+* Features::
+
+* Features:
+
+* Feature Expressions::
+* Examples of Feature Expressions::
+
+* System Construction Dictionary:
+
+* compile-file::
+* compile-file-pathname::
+* load::
+* with-compilation-unit::
+* *features*::
+* *compile-file-pathname*::
+* *load-pathname*::
+* *compile-print*::
+* *load-print*::
+* *modules*::
+* provide::
+
+* Environment:
+
+* The External Environment::
+* Environment Dictionary::
+
+* The External Environment:
+
+* Top level loop::
+* Debugging Utilities::
+* Environment Inquiry::
+* Time::
+
+* Time:
+
+* Decoded Time::
+* Universal Time::
+* Internal Time::
+* Seconds::
+
+* Environment Dictionary:
+
+* decode-universal-time::
+* encode-universal-time::
+* get-universal-time::
+* sleep::
+* apropos::
+* describe::
+* describe-object::
+* trace::
+* step::
+* time::
+* internal-time-units-per-second::
+* get-internal-real-time::
+* get-internal-run-time::
+* disassemble::
+* documentation::
+* room::
+* ed::
+* inspect::
+* dribble::
+* -::
+* +::
+* *::
+* /::
+* lisp-implementation-type::
+* short-site-name::
+* machine-instance::
+* machine-type::
+* machine-version::
+* software-type::
+* user-homedir-pathname::
+
+* Glossary:
+
+* Glossary::
+
+* Appendix:
+
+* Removed Language Features::
+
+* Removed Language Features:
+
+* Requirements for removed and deprecated features::
+* Removed Types::
+* Removed Operators::
+* Removed Argument Conventions::
+* Removed Variables::
+* Removed Reader Syntax::
+* Packages No Longer Required::
+
+
+File: gcl.info,  Node: Introduction (Introduction),  Next: Syntax,  Prev: Top,  Up: Top
+
+Introduction
+************
+
+* Menu:
+
+* Scope::
+* Organization of the Document::
+* Referenced Publications::
+* Definitions::
+* Conformance::
+* Language Extensions::
+* Language Subsets::
+* Deprecated Language Features::
+* Symbols in the COMMON-LISP Package::
+
+
+File: gcl.info,  Node: Scope,  Next: Organization of the Document,  Prev: Introduction (Introduction),  Up: Introduction (Introduction)
+
+Scope, Purpose, and History
+===========================
+
+* Menu:
+
+* Scope and Purpose::
+* History::
+
+
+File: gcl.info,  Node: Scope and Purpose,  Next: History,  Prev: Scope,  Up: Scope
+
+Scope and Purpose
+-----------------
+
+The specification set forth in this document is designed to promote the
+portability of Common Lisp programs among a variety of data processing
+systems. It is a language specification aimed at an audience of
+implementors and knowledgeable programmers. It is neither a tutorial nor
+an implementation guide.
+

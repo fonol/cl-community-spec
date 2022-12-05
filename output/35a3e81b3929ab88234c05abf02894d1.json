@@ -1,0 +1,65 @@
+{
+    "name": "with-hash-table-iterator",
+    "prev": "maphash",
+    "next": "clrhash",
+    "up": "Hash Tables Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "with-hash-table-iterator"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "with-hash-table-iterator",
+                    "text": " (name hash-table) {declaration}* {form}* =>{result}*\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "name",
+                    "desc": "a name suitable for the first argument to macrolet."
+                },
+                {
+                    "name": "hash-table",
+                    "desc": "a form, evaluated once, that should produce a hash table."
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values returned by forms."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Within the lexical scope of the body, name is defined via macrolet such\nthat successive invocations of (name) return the items, one by one, from\nthe hash table that is obtained by evaluating hash-table only once.\nAn invocation (name) returns three values as follows:\n1.\n     A generalized boolean that is true if an entry is returned.\n2.\n     The key from the hash-table entry.\n3.\n     The value from the hash-table entry.\nAfter all entries have been returned by successive invocations of (name),\nthen only one value is returned, namely nil.\nIt is unspecified what happens if any of the implicit interior state of an\niteration is returned outside the dynamic extent of the\nwith-hash-table-iterator form such as by returning some closure over the\ninvocation form.\nAny number of invocations of with-hash-table-iterator can be nested, and\nthe body of the innermost one can invoke all of the locally established\nmacros, provided all of those macros have distinct names.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "The following function should return t on any hash table, and signal an\nerror if the usage of with-hash-table-iterator does not agree with the\ncorresponding usage of maphash.\n      (defun test-hash-table-iterator (hash-table)\n        (let ((all-entries '())\n              (generated-entries '())\n              (unique (list nil)))\n          (maphash #'(lambda (key value) (push (list key value) all-entries))\n                   hash-table)\n          (with-hash-table-iterator (generator-fn hash-table)\n            (loop\n              (multiple-value-bind (more? key value) (generator-fn)\n                (unless more? (return))\n                (unless (eql value (gethash key hash-table unique))\n                  (error \"Key ~S not found for value ~S\" key value))\n                (push (list key value) generated-entries))))\n          (unless (= (length all-entries)\n                     (length generated-entries)\n                     (length (union all-entries generated-entries\n                                    :key #'car :test (hash-table-test hash-table))))\n            (error \"Generated entries and Maphash entries don't correspond\"))\n          t))\nThe following could be an acceptable definition of maphash, implemented by\nwith-hash-table-iterator.\n      (defun maphash (function hash-table)\n        (with-hash-table-iterator (next-entry hash-table)\n          (loop (multiple-value-bind (more key value) (next-entry)\n                  (unless more (return nil))\n                  (funcall function key value)))))\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "The consequences are undefined if the local function named name\nestablished by with-hash-table-iterator is called after it has returned\nfalse as its primary value.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note Traversal Rules and Side Effects::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: with-hash-table-iterator,  Next: clrhash,  Prev: maphash,  Up: Hash Tables Dictionary\n\nwith-hash-table-iterator                                            [Macro]\n---------------------------------------------------------------------------\n\n`with-hash-table-iterator'  (name hash-table) {declaration}* {form}* =>\n{result}*\n\nArguments and Values::\n......................\n\nname--a name suitable for the first argument to macrolet.\n\nhash-table--a form, evaluated once, that should produce a hash table.\n\ndeclaration--a declare expression; not evaluated.\n\nforms--an implicit progn.\n\nresults--the values returned by forms.\n\nDescription::\n.............\n\nWithin the lexical scope of the body, name is defined via macrolet such\nthat successive invocations of (name) return the items, one by one, from\nthe hash table that is obtained by evaluating hash-table only once.\n\nAn invocation (name) returns three values as follows:\n\n1.\n     A generalized boolean that is true if an entry is returned.\n\n2.\n     The key from the hash-table entry.\n\n3.\n     The value from the hash-table entry.\n\nAfter all entries have been returned by successive invocations of (name),\nthen only one value is returned, namely nil.\n\nIt is unspecified what happens if any of the implicit interior state of an\niteration is returned outside the dynamic extent of the\nwith-hash-table-iterator form such as by returning some closure over the\ninvocation form.\n\nAny number of invocations of with-hash-table-iterator can be nested, and\nthe body of the innermost one can invoke all of the locally established\nmacros, provided all of those macros have distinct names.\n\nExamples::\n..........\n\nThe following function should return t on any hash table, and signal an\nerror if the usage of with-hash-table-iterator does not agree with the\ncorresponding usage of maphash.\n\n      (defun test-hash-table-iterator (hash-table)\n        (let ((all-entries '())\n              (generated-entries '())\n              (unique (list nil)))\n          (maphash #'(lambda (key value) (push (list key value) all-entries))\n                   hash-table)\n          (with-hash-table-iterator (generator-fn hash-table)\n            (loop\n              (multiple-value-bind (more? key value) (generator-fn)\n                (unless more? (return))\n                (unless (eql value (gethash key hash-table unique))\n                  (error \"Key ~S not found for value ~S\" key value))\n                (push (list key value) generated-entries))))\n          (unless (= (length all-entries)\n                     (length generated-entries)\n                     (length (union all-entries generated-entries\n                                    :key #'car :test (hash-table-test hash-table))))\n            (error \"Generated entries and Maphash entries don't correspond\"))\n          t))\n\nThe following could be an acceptable definition of maphash, implemented by\nwith-hash-table-iterator.\n\n      (defun maphash (function hash-table)\n        (with-hash-table-iterator (next-entry hash-table)\n          (loop (multiple-value-bind (more key value) (next-entry)\n                  (unless more (return nil))\n                  (funcall function key value)))))\n\nExceptional Situations::\n........................\n\nThe consequences are undefined if the local function named name\nestablished by with-hash-table-iterator is called after it has returned\nfalse as its primary value.\n\nSee Also::\n..........\n\n*Note Traversal Rules and Side Effects::\n\n"
+}

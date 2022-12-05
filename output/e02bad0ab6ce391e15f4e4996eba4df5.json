@@ -1,0 +1,65 @@
+{
+    "name": "read-delimited-list",
+    "prev": "read",
+    "next": "read-from-string",
+    "up": "Reader Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "read-delimited-list"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "read-delimited-list",
+                    "text": " char &optional input-stream recursive-p =>  list\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "char",
+                    "desc": "a character."
+                },
+                {
+                    "name": "input-stream",
+                    "desc": "an input stream designator.  The default is standard input."
+                },
+                {
+                    "name": "recursive-p",
+                    "desc": "a generalized boolean.  The default is false."
+                },
+                {
+                    "name": "list",
+                    "desc": "a list of the objects read."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "read-delimited-list reads objects from input-stream until the next\ncharacter after an object's representation (ignoring whitespace_2\ncharacters and comments) is char.\nread-delimited-list looks ahead at each step for the next non-whitespace_2\ncharacter and peeks at it as if with peek-char.  If it is char, then the\ncharacter is consumed and the list of objects is returned.  If it is a\nconstituent or escape character, then read is used to read an object,\nwhich is added to the end of the list.  If it is a macro character, its\nreader macro function is called; if the function returns a value, that\nvalue is added to the list.  The peek-ahead process is then repeated.\nIf recursive-p is true, this call is expected to be embedded in a\nhigher-level call to read or a similar function.\nIt is an error to reach end-of-file during the operation of\nread-delimited-list.\nThe consequences are undefined if char has a syntax type of whitespace_2\nin the current readtable.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (read-delimited-list #\\]) 1 2 3 4 5 6 ]\n     =>  (1 2 3 4 5 6)\nSuppose you wanted #{a b c ... z} to read as a list of all pairs of the\nelements a, b, c, ..., z, for example.\n      #{p q z a}  reads as  ((p q) (p z) (p a) (q z) (q a) (z a))\nThis can be done by specifying a macro-character definition for #{ that\ndoes two things: reads in all the items up to the }, and constructs the\npairs.  read-delimited-list performs the first task.\n      (defun |#{-reader| (stream char arg)\n        (declare (ignore char arg))\n        (mapcon #'(lambda (x)\n                   (mapcar #'(lambda (y) (list (car x) y)) (cdr x)))\n               (read-delimited-list #\\} stream t))) =>  |#{-reader|\n      (set-dispatch-macro-character #\\# #\\{ #'|#{-reader|) =>  T\n      (set-macro-character #\\} (get-macro-character #\\) nil))\nNote that true is supplied for the recursive-p argument.\nIt is necessary here to give a definition to the character } as well to\nprevent it from being a constituent.  If the line\n      (set-macro-character #\\} (get-macro-character #\\) nil))\nshown above were not included, then the } in\n      #{ p q z a}\nwould be considered a constituent character, part of the symbol named a}.\nThis could be corrected by putting a space before the }, but it is better\nto call set-macro-character.\nGiving } the same definition as the standard definition of the character )\nhas the twin benefit of making it terminate tokens for use with\nread-delimited-list and also making it invalid for use in any other\ncontext. Attempting to read a stray } will signal an error.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "*standard-input*, *readtable*, *terminal-io*.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note read; read-preserving-whitespace:: , *Note peek-char:: , *Note\nread-char:: , *Note unread-char:: .\n"
+        },
+        {
+            "type": "Notes",
+            "text": "read-delimited-list is intended for use in implementing reader macros.\nUsually it is desirable for char to be a terminating macro character so\nthat it can be used to delimit tokens; however, read-delimited-list makes\nno attempt to alter the syntax specified for char by the current\nreadtable.  The caller must make any necessary changes to the readtable\nsyntax explicitly.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: read-delimited-list,  Next: read-from-string,  Prev: read,  Up: Reader Dictionary\n\nread-delimited-list                                              [Function]\n---------------------------------------------------------------------------\n\n`read-delimited-list'  char &optional input-stream recursive-p =>  list\n\nArguments and Values::\n......................\n\nchar--a character.\n\ninput-stream--an input stream designator.  The default is standard input.\n\nrecursive-p--a generalized boolean.  The default is false.\n\nlist--a list of the objects read.\n\nDescription::\n.............\n\nread-delimited-list reads objects from input-stream until the next\ncharacter after an object's representation (ignoring whitespace_2\ncharacters and comments) is char.\n\nread-delimited-list looks ahead at each step for the next non-whitespace_2\ncharacter and peeks at it as if with peek-char.  If it is char, then the\ncharacter is consumed and the list of objects is returned.  If it is a\nconstituent or escape character, then read is used to read an object,\nwhich is added to the end of the list.  If it is a macro character, its\nreader macro function is called; if the function returns a value, that\nvalue is added to the list.  The peek-ahead process is then repeated.\n\nIf recursive-p is true, this call is expected to be embedded in a\nhigher-level call to read or a similar function.\n\nIt is an error to reach end-of-file during the operation of\nread-delimited-list.\n\nThe consequences are undefined if char has a syntax type of whitespace_2\nin the current readtable.\n\nExamples::\n..........\n\n      (read-delimited-list #\\]) 1 2 3 4 5 6 ]\n     =>  (1 2 3 4 5 6)\n\nSuppose you wanted #{a b c ... z} to read as a list of all pairs of the\nelements a, b, c, ..., z, for example.\n\n      #{p q z a}  reads as  ((p q) (p z) (p a) (q z) (q a) (z a))\n\nThis can be done by specifying a macro-character definition for #{ that\ndoes two things: reads in all the items up to the }, and constructs the\npairs.  read-delimited-list performs the first task.\n\n      (defun |#{-reader| (stream char arg)\n        (declare (ignore char arg))\n        (mapcon #'(lambda (x)\n                   (mapcar #'(lambda (y) (list (car x) y)) (cdr x)))\n               (read-delimited-list #\\} stream t))) =>  |#{-reader|\n     \n      (set-dispatch-macro-character #\\# #\\{ #'|#{-reader|) =>  T\n      (set-macro-character #\\} (get-macro-character #\\) nil))\n\nNote that true is supplied for the recursive-p argument.\n\nIt is necessary here to give a definition to the character } as well to\nprevent it from being a constituent.  If the line\n\n      (set-macro-character #\\} (get-macro-character #\\) nil))\n\nshown above were not included, then the } in\n\n      #{ p q z a}\n\nwould be considered a constituent character, part of the symbol named a}.\nThis could be corrected by putting a space before the }, but it is better\nto call set-macro-character.\n\nGiving } the same definition as the standard definition of the character )\nhas the twin benefit of making it terminate tokens for use with\nread-delimited-list and also making it invalid for use in any other\ncontext. Attempting to read a stray } will signal an error.\n\nAffected By::\n.............\n\n*standard-input*, *readtable*, *terminal-io*.\n\nSee Also::\n..........\n\n*Note read; read-preserving-whitespace:: , *Note peek-char:: , *Note\nread-char:: , *Note unread-char:: .\n\nNotes::\n.......\n\nread-delimited-list is intended for use in implementing reader macros.\nUsually it is desirable for char to be a terminating macro character so\nthat it can be used to delimit tokens; however, read-delimited-list makes\nno attempt to alter the syntax specified for char by the current\nreadtable.  The caller must make any necessary changes to the readtable\nsyntax explicitly.\n\n"
+}

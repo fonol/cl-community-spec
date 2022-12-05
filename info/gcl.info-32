@@ -1,0 +1,1745 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: exp,  Next: gcd,  Prev: evenp,  Up: Numbers Dictionary
+
+exp, expt                                                        [Function]
+---------------------------------------------------------------------------
+
+`exp'  number =>  result
+
+`expt'  base-number power-number =>  result
+
+Arguments and Values::
+......................
+
+number--a number.
+
+base-number--a number.
+
+power-number--a number.
+
+result--a number.
+
+Description::
+.............
+
+exp and expt perform exponentiation.
+
+exp returns e raised to the power number, where e is the base of the
+natural logarithms.  exp has no branch cut.
+
+expt returns base-number raised to the power power-number.  If the
+base-number is a rational and power-number is an integer, the calculation
+is exact and the result will be of type rational; otherwise a
+floating-point approximation might result.
+
+For expt of a complex rational to an integer power, the calculation must
+be exact and the result is of type (or rational (complex rational)).
+
+The result of expt can be a complex, even when neither argument is a
+complex, if base-number is negative and power-number is not an integer.
+The result is always the principal complex value.  For example, (expt -8
+1/3) is not permitted to return -2, even though -2 is one of the cube
+roots of -8.  The principal cube root is a complex approximately equal to
+#C(1.0 1.73205), not -2.
+
+expt is defined as b^x = e^x log b\/.  This defines the principal values
+precisely.  The range of expt is the entire complex plane.  Regarded as a
+function of x, with b fixed, there is no branch cut.  Regarded as a
+function of b, with x fixed, there is in general a branch cut along the
+negative real axis, continuous with quadrant II.  The domain excludes the
+origin.  By definition, 0^0=1.  If b=0 and the real part of x is strictly
+positive, then b^x=0. For all other values of x, 0^x is an error.
+
+When power-number is an integer 0, then the result is always the value one
+in the type of base-number, even if the base-number is zero (of any type).
+That is:
+
+      (expt x 0) == (coerce 1 (type-of x))
+
+If power-number is a zero of any other type, then the result is also the
+value one, in the type of the arguments after the application of the
+contagion rules in *Note Contagion in Numeric Operations::, with one
+exception: the consequences are undefined if base-number is zero when
+power-number is zero and not of type integer.
+
+Examples::
+..........
+
+      (exp 0) =>  1.0
+      (exp 1) =>  2.718282
+      (exp (log 5)) =>  5.0
+      (expt 2 8) =>  256
+      (expt 4 .5) =>  2.0
+      (expt #c(0 1) 2) =>  -1
+      (expt #c(2 2) 3) =>  #C(-16 16)
+      (expt #c(2 2) 4) =>  -64
+
+See Also::
+..........
+
+*Note log:: , *Note Rule of Float Substitutability::
+
+Notes::
+.......
+
+Implementations of expt are permitted to use different algorithms for the
+cases of a power-number of type rational and a power-number of type float.
+
+Note that by the following logic, (sqrt (expt x 3)) is not equivalent to
+(expt x 3/2).
+
+      (setq x (exp (/ (* 2 pi #c(0 1)) 3)))         ;exp(2.pi.i/3)
+      (expt x 3) =>  1 ;except for round-off error
+      (sqrt (expt x 3)) =>  1 ;except for round-off error
+      (expt x 3/2) =>  -1 ;except for round-off error
+
+
+File: gcl.info,  Node: gcd,  Next: incf,  Prev: exp,  Up: Numbers Dictionary
+
+gcd                                                              [Function]
+---------------------------------------------------------------------------
+
+`gcd'  &rest integers =>  greatest-common-denominator
+
+Arguments and Values::
+......................
+
+integer--an integer.
+
+greatest-common-denominator--a non-negative integer.
+
+Description::
+.............
+
+Returns the greatest common divisor of integers.  If only one integer is
+supplied, its absolute value is returned.  If no integers are given, gcd
+returns 0, which is an identity for this operation.
+
+Examples::
+..........
+
+      (gcd) =>  0
+      (gcd 60 42) =>  6
+      (gcd 3333 -33 101) =>  1
+      (gcd 3333 -33 1002001) =>  11
+      (gcd 91 -49) =>  7
+      (gcd 63 -42 35) =>  7
+      (gcd 5) =>  5
+      (gcd -4) =>  4
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if any integer is not an integer.
+
+See Also::
+..........
+
+*Note lcm::
+
+Notes::
+.......
+
+For three or more arguments,
+
+      (gcd b c ... z) == (gcd (gcd a b) c ... z)
+
+
+File: gcl.info,  Node: incf,  Next: lcm,  Prev: gcd,  Up: Numbers Dictionary
+
+incf, decf                                                          [Macro]
+---------------------------------------------------------------------------
+
+`incf'  place [delta-form] =>  new-value
+
+`decf'  place [delta-form] =>  new-value
+
+Arguments and Values::
+......................
+
+place--a place.
+
+delta-form--a form; evaluated to produce a delta.  The default is 1.
+
+delta--a number.
+
+new-value--a number.
+
+Description::
+.............
+
+incf and decf are used for incrementing and decrementing the value of
+place, respectively.
+
+The delta is added to        (in the case of incf) or subtracted from (in
+the case of decf) the number in place and the result is stored in place.
+
+Any necessary type conversions are performed automatically.
+
+For information about the evaluation of subforms of places, see *Note
+Evaluation of Subforms to Places::.
+
+Examples::
+..........
+
+      (setq n 0)
+      (incf n) =>  1
+      n =>  1
+      (decf n 3) =>  -2
+      n =>  -2
+      (decf n -5) =>  3
+      (decf n) =>  2
+      (incf n 0.5) =>  2.5
+      (decf n) =>  1.5
+      n =>  1.5
+
+Side Effects::
+..............
+
+Place is modified.
+
+See Also::
+..........
+
++, *Note -:: , 1+, 1-, *Note setf; psetf::
+
+
+File: gcl.info,  Node: lcm,  Next: log,  Prev: incf,  Up: Numbers Dictionary
+
+lcm                                                              [Function]
+---------------------------------------------------------------------------
+
+`lcm'  &rest integers =>  least-common-multiple
+
+Arguments and Values::
+......................
+
+integer--an integer.
+
+least-common-multiple--a non-negative integer.
+
+Description::
+.............
+
+lcm returns the least common multiple of the integers.
+
+If no integer is supplied, the integer 1 is returned.
+
+If only one integer is supplied, the absolute value of that integer is
+returned.
+
+For two arguments that are not both zero,
+
+      (lcm a b) == (/ (abs (* a b)) (gcd a b))
+
+If one or both arguments are zero,
+
+      (lcm a 0) == (lcm 0 a) == 0
+
+For three or more arguments,
+
+      (lcm a b c ... z) == (lcm (lcm a b) c ... z)
+
+Examples::
+..........
+
+      (lcm 10) =>  10
+      (lcm 25 30) =>  150
+      (lcm -24 18 10) =>  360
+      (lcm 14 35) =>  70
+      (lcm 0 5) =>  0
+      (lcm 1 2 3 4 5 6) =>  60
+
+Exceptional Situations::
+........................
+
+Should signal type-error if any argument is not an integer.
+
+See Also::
+..........
+
+*Note gcd::
+
+
+File: gcl.info,  Node: log,  Next: mod,  Prev: lcm,  Up: Numbers Dictionary
+
+log                                                              [Function]
+---------------------------------------------------------------------------
+
+`log'  number &optional base =>  logarithm
+
+Arguments and Values::
+......................
+
+number--a non-zero number.
+
+base--a number.
+
+logarithm--a number.
+
+Description::
+.............
+
+log returns the logarithm of number in base base.  If base is not supplied
+its value is e, the base of the natural logarithms.
+
+log may return a complex when given a
+
+real
+
+negative number.
+
+      (log -1.0) == (complex 0.0 (float pi 0.0))
+
+If base is zero, log returns zero.
+
+The result of (log 8 2) may be either 3 or 3.0, depending on the
+implementation. An implementation can use floating-point calculations even
+if an exact integer result is possible.
+
+The branch cut for the logarithm function of one argument (natural
+logarithm) lies along the negative real axis, continuous with quadrant II.
+The domain excludes the origin.
+
+The mathematical definition of a complex logarithm is as follows, whether
+or not minus zero is supported by the implementation:
+
+     (log x) == (complex (log (abs x)) (phase x))
+
+Therefore the range of the one-argument logarithm function is that strip
+of the complex plane containing numbers with imaginary parts between
+
+-\pi (exclusive) and~\pi (inclusive) if minus zero is not supported, or
+-\pi (inclusive) and~\pi (inclusive) if minus zero is supported.
+
+The two-argument logarithm function is defined as
+
+      (log base number)
+      == (/ (log number) (log base))
+
+This defines the principal values precisely.  The range of the
+two-argument logarithm function is the entire complex plane.
+
+Examples::
+..........
+
+      (log 100 10)
+     =>  2.0
+     =>  2
+      (log 100.0 10) =>  2.0
+      (log #c(0 1) #c(0 -1))
+     =>  #C(-1.0 0.0)
+     OR=> #C(-1 0)
+      (log 8.0 2) =>  3.0
+
+      (log #c(-16 16) #c(2 2)) =>  3 or approximately #c(3.0 0.0)
+                                    or approximately 3.0 (unlikely)
+
+Affected By::
+.............
+
+The implementation.
+
+See Also::
+..........
+
+*Note exp; expt:: , expt, *Note Rule of Float Substitutability::
+
+
+File: gcl.info,  Node: mod,  Next: signum,  Prev: log,  Up: Numbers Dictionary
+
+mod, rem                                                         [Function]
+---------------------------------------------------------------------------
+
+`mod'  number divisor =>  modulus
+
+`rem'  number divisor =>  remainder
+
+Arguments and Values::
+......................
+
+number--a real.
+
+divisor--a real.
+
+modulus, remainder--a real.
+
+Description::
+.............
+
+mod and rem are generalizations of the modulus and remainder functions
+respectively.
+
+mod performs the operation floor on number and divisor and returns the
+remainder of the floor operation.
+
+rem performs the operation truncate on number and divisor and returns the
+remainder of the truncate operation.
+
+mod and rem are the modulus and remainder functions when number and
+divisor are integers.
+
+Examples::
+..........
+
+      (rem -1 5) =>  -1
+      (mod -1 5) =>  4
+      (mod 13 4) =>  1
+      (rem 13 4) =>  1
+      (mod -13 4) =>  3
+      (rem -13 4) =>  -1
+      (mod 13 -4) =>  -3
+      (rem 13 -4) =>  1
+      (mod -13 -4) =>  -1
+      (rem -13 -4) =>  -1
+      (mod 13.4 1) =>  0.4
+      (rem 13.4 1) =>  0.4
+      (mod -13.4 1) =>  0.6
+      (rem -13.4 1) =>  -0.4
+
+See Also::
+..........
+
+*Note floor; ffloor; ceiling; fceiling; truncate; ftruncate; round;
+fround:: , truncate
+
+Notes::
+.......
+
+The result of mod is either zero or a
+
+real
+
+with the same sign as divisor.
+
+
+File: gcl.info,  Node: signum,  Next: sqrt,  Prev: mod,  Up: Numbers Dictionary
+
+signum                                                           [Function]
+---------------------------------------------------------------------------
+
+`signum'  number =>  signed-prototype
+
+Arguments and Values::
+......................
+
+number--a number.
+
+signed-prototype--a number.
+
+Description::
+.............
+
+signum determines a numerical value that indicates whether number is
+negative, zero, or positive.
+
+For a rational, signum returns one of -1, 0, or 1 according to whether
+number is negative, zero, or positive.  For a float, the result is a float
+of the same format whose value is minus one, zero, or one.  For a complex
+number z, (signum z) is a complex number of the same phase but with unit
+magnitude, unless z is a complex zero, in which case the result is z.
+
+For rational arguments, signum is a rational function, but it may be
+irrational for complex arguments.
+
+If number is a float, the result is a float.  If number is a rational, the
+result is a rational.  If number is a complex float, the result is a
+complex float.  If number is a complex rational, the result is a complex,
+but it is implementation-dependent whether that result is a complex
+rational or a complex float.
+
+Examples::
+..........
+
+      (signum 0) =>  0
+      (signum 99) =>  1
+      (signum 4/5) =>  1
+      (signum -99/100) =>  -1
+      (signum 0.0) =>  0.0
+      (signum #c(0 33)) =>  #C(0.0 1.0)
+      (signum #c(7.5 10.0)) =>  #C(0.6 0.8)
+      (signum #c(0.0 -14.7)) =>  #C(0.0 -1.0)
+      (eql (signum -0.0) -0.0) =>  true
+
+See Also::
+..........
+
+*Note Rule of Float Substitutability::
+
+Notes::
+.......
+
+      (signum x) == (if (zerop x) x (/ x (abs x)))
+
+
+File: gcl.info,  Node: sqrt,  Next: random-state,  Prev: signum,  Up: Numbers Dictionary
+
+sqrt, isqrt                                                      [Function]
+---------------------------------------------------------------------------
+
+`sqrt'  number =>  root
+
+`isqrt'  natural =>  natural-root
+
+Arguments and Values::
+......................
+
+number, root--a number.
+
+natural, natural-root--a non-negative integer.
+
+Description::
+.............
+
+sqrt and isqrt compute square roots.
+
+sqrt returns the principal square root of number.  If the number is not a
+complex but is negative, then the result is a complex.
+
+isqrt returns the greatest integer less than or equal to the exact
+positive square root of natural.
+
+If number is a positive rational, it is implementation-dependent whether
+root is a rational or a float.  If number is a negative rational, it is
+implementation-dependent whether root is a complex rational or a complex
+float.
+
+The mathematical definition of complex square root (whether or not minus
+zero is supported) follows:
+
+(sqrt x) = (exp (/ (log x) 2))
+
+The branch cut for square root lies along the negative real axis,
+continuous with quadrant II.  The range consists of the right half-plane,
+including the non-negative imaginary axis and excluding the negative
+imaginary axis.
+
+Examples::
+..........
+
+      (sqrt 9.0) =>  3.0
+      (sqrt -9.0) =>  #C(0.0 3.0)
+      (isqrt 9) =>  3
+      (sqrt 12) =>  3.4641016
+      (isqrt 12) =>  3
+      (isqrt 300) =>  17
+      (isqrt 325) =>  18
+      (sqrt 25)
+     =>  5
+     OR=> 5.0
+      (isqrt 25) =>  5
+      (sqrt -1) =>  #C(0.0 1.0)
+      (sqrt #c(0 2)) =>  #C(1.0 1.0)
+
+Exceptional Situations::
+........................
+
+The function sqrt should signal type-error if its argument is not a number.
+
+The function isqrt should signal type-error if its argument is not a
+non-negative integer.
+
+The functions sqrt and isqrt might signal arithmetic-error.
+
+See Also::
+..........
+
+*Note exp; expt:: , *Note log:: , *Note Rule of Float Substitutability::
+
+Notes::
+.......
+
+      (isqrt x) == (values (floor (sqrt x)))
+
+but it is potentially more efficient.
+
+
+File: gcl.info,  Node: random-state,  Next: make-random-state,  Prev: sqrt,  Up: Numbers Dictionary
+
+random-state                                                 [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+random-state, t
+
+Description::
+.............
+
+A random state object contains state information used by the pseudo-random
+number generator.  The nature of a random state object is
+implementation-dependent.  It can be printed out and successfully read
+back in by the same implementation, but might not function correctly as a
+random state in another implementation.
+
+Implementations are required to provide a read syntax for objects of type
+random-state, but the specific nature of that syntax is
+implementation-dependent.
+
+See Also::
+..........
+
+*Note random-state:: , *Note random:: , *Note Printing Random States::
+
+
+File: gcl.info,  Node: make-random-state,  Next: random,  Prev: random-state,  Up: Numbers Dictionary
+
+make-random-state                                                [Function]
+---------------------------------------------------------------------------
+
+`make-random-state'  &optional state =>  new-state
+
+Arguments and Values::
+......................
+
+state--a random state, or nil, or t.  The default is nil.
+
+new-state--a random state object.
+
+Description::
+.............
+
+Creates a fresh object of type random-state suitable for use as the value
+of *random-state*.
+
+If state is a random state object, the new-state is a copy_5 of that
+object.  If state is nil, the new-state is a copy_5 of the current random
+state.  If state is t, the new-state is a fresh random state object that
+has been randomly initialized by some means.
+
+Examples::
+..........
+
+      (let* ((rs1 (make-random-state nil))
+             (rs2 (make-random-state t))
+             (rs3 (make-random-state rs2))
+             (rs4 nil))
+        (list (loop for i from 1 to 10
+                    collect (random 100)
+                    when (= i 5)
+                     do (setq rs4 (make-random-state)))
+              (loop for i from 1 to 10 collect (random 100 rs1))
+              (loop for i from 1 to 10 collect (random 100 rs2))
+              (loop for i from 1 to 10 collect (random 100 rs3))
+              (loop for i from 1 to 10 collect (random 100 rs4))))
+     =>  ((29 25 72 57 55 68 24 35 54 65)
+         (29 25 72 57 55 68 24 35 54 65)
+         (93 85 53 99 58 62 2 23 23 59)
+         (93 85 53 99 58 62 2 23 23 59)
+         (68 24 35 54 65 54 55 50 59 49))
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if state is not a random state,
+or nil, or t.
+
+See Also::
+..........
+
+*Note random:: , *Note random-state::
+
+Notes::
+.......
+
+One important use of make-random-state is to allow the same series of
+pseudo-random numbers to be generated many times within a single program.
+
+
+File: gcl.info,  Node: random,  Next: random-state-p,  Prev: make-random-state,  Up: Numbers Dictionary
+
+random                                                           [Function]
+---------------------------------------------------------------------------
+
+`random'  limit &optional random-state =>  random-number
+
+Arguments and Values::
+......................
+
+limit--a positive integer, or a positive float.
+
+random-state--a random state.  The default is the current random state.
+
+random-number--a non-negative number less than limit and of the same type
+as limit.
+
+Description::
+.............
+
+Returns a pseudo-random number that is a non-negative number less than
+limit and of the same type as limit.
+
+The random-state, which is modified by this function, encodes the internal
+state maintained by the random number generator.
+
+An approximately uniform choice distribution is used.  If limit is an
+integer, each of the possible results occurs with (approximate)
+probability 1/limit.
+
+Examples::
+..........
+
+      (<= 0 (random 1000) 1000) =>  true
+      (let ((state1 (make-random-state))
+            (state2 (make-random-state)))
+        (= (random 1000 state1) (random 1000 state2))) =>  true
+
+Side Effects::
+..............
+
+The random-state is modified.
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if limit is not a positive
+integer or a positive real.
+
+See Also::
+..........
+
+*Note make-random-state:: , *Note random-state::
+
+Notes::
+.......
+
+See Common Lisp: The Language for information about generating random
+numbers.
+
+
+File: gcl.info,  Node: random-state-p,  Next: *random-state*,  Prev: random,  Up: Numbers Dictionary
+
+random-state-p                                                   [Function]
+---------------------------------------------------------------------------
+
+`random-state-p'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type random-state; otherwise, returns false.
+
+Examples::
+..........
+
+      (random-state-p *random-state*) =>  true
+      (random-state-p (make-random-state)) =>  true
+      (random-state-p 'test-function) =>  false
+
+See Also::
+..........
+
+*Note make-random-state:: , *Note random-state::
+
+Notes::
+.......
+
+      (random-state-p object) == (typep object 'random-state)
+
+
+File: gcl.info,  Node: *random-state*,  Next: numberp,  Prev: random-state-p,  Up: Numbers Dictionary
+
+*random-state*                                                   [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a random state.
+
+Initial Value::
+...............
+
+implementation-dependent.
+
+Description::
+.............
+
+The current random state, which is used, for example, by the function
+random when a random state is not explicitly supplied.
+
+Examples::
+..........
+
+      (random-state-p *random-state*) =>  true
+      (setq snap-shot (make-random-state))
+      ;; The series from any given point is random,
+      ;; but if you backtrack to that point, you get the same series.
+      (list (loop for i from 1 to 10 collect (random))
+            (let ((*random-state* snap-shot))
+              (loop for i from 1 to 10 collect (random)))
+            (loop for i from 1 to 10 collect (random))
+            (let ((*random-state* snap-shot))
+              (loop for i from 1 to 10 collect (random))))
+     =>  ((19 16 44 19 96 15 76 96 13 61)
+         (19 16 44 19 96 15 76 96 13 61)
+         (16 67 0 43 70 79 58 5 63 50)
+         (16 67 0 43 70 79 58 5 63 50))
+
+Affected By::
+.............
+
+The implementation.
+
+random.
+
+See Also::
+..........
+
+*Note make-random-state:: , *Note random:: , random-state
+
+Notes::
+.......
+
+Binding *random-state* to a different random state object correctly saves
+and restores the old random state object.
+
+
+File: gcl.info,  Node: numberp,  Next: cis,  Prev: *random-state*,  Up: Numbers Dictionary
+
+numberp                                                          [Function]
+---------------------------------------------------------------------------
+
+`numberp'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type number; otherwise, returns false.
+
+Examples::
+..........
+
+      (numberp 12) =>  true
+      (numberp (expt 2 130)) =>  true
+      (numberp #c(5/3 7.2)) =>  true
+      (numberp nil) =>  false
+      (numberp (cons 1 2)) =>  false
+
+Notes::
+.......
+
+      (numberp object) == (typep object 'number)
+
+
+File: gcl.info,  Node: cis,  Next: complex,  Prev: numberp,  Up: Numbers Dictionary
+
+cis                                                              [Function]
+---------------------------------------------------------------------------
+
+`cis'  radians =>  number
+
+Arguments and Values::
+......................
+
+radians--a real.
+
+number--a complex.
+
+Description::
+.............
+
+cis returns the value of~e^i\cdot radians, which is a complex in which the
+real part is equal to the cosine of radians, and the imaginary part is
+equal to the sine of radians.
+
+Examples::
+..........
+
+      (cis 0) =>  #C(1.0 0.0)
+
+See Also::
+..........
+
+*Note Rule of Float Substitutability::
+
+
+File: gcl.info,  Node: complex,  Next: complexp,  Prev: cis,  Up: Numbers Dictionary
+
+complex                                                          [Function]
+---------------------------------------------------------------------------
+
+`complex'  realpart &optional imagpart =>  complex
+
+Arguments and Values::
+......................
+
+realpart--a real.
+
+imagpart--a real.
+
+complex--a rational or a complex.
+
+Description::
+.............
+
+complex returns a number whose real      part is realpart and whose
+imaginary part is imagpart.
+
+If realpart is a rational and imagpart is the rational number zero, the
+result of complex is realpart, a rational.  Otherwise, the result is a
+complex.
+
+If either realpart or imagpart is a float, the non-float is converted to a
+float before the complex is created.  If imagpart is not supplied, the
+imaginary part is a zero of the same type as realpart; i.e., (coerce 0
+(type-of realpart)) is effectively used.
+
+Type upgrading implies a movement upwards in the type hierarchy lattice.
+In the case of complexes, the type-specifier
+
+[Reviewer Note by Barmar: What type specifier?] must be a subtype of
+(upgraded-complex-part-type type-specifier).  If type-specifier1 is a
+subtype of type-specifier2, then (upgraded-complex-element-type
+'type-specifier1) must also be a subtype of (upgraded-complex-element-type
+'type-specifier2).  Two disjoint types can be upgraded into the same thing.
+
+Examples::
+..........
+
+      (complex 0) =>  0
+      (complex 0.0) =>  #C(0.0 0.0)
+      (complex 1 1/2) =>  #C(1 1/2)
+      (complex 1 .99) =>  #C(1.0 0.99)
+      (complex 3/2 0.0) =>  #C(1.5 0.0)
+
+See Also::
+..........
+
+*Note realpart; imagpart:: , imagpart
+
+Notes::
+.......
+
+      #c(a b) == #.(complex a b)
+
+
+File: gcl.info,  Node: complexp,  Next: conjugate,  Prev: complex,  Up: Numbers Dictionary
+
+complexp                                                         [Function]
+---------------------------------------------------------------------------
+
+`complexp'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type complex; otherwise, returns false.
+
+Examples::
+..........
+
+      (complexp 1.2d2) =>  false
+      (complexp #c(5/3 7.2)) =>  true
+
+See Also::
+..........
+
+*Note complex:: (function and type), *Note typep::
+
+Notes::
+.......
+
+      (complexp object) == (typep object 'complex)
+
+
+File: gcl.info,  Node: conjugate,  Next: phase,  Prev: complexp,  Up: Numbers Dictionary
+
+conjugate                                                        [Function]
+---------------------------------------------------------------------------
+
+`conjugate'  number =>  conjugate
+
+Arguments and Values::
+......................
+
+number--a number.
+
+conjugate--a number.
+
+Description::
+.............
+
+Returns the complex conjugate of number.  The conjugate of a
+
+real
+
+number is itself.
+
+Examples::
+..........
+
+      (conjugate #c(0 -1)) =>  #C(0 1)
+      (conjugate #c(1 1)) =>  #C(1 -1)
+      (conjugate 1.5) =>  1.5
+      (conjugate #C(3/5 4/5)) =>  #C(3/5 -4/5)
+      (conjugate #C(0.0D0 -1.0D0)) =>  #C(0.0D0 1.0D0)
+      (conjugate 3.7) =>  3.7
+
+Notes::
+.......
+
+For a complex number z,
+
+      (conjugate z) == (complex (realpart z) (- (imagpart z)))
+
+
+File: gcl.info,  Node: phase,  Next: realpart,  Prev: conjugate,  Up: Numbers Dictionary
+
+phase                                                            [Function]
+---------------------------------------------------------------------------
+
+`phase'  number =>  phase
+
+Arguments and Values::
+......................
+
+number--a number.
+
+phase--a number.
+
+Description::
+.............
+
+phase returns the phase of number (the angle part of its polar
+representation) in radians, in the range
+
+-\pi (exclusive) if minus zero is not supported, or -\pi (inclusive) if
+minus zero is supported,
+
+to \pi (inclusive).  The phase of a positive
+
+real
+
+number is zero; that of a negative
+
+real
+
+number is \pi.  The phase of zero is defined to be zero.
+
+If number is a complex float, the result is a float of the same type as
+the components of number.  If number is a float, the result is a float of
+the same type.  If number is a rational or a complex rational, the result
+is a single float.
+
+The branch cut for phase lies along the negative real axis, continuous
+with quadrant II.  The range consists of that portion of the real axis
+between -\pi (exclusive) and~\pi (inclusive).
+
+The mathematical definition of phase is as follows:
+
+(phase x) = (atan (imagpart x) (realpart x))
+
+Examples::
+..........
+
+      (phase 1) =>  0.0s0
+      (phase 0) =>  0.0s0
+      (phase (cis 30)) =>  -1.4159266
+      (phase #c(0 1)) =>  1.5707964
+
+Exceptional Situations::
+........................
+
+Should signal type-error if its argument is not a number.  Might signal
+arithmetic-error.
+
+See Also::
+..........
+
+*Note Rule of Float Substitutability::
+
+
+File: gcl.info,  Node: realpart,  Next: upgraded-complex-part-type,  Prev: phase,  Up: Numbers Dictionary
+
+realpart, imagpart                                               [Function]
+---------------------------------------------------------------------------
+
+`realpart'  number =>  real
+
+`imagpart'  number =>  real
+
+Arguments and Values::
+......................
+
+number--a number.
+
+real--a real.
+
+Description::
+.............
+
+realpart and imagpart return the real and imaginary parts of number
+respectively.  If number is
+
+real,
+
+then realpart returns number and imagpart returns (* 0 number), which has
+the effect that the imaginary part of a rational is 0 and that of a float
+is a floating-point zero of the same format.
+
+Examples::
+..........
+
+      (realpart #c(23 41)) =>  23
+      (imagpart #c(23 41.0)) =>  41.0
+      (realpart #c(23 41.0)) =>  23.0
+      (imagpart 23.0) =>  0.0
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if number is not a number.
+
+See Also::
+..........
+
+*Note complex::
+
+
+File: gcl.info,  Node: upgraded-complex-part-type,  Next: realp,  Prev: realpart,  Up: Numbers Dictionary
+
+upgraded-complex-part-type                                       [Function]
+---------------------------------------------------------------------------
+
+`upgraded-complex-part-type'  typespec &optional environment =>
+upgraded-typespec
+
+Arguments and Values::
+......................
+
+typespec--a type specifier.
+
+environment--an environment object.  The default is nil, denoting the null
+lexical environment and the and current global environment.
+
+upgraded-typespec--a type specifier.
+
+Description::
+.............
+
+upgraded-complex-part-type returns the part type of the most specialized
+complex number representation that can hold parts of type typespec.
+
+The typespec is a subtype of (and possibly type equivalent to) the
+upgraded-typespec.
+
+The purpose of upgraded-complex-part-type is to reveal how an
+implementation does its upgrading.
+
+See Also::
+..........
+
+*Note complex:: (function and type)
+
+Notes::
+.......
+
+
+File: gcl.info,  Node: realp,  Next: numerator,  Prev: upgraded-complex-part-type,  Up: Numbers Dictionary
+
+realp                                                            [Function]
+---------------------------------------------------------------------------
+
+`realp'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type real; otherwise, returns false.
+
+Examples::
+..........
+
+      (realp 12) =>  true
+      (realp #c(5/3 7.2)) =>  false
+      (realp nil) =>  false
+      (realp (cons 1 2)) =>  false
+
+Notes::
+.......
+
+      (realp object) == (typep object 'real)
+
+
+File: gcl.info,  Node: numerator,  Next: rational,  Prev: realp,  Up: Numbers Dictionary
+
+numerator, denominator                                           [Function]
+---------------------------------------------------------------------------
+
+`numerator'  rational =>  numerator
+
+`denominator'  rational =>  denominator
+
+Arguments and Values::
+......................
+
+rational--a rational.
+
+numerator--an integer.
+
+denominator--a positive integer.
+
+Description::
+.............
+
+numerator and denominator reduce rational to canonical form and compute
+the numerator or denominator of that number.
+
+numerator and denominator return the numerator or denominator of the
+canonical form of rational.
+
+If rational is an integer, numerator returns rational and denominator
+returns 1.
+
+Examples::
+..........
+
+      (numerator 1/2) =>  1
+      (denominator 12/36) =>  3
+      (numerator -1) =>  -1
+      (denominator (/ -33)) =>  33
+      (numerator (/ 8 -6)) =>  -4
+      (denominator (/ 8 -6)) =>  3
+
+See Also::
+..........
+
+*Note /::
+
+Notes::
+.......
+
+      (gcd (numerator x) (denominator x)) =>  1
+
+
+File: gcl.info,  Node: rational,  Next: rationalp,  Prev: numerator,  Up: Numbers Dictionary
+
+rational, rationalize                                            [Function]
+---------------------------------------------------------------------------
+
+`rational'  number =>  rational
+
+`rationalize'  number =>  rational
+
+Arguments and Values::
+......................
+
+number--a real.
+
+rational--a rational.
+
+Description::
+.............
+
+rational and rationalize convert
+
+reals
+
+to rationals.
+
+If number is already rational, it is returned.
+
+If number is a float, rational returns a rational that is mathematically
+equal in value to the float.  rationalize returns a rational that
+approximates the float to the accuracy of the underlying floating-point
+representation.
+
+rational assumes that the float is completely accurate.
+
+rationalize assumes that the float is accurate only to the precision of the
+floating-point representation.
+
+Examples::
+..........
+
+      (rational 0) =>  0
+      (rationalize -11/100) =>  -11/100
+      (rational .1) =>  13421773/134217728 ;implementation-dependent
+      (rationalize .1) =>  1/10
+
+Affected By::
+.............
+
+The implementation.
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if number is not a real.  Might
+signal arithmetic-error.
+
+Notes::
+.......
+
+It is always the case that
+
+      (float (rational x) x) == x
+
+and
+
+      (float (rationalize x) x) == x
+
+That is, rationalizing a float by either method and then converting it back
+to a float of the same format produces the original number.
+
+
+File: gcl.info,  Node: rationalp,  Next: ash,  Prev: rational,  Up: Numbers Dictionary
+
+rationalp                                                        [Function]
+---------------------------------------------------------------------------
+
+`rationalp'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type rational; otherwise, returns false.
+
+Examples::
+..........
+
+      (rationalp 12) =>  true
+      (rationalp 6/5) =>  true
+      (rationalp 1.212) =>  false
+
+See Also::
+..........
+
+*Note rational::
+
+Notes::
+.......
+
+      (rationalp object) == (typep object 'rational)
+
+
+File: gcl.info,  Node: ash,  Next: integer-length,  Prev: rationalp,  Up: Numbers Dictionary
+
+ash                                                              [Function]
+---------------------------------------------------------------------------
+
+`ash'  integer count =>  shifted-integer
+
+Arguments and Values::
+......................
+
+integer--an integer.
+
+count--an integer.
+
+shifted-integer--an integer.
+
+Description::
+.............
+
+ash performs the arithmetic shift operation on the binary representation
+of integer, which is treated as if it were binary.
+
+ash shifts integer arithmetically left by count bit positions if count is
+positive, or right count bit positions if count is negative.  The shifted
+value of the same sign as integer is returned.
+
+Mathematically speaking, ash performs the computation floor(integer\cdot
+2^count).  Logically, ash moves all of the bits in integer to the left,
+adding zero-bits at the right, or moves them to the right, discarding bits.
+
+ash is defined to behave as if integer were represented in two's
+complement form, regardless of how integers are represented internally.
+
+Examples::
+..........
+
+      (ash 16 1) =>  32
+      (ash 16 0) =>  16
+      (ash 16 -1) =>  8
+      (ash -100000000000000000000000000000000 -100) =>  -79
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if integer is not an integer.
+Should signal an error of type type-error if count is not an integer.
+Might signal arithmetic-error.
+
+Notes::
+.......
+
+      (logbitp j (ash n k))
+      == (and (>= j k) (logbitp (- j k) n))
+
+
+File: gcl.info,  Node: integer-length,  Next: integerp,  Prev: ash,  Up: Numbers Dictionary
+
+integer-length                                                   [Function]
+---------------------------------------------------------------------------
+
+`integer-length'  integer =>  number-of-bits
+
+Arguments and Values::
+......................
+
+integer--an integer.
+
+number-of-bits--a non-negative integer.
+
+Description::
+.............
+
+Returns the number of bits needed to represent integer in binary
+two's-complement format.
+
+Examples::
+..........
+
+      (integer-length 0) =>  0
+      (integer-length 1) =>  1
+      (integer-length 3) =>  2
+      (integer-length 4) =>  3
+      (integer-length 7) =>  3
+      (integer-length -1) =>  0
+      (integer-length -4) =>  2
+      (integer-length -7) =>  3
+      (integer-length -8) =>  3
+      (integer-length (expt 2 9)) =>  10
+      (integer-length (1- (expt 2 9))) =>  9
+      (integer-length (- (expt 2 9))) =>  9
+      (integer-length (- (1+ (expt 2 9)))) =>  10
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if integer is not an integer.
+
+Notes::
+.......
+
+This function could have been defined by:
+
+     (defun integer-length (integer)
+       (ceiling (log (if (minusp integer)
+                         (- integer)
+                         (1+ integer))
+                     2)))
+
+If integer is non-negative, then its value can be represented in unsigned
+binary form in a field whose width in bits is no smaller than
+(integer-length integer).  Regardless of the sign of integer, its value
+can be represented in signed binary two's-complement form in a field whose
+width in bits is no smaller than (+ (integer-length integer) 1).
+
+
+File: gcl.info,  Node: integerp,  Next: parse-integer,  Prev: integer-length,  Up: Numbers Dictionary
+
+integerp                                                         [Function]
+---------------------------------------------------------------------------
+
+`integerp'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type integer; otherwise, returns false.
+
+Examples::
+..........
+
+      (integerp 1) =>  true
+      (integerp (expt 2 130)) =>  true
+      (integerp 6/5) =>  false
+      (integerp nil) =>  false
+
+Notes::
+.......
+
+      (integerp object) == (typep object 'integer)
+
+
+File: gcl.info,  Node: parse-integer,  Next: boole,  Prev: integerp,  Up: Numbers Dictionary
+
+parse-integer                                                    [Function]
+---------------------------------------------------------------------------
+
+`parse-integer'  string &key start end radix junk-allowed =>  integer, pos
+
+Arguments and Values::
+......................
+
+string--a string.
+
+start, end--bounding index designators of string.  The defaults for start
+and end are 0 and nil, respectively.
+
+radix--a radix.  The default is 10.
+
+junk-allowed--a generalized boolean.  The default is false.
+
+integer--an integer or false.
+
+pos--a bounding index of string.
+
+Description::
+.............
+
+parse-integer parses an integer in the specified radix from the substring
+of string delimited by start and end.
+
+parse-integer expects an optional sign (+ or -) followed by a a non-empty
+sequence of digits to be interpreted in the specified radix.  Optional
+leading and trailing whitespace_1 is ignored.
+
+parse-integer does not recognize the syntactic radix-specifier prefixes
+#O, #B, #X, and #nR, nor does it recognize a trailing decimal point.
+
+If junk-allowed is false, an error of type parse-error is signaled if
+substring does not consist entirely of the representation of a signed
+integer, possibly surrounded on either side by whitespace_1 characters.
+
+The first value returned is either the integer that was parsed, or else
+nil if no syntactically correct integer was seen but junk-allowed was true.
+
+The second value is either the index into the string of the delimiter that
+terminated the parse, or the upper bounding index of the substring if the
+parse terminated at the end of the substring (as is always the case if
+junk-allowed is false).
+
+Examples::
+..........
+
+      (parse-integer "123") =>  123, 3
+      (parse-integer "123" :start 1 :radix 5) =>  13, 3
+      (parse-integer "no-integer" :junk-allowed t) =>  NIL, 0
+
+Exceptional Situations::
+........................
+
+If junk-allowed is false, an error is signaled if substring does not
+consist entirely of the representation of an integer, possibly surrounded
+on either side by whitespace_1 characters.
+
+
+File: gcl.info,  Node: boole,  Next: boole-1,  Prev: parse-integer,  Up: Numbers Dictionary
+
+boole                                                            [Function]
+---------------------------------------------------------------------------
+
+`boole'  op integer-1 integer-2 =>  result-integer
+
+Arguments and Values::
+......................
+
+Op--a bit-wise logical operation specifier.
+
+integer-1--an integer.
+
+integer-2--an integer.
+
+result-integer--an integer.
+
+Description::
+.............
+
+boole performs bit-wise logical operations on integer-1 and integer-2,
+which are treated as if they were binary and in two's complement
+representation.
+
+The operation to be performed and the return value are determined by op.
+
+boole returns the values specified for any op in Figure 12-16.
+
+  Op           Result                                      
+  boole-1      integer-1                                   
+  boole-2      integer-2                                   
+  boole-andc1  and complement of integer-1 with integer-2  
+  boole-andc2  and integer-1 with complement of integer-2  
+  boole-and    and                                         
+  boole-c1     complement of integer-1                     
+  boole-c2     complement of integer-2                     
+  boole-clr    always 0 (all zero bits)                    
+  boole-eqv    equivalence (exclusive nor)                 
+  boole-ior    inclusive or                                
+  boole-nand   not-and                                     
+  boole-nor    not-or                                      
+  boole-orc1   or complement of integer-1 with integer-2   
+  boole-orc2   or integer-1 with complement of integer-2   
+  boole-set    always -1 (all one bits)                    
+  boole-xor    exclusive or                                
+
+         Figure 12-16: Bit-Wise Logical Operations        
+
+
+Examples::
+..........
+
+      (boole boole-ior 1 16) =>  17
+      (boole boole-and -2 5) =>  4
+      (boole boole-eqv 17 15) =>  -31
+     
+     ;;; These examples illustrate the result of applying BOOLE and each
+     ;;; of the possible values of OP to each possible combination of bits.
+      (progn
+        (format t "~&Results of (BOOLE <op> #b0011 #b0101) ...~
+                ~
+        (dolist (symbol '(boole-1     boole-2    boole-and  boole-andc1
+                          boole-andc2 boole-c1   boole-c2   boole-clr
+                          boole-eqv   boole-ior  boole-nand boole-nor
+                          boole-orc1  boole-orc2 boole-set  boole-xor))
+          (let ((result (boole (symbol-value symbol) #b0011 #b0101)))
+            (format t "~& ~A~13T~3,' D~23T~:*~5,' B~31T ...~4,'0B~
+                    symbol result (logand result #b1111)))))
+      |>  Results of (BOOLE <op> #b0011 #b0101) ...
+      |>  ---Op-------Decimal-----Binary----Bits---
+      |>   BOOLE-1       3          11    ...0011
+      |>   BOOLE-2       5         101    ...0101
+      |>   BOOLE-AND     1           1    ...0001
+      |>   BOOLE-ANDC1   4         100    ...0100
+      |>   BOOLE-ANDC2   2          10    ...0010
+      |>   BOOLE-C1     -4        -100    ...1100
+      |>   BOOLE-C2     -6        -110    ...1010
+      |>   BOOLE-CLR     0           0    ...0000
+      |>   BOOLE-EQV    -7        -111    ...1001
+      |>   BOOLE-IOR     7         111    ...0111
+      |>   BOOLE-NAND   -2         -10    ...1110
+      |>   BOOLE-NOR    -8       -1000    ...1000
+      |>   BOOLE-ORC1   -3         -11    ...1101
+      |>   BOOLE-ORC2   -5        -101    ...1011
+      |>   BOOLE-SET    -1          -1    ...1111
+      |>   BOOLE-XOR     6         110    ...0110
+     =>  NIL
+
+Exceptional Situations::
+........................
+
+Should signal type-error if its first argument is not a bit-wise logical
+operation specifier or if any subsequent argument is not an integer.
+
+See Also::
+..........
+
+*Note logand; logandc1; logandc2; logeqv; logior; lognand; lognor; lognot;
+logorc1; logorc2; logxor::
+
+Notes::
+.......
+
+In general,
+
+      (boole boole-and x y) == (logand x y)
+
+Programmers who would prefer to use numeric indices rather than bit-wise
+logical operation specifiers can get an equivalent effect by a technique
+such as the following:
+
+     ;; The order of the values in this `table' are such that
+     ;; (logand (boole (elt boole-n-vector n) #b0101 #b0011) #b1111) => n
+      (defconstant boole-n-vector
+         (vector boole-clr   boole-and  boole-andc1 boole-2
+                 boole-andc2 boole-1    boole-xor   boole-ior
+                 boole-nor   boole-eqv  boole-c1    boole-orc1
+                 boole-c2    boole-orc2 boole-nand  boole-set))
+     =>  BOOLE-N-VECTOR
+      (proclaim '(inline boole-n))
+     =>  implementation-dependent
+      (defun boole-n (n integer &rest more-integers)
+        (apply #'boole (elt boole-n-vector n) integer more-integers))
+     =>  BOOLE-N
+      (boole-n #b0111 5 3) =>  7
+      (boole-n #b0001 5 3) =>  1
+      (boole-n #b1101 5 3) =>  -3
+      (loop for n from #b0000 to #b1111 collect (boole-n n 5 3))
+     =>  (0 1 2 3 4 5 6 7 -8 -7 -6 -5 -4 -3 -2 -1)
+
+
+File: gcl.info,  Node: boole-1,  Next: logand,  Prev: boole,  Up: Numbers Dictionary
+
+boole-1,    boole-2,   boole-and,  boole-andc1, boole-andc2,
+------------------------------------------------------------
+
+boole-c1,   boole-c2,  boole-clr,  boole-eqv,   boole-ior,
+----------------------------------------------------------
+
+boole-nand, boole-nor, boole-orc1, boole-orc2,  boole-set,
+----------------------------------------------------------
+
+boole-xor
+---------
+
+                                                       [Constant Variable]
+
+Constant Value::
+................
+
+The identity and nature of the values of each of these variables is
+implementation-dependent, except that it must be distinct from each of the
+values of the others, and it must be a valid first argument to the
+function boole.
+
+Description::
+.............
+
+Each of these constants has a value which is one of the sixteen possible
+bit-wise logical operation specifiers.
+
+Examples::
+..........
+
+      (boole boole-ior 1 16) =>  17
+      (boole boole-and -2 5) =>  4
+      (boole boole-eqv 17 15) =>  -31
+
+See Also::
+..........
+
+*Note boole::
+

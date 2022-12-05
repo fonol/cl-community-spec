@@ -1,0 +1,57 @@
+{
+    "name": "make-condition",
+    "prev": "define-condition",
+    "next": "restart",
+    "up": "Conditions Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "make-condition"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "make-condition",
+                    "text": " type &rest slot-initializations =>  condition\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "type",
+                    "desc": "a type specifier (for a subtype of condition)."
+                },
+                {
+                    "name": "slot-initializations",
+                    "desc": "an initialization argument list."
+                },
+                {
+                    "name": "condition",
+                    "desc": "a condition."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Constructs and returns a condition of type type using slot-initializations\nfor the initial values of the slots.  The newly created condition is\nreturned.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defvar *oops-count* 0)\n      (setq a (make-condition 'simple-error\n                              :format-control \"This is your ~:R error.\"\n                              :format-arguments (list (incf *oops-count*))))\n     =>  #<SIMPLE-ERROR 32245104>\n      (format t \"~&~A~\n      |>  This is your first error.\n     =>  NIL\n      (error a)\n      |>  Error: This is your first error.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Return to Lisp Toplevel.\n      |>  Debug>\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "The set of defined condition types.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note define-condition:: , *Note Condition System Concepts::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: make-condition,  Next: restart,  Prev: define-condition,  Up: Conditions Dictionary\n\nmake-condition                                                   [Function]\n---------------------------------------------------------------------------\n\n`make-condition'  type &rest slot-initializations =>  condition\n\nArguments and Values::\n......................\n\ntype--a type specifier (for a subtype of condition).\n\nslot-initializations--an initialization argument list.\n\ncondition--a condition.\n\nDescription::\n.............\n\nConstructs and returns a condition of type type using slot-initializations\nfor the initial values of the slots.  The newly created condition is\nreturned.\n\nExamples::\n..........\n\n      (defvar *oops-count* 0)\n     \n      (setq a (make-condition 'simple-error\n                              :format-control \"This is your ~:R error.\"\n                              :format-arguments (list (incf *oops-count*))))\n     =>  #<SIMPLE-ERROR 32245104>\n     \n      (format t \"~&~A~\n      |>  This is your first error.\n     =>  NIL\n     \n      (error a)\n      |>  Error: This is your first error.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Return to Lisp Toplevel.\n      |>  Debug>\n\nAffected By::\n.............\n\nThe set of defined condition types.\n\nSee Also::\n..........\n\n*Note define-condition:: , *Note Condition System Concepts::\n\n"
+}

@@ -1,0 +1,1625 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: member,  Next: mapc,  Prev: rest,  Up: Conses Dictionary
+
+member, member-if, member-if-not                                 [Function]
+---------------------------------------------------------------------------
+
+`member'  item      list &key key test test-not =>  tail
+
+`member-if'  predicate list &key key =>  tail
+
+`member-if-not'  predicate list &key key =>  tail
+
+Arguments and Values::
+......................
+
+item--an object.
+
+list--a proper list.
+
+predicate--a designator for a function of one argument that returns a
+generalized boolean.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+key--a designator for a function of one argument, or nil.
+
+tail--a list.
+
+Description::
+.............
+
+member, member-if, and member-if-not each search list for item or for a
+top-level element that satisfies the test.  The argument to the predicate
+function is an element of list.
+
+If some element satisfies the test, the tail of list beginning with this
+element is returned; otherwise nil is returned.
+
+list is searched on the top level only.
+
+Examples::
+..........
+
+      (member 2 '(1 2 3)) =>  (2 3)
+      (member 2 '((1 . 2) (3 . 4)) :test-not #'= :key #'cdr) =>  ((3 . 4))
+      (member 'e '(a b c d)) =>  NIL
+
+      (member-if #'listp '(a b nil c d)) =>  (NIL C D)
+      (member-if #'numberp '(a #\Space 5/3 foo)) =>  (5/3 FOO)
+      (member-if-not #'zerop
+                      '(3 6 9 11 . 12)
+                      :key #'(lambda (x) (mod x 3))) =>  (11 . 12)
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if list is not a
+proper list.
+
+See Also::
+..........
+
+*Note find; find-if; find-if-not:: , *Note position; position-if;
+position-if-not:: ,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not parameter is deprecated.
+
+The function member-if-not is deprecated.
+
+In the following
+
+      (member 'a '(g (a y) c a d e a f)) =>  (A D E A F)
+
+the value returned by member is identical to the portion of the list
+beginning with a.  Thus rplaca on the result of member can be used to
+alter the part of the list where a was found (assuming a check has been
+made that member did not return nil).
+
+
+File: gcl.info,  Node: mapc,  Next: acons,  Prev: member,  Up: Conses Dictionary
+
+mapc, mapcar, mapcan, mapl, maplist, mapcon                      [Function]
+---------------------------------------------------------------------------
+
+`mapc'  function &rest lists^+ =>  list-1
+
+`mapcar'  function &rest lists^+ =>  result-list
+
+`mapcan'  function &rest lists^+ =>  concatenated-results
+
+`mapl'  function &rest lists^+ =>  list-1
+
+`maplist'  function &rest lists^+ =>  result-list
+
+`mapcon'  function &rest lists^+ =>  concatenated-results
+
+Arguments and Values::
+......................
+
+function--a designator for a function that must take as many arguments as
+there are lists.
+
+list--a proper list.
+
+list-1--the first list (which must be a proper list).
+
+result-list--a list.
+
+concatenated-results--a list.
+
+Description::
+.............
+
+The mapping operation involves applying function to successive sets of
+arguments in which one argument is obtained from each sequence.  Except
+for mapc and mapl, the result contains the results returned by function.
+In the cases of mapc and mapl, the resulting sequence is list.
+
+function is called first on all the elements with index 0, then on all
+those with index 1, and so on.  result-type specifies the type of the
+resulting sequence.
+
+If function is a symbol, it is coerced to a function as if by
+symbol-function.
+
+mapcar operates on successive elements of the lists.  function is applied
+to the first element of each list, then to the second element of each
+list, and so on.  The iteration terminates when the shortest list runs out,
+and excess elements in other lists are ignored.  The value returned by
+mapcar is a list of the results of successive calls to function.
+
+mapc is like mapcar except that the results of applying function are not
+accumulated.  The list argument is returned.
+
+maplist is like mapcar except that function is applied to successive
+sublists of the lists.  function is first applied to the lists themselves,
+and then to the cdr of each list, and then to the cdr of the cdr of each
+list, and so on.
+
+mapl is like maplist except that the results of applying function are not
+accumulated; list-1 is returned.
+
+mapcan and mapcon are like mapcar and maplist respectively, except that
+the results of applying function are combined into a list by the use of
+nconc rather than list.  That is,
+
+      (mapcon f x1 ... xn)
+        == (apply #'nconc (maplist f x1 ... xn))
+
+and similarly for the relationship between mapcan and mapcar.
+
+Examples::
+..........
+
+      (mapcar #'car '((1 a) (2 b) (3 c))) =>  (1 2 3)
+      (mapcar #'abs '(3 -4 2 -5 -6)) =>  (3 4 2 5 6)
+      (mapcar #'cons '(a b c) '(1 2 3)) =>  ((A . 1) (B . 2) (C . 3))
+     
+      (maplist #'append '(1 2 3 4) '(1 2) '(1 2 3))
+     =>  ((1 2 3 4 1 2 1 2 3) (2 3 4 2 2 3))
+      (maplist #'(lambda (x) (cons 'foo x)) '(a b c d))
+     =>  ((FOO A B C D) (FOO B C D) (FOO C D) (FOO D))
+      (maplist #'(lambda (x) (if (member (car x) (cdr x)) 0 1)) '(a b a c d b c))
+     =>  (0 0 1 0 1 1 1)
+     ;An entry is 1 if the corresponding element of the input
+     ;  list was the last instance of that element in the input list.
+     
+      (setq dummy nil) =>  NIL
+      (mapc #'(lambda (&rest x) (setq dummy (append dummy x)))
+             '(1 2 3 4)
+             '(a b c d e)
+             '(x y z)) =>  (1 2 3 4)
+      dummy =>  (1 A X 2 B Y 3 C Z)
+     
+      (setq dummy nil) =>  NIL
+      (mapl #'(lambda (x) (push x dummy)) '(1 2 3 4)) =>  (1 2 3 4)
+      dummy =>  ((4) (3 4) (2 3 4) (1 2 3 4))
+     
+      (mapcan #'(lambda (x y) (if (null x) nil (list x y)))
+               '(nil nil nil d e)
+               '(1 2 3 4 5 6)) =>  (D 4 E 5)
+      (mapcan #'(lambda (x) (and (numberp x) (list x)))
+               '(a 1 b c 3 4 d 5))
+     =>  (1 3 4 5)
+
+In this case the function serves as a filter; this is a standard Lisp
+idiom using mapcan.
+
+      (mapcon #'list '(1 2 3 4)) =>  ((1 2 3 4) (2 3 4) (3 4) (4))
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if any list is
+not a proper list.
+
+See Also::
+..........
+
+*Note dolist:: , *Note map:: ,
+
+*Note Traversal Rules and Side Effects::
+
+
+File: gcl.info,  Node: acons,  Next: assoc,  Prev: mapc,  Up: Conses Dictionary
+
+acons                                                            [Function]
+---------------------------------------------------------------------------
+
+`acons'  key datum alist =>  new-alist
+
+Arguments and Values::
+......................
+
+key--an object.
+
+datum--an object.
+
+alist--an association list.
+
+new-alist--an association list.
+
+Description::
+.............
+
+Creates a fresh cons, the cdr of which is alist and the car of which is
+another fresh cons, the car of which is key and the cdr of which is datum.
+
+Examples::
+..........
+
+      (setq alist '()) =>  NIL
+      (acons 1 "one" alist) =>  ((1 . "one"))
+      alist =>  NIL
+      (setq alist (acons 1 "one" (acons 2 "two" alist))) =>  ((1 . "one") (2 . "two"))
+      (assoc 1 alist) =>  (1 . "one")
+      (setq alist (acons 1 "uno" alist)) =>  ((1 . "uno") (1 . "one") (2 . "two"))
+      (assoc 1 alist) =>  (1 . "uno")
+
+See Also::
+..........
+
+*Note assoc; assoc-if; assoc-if-not:: , *Note pairlis::
+
+Notes::
+.......
+
+     (acons key datum alist) == (cons (cons key datum) alist)
+
+
+File: gcl.info,  Node: assoc,  Next: copy-alist,  Prev: acons,  Up: Conses Dictionary
+
+assoc, assoc-if, assoc-if-not                                    [Function]
+---------------------------------------------------------------------------
+
+`assoc'  item      alist &key key test test-not =>  entry
+
+`assoc-if'  predicate alist &key key =>  entry
+
+`assoc-if-not'  predicate alist &key key =>  entry
+
+Arguments and Values::
+......................
+
+item--an object.
+
+alist--an association list.
+
+predicate--a designator for a function of one argument that returns a
+generalized boolean.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+key--a designator for a function of one argument, or nil.
+
+entry--a cons that is an element of alist, or nil.
+
+Description::
+.............
+
+assoc, assoc-if, and assoc-if-not return the first cons in alist whose car
+satisfies the test, or nil if no such cons is found.
+
+For assoc, assoc-if, and assoc-if-not, if nil appears in alist in place of
+a pair, it is ignored.
+
+Examples::
+..........
+
+      (setq values '((x . 100) (y . 200) (z . 50))) =>  ((X . 100) (Y . 200) (Z . 50))
+      (assoc 'y values) =>  (Y . 200)
+      (rplacd (assoc 'y values) 201) =>  (Y . 201)
+      (assoc 'y values) =>  (Y . 201)
+      (setq alist '((1 . "one")(2 . "two")(3 . "three")))
+     =>  ((1 . "one") (2 . "two") (3 . "three"))
+      (assoc 2 alist) =>  (2 . "two")
+      (assoc-if #'evenp alist) =>  (2 . "two")
+      (assoc-if-not #'(lambda(x) (< x 3)) alist) =>  (3 . "three")
+      (setq alist '(("one" . 1)("two" . 2))) =>  (("one" . 1) ("two" . 2))
+      (assoc "one" alist) =>  NIL
+      (assoc "one" alist :test #'equalp) =>  ("one" . 1)
+      (assoc "two" alist :key #'(lambda(x) (char x 2))) =>  NIL
+      (assoc #\o alist :key #'(lambda(x) (char x 2))) =>  ("two" . 2)
+      (assoc 'r '((a . b) (c . d) (r . x) (s . y) (r . z))) =>   (R . X)
+      (assoc 'goo '((foo . bar) (zoo . goo))) =>  NIL
+      (assoc '2 '((1 a b c) (2 b c d) (-7 x y z))) =>  (2 B C D)
+      (setq alist '(("one" . 1) ("2" . 2) ("three" . 3)))
+     =>  (("one" . 1) ("2" . 2) ("three" . 3))
+      (assoc-if-not #'alpha-char-p alist
+                    :key #'(lambda (x) (char x 0))) =>  ("2" . 2)
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if alist is not
+an association list.
+
+See Also::
+..........
+
+*Note rassoc; rassoc-if; rassoc-if-not:: , *Note find; find-if;
+find-if-not:: , *Note member; member-if; member-if-not:: , *Note position;
+position-if; position-if-not:: ,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not parameter is deprecated.
+
+The function assoc-if-not is deprecated.
+
+It is possible to rplacd the result of assoc, provided that it is not nil,
+in order to "update" alist.
+
+The two expressions
+
+      (assoc item list :test fn)
+
+and
+
+      (find item list :test fn :key #'car)
+
+are equivalent in meaning with one exception: if nil appears in alist in
+place of a pair, and item is nil, find will compute the car of the nil in
+alist, find that it is equal to item, and return nil, whereas assoc will
+ignore the nil in alist and continue to search for an actual cons whose
+car is nil.
+
+
+File: gcl.info,  Node: copy-alist,  Next: pairlis,  Prev: assoc,  Up: Conses Dictionary
+
+copy-alist                                                       [Function]
+---------------------------------------------------------------------------
+
+`copy-alist'  alist =>  new-alist
+
+Arguments and Values::
+......................
+
+alist--an association list.
+
+new-alist--an association list.
+
+Description::
+.............
+
+copy-alist returns a copy of alist.
+
+The list structure of alist is copied, and the elements of alist which are
+conses are also copied (as conses only).  Any other objects which are
+referred to, whether directly or indirectly, by the alist continue to be
+shared.
+
+Examples::
+..........
+
+     (defparameter *alist* (acons 1 "one" (acons 2 "two" '())))
+     *alist* =>  ((1 . "one") (2 . "two"))
+     (defparameter *list-copy* (copy-list *alist*))
+     *list-copy* =>  ((1 . "one") (2 . "two"))
+     (defparameter *alist-copy* (copy-alist *alist*))
+     *alist-copy* =>  ((1 . "one") (2 . "two"))
+     (setf (cdr (assoc 2 *alist-copy*)) "deux") =>  "deux"
+     *alist-copy* =>  ((1 . "one") (2 . "deux"))
+     *alist* =>  ((1 . "one") (2 . "two"))
+     (setf (cdr (assoc 1 *list-copy*)) "uno") =>  "uno"
+     *list-copy* =>  ((1 . "uno") (2 . "two"))
+     *alist* =>  ((1 . "uno") (2 . "two"))
+
+See Also::
+..........
+
+*Note copy-list::
+
+
+File: gcl.info,  Node: pairlis,  Next: rassoc,  Prev: copy-alist,  Up: Conses Dictionary
+
+pairlis                                                          [Function]
+---------------------------------------------------------------------------
+
+`pairlis'  keys data &optional alist =>  new-alist
+
+Arguments and Values::
+......................
+
+keys--a proper list.
+
+data--a proper list.
+
+alist--an association list.  The default is the empty list.
+
+new-alist--an association list.
+
+Description::
+.............
+
+Returns an association list that associates elements of keys to
+corresponding elements of data.  The consequences are undefined if keys
+and data are not of the same length.
+
+If alist is supplied, pairlis returns a modified alist with the new pairs
+prepended to it.  The new pairs may appear in the resulting association
+list in either forward or backward order.  The result of
+
+      (pairlis '(one two) '(1 2) '((three . 3) (four . 19)))
+
+might be
+
+      ((one . 1) (two . 2) (three . 3) (four . 19))
+
+or
+
+      ((two . 2) (one . 1) (three . 3) (four . 19))
+
+Examples::
+..........
+
+      (setq keys '(1 2 3)
+             data '("one" "two" "three")
+             alist '((4 . "four"))) =>  ((4 . "four"))
+      (pairlis keys data) =>  ((3 . "three") (2 . "two") (1 . "one"))
+      (pairlis keys data alist)
+     =>  ((3 . "three") (2 . "two") (1 . "one") (4 . "four"))
+      alist =>  ((4 . "four"))
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if keys and data
+are not proper lists.
+
+See Also::
+..........
+
+*Note acons::
+
+
+File: gcl.info,  Node: rassoc,  Next: get-properties,  Prev: pairlis,  Up: Conses Dictionary
+
+rassoc, rassoc-if, rassoc-if-not                                 [Function]
+---------------------------------------------------------------------------
+
+`rassoc'  item      alist  &key key test test-not =>  entry
+
+`rassoc-if'  predicate alist &key key =>  entry
+
+`rassoc-if-not'  predicate alist &key key =>  entry
+
+Arguments and Values::
+......................
+
+item--an object.
+
+alist--an association list.
+
+predicate--a designator for a function of one argument that returns a
+generalized boolean.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+key--a designator for a function of one argument, or nil.
+
+entry--a cons that is an element of the alist, or nil.
+
+Description::
+.............
+
+rassoc, rassoc-if, and rassoc-if-not return the first cons whose cdr
+satisfies the test.  If no such cons is found, nil is returned.
+
+If nil appears in alist in place of a pair, it is  ignored.
+
+Examples::
+..........
+
+      (setq alist '((1 . "one") (2 . "two") (3 . 3)))
+     =>  ((1 . "one") (2 . "two") (3 . 3))
+      (rassoc 3 alist) =>  (3 . 3)
+      (rassoc "two" alist) =>  NIL
+      (rassoc "two" alist :test 'equal) =>  (2 . "two")
+      (rassoc 1 alist :key #'(lambda (x) (if (numberp x) (/ x 3)))) =>  (3 . 3)
+      (rassoc 'a '((a . b) (b . c) (c . a) (z . a))) =>  (C . A)
+      (rassoc-if #'stringp alist) =>  (1 . "one")
+      (rassoc-if-not #'vectorp alist) =>  (3 . 3)
+
+See Also::
+..........
+
+*Note assoc; assoc-if; assoc-if-not:: ,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not parameter is deprecated.
+
+The function rassoc-if-not is deprecated.
+
+It is possible to rplaca the result of rassoc, provided that it is not
+nil, in order to "update" alist.
+
+The expressions
+
+      (rassoc item list :test fn)
+
+and
+
+      (find item list :test fn :key #'cdr)
+
+are equivalent in meaning, except when the item is nil and nil appears in
+place of a pair in the alist.  See the function assoc.
+
+
+File: gcl.info,  Node: get-properties,  Next: getf,  Prev: rassoc,  Up: Conses Dictionary
+
+get-properties                                                   [Function]
+---------------------------------------------------------------------------
+
+`get-properties'  plist indicator-list =>  indicator, value, tail
+
+Arguments and Values::
+......................
+
+plist--a property list.
+
+indicator-list--a proper list (of indicators).
+
+indicator--an object that is an element of indicator-list.
+
+value--an object.
+
+tail--a list.
+
+Description::
+.............
+
+get-properties is used to look up any of several property list entries all
+at once.
+
+It searches the plist for the first entry whose indicator is identical to
+one of the objects in indicator-list.  If such an entry is found, the
+indicator and value returned are the property indicator and its associated
+property value, and the tail returned is the tail of the plist that begins
+with the found entry (i.e., whose car is the indicator).  If no such entry
+is found, the indicator, value, and tail are all nil.
+
+Examples::
+..........
+
+      (setq x '()) =>  NIL
+      (setq *indicator-list* '(prop1 prop2)) =>  (PROP1 PROP2)
+      (getf x 'prop1) =>  NIL
+      (setf (getf x 'prop1) 'val1) =>  VAL1
+      (eq (getf x 'prop1) 'val1) =>  true
+      (get-properties x *indicator-list*) =>  PROP1, VAL1, (PROP1 VAL1)
+      x =>  (PROP1 VAL1)
+
+See Also::
+..........
+
+*Note get:: , *Note getf::
+
+
+File: gcl.info,  Node: getf,  Next: remf,  Prev: get-properties,  Up: Conses Dictionary
+
+getf                                                             [Accessor]
+---------------------------------------------------------------------------
+
+`getf'  plist indicator &optional default =>  value
+
+(setf (`         getf' place indicator &optional default) new-value)
+Arguments and Values::
+......................
+
+plist--a property list.
+
+place--a place, the value of which is a property list.
+
+indicator--an object.
+
+default--an object.  The default is nil.
+
+value--an object.
+
+new-value--an object.
+
+Description::
+.............
+
+getf finds a property on the plist whose property indicator is identical
+to indicator, and returns its corresponding property value.
+
+If there are multiple properties_1 with that property indicator, getf uses
+the first such property.
+
+If there is no property with that property indicator, default is returned.
+
+setf of getf may be used to associate a new object with an existing
+indicator in the property list held by place, or to create a new
+assocation if none exists.
+
+If there are multiple properties_1 with that property indicator, setf of
+getf associates the new-value with the first such property.
+
+When a getf form is used as a setf place, any default which is supplied is
+evaluated according to normal left-to-right evaluation rules, but its
+value is ignored.
+
+setf of getf is permitted to either write the value of place itself, or
+modify of any part, car or cdr, of the list structure held by place.
+
+Examples::
+..........
+
+      (setq x '()) =>  NIL
+      (getf x 'prop1) =>  NIL
+      (getf x 'prop1 7) =>  7
+      (getf x 'prop1) =>  NIL
+      (setf (getf x 'prop1) 'val1) =>  VAL1
+      (eq (getf x 'prop1) 'val1) =>  true
+      (getf x 'prop1) =>  VAL1
+      (getf x 'prop1 7) =>  VAL1
+      x =>  (PROP1 VAL1)
+     
+     ;; Examples of implementation variation permitted.
+      (setq foo (list 'a 'b 'c 'd 'e 'f)) =>  (A B C D E F)
+      (setq bar (cddr foo)) =>  (C D E F)
+      (remf foo 'c) =>  true
+      foo =>  (A B E F)
+      bar
+     =>  (C D E F)
+     OR=> (C)
+     OR=> (NIL)
+     OR=> (C NIL)
+     OR=> (C D)
+
+See Also::
+..........
+
+*Note get:: , *Note get-properties:: , *Note setf; psetf:: , *Note
+Function Call Forms as Places::
+
+Notes::
+.......
+
+There is no way (using getf) to distinguish an absent property from one
+whose value is default; but see get-properties.
+
+Note that while supplying a default argument to getf in a setf situation
+is sometimes not very interesting, it is still important because some
+macros, such as push and incf, require a place argument which data is both
+read from and written to.  In such a context, if a default argument is to
+be supplied for the read situation, it must be syntactically valid for the
+write situation as well. For example,
+
+      (let ((plist '()))
+        (incf (getf plist 'count 0))
+        plist) =>  (COUNT 1)
+
+
+File: gcl.info,  Node: remf,  Next: intersection,  Prev: getf,  Up: Conses Dictionary
+
+remf                                                                [Macro]
+---------------------------------------------------------------------------
+
+`remf'  place indicator =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+place--a place.
+
+indicator--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+remf removes from the property list stored in place a property_1 with a
+property indicator identical to indicator.
+
+If there are multiple properties_1 with the identical key, remf only
+removes the first such property.
+
+remf returns false if no such property was found, or true if a property
+was found.
+
+The property indicator and the corresponding property value are removed in
+an undefined order by destructively splicing the property list.
+
+remf is permitted to either setf place or to setf any part, car or cdr, of
+the list structure held by that place.
+
+For information about the evaluation of subforms of place, see *Note
+Evaluation of Subforms to Places::.
+
+Examples::
+..........
+
+      (setq x (cons () ())) =>  (NIL)
+      (setf (getf (car x) 'prop1) 'val1) =>  VAL1
+      (remf (car x) 'prop1) =>  true
+      (remf (car x) 'prop1) =>  false
+
+Side Effects::
+..............
+
+The property list stored in place is modified.
+
+See Also::
+..........
+
+*Note remprop:: , *Note getf::
+
+
+File: gcl.info,  Node: intersection,  Next: adjoin,  Prev: remf,  Up: Conses Dictionary
+
+intersection, nintersection                                      [Function]
+---------------------------------------------------------------------------
+
+`intersection'  list-1 list-2 &key key test test-not =>  result-list
+
+`nintersection'  list-1 list-2 &key key test test-not =>  result-list
+
+Arguments and Values::
+......................
+
+list-1--a proper list.
+
+list-2--a proper list.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+key--a designator for a function of one argument, or nil.
+
+result-list--a list.
+
+Description::
+.............
+
+intersection and nintersection return a list that contains every element
+that occurs in both list-1 and list-2.
+
+nintersection is the destructive version of intersection.  It performs the
+same operation, but may destroy list-1 using its cells to construct the
+result.
+
+list-2 is not destroyed.
+
+The intersection operation is described as follows.  For all possible
+ordered pairs consisting of one element from list-1 and one element from
+list-2, :test or :test-not are used to determine whether they satisfy the
+test.  The first argument to the :test or :test-not function is an element
+of list-1; the second argument is an element of list-2.  If :test or
+:test-not is not supplied, eql is used.  It is an error if :test and
+:test-not are supplied in the same function call.
+
+If :key is supplied (and not nil), it is used to extract the part to be
+tested from the list element.  The argument to the :key function is an
+element of either list-1 or list-2; the :key function typically returns
+part of the supplied element.  If :key is not supplied or nil, the list-1
+and list-2 elements are used.
+
+For every pair that satifies the test, exactly one of the two elements of
+the pair will be put in the result.  No element from either list appears
+in the result that does not satisfy the test for an element from the other
+list.  If one of the lists contains duplicate elements, there may be
+duplication in the result.
+
+There is no guarantee that the order of elements in the result will
+reflect the ordering of the arguments in any particular way.  The result
+list may share cells with, or be eq to, either list-1 or list-2 if
+appropriate.
+
+Examples::
+..........
+
+      (setq list1 (list 1 1 2 3 4 a b c "A" "B" "C" "d")
+            list2 (list 1 4 5 b c d "a" "B" "c" "D"))
+       =>  (1 4 5 B C D "a" "B" "c" "D")
+      (intersection list1 list2) =>  (C B 4 1 1)
+      (intersection list1 list2 :test 'equal) =>  ("B" C B 4 1 1)
+      (intersection list1 list2 :test #'equalp) =>  ("d" "C" "B" "A" C B 4 1 1)
+      (nintersection list1 list2) =>  (1 1 4 B C)
+      list1 =>  implementation-dependent ;e.g., (1 1 4 B C)
+      list2 =>  implementation-dependent ;e.g., (1 4 5 B C D "a" "B" "c" "D")
+      (setq list1 (copy-list '((1 . 2) (2 . 3) (3 . 4) (4 . 5))))
+     =>  ((1 . 2) (2 . 3) (3 . 4) (4 . 5))
+      (setq list2 (copy-list '((1 . 3) (2 . 4) (3 . 6) (4 . 8))))
+     =>  ((1 . 3) (2 . 4) (3 . 6) (4 . 8))
+      (nintersection list1 list2 :key #'cdr) =>  ((2 . 3) (3 . 4))
+      list1 =>  implementation-dependent ;e.g., ((1 . 2) (2 . 3) (3 . 4))
+      list2 =>  implementation-dependent ;e.g., ((1 . 3) (2 . 4) (3 . 6) (4 . 8))
+
+Side Effects::
+..............
+
+nintersection can modify list-1,
+
+but not list-2.
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if list-1 and
+list-2 are not proper lists.
+
+See Also::
+..........
+
+*Note union; nunion:: ,
+
+*Note Compiler Terminology::,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not parameter is deprecated.
+
+Since the nintersection side effect is not required, it should not be used
+in for-effect-only positions in portable code.
+
+
+File: gcl.info,  Node: adjoin,  Next: pushnew,  Prev: intersection,  Up: Conses Dictionary
+
+adjoin                                                           [Function]
+---------------------------------------------------------------------------
+
+`adjoin'  item list &key key test test-not =>  new-list
+
+Arguments and Values::
+......................
+
+item--an object.
+
+list--a proper list.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+key--a designator for a function of one argument, or nil.
+
+new-list--a list.
+
+Description::
+.............
+
+Tests whether item is the same as an existing element of list.  If the
+item is not an existing element, adjoin adds it to list (as if by cons)
+and returns the resulting list; otherwise, nothing is added and the
+original list is returned.
+
+The test, test-not, and key affect how it is determined whether item is
+the same as an element of list.  For details, see *Note Satisfying a
+Two-Argument Test::.\ifvmode\else\endgraf \ifdim \prevdepth>-1000pt
+\NIS\parskip \normalparskip\relax\fi
+
+Examples::
+..........
+
+      (setq slist '()) =>  NIL
+      (adjoin 'a slist) =>  (A)
+      slist =>  NIL
+      (setq slist (adjoin '(test-item 1) slist)) =>  ((TEST-ITEM 1))
+      (adjoin '(test-item 1) slist) =>  ((TEST-ITEM 1) (TEST-ITEM 1))
+      (adjoin '(test-item 1) slist :test 'equal) =>  ((TEST-ITEM 1))
+      (adjoin '(new-test-item 1) slist :key #'cadr) =>  ((TEST-ITEM 1))
+      (adjoin '(new-test-item 1) slist) =>  ((NEW-TEST-ITEM 1) (TEST-ITEM 1))
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if list is not a
+proper list.
+
+See Also::
+..........
+
+*Note pushnew:: ,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not parameter is deprecated.
+
+      (adjoin item list :key fn)
+        == (if (member (fn item) list :key fn) list (cons item list))
+
+
+File: gcl.info,  Node: pushnew,  Next: set-difference,  Prev: adjoin,  Up: Conses Dictionary
+
+pushnew                                                             [Macro]
+---------------------------------------------------------------------------
+
+`pushnew'  item place &key key test test-not
+=>  new-place-value
+
+Arguments and Values::
+......................
+
+item--an object.
+
+place--a place, the value of which is a proper list.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+key--a designator for a function of one argument, or nil.
+
+new-place-value--a list (the new value of place).
+
+Description::
+.............
+
+pushnew tests whether  item is the same as any existing element of the
+list stored in place.  If item is not, it is prepended to the list, and
+the new list is stored in place.
+
+pushnew returns the new list that is stored in place.
+
+Whether or not item is already a member of the list that is in place is
+determined by comparisons using :test or :test-not.  The first argument to
+the :test or :test-not function is item; the second argument is an element
+of the list in place as returned by the :key function (if supplied).
+
+If :key is supplied, it is used to extract the part to be tested from both
+item and the list element, as for adjoin.
+
+The argument to the :key function is an element of the list stored in
+place. The :key function typically returns part part of the element of the
+list.  If :key is not supplied or nil, the list element is used.
+
+For information about the evaluation of subforms of place, see *Note
+Evaluation of Subforms to Places::.
+
+It is implementation-dependent whether or not pushnew actually executes
+the storing form for its place in the situation where the item is already
+a member of the list held by place.
+
+Examples::
+..........
+
+      (setq x '(a (b c) d)) =>  (A (B C) D)
+      (pushnew 5 (cadr x)) =>  (5 B C)
+      x =>  (A (5 B C) D)
+      (pushnew 'b (cadr x)) =>  (5 B C)
+      x =>  (A (5 B C) D)
+      (setq lst '((1) (1 2) (1 2 3))) =>  ((1) (1 2) (1 2 3))
+      (pushnew '(2) lst) =>  ((2) (1) (1 2) (1 2 3))
+      (pushnew '(1) lst) =>  ((1) (2) (1) (1 2) (1 2 3))
+      (pushnew '(1) lst :test 'equal) =>  ((1) (2) (1) (1 2) (1 2 3))
+      (pushnew '(1) lst :key #'car) =>  ((1) (2) (1) (1 2) (1 2 3))
+
+Side Effects::
+..............
+
+The contents of place may be modified.
+
+See Also::
+..........
+
+*Note push:: , *Note adjoin:: , *Note Generalized Reference::
+
+Notes::
+.......
+
+The effect of
+      (pushnew item place :test p)
+
+is roughly equivalent to
+      (setf place (adjoin item place :test p))
+
+except that the subforms of place are evaluated only once, and item is
+evaluated before place.
+
+
+File: gcl.info,  Node: set-difference,  Next: set-exclusive-or,  Prev: pushnew,  Up: Conses Dictionary
+
+set-difference, nset-difference                                  [Function]
+---------------------------------------------------------------------------
+
+`set-difference'  list-1 list-2 &key key test test-not =>  result-list
+
+`nset-difference'  list-1 list-2 &key key test test-not =>  result-list
+
+Arguments and Values::
+......................
+
+list-1--a proper list.
+
+list-2--a proper list.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+key--a designator for a function of one argument, or nil.
+
+result-list--a list.
+
+Description::
+.............
+
+set-difference returns a list of elements of list-1 that do not appear in
+list-2.
+
+nset-difference is the destructive version of set-difference.  It may
+destroy list-1.
+
+For all possible ordered pairs consisting of one element from list-1 and
+one element from list-2, the :test or :test-not function is used to
+determine whether they satisfy the test.  The first argument to the :test
+or :test-not function is the part of an element of list-1 that is returned
+by the :key function (if supplied); the second argument is the part of an
+element of list-2 that is returned by the :key function (if supplied).
+
+If :key is supplied, its argument is a list-1 or list-2 element. The :key
+function typically returns part of the supplied element.  If :key is not
+supplied, the list-1 or list-2 element is used.
+
+An element of list-1 appears in the result if and only if it does not
+match any element of list-2.
+
+There is no guarantee that the order of elements in the result will
+reflect the ordering of the arguments in any particular way.  The result
+list may share cells with, or be eq to, either of list-1 or list-2, if
+appropriate.
+
+Examples::
+..........
+
+      (setq lst1 (list "A" "b" "C" "d")
+            lst2 (list "a" "B" "C" "d")) =>  ("a" "B" "C" "d")
+      (set-difference lst1 lst2) =>  ("d" "C" "b" "A")
+      (set-difference lst1 lst2 :test 'equal) =>  ("b" "A")
+      (set-difference lst1 lst2 :test #'equalp) =>  NIL
+      (nset-difference lst1 lst2 :test #'string=) =>  ("A" "b")
+      (setq lst1 '(("a" . "b") ("c" . "d") ("e" . "f")))
+     =>  (("a" . "b") ("c" . "d") ("e" . "f"))
+      (setq lst2 '(("c" . "a") ("e" . "b") ("d" . "a")))
+     =>  (("c" . "a") ("e" . "b") ("d" . "a"))
+      (nset-difference lst1 lst2 :test #'string= :key #'cdr)
+     =>  (("c" . "d") ("e" . "f"))
+      lst1 =>  (("a" . "b") ("c" . "d") ("e" . "f"))
+      lst2 =>  (("c" . "a") ("e" . "b") ("d" . "a"))
+
+     ;; Remove all flavor names that contain "c" or "w".
+      (set-difference '("strawberry" "chocolate" "banana"
+                       "lemon" "pistachio" "rhubarb")
+               '(#\c #\w)
+               :test #'(lambda (s c) (find c s)))
+     =>  ("banana" "rhubarb" "lemon")    ;One possible ordering.
+
+Side Effects::
+..............
+
+nset-difference may destroy list-1.
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if list-1 and
+list-2 are not proper lists.
+
+See Also::
+..........
+
+*Note Compiler Terminology::,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not parameter is deprecated.
+
+
+File: gcl.info,  Node: set-exclusive-or,  Next: subsetp,  Prev: set-difference,  Up: Conses Dictionary
+
+set-exclusive-or, nset-exclusive-or                              [Function]
+---------------------------------------------------------------------------
+
+`set-exclusive-or'  list-1 list-2 &key key test test-not =>  result-list
+
+`nset-exclusive-or'  list-1 list-2 &key key test test-not =>  result-list
+
+Arguments and Values::
+......................
+
+list-1--a proper list.
+
+list-2--a proper list.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+key--a designator for a function of one argument, or nil.
+
+result-list--a list.
+
+Description::
+.............
+
+set-exclusive-or returns a list of elements that appear in exactly one of
+list-1 and list-2.
+
+nset-exclusive-or is the destructive version of set-exclusive-or.
+
+For all possible ordered pairs consisting of one element from list-1 and
+one element from list-2, the :test or :test-not function is used to
+determine whether they satisfy the test.
+
+If :key is supplied, it is used to extract the part to be tested from the
+list-1 or list-2 element.  The first argument to the :test or :test-not
+function is the part of an element of list-1 extracted by the :key
+function (if supplied); the second argument  is the part of an element of
+list-2 extracted by the :key function (if supplied).  If :key is not
+supplied or nil, the list-1 or list-2 element is used.
+
+The result contains precisely those elements of list-1 and list-2 that
+appear in no matching pair.
+
+The result list of set-exclusive-or might share storage with one of list-1
+or list-2.
+
+Examples::
+..........
+
+      (setq lst1 (list 1 "a" "b")
+            lst2 (list 1 "A" "b")) =>  (1 "A" "b")
+      (set-exclusive-or lst1 lst2) =>  ("b" "A" "b" "a")
+      (set-exclusive-or lst1 lst2 :test #'equal) =>  ("A" "a")
+      (set-exclusive-or lst1 lst2 :test 'equalp) =>  NIL
+      (nset-exclusive-or lst1 lst2) =>  ("a" "b" "A" "b")
+      (setq lst1 (list (("a" . "b") ("c" . "d") ("e" . "f"))))
+     =>  (("a" . "b") ("c" . "d") ("e" . "f"))
+      (setq lst2 (list (("c" . "a") ("e" . "b") ("d" . "a"))))
+     =>  (("c" . "a") ("e" . "b") ("d" . "a"))
+      (nset-exclusive-or lst1 lst2 :test #'string= :key #'cdr)
+     =>  (("c" . "d") ("e" . "f") ("c" . "a") ("d" . "a"))
+      lst1 =>  (("a" . "b") ("c" . "d") ("e" . "f"))
+      lst2 =>  (("c" . "a") ("d" . "a"))
+
+Side Effects::
+..............
+
+nset-exclusive-or is permitted to modify any part, car or cdr, of the list
+structure of list-1 or list-2.
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if list-1 and
+list-2 are not proper lists.
+
+See Also::
+..........
+
+*Note Compiler Terminology::,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not parameter is deprecated.
+
+Since the nset-exclusive-or side effect is not required, it should not be
+used in for-effect-only positions in portable code.
+
+
+File: gcl.info,  Node: subsetp,  Next: union,  Prev: set-exclusive-or,  Up: Conses Dictionary
+
+subsetp                                                          [Function]
+---------------------------------------------------------------------------
+
+`subsetp'  list-1 list-2 &key key test test-not =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+list-1--a proper list.
+
+list-2--a proper list.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+key--a designator for a function of one argument, or nil.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+subsetp returns true if every element of list-1 matches some element of
+list-2, and false otherwise.
+
+Whether a list element is the same as another list element is determined
+by the functions specified by the keyword arguments.  The first argument
+to the :test or :test-not function is typically part of an element of
+list-1 extracted by the :key function; the second argument is  typically
+part of an element of list-2 extracted by the :key function.
+
+The argument to the :key function is an element of either list-1 or
+list-2; the return value is part of the element of the supplied list
+element.  If :key is not supplied or nil, the list-1 or list-2 element
+itself is supplied to the :test or :test-not function.
+
+Examples::
+..........
+
+      (setq cosmos '(1 "a" (1 2))) =>  (1 "a" (1 2))
+      (subsetp '(1) cosmos) =>  true
+      (subsetp '((1 2)) cosmos) =>  false
+      (subsetp '((1 2)) cosmos :test 'equal) =>  true
+      (subsetp '(1 "A") cosmos :test #'equalp) =>  true
+      (subsetp '((1) (2)) '((1) (2))) =>  false
+      (subsetp '((1) (2)) '((1) (2)) :key #'car) =>  true
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if list-1 and
+list-2 are not proper lists.
+
+See Also::
+..........
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not parameter is deprecated.
+
+
+File: gcl.info,  Node: union,  Prev: subsetp,  Up: Conses Dictionary
+
+union, nunion                                                    [Function]
+---------------------------------------------------------------------------
+
+`union'  list-1 list-2 &key key test test-not =>  result-list
+
+`nunion'  list-1 list-2 &key key test test-not =>  result-list
+
+Arguments and Values::
+......................
+
+list-1--a proper list.
+
+list-2--a proper list.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+key--a designator for a function of one argument, or nil.
+
+result-list--a list.
+
+Description::
+.............
+
+union and nunion return a list that contains every element that occurs in
+either list-1 or list-2.
+
+For all possible ordered pairs consisting of one element from list-1 and
+one element from list-2, :test or  :test-not is used to determine whether
+they satisfy the test.  The first argument to the :test or :test-not
+function is the part of the element of list-1 extracted by the :key
+function (if supplied); the second argument is the part of the element of
+list-2 extracted by the :key function (if supplied).
+
+The argument to the :key function is an element of list-1 or list-2; the
+return value is part of the supplied element.  If :key is not supplied or
+nil, the element of list-1 or list-2 itself is supplied to the :test or
+:test-not function.
+
+For every matching pair, one of the two elements of the pair will be in
+the result.  Any element from either list-1 or list-2 that matches no
+element of the other will appear in the result.
+
+If there is a duplication between list-1 and list-2, only one of the
+duplicate instances will be in the result.  If either list-1 or list-2 has
+duplicate entries within it, the redundant entries might or might not
+appear in the result.
+
+The order of elements in the result do not have to reflect the ordering of
+list-1 or list-2 in any way.  The result list may be eq to either list-1
+or list-2 if appropriate.
+
+Examples::
+..........
+
+      (union '(a b c) '(f a d))
+     =>  (A B C F D)
+     OR=> (B C F A D)
+     OR=> (D F A B C)
+      (union '((x 5) (y 6)) '((z 2) (x 4)) :key #'car)
+     =>  ((X 5) (Y 6) (Z 2))
+     OR=> ((X 4) (Y 6) (Z 2))
+     
+      (setq lst1 (list 1 2 '(1 2) "a" "b")
+            lst2 (list 2 3 '(2 3) "B" "C"))
+     =>  (2 3 (2 3) "B" "C")
+      (nunion lst1 lst2)
+     =>  (1 (1 2) "a" "b" 2 3 (2 3) "B" "C")
+     OR=> (1 2 (1 2) "a" "b" "C" "B" (2 3) 3)
+
+Side Effects::
+..............
+
+nunion is permitted to modify any part, car or cdr, of the list structure
+of list-1 or list-2.
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if list-1 and
+list-2 are not proper lists.
+
+See Also::
+..........
+
+*Note intersection; nintersection:: ,
+
+*Note Compiler Terminology::,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not parameter is deprecated.
+
+Since the nunion side effect is not required, it should not be used in
+for-effect-only positions in portable code.
+
+
+File: gcl.info,  Node: Arrays,  Next: Strings,  Prev: Conses,  Up: Top
+
+Arrays
+******
+
+* Menu:
+
+* Array Concepts::
+* Arrays Dictionary::
+
+
+File: gcl.info,  Node: Array Concepts,  Next: Arrays Dictionary,  Prev: Arrays,  Up: Arrays
+
+Array Concepts
+==============
+
+* Menu:
+
+* Array Elements::
+* Specialized Arrays::
+
+
+File: gcl.info,  Node: Array Elements,  Next: Specialized Arrays,  Prev: Array Concepts,  Up: Array Concepts
+
+Array Elements
+--------------
+
+An array contains a set of objects called elements that can be referenced
+individually according to a rectilinear coordinate system.
+
+* Menu:
+
+* Array Indices::
+* Array Dimensions::
+* Implementation Limits on Individual Array Dimensions::
+* Array Rank::
+* Vectors::
+* Fill Pointers::
+* Multidimensional Arrays::
+* Storage Layout for Multidimensional Arrays::
+* Implementation Limits on Array Rank::
+
+
+File: gcl.info,  Node: Array Indices,  Next: Array Dimensions,  Prev: Array Elements,  Up: Array Elements
+
+Array Indices
+.............
+
+An array element is referred to by a (possibly empty) series of indices.
+The length of the series must equal the rank of the array.
+
+Each index must be a non-negative fixnum
+
+less than the corresponding array dimension.  Array indexing is
+zero-origin.
+
+
+File: gcl.info,  Node: Array Dimensions,  Next: Implementation Limits on Individual Array Dimensions,  Prev: Array Indices,  Up: Array Elements
+
+Array Dimensions
+................
+
+An axis of an array is called a dimension .
+
+Each dimension is a non-negative
+
+fixnum;
+
+if any dimension of an array is zero, the array has no elements.  It is
+permissible for a dimension to be zero, in which case the array has no
+elements, and any attempt to access an element is an error.  However,
+other properties of the array, such as the dimensions themselves, may be
+used.
+
+
+File: gcl.info,  Node: Implementation Limits on Individual Array Dimensions,  Next: Array Rank,  Prev: Array Dimensions,  Up: Array Elements
+
+Implementation Limits on Individual Array Dimensions
+....................................................
+
+An implementation may impose a limit on dimensions of an array, but there
+is a minimum requirement on that limit.  See the variable
+array-dimension-limit.
+
+
+File: gcl.info,  Node: Array Rank,  Next: Vectors,  Prev: Implementation Limits on Individual Array Dimensions,  Up: Array Elements
+
+Array Rank
+..........
+
+An array can have any number of dimensions (including zero).  The number
+of dimensions is called the rank .
+
+If the rank of an array is zero then the array is said to have no
+dimensions, and the product of the dimensions (see array-total-size) is
+then 1; a zero-rank array therefore has a single element.
+
+
+File: gcl.info,  Node: Vectors,  Next: Fill Pointers,  Prev: Array Rank,  Up: Array Elements
+
+Vectors
+.......
+
+An array of rank one (i.e., a one-dimensional array) is called a vector .
+
+
+File: gcl.info,  Node: Fill Pointers,  Next: Multidimensional Arrays,  Prev: Vectors,  Up: Array Elements
+
+Fill Pointers
+.............
+
+A fill pointer is a non-negative integer no larger than the total number
+of elements in a vector.  Not all vectors have fill pointers.  See the
+functions make-array and adjust-array.
+
+An element of a vector is said to be active if it has an index that is
+greater than or equal to zero, but less than the fill pointer (if any).
+For an array that has no fill pointer, all elements are considered active.
+
+Only vectors may have fill pointers; multidimensional arrays may not.  A
+multidimensional array that is displaced to a vector that has a fill
+pointer can be created.
+
+
+File: gcl.info,  Node: Multidimensional Arrays,  Next: Storage Layout for Multidimensional Arrays,  Prev: Fill Pointers,  Up: Array Elements
+
+Multidimensional Arrays
+.......................
+
+
+File: gcl.info,  Node: Storage Layout for Multidimensional Arrays,  Next: Implementation Limits on Array Rank,  Prev: Multidimensional Arrays,  Up: Array Elements
+
+Storage Layout for Multidimensional Arrays
+..........................................
+
+Multidimensional arrays store their components in row-major order; that
+is, internally a multidimensional array is stored as a one-dimensional
+array, with the multidimensional index sets ordered lexicographically,
+last index varying fastest.
+
+
+File: gcl.info,  Node: Implementation Limits on Array Rank,  Prev: Storage Layout for Multidimensional Arrays,  Up: Array Elements
+
+Implementation Limits on Array Rank
+...................................
+
+An implementation may impose a limit on the rank of an array, but there is
+a minimum requirement on that limit.  See the variable array-rank-limit.
+
+
+File: gcl.info,  Node: Specialized Arrays,  Prev: Array Elements,  Up: Array Concepts
+
+Specialized Arrays
+------------------
+
+An array can be a general array, meaning each element may be any object,
+or it may be a specialized array, meaning that each element must be of a
+restricted type.
+
+The phrasing "an array specialized to type <<type>>" is sometimes used to
+emphasize the element type of an array.  This phrasing is tolerated even
+when the <<type>> is t, even though an array specialized to type t is a
+general array, not a specialized array.
+
+Figure 15-1 lists some defined names that are applicable to array
+creation, access, and information operations.
+
+ adjust-array             array-in-bounds-p      svref                       
+ adjustable-array-p       array-rank             upgraded-array-element-type 
+ aref                     array-rank-limit       upgraded-complex-part-type  
+ array-dimension          array-row-major-index  vector                      
+ array-dimension-limit    array-total-size       vector-pop                  
+ array-dimensions         array-total-size-limit vector-push                 
+ array-element-type       fill-pointer           vector-push-extend          
+ array-has-fill-pointer-p make-array                                         
+
+           Figure 15-1: General Purpose Array-Related Defined Names          
+
+
+* Menu:
+
+* Array Upgrading::
+* Required Kinds of Specialized Arrays::
+
+
+File: gcl.info,  Node: Array Upgrading,  Next: Required Kinds of Specialized Arrays,  Prev: Specialized Arrays,  Up: Specialized Arrays
+
+Array Upgrading
+...............
+
+The upgraded array element type of a type T_1 is a type T_2 that is a
+supertype of T_1 and that is used instead of T_1 whenever T_1 is used as
+an array element type for object creation or type discrimination.
+
+During creation of an array, the element type that was requested is called
+the expressed array element type .  The upgraded array element type of the
+expressed array element type becomes the actual array element type of the
+array that is created.
+
+Type upgrading implies a movement upwards in the type hierarchy lattice.
+A type is always a subtype of its upgraded array element type.  Also, if a
+type T_x is a subtype of another type T_y, then the upgraded array element
+type of T_x must be a subtype of the upgraded array element type of T_y.
+Two disjoint types can be upgraded to the same type.
+
+The upgraded array element type T_2 of a type T_1 is a function only of
+T_1 itself; that is, it is independent of any other property of the array
+for which T_2 will be used, such as rank, adjustability, fill pointers, or
+displacement.  The function upgraded-array-element-type can be used by
+conforming programs to predict how the implementation will upgrade a given
+type.
+

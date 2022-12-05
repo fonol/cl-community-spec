@@ -1,0 +1,109 @@
+{
+    "name": "find",
+    "prev": "sort",
+    "next": "position",
+    "up": "Sequences Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "find, find-if, find-if-not"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "find",
+                    "text": " item sequence &key from-end test test-not start end key =>  element\n"
+                },
+                {
+                    "name": "find-if",
+                    "text": " predicate sequence &key from-end start end key =>  element\n\n"
+                },
+                {
+                    "name": "find-if-not",
+                    "text": " predicate sequence &key from-end start end key =>  element\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "item",
+                    "desc": "an object."
+                },
+                {
+                    "name": "sequence",
+                    "desc": "a proper sequence."
+                },
+                {
+                    "name": "predicate",
+                    "desc": "a designator for a function of one argument that returns a"
+                },
+                {
+                    "name": "predicate",
+                    "desc": "a designator for a function of one argument that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "from-end",
+                    "desc": "a generalized boolean.  The default is false."
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of sequence.  The defaults for"
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of sequence.  The defaults forstart and end are 0 and nil, respectively.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "element",
+                    "desc": "an element of the sequence, or nil."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "find, find-if, and find-if-not each search for an element of the sequence\nbounded by start and end that satisfies the predicate predicate or that\nsatisfies the test test or test-not, as appropriate.\nIf from-end is true, then the result is the rightmost element that\nsatisfies the test.\nIf the sequence contains an element that satisfies the test, then the\nleftmost or rightmost sequence element, depending on from-end, is returned;\notherwise nil is returned.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (find #\\d \"here are some letters that can be looked at\" :test #'char>)\n     =>  #\\Space\n      (find-if #'oddp '(1 2 3 4 5) :end 3 :from-end t) =>  3\n      (find-if-not #'complexp\n                  '#(3.5 2 #C(1.0 0.0) #C(0.0 1.0))\n                  :start 2) =>  NIL\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note position; position-if; position-if-not:: , *Note Rules about Test\nFunctions::,\n*Note Traversal Rules and Side Effects::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The :test-not argument is deprecated.\nThe function find-if-not is deprecated.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: find,  Next: position,  Prev: sort,  Up: Sequences Dictionary\n\nfind, find-if, find-if-not                                       [Function]\n---------------------------------------------------------------------------\n\n`find'  item sequence &key from-end test test-not start end key =>  element\n\n`find-if'  predicate sequence &key from-end start end key =>  element\n\n`find-if-not'  predicate sequence &key from-end start end key =>  element\n\nArguments and Values::\n......................\n\nitem--an object.\n\nsequence--a proper sequence.\n\npredicate--a designator for a function of one argument that returns a\ngeneralized boolean.\n\nfrom-end--a generalized boolean.  The default is false.\n\ntest--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\ntest-not--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nstart, end--bounding index designators of sequence.  The defaults for\nstart and end are 0 and nil, respectively.\n\nkey--a designator for a function of one argument, or nil.\n\nelement--an element of the sequence, or nil.\n\nDescription::\n.............\n\nfind, find-if, and find-if-not each search for an element of the sequence\nbounded by start and end that satisfies the predicate predicate or that\nsatisfies the test test or test-not, as appropriate.\n\nIf from-end is true, then the result is the rightmost element that\nsatisfies the test.\n\nIf the sequence contains an element that satisfies the test, then the\nleftmost or rightmost sequence element, depending on from-end, is returned;\notherwise nil is returned.\n\nExamples::\n..........\n\n      (find #\\d \"here are some letters that can be looked at\" :test #'char>)\n     =>  #\\Space\n      (find-if #'oddp '(1 2 3 4 5) :end 3 :from-end t) =>  3\n      (find-if-not #'complexp\n                  '#(3.5 2 #C(1.0 0.0) #C(0.0 1.0))\n                  :start 2) =>  NIL\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.\n\nSee Also::\n..........\n\n*Note position; position-if; position-if-not:: , *Note Rules about Test\nFunctions::,\n\n*Note Traversal Rules and Side Effects::\n\nNotes::\n.......\n\nThe :test-not argument is deprecated.\n\nThe function find-if-not is deprecated.\n\n"
+}

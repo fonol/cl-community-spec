@@ -1,0 +1,1164 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: Pathnames as Filenames,  Next: Parsing Namestrings Into Pathnames,  Prev: Namestrings as Filenames,  Up: Overview of Filenames
+
+Pathnames as Filenames
+----------------------
+
+Pathnames are structured objects that can represent, in an
+implementation-independent way, the filenames that are used natively by an
+underlying file system.
+
+In addition, pathnames can also represent certain partially composed
+filenames for which an underlying file system might not have a specific
+namestring representation.
+
+A pathname need not correspond to any file that actually exists, and more
+than one pathname can refer to the same file.  For example, the pathname
+with a version of :newest might refer to the same file as a pathname with
+the same components except a certain number as the version.  Indeed, a
+pathname with version :newest might refer to different files as time
+passes, because the meaning of such a pathname depends on the state of the
+file system.
+
+Some file systems naturally use a structural model for their filenames,
+while others do not.  Within the Common Lisp pathname model, all filenames
+are seen as having a particular structure, even if that structure is not
+reflected in the underlying file system.  The nature of the mapping
+between structure imposed by pathnames and the structure, if any, that is
+used by the underlying file system is implementation-defined.
+
+Every pathname has six components: a host, a device, a directory, a name,
+a type, and a version.  By naming files with pathnames, Common Lisp
+programs can work in essentially the same way even in file systems that
+seem superficially quite different.  For a detailed description of these
+components, see *Note Pathname Components::.
+
+The mapping of the pathname components into the concepts peculiar to each
+file system is implementation-defined.  There exist conceivable pathnames
+for which there is no mapping to a syntactically valid filename in a
+particular implementation.  An implementation may use various strategies
+in an attempt to find a mapping; for example, an implementation may
+quietly truncate filenames that exceed length limitations imposed by the
+underlying file system, or ignore certain pathname components for which
+the file system provides no support.  If such a mapping cannot be found,
+an error of type file-error is signaled.
+
+The time at which this mapping and associated error signaling occurs is
+implementation-dependent.  Specifically, it may occur at the time the
+pathname is constructed, when coercing a pathname to a namestring, or when
+an attempt is made to open or otherwise access the file designated by the
+pathname.
+
+Figure 19-1 lists some defined names that are applicable to pathnames.
+
+  *default-pathname-defaults*  namestring          pathname-name          
+  directory-namestring         open                pathname-type          
+  enough-namestring            parse-namestring    pathname-version       
+  file-namestring              pathname            pathnamep              
+  file-string-length           pathname-device     translate-pathname     
+  host-namestring              pathname-directory  truename               
+  make-pathname                pathname-host       user-homedir-pathname  
+  merge-pathnames              pathname-match-p    wild-pathname-p        
+
+                     Figure 19-1: Pathname Operations                    
+
+
+
+File: gcl.info,  Node: Parsing Namestrings Into Pathnames,  Prev: Pathnames as Filenames,  Up: Overview of Filenames
+
+Parsing Namestrings Into Pathnames
+----------------------------------
+
+Parsing is the operation used to convert a namestring into a pathname.
+
+Except in the case of parsing logical pathname namestrings,
+
+this operation is implementation-dependent, because the format of
+namestrings is implementation-dependent.
+
+A conforming implementation is free to accommodate other file system
+features in its pathname representation and provides a parser that can
+process such specifications in namestrings.  Conforming programs must not
+depend on any such features, since those features will not be portable.
+
+
+File: gcl.info,  Node: Pathnames,  Next: Logical Pathnames,  Prev: Overview of Filenames,  Up: Filenames
+
+Pathnames
+=========
+
+* Menu:
+
+* Pathname Components::
+* Interpreting Pathname Component Values::
+* Merging Pathnames::
+
+
+File: gcl.info,  Node: Pathname Components,  Next: Interpreting Pathname Component Values,  Prev: Pathnames,  Up: Pathnames
+
+Pathname Components
+-------------------
+
+A pathname has six components: a host, a device, a directory, a name, a
+type, and a version.
+
+* Menu:
+
+* The Pathname Host Component::
+* The Pathname Device Component::
+* The Pathname Directory Component::
+* The Pathname Name Component::
+* The Pathname Type Component::
+* The Pathname Version Component::
+
+
+File: gcl.info,  Node: The Pathname Host Component,  Next: The Pathname Device Component,  Prev: Pathname Components,  Up: Pathname Components
+
+The Pathname Host Component
+...........................
+
+The name of the file system on which the file resides, or the name of a
+logical host.
+
+
+File: gcl.info,  Node: The Pathname Device Component,  Next: The Pathname Directory Component,  Prev: The Pathname Host Component,  Up: Pathname Components
+
+The Pathname Device Component
+.............................
+
+Corresponds to the "device" or "file structure" concept in many host file
+systems: the name of a logical or physical device containing files.
+
+
+File: gcl.info,  Node: The Pathname Directory Component,  Next: The Pathname Name Component,  Prev: The Pathname Device Component,  Up: Pathname Components
+
+The Pathname Directory Component
+................................
+
+Corresponds to the "directory" concept in many host file systems: the name
+of a group of related files.
+
+
+File: gcl.info,  Node: The Pathname Name Component,  Next: The Pathname Type Component,  Prev: The Pathname Directory Component,  Up: Pathname Components
+
+The Pathname Name Component
+...........................
+
+The "name" part of a group of files that can be thought of as conceptually
+related.
+
+
+File: gcl.info,  Node: The Pathname Type Component,  Next: The Pathname Version Component,  Prev: The Pathname Name Component,  Up: Pathname Components
+
+The Pathname Type Component
+...........................
+
+Corresponds to the "filetype" or "extension" concept in many host file
+systems.  This says what kind of file this is.  This component is always a
+string, nil, :wild, or :unspecific.
+
+
+File: gcl.info,  Node: The Pathname Version Component,  Prev: The Pathname Type Component,  Up: Pathname Components
+
+The Pathname Version Component
+..............................
+
+Corresponds to the "version number" concept in many host file systems.
+
+The version is either a positive integer or a symbol from the following
+list: nil, :wild, :unspecific, or :newest (refers to the largest version
+number that already exists in the file system when reading a file, or to a
+version number greater than any already existing in the file system when
+writing a new file).  Implementations can define other special version
+symbols.
+
+
+File: gcl.info,  Node: Interpreting Pathname Component Values,  Next: Merging Pathnames,  Prev: Pathname Components,  Up: Pathnames
+
+Interpreting Pathname Component Values
+--------------------------------------
+
+* Menu:
+
+* Strings in Component Values::
+* Special Characters in Pathname Components::
+* Case in Pathname Components::
+* Local Case in Pathname Components::
+* Common Case in Pathname Components::
+* Special Pathname Component Values::
+* NIL as a Component Value::
+* ->WILD as a Component Value::
+* ->UNSPECIFIC as a Component Value::
+* Relation between component values NIL and ->UNSPECIFIC::
+* Restrictions on Wildcard Pathnames::
+* Restrictions on Examining Pathname Components::
+* Restrictions on Examining a Pathname Host Component::
+* Restrictions on Examining a Pathname Device Component::
+* Restrictions on Examining a Pathname Directory Component::
+* Directory Components in Non-Hierarchical File Systems::
+* Restrictions on Examining a Pathname Name Component::
+* Restrictions on Examining a Pathname Type Component::
+* Restrictions on Examining a Pathname Version Component::
+* Notes about the Pathname Version Component::
+* Restrictions on Constructing Pathnames::
+
+
+File: gcl.info,  Node: Strings in Component Values,  Next: Special Characters in Pathname Components,  Prev: Interpreting Pathname Component Values,  Up: Interpreting Pathname Component Values
+
+Strings in Component Values
+...........................
+
+
+File: gcl.info,  Node: Special Characters in Pathname Components,  Next: Case in Pathname Components,  Prev: Strings in Component Values,  Up: Interpreting Pathname Component Values
+
+Special Characters in Pathname Components
+.........................................
+
+Strings in pathname component values never contain special characters that
+represent separation between pathname fields, such as slash in Unix
+filenames.  Whether separator characters are permitted as part of a string
+in a pathname component is implementation-defined; however, if the
+implementation does permit it, it must arrange to properly "quote" the
+character for the file system when constructing a namestring.  For example,
+
+      ;; In a TOPS-20 implementation, which uses ^V to quote
+      (NAMESTRING (MAKE-PATHNAME :HOST "OZ" :NAME "<TEST>"))
+     =>  #P"OZ:PS:^V<TEST^V>"
+     NOT=> #P"OZ:PS:<TEST>"
+
+
+File: gcl.info,  Node: Case in Pathname Components,  Next: Local Case in Pathname Components,  Prev: Special Characters in Pathname Components,  Up: Interpreting Pathname Component Values
+
+Case in Pathname Components
+...........................
+
+Namestrings always use local file system case conventions, but Common Lisp
+functions that manipulate pathname components allow the caller to select
+either of two conventions for representing case in component values by
+supplying a value for the :case keyword argument.  Figure 19-2 lists the
+functions relating to pathnames that permit a :case argument:
+
+  make-pathname    pathname-directory  pathname-name  
+  pathname-device  pathname-host       pathname-type  
+
+  Figure 19-2: Pathname functions using a :CASE argument
+
+
+
+File: gcl.info,  Node: Local Case in Pathname Components,  Next: Common Case in Pathname Components,  Prev: Case in Pathname Components,  Up: Interpreting Pathname Component Values
+
+Local Case in Pathname Components
+.................................
+
+For the functions in Figure~19-2, a value of :local for the :case argument
+(the default for these functions) indicates that the functions should
+receive and yield strings in component values as if they were already
+represented according to the host file system's convention for case.
+
+If the file system supports both cases, strings given or received as
+pathname component values under this protocol are to be used exactly as
+written.  If the file system only supports one case, the strings will be
+translated to that case.
+
+
+File: gcl.info,  Node: Common Case in Pathname Components,  Next: Special Pathname Component Values,  Prev: Local Case in Pathname Components,  Up: Interpreting Pathname Component Values
+
+Common Case in Pathname Components
+..................................
+
+For the functions in Figure~19-2, a value of :common for the :case argument
+that these functions should receive and yield strings in component values
+according to the following conventions:
+
+*
+     All uppercase means to use a file system's customary case.
+
+*
+     All lowercase means to use the opposite of the customary case.
+
+*
+     Mixed case represents itself.
+
+Note that these conventions have been chosen in such a way that translation
+from :local to :common and back to :local is information-preserving.
+
+
+File: gcl.info,  Node: Special Pathname Component Values,  Next: NIL as a Component Value,  Prev: Common Case in Pathname Components,  Up: Interpreting Pathname Component Values
+
+Special Pathname Component Values
+.................................
+
+
+File: gcl.info,  Node: NIL as a Component Value,  Next: ->WILD as a Component Value,  Prev: Special Pathname Component Values,  Up: Interpreting Pathname Component Values
+
+NIL as a Component Value
+........................
+
+As a pathname component value, nil represents that the component is
+"unfilled"; see *Note Merging Pathnames::.
+
+The value of any pathname component can be nil.
+
+When constructing a pathname, nil in the host component might mean a
+default host rather than an actual nil in some implementations.
+
+
+File: gcl.info,  Node: ->WILD as a Component Value,  Next: ->UNSPECIFIC as a Component Value,  Prev: NIL as a Component Value,  Up: Interpreting Pathname Component Values
+
+:WILD as a Component Value
+..........................
+
+If :wild is the value of a pathname component, that component is
+considered to be a wildcard, which matches anything.
+
+A conforming program must be prepared to encounter a value of :wild as the
+value of any pathname component, or as an element of a list that is the
+value of the directory component.
+
+When constructing a pathname, a conforming program may use :wild as the
+value of any or all of the directory, name, type, or version component,
+but must not use :wild as the value of the host, or device component.
+
+If :wild is used as the value of the directory component in the
+construction of a pathname, the effect is equivalent to specifying the list
+(:absolute :wild-inferiors), or the same as (:absolute :wild) in a file
+system that does not support :wild-inferiors.
+
+
+File: gcl.info,  Node: ->UNSPECIFIC as a Component Value,  Next: Relation between component values NIL and ->UNSPECIFIC,  Prev: ->WILD as a Component Value,  Up: Interpreting Pathname Component Values
+
+:UNSPECIFIC as a Component Value
+................................
+
+If :unspecific is the value of a pathname component, the component is
+considered to be "absent" or to "have no meaning" in the filename being
+represented by the pathname.
+
+Whether a value of :unspecific is permitted for any component on any given
+file system accessible to the implementation is implementation-defined.  A
+conforming program must never unconditionally use a :unspecific as the
+value of a pathname component because such a value is not guaranteed to be
+permissible in all implementations.  However, a conforming program can, if
+it is careful, successfully manipulate user-supplied data which contains
+or refers to non-portable pathname components.  And certainly a conforming
+program should be prepared for the possibility that any components of a
+pathname could be :unspecific.
+
+When reading_1 the value of any pathname component, conforming programs
+should be prepared for the value to be :unspecific.
+
+When writing_1 the value of any pathname component, the consequences are
+undefined if :unspecific is given for a pathname in a file system for
+which it does not make sense.
+
+
+File: gcl.info,  Node: Relation between component values NIL and ->UNSPECIFIC,  Next: Restrictions on Wildcard Pathnames,  Prev: ->UNSPECIFIC as a Component Value,  Up: Interpreting Pathname Component Values
+
+Relation between component values NIL and :UNSPECIFIC
+.....................................................
+
+If a pathname is converted to a namestring, the symbols nil and :unspecific
+cause the field to be treated as if it were empty.  That is, both nil and
+:unspecific cause the component not to appear in the namestring.
+
+However, when merging a pathname with a set of defaults, only a nil value
+for a component will be replaced with the default for that component,
+while a value of :unspecific will be left alone as if the field were
+"filled"; see the function merge-pathnames and *Note Merging Pathnames::.
+
+
+File: gcl.info,  Node: Restrictions on Wildcard Pathnames,  Next: Restrictions on Examining Pathname Components,  Prev: Relation between component values NIL and ->UNSPECIFIC,  Up: Interpreting Pathname Component Values
+
+Restrictions on Wildcard Pathnames
+..................................
+
+Wildcard pathnames can be used with directory but not with open, and
+return true from wild-pathname-p. When examining wildcard components of a
+wildcard pathname, conforming programs must be prepared to encounter any
+of the following additional values in any component or any element of a
+list that is the directory component:
+
+*
+     The symbol :wild, which matches anything.
+
+*
+     A string containing implementation-dependent special wildcard
+     characters.
+
+*
+     Any object, representing an implementation-dependent wildcard pattern.
+
+
+File: gcl.info,  Node: Restrictions on Examining Pathname Components,  Next: Restrictions on Examining a Pathname Host Component,  Prev: Restrictions on Wildcard Pathnames,  Up: Interpreting Pathname Component Values
+
+Restrictions on Examining Pathname Components
+.............................................
+
+The space of possible objects that a conforming program must be prepared
+to read_1 as the value of a pathname component is substantially larger
+than the space of possible objects that a conforming program is permitted
+to write_1 into such a component.
+
+While the values discussed in the subsections of this section, in *Note
+Special Pathname Component Values::, and in *Note Restrictions on Wildcard
+Pathnames:: apply to values that might be seen when reading the component
+values, substantially more restrictive rules apply to constructing
+pathnames; see *Note Restrictions on Constructing Pathnames::.
+
+When examining pathname components, conforming programs should be aware of
+the following restrictions.
+
+
+File: gcl.info,  Node: Restrictions on Examining a Pathname Host Component,  Next: Restrictions on Examining a Pathname Device Component,  Prev: Restrictions on Examining Pathname Components,  Up: Interpreting Pathname Component Values
+
+Restrictions on Examining a Pathname Host Component
+...................................................
+
+It is implementation-dependent what object is used to represent the host.
+
+
+File: gcl.info,  Node: Restrictions on Examining a Pathname Device Component,  Next: Restrictions on Examining a Pathname Directory Component,  Prev: Restrictions on Examining a Pathname Host Component,  Up: Interpreting Pathname Component Values
+
+Restrictions on Examining a Pathname Device Component
+.....................................................
+
+The device might be a string, :wild, :unspecific, or nil.
+
+Note that :wild might result from an attempt to read_1 the pathname
+component, even though portable programs are restricted from writing_1
+such a component value; see *Note Restrictions on Wildcard Pathnames:: and
+*Note Restrictions on Constructing Pathnames::.
+
+
+File: gcl.info,  Node: Restrictions on Examining a Pathname Directory Component,  Next: Directory Components in Non-Hierarchical File Systems,  Prev: Restrictions on Examining a Pathname Device Component,  Up: Interpreting Pathname Component Values
+
+Restrictions on Examining a Pathname Directory Component
+........................................................
+
+The directory might be a string, :wild, :unspecific, or nil.
+
+The directory can be a list of strings and symbols.
+
+The car of the list is one of the symbols :absolute or :relative , meaning:
+
+:absolute
+     A list whose car is the symbol :absolute represents a directory path
+     starting from the root directory.  The list (:absolute) represents
+     the root directory.  The list (:absolute "foo" "bar" "baz")
+     represents the directory called "/foo/bar/baz" in Unix (except
+     possibly for case).
+
+:relative
+     A list whose car is the symbol :relative represents a directory path
+     starting from a default directory.  The list (:relative) has the same
+     meaning as nil and hence is not used.  The list (:relative "foo"
+     "bar") represents the directory named "bar" in the directory named
+     "foo" in the default directory.
+
+Each remaining element of the list is a string or a symbol.
+
+Each string names a single level of directory structure.  The strings
+should contain only the directory names themselves--no punctuation
+characters.
+
+In place of a string, at any point in the list, symbols can occur to
+indicate special file notations.  Figure 19-3 lists the symbols that have
+standard meanings.  Implementations are permitted to add additional objects
+of any type that is disjoint from string if necessary to represent
+features of their file systems that cannot be represented with the
+standard strings and symbols.
+
+Supplying any non-string, including any of the symbols listed below, to a
+file system for which it does not make sense signals an error of type
+file-error.  For example, Unix does not support :wild-inferiors in most
+implementations.
+
+  Symbol           Meaning                                             
+  :wild            Wildcard match of one level of directory structure  
+  :wild-inferiors  Wildcard match of any number of directory levels    
+  :up              Go upward in directory structure (semantic)         
+  :back            Go upward in directory structure (syntactic)        
+
+          Figure 19-3: Special Markers In Directory Component         
+
+
+The following notes apply to the previous figure:
+
+Invalid Combinations
+     Using :absolute or :wild-inferiors immediately followed by :up or
+     :back signals an error of type file-error.
+
+Syntactic vs Semantic
+     "Syntactic" means that the action of :back depends only on the
+     pathname and not on the contents of the file system.
+
+     "Semantic" means that the action of :up depends on the contents of
+     the file system; to resolve a pathname containing :up to a pathname
+     whose directory component contains only :absolute and strings
+     requires probing the file system.
+
+     :up differs from :back only in file systems that support multiple
+     names for directories, perhaps via symbolic links.  For example,
+     suppose that there is a directory (:absolute "X" "Y" "Z") linked to
+     (:absolute "A" "B" "C") and there also exist directories (:absolute
+     "A" "B" "Q") and (:absolute "X" "Y" "Q").  Then (:absolute "X" "Y"
+     "Z" :up "Q") designates (:absolute "A" "B" "Q") while (:absolute "X"
+     "Y" "Z" :back "Q") designates (:absolute "X" "Y" "Q")
+
+
+File: gcl.info,  Node: Directory Components in Non-Hierarchical File Systems,  Next: Restrictions on Examining a Pathname Name Component,  Prev: Restrictions on Examining a Pathname Directory Component,  Up: Interpreting Pathname Component Values
+
+Directory Components in Non-Hierarchical File Systems
+.....................................................
+
+In non-hierarchical file systems, the only valid list values for the
+directory component of a pathname are (:absolute string) and (:absolute
+:wild).  :relative directories and the keywords :wild-inferiors, :up, and
+:back are not used in non-hierarchical file systems.
+
+
+File: gcl.info,  Node: Restrictions on Examining a Pathname Name Component,  Next: Restrictions on Examining a Pathname Type Component,  Prev: Directory Components in Non-Hierarchical File Systems,  Up: Interpreting Pathname Component Values
+
+Restrictions on Examining a Pathname Name Component
+...................................................
+
+The name might be a string, :wild, :unspecific, or nil.
+
+
+File: gcl.info,  Node: Restrictions on Examining a Pathname Type Component,  Next: Restrictions on Examining a Pathname Version Component,  Prev: Restrictions on Examining a Pathname Name Component,  Up: Interpreting Pathname Component Values
+
+Restrictions on Examining a Pathname Type Component
+...................................................
+
+The type might be a string, :wild, :unspecific, or nil.
+
+
+File: gcl.info,  Node: Restrictions on Examining a Pathname Version Component,  Next: Notes about the Pathname Version Component,  Prev: Restrictions on Examining a Pathname Type Component,  Up: Interpreting Pathname Component Values
+
+Restrictions on Examining a Pathname Version Component
+......................................................
+
+The version can be any symbol or any integer.
+
+The symbol :newest refers to the largest version number that already
+exists in the file system when reading, overwriting, appending,
+superseding, or directory listing an existing file.  The symbol :newest
+refers to the smallest version number greater than any existing version
+number when creating a new file.
+
+The symbols nil, :unspecific, and :wild have special meanings and
+restrictions; see *Note Special Pathname Component Values:: and *Note
+Restrictions on Constructing Pathnames::.
+
+Other symbols and integers have implementation-defined meaning.
+
+
+File: gcl.info,  Node: Notes about the Pathname Version Component,  Next: Restrictions on Constructing Pathnames,  Prev: Restrictions on Examining a Pathname Version Component,  Up: Interpreting Pathname Component Values
+
+Notes about the Pathname Version Component
+..........................................
+
+It is suggested, but not required, that implementations do the following:
+
+*
+     Use positive integers starting at 1 as version numbers.
+
+*
+     Recognize the symbol :oldest to designate the smallest existing
+     version number.
+
+*
+     Use keywords for other special versions.
+
+
+File: gcl.info,  Node: Restrictions on Constructing Pathnames,  Prev: Notes about the Pathname Version Component,  Up: Interpreting Pathname Component Values
+
+Restrictions on Constructing Pathnames
+......................................
+
+When constructing a pathname from components, conforming programs must
+follow these rules:
+
+*
+     Any component can be nil.  nil in the host might mean a default host
+     rather than an actual nil in some implementations.
+
+*
+     The host, device, directory, name, and type can be strings.  There
+     are implementation-dependent limits on the number and type of
+     characters in these strings.
+
+*
+     The directory can be a list of strings and symbols.  There are
+     implementation-dependent limits on the list's length and contents.
+
+*
+     The version can be :newest.
+
+*
+     Any component can be taken from the corresponding component of
+     another pathname.  When the two pathnames are for different file
+     systems (in implementations that support multiple file systems), an
+     appropriate translation occurs.  If no meaningful translation is
+     possible, an error is signaled.  The definitions of "appropriate" and
+     "meaningful" are implementation-dependent.
+
+*
+     An implementation might support other values for some components, but
+     a portable program cannot use those values.  A conforming program can
+     use implementation-dependent values but this can make it non-portable;
+     for example, it might work only with Unix file systems.
+
+
+File: gcl.info,  Node: Merging Pathnames,  Prev: Interpreting Pathname Component Values,  Up: Pathnames
+
+Merging Pathnames
+-----------------
+
+Merging takes a pathname with unfilled components and supplies values for
+those components from a source of defaults.
+
+If a component's value is nil, that component is considered to be unfilled.
+If a component's value is any non-nil object, including :unspecific, that
+component is considered to be filled.
+
+Except as explicitly specified otherwise, for functions that manipulate or
+inquire about files in the file system, the pathname argument to such a
+function is merged with *default-pathname-defaults* before accessing the
+file system (as if by merge-pathnames).
+
+* Menu:
+
+* Examples of Merging Pathnames::
+
+
+File: gcl.info,  Node: Examples of Merging Pathnames,  Prev: Merging Pathnames,  Up: Merging Pathnames
+
+Examples of Merging Pathnames
+.............................
+
+Although the following examples are possible to execute only in
+implementations which permit :unspecific in the indicated position
+andwhich permit four-letter type components, they serve to illustrate the
+basic concept of pathname merging.
+
+      (pathname-type
+        (merge-pathnames (make-pathname :type "LISP")
+                         (make-pathname :type "TEXT")))
+     =>  "LISP"
+     
+      (pathname-type
+        (merge-pathnames (make-pathname :type nil)
+                         (make-pathname :type "LISP")))
+     =>  "LISP"
+     
+      (pathname-type
+        (merge-pathnames (make-pathname :type :unspecific)
+                         (make-pathname :type "LISP")))
+     =>  :UNSPECIFIC
+
+
+File: gcl.info,  Node: Logical Pathnames,  Next: Filenames Dictionary,  Prev: Pathnames,  Up: Filenames
+
+Logical Pathnames
+=================
+
+* Menu:
+
+* Syntax of Logical Pathname Namestrings::
+* Logical Pathname Components::
+
+
+File: gcl.info,  Node: Syntax of Logical Pathname Namestrings,  Next: Logical Pathname Components,  Prev: Logical Pathnames,  Up: Logical Pathnames
+
+Syntax of Logical Pathname Namestrings
+--------------------------------------
+
+The syntax of a logical pathname namestring is as follows.  (Note that
+unlike many notational descriptions in this document, this is a syntactic
+description of character sequences, not a structural description of
+objects.)
+
+logical-pathname ::=[!host host-marker] 
+                     [!relative-directory-marker] {!directory directory-marker}* 
+                     [!name] [type-marker !type [version-marker !version]]
+
+host ::=!word
+
+directory ::=!word | !wildcard-word | !wild-inferiors-word
+
+name ::=!word | !wildcard-word
+
+type ::=!word | !wildcard-word
+
+version ::=!pos-int | newest-word | wildcard-version
+
+host-marker--a colon.
+
+relative-directory-marker--a semicolon.
+
+directory-marker--a semicolon.
+
+type-marker--a dot.
+
+version-marker--a dot.
+
+wild-inferiors-word--The two character sequence "**" (two asterisks).
+
+newest-word--The six character sequence "newest" or the six character
+sequence "NEWEST".
+
+wildcard-version--an asterisk.
+
+wildcard-word--one or more asterisks, uppercase letters, digits, and
+hyphens, including at least one asterisk, with no two asterisks adjacent.
+
+word--one or more uppercase letters, digits, and hyphens.
+
+pos-int--a positive integer.
+
+* Menu:
+
+* Additional Information about Parsing Logical Pathname Namestrings::
+* The Host part of a Logical Pathname Namestring::
+* The Device part of a Logical Pathname Namestring::
+* The Directory part of a Logical Pathname Namestring::
+* The Type part of a Logical Pathname Namestring::
+* The Version part of a Logical Pathname Namestring::
+* Wildcard Words in a Logical Pathname Namestring::
+* Lowercase Letters in a Logical Pathname Namestring::
+* Other Syntax in a Logical Pathname Namestring::
+
+
+File: gcl.info,  Node: Additional Information about Parsing Logical Pathname Namestrings,  Next: The Host part of a Logical Pathname Namestring,  Prev: Syntax of Logical Pathname Namestrings,  Up: Syntax of Logical Pathname Namestrings
+
+Additional Information about Parsing Logical Pathname Namestrings
+.................................................................
+
+
+File: gcl.info,  Node: The Host part of a Logical Pathname Namestring,  Next: The Device part of a Logical Pathname Namestring,  Prev: Additional Information about Parsing Logical Pathname Namestrings,  Up: Syntax of Logical Pathname Namestrings
+
+The Host part of a Logical Pathname Namestring
+..............................................
+
+The host must have been defined as a logical pathname host; this can be
+done by using setf of logical-pathname-translations.
+
+The logical pathname host name "SYS" is reserved for the implementation.
+The existence and meaning of SYS: logical pathnames is
+implementation-defined.
+
+
+File: gcl.info,  Node: The Device part of a Logical Pathname Namestring,  Next: The Directory part of a Logical Pathname Namestring,  Prev: The Host part of a Logical Pathname Namestring,  Up: Syntax of Logical Pathname Namestrings
+
+The Device part of a Logical Pathname Namestring
+................................................
+
+There is no syntax for a logical pathname device since the device
+component of a logical pathname is always :unspecific; see *Note
+Unspecific Components of a Logical Pathname::.
+
+
+File: gcl.info,  Node: The Directory part of a Logical Pathname Namestring,  Next: The Type part of a Logical Pathname Namestring,  Prev: The Device part of a Logical Pathname Namestring,  Up: Syntax of Logical Pathname Namestrings
+
+The Directory part of a Logical Pathname Namestring
+...................................................
+
+If a relative-directory-marker precedes the directories, the directory
+component parsed is as relative; otherwise, the directory component is
+parsed as absolute.
+
+If a wild-inferiors-marker is specified, it parses into :wild-inferiors.
+
+
+File: gcl.info,  Node: The Type part of a Logical Pathname Namestring,  Next: The Version part of a Logical Pathname Namestring,  Prev: The Directory part of a Logical Pathname Namestring,  Up: Syntax of Logical Pathname Namestrings
+
+The Type part of a Logical Pathname Namestring
+..............................................
+
+The type of a logical pathname for a source file is "LISP".   This should
+be translated into whatever type is appropriate in a physical pathname.
+
+
+File: gcl.info,  Node: The Version part of a Logical Pathname Namestring,  Next: Wildcard Words in a Logical Pathname Namestring,  Prev: The Type part of a Logical Pathname Namestring,  Up: Syntax of Logical Pathname Namestrings
+
+The Version part of a Logical Pathname Namestring
+.................................................
+
+Some file systems do not have versions.  Logical pathname translation to
+such a file system ignores the version.  This implies that a program
+cannot rely on being able to store more than one version of a file named
+by a logical pathname.
+
+If a wildcard-version is specified, it parses into :wild.
+
+
+File: gcl.info,  Node: Wildcard Words in a Logical Pathname Namestring,  Next: Lowercase Letters in a Logical Pathname Namestring,  Prev: The Version part of a Logical Pathname Namestring,  Up: Syntax of Logical Pathname Namestrings
+
+Wildcard Words in a Logical Pathname Namestring
+...............................................
+
+Each asterisk in a wildcard-word matches a sequence of zero or more
+characters.  The wildcard-word "*" parses into :wild; other wildcard-words
+parse into strings.
+
+
+File: gcl.info,  Node: Lowercase Letters in a Logical Pathname Namestring,  Next: Other Syntax in a Logical Pathname Namestring,  Prev: Wildcard Words in a Logical Pathname Namestring,  Up: Syntax of Logical Pathname Namestrings
+
+Lowercase Letters in a Logical Pathname Namestring
+..................................................
+
+When parsing words and wildcard-words, lowercase letters are translated to
+uppercase.
+
+
+File: gcl.info,  Node: Other Syntax in a Logical Pathname Namestring,  Prev: Lowercase Letters in a Logical Pathname Namestring,  Up: Syntax of Logical Pathname Namestrings
+
+Other Syntax in a Logical Pathname Namestring
+.............................................
+
+The consequences of using characters other than those specified here in a
+logical pathname namestring are unspecified.
+
+The consequences of using any value not specified here as a logical
+pathname component are unspecified.
+
+
+File: gcl.info,  Node: Logical Pathname Components,  Prev: Syntax of Logical Pathname Namestrings,  Up: Logical Pathnames
+
+Logical Pathname Components
+---------------------------
+
+* Menu:
+
+* Unspecific Components of a Logical Pathname::
+* Null Strings as Components of a Logical Pathname::
+
+
+File: gcl.info,  Node: Unspecific Components of a Logical Pathname,  Next: Null Strings as Components of a Logical Pathname,  Prev: Logical Pathname Components,  Up: Logical Pathname Components
+
+Unspecific Components of a Logical Pathname
+...........................................
+
+The device component of a logical pathname is always :unspecific; no other
+component of a  logical pathname can be :unspecific.
+
+
+File: gcl.info,  Node: Null Strings as Components of a Logical Pathname,  Prev: Unspecific Components of a Logical Pathname,  Up: Logical Pathname Components
+
+Null Strings as Components of a Logical Pathname
+................................................
+
+The null string, "", is not a valid value for any component of a logical
+pathname.
+
+
+File: gcl.info,  Node: Filenames Dictionary,  Prev: Logical Pathnames,  Up: Filenames
+
+Filenames Dictionary
+====================
+
+* Menu:
+
+* pathname (System Class)::
+* logical-pathname (System Class)::
+* pathname::
+* make-pathname::
+* pathnamep::
+* pathname-host::
+* load-logical-pathname-translations::
+* logical-pathname-translations::
+* logical-pathname::
+* *default-pathname-defaults*::
+* namestring::
+* parse-namestring::
+* wild-pathname-p::
+* pathname-match-p::
+* translate-logical-pathname::
+* translate-pathname::
+* merge-pathnames::
+
+
+File: gcl.info,  Node: pathname (System Class),  Next: logical-pathname (System Class),  Prev: Filenames Dictionary,  Up: Filenames Dictionary
+
+pathname                                                     [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+pathname, t
+
+Description::
+.............
+
+A pathname is a structured object which represents a filename.
+
+There are two kinds of pathnames--physical pathnames and logical pathnames.
+
+
+File: gcl.info,  Node: logical-pathname (System Class),  Next: pathname,  Prev: pathname (System Class),  Up: Filenames Dictionary
+
+logical-pathname                                             [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+logical-pathname, pathname, t
+
+Description::
+.............
+
+A pathname that uses a namestring syntax that is
+implementation-independent, and that has component values that are
+implementation-independent.  Logical pathnames do not refer directly to
+filenames
+
+See Also::
+..........
+
+*Note File System Concepts::, *Note Sharpsign P::, *Note Printing
+Pathnames::
+
+
+File: gcl.info,  Node: pathname,  Next: make-pathname,  Prev: logical-pathname (System Class),  Up: Filenames Dictionary
+
+pathname                                                         [Function]
+---------------------------------------------------------------------------
+
+`pathname'  pathspec =>  pathname
+
+Arguments and Values::
+......................
+
+pathspec--a pathname designator.
+
+pathname--a pathname.
+
+Description::
+.............
+
+Returns the pathname denoted by pathspec.
+
+If the pathspec designator is a stream, the stream can be either open or
+closed; in both cases, the pathname returned corresponds to the filename
+used to open the file.  pathname returns the same pathname for a file
+stream after it is closed as it did when it was open.
+
+If the pathspec designator is a file stream created by opening a logical
+pathname, a logical pathname is returned.
+
+Examples::
+..........
+
+      ;; There is a great degree of variability permitted here.  The next
+      ;; several examples are intended to illustrate just a few of the many
+      ;; possibilities.  Whether the name is canonicalized to a particular
+      ;; case (either upper or lower) depends on both the file system and the
+      ;; implementation since two different implementations using the same
+      ;; file system might differ on many issues.  How information is stored
+      ;; internally (and possibly presented in #S notation) might vary,
+      ;; possibly requiring `accessors' such as PATHNAME-NAME to perform case
+      ;; conversion upon access.  The format of a namestring is dependent both
+      ;; on the file system and the implementation since, for example, one
+      ;; implementation might include the host name in a namestring, and
+      ;; another might not.  #S notation would generally only be used in a
+      ;; situation where no appropriate namestring could be constructed for use
+      ;; with #P.
+      (setq p1 (pathname "test"))
+     =>  #P"CHOCOLATE:TEST" ; with case canonicalization (e.g., VMS)
+     OR=> #P"VANILLA:test"   ; without case canonicalization (e.g., Unix)
+     OR=> #P"test"
+     OR=> #S(PATHNAME :HOST "STRAWBERRY" :NAME "TEST")
+     OR=> #S(PATHNAME :HOST "BELGIAN-CHOCOLATE" :NAME "test")
+      (setq p2 (pathname "test"))
+     =>  #P"CHOCOLATE:TEST"
+     OR=> #P"VANILLA:test"
+     OR=> #P"test"
+     OR=> #S(PATHNAME :HOST "STRAWBERRY" :NAME "TEST")
+     OR=> #S(PATHNAME :HOST "BELGIAN-CHOCOLATE" :NAME "test")
+      (pathnamep p1) =>  true
+      (eq p1 (pathname p1)) =>  true
+      (eq p1 p2)
+     =>  true
+     OR=> false
+      (with-open-file (stream "test" :direction :output)
+        (pathname stream))
+     =>  #P"ORANGE-CHOCOLATE:>Gus>test.lisp.newest"
+
+See Also::
+..........
+
+pathname, logical-pathname, *Note File System Concepts::,
+
+*Note Pathnames as Filenames::
+
+
+File: gcl.info,  Node: make-pathname,  Next: pathnamep,  Prev: pathname,  Up: Filenames Dictionary
+
+make-pathname                                                    [Function]
+---------------------------------------------------------------------------
+
+`make-pathname'  &key host device directory name type version defaults case
+=>  pathname
+
+Arguments and Values::
+......................
+
+host--a valid physical pathname host.  Complicated defaulting behavior;
+see below.
+
+device--a valid pathname device.  Complicated defaulting behavior; see
+below.
+
+directory--a valid pathname directory.  Complicated defaulting behavior;
+see below.
+
+name--a valid pathname name.  Complicated defaulting behavior; see below.
+
+type--a valid pathname type.  Complicated defaulting behavior; see below.
+
+version--a valid pathname version.  Complicated defaulting behavior; see
+below.
+
+defaults--a pathname designator.  The default is a pathname whose host
+component is the same as the host component of the value of
+*default-pathname-defaults*, and whose other components are all nil.
+
+case--one of :common or :local.  The default is :local.
+
+pathname--a pathname.
+
+Description::
+.............
+
+Constructs and returns a pathname from the supplied keyword arguments.
+
+After the components supplied explicitly by host, device, directory, name,
+type, and version are filled in, the merging rules used by merge-pathnames
+are used to fill in any unsupplied components from the defaults supplied
+by defaults.
+
+Whenever a pathname is constructed the components may be canonicalized if
+appropriate.  For the explanation of the arguments that can be supplied
+for each component, see *Note Pathname Components::.
+
+If case is supplied, it is treated as described in *Note Case in Pathname
+Components::.
+
+The resulting pathname is a logical pathname if and only its host component
+is a logical host or a string that names a defined logical host.
+
+If the directory is a string, it should be the name of a top level
+directory, and should not contain any punctuation characters; that is,
+specifying a string, str, is equivalent to specifying the list (:absolute
+str).  Specifying the symbol :wild is equivalent to specifying the list
+(:absolute :wild-inferiors), or (:absolute :wild) in a file system that
+does not support :wild-inferiors.
+
+Examples::
+..........
+
+      ;; Implementation A -- an implementation with access to a single
+      ;;  Unix file system.  This implementation happens to never display
+      ;;  the `host' information in a namestring, since there is only one host.
+      (make-pathname :directory '(:absolute "public" "games")
+                     :name "chess" :type "db")
+     =>  #P"/public/games/chess.db"
+     
+      ;; Implementation B -- an implementation with access to one or more
+      ;;  VMS file systems.  This implementation displays `host' information
+      ;;  in the namestring only when the host is not the local host.
+      ;;  It uses a double colon to separate a host name from the host's local
+      ;;  file name.
+      (make-pathname :directory '(:absolute "PUBLIC" "GAMES")
+                     :name "CHESS" :type "DB")
+     =>  #P"SYS$DISK:[PUBLIC.GAMES]CHESS.DB"
+      (make-pathname :host "BOBBY"
+                     :directory '(:absolute "PUBLIC" "GAMES")
+                     :name "CHESS" :type "DB")
+     =>  #P"BOBBY::SYS$DISK:[PUBLIC.GAMES]CHESS.DB"
+     
+      ;; Implementation C -- an implementation with simultaneous access to
+      ;;  multiple file systems from the same Lisp image.  In this
+      ;;  implementation, there is a convention that any text preceding the
+      ;;  first colon in a pathname namestring is a host name.
+      (dolist (case '(:common :local))
+        (dolist (host '("MY-LISPM" "MY-VAX" "MY-UNIX"))
+          (print (make-pathname :host host :case case
+                                :directory '(:absolute "PUBLIC" "GAMES")
+                                :name "CHESS" :type "DB"))))
+      |>  #P"MY-LISPM:>public>games>chess.db"
+      |>  #P"MY-VAX:SYS$DISK:[PUBLIC.GAMES]CHESS.DB"
+      |>  #P"MY-UNIX:/public/games/chess.db"
+      |>  #P"MY-LISPM:>public>games>chess.db"
+      |>  #P"MY-VAX:SYS$DISK:[PUBLIC.GAMES]CHESS.DB"
+      |>  #P"MY-UNIX:/PUBLIC/GAMES/CHESS.DB"
+     =>  NIL
+
+Affected By::
+.............
+
+The file system.
+
+See Also::
+..........
+
+*Note merge-pathnames:: , pathname, logical-pathname, *Note File System
+Concepts::,
+
+*Note Pathnames as Filenames::
+
+Notes::
+.......
+
+Portable programs should not supply :unspecific for any component.  See
+*Note ->UNSPECIFIC as a Component Value::.
+
+
+File: gcl.info,  Node: pathnamep,  Next: pathname-host,  Prev: make-pathname,  Up: Filenames Dictionary
+
+pathnamep                                                        [Function]
+---------------------------------------------------------------------------
+
+`pathnamep'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type pathname; otherwise, returns false.
+
+Examples::
+..........
+
+      (setq q "test")  =>  "test"
+      (pathnamep q) =>  false
+      (setq q (pathname "test"))
+     =>  #S(PATHNAME :HOST NIL :DEVICE NIL :DIRECTORY NIL :NAME "test" :TYPE NIL
+            :VERSION NIL)
+      (pathnamep q) =>  true
+      (setq q (logical-pathname "SYS:SITE;FOO.SYSTEM"))
+     =>  #P"SYS:SITE;FOO.SYSTEM"
+      (pathnamep q) =>  true
+
+Notes::
+.......
+
+      (pathnamep object) == (typep object 'pathname)
+

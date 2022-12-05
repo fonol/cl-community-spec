@@ -1,0 +1,53 @@
+{
+    "name": "tagbody",
+    "prev": "return",
+    "next": "throw",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Special Operator",
+        "text": "tagbody"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "tagbody",
+                    "text": " {tag | statement}* =>  nil\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "tag",
+                    "desc": "a go tag; not evaluated."
+                },
+                {
+                    "name": "statement",
+                    "desc": "a compound form; evaluated as described below."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Executes zero or more statements in a lexical environment that provides\nfor control transfers to labels indicated by the tags.\nThe statements in a tagbody are evaluated in order from left to right, and\ntheir values are discarded.  If at any time there are no remaining\nstatements, tagbody returns nil.  However, if (go tag) is evaluated,\ncontrol jumps to the part of the body labeled with the tag.  (Tags are\ncompared with eql.)\nA tag established by tagbody has lexical scope and has dynamic extent.\nOnce tagbody has been exited, it is no longer valid to go to a tag in its\nbody.  It is permissible for go to jump to a tagbody that is not the\ninnermost tagbody containing that go; the tags established by a tagbody\nonly shadow other tags of like name.\nThe determination of which elements of the body are tags and which are\nstatements is made prior to any macro expansion of that element.  If a\nstatement is a macro form and its macro expansion is an atom, that atom is\ntreated as a statement, not a tag.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (let (val)\n         (tagbody\n           (setq val 1)\n           (go point-a)\n           (incf val 16)\n          point-c\n           (incf val 04)\n           (go point-b)\n           (incf val 32)\n          point-a\n           (incf val 02)\n           (go point-c)\n           (incf val 64)\n          point-b\n           (incf val 08))\n         val)\n     =>  15\n      (defun f1 (flag)\n        (let ((n 1))\n          (tagbody\n            (setq n (f2 flag #'(lambda () (go out))))\n           out\n            (prin1 n))))\n     =>  F1\n      (defun f2 (flag escape)\n        (if flag (funcall escape) 2))\n     =>  F2\n      (f1 nil)\n      |>  2\n     =>  NIL\n      (f1 t)\n      |>  1\n     =>  NIL\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note go::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The macros in Figure 5-10 have implicit tagbodies.\n  do              do-external-symbols  dotimes  \n  do*             do-symbols           prog     \n  do-all-symbols  dolist               prog*    \n  Figure 5-10: Macros that have implicit tagbodies.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: tagbody,  Next: throw,  Prev: return,  Up: Data and Control Flow Dictionary\n\ntagbody                                                  [Special Operator]\n---------------------------------------------------------------------------\n\n`tagbody'  {tag | statement}* =>  nil\n\nArguments and Values::\n......................\n\ntag--a go tag; not evaluated.\n\nstatement--a compound form; evaluated as described below.\n\nDescription::\n.............\n\nExecutes zero or more statements in a lexical environment that provides\nfor control transfers to labels indicated by the tags.\n\nThe statements in a tagbody are evaluated in order from left to right, and\ntheir values are discarded.  If at any time there are no remaining\nstatements, tagbody returns nil.  However, if (go tag) is evaluated,\ncontrol jumps to the part of the body labeled with the tag.  (Tags are\ncompared with eql.)\n\nA tag established by tagbody has lexical scope and has dynamic extent.\nOnce tagbody has been exited, it is no longer valid to go to a tag in its\nbody.  It is permissible for go to jump to a tagbody that is not the\ninnermost tagbody containing that go; the tags established by a tagbody\nonly shadow other tags of like name.\n\nThe determination of which elements of the body are tags and which are\nstatements is made prior to any macro expansion of that element.  If a\nstatement is a macro form and its macro expansion is an atom, that atom is\ntreated as a statement, not a tag.\n\nExamples::\n..........\n\n      (let (val)\n         (tagbody\n           (setq val 1)\n           (go point-a)\n           (incf val 16)\n          point-c\n           (incf val 04)\n           (go point-b)\n           (incf val 32)\n          point-a\n           (incf val 02)\n           (go point-c)\n           (incf val 64)\n          point-b\n           (incf val 08))\n         val)\n     =>  15\n      (defun f1 (flag)\n        (let ((n 1))\n          (tagbody\n            (setq n (f2 flag #'(lambda () (go out))))\n           out\n            (prin1 n))))\n     =>  F1\n      (defun f2 (flag escape)\n        (if flag (funcall escape) 2))\n     =>  F2\n      (f1 nil)\n      |>  2\n     =>  NIL\n      (f1 t)\n      |>  1\n     =>  NIL\n\nSee Also::\n..........\n\n*Note go::\n\nNotes::\n.......\n\nThe macros in Figure 5-10 have implicit tagbodies.\n\n  do              do-external-symbols  dotimes  \n  do*             do-symbols           prog     \n  do-all-symbols  dolist               prog*    \n\n  Figure 5-10: Macros that have implicit tagbodies.\n\n\n"
+}

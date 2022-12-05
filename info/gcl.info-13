@@ -1,0 +1,1404 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: values (Type Specifier),  Next: eql (Type Specifier),  Prev: or (Type Specifier),  Up: Types and Classes Dictionary
+
+values                                                     [Type Specifier]
+---------------------------------------------------------------------------
+
+Compound Type Specifier Kind::
+..............................
+
+Specializing.
+
+Compound Type Specifier Syntax::
+................................
+
+(`values'{!value-typespec})
+
+[Reviewer Note by Barmar: Missing &key]
+
+value-typespec ::={typespec}* [&optional {typespec}*] [&rest typespec] [&allow-other-keys]
+
+Compound Type Specifier Arguments::
+...................................
+
+typespec--a type specifier.
+
+Compound Type Specifier Description::
+.....................................
+
+This type specifier can be used only as the value-type in a function type
+specifier or a the special form.  It is used to specify individual types
+when multiple values are involved.  The &optional and &rest markers can
+appear in the value-type list; they indicate the parameter list of a
+function that, when given to multiple-value-call along with the values,
+would correctly receive those values.
+
+The symbol * may not be among the value-types.
+
+The symbol values is not valid as a type specifier; and, specifically, it
+is not an abbreviation for (values).
+
+
+File: gcl.info,  Node: eql (Type Specifier),  Next: coerce,  Prev: values (Type Specifier),  Up: Types and Classes Dictionary
+
+eql                                                        [Type Specifier]
+---------------------------------------------------------------------------
+
+Compound Type Specifier Kind::
+..............................
+
+Combining.
+
+Compound Type Specifier Syntax::
+................................
+
+(`eql'{object})
+
+Compound Type Specifier Arguments::
+...................................
+
+object--an object.
+
+Compound Type Specifier Description::
+.....................................
+
+Represents the type whose only element is object.
+
+The argument object is required.  The object can be *, but if so it
+denotes itself (the symbol *) and does not represent an unspecified value.
+The symbol eql is not valid as an atomic type specifier.
+
+
+File: gcl.info,  Node: coerce,  Next: deftype,  Prev: eql (Type Specifier),  Up: Types and Classes Dictionary
+
+coerce                                                           [Function]
+---------------------------------------------------------------------------
+
+`coerce'  object result-type =>  result
+
+Arguments and Values::
+......................
+
+object--an object.
+
+result-type--a type specifier.
+
+result--an object, of type result-type except in situations described in
+*Note Rule of Canonical Representation for Complex Rationals::.
+
+Description::
+.............
+
+Coerces the object to type result-type.
+
+If object is already of type result-type, the object itself is returned,
+regardless of whether it would have been possible in general to coerce an
+object of some other type to result-type.
+
+Otherwise, the object is coerced to type result-type according to the
+following rules:
+
+sequence
+     If the result-type is a recognizable subtype of list, and the object
+     is a sequence, then the result is a list that has the same elements
+     as object.
+
+     If the result-type is a recognizable subtype of vector, and the
+     object is a sequence, then the result is a vector that has the same
+     elements as object.  If result-type is a specialized type, the result
+     has an actual array element type that is the result of upgrading the
+     element type part of that specialized type.  If no element type is
+     specified, the element type defaults to t.  If the implementation
+     cannot determine the element type, an error is signaled.
+
+character
+     If the result-type is character and the object is a character
+     designator, the result is the character it denotes.
+
+complex
+     If the result-type is complex and the object is a number, then the
+     result is obtained by constructing a complex whose real part is the
+     object and whose imaginary part is the result of coercing an integer
+     zero to the type of the object (using coerce).  (If the real part is
+     a rational, however, then the result must be represented as a
+     rational rather than a complex; see *Note Rule of Canonical
+     Representation for Complex Rationals::.  So, for example, (coerce 3
+     'complex) is permissible, but will return 3, which is not a complex.)
+
+float
+     If the result-type is any of float, short-float, single-float,
+     double-float, long-float, and the object is a
+
+     real,
+
+     then the result is a float of type result-type which is equal in sign
+     and magnitude to the object to whatever degree of representational
+     precision is permitted by that float representation.  (If the
+     result-type is float and object is not already a float, then the
+     result is a single float.)
+
+function
+     If the result-type is function, and object is any
+
+     function name
+
+     that is fbound but that is globally defined neither as a macro name
+     nor as a special operator, then the result is the functional value of
+     object.
+
+     If the result-type is function, and object is a lambda expression,
+     then the result is a closure of object in the null lexical
+     environment.
+
+t
+     Any object can be coerced to an object of type t.  In this case, the
+     object is simply returned.
+
+Examples::
+..........
+
+      (coerce '(a b c) 'vector) =>  #(A B C)
+      (coerce 'a 'character) =>  #\A
+      (coerce 4.56 'complex) =>  #C(4.56 0.0)
+      (coerce 4.5s0 'complex) =>  #C(4.5s0 0.0s0)
+      (coerce 7/2 'complex) =>  7/2
+      (coerce 0 'short-float) =>  0.0s0
+      (coerce 3.5L0 'float) =>  3.5L0
+      (coerce 7/2 'float) =>  3.5
+      (coerce (cons 1 2) t) =>  (1 . 2)
+
+All the following forms should signal an error:
+
+      (coerce '(a b c) '(vector * 4))
+      (coerce #(a b c) '(vector * 4))
+      (coerce '(a b c) '(vector * 2))
+      (coerce #(a b c) '(vector * 2))
+      (coerce "foo" '(string 2))
+      (coerce #(#\a #\b #\c) '(string 2))
+      (coerce '(0 1) '(simple-bit-vector 3))
+
+Exceptional Situations::
+........................
+
+If a coercion is not possible, an error of type type-error is signaled.
+
+(coerce x 'nil) always signals an error of type type-error.
+
+An error of type error is signaled if the result-type is function but
+object is a symbol that is not fbound or if the symbol names a macro or a
+special operator.
+
+An error of type type-error should be signaled if result-type specifies
+the number of elements and object is of a different length.
+
+See Also::
+..........
+
+*Note rational:: , *Note floor; ffloor; ceiling; fceiling; truncate;
+ftruncate; round; fround:: , *Note char-code:: , *Note char-int::
+
+Notes::
+.......
+
+Coercions from floats to rationals and from ratios to integers are not
+provided because of rounding problems.
+
+      (coerce x 't) == (identity x) == x
+
+
+File: gcl.info,  Node: deftype,  Next: subtypep,  Prev: coerce,  Up: Types and Classes Dictionary
+
+deftype                                                             [Macro]
+---------------------------------------------------------------------------
+
+`deftype'  name lambda-list [[{declaration}* | documentation]] {form}* =>
+name
+
+Arguments and Values::
+......................
+
+name--a symbol.
+
+lambda-list--a deftype lambda list.
+
+declaration--a declare expression; not evaluated.
+
+documentation--a string; not evaluated.
+
+form--a form.
+
+Description::
+.............
+
+deftype defines a derived type specifier named name.
+
+The meaning of the new type specifier is given in terms of a function
+which expands the type specifier into another type specifier, which itself
+will be expanded if it contains references to another derived type
+specifier.
+
+The newly defined type specifier may be referenced as a list of the form
+(name arg_1 arg_2 ...)\/.  The number of arguments must be appropriate to
+the lambda-list.  If the new type specifier takes no arguments, or if all
+of its arguments are optional, the type specifier may be used as an atomic
+type specifier.
+
+The argument expressions to the type specifier, arg_1 ... arg_n, are not
+evaluated.  Instead, these literal objects become the objects to which
+corresponding parameters become bound.
+
+The body of the deftype form
+
+(but not the lambda-list)
+
+is
+
+implicitly enclosed in a block named name,
+
+and is evaluated as an implicit progn, returning a new type specifier.
+
+The lexical environment of the body is the one which was current at the
+time the deftype form was evaluated, augmented by the variables in the
+lambda-list.
+
+Recursive expansion of the type specifier returned as the expansion must
+terminate, including the expansion of type specifiers which are nested
+within the expansion.
+
+The consequences are undefined if the result of fully expanding a type
+specifier contains any circular structure, except within the objects
+referred to by member and eql type specifiers.
+
+Documentation is attached to name as a documentation string of kind type.
+
+If a deftype form appears as a top level form, the compiler must ensure
+that the name is recognized in subsequent type declarations.  The
+programmer must ensure that the body of a deftype form can be evaluated at
+compile time if the name is referenced in subsequent type declarations.
+If the expansion of a type specifier is not defined fully at compile time
+(perhaps because it expands into an unknown type specifier or a satisfies
+of a named function that isn't defined in the compile-time environment),
+an implementation may ignore any references to this type in declarations
+and/or signal a warning.
+
+Examples::
+..........
+
+      (defun equidimensional (a)
+        (or (< (array-rank a) 2)
+            (apply #'= (array-dimensions a)))) =>  EQUIDIMENSIONAL
+      (deftype square-matrix (&optional type size)
+        `(and (array ,type (,size ,size))
+              (satisfies equidimensional))) =>  SQUARE-MATRIX
+
+See Also::
+..........
+
+declare, *Note defmacro:: , *Note documentation; (setf documentation):: ,
+*Note Type Specifiers::, *Note Syntactic Interaction of Documentation
+Strings and Declarations::
+
+
+File: gcl.info,  Node: subtypep,  Next: type-of,  Prev: deftype,  Up: Types and Classes Dictionary
+
+subtypep                                                         [Function]
+---------------------------------------------------------------------------
+
+`subtypep'  type-1 type-2 &optional environment =>  subtype-p, valid-p
+
+Arguments and Values::
+......................
+
+type-1--a type specifier.
+
+type-2--a type specifier.
+
+environment--an environment object.  The default is nil, denoting the null
+lexical environment and the current global environment.
+
+subtype-p--a generalized boolean.
+
+valid-p--a generalized boolean.
+
+Description::
+.............
+
+If type-1 is a recognizable subtype of type-2, the first value is true.
+Otherwise, the first value is false, indicating that either type-1 is not
+a subtype of type-2, or else type-1 is a subtype of type-2 but is not a
+recognizable subtype.
+
+A second value is also returned indicating the `certainty' of the first
+value.  If this value is true, then the first value is an accurate
+indication of the subtype relationship.  (The second value is always true
+when the first value is true.)
+
+Figure 4-9 summarizes the possible combinations of values that might
+result.
+
+  Value 1  Value 2  Meaning                                               
+  true     true     type-1 is definitely a subtype of type-2.             
+  false    true     type-1 is definitely not a subtype of type-2.         
+  false    false    subtypep could not determine the relationship,        
+                    so type-1 might or might not be a subtype of type-2.  
+
+               Figure 4-9: Result possibilities for subtypep             
+
+
+subtypep is permitted to return the values false and false only when at
+least one argument involves one of these type specifiers: and, eql, the
+list form of function, member, not, or, satisfies, or values.  (A type
+specifier `involves' such a symbol if, after being type expanded, it
+contains that symbol in a position that would call for its meaning as a
+type specifier to be used.) One consequence of this is that if neither
+type-1 nor type-2 involves any of these type specifiers, then subtypep is
+obliged to determine the relationship accurately.  In particular, subtypep
+returns the values true and true if the arguments are equal and do not
+involve any of these type specifiers.
+
+subtypep never returns a second value of nil when both type-1 and type-2
+involve only the names in Figure~4-2, or names of types defined by
+defstruct, define-condition, or defclass, or derived types that expand
+into only those names.  While type specifiers listed in Figure~4-2 and
+names of defclass and defstruct can in some cases be implemented as
+derived types, subtypep regards them as primitive.
+
+The relationships between types reflected by subtypep are those specific
+to the particular implementation.  For example, if an implementation
+supports only a single type of floating-point numbers, in that
+implementation (subtypep 'float 'long-float) returns the values true and
+true (since the two types are identical).
+
+For all T1 and T2 other than *, (array T1) and (array T2) are two
+different type specifiers that always refer to the same sets of things if
+and only if they refer to arrays of exactly the same specialized
+representation, i.e., if (upgraded-array-element-type 'T1)  and
+(upgraded-array-element-type 'T2) return two different type specifiers
+that always refer to the same sets of objects.  This is another way of
+saying that `(array type-specifier) and `(array
+,(upgraded-array-element-type 'type-specifier)) refer to the same set of
+specialized array representations.  For all T1 and T2 other than *, the
+intersection of (array T1) and (array T2) is the empty set if and only if
+they refer to arrays of different, distinct specialized representations.
+
+Therefore,
+
+      (subtypep '(array T1) '(array T2)) =>  true
+
+if and only if
+
+      (upgraded-array-element-type 'T1)  and
+      (upgraded-array-element-type 'T2)
+
+return two different type specifiers that always refer to the same sets of
+objects.
+
+For all type-specifiers T1 and T2 other than *,
+
+      (subtypep '(complex T1) '(complex T2)) =>  true, true
+
+if:
+1.
+     T1 is a subtype of T2, or
+
+2.
+     (upgraded-complex-part-type 'T1) and (upgraded-complex-part-type 'T2)
+     return two different type specifiers that always refer to the same
+     sets of objects; in this case, (complex T1) and (complex T2) both
+     refer to the same specialized representation.
+
+The values are false and true otherwise.
+
+The form
+
+      (subtypep '(complex single-float) '(complex float))
+
+must return true in all implementations, but
+
+      (subtypep '(array single-float) '(array float))
+
+returns true only in implementations that do not have a specialized array
+representation for single floats distinct from that for other floats.
+
+Examples::
+..........
+
+      (subtypep 'compiled-function 'function) =>  true, true
+      (subtypep 'null 'list) =>  true, true
+      (subtypep 'null 'symbol) =>  true, true
+      (subtypep 'integer 'string) =>  false, true
+      (subtypep '(satisfies dummy) nil) =>  false, implementation-dependent
+      (subtypep '(integer 1 3) '(integer 1 4)) =>  true, true
+      (subtypep '(integer (0) (0)) 'nil) =>  true, true
+      (subtypep 'nil '(integer (0) (0))) =>  true, true
+      (subtypep '(integer (0) (0)) '(member)) =>  true, true ;or false, false
+      (subtypep '(member) 'nil) =>  true, true ;or false, false
+      (subtypep 'nil '(member)) =>  true, true ;or false, false
+
+Let <aet-x> and <aet-y> be two distinct type specifiers that do not always
+refer to the same sets of objects in a given implementation, but for which
+make-array, will return an object of the same array type.
+
+Thus, in each case,
+
+       (subtypep (array-element-type (make-array 0 :element-type '<aet-x>))
+                 (array-element-type (make-array 0 :element-type '<aet-y>)))
+     =>  true, true
+     
+       (subtypep (array-element-type (make-array 0 :element-type '<aet-y>))
+                 (array-element-type (make-array 0 :element-type '<aet-x>)))
+     =>  true, true
+
+If  (array <aet-x>) and (array <aet-y>) are different names for exactly
+the same set of objects, these names should always refer to the same sets
+of objects.  That implies that the following set of tests are also true:
+
+      (subtypep '(array <aet-x>) '(array <aet-y>)) =>  true, true
+      (subtypep '(array <aet-y>) '(array <aet-x>)) =>  true, true
+
+See Also::
+..........
+
+*Note Types::
+
+Notes::
+.......
+
+The small differences between the subtypep specification for the array and
+complex types are necessary because there is no creation function for
+complexes which allows the specification of the resultant part type
+independently of the actual types of the parts.  Thus in the case of the
+type complex, the actual type of the parts is referred to, although a
+number can be a member of more than one type.  For example, 17 is of type
+(mod 18) as well as type (mod 256) and type integer; and 2.3f5 is of type
+single-float as well as type float.
+
+
+File: gcl.info,  Node: type-of,  Next: typep,  Prev: subtypep,  Up: Types and Classes Dictionary
+
+type-of                                                          [Function]
+---------------------------------------------------------------------------
+
+`type-of'  object =>  typespec
+
+Arguments and Values::
+......................
+
+object--an object.
+
+typespec--a type specifier.
+
+Description::
+.............
+
+Returns a type specifier, typespec, for a type that has the object as an
+element.  The typespec satisfies the following:
+
+1.
+     For any object that is an element of some built-in type:
+
+    a.
+          the type returned is a recognizable subtype of that built-in
+          type.
+
+    b.
+          the type returned does not involve and, eql, member, not, or,
+          satisfies, or values.
+
+2.
+     For all objects, (typep object (type-of object)) returns true.
+     Implicit in this is that type specifiers which are not valid for use
+     with typep, such as the list form of the function type specifier, are
+     never returned by type-of.
+
+3.
+     The type returned by type-of is always a recognizable subtype of the
+     class returned by class-of.  That is,
+
+           (subtypep (type-of object) (class-of object)) =>  true, true
+
+4.
+     For objects of metaclass structure-class or standard-class,
+
+     and for conditions,
+
+     type-of returns the proper name of the class returned by class-of if
+     it has a proper name, and otherwise returns the class itself.  In
+     particular, for objects created by the constructor function of a
+     structure defined with defstruct without a :type option, type-of
+     returns the structure name; and for objects created by
+     make-condition, the typespec is the name of the condition type.
+
+5.
+     For each of the types short-float, single-float, double-float, or
+     long-float of which the object is an element, the typespec is a
+     recognizable subtype of that type.
+
+Examples::
+..........
+
+
+      (type-of 'a) =>  SYMBOL
+      (type-of '(1 . 2))
+     =>  CONS
+     OR=> (CONS FIXNUM FIXNUM)
+      (type-of #c(0 1))
+     =>  COMPLEX
+     OR=> (COMPLEX INTEGER)
+      (defstruct temp-struct x y z) =>  TEMP-STRUCT
+      (type-of (make-temp-struct)) =>  TEMP-STRUCT
+      (type-of "abc")
+     =>  STRING
+     OR=> (STRING 3)
+      (subtypep (type-of "abc") 'string) =>  true, true
+      (type-of (expt 2 40))
+     =>  BIGNUM
+     OR=> INTEGER
+     OR=> (INTEGER 1099511627776 1099511627776)
+     OR=> SYSTEM::TWO-WORD-BIGNUM
+     OR=> FIXNUM
+      (subtypep (type-of 112312) 'integer) =>  true, true
+      (defvar *foo* (make-array 5 :element-type t)) =>  *FOO*
+      (class-name (class-of *foo*)) =>  VECTOR
+      (type-of *foo*)
+     =>  VECTOR
+     OR=> (VECTOR T 5)
+
+See Also::
+..........
+
+*Note array-element-type:: , *Note class-of:: , *Note defstruct:: , *Note
+typecase; ctypecase; etypecase:: , *Note typep:: , *Note Types::
+
+Notes::
+.......
+
+Implementors are encouraged to arrange for type-of to return
+
+a portable value.
+
+
+File: gcl.info,  Node: typep,  Next: type-error,  Prev: type-of,  Up: Types and Classes Dictionary
+
+typep                                                            [Function]
+---------------------------------------------------------------------------
+
+`typep'  object type-specifier &optional environment =>
+generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+type-specifier--any type specifier except
+
+values, or a type specifier list whose first element is either function or
+values.
+
+environment--an environment object.  The default is nil, denoting the null
+lexical environment and the and current global environment.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of the type specified by type-specifier;
+otherwise, returns false.
+
+A type-specifier of the form (satisfies fn) is handled by applying the
+function fn to object.
+
+(typep object '(array type-specifier)), where type-specifier is not *,
+returns true if and only if object is an array that could be the result of
+supplying type-specifier as the :element-type argument to make-array.
+(array *) refers to all arrays regardless of element type, while (array
+type-specifier) refers only to those arrays that can result from giving
+type-specifier as the :element-type argument to make-array.  A similar
+interpretation applies to (simple-array type-specifier) and (vector
+type-specifier).  See *Note Array Upgrading::.
+
+(typep object '(complex type-specifier)) returns true for all complex
+numbers that can result from giving numbers of type type-specifier to the
+function complex, plus all other complex numbers of the same specialized
+representation.  Both the real and the imaginary parts of any such complex
+number must satisfy:
+
+      (typep realpart 'type-specifier)
+      (typep imagpart 'type-specifier)
+
+See the function upgraded-complex-part-type.
+
+Examples::
+..........
+
+      (typep 12 'integer) =>  true
+      (typep (1+ most-positive-fixnum) 'fixnum) =>  false
+      (typep nil t) =>  true
+      (typep nil nil) =>  false
+      (typep 1 '(mod 2)) =>  true
+      (typep #c(1 1) '(complex (eql 1))) =>  true
+     ;; To understand this next example, you might need to refer to
+     ;; *Note Rule of Canonical Representation for Complex Rationals::.
+      (typep #c(0 0) '(complex (eql 0))) =>  false
+
+Let A_x and A_y be two type specifiers that denote different types, but
+for which
+
+      (upgraded-array-element-type 'A_x)
+
+and
+
+      (upgraded-array-element-type 'A_y)
+
+denote the same type.  Notice that
+
+      (typep (make-array 0 :element-type 'A_x) '(array A_x)) =>  true
+      (typep (make-array 0 :element-type 'A_y) '(array A_y)) =>  true
+      (typep (make-array 0 :element-type 'A_x) '(array A_y)) =>  true
+      (typep (make-array 0 :element-type 'A_y) '(array A_x)) =>  true
+
+Exceptional Situations::
+........................
+
+An error of type error is signaled if type-specifier is values, or a type
+specifier list whose first element is either function or values.
+
+The consequences are undefined if the type-specifier is not a type
+specifier.
+
+See Also::
+..........
+
+*Note type-of:: , *Note upgraded-array-element-type:: , *Note
+upgraded-complex-part-type:: , *Note Type Specifiers::
+
+Notes::
+.......
+
+Implementations are encouraged to recognize and optimize the case of
+(typep x (the class y)), since it does not involve any need for expansion
+of deftype information at runtime.
+
+
+
+File: gcl.info,  Node: type-error,  Next: type-error-datum,  Prev: typep,  Up: Types and Classes Dictionary
+
+type-error                                                 [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+type-error, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type type-error represents a situation in which an object is not of
+the expected type.  The "offending datum" and "expected type" are
+initialized by the initialization arguments named :datum and
+:expected-type to make-condition, and are accessed by the functions
+type-error-datum and type-error-expected-type.
+
+See Also::
+..........
+
+*Note type-error-datum; type-error-expected-type:: ,
+type-error-expected-type
+
+
+File: gcl.info,  Node: type-error-datum,  Next: simple-type-error,  Prev: type-error,  Up: Types and Classes Dictionary
+
+type-error-datum, type-error-expected-type                       [Function]
+---------------------------------------------------------------------------
+
+`type-error-datum'  condition =>  datum
+
+`type-error-expected-type'  condition =>  expected-type
+
+Arguments and Values::
+......................
+
+condition--a condition of type type-error.
+
+datum--an object.
+
+expected-type--a type specifier.
+
+Description::
+.............
+
+type-error-datum returns the offending datum in the situation represented
+by the condition.
+
+type-error-expected-type returns the expected type of the offending datum
+in the situation represented by the condition.
+
+Examples::
+..........
+
+      (defun fix-digits (condition)
+        (check-type condition type-error)
+        (let* ((digits '(zero one two three four
+                        five six seven eight nine))
+              (val (position (type-error-datum condition) digits)))
+          (if (and val (subtypep 'fixnum (type-error-expected-type condition)))
+              (store-value 7))))
+     
+      (defun foo (x)
+        (handler-bind ((type-error #'fix-digits))
+          (check-type x number)
+          (+ x 3)))
+     
+      (foo 'seven)
+     =>  10
+
+See Also::
+..........
+
+type-error, *Note Conditions::
+
+
+File: gcl.info,  Node: simple-type-error,  Prev: type-error-datum,  Up: Types and Classes Dictionary
+
+simple-type-error                                          [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+simple-type-error, simple-condition, type-error, error, serious-condition,
+condition, t
+
+Description::
+.............
+
+Conditions of type simple-type-error are like conditions of type
+type-error, except that they provide an alternate mechanism for specifying
+how the condition is to be reported; see the type simple-condition.
+
+See Also::
+..........
+
+simple-condition,
+
+*Note simple-condition-format-control; simple-condition-format-arguments::
+,
+
+simple-condition-format-arguments, *Note type-error-datum;
+type-error-expected-type:: , type-error-expected-type
+
+
+File: gcl.info,  Node: Data and Control Flow,  Next: Iteration,  Prev: Types and Classes,  Up: Top
+
+Data and Control Flow
+*********************
+
+* Menu:
+
+* Generalized Reference::
+* Transfer of Control to an Exit Point::
+* Data and Control Flow Dictionary::
+
+
+File: gcl.info,  Node: Generalized Reference,  Next: Transfer of Control to an Exit Point,  Prev: Data and Control Flow,  Up: Data and Control Flow
+
+Generalized Reference
+=====================
+
+* Menu:
+
+* Overview of Places and Generalized Reference::
+* Kinds of Places::
+* Treatment of Other Macros Based on SETF::
+
+
+File: gcl.info,  Node: Overview of Places and Generalized Reference,  Next: Kinds of Places,  Prev: Generalized Reference,  Up: Generalized Reference
+
+Overview of Places and Generalized Reference
+--------------------------------------------
+
+A generalized reference is the use of a form, sometimes called a place ,
+as if it were a variable that could be read and written.  The value of a
+place is the object to which the place form evaluates.  The value of a
+place can be changed by using setf.  The concept of binding a place is not
+defined in Common Lisp, but an implementation is permitted to extend the
+language by defining this concept.
+
+Figure 5-1 contains examples of the use of setf.  Note that the values
+returned by evaluating the forms in column two are not necessarily the
+same as those obtained by evaluating the forms in column three.  In
+general, the exact macro expansion of a setf form is not guaranteed and
+can even be implementation-dependent; all that is guaranteed is that the
+expansion is an update form that works for that particular implementation,
+that the left-to-right evaluation of subforms is preserved, and that the
+ultimate result of evaluating setf is the value or values being stored.
+
+  Access function   Update Function   Update using setf              
+  x                 (setq x datum)    (setf x datum)                 
+  (car x)           (rplaca x datum)  (setf (car x) datum)           
+  (symbol-value x)  (set x datum)     (setf (symbol-value x) datum)  
+
+                     Figure 5-1: Examples of setf                   
+
+
+Figure 5-2 shows operators relating to places and generalized reference.
+
+  assert                defsetf             push     
+  ccase                 get-setf-expansion  remf     
+  ctypecase             getf                rotatef  
+  decf                  incf                setf     
+  define-modify-macro   pop                 shiftf   
+  define-setf-expander  psetf                        
+
+  Figure 5-2: Operators relating to places and generalized reference.
+
+
+Some of the operators above manipulate places and some manipulate setf
+expanders.  A setf expansion can be derived from any place.
+
+New setf expanders can be defined by using defsetf and
+define-setf-expander.
+
+* Menu:
+
+* Evaluation of Subforms to Places::
+* Examples of Evaluation of Subforms to Places::
+* Setf Expansions::
+* Examples of Setf Expansions::
+
+
+File: gcl.info,  Node: Evaluation of Subforms to Places,  Next: Examples of Evaluation of Subforms to Places,  Prev: Overview of Places and Generalized Reference,  Up: Overview of Places and Generalized Reference
+
+Evaluation of Subforms to Places
+................................
+
+The following rules apply to the evaluation of subforms in a place:
+
+1.
+     The evaluation ordering of subforms within a place is determined by
+     the order specified by the second value returned by
+
+     get-setf-expansion.
+
+     For all places defined by this specification (e.g., getf, ldb, ...),
+     this order of evaluation is left-to-right.
+
+     When a place is derived from a macro expansion, this rule is applied
+     after the macro is expanded to find the appropriate place.
+
+     Places defined by using defmacro or
+
+     define-setf-expander
+
+     use the evaluation order defined by those definitions.  For example,
+     consider the following:
+
+           (defmacro wrong-order (x y) `(getf ,y ,x))
+
+     This following form evaluates place2 first and then place1 because
+     that is the order they are evaluated in the macro expansion:
+
+           (push value (wrong-order place1 place2))
+
+2.
+     For the macros that manipulate places (push, pushnew, remf, incf,
+     decf, shiftf, rotatef, psetf, setf, pop, and those defined by
+     define-modify-macro) the subforms of the macro call are evaluated
+     exactly once in left-to-right order, with the subforms of the places
+     evaluated in the order specified in (1).
+
+     push, pushnew, remf, incf, decf, shiftf, rotatef, psetf, pop evaluate
+     all subforms before modifying any of the place locations.  setf (in
+     the case when setf has more than two arguments) performs its
+     operation on each pair in sequence. For example, in
+
+           (setf place1 value1 place2 value2 ...)
+
+     the subforms of place1 and value1 are evaluated, the location
+     specified by place1 is modified to contain the value returned by
+     value1, and then the rest of the setf form is processed in a like
+     manner.
+
+3.
+     For check-type, ctypecase, and ccase, subforms of the place are
+     evaluated once as in (1), but might be evaluated again if the type
+     check fails in the case of check-type or none of the cases hold in
+     ctypecase and ccase.
+
+4.
+     For assert, the order of evaluation of the generalized references is
+     not specified.
+
+Rules 2, 3 and 4 cover all standardized macros that manipulate places.
+
+
+File: gcl.info,  Node: Examples of Evaluation of Subforms to Places,  Next: Setf Expansions,  Prev: Evaluation of Subforms to Places,  Up: Overview of Places and Generalized Reference
+
+Examples of Evaluation of Subforms to Places
+............................................
+
+      (let ((ref2 (list '())))
+        (push (progn (princ "1") 'ref-1)
+              (car (progn (princ "2") ref2))))
+      |>  12
+     =>  (REF1)
+     
+      (let (x)
+         (push (setq x (list 'a))
+               (car (setq x (list 'b))))
+          x)
+     =>  (((A) . B))
+
+push first evaluates (setq x (list 'a)) =>  (a), then evaluates (setq x
+(list 'b)) =>  (b), then modifies the car of this latest value to be ((a)
+. b).
+
+
+File: gcl.info,  Node: Setf Expansions,  Next: Examples of Setf Expansions,  Prev: Examples of Evaluation of Subforms to Places,  Up: Overview of Places and Generalized Reference
+
+Setf Expansions
+...............
+
+Sometimes it is possible to avoid evaluating subforms of a place multiple
+times or in the wrong order.  A
+
+setf expansion
+
+for a given access form can be expressed as an ordered collection of five
+objects:
+
+List of temporary variables
+     a list of symbols naming temporary variables to be bound
+     sequentially, as if by let*, to values resulting from value forms.
+
+List of value forms
+     a list of forms (typically, subforms of the place) which when
+     evaluated yield the values to which the corresponding temporary
+     variables should be bound.
+
+List of store variables
+     a list of symbols naming temporary store variables which are to hold
+     the new values that will be assigned to the place.
+
+Storing form
+     a form which can reference both the temporary and the store variables,
+     and which changes the value of the place and guarantees to return as
+     its values the values of the store variables, which are the correct
+     values for setf to return.
+
+Accessing form
+     a form which can reference the temporary variables, and which returns
+     the value of the place.
+
+The value returned by the accessing form is affected by execution of the
+storing form, but either of these forms might be evaluated any number of
+times.
+
+It is possible to do more than one setf in parallel via psetf, shiftf, and
+rotatef.  Because of this, the
+
+setf expander
+
+must produce new temporary and store variable names every time.  For
+examples of how to do this, see gensym.
+
+For each standardized accessor function F, unless it is explicitly
+documented otherwise, it is implementation-dependent whether the ability to
+use an F form as a setf place is implemented by a setf expander or a setf
+function.  Also, it follows from this that it is implementation-dependent
+whether the name (setf F) is fbound.
+
+
+File: gcl.info,  Node: Examples of Setf Expansions,  Prev: Setf Expansions,  Up: Overview of Places and Generalized Reference
+
+Examples of Setf Expansions
+...........................
+
+Examples of the contents of the constituents of setf expansions follow.
+
+For a variable x:
+
+  ()              ;list of temporary variables  
+  ()              ;list of value forms          
+  (g0001)         ;list of store variables      
+  (setq x g0001)  ;storing form                 
+  x               ;accessing form               
+
+  Figure 5-3: Sample Setf Expansion of a Variable
+
+
+For (car exp):
+
+  (g0002)                             ;list of temporary variables  
+  (exp)                               ;list of value forms          
+  (g0003)                             ;list of store variables      
+  (progn (rplaca g0002 g0003) g0003)  ;storing form                 
+  (car g0002)                         ;accessing form               
+
+           Figure 5-4: Sample Setf Expansion of a CAR Form         
+
+
+For (subseq seq s e):
+
+  (g0004 g0005 g0006)         ;list of temporary variables  
+  (seq s e)                   ;list of value forms          
+  (g0007)                     ;list of store variables      
+  (progn (replace g0004 g0007 :start1 g0005 :end1 g0006) g0007) 
+                              ;storing form                 
+  (subseq g0004 g0005 g0006)  ; accessing form              
+
+     Figure 5-5: Sample Setf Expansion of a SUBSEQ Form    
+
+
+In some cases, if a subform of a place is itself a place, it is necessary
+to expand the subform in order to compute some of the values in the
+expansion of the outer place.  For (ldb bs (car exp)):
+
+  (g0001 g0002)            ;list of temporary variables  
+  (bs exp)                 ;list of value forms          
+  (g0003)                  ;list of store variables      
+  (progn (rplaca g0002 (dpb g0003 g0001 (car g0002))) g0003) 
+                           ;storing form                 
+  (ldb g0001 (car g0002))  ; accessing form              
+
+     Figure 5-6: Sample Setf Expansion of a LDB Form    
+
+
+
+File: gcl.info,  Node: Kinds of Places,  Next: Treatment of Other Macros Based on SETF,  Prev: Overview of Places and Generalized Reference,  Up: Generalized Reference
+
+Kinds of Places
+---------------
+
+Several kinds of places are defined by Common Lisp; this section
+enumerates them.  This set can be extended by implementations and by
+programmer code.
+
+* Menu:
+
+* Variable Names as Places::
+* Function Call Forms as Places::
+* VALUES Forms as Places::
+* THE Forms as Places::
+* APPLY Forms as Places::
+* Setf Expansions and Places::
+* Macro Forms as Places::
+* Symbol Macros as Places::
+* Other Compound Forms as Places::
+
+
+File: gcl.info,  Node: Variable Names as Places,  Next: Function Call Forms as Places,  Prev: Kinds of Places,  Up: Kinds of Places
+
+Variable Names as Places
+........................
+
+The name of a lexical variable or dynamic variable can be used as a place.
+
+
+File: gcl.info,  Node: Function Call Forms as Places,  Next: VALUES Forms as Places,  Prev: Variable Names as Places,  Up: Kinds of Places
+
+Function Call Forms as Places
+.............................
+
+A function form can be used as a place if it falls into one of the
+following categories:
+
+*
+     A function call form whose first element is the name of any one of
+     the functions in Figure 5-7.
+
+     [Editorial Note by KMP: Note that what are in some places still
+     called `condition accessors' are deliberately omitted from this
+     table, and are not labeled as accessors in their entries.  I have not
+     yet had time to do a full search for these items and eliminate stray
+     references to them as `accessors', which they are not, but I will do
+     that at some point.]
+
+       aref    cdadr                    get                            
+       bit     cdar                     gethash                        
+       caaaar  cddaar                   logical-pathname-translations  
+       caaadr  cddadr                   macro-function                 
+       caaar   cddar                    ninth                          
+       caadar  cdddar                   nth                            
+       caaddr  cddddr                   readtable-case                 
+       caadr   cdddr                    rest                           
+       caar    cddr                     row-major-aref                 
+       cadaar  cdr                      sbit                           
+       cadadr  char                     schar                          
+       cadar   class-name               second                         
+       caddar  compiler-macro-function  seventh                        
+       cadddr  documentation            sixth                          
+       caddr   eighth                   slot-value                     
+       cadr    elt                      subseq                         
+       car     fdefinition              svref                          
+       cdaaar  fifth                    symbol-function                
+       cdaadr  fill-pointer             symbol-plist                   
+       cdaar   find-class               symbol-value                   
+       cdadar  first                    tenth                          
+       cdaddr  fourth                   third                          
+
+            Figure 5-7: Functions that setf can be used with--1      
+
+
+     In the case of subseq, the replacement value must be a sequence whose
+     elements might be contained by the sequence argument to subseq, but
+     does not have to be a sequence of the same type as the sequence of
+     which the subsequence is specified.  If the length of the replacement
+     value does not equal the length of the subsequence to be replaced,
+     then the shorter length determines the number of elements to be
+     stored, as for replace.
+
+*
+     A function call form whose first element is the name of a selector
+     function constructed by defstruct.
+
+     The function name must refer to the global function definition,
+     rather than a locally defined function.
+
+*
+     A function call form whose first element is the name of any one of
+     the functions in Figure 5-8, provided that the supplied argument to
+     that function is in turn a place form; in this case the new place has
+     stored back into it the result of applying the supplied "update"
+     function.
+
+       Function name  Argument that is a place  Update function used      
+       ldb            second                    dpb                       
+       mask-field     second                    deposit-field             
+       getf           first                     implementation-dependent  
+
+              Figure 5-8: Functions that setf can be used with--2       
+
+
+     During the setf expansion of these forms, it is necessary to call
+
+     get-setf-expansion
+
+     in order to figure out how the inner, nested generalized variable
+     must be treated.
+
+     The information from
+
+     get-setf-expansion
+
+     is used as follows.
+    ldb
+          In a form such as:
+
+          (setf (ldb byte-spec place-form) value-form)
+
+          the place referred to by the place-form must always be both read
+          and written;  note that the update is to the generalized variable
+          specified by place-form, not to any object of type integer.
+
+          Thus this setf should generate code to do the following:
+
+         1.
+               Evaluate byte-spec (and bind it into a temporary variable).
+
+         2.
+               Bind the temporary variables for place-form.
+
+         3.
+               Evaluate value-form  (and bind
+
+               its value or values into the store variable).
+
+         4.
+               Do the read from place-form.
+
+         5.
+               Do the write into place-form with the given bits of the
+               integer fetched in step 4 replaced with the value from step
+               3.
+
+          If the evaluation of value-form in step 3 alters what is found
+          in place-form, such as setting different bits of integer, then
+          the change of the bits denoted by byte-spec is to that altered
+          integer, because step 4 is done after the value-form evaluation.
+          Nevertheless, the evaluations required for binding the
+          temporary variables are done in steps 1 and 2, and thus the
+          expected left-to-right evaluation order is seen.  For example:
+
+                (setq integer #x69) =>  #x69
+                (rotatef (ldb (byte 4 4) integer)
+                         (ldb (byte 4 0) integer))
+                integer =>  #x96
+               ;;; This example is trying to swap two independent bit fields
+               ;;; in an integer.  Note that the generalized variable of
+               ;;; interest here is just the (possibly local) program variable
+               ;;; integer.
+
+    mask-field
+          This case is the same as ldb in all essential aspects.
+
+    getf
+          In a form such as:
+
+          (setf (getf place-form ind-form) value-form)
+
+          the place referred to by place-form must always be both read and
+          written;  note that the update is to the generalized variable
+          specified by place-form, not necessarily to the particular list
+          that is the property list in question.
+
+          Thus this setf should generate code to do the following:
+         1.
+               Bind the temporary variables for place-form.
+
+         2.
+               Evaluate ind-form (and bind it into a temporary variable).
+
+         3.
+               Evaluate value-form (and bind
+
+               its value or values into the store variable).
+
+         4.
+               Do the read from place-form.
+
+         5.
+               Do the write into place-form with a possibly-new property
+               list obtained by combining the values from steps 2, 3, and
+               4.  (Note that the phrase "possibly-new property list" can
+               mean that the former property list is somehow destructively
+               re-used, or it can mean partial or full copying of it.
+               Since either copying or destructive re-use can occur, the
+               treatment of the resultant value for the possibly-new
+               property list must proceed as if it were a different copy
+               needing to be stored back into the generalized variable.)
+
+          If the evaluation of value-form in step 3 alters what is found in
+          place-form, such as setting a different named property in the
+          list, then the change of the property denoted by ind-form is to
+          that altered list, because step 4 is done after the value-form
+          evaluation.  Nevertheless, the evaluations required for binding
+          the temporary variables  are done in steps 1 and 2,  and thus
+          the expected left-to-right evaluation order is seen.
+
+          For example:
+
+                (setq s (setq r (list (list 'a 1 'b 2 'c 3)))) =>  ((a 1 b 2 c 3))
+                (setf (getf (car r) 'b)
+                      (progn (setq r nil) 6)) =>  6
+                r =>  NIL
+                s =>  ((A 1 B 6 C 3))
+               ;;; Note that the (setq r nil) does not affect the actions of
+               ;;; the SETF because the value of R had already been saved in
+               ;;; a temporary variable as part of the step 1. Only the CAR
+               ;;; of this value will be retrieved, and subsequently modified
+               ;;; after the value computation.
+
+
+File: gcl.info,  Node: VALUES Forms as Places,  Next: THE Forms as Places,  Prev: Function Call Forms as Places,  Up: Kinds of Places
+
+VALUES Forms as Places
+......................
+
+A values form can be used as a place, provided that each of its subforms
+is also a place form.
+
+A form such as
+
+(setf (values place-1 \dots place-n) values-form)
+
+does the following:
+
+1.
+     The subforms of each nested place are evaluated in left-to-right
+     order.
+
+2.
+     The values-form is evaluated, and the first store variable from each
+     place is bound to its return values as if by multiple-value-bind.
+
+3.
+     If the setf expansion for any place involves more than one store
+     variable, then the additional store variables are bound to nil.
+
+4.
+     The storing forms for each place are evaluated in left-to-right order.
+
+The storing form in the setf expansion of values returns as multiple
+values_2 the values of the store variables in step 2.  That is, the number
+of values returned is the same as the number of place forms.  This may be
+more or fewer values than are produced by the values-form.
+
+
+File: gcl.info,  Node: THE Forms as Places,  Next: APPLY Forms as Places,  Prev: VALUES Forms as Places,  Up: Kinds of Places
+
+THE Forms as Places
+...................
+
+A the form can be used as a place, in which case the declaration is
+transferred to the newvalue form, and the resulting setf is analyzed.  For
+example,
+
+      (setf (the integer (cadr x)) (+ y 3))
+
+is processed as if it were
+
+      (setf (cadr x) (the integer (+ y 3)))
+
+
+File: gcl.info,  Node: APPLY Forms as Places,  Next: Setf Expansions and Places,  Prev: THE Forms as Places,  Up: Kinds of Places
+
+APPLY Forms as Places
+.....................
+
+The following situations involving setf of apply must be supported:
+
+*
+     (setf (apply #'aref array {subscript}* more-subscripts) new-element)
+
+*
+     (setf (apply #'bit array {subscript}* more-subscripts) new-element)
+
+*
+     (setf (apply #'sbit array {subscript}* more-subscripts) new-element)
+
+In all three cases, the element of array designated by the concatenation
+of subscripts and more-subscripts (i.e., the same element which would be
+read by the call to apply if it were not part of a setf form) is changed
+to have the value given by new-element.
+
+For these usages, the function name (aref, bit, or sbit) must refer to the
+global function definition, rather than a locally defined function.
+
+No other standardized function is required to be supported, but an
+implementation may define such support.  An implementation may also define
+support for implementation-defined operators.
+
+If a user-defined function is used in this context, the following
+equivalence is true, except that care is taken to preserve proper
+left-to-right evaluation of argument subforms:
+
+      (setf (apply #'name {arg}*) val)
+      == (apply #'(setf name) val {arg}*)
+
+
+File: gcl.info,  Node: Setf Expansions and Places,  Next: Macro Forms as Places,  Prev: APPLY Forms as Places,  Up: Kinds of Places
+
+Setf Expansions and Places
+..........................
+
+Any compound form for which the operator has a
+
+setf expander
+
+defined can be used as a place.
+
+The operator must refer to the global function definition, rather than a
+locally defined function or macro.
+

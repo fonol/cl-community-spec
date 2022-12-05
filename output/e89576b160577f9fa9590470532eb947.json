@@ -1,0 +1,57 @@
+{
+    "name": "upgraded-array-element-type",
+    "prev": "row-major-aref",
+    "next": "array-dimension-limit",
+    "up": "Arrays Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "upgraded-array-element-type"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "upgraded-array-element-type",
+                    "text": " typespec &optional environment =>upgraded-typespec\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "typespec",
+                    "desc": "a type specifier."
+                },
+                {
+                    "name": "environment",
+                    "desc": "an environment object.  The default is nil, denoting the null"
+                },
+                {
+                    "name": "environment",
+                    "desc": "an environment object.  The default is nil, denoting the nulllexical environment and the current global environment.\n"
+                },
+                {
+                    "name": "upgraded-typespec",
+                    "desc": "a type specifier."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns the element type of the most specialized array representation\ncapable of holding items of the type denoted by typespec.\nThe typespec is a subtype of (and possibly type equivalent to) the\nupgraded-typespec.\nIf typespec is bit, the result is type equivalent to bit.\nIf typespec is base-char, the result is type equivalent to base-char.\nIf typespec is character, the result is type equivalent to character.\nThe purpose of upgraded-array-element-type is to reveal how an\nimplementation does its upgrading.\nThe environment is used to expand any derived type specifiers that are\nmentioned in the typespec.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note array-element-type:: , *Note make-array::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Except for storage allocation consequences and dealing correctly with the\noptional environment argument, upgraded-array-element-type could be\ndefined as:\n      (defun upgraded-array-element-type (type &optional environment)\n        (array-element-type (make-array 0 :element-type type)))\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: upgraded-array-element-type,  Next: array-dimension-limit,  Prev: row-major-aref,  Up: Arrays Dictionary\n\nupgraded-array-element-type                                      [Function]\n---------------------------------------------------------------------------\n\n`upgraded-array-element-type'  typespec &optional environment =>\nupgraded-typespec\n\nArguments and Values::\n......................\n\ntypespec--a type specifier.\n\nenvironment--an environment object.  The default is nil, denoting the null\nlexical environment and the current global environment.\n\nupgraded-typespec--a type specifier.\n\nDescription::\n.............\n\nReturns the element type of the most specialized array representation\ncapable of holding items of the type denoted by typespec.\n\nThe typespec is a subtype of (and possibly type equivalent to) the\nupgraded-typespec.\n\nIf typespec is bit, the result is type equivalent to bit.\n\nIf typespec is base-char, the result is type equivalent to base-char.\n\nIf typespec is character, the result is type equivalent to character.\n\nThe purpose of upgraded-array-element-type is to reveal how an\nimplementation does its upgrading.\n\nThe environment is used to expand any derived type specifiers that are\nmentioned in the typespec.\n\nSee Also::\n..........\n\n*Note array-element-type:: , *Note make-array::\n\nNotes::\n.......\n\nExcept for storage allocation consequences and dealing correctly with the\noptional environment argument, upgraded-array-element-type could be\ndefined as:\n\n      (defun upgraded-array-element-type (type &optional environment)\n        (array-element-type (make-array 0 :element-type type)))\n\n"
+}

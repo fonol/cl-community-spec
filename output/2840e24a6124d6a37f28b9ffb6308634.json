@@ -1,0 +1,21 @@
+{
+    "name": "Other Compound Forms as Places",
+    "prev": "Symbol Macros as Places",
+    "next": null,
+    "up": "Kinds of Places",
+    "header": {
+        "type": null,
+        "text": null
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Other Compound Forms as Places",
+            "text": "For any other compound form for which the operator is a symbol f, the setf\nform expands into a call to the function named (setf f).  The first\nargument in the newly constructed function form is newvalue and the\nremaining arguments are the remaining elements of place.  This expansion\noccurs regardless of whether f or (setf f) is defined as a function\nlocally, globally, or not at all.  For example,\n(setf (f arg1 arg2 ...) new-value)\nexpands into a form with the same effect and value as\n      (let ((#:temp-1 arg1)          ;force correct order of evaluation\n            (#:temp-2 arg2)\n            ...\n            (#:temp-0 new-value))\n        (funcall (function (setf f)) #:temp-0 #:temp-1 #:temp-2...))\nA function named (setf f) must return its first argument as its only value\nin order to preserve the semantics of setf.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: Other Compound Forms as Places,  Prev: Symbol Macros as Places,  Up: Kinds of Places\n\nOther Compound Forms as Places\n..............................\n\nFor any other compound form for which the operator is a symbol f, the setf\nform expands into a call to the function named (setf f).  The first\nargument in the newly constructed function form is newvalue and the\nremaining arguments are the remaining elements of place.  This expansion\noccurs regardless of whether f or (setf f) is defined as a function\nlocally, globally, or not at all.  For example,\n\n(setf (f arg1 arg2 ...) new-value)\n\nexpands into a form with the same effect and value as\n\n      (let ((#:temp-1 arg1)          ;force correct order of evaluation\n            (#:temp-2 arg2)\n            ...\n            (#:temp-0 new-value))\n        (funcall (function (setf f)) #:temp-0 #:temp-1 #:temp-2...))\n\nA function named (setf f) must return its first argument as its only value\nin order to preserve the semantics of setf.\n\n"
+}

@@ -1,0 +1,49 @@
+{
+    "name": "rotatef",
+    "prev": "shiftf",
+    "next": "control-error",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "rotatef"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "rotatef",
+                    "text": " {place}* =>  nil\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "place",
+                    "desc": "a place."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "rotatef modifies the values of each place by rotating values from one\nplace into another.\nIf a place produces more values than there are store variables, the extra\nvalues are ignored. If a place produces fewer values than there are store\nvariables, the missing values are set to nil.\nIn the form (rotatef place1 place2 ... placen), the values in place1\nthrough placen are read and written.  Values 2 through n and value 1 are\nthen stored into place1 through placen.  It is as if all the places form\nan end-around shift register that is rotated one place to the left, with\nthe value of place1 being shifted around the end to placen.\nFor information about the evaluation of subforms of places, see *Note\nEvaluation of Subforms to Places::.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (let ((n 0)\n             (x (list 'a 'b 'c 'd 'e 'f 'g)))\n         (rotatef (nth (incf n) x)\n                  (nth (incf n) x)\n                  (nth (incf n) x))\n         x) =>  (A C D B E F G)\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note define-setf-expander:: , *Note defsetf:: , *Note setf; psetf:: ,\n*Note shiftf:: , *macroexpand-hook*, *Note Generalized Reference::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The effect of (rotatef place1 place2 ... placen) is roughly equivalent to\n      (psetf place1 place2\n             place2 place3\n             ...\n             placen place1)\nexcept that the latter would evaluate any subforms of each place twice,\nwhereas rotatef evaluates them once.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: rotatef,  Next: control-error,  Prev: shiftf,  Up: Data and Control Flow Dictionary\n\nrotatef                                                             [Macro]\n---------------------------------------------------------------------------\n\n`rotatef'  {place}* =>  nil\n\nArguments and Values::\n......................\n\nplace--a place.\n\nDescription::\n.............\n\nrotatef modifies the values of each place by rotating values from one\nplace into another.\n\nIf a place produces more values than there are store variables, the extra\nvalues are ignored. If a place produces fewer values than there are store\nvariables, the missing values are set to nil.\n\nIn the form (rotatef place1 place2 ... placen), the values in place1\nthrough placen are read and written.  Values 2 through n and value 1 are\nthen stored into place1 through placen.  It is as if all the places form\nan end-around shift register that is rotated one place to the left, with\nthe value of place1 being shifted around the end to placen.\n\nFor information about the evaluation of subforms of places, see *Note\nEvaluation of Subforms to Places::.\n\nExamples::\n..........\n\n      (let ((n 0)\n             (x (list 'a 'b 'c 'd 'e 'f 'g)))\n         (rotatef (nth (incf n) x)\n                  (nth (incf n) x)\n                  (nth (incf n) x))\n         x) =>  (A C D B E F G)\n\nSee Also::\n..........\n\n*Note define-setf-expander:: , *Note defsetf:: , *Note setf; psetf:: ,\n*Note shiftf:: , *macroexpand-hook*, *Note Generalized Reference::\n\nNotes::\n.......\n\nThe effect of (rotatef place1 place2 ... placen) is roughly equivalent to\n\n      (psetf place1 place2\n             place2 place3\n             ...\n             placen place1)\n\nexcept that the latter would evaluate any subforms of each place twice,\nwhereas rotatef evaluates them once.\n\n"
+}

@@ -1,0 +1,73 @@
+{
+    "name": "merge",
+    "prev": "concatenate",
+    "next": "remove",
+    "up": "Sequences Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "merge"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "merge",
+                    "text": " result-type sequence-1 sequence-2 predicate &key key =>result-sequence\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "result-type",
+                    "desc": "a sequence type specifier."
+                },
+                {
+                    "name": "sequence-1",
+                    "desc": "a sequence."
+                },
+                {
+                    "name": "sequence-2",
+                    "desc": "a sequence."
+                },
+                {
+                    "name": "predicate",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "predicate",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "result-sequence",
+                    "desc": "a proper sequence of type result-type."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Destructively merges sequence-1 with sequence-2 according to an order\ndetermined by the predicate.  merge determines the relationship between\ntwo elements by giving keys extracted from the sequence elements to the\npredicate.\nThe first argument to the predicate function is an element of sequence-1\nas returned by the key (if supplied); the second argument is an element of\nsequence-2 as returned by the key (if supplied).  Predicate should return\ntrue if and only if its first argument is strictly less than the second\n(in some appropriate sense).  If the first argument is greater than or\nequal to the second (in the appropriate sense), then predicate should\nreturn false.  merge considers two elements x and y to be equal if\n(funcall predicate x y) and (funcall predicate y x) both yield false.\nThe argument to the key is the sequence element.  Typically, the return\nvalue of the key becomes the argument to predicate.  If key is not\nsupplied or nil, the sequence element itself is used.  The key may be\nexecuted more than once for each sequence element, and its side effects\nmay occur in any order.\nIf key and predicate return, then the merging operation will terminate.\nThe result of merging two sequences x and y is a new sequence of type\nresult-type z, such that the length of z is the sum of the lengths of x\nand y, and z contains all the elements of x and y.  If x1 and x2 are two\nelements of x, and x1 precedes x2 in x, then x1 precedes x2 in z, and\nsimilarly for elements of y.  In short, z is an interleaving of x and y.\nIf x and y were correctly sorted according to the predicate, then z will\nalso be correctly sorted.  If x or y is not so sorted, then z will not be\nsorted, but will nevertheless be an interleaving of x and y.\nThe merging operation is guaranteed stable; if two or more elements are\nconsidered equal by the predicate, then the elements from sequence-1 will\nprecede those from sequence-2 in the result.\nsequence-1 and/or sequence-2 may be destroyed.\nIf the result-type is a subtype of list, the result will be a list.\nIf the result-type is a subtype of vector, then if the implementation can\ndetermine the element type specified for the result-type, the element type\nof the resulting array is the result of upgrading that element type; or,\nif the implementation can determine that the element type is unspecified\n(or *), the element type of the resulting array is t; otherwise, an error\nis signaled.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq test1 (list 1 3 4 6 7))\n      (setq test2 (list 2 5 8))\n      (merge 'list test1 test2 #'<) =>  (1 2 3 4 5 6 7 8)\n      (setq test1 (copy-seq \"BOY\"))\n      (setq test2 (copy-seq :nosy\"))\n      (merge 'string test1 test2 #'char-lessp) =>  \"BnOosYy\"\n      (setq test1 (vector ((red . 1) (blue . 4))))\n      (setq test2 (vector ((yellow . 2) (green . 7))))\n      (merge 'vector test1 test2 #'< :key #'cdr)\n     =>  #((RED . 1) (YELLOW . 2) (BLUE . 4) (GREEN . 7))\n      (merge '(vector * 4) '(1 5) '(2 4 6) #'<) should signal an error\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "An error must be signaled if the result-type is neither a recognizable\nsubtype of list, nor a recognizable subtype of vector.\nAn error of type type-error should be signaled if result-type specifies\nthe number of elements and the sum of the lengths of sequence-1 and\nsequence-2 is different from that number.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note sort; stable-sort:: , stable-sort,\n*Note Compiler Terminology::,\n*Note Traversal Rules and Side Effects::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: merge,  Next: remove,  Prev: concatenate,  Up: Sequences Dictionary\n\nmerge                                                            [Function]\n---------------------------------------------------------------------------\n\n`merge'  result-type sequence-1 sequence-2 predicate &key key =>\nresult-sequence\n\nArguments and Values::\n......................\n\nresult-type--a sequence type specifier.\n\nsequence-1--a sequence.\n\nsequence-2--a sequence.\n\npredicate--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nkey--a designator for a function of one argument, or nil.\n\nresult-sequence--a proper sequence of type result-type.\n\nDescription::\n.............\n\nDestructively merges sequence-1 with sequence-2 according to an order\ndetermined by the predicate.  merge determines the relationship between\ntwo elements by giving keys extracted from the sequence elements to the\npredicate.\n\nThe first argument to the predicate function is an element of sequence-1\nas returned by the key (if supplied); the second argument is an element of\nsequence-2 as returned by the key (if supplied).  Predicate should return\ntrue if and only if its first argument is strictly less than the second\n(in some appropriate sense).  If the first argument is greater than or\nequal to the second (in the appropriate sense), then predicate should\nreturn false.  merge considers two elements x and y to be equal if\n(funcall predicate x y) and (funcall predicate y x) both yield false.\n\nThe argument to the key is the sequence element.  Typically, the return\nvalue of the key becomes the argument to predicate.  If key is not\nsupplied or nil, the sequence element itself is used.  The key may be\nexecuted more than once for each sequence element, and its side effects\nmay occur in any order.\n\nIf key and predicate return, then the merging operation will terminate.\nThe result of merging two sequences x and y is a new sequence of type\nresult-type z, such that the length of z is the sum of the lengths of x\nand y, and z contains all the elements of x and y.  If x1 and x2 are two\nelements of x, and x1 precedes x2 in x, then x1 precedes x2 in z, and\nsimilarly for elements of y.  In short, z is an interleaving of x and y.\n\nIf x and y were correctly sorted according to the predicate, then z will\nalso be correctly sorted.  If x or y is not so sorted, then z will not be\nsorted, but will nevertheless be an interleaving of x and y.\n\nThe merging operation is guaranteed stable; if two or more elements are\nconsidered equal by the predicate, then the elements from sequence-1 will\nprecede those from sequence-2 in the result.\n\nsequence-1 and/or sequence-2 may be destroyed.\n\nIf the result-type is a subtype of list, the result will be a list.\n\nIf the result-type is a subtype of vector, then if the implementation can\ndetermine the element type specified for the result-type, the element type\nof the resulting array is the result of upgrading that element type; or,\nif the implementation can determine that the element type is unspecified\n(or *), the element type of the resulting array is t; otherwise, an error\nis signaled.\n\nExamples::\n..........\n\n      (setq test1 (list 1 3 4 6 7))\n      (setq test2 (list 2 5 8))\n      (merge 'list test1 test2 #'<) =>  (1 2 3 4 5 6 7 8)\n      (setq test1 (copy-seq \"BOY\"))\n      (setq test2 (copy-seq :nosy\"))\n      (merge 'string test1 test2 #'char-lessp) =>  \"BnOosYy\"\n      (setq test1 (vector ((red . 1) (blue . 4))))\n      (setq test2 (vector ((yellow . 2) (green . 7))))\n      (merge 'vector test1 test2 #'< :key #'cdr)\n     =>  #((RED . 1) (YELLOW . 2) (BLUE . 4) (GREEN . 7))\n\n      (merge '(vector * 4) '(1 5) '(2 4 6) #'<) should signal an error\n\nExceptional Situations::\n........................\n\nAn error must be signaled if the result-type is neither a recognizable\nsubtype of list, nor a recognizable subtype of vector.\n\nAn error of type type-error should be signaled if result-type specifies\nthe number of elements and the sum of the lengths of sequence-1 and\nsequence-2 is different from that number.\n\nSee Also::\n..........\n\n*Note sort; stable-sort:: , stable-sort,\n\n*Note Compiler Terminology::,\n\n*Note Traversal Rules and Side Effects::\n\n"
+}

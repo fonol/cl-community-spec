@@ -1,0 +1,75 @@
+{
+    "name": "change-class",
+    "prev": "update-instance-for-redefined-class",
+    "next": "slot-boundp",
+    "up": "Objects Dictionary",
+    "header": {
+        "type": "Standard Generic Function",
+        "text": "change-class"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "change-class",
+                    "text": " instance new-class &key &allow-other-keys =>  instance\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "change-class",
+                    "text": " (instance standard-object) (new-class standard-class)&rest initargs\n\n"
+                },
+                {
+                    "name": "change-class",
+                    "text": " (instance t) (new-class symbol) &rest initargs\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "instance",
+                    "desc": "an object."
+                },
+                {
+                    "name": "new-class",
+                    "desc": "a class designator."
+                },
+                {
+                    "name": "initargs",
+                    "desc": "an initialization argument list."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "The generic function change-class changes the class of an instance to\nnew-class.  It destructively modifies and returns the instance.\nIf in the old class there is any slot of the same name as a local slot in\nthe new-class, the value of that slot is retained.  This means that if the\nslot has a value, the value returned by slot-value after change-class is\ninvoked is eql to the value returned by slot-value before change-class is\ninvoked.  Similarly, if the slot was unbound, it remains unbound.  The\nother slots are initialized as described in *Note Changing the Class of an\nInstance::.\nAfter completing all other actions, change-class invokes\nupdate-instance-for-different-class.  The generic function\nupdate-instance-for-different-class can be used to assign values to slots\nin the transformed instance.\nSee *Note Initializing Newly Added Local Slots::.\nIf the second of the above methods is selected, that method invokes\nchange-class on instance, (find-class new-class), and the initargs.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defclass position () ())\n      (defclass x-y-position (position)\n          ((x :initform 0 :initarg :x)\n           (y :initform 0 :initarg :y)))\n      (defclass rho-theta-position (position)\n          ((rho :initform 0)\n           (theta :initform 0)))\n      (defmethod update-instance-for-different-class :before ((old x-y-position)\n                                                              (new rho-theta-position)\n                                                              &key)\n        ;; Copy the position information from old to new to make new\n        ;; be a rho-theta-position at the same position as old.\n        (let ((x (slot-value old 'x))\n              (y (slot-value old 'y)))\n          (setf (slot-value new 'rho) (sqrt (+ (* x x) (* y y)))\n                (slot-value new 'theta) (atan y x))))\n     ;;; At this point an instance of the class x-y-position can be\n     ;;; changed to be an instance of the class rho-theta-position using\n     ;;; change-class:\n      (setq p1 (make-instance 'x-y-position :x 2 :y 0))\n      (change-class p1 'rho-theta-position)\n     ;;; The result is that the instance bound to p1 is now an instance of\n     ;;; the class rho-theta-position.   The update-instance-for-different-class\n     ;;; method performed the initialization of the rho and theta slots based\n     ;;; on the value of the x and y slots, which were maintained by\n     ;;; the old instance.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note update-instance-for-different-class:: , *Note Changing the Class of\nan Instance::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The generic function change-class has several semantic difficulties.\nFirst, it performs a destructive operation that can be invoked within a\nmethod on an instance that was used to select that method.  When multiple\nmethods are involved because methods are being combined, the methods\ncurrently executing or about to be executed may no longer be applicable.\nSecond, some implementations might use compiler optimizations of slot\naccess, and when the class of an instance is changed the assumptions the\ncompiler made might be violated.  This implies that a programmer must not\nuse change-class inside a method if any methods for that generic function\naccess any slots, or the results are undefined.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: change-class,  Next: slot-boundp,  Prev: update-instance-for-redefined-class,  Up: Objects Dictionary\n\nchange-class                                    [Standard Generic Function]\n---------------------------------------------------------------------------\n\nSyntax::\n........\n\n`change-class'  instance new-class &key &allow-other-keys =>  instance\n\nMethod Signatures::\n...................\n\n`change-class'  (instance standard-object) (new-class standard-class)\n&rest initargs\n\n`change-class'  (instance t) (new-class symbol) &rest initargs\n\nArguments and Values::\n......................\n\ninstance--an object.\n\nnew-class--a class designator.\n\ninitargs--an initialization argument list.\n\nDescription::\n.............\n\nThe generic function change-class changes the class of an instance to\nnew-class.  It destructively modifies and returns the instance.\n\nIf in the old class there is any slot of the same name as a local slot in\nthe new-class, the value of that slot is retained.  This means that if the\nslot has a value, the value returned by slot-value after change-class is\ninvoked is eql to the value returned by slot-value before change-class is\ninvoked.  Similarly, if the slot was unbound, it remains unbound.  The\nother slots are initialized as described in *Note Changing the Class of an\nInstance::.\n\nAfter completing all other actions, change-class invokes\nupdate-instance-for-different-class.  The generic function\nupdate-instance-for-different-class can be used to assign values to slots\nin the transformed instance.\n\nSee *Note Initializing Newly Added Local Slots::.\n\nIf the second of the above methods is selected, that method invokes\nchange-class on instance, (find-class new-class), and the initargs.\n\nExamples::\n..........\n\n\n      (defclass position () ())\n     \n      (defclass x-y-position (position)\n          ((x :initform 0 :initarg :x)\n           (y :initform 0 :initarg :y)))\n     \n      (defclass rho-theta-position (position)\n          ((rho :initform 0)\n           (theta :initform 0)))\n     \n      (defmethod update-instance-for-different-class :before ((old x-y-position)\n                                                              (new rho-theta-position)\n                                                              &key)\n        ;; Copy the position information from old to new to make new\n        ;; be a rho-theta-position at the same position as old.\n        (let ((x (slot-value old 'x))\n              (y (slot-value old 'y)))\n          (setf (slot-value new 'rho) (sqrt (+ (* x x) (* y y)))\n                (slot-value new 'theta) (atan y x))))\n     \n     ;;; At this point an instance of the class x-y-position can be\n     ;;; changed to be an instance of the class rho-theta-position using\n     ;;; change-class:\n     \n      (setq p1 (make-instance 'x-y-position :x 2 :y 0))\n     \n      (change-class p1 'rho-theta-position)\n     \n     ;;; The result is that the instance bound to p1 is now an instance of\n     ;;; the class rho-theta-position.   The update-instance-for-different-class\n     ;;; method performed the initialization of the rho and theta slots based\n     ;;; on the value of the x and y slots, which were maintained by\n     ;;; the old instance.\n\nSee Also::\n..........\n\n*Note update-instance-for-different-class:: , *Note Changing the Class of\nan Instance::\n\nNotes::\n.......\n\nThe generic function change-class has several semantic difficulties.\nFirst, it performs a destructive operation that can be invoked within a\nmethod on an instance that was used to select that method.  When multiple\nmethods are involved because methods are being combined, the methods\ncurrently executing or about to be executed may no longer be applicable.\nSecond, some implementations might use compiler optimizations of slot\naccess, and when the class of an instance is changed the assumptions the\ncompiler made might be violated.  This implies that a programmer must not\nuse change-class inside a method if any methods for that generic function\naccess any slots, or the results are undefined.\n\n"
+}

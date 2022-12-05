@@ -1,0 +1,1338 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: type,  Next: inline,  Prev: dynamic-extent,  Up: Evaluation and Compilation Dictionary
+
+type                                                          [Declaration]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+(type typespec {var}*)
+
+(typespec {var}*)
+
+Arguments::
+...........
+
+typespec--a type specifier.
+
+var--a variable name.
+
+Valid Context::
+...............
+
+declaration or proclamation
+
+Binding Types Affected::
+........................
+
+variable
+
+Description::
+.............
+
+Affects only variable bindings and specifies that the vars take on values
+only of the specified typespec.  In particular, values assigned to the
+variables by setq, as well as the initial values of the vars must be of
+the specified typespec.  type declarations never apply to function
+bindings (see ftype).
+
+A type declaration of a symbol defined by symbol-macrolet is equivalent to
+wrapping a the expression around the expansion of that symbol,
+
+although the symbol's macro expansion is not actually affected.
+
+The meaning of a type declaration is equivalent to changing each reference
+to a variable (var) within the scope of the declaration to (the typespec
+var), changing each expression assigned to the variable (new-value) within
+the scope of the declaration to (the typespec new-value), and executing
+(the typespec var) at the moment the scope of the declaration is entered.
+
+A type declaration is valid in all declarations. The interpretation of a
+type declaration is as follows:
+1.
+     During the execution of any reference to the declared variable within
+     the scope of the declaration, the consequences are undefined if the
+     value of the declared variable is not of the declared type.
+
+2.
+     During the execution of any setq of the declared variable within the
+     scope of the declaration, the consequences are undefined if the newly
+     assigned value of the declared variable is not of the declared type.
+
+3.
+     At the moment the scope of the declaration is entered, the
+     consequences are undefined if the value of the declared variable is
+     not of the declared type.
+
+A type declaration affects only variable references within its scope.
+
+If nested type declarations refer to the same variable, then the value of
+the variable must be a member of the intersection of the declared types.
+
+If there is a local type declaration for a dynamic variable, and there is
+also a global type proclamation for that same variable, then the value of
+the variable within the scope of the local declaration must be a member of
+the intersection of the two declared types.
+
+type declarations can  be free declarations or bound declarations.
+
+A symbol cannot be both the name of a type and the name of a declaration.
+Defining a symbol as the name of a class, structure, condition, or type,
+when the symbol has been declared as a declaration name, or vice versa,
+signals an error.
+
+Within the lexical scope of an array type declaration, all references to
+array elements are assumed to satisfy the expressed array element type (as
+opposed to the upgraded array element type).  A compiler can treat the
+code within the scope of the array type declaration as if each access of
+an array element were surrounded by an appropriate the form.
+
+Examples::
+..........
+
+      (defun f (x y)
+        (declare (type fixnum x y))
+        (let ((z (+ x y)))
+          (declare (type fixnum z))
+          z)) =>  F
+      (f 1 2) =>  3
+      ;; The previous definition of F is equivalent to
+      (defun f (x y)
+        ;; This declaration is a shorthand form of the TYPE declaration
+        (declare (fixnum x y))
+        ;; To declare the type of a return value, it's not necessary to
+        ;; create a named variable.  A THE special form can be used instead.
+        (the fixnum (+ x y))) =>  F
+      (f 1 2) =>  3
+
+      (defvar *one-array* (make-array 10 :element-type '(signed-byte 5)))
+      (defvar *another-array* (make-array 10 :element-type '(signed-byte 8)))
+     
+      (defun frob (an-array)
+        (declare (type (array (signed-byte 5) 1) an-array))
+        (setf (aref an-array 1) 31)
+        (setf (aref an-array 2) 127)
+        (setf (aref an-array 3) (* 2 (aref an-array 3)))
+        (let ((foo 0))
+          (declare (type (signed-byte 5) foo))
+          (setf foo (aref an-array 0))))
+     
+      (frob *one-array*)
+      (frob *another-array*)
+
+The above definition of frob is equivalent to:
+
+      (defun frob (an-array)
+        (setf (the (signed-byte 5) (aref an-array 1)) 31)
+        (setf (the (signed-byte 5) (aref an-array 2)) 127)
+        (setf (the (signed-byte 5) (aref an-array 3))
+              (* 2 (the (signed-byte 5) (aref an-array 3))))
+        (let ((foo 0))
+          (declare (type (signed-byte 5) foo))
+          (setf foo (the (signed-byte 5) (aref an-array 0)))))
+
+Given an implementation in which fixnums are 29 bits but fixnum arrays are
+upgraded to signed 32-bit arrays, the following could be compiled with all
+fixnum arithmetic:
+
+      (defun bump-counters (counters)
+        (declare (type (array fixnum *) bump-counters))
+        (dotimes (i (length counters))
+          (incf (aref counters i))))
+
+See Also::
+..........
+
+declare, *Note declaim:: , *Note proclaim::
+
+Notes::
+.......
+
+(typespec {var}*) is an abbreviation for (type typespec {var}*).
+
+A type declaration for the arguments to a function does not necessarily
+imply anything about the type of the result.  The following function is
+not permitted to be compiled using implementation-dependent fixnum-only
+arithmetic:
+
+      (defun f (x y) (declare (fixnum x y)) (+ x y))
+
+To see why, consider (f most-positive-fixnum 1).  Common Lisp defines that
+F must return a bignum here, rather than signal an error or produce a
+mathematically incorrect result.  If you have special knowledge such
+"fixnum overflow" cases will not come up, you can declare the result value
+to be in the fixnum range, enabling some compilers to use more efficient
+arithmetic:
+
+      (defun f (x y)
+        (declare (fixnum x y))
+        (the fixnum (+ x y)))
+
+Note, however, that in the three-argument case, because of the possibility
+of an implicit intermediate value growing too large, the following will not
+cause implementation-dependent fixnum-only arithmetic to be used:
+
+      (defun f (x y)
+        (declare (fixnum x y z))
+        (the fixnum (+ x y z)))
+
+To see why, consider (f most-positive-fixnum 1 -1).  Although the
+arguments and the result are all fixnums, an intermediate value is not a
+fixnum.  If it is important that implementation-dependent fixnum-only
+arithmetic be selected in implementations that provide it, consider
+writing something like this instead:
+
+      (defun f (x y)
+        (declare (fixnum x y z))
+        (the fixnum (+ (the fixnum (+ x y)) z)))
+
+
+File: gcl.info,  Node: inline,  Next: ftype,  Prev: type,  Up: Evaluation and Compilation Dictionary
+
+inline, notinline                                             [Declaration]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+(inline {function-name}*)
+
+(notinline {function-name}*)
+
+Arguments::
+...........
+
+function-name--a function name.
+
+Valid Context::
+...............
+
+declaration or proclamation
+
+Binding Types Affected::
+........................
+
+function
+
+Description::
+.............
+
+inline specifies that it is desirable for the compiler to produce inline
+calls to the functions named by function-names; that is, the code for a
+specified function-name
+
+should be integrated into the calling routine, appearing "in line" in
+place of a procedure call.  A compiler is free to ignore this declaration.
+inline declarations never apply to variable bindings.
+
+If one of the functions mentioned has a lexically apparent local definition
+(as made by flet or labels), then the declaration applies to that local
+definition and not to the global function definition.
+
+While no conforming implementation is required to perform inline expansion
+of user-defined functions, those implementations that do attempt to
+recognize the following paradigm:
+
+To define a function f that is not inline by default but for which
+(declare (inline f)) will make f be locally inlined, the proper definition
+sequence is:
+
+      (declaim (inline f))
+      (defun f ...)
+      (declaim (notinline f))
+
+The inline proclamation preceding the defun form ensures that the compiler
+has the opportunity save the information necessary for inline expansion,
+and the notinline proclamation following the defun form prevents f from
+being expanded inline everywhere.
+
+notinline specifies that it is
+
+undesirable to compile the functions named by function-names in-line.  A
+compiler is not free to ignore this declaration; calls to the specified
+functions must be implemented as out-of-line subroutine calls.
+
+If one of the functions mentioned has a lexically apparent local definition
+(as made by flet or labels), then the declaration applies to that local
+definition and not to the global function definition.
+
+In the presence of a compiler macro definition for function-name, a
+notinline declaration prevents that
+
+compiler macro from being used.
+
+An inline declaration may be used to encourage use of compiler macro
+definitions.  inline and notinline declarations otherwise have no effect
+when the lexically visible definition of function-name is a macro
+definition.
+
+inline and notinline declarations can be free declarations or bound
+declarations.  inline and notinline declarations of functions that appear
+before the body of a flet or  labels
+
+form that defines that function are bound declarations.  Such declarations
+in other contexts are free declarations.
+
+Examples::
+..........
+
+      ;; The globally defined function DISPATCH should be open-coded,
+      ;; if the implementation supports inlining, unless a NOTINLINE
+      ;; declaration overrides this effect.
+      (declaim (inline dispatch))
+      (defun dispatch (x) (funcall (get (car x) 'dispatch) x))
+      ;; Here is an example where inlining would be encouraged.
+      (defun top-level-1 () (dispatch (read-command)))
+      ;; Here is an example where inlining would be prohibited.
+      (defun top-level-2 ()
+        (declare (notinline dispatch))
+        (dispatch (read-command)))
+      ;; Here is an example where inlining would be prohibited.
+      (declaim (notinline dispatch))
+      (defun top-level-3 () (dispatch (read-command)))
+      ;; Here is an example where inlining would be encouraged.
+      (defun top-level-4 ()
+        (declare (inline dispatch))
+        (dispatch (read-command)))
+
+See Also::
+..........
+
+declare, *Note declaim:: , *Note proclaim::
+
+
+File: gcl.info,  Node: ftype,  Next: declaration,  Prev: inline,  Up: Evaluation and Compilation Dictionary
+
+ftype                                                         [Declaration]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+(ftype type {function-name}*)
+
+Arguments::
+...........
+
+function-name--a function name.
+
+type--a type specifier.
+
+Valid Context::
+...............
+
+declaration or proclamation
+
+Binding Types Affected::
+........................
+
+function
+
+Description::
+.............
+
+Specifies that the functions named by function-names are of the functional
+type type.  For example:
+
+      (declare (ftype (function (integer list) t) ith)
+               (ftype (function (number) float) sine cosine))
+
+If one of the functions mentioned has a lexically apparent local definition
+(as made by flet or labels), then the declaration applies to that local
+definition and not to the global function definition.  ftype declarations
+never apply to variable bindings (see type).
+
+The lexically apparent bindings of function-names must not be macro
+definitions.  (This is because ftype declares the functional definition of
+each function name to be of a particular subtype of function, and macros
+do not denote functions.)
+
+ftype
+
+declarations can be free declarations or bound declarations.  ftype
+declarations of functions that appear before the body of a flet or labels
+
+form that defines that function are bound declarations.  Such declarations
+in other contexts are free declarations.
+
+See Also::
+..........
+
+declare, *Note declaim:: , *Note proclaim::
+
+
+File: gcl.info,  Node: declaration,  Next: optimize,  Prev: ftype,  Up: Evaluation and Compilation Dictionary
+
+declaration                                                   [Declaration]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+(declaration {name}*)
+
+Arguments::
+...........
+
+name--a symbol.
+
+Valid Context::
+...............
+
+proclamation only
+
+Description::
+.............
+
+Advises the compiler that each name is a valid but potentially
+non-standard declaration name.  The purpose of this is to tell one
+compiler not to issue warnings for declarations meant for another compiler
+or other program processor.
+
+Examples::
+..........
+
+      (declaim (declaration author target-language target-machine))
+      (declaim (target-language ada))
+      (declaim (target-machine IBM-650))
+      (defun strangep (x)
+        (declare (author "Harry Tweeker"))
+        (member x '(strange weird odd peculiar)))
+
+See Also::
+..........
+
+*Note declaim:: , *Note proclaim::
+
+
+File: gcl.info,  Node: optimize,  Next: special,  Prev: declaration,  Up: Evaluation and Compilation Dictionary
+
+optimize                                                      [Declaration]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+(optimize {quality | (quality value)}*)
+
+Arguments::
+...........
+
+quality--an optimize quality.
+
+value--one of the integers 0, 1, 2, or 3.
+
+Valid Context::
+...............
+
+declaration or proclamation
+
+Description::
+.............
+
+Advises the compiler that each quality should be given attention according
+to the specified corresponding value.  Each quality must be a symbol
+naming an optimize quality; the names and meanings of the standard
+optimize qualities are shown in Figure 3-25.
+
+  Name               Meaning                            
+  compilation-speed  speed of the compilation process   
+  debug              ease of debugging                  
+  safety             run-time error checking            
+  space              both code size and run-time space  
+  speed              speed of the object code           
+
+             Figure 3-25: Optimize qualities           
+
+
+There may be other, implementation-defined optimize qualities.
+
+A value 0 means that the corresponding quality is totally unimportant, and
+3 that the quality is extremely important; 1 and 2 are intermediate
+values, with 1 the neutral value.  (quality 3) can be abbreviated to
+quality.
+
+Note that code which has the optimization (safety 3), or just safety, is
+called safe code.
+
+The consequences are unspecified if a quality appears more than once with
+different values.
+
+Examples::
+..........
+
+      (defun often-used-subroutine (x y)
+        (declare (optimize (safety 2)))
+        (error-check x y)
+        (hairy-setup x)
+        (do ((i 0 (+ i 1))
+             (z x (cdr z)))
+            ((null z))
+          ;; This inner loop really needs to burn.
+          (declare (optimize speed))
+          (declare (fixnum i))
+          ))
+
+See Also::
+..........
+
+declare, *Note declaim:: , *Note proclaim:: , *Note Declaration Scope::
+
+Notes::
+.......
+
+An optimize declaration never applies to either a variable or a function
+binding.  An optimize declaration can only be a free declaration.  For
+more information, see *Note Declaration Scope::.
+
+
+File: gcl.info,  Node: special,  Next: locally,  Prev: optimize,  Up: Evaluation and Compilation Dictionary
+
+special                                                       [Declaration]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+(special {var}*)
+
+Arguments::
+...........
+
+var--a symbol.
+
+Valid Context::
+...............
+
+declaration or proclamation
+
+Binding Types Affected::
+........................
+
+variable
+
+Description::
+.............
+
+Specifies that all of the vars named are dynamic.  This specifier affects
+variable bindings and affects references.  All variable bindings affected
+are made to be dynamic bindings, and affected variable references refer to
+the current dynamic binding.  For example:
+
+      (defun hack (thing *mod*)    ;The binding of the parameter
+        (declare (special *mod*))  ; *mod* is visible to hack1,
+        (hack1 (car thing)))       ; but not that of thing.
+      (defun hack1 (arg)
+        (declare (special *mod*))  ;Declare references to *mod*
+                                   ;within hack1 to be special.
+        (if (atom arg) *mod*
+            (cons (hack1 (car arg)) (hack1 (cdr arg)))))
+
+A special declaration does not affect inner bindings of a var; the inner
+bindings implicitly shadow a special declaration and must be explicitly
+re-declared to be special.  special declarations never apply to function
+bindings.
+
+special declarations can be either bound declarations, affecting both a
+binding and references, or free declarations, affecting only references,
+depending on whether the declaration is attached to a variable binding.
+
+When used in a proclamation, a special declaration specifier applies to
+all bindings as well as to all references of the mentioned variables.  For
+example, after
+
+      (declaim (special x))
+
+then in a function definition such as
+
+      (defun example (x) ...)
+
+the parameter x is bound as a dynamic variable rather than as a lexical
+variable.
+
+Examples::
+..........
+
+     (defun declare-eg (y)                 ;this y is special
+      (declare (special y))
+      (let ((y t))                         ;this y is lexical
+           (list y
+                 (locally (declare (special y)) y)))) ;this y refers to the
+                                                      ;special binding of y
+     =>  DECLARE-EG
+      (declare-eg nil) =>  (T NIL)
+
+     (setf (symbol-value 'x) 6)
+     (defun foo (x)                         ;a lexical binding of x
+       (print x)
+       (let ((x (1+ x)))                    ;a special binding of x
+         (declare (special x))              ;and a lexical reference
+         (bar))
+       (1+ x))
+     (defun bar ()
+       (print (locally (declare (special x))
+                x)))
+     (foo 10)
+      |>  10
+      |>  11
+     =>  11
+
+     (setf (symbol-value 'x) 6)
+     (defun bar (x y)            ;[1] 1st occurrence of x
+       (let ((old-x x)           ;[2] 2nd occurrence of x -- same as 1st occurrence
+             (x y))              ;[3] 3rd occurrence of x
+         (declare (special x))
+         (list old-x x)))
+     (bar 'first 'second) =>  (FIRST SECOND)
+
+      (defun few (x &optional (y *foo*))
+        (declare (special *foo*))
+        ...)
+
+The reference to *foo* in the first line of this example is not special
+even though there is a special declaration in the second line.
+
+      (declaim (special prosp)) =>  implementation-dependent
+      (setq prosp 1 reg 1) =>  1
+      (let ((prosp 2) (reg 2))         ;the binding of prosp is special
+         (set 'prosp 3) (set 'reg 3)   ;due to the preceding proclamation,
+         (list prosp reg))             ;whereas the variable reg is lexical
+     =>  (3 2)
+      (list prosp reg) =>  (1 3)
+     
+      (declaim (special x))          ;x is always special.
+      (defun example (x y)
+        (declare (special y))
+        (let ((y 3) (x (* x 2)))
+          (print (+ y (locally (declare (special y)) y)))
+          (let ((y 4)) (declare (special y)) (foo x)))) =>  EXAMPLE
+
+In the contorted code above, the outermost and innermost bindings of y are
+dynamic, but the middle binding is lexical. The two arguments to + are
+different, one being the value, which is 3, of the lexical variable y, and
+the other being the value of the dynamic variable named y (a binding of
+which happens, coincidentally, to lexically surround it at an outer
+level).  All the bindings of x and references to x are dynamic, however,
+because of the proclamation that x is always special.
+
+See Also::
+..........
+
+*Note defparameter; defvar:: , defvar
+
+
+File: gcl.info,  Node: locally,  Next: the,  Prev: special,  Up: Evaluation and Compilation Dictionary
+
+locally                                                  [Special Operator]
+---------------------------------------------------------------------------
+
+`locally'  {declaration}* {form}* =>  {result}*
+
+Arguments and Values::
+......................
+
+Declaration--a declare expression; not evaluated.
+
+forms--an implicit progn.
+
+results--the values of the forms.
+
+Description::
+.............
+
+Sequentially evaluates a body of forms in a lexical environment where the
+given declarations have effect.
+
+Examples::
+..........
+
+      (defun sample-function (y)  ;this y is regarded as special
+        (declare (special y))
+        (let ((y t))              ;this y is regarded as lexical
+          (list y
+                (locally (declare (special y))
+                  ;; this next y is regarded as special
+                  y))))
+     =>  SAMPLE-FUNCTION
+      (sample-function nil) =>  (T NIL)
+      (setq x '(1 2 3) y '(4 . 5)) =>  (4 . 5)
+     
+     ;;; The following declarations are not notably useful in specific.
+     ;;; They just offer a sample of valid declaration syntax using LOCALLY.
+      (locally (declare (inline floor) (notinline car cdr))
+               (declare (optimize space))
+         (floor (car x) (cdr y))) =>  0, 1
+
+     ;;; This example shows a definition of a function that has a particular set
+     ;;; of OPTIMIZE settings made locally to that definition.
+      (locally (declare (optimize (safety 3) (space 3) (speed 0)))
+        (defun frob (w x y &optional (z (foo x y)))
+          (mumble x y z w)))
+     =>  FROB
+     
+     ;;; This is like the previous example, except that the optimize settings
+     ;;; remain in effect for subsequent definitions in the same compilation unit.
+      (declaim (optimize (safety 3) (space 3) (speed 0)))
+      (defun frob (w x y &optional (z (foo x y)))
+        (mumble x y z w))
+     =>  FROB
+
+See Also::
+..........
+
+declare
+
+Notes::
+.......
+
+The special declaration may be used with locally to affect references to,
+rather than bindings of, variables.
+
+If a locally form is a top level form, the body forms are also processed
+as top level forms.  See *Note File Compilation::.
+
+
+File: gcl.info,  Node: the,  Next: special-operator-p,  Prev: locally,  Up: Evaluation and Compilation Dictionary
+
+the                                                      [Special Operator]
+---------------------------------------------------------------------------
+
+`the'  value-type form =>  {result}*
+
+Arguments and Values::
+......................
+
+value-type--a type specifier; not evaluated.
+
+form--a form; evaluated.
+
+results--the values resulting from the evaluation of form.  These values
+must conform to the type supplied by value-type; see below.
+
+Description::
+.............
+
+the specifies that the values_{1a} returned by form are of the types
+specified by value-type.  The consequences are undefined if any result is
+not of the declared type.
+
+It is permissible for form to yield a different number of values than are
+specified by value-type, provided that the values for which types are
+declared are indeed of those types.  Missing values are treated as nil for
+the purposes of checking their types.
+
+Regardless of number of values declared by value-type, the number of
+values returned by the the special form is the same as the number of
+values returned by form.
+
+Examples::
+..........
+
+      (the symbol (car (list (gensym)))) =>  #:G9876
+      (the fixnum (+ 5 7)) =>  12
+      (the (values) (truncate 3.2 2)) =>  1, 1.2
+      (the integer (truncate 3.2 2)) =>  1, 1.2
+      (the (values integer) (truncate 3.2 2)) =>  1, 1.2
+      (the (values integer float) (truncate 3.2 2))   =>  1, 1.2
+      (the (values integer float symbol) (truncate 3.2 2)) =>  1, 1.2
+      (the (values integer float symbol t null list)
+           (truncate 3.2 2)) =>  1, 1.2
+      (let ((i 100))
+         (declare (fixnum i))
+         (the fixnum (1+ i))) =>  101
+      (let* ((x (list 'a 'b 'c))
+             (y 5))
+         (setf (the fixnum (car x)) y)
+         x) =>  (5 B C)
+
+Exceptional Situations::
+........................
+
+The consequences are undefined if the values yielded by the form are not
+of the type specified by value-type.
+
+See Also::
+..........
+
+values
+
+Notes::
+.......
+
+The values type specifier can be used to indicate the types of multiple
+values:
+
+      (the (values integer integer) (floor x y))
+      (the (values string t)
+           (gethash the-key the-string-table))
+
+setf can be used with the type declarations.  In this case the declaration
+is transferred to the form that specifies  the new value.  The resulting
+setf form is then analyzed.
+
+
+File: gcl.info,  Node: special-operator-p,  Next: constantp,  Prev: the,  Up: Evaluation and Compilation Dictionary
+
+special-operator-p                                               [Function]
+---------------------------------------------------------------------------
+
+`special-operator-p'  symbol =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+symbol--a symbol.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if symbol is a special operator; otherwise, returns false.
+
+Examples::
+..........
+
+      (special-operator-p 'if) =>  true
+      (special-operator-p 'car) =>  false
+      (special-operator-p 'one) =>  false
+
+Exceptional Situations::
+........................
+
+Should signal type-error if its argument is not a symbol.
+
+Notes::
+.......
+
+Historically, this function was called special-form-p.  The name was
+finally declared a misnomer and changed, since it returned true for
+special operators, not special forms.
+
+
+File: gcl.info,  Node: constantp,  Prev: special-operator-p,  Up: Evaluation and Compilation Dictionary
+
+constantp                                                        [Function]
+---------------------------------------------------------------------------
+
+`constantp'  form &optional environment =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+form--a form.
+
+environment--an environment object.  The default is nil.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if form can be determined by the implementation to be a
+constant form in the indicated environment; otherwise, it returns false
+indicating either that the form is not a constant form or that it cannot
+be determined whether or not form is a constant form.
+
+The following kinds of forms are considered constant forms:
+*
+     Self-evaluating objects (such as numbers, characters, and the various
+     kinds of arrays) are always considered constant forms and must be
+     recognized as such by constantp.
+
+*
+     Constant variables, such as keywords, symbols defined by Common Lisp
+     as constant (such as nil, t, and pi), and symbols declared as
+     constant by the user in the indicated environment using defconstant
+     are always considered constant forms and must be recognized as such
+     by constantp.
+
+*
+     quote forms are always considered constant forms and must be
+     recognized as such by constantp.
+
+*
+     An implementation is permitted, but not required, to detect
+     additional constant forms.  If it does, it is also permitted, but not
+     required, to make use of information in the environment.  Examples of
+     constant forms for which constantp might or might not return true are:
+     (sqrt pi), (+ 3 2), (length '(a b c)), and (let ((x 7)) (zerop x)).
+
+If an implementation chooses to make use of the environment information,
+such actions as expanding macros or performing function inlining are
+permitted to be used, but not required; however, expanding compiler macros
+is not permitted.
+
+Examples::
+..........
+
+      (constantp 1) =>  true
+      (constantp 'temp) =>  false
+      (constantp ''temp)) =>  true
+      (defconstant this-is-a-constant 'never-changing) =>  THIS-IS-A-CONSTANT
+      (constantp 'this-is-a-constant) =>  true
+      (constantp "temp") =>  true
+      (setq a 6) =>  6
+      (constantp a) =>  true
+      (constantp '(sin pi)) =>  implementation-dependent
+      (constantp '(car '(x))) =>  implementation-dependent
+      (constantp '(eql x x)) =>  implementation-dependent
+      (constantp '(typep x 'nil)) =>  implementation-dependent
+      (constantp '(typep x 't)) =>  implementation-dependent
+      (constantp '(values this-is-a-constant)) =>  implementation-dependent
+      (constantp '(values 'x 'y)) =>  implementation-dependent
+      (constantp '(let ((a '(a b c))) (+ (length a) 6))) =>  implementation-dependent
+
+Affected By::
+.............
+
+The state of the global environment (e.g., which symbols have been
+declared to be the names of constant variables).
+
+See Also::
+..........
+
+*Note defconstant::
+
+
+File: gcl.info,  Node: Types and Classes,  Next: Data and Control Flow,  Prev: Evaluation and Compilation,  Up: Top
+
+Types and Classes
+*****************
+
+* Menu:
+
+* Introduction (Types and Classes)::
+* Types::
+* Classes::
+* Types and Classes Dictionary::
+
+
+File: gcl.info,  Node: Introduction (Types and Classes),  Next: Types,  Prev: Types and Classes,  Up: Types and Classes
+
+Introduction
+============
+
+A type is a (possibly infinite) set of objects.  An object can belong to
+more than one type.  Types are never explicitly represented as objects by
+Common Lisp.  Instead, they are referred to indirectly by the use of type
+specifiers, which are objects that denote types.
+
+New types can be defined using deftype, defstruct, defclass, and
+define-condition.
+
+The function typep, a set membership test, is used to determine whether a
+given object is of a given type.  The function subtypep, a subset test, is
+used to determine whether a given type is a subtype of another given type.
+The function type-of returns a particular type to which a given object
+belongs, even though that object must belong to one or more other types as
+well.  (For example, every object is of type t, but type-of always returns
+a type specifier for a type more specific than t.)
+
+Objects, not variables, have types.  Normally, any variable can have any
+object as its value.  It is possible to declare that a variable takes on
+only values of a given type by making an explicit type declaration.  Types
+are arranged in a directed acyclic graph, except for the presence of
+equivalences.
+
+Declarations can be made about types using declare, proclaim, declaim, or
+the.  For more information about declarations, see *Note Declarations::.
+
+Among the fundamental objects of the object system are classes.  A class
+determines the structure and behavior of a set of other objects, which are
+called its instances.  Every object is a direct instance of a class.  The
+class of an object determines the set of operations that can be performed
+on the object.  For more information, see *Note Classes::.
+
+It is possible to write functions that have behavior specialized to the
+class of the objects which are their arguments.  For more information, see
+*Note Generic Functions and Methods::.
+
+The class of the class of an object is called its metaclass .  For more
+information about metaclasses, see *Note Meta-Objects::.
+
+
+File: gcl.info,  Node: Types,  Next: Classes,  Prev: Introduction (Types and Classes),  Up: Types and Classes
+
+Types
+=====
+
+* Menu:
+
+* Data Type Definition::
+* Type Relationships::
+* Type Specifiers::
+
+
+File: gcl.info,  Node: Data Type Definition,  Next: Type Relationships,  Prev: Types,  Up: Types
+
+Data Type Definition
+--------------------
+
+Information about type usage is located in the sections specified in
+Figure~4-1.  Figure~4-7 lists some classes that are particularly relevant
+to the object system.  Figure~9-1 lists the defined condition types.
+
+  Section                                Data Type                         
+  _________________________________________________________________________
+  *Note Classes::                        Object System types               
+  *Note Slots::                          Object System types               
+  *Note Objects::                        Object System types               
+  *Note Generic Functions and Methods::  Object System types               
+  *Note Condition System Concepts::      Condition System types            
+  *Note Types and Classes::              Miscellaneous types               
+  *Note Syntax::                         All types--read and print syntax  
+  *Note The Lisp Printer::               All types--print syntax           
+  *Note Compilation::                    All types--compilation issues     
+
+           Figure 4-1: Cross-References to Data Type Information          
+
+
+
+File: gcl.info,  Node: Type Relationships,  Next: Type Specifiers,  Prev: Data Type Definition,  Up: Types
+
+Type Relationships
+------------------
+
+*
+     The types cons, symbol, array, number, character, hash-table,
+
+     function,
+
+     readtable, package, pathname, stream, random-state, condition,
+     restart, and any single other type created by defstruct,
+
+     define-condition,
+
+     or defclass are pairwise disjoint, except for type relations
+     explicitly established by specifying superclasses in defclass
+
+     or define-condition
+
+     or the :include option of destruct.
+
+*
+     Any two types created by defstruct are disjoint unless one is a
+     supertype of the other by virtue of the defstruct :include option.
+
+     [Editorial Note by KMP: The comments in the source say gray suggested
+     some change from "common superclass" to "common subclass" in the
+     following, but the result looks suspicious to me.]
+
+*
+     Any two distinct classes created by defclass or define-condition are
+     disjoint unless they have a common subclass or one class is a
+     subclass of the other.
+
+*
+     An implementation may be extended to add other subtype relationships
+     between the specified types, as long as they do not violate the type
+     relationships and disjointness requirements specified here.  An
+     implementation may define additional types that are subtypes or
+     supertypes of any specified types, as long as each additional type is
+     a subtype of type t and a supertype of type nil and the disjointness
+     requirements are not violated.
+
+     At the discretion of the implementation, either standard-object or
+     structure-object might appear in any class precedence list for a
+     system class that does not already specify either standard-object or
+     structure-object.  If it does, it must precede the class t and follow
+     all other standardized classes.
+
+
+File: gcl.info,  Node: Type Specifiers,  Prev: Type Relationships,  Up: Types
+
+Type Specifiers
+---------------
+
+Type specifiers can be symbols, classes, or lists.  Figure~4-2 lists
+symbols that are standardized atomic type specifiers, and Figure~4-3 lists
+standardized compound type specifier names.  For syntax information, see
+the dictionary entry for the corresponding type specifier.  It is possible
+to define new type specifiers using defclass, define-condition, defstruct,
+or deftype.
+
+ arithmetic-error                 function           simple-condition          
+ array                            generic-function   simple-error              
+ atom                             hash-table         simple-string             
+ base-char                        integer            simple-type-error         
+ base-string                      keyword            simple-vector             
+ bignum                           list               simple-warning            
+ bit                              logical-pathname   single-float              
+ bit-vector                       long-float         standard-char             
+ broadcast-stream                 method             standard-class            
+ built-in-class                   method-combination standard-generic-function 
+ cell-error                       nil                standard-method           
+ character                        null               standard-object           
+ class                            number             storage-condition         
+ compiled-function                package            stream                    
+ complex                          package-error      stream-error              
+ concatenated-stream              parse-error        string                    
+ condition                        pathname           string-stream             
+ cons                             print-not-readable structure-class           
+ control-error                    program-error      structure-object          
+ division-by-zero                 random-state       style-warning             
+ double-float                     ratio              symbol                    
+ echo-stream                      rational           synonym-stream            
+ end-of-file                      reader-error       t                         
+ error                            readtable          two-way-stream            
+ extended-char                    real               type-error                
+ file-error                       restart            unbound-slot              
+ file-stream                      sequence           unbound-variable          
+ fixnum                           serious-condition  undefined-function        
+ float                            short-float        unsigned-byte             
+ floating-point-inexact           signed-byte        vector                    
+ floating-point-invalid-operation simple-array       warning                   
+ floating-point-overflow          simple-base-string                           
+ floating-point-underflow         simple-bit-vector                            
+
+                 Figure 4-2: Standardized Atomic Type Specifiers               
+
+
+\indent If a type specifier is a list, the car of the list is a symbol,
+and the rest of the list is subsidiary type information.  Such a type
+specifier is called a compound type specifier .  Except as explicitly
+stated otherwise, the subsidiary items can be unspecified.  The
+unspecified subsidiary items are indicated by writing *.  For example, to
+completely specify a vector, the type of the elements and the length of
+the vector must be present.
+
+      (vector double-float 100)
+
+The following leaves the length unspecified:
+
+      (vector double-float *)
+
+The following leaves the element type unspecified:
+
+      (vector * 100)
+
+Suppose that two type specifiers are the same except that the first has a
+* where the second has a more explicit specification.  Then the second
+denotes a subtype of the type denoted by the first.
+
+If a list has one or more unspecified items at the end, those items can be
+dropped.  If dropping all occurrences of * results in a singleton list,
+then the parentheses can be dropped as well (the list can be replaced by
+the symbol in its car).  For example, (vector double-float *) can be
+abbreviated to (vector double-float), and (vector * *) can be abbreviated
+to (vector) and then to vector.
+
+  and           long-float    simple-base-string  
+  array         member        simple-bit-vector   
+  base-string   mod           simple-string       
+  bit-vector    not           simple-vector       
+  complex       or            single-float        
+  cons          rational      string              
+  double-float  real          unsigned-byte       
+  eql           satisfies     values              
+  float         short-float   vector              
+  function      signed-byte                       
+  integer       simple-array                      
+
+  Figure 4-3: Standardized Compound Type Specifier Names
+
+
+Figure 4-4 show the defined names that can be used as compound type
+specifier names but that cannot be used as atomic type specifiers.
+
+  and     mod  satisfies     eql     not  values     
+  member  or              
+
+  Figure 4-4: Standardized Compound-Only Type Specifier Names
+
+
+New type specifiers can come into existence in two ways.
+*
+     Defining a structure by using defstruct without using the :type
+     specifier or defining a class by using defclass or define-condition
+     automatically causes the name of the structure or class to be a new
+     type specifier symbol.
+
+*
+     deftype can be used to define derived type specifiers , which act as
+     `abbreviations' for other type specifiers.
+
+A class object can be used as a type specifier.  When used this way, it
+denotes the set of all members of that class.
+
+Figure 4-5 shows some defined names relating to types and declarations.
+
+  coerce            defstruct  subtypep  
+  declaim           deftype    the       
+  declare           ftype      type      
+  defclass          locally    type-of   
+  define-condition  proclaim   typep     
+
+  Figure 4-5: Defined names relating to types and declarations.
+
+
+Figure 4-6 shows all defined names that are type specifier names, whether
+for atomic type specifiers or compound type specifiers; this list is the
+union of the lists in Figure~4-2 and Figure~4-3.
+
+ and                              function           simple-array              
+ arithmetic-error                 generic-function   simple-base-string        
+ array                            hash-table         simple-bit-vector         
+ atom                             integer            simple-condition          
+ base-char                        keyword            simple-error              
+ base-string                      list               simple-string             
+ bignum                           logical-pathname   simple-type-error         
+ bit                              long-float         simple-vector             
+ bit-vector                       member             simple-warning            
+ broadcast-stream                 method             single-float              
+ built-in-class                   method-combination standard-char             
+ cell-error                       mod                standard-class            
+ character                        nil                standard-generic-function 
+ class                            not                standard-method           
+ compiled-function                null               standard-object           
+ complex                          number             storage-condition         
+ concatenated-stream              or                 stream                    
+ condition                        package            stream-error              
+ cons                             package-error      string                    
+ control-error                    parse-error        string-stream             
+ division-by-zero                 pathname           structure-class           
+ double-float                     print-not-readable structure-object          
+ echo-stream                      program-error      style-warning             
+ end-of-file                      random-state       symbol                    
+ eql                              ratio              synonym-stream            
+ error                            rational           t                         
+ extended-char                    reader-error       two-way-stream            
+ file-error                       readtable          type-error                
+ file-stream                      real               unbound-slot              
+ fixnum                           restart            unbound-variable          
+ float                            satisfies          undefined-function        
+ floating-point-inexact           sequence           unsigned-byte             
+ floating-point-invalid-operation serious-condition  values                    
+ floating-point-overflow          short-float        vector                    
+ floating-point-underflow         signed-byte        warning                   
+
+                  Figure 4-6: Standardized Type Specifier Names                
+
+
+
+File: gcl.info,  Node: Classes,  Next: Types and Classes Dictionary,  Prev: Types,  Up: Types and Classes
+
+Classes
+=======
+
+While the object system is general enough to describe all standardized
+classes (including, for example, number, hash-table, and symbol), Figure
+4-7 contains a list of classes that are especially relevant to
+understanding the object system.
+
+  built-in-class    method-combination         standard-object   
+  class             standard-class             structure-class   
+  generic-function  standard-generic-function  structure-object  
+  method            standard-method                              
+
+                Figure 4-7: Object System Classes               
+
+
+* Menu:
+
+* Introduction to Classes::
+* Defining Classes::
+* Creating Instances of Classes::
+* Inheritance::
+* Determining the Class Precedence List::
+* Redefining Classes::
+* Integrating Types and Classes::
+
+
+File: gcl.info,  Node: Introduction to Classes,  Next: Defining Classes,  Prev: Classes,  Up: Classes
+
+Introduction to Classes
+-----------------------
+
+A class is an object that determines the structure and behavior of a set
+of other objects, which are called its instances .
+
+A class can inherit structure and behavior from other classes.  A class
+whose definition refers to other classes for the purpose of inheriting
+from them is said to be a subclass of each of those classes. The classes
+that are designated for purposes of inheritance are said to be
+superclasses of the inheriting class.
+
+A class can have a name. The function class-name takes a class object and
+returns its name.  The name of an anonymous class is nil.  A symbol can
+name a class. The function find-class takes a symbol and returns the class
+that the symbol names.  A class has a proper name if the name is a symbol
+and if the name of the class names that class.  That is, a class~C has the
+proper name~S if S= (class-name C) and C= (find-class S).  Notice that it
+is possible for (find-class S_1) = (find-class S_2) and S_1!= S_2.  If C=
+(find-class S), we say that C is the class named S.
+
+A class C_1 is a direct superclass of a class C_2 if C_2 explicitly
+designates C_1 as a superclass in its definition.  In this case C_2 is a
+direct subclass of C_1.  A class C_n is a superclass of a class C_1 if
+there exists a series of classes C_2,...,C_{n-1} such that C_{i+1} is a
+direct superclass of C_i for 1 <= i<n.  In this case, C_1 is a subclass of
+C_n.  A class is considered neither a superclass nor a subclass of itself.
+That is, if C_1 is a superclass of C_2, then C_1 != C_2.  The set of
+classes consisting of some given class C along with all of its
+superclasses is called "C and its superclasses."
+
+Each class has a class precedence list , which is a total ordering on the
+set of the given class and its superclasses.  The total ordering is
+expressed as a list ordered from most specific to least specific.  The
+class precedence list is used in several ways.  In general, more specific
+classes can shadow _1 features that would otherwise be inherited from less
+specific classes.  The method selection and combination process uses the
+class precedence list to order methods from most specific to least
+specific.
+
+When a class is defined, the order in which its direct superclasses are
+mentioned in the defining form is important.  Each class has a local
+precedence order , which is a list consisting of the class followed by its
+direct superclasses in the order mentioned in the defining form.
+
+A class precedence list is always consistent with the local precedence
+order of each class in the list.  The classes in each local precedence
+order appear within the class precedence list in the same order.  If the
+local precedence orders are inconsistent with each other, no class
+precedence list can be constructed, and an error is signaled.  The class
+precedence list and its computation is discussed in *Note Determining the
+Class Precedence List::.
+
+classes are organized into a directed acyclic graph.  There are two
+distinguished classes, named t and standard-object.  The class named t has
+no superclasses.  It is a superclass of every class except itself.  The
+class named standard-object is an instance of the class standard-class and
+is a superclass of every class that is an instance of the class
+standard-class except itself.
+
+[Reviewer Note by Barmar: This or something like it needs to be said in
+the introduction.] There is a mapping from the object system class space
+into the type space.  Many of the standard types specified in this
+document have a corresponding class that has the same name as the type.
+Some types do not have a corresponding class. The integration of the type
+and class systems is discussed in *Note Integrating Types and Classes::.
+
+Classes are represented by objects that are themselves instances of
+classes.  The class of the class of an object is termed the metaclass of
+that object. When no misinterpretation is possible, the term metaclass is
+used to refer to a class that has instances that are themselves classes.
+The metaclass determines the form of inheritance used by the classes that
+are its instances and the representation of the instances of those classes.
+The object system provides a default metaclass, standard-class, that is
+appropriate for most programs.
+
+Except where otherwise specified, all classes mentioned in this standard
+are instances of the class standard-class, all generic functions are
+instances of the class standard-generic-function, and all methods are
+instances of the class standard-method.
+
+* Menu:
+
+* Standard Metaclasses::
+

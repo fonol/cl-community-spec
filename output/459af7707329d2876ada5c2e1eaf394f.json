@@ -1,0 +1,53 @@
+{
+    "name": "pprint-indent",
+    "prev": "pprint-fill",
+    "next": "pprint-logical-block",
+    "up": "Printer Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "pprint-indent"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "pprint-indent",
+                    "text": " relative-to n &optional stream =>  nil\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "relative-to",
+                    "desc": "either :block or :current."
+                },
+                {
+                    "name": "n",
+                    "desc": "a real."
+                },
+                {
+                    "name": "stream",
+                    "desc": "an output stream designator.  The default is standard output."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "pprint-indent specifies the indentation to use in a logical block on\nstream.\nIf stream is a pretty printing stream and the value of *print-pretty* is\ntrue, pprint-indent sets the indentation in the innermost dynamically\nenclosing logical block; otherwise, pprint-indent has no effect.\nN specifies the indentation in ems.  If relative-to is :block, the\nindentation is set to the horizontal position of the first character in\nthe dynamically current logical block plus n ems. If relative-to is\n:current, the indentation is set to the current output position plus n\nems. (For robustness in the face of variable-width fonts, it is advisable\nto use :current with an n of zero whenever possible.)\nN can be negative; however, the total indentation cannot be moved left of\nthe beginning of the line or left of the end of the rightmost per-line\nprefix--an attempt to move beyond one of these limits is treated the same\nas an attempt to move to that limit.  Changes in indentation caused by\npprint-indent do not take effect until after the next line break.  In\naddition, in miser mode all calls to pprint-indent are ignored, forcing\nthe lines corresponding to the logical block to line up under the first\ncharacter in the block.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "An error is signaled if relative-to is any object other than :block or\n:current.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note Tilde I-> Indent::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: pprint-indent,  Next: pprint-logical-block,  Prev: pprint-fill,  Up: Printer Dictionary\n\npprint-indent                                                    [Function]\n---------------------------------------------------------------------------\n\n`pprint-indent'  relative-to n &optional stream =>  nil\n\nArguments and Values::\n......................\n\nrelative-to--either :block or :current.\n\nn--a real.\n\nstream--an output stream designator.  The default is standard output.\n\nDescription::\n.............\n\npprint-indent specifies the indentation to use in a logical block on\nstream.\n\nIf stream is a pretty printing stream and the value of *print-pretty* is\ntrue, pprint-indent sets the indentation in the innermost dynamically\nenclosing logical block; otherwise, pprint-indent has no effect.\n\nN specifies the indentation in ems.  If relative-to is :block, the\nindentation is set to the horizontal position of the first character in\nthe dynamically current logical block plus n ems. If relative-to is\n:current, the indentation is set to the current output position plus n\nems. (For robustness in the face of variable-width fonts, it is advisable\nto use :current with an n of zero whenever possible.)\n\nN can be negative; however, the total indentation cannot be moved left of\nthe beginning of the line or left of the end of the rightmost per-line\nprefix--an attempt to move beyond one of these limits is treated the same\nas an attempt to move to that limit.  Changes in indentation caused by\npprint-indent do not take effect until after the next line break.  In\naddition, in miser mode all calls to pprint-indent are ignored, forcing\nthe lines corresponding to the logical block to line up under the first\ncharacter in the block.\n\nExceptional Situations::\n........................\n\nAn error is signaled if relative-to is any object other than :block or\n:current.\n\nSee Also::\n..........\n\n*Note Tilde I-> Indent::\n\n"
+}

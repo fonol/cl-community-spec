@@ -1,0 +1,57 @@
+{
+    "name": "nthcdr",
+    "prev": "ldiff",
+    "next": "rest",
+    "up": "Conses Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "nthcdr"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "nthcdr",
+                    "text": " n list =>  tail\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "n",
+                    "desc": "a non-negative integer."
+                },
+                {
+                    "name": "list",
+                    "desc": "a list,which might be a dotted list or a circular list.\n"
+                },
+                {
+                    "name": "tail",
+                    "desc": "an object."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns the tail of list that would be obtained by calling cdr n times in\nsuccession.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (nthcdr 0 '()) =>  NIL\n      (nthcdr 3 '()) =>  NIL\n      (nthcdr 0 '(a b c)) =>  (A B C)\n      (nthcdr 2 '(a b c)) =>  (C)\n      (nthcdr 4 '(a b c)) =>  ()\n      (nthcdr 1 '(0 . 1)) =>  1\n      (locally (declare (optimize (safety 3)))\n        (nthcdr 3 '(0 . 1)))\n      Error: Attempted to take CDR of 1.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should signal an error of type type-error if n is not a non-negative\ninteger.\nFor n being an integer greater than 1, the error checking done by (nthcdr\nn list) is the same as for (nthcdr (- n 1) (cdr list)); see the function\ncdr.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "cdr, *Note nth:: , *Note rest::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: nthcdr,  Next: rest,  Prev: ldiff,  Up: Conses Dictionary\n\nnthcdr                                                           [Function]\n---------------------------------------------------------------------------\n\n`nthcdr'  n list =>  tail\n\nArguments and Values::\n......................\n\nn--a non-negative integer.\n\nlist--a list,\n\nwhich might be a dotted list or a circular list.\n\ntail--an object.\n\nDescription::\n.............\n\nReturns the tail of list that would be obtained by calling cdr n times in\nsuccession.\n\nExamples::\n..........\n\n      (nthcdr 0 '()) =>  NIL\n      (nthcdr 3 '()) =>  NIL\n      (nthcdr 0 '(a b c)) =>  (A B C)\n      (nthcdr 2 '(a b c)) =>  (C)\n      (nthcdr 4 '(a b c)) =>  ()\n      (nthcdr 1 '(0 . 1)) =>  1\n     \n      (locally (declare (optimize (safety 3)))\n        (nthcdr 3 '(0 . 1)))\n      Error: Attempted to take CDR of 1.\n\nExceptional Situations::\n........................\n\nShould signal an error of type type-error if n is not a non-negative\ninteger.\n\nFor n being an integer greater than 1, the error checking done by (nthcdr\nn list) is the same as for (nthcdr (- n 1) (cdr list)); see the function\ncdr.\n\nSee Also::\n..........\n\ncdr, *Note nth:: , *Note rest::\n\n"
+}

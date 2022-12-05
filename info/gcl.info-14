@@ -1,0 +1,1472 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: Macro Forms as Places,  Next: Symbol Macros as Places,  Prev: Setf Expansions and Places,  Up: Kinds of Places
+
+Macro Forms as Places
+.....................
+
+A macro form can be used as a place, in which case Common Lisp expands the
+macro form
+
+as if by macroexpand-1
+
+and then uses the macro expansion in place of the original place.
+
+Such macro expansion is attempted only after exhausting all other
+possibilities other than expanding into a call to a function named (setf
+reader).
+
+
+File: gcl.info,  Node: Symbol Macros as Places,  Next: Other Compound Forms as Places,  Prev: Macro Forms as Places,  Up: Kinds of Places
+
+Symbol Macros as Places
+.......................
+
+A reference to a symbol that has been established as a symbol macro can be
+used as a place.  In this case, setf expands the reference and then
+analyzes the resulting form.
+
+
+File: gcl.info,  Node: Other Compound Forms as Places,  Prev: Symbol Macros as Places,  Up: Kinds of Places
+
+Other Compound Forms as Places
+..............................
+
+For any other compound form for which the operator is a symbol f, the setf
+form expands into a call to the function named (setf f).  The first
+argument in the newly constructed function form is newvalue and the
+remaining arguments are the remaining elements of place.  This expansion
+occurs regardless of whether f or (setf f) is defined as a function
+locally, globally, or not at all.  For example,
+
+(setf (f arg1 arg2 ...) new-value)
+
+expands into a form with the same effect and value as
+
+      (let ((#:temp-1 arg1)          ;force correct order of evaluation
+            (#:temp-2 arg2)
+            ...
+            (#:temp-0 new-value))
+        (funcall (function (setf f)) #:temp-0 #:temp-1 #:temp-2...))
+
+A function named (setf f) must return its first argument as its only value
+in order to preserve the semantics of setf.
+
+
+File: gcl.info,  Node: Treatment of Other Macros Based on SETF,  Prev: Kinds of Places,  Up: Generalized Reference
+
+Treatment of Other Macros Based on SETF
+---------------------------------------
+
+For each of the "read-modify-write" operators in Figure 5-9, and for any
+additional macros defined by the programmer using define-modify-macro, an
+exception is made to the normal rule of left-to-right evaluation of
+arguments.  Evaluation of argument forms occurs in left-to-right order,
+with the exception that for the place argument, the actual read of the
+"old value" from that place happens after all of the argument form
+evaluations, and just before a "new value" is computed and written back
+into the place.
+
+Specifically, each of these operators can be viewed as involving a form
+with the following general syntax:
+
+      (operator {preceding-form}* place {following-form}*)
+
+The evaluation of each such form proceeds like this:
+
+1.
+     Evaluate each of the preceding-forms, in left-to-right order.
+
+2.
+     Evaluate the subforms of the place, in the order specified by the
+     second value of the setf expansion for that place.
+
+3.
+     Evaluate each of the following-forms, in left-to-right order.
+
+4.
+     Read the old value from place.
+
+5.
+     Compute the new value.
+
+6.
+     Store the new value into place.
+
+  decf  pop   pushnew     incf  push  remf     
+
+  Figure 5-9: Read-Modify-Write Macros
+
+
+
+File: gcl.info,  Node: Transfer of Control to an Exit Point,  Next: Data and Control Flow Dictionary,  Prev: Generalized Reference,  Up: Data and Control Flow
+
+Transfer of Control to an Exit Point
+====================================
+
+When a transfer of control is initiated by go, return-from, or throw the
+following events occur in order to accomplish the transfer of control.
+Note that for go, the exit point is the form within the tagbody that is
+being executed at the time the go is performed; for return-from, the exit
+point is the corresponding block form; and for throw, the exit point is
+the corresponding catch form.
+
+1.
+     Intervening exit points are "abandoned" (i.e., their extent ends and
+     it is no longer valid to attempt to transfer control through them).
+
+2.
+     The cleanup clauses of any intervening unwind-protect clauses are
+     evaluated.
+
+3.
+     Intervening dynamic bindings of special variables, catch tags,
+     condition handlers, and restarts are undone.
+
+4.
+     The extent of the exit point being invoked ends, and control is
+     passed to the target.
+
+The extent of an exit being "abandoned" because it is being passed over
+ends as soon as the transfer of control is initiated. That is, event 1
+occurs at the beginning of the initiation of the transfer of control.  The
+consequences are undefined if an attempt is made to transfer control to an
+exit point whose dynamic extent has ended.
+
+Events 2 and 3 are actually performed interleaved, in the order
+corresponding to the reverse order in which they were established.  The
+effect of this is that the cleanup clauses of an unwind-protect see the
+same dynamic bindings of variables and catch tags as were visible when the
+unwind-protect was entered.
+
+Event 4 occurs at the end of the transfer of control.
+
+
+File: gcl.info,  Node: Data and Control Flow Dictionary,  Prev: Transfer of Control to an Exit Point,  Up: Data and Control Flow
+
+Data and Control Flow Dictionary
+================================
+
+* Menu:
+
+* apply::
+* defun::
+* fdefinition::
+* fboundp::
+* fmakunbound::
+* flet::
+* funcall::
+* function (Special Operator)::
+* function-lambda-expression::
+* functionp::
+* compiled-function-p::
+* call-arguments-limit::
+* lambda-list-keywords::
+* lambda-parameters-limit::
+* defconstant::
+* defparameter::
+* destructuring-bind::
+* let::
+* progv::
+* setq::
+* psetq::
+* block::
+* catch::
+* go::
+* return-from::
+* return::
+* tagbody::
+* throw::
+* unwind-protect::
+* nil::
+* not::
+* t::
+* eq::
+* eql::
+* equal::
+* equalp::
+* identity::
+* complement::
+* constantly::
+* every::
+* and::
+* cond::
+* if::
+* or::
+* when::
+* case::
+* typecase::
+* multiple-value-bind::
+* multiple-value-call::
+* multiple-value-list::
+* multiple-value-prog1::
+* multiple-value-setq::
+* values::
+* values-list::
+* multiple-values-limit::
+* nth-value::
+* prog::
+* prog1::
+* progn::
+* define-modify-macro::
+* defsetf::
+* define-setf-expander::
+* get-setf-expansion::
+* setf::
+* shiftf::
+* rotatef::
+* control-error::
+* program-error::
+* undefined-function::
+
+
+File: gcl.info,  Node: apply,  Next: defun,  Prev: Data and Control Flow Dictionary,  Up: Data and Control Flow Dictionary
+
+apply                                                            [Function]
+---------------------------------------------------------------------------
+
+`apply'  function &rest args^+ =>  {result}*
+
+Arguments and Values::
+......................
+
+function--a function designator.
+
+args--a spreadable argument list designator.
+
+results--the values returned by function.
+
+Description::
+.............
+
+Applies the function to the args.
+
+When the function receives its arguments via &rest, it is permissible (but
+not required) for the implementation to bind the rest parameter to an
+object that shares structure with the last argument to apply.  Because a
+function can neither detect whether it was called via apply nor whether
+(if so) the last argument to apply was a constant, conforming programs
+must neither rely on the list structure of a rest list to be freshly
+consed, nor modify that list structure.
+
+setf can be used with apply in certain circumstances; see *Note APPLY
+Forms as Places::.
+
+Examples::
+..........
+
+      (setq f '+) =>  +
+      (apply f '(1 2)) =>  3
+      (setq f #'-) =>  #<FUNCTION ->
+      (apply f '(1 2)) =>  -1
+      (apply #'max 3 5 '(2 7 3)) =>  7
+      (apply 'cons '((+ 2 3) 4)) =>  ((+ 2 3) . 4)
+      (apply #'+ '()) =>  0
+     
+      (defparameter *some-list* '(a b c))
+      (defun strange-test (&rest x) (eq x *some-list*))
+      (apply #'strange-test *some-list*) =>  implementation-dependent
+     
+      (defun bad-boy (&rest x) (rplacd x 'y))
+      (bad-boy 'a 'b 'c) has undefined consequences.
+      (apply #'bad-boy *some-list*) has undefined consequences.
+
+      (defun foo (size &rest keys &key double &allow-other-keys)
+        (let ((v (apply #'make-array size :allow-other-keys t keys)))
+          (if double (concatenate (type-of v) v v) v)))
+      (foo 4 :initial-contents '(a b c d) :double t)
+         =>  #(A B C D A B C D)
+
+See Also::
+..........
+
+*Note funcall:: , *Note fdefinition:: , function, *Note Evaluation::,
+*Note APPLY Forms as Places::
+
+
+File: gcl.info,  Node: defun,  Next: fdefinition,  Prev: apply,  Up: Data and Control Flow Dictionary
+
+defun                                                               [Macro]
+---------------------------------------------------------------------------
+
+`defun'  function-name lambda-list [[{declaration}* | documentation]]
+{form}*
+=>  function-name
+
+Arguments and Values::
+......................
+
+function-name--a function name.
+
+lambda-list--an ordinary lambda list.
+
+declaration--a declare expression; not evaluated.
+
+documentation--a string; not evaluated.
+
+forms--an implicit progn.
+
+block-name--the function block name of the function-name.
+
+Description::
+.............
+
+Defines a new function named function-name in the global environment.  The
+body of the function defined by defun consists of forms; they are executed
+as an implicit progn when the function is called.  defun can be used to
+define a new function, to install a corrected version of an incorrect
+definition, to redefine an already-defined function, or to redefine a
+macro as a function.
+
+defun implicitly puts a block named block-name around the body forms
+
+(but not the forms in the lambda-list)
+
+of the function defined.
+
+Documentation is attached as a documentation string to name (as kind
+function) and to the function object.
+
+Evaluating defun causes function-name to be a global name for the function
+specified by the lambda expression
+
+      (lambda lambda-list
+        [[{declaration}* | documentation]]
+        (block block-name {form}*))
+
+processed in the lexical environment in which defun was executed.
+
+(None of the arguments are evaluated at macro expansion time.)
+
+defun is not required to perform any compile-time side effects.  In
+particular, defun does not make the function definition available at
+compile time.  An implementation may choose to store information about the
+function for the purposes of compile-time error-checking (such as checking
+the number of arguments on calls), or to enable the function to be
+expanded inline.
+
+Examples::
+..........
+
+      (defun recur (x)
+       (when (> x 0)
+         (recur (1- x)))) =>  RECUR
+      (defun ex (a b &optional c (d 66) &rest keys &key test (start 0))
+         (list a b c d keys test start)) =>  EX
+      (ex 1 2) =>  (1 2 NIL 66 NIL NIL 0)
+      (ex 1 2 3 4 :test 'equal :start 50)
+     =>  (1 2 3 4 (:TEST EQUAL :START 50) EQUAL 50)
+      (ex :test 1 :start 2) =>  (:TEST 1 :START 2 NIL NIL 0)
+     
+      ;; This function assumes its callers have checked the types of the
+      ;; arguments, and authorizes the compiler to build in that assumption.
+      (defun discriminant (a b c)
+        (declare (number a b c))
+        "Compute the discriminant for a quadratic equation."
+        (- (* b b) (* 4 a c))) =>  DISCRIMINANT
+      (discriminant 1 2/3 -2) =>  76/9
+     
+      ;; This function assumes its callers have not checked the types of the
+      ;; arguments, and performs explicit type checks before making any assumptions.
+      (defun careful-discriminant (a b c)
+        "Compute the discriminant for a quadratic equation."
+        (check-type a number)
+        (check-type b number)
+        (check-type c number)
+        (locally (declare (number a b c))
+          (- (* b b) (* 4 a c)))) =>  CAREFUL-DISCRIMINANT
+      (careful-discriminant 1 2/3 -2) =>  76/9
+
+See Also::
+..........
+
+*Note flet; labels; macrolet:: , labels, *Note block:: , *Note
+return-from:: , declare, *Note documentation; (setf documentation):: ,
+*Note Evaluation::, *Note Ordinary Lambda Lists::, *Note Syntactic
+Interaction of Documentation Strings and Declarations::
+
+Notes::
+.......
+
+return-from can be used to return prematurely from a function defined by
+defun.
+
+Additional side effects might take place when additional information
+(typically debugging information) about the function definition is
+recorded.
+
+
+File: gcl.info,  Node: fdefinition,  Next: fboundp,  Prev: defun,  Up: Data and Control Flow Dictionary
+
+fdefinition                                                      [Accessor]
+---------------------------------------------------------------------------
+
+`fdefinition'  function-name =>  definition
+
+(setf (`         fdefinition' function-name) new-definition)
+Arguments and Values::
+......................
+
+function-name--a function name.
+
+In the non-setf case, the name must be fbound in the global environment.
+
+definition--Current global function definition named by function-name.
+
+new-definition--a function.
+
+Description::
+.............
+
+fdefinition accesses the current global function definition named by
+function-name.  The definition may be a function or may be an object
+representing a special form or macro.
+
+The value returned by fdefinition when fboundp returns true but the
+function-name denotes a macro or special form is not well-defined, but
+fdefinition does not signal an error.
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if function-name is not a
+function name.
+
+An error of type undefined-function is signaled in the non-setf case if
+function-name is not fbound.
+
+See Also::
+..........
+
+*Note fboundp:: , *Note fmakunbound:: , *Note macro-function:: ,
+
+*Note special-operator-p:: ,
+
+*Note symbol-function::
+
+Notes::
+.......
+
+fdefinition cannot access the value of a lexical function name produced by
+flet or labels; it can access only the global function value.
+
+setf can be used with fdefinition to replace a global function definition
+when the function-name's function definition does not represent a special
+form.
+
+setf of fdefinition requires a function as the new value.  It is an error
+to set the fdefinition of a function-name to a symbol, a list, or the
+value returned by fdefinition on the name of a macro or special form.
+
+
+File: gcl.info,  Node: fboundp,  Next: fmakunbound,  Prev: fdefinition,  Up: Data and Control Flow Dictionary
+
+fboundp                                                          [Function]
+---------------------------------------------------------------------------
+
+`fboundp'  name =>  generalized-boolean
+
+Pronunciation::
+...............
+
+pronounced ,ef 'baund p\=e
+
+Arguments and Values::
+......................
+
+name--a function name.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if name is fbound; otherwise, returns false.
+
+Examples::
+..........
+
+      (fboundp 'car) =>  true
+      (fboundp 'nth-value) =>  false
+      (fboundp 'with-open-file) =>  true
+      (fboundp 'unwind-protect) =>  true
+      (defun my-function (x) x) =>  MY-FUNCTION
+      (fboundp 'my-function) =>  true
+      (let ((saved-definition (symbol-function 'my-function)))
+        (unwind-protect (progn (fmakunbound 'my-function)
+                               (fboundp 'my-function))
+          (setf (symbol-function 'my-function) saved-definition)))
+     =>  false
+      (fboundp 'my-function) =>  true
+      (defmacro my-macro (x) `',x) =>  MY-MACRO
+      (fboundp 'my-macro) =>  true
+      (fmakunbound 'my-function) =>  MY-FUNCTION
+      (fboundp 'my-function) =>  false
+      (flet ((my-function (x) x))
+        (fboundp 'my-function)) =>  false
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if name is not a function name.
+
+See Also::
+..........
+
+*Note symbol-function:: , *Note fmakunbound:: , *Note fdefinition::
+
+Notes::
+.......
+
+It is permissible to call symbol-function on any symbol that is fbound.
+
+fboundp is sometimes used to "guard" an access to the function cell, as in:
+     (if (fboundp x) (symbol-function x))
+
+Defining a setf expander F does not cause the setf function (setf F) to
+become defined.
+
+
+File: gcl.info,  Node: fmakunbound,  Next: flet,  Prev: fboundp,  Up: Data and Control Flow Dictionary
+
+fmakunbound                                                      [Function]
+---------------------------------------------------------------------------
+
+`fmakunbound'  name =>  name
+
+Pronunciation::
+...............
+
+pronounced ,ef 'mak e n,baund or pronounced ,ef 'm\=a k e n,baund
+
+Arguments and Values::
+......................
+
+name--a function name.
+
+Description::
+.............
+
+Removes the function or macro definition, if any, of name in the global
+environment.
+
+Examples::
+..........
+
+     (defun add-some (x) (+ x 19)) =>  ADD-SOME
+      (fboundp 'add-some) =>  true
+      (flet ((add-some (x) (+ x 37)))
+         (fmakunbound 'add-some)
+         (add-some 1)) =>  38
+      (fboundp 'add-some) =>  false
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if name is not a function name.
+
+The consequences are undefined if name is a special operator.
+
+See Also::
+..........
+
+*Note fboundp:: , *Note makunbound::
+
+
+File: gcl.info,  Node: flet,  Next: funcall,  Prev: fmakunbound,  Up: Data and Control Flow Dictionary
+
+flet, labels, macrolet                                   [Special Operator]
+---------------------------------------------------------------------------
+
+`flet'  ({(function-name lambda-list [[{local-declaration}* |
+local-documentation]] {local-form}*)}*) {declaration}* {form}*
+=>  {result}*
+
+`labels'  ({(function-name lambda-list [[{local-declaration}* |
+local-documentation]] {local-form}*)}*) {declaration}* {form}*
+=>  {result}*
+
+`macrolet'  ({(name lambda-list [[{local-declaration}* |
+local-documentation]] {local-form}*)}*) {declaration}* {form}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+function-name--a function name.
+
+name--a symbol.
+
+lambda-list--a lambda list; for flet and labels, it is an ordinary lambda
+list; for macrolet, it is a macro lambda list.
+
+local-declaration--a declare expression; not evaluated.
+
+declaration--a declare expression; not evaluated.
+
+local-documentation--a string; not evaluated.
+
+local-forms, forms--an implicit progn.
+
+results--the values of the forms.
+
+Description::
+.............
+
+flet, labels, and macrolet define local functions and macros, and execute
+forms using the local definitions.  Forms are executed  in order of
+occurrence.
+
+The body forms (but not the lambda list)
+
+of each function created by flet and labels and each macro created by
+macrolet are enclosed in an implicit block whose name is the function
+block name of the function-name or name, as appropriate.
+
+The scope of the declarations between the list of local function/macro
+definitions and the body forms in flet and labels does not include the
+bodies of the locally defined functions, except that for labels, any
+inline, notinline, or ftype declarations that refer to the locally defined
+functions do apply to the local function bodies. That is, their scope is
+the same as the function name that they affect.
+
+The scope of these declarations does not include the bodies of the macro
+expander functions defined by macrolet.
+
+flet
+     flet defines locally named functions and executes a series of forms
+     with these definition bindings.  Any number of such local functions
+     can be defined.
+
+     The scope of the name binding encompasses only the body.  Within the
+     body of flet, function-names matching those defined by flet refer to
+     the locally defined functions rather than to the global function
+     definitions of the same name.
+
+     Also, within the scope of flet, global setf expander definitions of
+     the function-name defined by flet do not apply.  Note that this
+     applies to (defsetf f ...), not (defmethod (setf f) ...).
+
+     The names of functions defined by flet are in the lexical
+     environment; they retain their local definitions only within the body
+     of flet.  The function definition bindings are visible only in the
+     body of flet, not the definitions themselves.  Within the function
+     definitions, local function names that match those being defined
+     refer to functions or macros defined outside the flet.  flet can
+     locally shadow a global function name, and the new definition can
+     refer to the global definition.
+
+     Any local-documentation is attached to the corresponding local
+     function (if one is actually created) as a documentation string.
+
+labels
+     labels is equivalent to flet except that the scope of the defined
+     function names for labels encompasses the function definitions
+     themselves as well as the body.
+
+macrolet
+     macrolet establishes local macro definitions, using the same format
+     used by defmacro.
+
+     Within the body of macrolet, global setf expander definitions of the
+     names defined by the macrolet do not apply; rather, setf expands the
+     macro form and recursively process the resulting form.
+
+     The macro-expansion functions defined by macrolet are defined in the
+
+     lexical environment in which the macrolet form appears.  Declarations
+     and macrolet and symbol-macrolet definitions affect the local macro
+     definitions in a macrolet, but the consequences are undefined if the
+     local macro definitions reference any local variable or function
+     bindings that are visible in that lexical environment.
+
+     Any local-documentation is attached to the corresponding local macro
+     function as a documentation string.
+
+Examples::
+..........
+
+      (defun foo (x flag)
+        (macrolet ((fudge (z)
+                      ;The parameters x and flag are not accessible
+                      ; at this point; a reference to flag would be to
+                      ; the global variable of that name.
+                      ` (if flag (* ,z ,z) ,z)))
+         ;The parameters x and flag are accessible here.
+          (+ x
+             (fudge x)
+             (fudge (+ x 1)))))
+      ==
+      (defun foo (x flag)
+        (+ x
+           (if flag (* x x) x)
+           (if flag (* (+ x 1) (+ x 1)) (+ x 1))))
+
+after macro expansion.  The occurrences of x and flag legitimately refer
+to the parameters of the function foo because those parameters are visible
+at the site of the macro call which produced the expansion.
+
+      (flet ((flet1 (n) (+ n n)))
+         (flet ((flet1 (n) (+ 2 (flet1 n))))
+           (flet1 2))) =>  6
+     
+      (defun dummy-function () 'top-level) =>  DUMMY-FUNCTION
+      (funcall #'dummy-function) =>  TOP-LEVEL
+      (flet ((dummy-function () 'shadow))
+           (funcall #'dummy-function)) =>  SHADOW
+      (eq (funcall #'dummy-function) (funcall 'dummy-function))
+     =>  true
+      (flet ((dummy-function () 'shadow))
+        (eq (funcall #'dummy-function)
+            (funcall 'dummy-function)))
+     =>  false
+     
+      (defun recursive-times (k n)
+        (labels ((temp (n)
+                   (if (zerop n) 0 (+ k (temp (1- n))))))
+          (temp n))) =>  RECURSIVE-TIMES
+      (recursive-times 2 3) =>  6
+     
+      (defmacro mlets (x &environment env)
+         (let ((form `(babbit ,x)))
+           (macroexpand form env))) =>  MLETS
+      (macrolet ((babbit (z) `(+ ,z ,z))) (mlets 5)) =>  10
+
+      (flet ((safesqrt (x) (sqrt (abs x))))
+       ;; The safesqrt function is used in two places.
+        (safesqrt (apply #'+ (map 'list #'safesqrt '(1 2 3 4 5 6)))))
+     =>  3.291173
+
+      (defun integer-power (n k)
+        (declare (integer n))
+        (declare (type (integer 0 *) k))
+        (labels ((expt0 (x k a)
+                   (declare (integer x a) (type (integer 0 *) k))
+                   (cond ((zerop k) a)
+                         ((evenp k) (expt1 (* x x) (floor k 2) a))
+                         (t (expt0 (* x x) (floor k 2) (* x a)))))
+                 (expt1 (x k a)
+                   (declare (integer x a) (type (integer 0 *) k))
+                   (cond ((evenp k) (expt1 (* x x) (floor k 2) a))
+                         (t (expt0 (* x x) (floor k 2) (* x a))))))
+         (expt0 n k 1))) =>  INTEGER-POWER
+
+      (defun example (y l)
+        (flet ((attach (x)
+                 (setq l (append l (list x)))))
+          (declare (inline attach))
+          (dolist (x y)
+            (unless (null (cdr x))
+              (attach x)))
+          l))
+     
+      (example '((a apple apricot) (b banana) (c cherry) (d) (e))
+               '((1) (2) (3) (4 2) (5) (6 3 2)))
+     =>  ((1) (2) (3) (4 2) (5) (6 3 2) (A APPLE APRICOT) (B BANANA) (C CHERRY))
+
+See Also::
+..........
+
+declare, *Note defmacro:: , *Note defun:: , *Note documentation; (setf
+documentation):: , *Note let; let*:: , *Note Evaluation::, *Note Syntactic
+Interaction of Documentation Strings and Declarations::
+
+Notes::
+.......
+
+It is not possible to define recursive functions with flet.  labels can be
+used to define mutually recursive functions.
+
+If a macrolet form is a top level form, the body forms are also processed
+as top level forms.  See *Note File Compilation::.
+
+
+File: gcl.info,  Node: funcall,  Next: function (Special Operator),  Prev: flet,  Up: Data and Control Flow Dictionary
+
+funcall                                                          [Function]
+---------------------------------------------------------------------------
+
+`funcall'  function &rest args =>  {result}*
+
+Arguments and Values::
+......................
+
+function--a function designator.
+
+args--arguments to the function.
+
+results--the values returned by the function.
+
+Description::
+.............
+
+funcall applies function to args.
+
+If function is a symbol, it is coerced to a function as if by finding its
+functional value in the global environment.
+
+Examples::
+..........
+
+      (funcall #'+ 1 2 3) =>  6
+      (funcall 'car '(1 2 3)) =>  1
+      (funcall 'position 1 '(1 2 3 2 1) :start 1) =>  4
+      (cons 1 2) =>  (1 . 2)
+      (flet ((cons (x y) `(kons ,x ,y)))
+        (let ((cons (symbol-function '+)))
+          (funcall #'cons
+                   (funcall 'cons 1 2)
+                   (funcall cons 1 2))))
+     =>  (KONS (1 . 2) 3)
+
+Exceptional Situations::
+........................
+
+An error of type undefined-function should be signaled if function is a
+symbol that does not have a global definition as a function or that has a
+global definition as a macro or a special operator.
+
+See Also::
+..........
+
+*Note apply:: , function, *Note Evaluation::
+
+Notes::
+.......
+
+      (funcall function arg1 arg2 ...)
+      == (apply function arg1 arg2 ... nil)
+      == (apply function (list arg1 arg2 ...))
+
+The difference between funcall and an ordinary function call is that in
+the former case the function is obtained by ordinary evaluation of a form,
+and in the latter case it is obtained by the special interpretation of the
+function position that normally occurs.
+
+
+File: gcl.info,  Node: function (Special Operator),  Next: function-lambda-expression,  Prev: funcall,  Up: Data and Control Flow Dictionary
+
+function                                                 [Special Operator]
+---------------------------------------------------------------------------
+
+`function'  name =>  function
+
+Arguments and Values::
+......................
+
+name--a function name or lambda expression.
+
+function--a function object.
+
+Description::
+.............
+
+The value of function is the functional value of name in the current
+lexical environment.
+
+If name is a function name, the functional definition of that name is that
+established by the innermost lexically enclosing flet, labels, or macrolet
+form, if there is one.  Otherwise the global functional definition of the
+function name is returned.
+
+If name is a lambda expression, then a lexical closure is returned.  In
+situations where a closure over the same set of bindings might be produced
+more than once, the various resulting closures might or might not be eq.
+
+It is an error to use function on a function name that does not denote a
+function in the lexical environment in which the function form appears.
+Specifically, it is an error to use function on a symbol that denotes a
+macro or special form.  An implementation may choose not to signal this
+error for performance reasons, but implementations are forbidden from
+defining the failure to signal an error as a useful behavior.
+
+Examples::
+..........
+
+      (defun adder (x) (function (lambda (y) (+ x y))))
+
+The result of (adder 3) is a function that adds 3 to its argument:
+
+      (setq add3 (adder 3))
+      (funcall add3 5) =>  8
+
+This works because function creates a closure of the lambda expression
+that is able to refer to the value 3 of the variable x even after control
+has returned from the function adder.
+
+See Also::
+..........
+
+*Note defun:: , *Note fdefinition:: , *Note flet; labels; macrolet:: ,
+labels, *Note symbol-function:: , *Note Symbols as Forms::, *Note
+Sharpsign Single-Quote::, *Note Printing Other Objects::
+
+Notes::
+.......
+
+The notation #'name may be used as an abbreviation for (function name).
+
+
+File: gcl.info,  Node: function-lambda-expression,  Next: functionp,  Prev: function (Special Operator),  Up: Data and Control Flow Dictionary
+
+function-lambda-expression                                       [Function]
+---------------------------------------------------------------------------
+
+`function-lambda-expression'  function
+=>  lambda-expression, closure-p, name
+
+Arguments and Values::
+......................
+
+function--a function.
+
+lambda-expression--a lambda expression or nil.
+
+closure-p--a generalized boolean.
+
+name--an object.
+
+Description::
+.............
+
+Returns information about function as follows:
+
+The primary value, lambda-expression, is function's defining lambda
+expression, or nil if the information is not available.  The lambda
+expression may have been pre-processed in some ways, but it should remain
+a suitable argument to compile or function.  Any implementation may
+legitimately return nil as the lambda-expression of any function.
+
+The secondary value, closure-p, is nil if function's definition was
+enclosed in the null lexical environment or something non-nil if
+function's definition might have been enclosed in some non-null lexical
+environment.  Any implementation may legitimately return true as the
+closure-p of any function.
+
+The tertiary value, name, is the "name" of function.  The name is intended
+for debugging only and is not necessarily one that would be valid for use
+as a name in defun or function, for example.  By convention, nil is used
+to mean that function has no name.  Any implementation may legitimately
+return nil as the name of any function.
+
+Examples::
+..........
+
+The following examples illustrate some possible return values, but are not
+intended to be exhaustive:
+
+      (function-lambda-expression #'(lambda (x) x))
+     =>  NIL, false, NIL
+     OR=> NIL, true, NIL
+     OR=> (LAMBDA (X) X), true, NIL
+     OR=> (LAMBDA (X) X), false, NIL
+     
+      (function-lambda-expression
+         (funcall #'(lambda () #'(lambda (x) x))))
+     =>  NIL, false, NIL
+     OR=> NIL, true, NIL
+     OR=> (LAMBDA (X) X), true, NIL
+     OR=> (LAMBDA (X) X), false, NIL
+     
+      (function-lambda-expression
+         (funcall #'(lambda (x) #'(lambda () x)) nil))
+     =>  NIL, true, NIL
+     OR=> (LAMBDA () X), true, NIL
+     NOT=> NIL, false, NIL
+     NOT=> (LAMBDA () X), false, NIL
+     
+      (flet ((foo (x) x))
+        (setf (symbol-function 'bar) #'foo)
+        (function-lambda-expression #'bar))
+     =>  NIL, false, NIL
+     OR=> NIL, true, NIL
+     OR=> (LAMBDA (X) (BLOCK FOO X)), true, NIL
+     OR=> (LAMBDA (X) (BLOCK FOO X)), false, FOO
+     OR=> (SI::BLOCK-LAMBDA FOO (X) X), false, FOO
+     
+      (defun foo ()
+        (flet ((bar (x) x))
+          #'bar))
+      (function-lambda-expression (foo))
+     =>  NIL, false, NIL
+     OR=> NIL, true, NIL
+     OR=> (LAMBDA (X) (BLOCK BAR X)), true, NIL
+     OR=> (LAMBDA (X) (BLOCK BAR X)), true, (:INTERNAL FOO 0 BAR)
+     OR=> (LAMBDA (X) (BLOCK BAR X)), false, "BAR in FOO"
+
+Notes::
+.......
+
+Although implementations are free to return "nil, true, nil" in all cases,
+they are encouraged to return a lambda expression as the primary value in
+the case where the argument was created by a call to compile or eval (as
+opposed to being created by loading a compiled file).
+
+
+File: gcl.info,  Node: functionp,  Next: compiled-function-p,  Prev: function-lambda-expression,  Up: Data and Control Flow Dictionary
+
+functionp                                                        [Function]
+---------------------------------------------------------------------------
+
+`functionp'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type function; otherwise, returns false.
+
+Examples::
+..........
+
+      (functionp 'append) =>  false
+      (functionp #'append) =>  true
+      (functionp (symbol-function 'append)) =>  true
+      (flet ((f () 1)) (functionp #'f)) =>  true
+      (functionp (compile nil '(lambda () 259))) =>  true
+      (functionp nil) =>  false
+      (functionp 12) =>  false
+      (functionp '(lambda (x) (* x x))) =>  false
+      (functionp #'(lambda (x) (* x x))) =>  true
+
+Notes::
+.......
+
+      (functionp object) == (typep object 'function)
+
+
+File: gcl.info,  Node: compiled-function-p,  Next: call-arguments-limit,  Prev: functionp,  Up: Data and Control Flow Dictionary
+
+compiled-function-p                                              [Function]
+---------------------------------------------------------------------------
+
+`compiled-function-p'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type compiled-function; otherwise, returns
+false.
+
+Examples::
+..........
+
+      (defun f (x) x) =>  F
+      (compiled-function-p #'f)
+     =>  false
+     OR=> true
+      (compiled-function-p 'f) =>  false
+      (compile 'f) =>  F
+      (compiled-function-p #'f) =>  true
+      (compiled-function-p 'f) =>  false
+      (compiled-function-p (compile nil '(lambda (x) x)))
+     =>  true
+      (compiled-function-p #'(lambda (x) x))
+     =>  false
+     OR=> true
+      (compiled-function-p '(lambda (x) x)) =>  false
+
+See Also::
+..........
+
+*Note compile:: , *Note compile-file:: , *Note compiled-function::
+
+Notes::
+.......
+
+      (compiled-function-p object) == (typep object 'compiled-function)
+
+
+File: gcl.info,  Node: call-arguments-limit,  Next: lambda-list-keywords,  Prev: compiled-function-p,  Up: Data and Control Flow Dictionary
+
+call-arguments-limit                                    [Constant Variable]
+---------------------------------------------------------------------------
+
+Constant Value::
+................
+
+An integer not smaller than 50 and at least as great as the value of
+lambda-parameters-limit, the exact magnitude of which is
+implementation-dependent.
+
+Description::
+.............
+
+The upper exclusive bound on the number of arguments that may be passed to
+a function.
+
+See Also::
+..........
+
+*Note lambda-parameters-limit:: , *Note multiple-values-limit::
+
+
+File: gcl.info,  Node: lambda-list-keywords,  Next: lambda-parameters-limit,  Prev: call-arguments-limit,  Up: Data and Control Flow Dictionary
+
+lambda-list-keywords                                    [Constant Variable]
+---------------------------------------------------------------------------
+
+Constant Value::
+................
+
+a list, the elements of which are implementation-dependent, but which must
+contain at least the symbols &allow-other-keys, &aux, &body, &environment,
+&key, &optional, &rest, and &whole.
+
+Description::
+.............
+
+A list of all the lambda list keywords used in the implementation,
+including the additional ones used only by macro definition forms.
+
+See Also::
+..........
+
+*Note defun:: , *Note flet; labels; macrolet:: , *Note defmacro:: ,
+macrolet, *Note The Evaluation Model::
+
+
+File: gcl.info,  Node: lambda-parameters-limit,  Next: defconstant,  Prev: lambda-list-keywords,  Up: Data and Control Flow Dictionary
+
+lambda-parameters-limit                                 [Constant Variable]
+---------------------------------------------------------------------------
+
+Constant Value::
+................
+
+implementation-dependent, but not smaller than 50.
+
+Description::
+.............
+
+A positive integer that is the upper exclusive bound on the number of
+parameter names that can appear in a single lambda list.
+
+See Also::
+..........
+
+*Note call-arguments-limit::
+
+Notes::
+.......
+
+Implementors are encouraged to make the value of lambda-parameters-limit
+as large as possible.
+
+
+File: gcl.info,  Node: defconstant,  Next: defparameter,  Prev: lambda-parameters-limit,  Up: Data and Control Flow Dictionary
+
+defconstant                                                         [Macro]
+---------------------------------------------------------------------------
+
+`defconstant'  name initial-value [documentation] =>  name
+
+Arguments and Values::
+......................
+
+name--a symbol; not evaluated.
+
+initial-value--a form; evaluated.
+
+documentation--a string; not evaluated.
+
+Description::
+.............
+
+defconstant causes the global variable named by name to be given a value
+that is the result of evaluating initial-value.
+
+A constant defined by defconstant can be redefined with defconstant.
+However, the consequences are undefined if an attempt is made to assign a
+value to the symbol using another operator, or to assign it to a different
+value using a subsequent defconstant.
+
+If documentation is supplied, it is attached to name as a documentation
+string of kind variable.
+
+defconstant normally appears as a top level form, but it is meaningful for
+it to appear as a non-top-level form.  However, the compile-time side
+effects described below only take place when defconstant appears as a top
+level form.
+
+The consequences are undefined if there are any bindings of the variable
+named by name at the time defconstant is executed or if the value is not
+eql to the value of initial-value.
+
+The consequences are undefined when constant symbols are rebound as either
+lexical or dynamic variables.  In other words, a reference to a symbol
+declared with defconstant always refers to its global value.
+
+The side effects of the execution of defconstant must be equivalent to at
+least the side effects of the execution of the following code:
+
+      (setf (symbol-value 'name) initial-value)
+      (setf (documentation 'name 'variable) 'documentation)
+
+If a defconstant form appears as a top level form, the compiler must
+recognize that name names a constant variable.  An implementation may
+choose to evaluate the value-form at compile time, load time, or both.
+Therefore, users must ensure that the initial-value can be evaluated at
+compile time (regardless of whether or not references to name appear in
+the file) and that it always evaluates to the same value.
+
+[Editorial Note by KMP: Does "same value" here mean eql or similar?]
+
+[Reviewer Note by Moon: Probably depends on whether load time is compared
+to compile time, or two compiles.]
+
+Examples::
+..........
+
+      (defconstant this-is-a-constant 'never-changing "for a test") =>  THIS-IS-A-CONSTANT
+     this-is-a-constant =>  NEVER-CHANGING
+      (documentation 'this-is-a-constant 'variable) =>  "for a test"
+      (constantp 'this-is-a-constant) =>  true
+
+See Also::
+..........
+
+*Note declaim:: , *Note defparameter; defvar:: , defvar, *Note
+documentation; (setf documentation):: , *Note proclaim:: , *Note Constant
+Variables::, *Note Compilation::
+
+
+File: gcl.info,  Node: defparameter,  Next: destructuring-bind,  Prev: defconstant,  Up: Data and Control Flow Dictionary
+
+defparameter, defvar                                                [Macro]
+---------------------------------------------------------------------------
+
+`defparameter'  name         initial-value [documentation]  =>  name
+
+`defvar'  name [initial-value [documentation]] =>  name
+
+Arguments and Values::
+......................
+
+name--a symbol; not evaluated.
+
+initial-value--a form; for defparameter, it is always evaluated, but for
+defvar it is evaluated only if name is not already bound.
+
+documentation--a string; not evaluated.
+
+Description::
+.............
+
+defparameter and defvar establish name as a dynamic variable.
+
+defparameter unconditionally assigns the initial-value to the dynamic
+variable named name.  defvar, by contrast, assigns initial-value (if
+supplied) to the dynamic variable named name only if name is not already
+bound.
+
+If no initial-value is supplied, defvar leaves the value cell of the
+dynamic variable named name undisturbed; if name was previously bound, its
+old value persists, and if it was previously unbound, it remains unbound.
+
+If documentation is supplied, it is attached to name as a documentation
+string of kind variable.
+
+defparameter and defvar normally appear as a top level form, but it is
+meaningful for them to appear as non-top-level forms.  However, the
+compile-time side effects described below only take place when they appear
+as top level forms.
+
+Examples::
+..........
+
+      (defparameter *p* 1) =>  *P*
+      *p* =>  1
+      (constantp '*p*) =>  false
+      (setq *p* 2) =>  2
+      (defparameter *p* 3) =>  *P*
+      *p* =>  3
+     
+      (defvar *v* 1) =>  *V*
+      *v* =>  1
+      (constantp '*v*) =>  false
+      (setq *v* 2) =>  2
+      (defvar *v* 3) =>  *V*
+      *v* =>  2
+     
+      (defun foo ()
+        (let ((*p* 'p) (*v* 'v))
+          (bar))) =>  FOO
+      (defun bar () (list *p* *v*)) =>  BAR
+      (foo) =>  (P V)
+
+The principal operational distinction between defparameter and defvar is
+that defparameter makes an unconditional assignment to name, while defvar
+makes a conditional one.  In practice, this means that defparameter is
+useful in situations where loading or reloading the definition would want
+to pick up a new value of the variable, while defvar is used in situations
+where the old value would want to be retained if the file were loaded or
+reloaded.  For example, one might create a file which contained:
+
+      (defvar *the-interesting-numbers* '())
+      (defmacro define-interesting-number (name n)
+        `(progn (defvar ,name ,n)
+                (pushnew ,name *the-interesting-numbers*)
+                ',name))
+      (define-interesting-number *my-height* 168) ;cm
+      (define-interesting-number *my-weight* 13)  ;stones
+
+Here the initial value, (), for the variable *the-interesting-numbers* is
+just a seed that we are never likely to want to reset to something else
+once something has been grown from it.  As such, we have used defvar to
+avoid having the *interesting-numbers* information reset if the file is
+loaded a second time.  It is true that the two calls to
+define-interesting-number here would be reprocessed, but if there were
+additional calls in another file, they would not be and that information
+would be lost.  On the other hand, consider the following code:
+
+      (defparameter *default-beep-count* 3)
+      (defun beep (&optional (n *default-beep-count*))
+        (dotimes (i n) (si:
+
+Here we could easily imagine editing the code to change the initial value
+of *default-beep-count*, and then reloading the file to pick up the new
+value.  In order to make value updating easy, we have used defparameter.
+
+On the other hand, there is potential value to using defvar in this
+situation.  For example, suppose that someone had predefined an alternate
+value for *default-beep-count*, or had loaded the file and then manually
+changed the value.  In both cases, if we had used defvar instead of
+defparameter, those user preferences would not be overridden by
+(re)loading the file.
+
+The choice of whether to use defparameter or defvar has visible
+consequences to programs, but is nevertheless often made for subjective
+reasons.
+
+Side Effects::
+..............
+
+If a defvar or defparameter form appears as a top level form, the compiler
+must recognize that the name has been proclaimed special.  However, it
+must neither evaluate the initial-value form nor assign the dynamic
+variable named name at compile time.
+
+There may be additional (implementation-defined) compile-time or run-time
+side effects, as long as such effects do not interfere with the correct
+operation of conforming programs.
+
+Affected By::
+.............
+
+defvar is affected by whether name is already bound.
+
+See Also::
+..........
+
+*Note declaim:: , *Note defconstant:: , *Note documentation; (setf
+documentation):: , *Note Compilation::
+
+Notes::
+.......
+
+It is customary to name dynamic variables with an asterisk at the
+beginning and end of the name.  e.g., *foo* is a good name for a dynamic
+variable, but not for a lexical variable; foo is a good name for a lexical
+variable, but not for a dynamic variable.  This naming convention is
+observed for all defined names in Common Lisp; however, neither conforming
+programs nor conforming implementations are obliged to adhere to this
+convention.
+
+The intent of the permission for additional side effects is to allow
+implementations to do normal "bookkeeping" that accompanies definitions.
+For example, the macro expansion of a defvar or defparameter form might
+include code that arranges to record the name of the source file in which
+the definition occurs.
+
+defparameter and defvar might be defined as follows:
+
+      (defmacro defparameter (name initial-value
+                              &optional (documentation nil documentation-p))
+        `(progn (declaim (special ,name))
+                (setf (symbol-value ',name) ,initial-value)
+                ,(when documentation-p
+                   `(setf (documentation ',name 'variable) ',documentation))
+                ',name))
+      (defmacro defvar (name &optional
+                             (initial-value nil initial-value-p)
+                             (documentation nil documentation-p))
+        `(progn (declaim (special ,name))
+                ,(when initial-value-p
+                   `(unless (boundp ',name)
+                      (setf (symbol-value ',name) ,initial-value)))
+                ,(when documentation-p
+                   `(setf (documentation ',name 'variable) ',documentation))
+                ',name))
+
+
+File: gcl.info,  Node: destructuring-bind,  Next: let,  Prev: defparameter,  Up: Data and Control Flow Dictionary
+
+destructuring-bind                                                  [Macro]
+---------------------------------------------------------------------------
+
+`destructuring-bind'  lambda-list expression {declaration}* {form}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+lambda-list--a destructuring lambda list.
+
+expression--a form.
+
+declaration--a declare expression; not evaluated.
+
+forms--an implicit progn.
+
+results--the values returned by the forms.
+
+Description::
+.............
+
+destructuring-bind binds the variables specified in lambda-list to the
+corresponding values in the tree structure resulting from the evaluation
+of expression; then destructuring-bind evaluates forms.
+
+The lambda-list supports destructuring as described in *Note Destructuring
+Lambda Lists::.
+
+Examples::
+..........
+
+      (defun iota (n) (loop for i from 1 to n collect i))       ;helper
+      (destructuring-bind ((a &optional (b 'bee)) one two three)
+          `((alpha) ,@(iota 3))
+        (list a b three two one)) =>  (ALPHA BEE 3 2 1)
+
+Exceptional Situations::
+........................
+
+If the result of evaluating the expression does not match the
+destructuring pattern, an error of type error should be signaled.
+
+See Also::
+..........
+
+macrolet, *Note defmacro::
+

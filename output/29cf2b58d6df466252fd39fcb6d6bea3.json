@@ -1,0 +1,69 @@
+{
+    "name": "invoke-restart",
+    "prev": "find-restart",
+    "next": "invoke-restart-interactively",
+    "up": "Conditions Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "invoke-restart"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "invoke-restart",
+                    "text": " restart &rest arguments =>  {result}*\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "restart",
+                    "desc": "a restart designator."
+                },
+                {
+                    "name": "argument",
+                    "desc": "an object."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values returned by the function associated with restart, if"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Calls the function associated with restart, passing arguments to it.\nRestart must be valid in the current dynamic environment.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defun add3 (x) (check-type x number) (+ x 3))\n      (foo 'seven)\n      |>  Error: The value SEVEN was not of type NUMBER.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Specify a different value to use.\n      |>   2: Return to Lisp Toplevel.\n      |>  Debug> |>>(invoke-restart 'store-value 7)<<|\n     =>  10\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "A non-local transfer of control might be done by the restart.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "Existing restarts.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If restart is not valid, an error of type control-error is signaled.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note find-restart:: , *Note restart-bind:: , *Note restart-case:: , *Note\ninvoke-restart-interactively::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The most common use for invoke-restart is in a handler.  It might be used\nexplicitly, or implicitly through invoke-restart-interactively or a\nrestart function.\nRestart functions call invoke-restart, not vice versa.  That is,\ninvoke-restart provides primitive functionality, and restart functions are\nnon-essential \"syntactic sugar.\"\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: invoke-restart,  Next: invoke-restart-interactively,  Prev: find-restart,  Up: Conditions Dictionary\n\ninvoke-restart                                                   [Function]\n---------------------------------------------------------------------------\n\n`invoke-restart'  restart &rest arguments =>  {result}*\n\nArguments and Values::\n......................\n\nrestart--a restart designator.\n\nargument--an object.\n\nresults--the values returned by the function associated with restart, if\nthat function returns.\n\nDescription::\n.............\n\nCalls the function associated with restart, passing arguments to it.\nRestart must be valid in the current dynamic environment.\n\nExamples::\n..........\n\n      (defun add3 (x) (check-type x number) (+ x 3))\n     \n      (foo 'seven)\n      |>  Error: The value SEVEN was not of type NUMBER.\n      |>  To continue, type :CONTINUE followed by an option number:\n      |>   1: Specify a different value to use.\n      |>   2: Return to Lisp Toplevel.\n      |>  Debug> |>>(invoke-restart 'store-value 7)<<|\n     =>  10\n\nSide Effects::\n..............\n\nA non-local transfer of control might be done by the restart.\n\nAffected By::\n.............\n\nExisting restarts.\n\nExceptional Situations::\n........................\n\nIf restart is not valid, an error of type control-error is signaled.\n\nSee Also::\n..........\n\n*Note find-restart:: , *Note restart-bind:: , *Note restart-case:: , *Note\ninvoke-restart-interactively::\n\nNotes::\n.......\n\nThe most common use for invoke-restart is in a handler.  It might be used\nexplicitly, or implicitly through invoke-restart-interactively or a\nrestart function.\n\nRestart functions call invoke-restart, not vice versa.  That is,\ninvoke-restart provides primitive functionality, and restart functions are\nnon-essential \"syntactic sugar.\"\n\n"
+}

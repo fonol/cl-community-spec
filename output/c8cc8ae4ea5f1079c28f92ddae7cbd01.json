@@ -1,0 +1,47 @@
+{
+    "name": "write-sequence",
+    "prev": "read-sequence",
+    "next": "file-length",
+    "up": "Streams Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "write-sequence"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "write-sequence",
+                    "text": " sequence stream &key start end =>  sequence\nsequence--a sequence.\n\nstream--an output stream.\n\nstart, end--bounding index designators of sequence.  The defaults for\nstart and end are 0 and nil, respectively.\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Description",
+            "text": "write-sequence writes the elements of the subsequence of sequence bounded\nby start and end to stream.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (write-sequence \"bookworms\" *standard-output* :end 4)\n       |>  book\n      =>  \"bookworms\"\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "Modifies stream.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.  Should signal an error of type type-error if start\nis not a non-negative integer.  Should signal an error of type type-error\nif end is not a non-negative integer or nil.\nMight signal an error of type type-error if an element of the bounded\nsequence is not a member of the stream element type of the stream.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note Compiler Terminology::, *Note read-sequence:: , *Note write-string;\nwrite-line:: , write-line\n"
+        },
+        {
+            "type": "Notes",
+            "text": "write-sequence is identical in effect to iterating over the indicated\nsubsequence and writing one element at a time to stream, but may be more\nefficient than the equivalent loop.  An efficient implementation is more\nlikely to exist for the case where the sequence is a vector with the same\nelement type as the stream.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: write-sequence,  Next: file-length,  Prev: read-sequence,  Up: Streams Dictionary\n\nwrite-sequence                                                   [Function]\n---------------------------------------------------------------------------\n\n`write-sequence'  sequence stream &key start end =>  sequence\n\nsequence--a sequence.\n\nstream--an output stream.\n\nstart, end--bounding index designators of sequence.  The defaults for\nstart and end are 0 and nil, respectively.\n\nDescription::\n.............\n\nwrite-sequence writes the elements of the subsequence of sequence bounded\nby start and end to stream.\n\nExamples::\n..........\n\n      (write-sequence \"bookworms\" *standard-output* :end 4)\n       |>  book\n      =>  \"bookworms\"\n\nSide Effects::\n..............\n\nModifies stream.\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.  Should signal an error of type type-error if start\nis not a non-negative integer.  Should signal an error of type type-error\nif end is not a non-negative integer or nil.\n\nMight signal an error of type type-error if an element of the bounded\nsequence is not a member of the stream element type of the stream.\n\nSee Also::\n..........\n\n*Note Compiler Terminology::, *Note read-sequence:: , *Note write-string;\nwrite-line:: , write-line\n\nNotes::\n.......\n\nwrite-sequence is identical in effect to iterating over the indicated\nsubsequence and writing one element at a time to stream, but may be more\nefficient than the equivalent loop.  An efficient implementation is more\nlikely to exist for the case where the sequence is a vector with the same\nelement type as the stream.\n\n"
+}

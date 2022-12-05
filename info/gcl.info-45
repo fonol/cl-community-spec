@@ -1,0 +1,1497 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: broadcast-stream-streams,  Next: make-broadcast-stream,  Prev: synonym-stream-symbol,  Up: Streams Dictionary
+
+broadcast-stream-streams                                         [Function]
+---------------------------------------------------------------------------
+
+`broadcast-stream-streams'  broadcast-stream =>  streams
+
+Arguments and Values::
+......................
+
+broadcast-stream--a broadcast stream.
+
+streams--a list of streams.
+
+Description::
+.............
+
+Returns a list of output streams that constitute all the streams to which
+the broadcast-stream is broadcasting.
+
+
+File: gcl.info,  Node: make-broadcast-stream,  Next: make-two-way-stream,  Prev: broadcast-stream-streams,  Up: Streams Dictionary
+
+make-broadcast-stream                                            [Function]
+---------------------------------------------------------------------------
+
+`make-broadcast-stream'  &rest streams =>  broadcast-stream
+
+Arguments and Values::
+......................
+
+stream--an output stream.
+
+broadcast-stream--a broadcast stream.
+
+Description::
+.............
+
+Returns a broadcast stream.
+
+Examples::
+..........
+
+      (setq a-stream (make-string-output-stream)
+             b-stream (make-string-output-stream)) =>  #<String Output Stream>
+      (format (make-broadcast-stream a-stream b-stream)
+               "this will go to both streams") =>  NIL
+      (get-output-stream-string a-stream) =>  "this will go to both streams"
+      (get-output-stream-string b-stream) =>  "this will go to both streams"
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if any stream is not an output
+stream.
+
+See Also::
+..........
+
+*Note broadcast-stream-streams::
+
+
+File: gcl.info,  Node: make-two-way-stream,  Next: two-way-stream-input-stream,  Prev: make-broadcast-stream,  Up: Streams Dictionary
+
+make-two-way-stream                                              [Function]
+---------------------------------------------------------------------------
+
+`make-two-way-stream'  input-stream output-stream =>  two-way-stream
+
+Arguments and Values::
+......................
+
+input-stream--a stream.
+
+output-stream--a stream.
+
+two-way-stream--a two-way stream.
+
+Description::
+.............
+
+Returns a two-way stream that gets  its input  from input-stream and
+sends its output to   output-stream.
+
+Examples::
+..........
+
+      (with-output-to-string (out)
+         (with-input-from-string (in "input...")
+           (let ((two (make-two-way-stream in out)))
+             (format two "output...")
+             (setq what-is-read (read two))))) =>  "output..."
+      what-is-read =>  INPUT...
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if input-stream is not an input
+stream.  Should signal an error of type type-error if output-stream is not
+an output stream.
+
+
+File: gcl.info,  Node: two-way-stream-input-stream,  Next: echo-stream-input-stream,  Prev: make-two-way-stream,  Up: Streams Dictionary
+
+two-way-stream-input-stream, two-way-stream-output-stream
+---------------------------------------------------------
+
+                                                                [Function]
+
+`two-way-stream-input-stream'  two-way-stream =>  input-stream
+
+`two-way-stream-output-stream'  two-way-stream =>  output-stream
+
+Arguments and Values::
+......................
+
+two-way-stream--a two-way stream.
+
+input-stream--an input stream.
+
+output-stream--an output stream.
+
+Description::
+.............
+
+two-way-stream-input-stream returns the stream from which two-way-stream
+receives input.
+
+two-way-stream-output-stream returns the stream to which two-way-stream
+sends output.
+
+
+File: gcl.info,  Node: echo-stream-input-stream,  Next: make-echo-stream,  Prev: two-way-stream-input-stream,  Up: Streams Dictionary
+
+echo-stream-input-stream, echo-stream-output-stream              [Function]
+---------------------------------------------------------------------------
+
+`echo-stream-input-stream'  echo-stream =>  input-stream
+
+`echo-stream-output-stream'  echo-stream =>  output-stream
+
+Arguments and Values::
+......................
+
+echo-stream--an echo stream.
+
+input-stream--an input stream.
+
+output-stream--an output stream.
+
+Description::
+.............
+
+echo-stream-input-stream returns the input stream from which echo-stream
+receives input.
+
+echo-stream-output-stream returns the output stream to which echo-stream
+sends output.
+
+
+File: gcl.info,  Node: make-echo-stream,  Next: concatenated-stream-streams,  Prev: echo-stream-input-stream,  Up: Streams Dictionary
+
+make-echo-stream                                                 [Function]
+---------------------------------------------------------------------------
+
+`make-echo-stream'  input-stream output-stream =>  echo-stream
+
+Arguments and Values::
+......................
+
+input-stream--an input stream.
+
+output-stream--an output stream.
+
+echo-stream--an echo stream.
+
+Description::
+.............
+
+Creates and returns an echo stream that takes input  from input-stream and
+sends output to   output-stream.
+
+Examples::
+..........
+
+      (let ((out (make-string-output-stream)))
+         (with-open-stream
+             (s (make-echo-stream
+                 (make-string-input-stream "this-is-read-and-echoed")
+                 out))
+           (read s)
+           (format s " * this-is-direct-output")
+           (get-output-stream-string out)))
+     =>  "this-is-read-and-echoed * this-is-direct-output"
+
+See Also::
+..........
+
+*Note echo-stream-input-stream; echo-stream-output-stream:: ,
+echo-stream-output-stream, *Note make-two-way-stream::
+
+
+File: gcl.info,  Node: concatenated-stream-streams,  Next: make-concatenated-stream,  Prev: make-echo-stream,  Up: Streams Dictionary
+
+concatenated-stream-streams                                      [Function]
+---------------------------------------------------------------------------
+
+`concatenated-stream-streams'  concatenated-stream =>  streams
+
+Arguments and Values::
+......................
+
+concatenated-stream - a concatenated stream.
+
+streams--a list of input streams.
+
+Description::
+.............
+
+Returns a list of input streams that constitute the ordered set of streams
+the concatenated-stream still has to read from, starting with the current
+one it is reading from.  The list may be empty if no more streams remain
+to be read.
+
+The consequences are undefined if the list structure of the streams is
+ever modified.
+
+
+File: gcl.info,  Node: make-concatenated-stream,  Next: get-output-stream-string,  Prev: concatenated-stream-streams,  Up: Streams Dictionary
+
+make-concatenated-stream                                         [Function]
+---------------------------------------------------------------------------
+
+`make-concatenated-stream'  &rest input-streams =>  concatenated-stream
+
+Arguments and Values::
+......................
+
+input-stream--an input stream.
+
+concatenated-stream--a concatenated stream.
+
+Description::
+.............
+
+Returns a concatenated stream that has the indicated input-streams
+initially associated with it.
+
+Examples::
+..........
+
+      (read (make-concatenated-stream
+              (make-string-input-stream "1")
+              (make-string-input-stream "2"))) =>  12
+
+Exceptional Situations::
+........................
+
+Should signal type-error if any argument is not an input stream.
+
+See Also::
+..........
+
+*Note concatenated-stream-streams::
+
+
+File: gcl.info,  Node: get-output-stream-string,  Next: make-string-input-stream,  Prev: make-concatenated-stream,  Up: Streams Dictionary
+
+get-output-stream-string                                         [Function]
+---------------------------------------------------------------------------
+
+`get-output-stream-string'  string-output-stream =>  string
+
+Arguments and Values::
+......................
+
+string-output-stream--a stream.
+
+string--a string.
+
+Description::
+.............
+
+Returns a string containing, in order, all the characters that have been
+output to string-output-stream.  This operation clears any characters on
+string-output-stream, so the string contains only those characters which
+have been output since the last call to get-output-stream-string or since
+the creation of the string-output-stream, whichever occurred most recently.
+
+Examples::
+..........
+
+      (setq a-stream (make-string-output-stream)
+             a-string "abcdefghijklm") =>  "abcdefghijklm"
+      (write-string a-string a-stream) =>  "abcdefghijklm"
+      (get-output-stream-string a-stream) =>  "abcdefghijklm"
+      (get-output-stream-string a-stream) =>  ""
+
+Side Effects::
+..............
+
+The string-output-stream is cleared.
+
+Exceptional Situations::
+........................
+
+The consequences are undefined if stream-output-string is closed.
+
+The consequences are undefined if string-output-stream is a stream that
+was not produced by make-string-output-stream.
+
+The consequences are undefined if string-output-stream was created
+implicitly by with-output-to-string or format.
+
+See Also::
+..........
+
+*Note make-string-output-stream::
+
+
+File: gcl.info,  Node: make-string-input-stream,  Next: make-string-output-stream,  Prev: get-output-stream-string,  Up: Streams Dictionary
+
+make-string-input-stream                                         [Function]
+---------------------------------------------------------------------------
+
+`make-string-input-stream'  string &optional start end =>  string-stream
+
+Arguments and Values::
+......................
+
+string--a string.
+
+start, end--bounding index designators of string.  The defaults for start
+and end are 0 and nil, respectively.
+
+string-stream--an input string stream.
+
+Description::
+.............
+
+Returns an input string stream.  This stream will supply, in order, the
+characters in the substring of string bounded by start and end.  After the
+last character has been supplied, the string stream will then be at end of
+file.
+
+Examples::
+..........
+
+      (let ((string-stream (make-string-input-stream "1 one ")))
+        (list (read string-stream nil nil)
+              (read string-stream nil nil)
+              (read string-stream nil nil)))
+     =>  (1 ONE NIL)
+     
+      (read (make-string-input-stream "prefixtargetsuffix" 6 12)) =>  TARGET
+
+See Also::
+..........
+
+*Note with-input-from-string::
+
+
+File: gcl.info,  Node: make-string-output-stream,  Next: with-input-from-string,  Prev: make-string-input-stream,  Up: Streams Dictionary
+
+make-string-output-stream                                        [Function]
+---------------------------------------------------------------------------
+
+`make-string-output-stream'  &key element-type =>  string-stream
+
+Arguments and Values::
+......................
+
+element-type--a type specifier.  The default is character.
+
+string-stream--an output string stream.
+
+Description::
+.............
+
+Returns
+
+an output string stream that accepts characters and makes available (via
+get-output-stream-string) a string that contains the characters that were
+actually output.
+
+The element-type names the type of the elements of the string; a string is
+constructed of the most specialized type that can accommodate elements of
+that element-type.
+
+Examples::
+..........
+
+      (let ((s (make-string-output-stream)))
+        (write-string "testing... " s)
+        (prin1 1234 s)
+        (get-output-stream-string s))
+     =>  "testing... 1234"
+
+None..
+
+See Also::
+..........
+
+*Note get-output-stream-string:: , *Note with-output-to-string::
+
+
+File: gcl.info,  Node: with-input-from-string,  Next: with-output-to-string,  Prev: make-string-output-stream,  Up: Streams Dictionary
+
+with-input-from-string                                              [Macro]
+---------------------------------------------------------------------------
+
+`with-input-from-string'  (var string &key index start end) {declaration}*
+{form}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+var--a variable name.
+
+string--a form; evaluated to produce a string.
+
+index--a place.
+
+start, end--bounding index designators of string.  The defaults for start
+and end are 0 and nil, respectively.
+
+declaration--a declare expression; not evaluated.
+
+forms--an implicit progn.
+
+result--the values returned by the forms.
+
+Description::
+.............
+
+Creates an
+
+input string stream,
+
+provides an opportunity to perform operations on the stream (returning
+zero or more values), and then closes the string stream.
+
+String is evaluated first, and var is bound to a character input string
+stream that supplies characters from the subsequence of the resulting
+string bounded by start and end.  The body is executed as an implicit
+progn.
+
+The input string stream is automatically closed on exit from
+with-input-from-string, no matter whether the exit is normal or abnormal.
+
+The input string stream to which the variable var is bound has dynamic
+extent; its extent ends when the form is exited.
+
+The index is a pointer within the string to be advanced.  If
+with-input-from-string is exited normally, then index will have as its
+value the index into the string indicating the first character not read
+which is (length string) if all characters were used.  The place specified
+by index is not updated as reading progresses, but only at the end of the
+operation.
+
+start and index may both specify the same variable, which is a pointer
+within the string to be advanced, perhaps repeatedly by some containing
+loop.
+
+The consequences are undefined if an attempt is made to assign the
+variable var.
+
+Examples::
+..........
+
+      (with-input-from-string (s "XXX1 2 3 4xxx"
+                                  :index ind
+                                  :start 3 :end 10)
+         (+ (read s) (read s) (read s))) =>  6
+      ind =>  9
+      (with-input-from-string (s "Animal Crackers" :index j :start 6)
+        (read s)) =>  CRACKERS
+
+The variable j is set to 15.
+
+Side Effects::
+..............
+
+The value of the place named by index, if any, is modified.
+
+See Also::
+..........
+
+*Note make-string-input-stream:: ,
+
+*Note Traversal Rules and Side Effects::
+
+
+File: gcl.info,  Node: with-output-to-string,  Next: *debug-io*,  Prev: with-input-from-string,  Up: Streams Dictionary
+
+with-output-to-string                                               [Macro]
+---------------------------------------------------------------------------
+
+`with-output-to-string'  (var &optional string-form &key element-type)
+{declaration}* {form}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+var--a variable name.
+
+string-form--a form or nil; if non-nil, evaluated to produce string.
+
+string--a string that has a fill pointer.
+
+element-type--a type specifier; evaluated.
+
+The default is character.
+
+declaration--a declare expression; not evaluated.
+
+forms--an implicit progn.
+
+results--If a string-form is not supplied or nil, a string; otherwise, the
+values returned by the forms.
+
+Description::
+.............
+
+with-output-to-string creates a
+
+character output stream, performs a series of operations that may send
+results to this stream, and then closes the stream.
+
+The element-type names the type of the elements of the stream; a stream is
+constructed of the most specialized type that can accommodate elements of
+the given type.
+
+The body is executed as an implicit progn with var bound to an output
+string stream.  All output to that string stream is saved in a string.
+
+If string is supplied, element-type is ignored, and the output is
+incrementally appended to string as if by use of vector-push-extend.
+
+The output stream is automatically closed on exit from
+with-output-from-string, no matter whether the exit is normal or abnormal.
+
+The output string stream to which the variable var is bound has dynamic
+extent; its extent ends when the form is exited.
+
+If no string is provided, then with-output-from-string
+
+produces a stream that accepts characters and returns a string of the
+indicated element-type.
+
+If string is provided, with-output-to-string returns the results of
+evaluating the last form.
+
+The consequences are undefined if an attempt is made to assign the
+variable var.
+
+Examples::
+..........
+
+      (setq fstr (make-array '(0) :element-type 'base-char
+                                  :fill-pointer 0 :adjustable t)) =>  ""
+      (with-output-to-string (s fstr)
+         (format s "here's some output")
+         (input-stream-p s)) =>  false
+      fstr =>  "here's some output"
+
+Side Effects::
+..............
+
+The string is modified.
+
+Exceptional Situations::
+........................
+
+The consequences are undefined if destructive modifications are performed
+directly on the string during the dynamic extent of the call.
+
+See Also::
+..........
+
+*Note make-string-output-stream:: , vector-push-extend,
+
+*Note Traversal Rules and Side Effects::
+
+
+File: gcl.info,  Node: *debug-io*,  Next: *terminal-io*,  Prev: with-output-to-string,  Up: Streams Dictionary
+
+*debug-io*, *error-output*, *query-io*,
+---------------------------------------
+
+*standard-input*, *standard-output*,
+------------------------------------
+
+*trace-output*
+--------------
+
+                                                                [Variable]
+
+Value Type::
+............
+
+For *standard-input*: an input stream
+
+For *error-output*, *standard-output*, and *trace-output*: an output
+stream.
+
+For *debug-io*, *query-io*: a bidirectional stream.
+
+Initial Value::
+...............
+
+implementation-dependent, but it must be an open stream that is not a
+generalized synonym stream to an I/O customization variables but that
+might be a generalized synonym stream to the value of some I/O
+customization variable.  The initial value might also be a generalized
+synonym stream to either the symbol *terminal-io* or to the stream that is
+its value.
+
+Description::
+.............
+
+These variables are collectively called the standardized I/O customization
+variables.  They can be bound or assigned in order to change the default
+destinations for input and/or output used by various standardized
+operators and facilities.
+
+The value of *debug-io*, called debug I/O, is a stream to be used for
+interactive debugging purposes.
+
+The value of *error-output*, called error output, is a stream to which
+warnings and non-interactive error messages should be sent.
+
+The value of *query-io*, called query I/O, is a bidirectional stream to be
+used when asking questions of the user.  The question should be output to
+this stream, and the answer read from it.
+
+The value of *standard-input*, called standard input, is a stream that is
+used by many operators as a default source of input when no specific input
+stream is explicitly supplied.
+
+The value of *standard-output*, called standard output, is a stream that
+is used by many operators as a default destination for output when no
+specific output stream is explicitly supplied.
+
+The value of *trace-output*, called trace output, is the stream on which
+traced functions (see trace) and the time macro print their output.
+
+Examples::
+..........
+
+      (with-output-to-string (*error-output*)
+        (warn "this string is sent to *error-output*"))
+      =>  "Warning: this string is sent to *error-output*
+     " ;The exact format of this string is implementation-dependent.
+     
+      (with-input-from-string (*standard-input* "1001")
+         (+ 990 (read))) =>  1991
+     
+      (progn (setq out (with-output-to-string (*standard-output*)
+                          (print "print and format t send things to")
+                          (format t "*standard-output* now going to a string")))
+             :done)
+     =>  :DONE
+      out
+     =>  "
+     \"print and format t send things to\" *standard-output* now going to a string"
+     
+      (defun fact (n) (if (< n 2) 1 (* n (fact (- n 1)))))
+     =>  FACT
+      (trace fact)
+     =>  (FACT)
+     ;; Of course, the format of traced output is implementation-dependent.
+      (with-output-to-string (*trace-output*)
+        (fact 3))
+     =>  "
+     1 Enter FACT 3
+     | 2 Enter FACT 2
+     |   3 Enter FACT 1
+     |   3 Exit FACT 1
+     | 2 Exit FACT 2
+     1 Exit FACT 6"
+
+See Also::
+..........
+
+*terminal-io*, synonym-stream, *Note Time:: , *Note trace; untrace:: ,
+*Note Conditions::, *Note Reader::, *Note Printer::
+
+Notes::
+.......
+
+The intent of the constraints on the initial value of the I/O
+customization variables is to ensure that it is always safe to bind or
+assign such a variable to the value of another I/O customization variable,
+without unduly restricting implementation flexibility.
+
+It is common for an implementation to make the initial values of
+*debug-io* and *query-io* be the same stream, and to make the initial
+values of *error-output* and *standard-output* be the same stream.
+
+The functions y-or-n-p and yes-or-no-p use query I/O for their input and
+output.
+
+In the normal Lisp read-eval-print loop, input is read from standard input.
+Many input functions, including read and read-char, take a stream argument
+that defaults to standard input.
+
+In the normal Lisp read-eval-print loop, output is sent to standard output.
+Many output functions, including print and write-char, take a stream
+argument that defaults to standard output.
+
+A program that wants, for example, to divert output to a file should do so
+by binding *standard-output*; that way error messages sent to
+*error-output* can still get to the user by going through *terminal-io*
+(if *error-output* is bound to *terminal-io*), which is usually what is
+desired.
+
+
+File: gcl.info,  Node: *terminal-io*,  Next: stream-error,  Prev: *debug-io*,  Up: Streams Dictionary
+
+*terminal-io*                                                    [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a bidirectional stream.
+
+Initial Value::
+...............
+
+implementation-dependent, but it must be an open stream that is not a
+generalized synonym stream to an I/O customization variables but that
+might be a generalized synonym stream to the value of some I/O
+customization variable.
+
+Description::
+.............
+
+The value of *terminal-io*, called  terminal I/O, is ordinarily a
+bidirectional stream that connects to the user's console.  Typically,
+writing to this stream would cause the output to appear on a display
+screen, for example, and reading from the stream would accept input from a
+keyboard.  It is intended that standard input functions such as read and
+read-char, when used with this stream, cause echoing of the input into the
+output side of the stream. The means by which this is accomplished are
+implementation-dependent.
+
+The effect of changing the value of *terminal-io*, either by binding or
+assignment, is implementation-defined.
+
+Examples::
+..........
+
+      (progn (prin1 'foo) (prin1 'bar *terminal-io*))
+      |>  FOOBAR
+     =>  BAR
+      (with-output-to-string (*standard-output*)
+        (prin1 'foo)
+        (prin1 'bar *terminal-io*))
+      |>  BAR
+     =>  "FOO"
+
+See Also::
+..........
+
+*debug-io*, *error-output*, *query-io*, *standard-input*,
+*standard-output*, *trace-output*
+
+
+File: gcl.info,  Node: stream-error,  Next: stream-error-stream,  Prev: *terminal-io*,  Up: Streams Dictionary
+
+stream-error                                               [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+stream-error, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type stream-error consists of error conditions that are related to
+receiving input from or sending output to a stream.  The "offending
+stream" is initialized by the :stream initialization argument to
+make-condition, and is accessed by the function stream-error-stream.
+
+See Also::
+..........
+
+*Note stream-error-stream::
+
+
+File: gcl.info,  Node: stream-error-stream,  Next: end-of-file,  Prev: stream-error,  Up: Streams Dictionary
+
+stream-error-stream                                              [Function]
+---------------------------------------------------------------------------
+
+`stream-error-stream'  condition =>  stream
+
+Arguments and Values::
+......................
+
+condition--a condition of type stream-error.
+
+stream--a stream.
+
+Description::
+.............
+
+Returns the offending stream of a condition of type stream-error.
+
+Examples::
+..........
+
+      (with-input-from-string (s "(FOO")
+        (handler-case (read s)
+          (end-of-file (c)
+            (format nil "~&End of file on ~S." (stream-error-stream c)))))
+     "End of file on #<String Stream>."
+
+See Also::
+..........
+
+stream-error, *Note Conditions::
+
+
+File: gcl.info,  Node: end-of-file,  Prev: stream-error-stream,  Up: Streams Dictionary
+
+end-of-file                                                [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+end-of-file, stream-error, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type end-of-file consists of error conditions related to read
+operations that are done on streams that have no more data.
+
+See Also::
+..........
+
+*Note stream-error-stream::
+
+
+File: gcl.info,  Node: Printer,  Next: Reader,  Prev: Streams,  Up: Top
+
+Printer
+*******
+
+* Menu:
+
+* The Lisp Printer::
+* The Lisp Pretty Printer::
+* Formatted Output::
+* Printer Dictionary::
+
+
+File: gcl.info,  Node: The Lisp Printer,  Next: The Lisp Pretty Printer,  Prev: Printer,  Up: Printer
+
+The Lisp Printer
+================
+
+* Menu:
+
+* Overview of The Lisp Printer::
+* Printer Dispatching::
+* Default Print-Object Methods::
+* Examples of Printer Behavior::
+
+
+File: gcl.info,  Node: Overview of The Lisp Printer,  Next: Printer Dispatching,  Prev: The Lisp Printer,  Up: The Lisp Printer
+
+Overview of The Lisp Printer
+----------------------------
+
+Common Lisp provides a representation of most objects in the form of
+printed text called the printed representation.  Functions such as print
+take an object and send the characters of its printed representation to a
+stream.  The collection of routines that does this is known as the (Common
+Lisp) printer.
+
+Reading a printed representation typically produces an object that is
+equal to the originally printed object.
+
+* Menu:
+
+* Multiple Possible Textual Representations::
+* Printer Escaping::
+
+
+File: gcl.info,  Node: Multiple Possible Textual Representations,  Next: Printer Escaping,  Prev: Overview of The Lisp Printer,  Up: Overview of The Lisp Printer
+
+Multiple Possible Textual Representations
+.........................................
+
+Most objects have more than one possible textual representation.  For
+example, the positive integer with a magnitude of twenty-seven can be
+textually expressed in any of these ways:
+
+      27    27.    #o33    #x1B    #b11011    #.(* 3 3 3)    81/3
+
+A list containing the two symbols A and B can also be textually expressed
+in a variety of ways:
+
+      (A B)    (a b)    (  a  b )    (\A |B|)
+     (|\A|
+       B
+     )
+
+In general,
+
+from the point of view of the Lisp reader,
+
+wherever whitespace is permissible in a textual representation, any number
+of spaces and newlines can appear in standard syntax.
+
+When a function such as print produces a printed representation, it must
+choose from among many possible textual representations.  In most cases,
+it chooses a program readable representation, but in certain cases it
+might use a more compact notation that is not program-readable.
+
+A number of option variables, called printer control variables , are
+provided to permit control of individual aspects of the printed
+representation of objects.  Figure 22-1 shows the standardized printer
+control variables; there might also be implementation-defined printer
+control variables.
+
+  *print-array*   *print-gensym*       *print-pprint-dispatch*  
+  *print-base*    *print-length*       *print-pretty*           
+  *print-case*    *print-level*        *print-radix*            
+  *print-circle*  *print-lines*        *print-readably*         
+  *print-escape*  *print-miser-width*  *print-right-margin*     
+
+       Figure 22-1: Standardized Printer Control Variables     
+
+
+In addition to the printer control variables, the following additional
+defined names relate to or affect the behavior of the Lisp printer:
+
+  *package*                    *read-eval*  readtable-case  
+  *read-default-float-format*  *readtable*                  
+
+   Figure 22-2: Additional Influences on the Lisp printer. 
+
+
+
+File: gcl.info,  Node: Printer Escaping,  Prev: Multiple Possible Textual Representations,  Up: Overview of The Lisp Printer
+
+Printer Escaping
+................
+
+The variable *print-escape* controls whether the Lisp printer tries to
+produce notations such as escape characters and package prefixes.
+
+The variable *print-readably* can be used to override many of the
+individual aspects controlled by the other printer control variables when
+program-readable output is especially important.
+
+One of the many effects of making the value of *print-readably* be true is
+that the Lisp printer behaves as if *print-escape* were also true.  For
+notational convenience, we say that if the value of either
+*print-readably* or *print-escape* is true, then printer escaping is
+"enabled"; and we say that if the values of both *print-readably* and
+*print-escape* are false, then printer escaping is "disabled".
+
+
+File: gcl.info,  Node: Printer Dispatching,  Next: Default Print-Object Methods,  Prev: Overview of The Lisp Printer,  Up: The Lisp Printer
+
+Printer Dispatching
+-------------------
+
+The Lisp printer makes its determination of how to print an object as
+follows:
+
+If the value of *print-pretty* is true, printing is controlled by the
+current pprint dispatch table; see *Note Pretty Print Dispatch Tables::.
+
+Otherwise (if the value of *print-pretty* is false), the object's
+print-object method is used; see *Note Default Print-Object Methods::.
+
+
+File: gcl.info,  Node: Default Print-Object Methods,  Next: Examples of Printer Behavior,  Prev: Printer Dispatching,  Up: The Lisp Printer
+
+Default Print-Object Methods
+----------------------------
+
+This section describes the default behavior of print-object methods for
+the standardized types.
+
+* Menu:
+
+* Printing Numbers::
+* Printing Integers::
+* Printing Ratios::
+* Printing Floats::
+* Printing Complexes::
+* Note about Printing Numbers::
+* Printing Characters::
+* Printing Symbols::
+* Package Prefixes for Symbols::
+* Effect of Readtable Case on the Lisp Printer::
+* Examples of Effect of Readtable Case on the Lisp Printer::
+* Printing Strings::
+* Printing Lists and Conses::
+* Printing Bit Vectors::
+* Printing Other Vectors::
+* Printing Other Arrays::
+* Examples of Printing Arrays::
+* Printing Random States::
+* Printing Pathnames::
+* Printing Structures::
+* Printing Other Objects::
+
+
+File: gcl.info,  Node: Printing Numbers,  Next: Printing Integers,  Prev: Default Print-Object Methods,  Up: Default Print-Object Methods
+
+Printing Numbers
+................
+
+
+File: gcl.info,  Node: Printing Integers,  Next: Printing Ratios,  Prev: Printing Numbers,  Up: Default Print-Object Methods
+
+Printing Integers
+.................
+
+Integers are printed in the radix specified by the current output base in
+positional notation, most significant digit first.  If appropriate, a
+radix specifier can be printed; see *print-radix*.  If an integer is
+negative, a minus sign is printed and then the absolute value of the
+integer is printed.  The integer zero is represented by the single digit 0
+and never has a sign.  A decimal point might be printed, depending on the
+value of *print-radix*.
+
+For related information about the syntax of an integer, see *Note Syntax
+of an Integer::.
+
+
+File: gcl.info,  Node: Printing Ratios,  Next: Printing Floats,  Prev: Printing Integers,  Up: Default Print-Object Methods
+
+Printing Ratios
+...............
+
+Ratios are printed as follows: the absolute value of the numerator is
+printed, as for an integer; then a /; then the denominator.  The numerator
+and denominator are both printed in the radix specified by the current
+output base; they are obtained as if by numerator and denominator, and so
+ratios are printed in reduced form (lowest terms).  If appropriate, a
+radix specifier can be printed; see *print-radix*.  If the ratio is
+negative, a minus sign is printed before the numerator.
+
+For related information about the syntax of a ratio, see *Note Syntax of a
+Ratio::.
+
+
+File: gcl.info,  Node: Printing Floats,  Next: Printing Complexes,  Prev: Printing Ratios,  Up: Default Print-Object Methods
+
+Printing Floats
+...............
+
+If the magnitude of the float is either zero or between 10^-3 (inclusive)
+and 10^7 (exclusive), it is printed as the integer part of the number,
+then a decimal point, followed by the fractional part of the number; there
+is always at least one digit on each side of the decimal point.  If the
+sign of the number (as determined by float-sign) is negative, then a minus
+sign is printed before the number.  If the format of the number does not
+match that specified by *read-default-float-format*, then the exponent
+marker for that format and the digit 0 are also printed.  For example, the
+base of the natural logarithms as a short float might be printed as
+2.71828S0.
+
+For non-zero magnitudes outside of the range 10^-3 to 10^7, a float is
+printed in computerized scientific notation.  The representation of the
+number is scaled to be between 1 (inclusive) and 10 (exclusive) and then
+printed, with one digit before the decimal point and at least one digit
+after the decimal point.  Next the exponent marker for the format is
+printed, except that if the format of the number matches that specified by
+*read-default-float-format*, then the exponent marker E is used.  Finally,
+the power of ten by which the fraction must be multiplied to equal the
+original number is printed as a decimal integer.  For example, Avogadro's
+number as a short float is printed as 6.02S23.
+
+For related information about the syntax of a float, see *Note Syntax of a
+Float::.
+
+
+File: gcl.info,  Node: Printing Complexes,  Next: Note about Printing Numbers,  Prev: Printing Floats,  Up: Default Print-Object Methods
+
+Printing Complexes
+..................
+
+A complex is printed as #C, an open parenthesis, the printed
+representation of its real part, a space, the printed representation of
+its imaginary part, and finally a close parenthesis.
+
+For related information about the syntax of a complex, see *Note Syntax of
+a Complex:: and *Note Sharpsign C::.
+
+
+File: gcl.info,  Node: Note about Printing Numbers,  Next: Printing Characters,  Prev: Printing Complexes,  Up: Default Print-Object Methods
+
+Note about Printing Numbers
+...........................
+
+The printed representation of a number must not contain escape characters;
+see *Note Escape Characters and Potential Numbers::.
+
+
+File: gcl.info,  Node: Printing Characters,  Next: Printing Symbols,  Prev: Note about Printing Numbers,  Up: Default Print-Object Methods
+
+Printing Characters
+...................
+
+When printer escaping is disabled,
+
+a character prints as itself; it is sent directly to the output stream.
+
+When printer escaping is enabled,
+
+then #\ syntax is used.
+
+When the printer types out the name of a character, it uses the same table
+as the #\ reader macro would use; therefore any character name that is
+typed out is acceptable as input (in that implementation).  If a
+non-graphic character has a standardized name_5, that name is preferred
+over non-standard names for printing in #\ notation.  For the graphic
+standard characters, the character itself is always used for printing in
+#\ notation--even if the character also has a name_5.
+
+For details about the #\ reader macro, see *Note Sharpsign Backslash::.
+
+
+File: gcl.info,  Node: Printing Symbols,  Next: Package Prefixes for Symbols,  Prev: Printing Characters,  Up: Default Print-Object Methods
+
+Printing Symbols
+................
+
+When printer escaping is disabled,
+
+only the characters of the symbol's name are output
+
+(but the case in which to print characters in the name is controlled by
+*print-case*; see *Note Effect of Readtable Case on the Lisp Printer::).
+
+The remainder of this section applies only
+
+when printer escaping is enabled.
+
+When printing a symbol, the printer inserts enough single escape and/or
+multiple escape characters (backslashes and/or vertical-bars) so that if
+read were called with the same *readtable* and with *read-base* bound to
+the current output base, it would return the same symbol (if it is not
+apparently uninterned) or an uninterned symbol with the same print name
+(otherwise).
+
+For example, if the value of *print-base* were 16 when printing the symbol
+face, it would have to be printed as \FACE or \Face or |FACE|, because the
+token face would be read as a hexadecimal number (decimal value 64206) if
+the value of *read-base* were 16.
+
+For additional restrictions concerning characters with  nonstandard syntax
+types in the current readtable, see the variable *print-readably*
+
+For information about how the Lisp reader parses symbols, see *Note
+Symbols as Tokens:: and *Note Sharpsign Colon::.
+
+nil might be printed as ()
+
+when *print-pretty* is true and printer escaping is enabled.
+
+
+File: gcl.info,  Node: Package Prefixes for Symbols,  Next: Effect of Readtable Case on the Lisp Printer,  Prev: Printing Symbols,  Up: Default Print-Object Methods
+
+Package Prefixes for Symbols
+............................
+
+Package prefixes are printed if necessary.  The rules for package prefixes
+are as follows.  When the symbol is printed, if it is in the KEYWORD
+package, then it is printed with a preceding colon; otherwise, if it is
+accessible in the current package, it is printed without any package
+prefix; otherwise, it is printed with a package prefix.
+
+A symbol that is apparently uninterned is printed preceded by "#:"
+
+if *print-gensym* is true and printer escaping is enabled; if
+*print-gensym* is false or printer escaping is disabled,
+
+then the symbol is printed without a prefix, as if it were in the current
+package.
+
+Because the #: syntax does not intern the following symbol, it is
+necessary to use circular-list syntax if *print-circle* is true and the
+same uninterned symbol appears several times in an expression to be
+printed.  For example, the result of
+
+      (let ((x (make-symbol "FOO"))) (list x x))
+
+would be printed as (#:foo #:foo) if *print-circle* were false, but as
+(#1=#:foo #1#) if *print-circle* were true.
+
+A summary of the preceding package prefix rules follows:
+
+foo:bar
+     foo:bar is printed when symbol bar is external in its home package foo
+     and is not accessible in the current package.
+
+foo::bar
+     foo::bar is printed when bar is internal in its home package foo and
+     is not accessible in the current package.
+
+:bar
+     :bar is printed when the home package of bar is the KEYWORD package.
+
+#:bar
+     #:bar is printed when bar is apparently uninterned, even in the
+     pathological case that bar has no home package but is nevertheless
+     somehow accessible in the current package.
+
+
+File: gcl.info,  Node: Effect of Readtable Case on the Lisp Printer,  Next: Examples of Effect of Readtable Case on the Lisp Printer,  Prev: Package Prefixes for Symbols,  Up: Default Print-Object Methods
+
+Effect of Readtable Case on the Lisp Printer
+............................................
+
+When printer escaping is disabled, or the characters under consideration
+are not already quoted specifically by single escape or multiple escape
+syntax,
+
+the readtable case of the current readtable affects the way the Lisp
+printer writes symbols in the following ways:
+
+:upcase
+     When the readtable case is :upcase, uppercase characters are printed
+     in the case specified by *print-case*, and lowercase characters are
+     printed in their own case.
+
+:downcase
+     When the readtable case is :downcase, uppercase characters are
+     printed in their own case, and lowercase characters are printed in
+     the case specified by *print-case*.
+
+:preserve
+     When the readtable case is :preserve, all alphabetic characters are
+     printed in their own case.
+
+:invert
+     When the readtable case is :invert, the case of all alphabetic
+     characters in single case symbol names is inverted.  Mixed-case
+     symbol names are printed as is.
+
+The rules for escaping alphabetic characters in symbol names are affected
+by the readtable-case
+
+if printer escaping is enabled.
+
+Alphabetic characters are escaped as follows:
+:upcase
+     When the readtable case is :upcase, all lowercase characters must be
+     escaped.
+
+:downcase
+     When the readtable case is :downcase, all uppercase characters must
+     be escaped.
+
+:preserve
+     When the readtable case is :preserve, no alphabetic characters need
+     be escaped.
+
+:invert
+     When the readtable case is :invert, no alphabetic characters need be
+     escaped.
+
+
+File: gcl.info,  Node: Examples of Effect of Readtable Case on the Lisp Printer,  Next: Printing Strings,  Prev: Effect of Readtable Case on the Lisp Printer,  Up: Default Print-Object Methods
+
+Examples of Effect of Readtable Case on the Lisp Printer
+........................................................
+
+      (defun test-readtable-case-printing ()
+        (let ((*readtable* (copy-readtable nil))
+              (*print-case* *print-case*))
+          (format t "READTABLE-CASE *PRINT-CASE*  Symbol-name  Output~
+                   ~
+                   ~
+          (dolist (readtable-case '(:upcase :downcase :preserve :invert))
+            (setf (readtable-case *readtable*) readtable-case)
+            (dolist (print-case '(:upcase :downcase :capitalize))
+              (dolist (symbol '(|ZEBRA| |Zebra| |zebra|))
+                (setq *print-case* print-case)
+                (format t "~&:~A~15T:~A~29T~A~42T~A"
+                        (string-upcase readtable-case)
+                        (string-upcase print-case)
+                        (symbol-name symbol)
+                        (prin1-to-string symbol)))))))
+
+The output from (test-readtable-case-printing) should be as follows:
+
+         READTABLE-CASE *PRINT-CASE*  Symbol-name  Output
+         --------------------------------------------------
+         :UPCASE        :UPCASE       ZEBRA        ZEBRA
+         :UPCASE        :UPCASE       Zebra        |Zebra|
+         :UPCASE        :UPCASE       zebra        |zebra|
+         :UPCASE        :DOWNCASE     ZEBRA        zebra
+         :UPCASE        :DOWNCASE     Zebra        |Zebra|
+         :UPCASE        :DOWNCASE     zebra        |zebra|
+         :UPCASE        :CAPITALIZE   ZEBRA        Zebra
+         :UPCASE        :CAPITALIZE   Zebra        |Zebra|
+         :UPCASE        :CAPITALIZE   zebra        |zebra|
+         :DOWNCASE      :UPCASE       ZEBRA        |ZEBRA|
+         :DOWNCASE      :UPCASE       Zebra        |Zebra|
+         :DOWNCASE      :UPCASE       zebra        ZEBRA
+         :DOWNCASE      :DOWNCASE     ZEBRA        |ZEBRA|
+         :DOWNCASE      :DOWNCASE     Zebra        |Zebra|
+         :DOWNCASE      :DOWNCASE     zebra        zebra
+         :DOWNCASE      :CAPITALIZE   ZEBRA        |ZEBRA|
+         :DOWNCASE      :CAPITALIZE   Zebra        |Zebra|
+         :DOWNCASE      :CAPITALIZE   zebra        Zebra
+         :PRESERVE      :UPCASE       ZEBRA        ZEBRA
+         :PRESERVE      :UPCASE       Zebra        Zebra
+         :PRESERVE      :UPCASE       zebra        zebra
+         :PRESERVE      :DOWNCASE     ZEBRA        ZEBRA
+         :PRESERVE      :DOWNCASE     Zebra        Zebra
+         :PRESERVE      :DOWNCASE     zebra        zebra
+         :PRESERVE      :CAPITALIZE   ZEBRA        ZEBRA
+         :PRESERVE      :CAPITALIZE   Zebra        Zebra
+         :PRESERVE      :CAPITALIZE   zebra        zebra
+         :INVERT        :UPCASE       ZEBRA        zebra
+         :INVERT        :UPCASE       Zebra        Zebra
+         :INVERT        :UPCASE       zebra        ZEBRA
+         :INVERT        :DOWNCASE     ZEBRA        zebra
+         :INVERT        :DOWNCASE     Zebra        Zebra
+         :INVERT        :DOWNCASE     zebra        ZEBRA
+         :INVERT        :CAPITALIZE   ZEBRA        zebra
+         :INVERT        :CAPITALIZE   Zebra        Zebra
+         :INVERT        :CAPITALIZE   zebra        ZEBRA
+
+
+File: gcl.info,  Node: Printing Strings,  Next: Printing Lists and Conses,  Prev: Examples of Effect of Readtable Case on the Lisp Printer,  Up: Default Print-Object Methods
+
+Printing Strings
+................
+
+The characters of the string are output in order.
+
+If printer escaping is enabled,
+
+a double-quote is output before and after, and all double-quotes and
+single escapes are preceded by backslash.  The printing of strings is not
+affected by *print-array*.  Only the active elements of the string are
+printed.
+
+For information on how the Lisp reader parses strings, see *Note
+Double-Quote::.
+
+
+File: gcl.info,  Node: Printing Lists and Conses,  Next: Printing Bit Vectors,  Prev: Printing Strings,  Up: Default Print-Object Methods
+
+Printing Lists and Conses
+.........................
+
+Wherever possible, list notation is preferred over dot notation.
+Therefore the following algorithm is used to print a cons x:
+
+1.
+     A left-parenthesis is printed.
+
+2.
+     The car of x is printed.
+
+3.
+     If the cdr of x is itself a cons, it is made to be the current cons
+     (i.e., x becomes that cons),
+
+     a space
+
+     is printed, and step 2 is re-entered.
+
+4.
+     If the cdr of x is not null,
+
+     a space,
+
+     a dot,
+
+     a space,
+
+     and the cdr of x are printed.
+
+5.
+     A right-parenthesis is printed.
+
+Actually, the above algorithm is only used when *print-pretty* is false.
+When *print-pretty* is true (or when pprint is used), additional
+whitespace_1 may replace the use of a single space, and a more elaborate
+algorithm with similar goals but more presentational flexibility is used;
+see *Note Printer Dispatching::.
+
+Although the two expressions below are equivalent, and the reader accepts
+either one and produces the same cons, the printer always prints such a
+cons in the second form.
+
+      (a . (b . ((c . (d . nil)) . (e . nil))))
+      (a b (c d) e)
+
+The printing of conses is affected by *print-level*, *print-length*, and
+*print-circle*.
+
+Following are examples of printed representations of lists:
+
+      (a . b)     ;A dotted pair of a and b
+      (a.b)       ;A list of one element, the symbol named a.b
+      (a. b)      ;A list of two elements a. and b
+      (a .b)      ;A list of two elements a and .b
+      (a b . c)   ;A dotted list of a and b with c at the end; two conses
+      .iot        ;The symbol whose name is .iot
+      (. b)       ;Invalid -- an error is signaled if an attempt is made to read
+                  ;this syntax.
+      (a .)       ;Invalid -- an error is signaled.
+      (a .. b)    ;Invalid -- an error is signaled.
+      (a . . b)   ;Invalid -- an error is signaled.
+      (a b c ...) ;Invalid -- an error is signaled.
+      (a \. b)    ;A list of three elements a, ., and b
+      (a |.| b)   ;A list of three elements a, ., and b
+      (a \... b)  ;A list of three elements a, ..., and b
+      (a |...| b) ;A list of three elements a, ..., and b
+
+For information on how the Lisp reader parses lists and conses, see *Note
+Left-Parenthesis::.
+
+
+File: gcl.info,  Node: Printing Bit Vectors,  Next: Printing Other Vectors,  Prev: Printing Lists and Conses,  Up: Default Print-Object Methods
+
+Printing Bit Vectors
+....................
+
+A bit vector is printed as #* followed by the bits of the bit vector in
+order.  If *print-array* is false, then the bit vector is printed in a
+format (using #<) that is concise but not readable.  Only the active
+elements of the bit vector are printed.
+
+[Reviewer Note by Barrett: Need to provide for #5*0 as an alternate
+notation for #*00000.]
+
+For information on Lisp reader parsing of bit vectors, see *Note Sharpsign
+Asterisk::.
+
+
+File: gcl.info,  Node: Printing Other Vectors,  Next: Printing Other Arrays,  Prev: Printing Bit Vectors,  Up: Default Print-Object Methods
+
+Printing Other Vectors
+......................
+
+If *print-array* is true and *print-readably* is false, any
+
+vector other than a string or bit vector is printed using general-vector
+syntax; this means that information about specialized vector
+representations does not appear.  The printed representation of a
+zero-length vector is #().  The printed representation of a
+non-zero-length vector begins with #(.  Following that, the first element
+of the vector is printed.
+
+If there are any other elements, they are printed in turn, with each such
+additional element preceded by a space if *print-pretty* is false, or
+whitespace_1 if *print-pretty* is true.
+
+A right-parenthesis after the last element terminates the printed
+representation of the vector.  The printing of vectors is affected by
+*print-level* and *print-length*.  If the vector has a fill pointer, then
+only those elements below the fill pointer are printed.
+
+If both *print-array* and *print-readably* are false,
+
+the vector is not printed as described above, but in a format (using #<)
+that is concise but not readable.
+
+If *print-readably* is true, the vector prints in an
+implementation-defined manner; see the variable *print-readably*.
+
+For information on how the Lisp reader parses these "other vectors," see
+*Note Sharpsign Left-Parenthesis::.
+

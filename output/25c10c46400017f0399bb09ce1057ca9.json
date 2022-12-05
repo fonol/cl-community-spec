@@ -1,0 +1,61 @@
+{
+    "name": "fboundp",
+    "prev": "fdefinition",
+    "next": "fmakunbound",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "fboundp"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "fboundp",
+                    "text": " name =>  generalized-boolean\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Pronunciation",
+            "text": "pronounced ,ef 'baund p\\=e\n"
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "name",
+                    "desc": "a function name."
+                },
+                {
+                    "name": "generalized-boolean",
+                    "desc": "a generalized boolean."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns true if name is fbound; otherwise, returns false.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (fboundp 'car) =>  true\n      (fboundp 'nth-value) =>  false\n      (fboundp 'with-open-file) =>  true\n      (fboundp 'unwind-protect) =>  true\n      (defun my-function (x) x) =>  MY-FUNCTION\n      (fboundp 'my-function) =>  true\n      (let ((saved-definition (symbol-function 'my-function)))\n        (unwind-protect (progn (fmakunbound 'my-function)\n                               (fboundp 'my-function))\n          (setf (symbol-function 'my-function) saved-definition)))\n     =>  false\n      (fboundp 'my-function) =>  true\n      (defmacro my-macro (x) `',x) =>  MY-MACRO\n      (fboundp 'my-macro) =>  true\n      (fmakunbound 'my-function) =>  MY-FUNCTION\n      (fboundp 'my-function) =>  false\n      (flet ((my-function (x) x))\n        (fboundp 'my-function)) =>  false\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should signal an error of type type-error if name is not a function name.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note symbol-function:: , *Note fmakunbound:: , *Note fdefinition::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "It is permissible to call symbol-function on any symbol that is fbound.\nfboundp is sometimes used to \"guard\" an access to the function cell, as in:\n     (if (fboundp x) (symbol-function x))\nDefining a setf expander F does not cause the setf function (setf F) to\nbecome defined.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: fboundp,  Next: fmakunbound,  Prev: fdefinition,  Up: Data and Control Flow Dictionary\n\nfboundp                                                          [Function]\n---------------------------------------------------------------------------\n\n`fboundp'  name =>  generalized-boolean\n\nPronunciation::\n...............\n\npronounced ,ef 'baund p\\=e\n\nArguments and Values::\n......................\n\nname--a function name.\n\ngeneralized-boolean--a generalized boolean.\n\nDescription::\n.............\n\nReturns true if name is fbound; otherwise, returns false.\n\nExamples::\n..........\n\n      (fboundp 'car) =>  true\n      (fboundp 'nth-value) =>  false\n      (fboundp 'with-open-file) =>  true\n      (fboundp 'unwind-protect) =>  true\n      (defun my-function (x) x) =>  MY-FUNCTION\n      (fboundp 'my-function) =>  true\n      (let ((saved-definition (symbol-function 'my-function)))\n        (unwind-protect (progn (fmakunbound 'my-function)\n                               (fboundp 'my-function))\n          (setf (symbol-function 'my-function) saved-definition)))\n     =>  false\n      (fboundp 'my-function) =>  true\n      (defmacro my-macro (x) `',x) =>  MY-MACRO\n      (fboundp 'my-macro) =>  true\n      (fmakunbound 'my-function) =>  MY-FUNCTION\n      (fboundp 'my-function) =>  false\n      (flet ((my-function (x) x))\n        (fboundp 'my-function)) =>  false\n\nExceptional Situations::\n........................\n\nShould signal an error of type type-error if name is not a function name.\n\nSee Also::\n..........\n\n*Note symbol-function:: , *Note fmakunbound:: , *Note fdefinition::\n\nNotes::\n.......\n\nIt is permissible to call symbol-function on any symbol that is fbound.\n\nfboundp is sometimes used to \"guard\" an access to the function cell, as in:\n     (if (fboundp x) (symbol-function x))\n\nDefining a setf expander F does not cause the setf function (setf F) to\nbecome defined.\n\n"
+}

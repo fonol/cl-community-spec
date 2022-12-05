@@ -1,0 +1,1259 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: The for-as-arithmetic subclause,  Next: Examples of for-as-arithmetic subclause,  Prev: Iteration Control,  Up: Variable Initialization and Stepping Clauses
+
+The for-as-arithmetic subclause
+...............................
+
+In the for-as-arithmetic subclause, the for or as construct iterates from
+the value supplied by form1 to the value supplied by form2 in increments or
+decrements denoted by form3. Each expression is evaluated only once and
+must evaluate to a number.  The variable var is bound to the value of
+form1 in the first iteration and is stepped_1 by the value of form3 in
+each succeeding iteration, or by 1 if form3 is not provided.  The
+following loop keywords serve as valid prepositions within this syntax.
+At least one of the prepositions must be used; and at most one from each
+line may be used in a single subclause.
+
+from | downfrom | upfrom
+to | downto | upto | below | above
+by
+The prepositional phrases in each subclause may appear in any order.  For
+example, either "from x by y" or "by y from x" is permitted.  However,
+because left-to-right order of evaluation is preserved, the effects will
+be different in the case of side effects.
+
+Consider:
+
+     (let ((x 1)) (loop for i from x by (incf x) to 10 collect i))
+     =>  (1 3 5 7 9)
+     (let ((x 1)) (loop for i by (incf x) from x to 10 collect i))
+     =>  (2 4 6 8 10)
+
+The descriptions of the prepositions follow:
+
+from
+     The loop keyword from specifies the value from which stepping_1
+     begins, as supplied by form1.  Stepping_1 is incremental by default.
+     If decremental stepping_1 is desired, the preposition downto or above
+     must be used with form2.  For incremental stepping_1, the default
+     from value is 0.
+
+downfrom, upfrom
+     The loop keyword downfrom indicates that the variable var is
+     decreased in decrements supplied by form3; the loop keyword upfrom
+     indicates that var is increased in increments supplied by form3.
+
+to
+     The loop keyword to marks the end value for stepping_1 supplied in
+     form2.  Stepping_1 is incremental by default.  If decremental
+     stepping_1 is desired, the preposition downfrom must be used with
+     form1, or else the preposition downto or above should be used instead
+     of to with form2.
+
+downto, upto
+     The loop keyword downto specifies decremental stepping; the loop
+     keyword upto specifies incremental stepping.  In both cases, the
+     amount of change on each step is specified by form3, and the loop
+     terminates when the variable var passes the value of form2.  Since
+     there is no default for form1 in decremental stepping_1, a form1
+     value must be supplied (using from or downfrom) when downto is
+     supplied.
+
+below, above
+     The loop keywords below and above are analogous to upto and downto
+     respectively.  These keywords stop iteration just before the value of
+     the variable var reaches the value supplied by form2; the end value
+     of form2 is not included.  Since there is no default for form1 in
+     decremental stepping_1, a form1 value must be supplied (using from or
+     downfrom) when above is supplied.
+
+by
+     The loop keyword by marks the increment or decrement supplied by
+     form3.  The value of form3 can be any positive number.  The default
+     value is 1.
+
+In an iteration control clause, the for or as construct causes termination
+when the supplied limit is reached.  That is, iteration continues until
+the value var is stepped to the exclusive or inclusive limit supplied by
+form2.  The range is exclusive if form3 increases or decreases var to the
+value of form2 without reaching that value; the loop keywords below and
+above provide exclusive limits.  An inclusive limit allows var to attain
+the value of form2; to, downto, and upto provide inclusive limits.
+
+
+File: gcl.info,  Node: Examples of for-as-arithmetic subclause,  Next: The for-as-in-list subclause,  Prev: The for-as-arithmetic subclause,  Up: Variable Initialization and Stepping Clauses
+
+Examples of for-as-arithmetic subclause
+.......................................
+
+     ;; Print some numbers.
+      (loop for i from 1 to 3
+            do (print i))
+      |>  1
+      |>  2
+      |>  3
+     =>  NIL
+     
+     ;; Print every third number.
+      (loop for i from 10 downto 1 by 3
+            do (print i))
+      |>  10
+      |>  7
+      |>  4
+      |>  1
+     =>  NIL
+     
+     ;; Step incrementally from the default starting value.
+      (loop for i below 3
+            do (print i))
+      |>  0
+      |>  1
+      |>  2
+     =>  NIL
+
+
+File: gcl.info,  Node: The for-as-in-list subclause,  Next: Examples of for-as-in-list subclause,  Prev: Examples of for-as-arithmetic subclause,  Up: Variable Initialization and Stepping Clauses
+
+The for-as-in-list subclause
+............................
+
+In the for-as-in-list subclause, the for or as construct iterates over the
+contents of a list.  It checks for the end of the list as if by using endp.
+The variable var is bound to the successive elements  of the list in form1
+before each iteration.  At the end of each iteration, the function step-fun
+is applied to the list; the default value for step-fun is cdr.  The loop
+keywords in and by serve as valid prepositions in this syntax.  The for or
+as construct causes termination when the end of the list is reached.
+
+
+File: gcl.info,  Node: Examples of for-as-in-list subclause,  Next: The for-as-on-list subclause,  Prev: The for-as-in-list subclause,  Up: Variable Initialization and Stepping Clauses
+
+Examples of for-as-in-list subclause
+....................................
+
+     ;; Print every item in a list.
+      (loop for item in '(1 2 3) do (print item))
+      |>  1
+      |>  2
+      |>  3
+     =>  NIL
+     
+     ;; Print every other item in a list.
+      (loop for item in '(1 2 3 4 5) by #'cddr
+            do (print item))
+      |>  1
+      |>  3
+      |>  5
+     =>  NIL
+     
+     ;; Destructure a list, and sum the x values using fixnum arithmetic.
+      (loop for (item . x) of-type (t . fixnum) in '((A . 1) (B . 2) (C . 3))
+            unless (eq item 'B) sum x)
+     =>  4
+
+
+File: gcl.info,  Node: The for-as-on-list subclause,  Next: Examples of for-as-on-list subclause,  Prev: Examples of for-as-in-list subclause,  Up: Variable Initialization and Stepping Clauses
+
+The for-as-on-list subclause
+............................
+
+In the for-as-on-list subclause, the for or as construct iterates over a
+list. It checks for the end of the list as if by using atom.
+
+The variable var is bound to the successive tails of the list in form1.
+At the end of each iteration, the function step-fun is applied to the
+list; the default value for step-fun is cdr.  The loop keywords on and by
+serve as valid prepositions in this syntax.  The for or as construct
+causes termination when the end of the list is reached.
+
+
+File: gcl.info,  Node: Examples of for-as-on-list subclause,  Next: The for-as-equals-then subclause,  Prev: The for-as-on-list subclause,  Up: Variable Initialization and Stepping Clauses
+
+Examples of for-as-on-list subclause
+....................................
+
+     ;; Collect successive tails of a list.
+      (loop for sublist on '(a b c d)
+            collect sublist)
+     =>  ((A B C D) (B C D) (C D) (D))
+     
+     ;; Print a list by using destructuring with the loop keyword ON.
+      (loop for (item) on '(1 2 3)
+            do (print item))
+      |>  1
+      |>  2
+      |>  3
+     =>  NIL
+
+
+File: gcl.info,  Node: The for-as-equals-then subclause,  Next: Examples of for-as-equals-then subclause,  Prev: Examples of for-as-on-list subclause,  Up: Variable Initialization and Stepping Clauses
+
+The for-as-equals-then subclause
+................................
+
+In the for-as-equals-then subclause the for or as construct initializes
+the variable var by setting it to the result of evaluating form1 on the
+first iteration, then setting it to the result of evaluating form2 on the
+second and subsequent iterations.  If form2 is omitted, the construct uses
+form1 on the second and subsequent iterations.  The loop keywords = and
+then serve as valid prepositions in this syntax.  This construct does not
+provide any termination tests.
+
+
+File: gcl.info,  Node: Examples of for-as-equals-then subclause,  Next: The for-as-across subclause,  Prev: The for-as-equals-then subclause,  Up: Variable Initialization and Stepping Clauses
+
+Examples of for-as-equals-then subclause
+........................................
+
+     ;; Collect some numbers.
+      (loop for item = 1 then (+ item 10)
+            for iteration from 1 to 5
+            collect item)
+     =>  (1 11 21 31 41)
+
+
+File: gcl.info,  Node: The for-as-across subclause,  Next: Examples of for-as-across subclause,  Prev: Examples of for-as-equals-then subclause,  Up: Variable Initialization and Stepping Clauses
+
+The for-as-across subclause
+...........................
+
+In the for-as-across subclause the for or as construct binds the variable
+var to the value of each element in the array vector.  The loop keyword
+across marks the array vector; across is used as a preposition in this
+syntax.  Iteration stops when there are no more elements in the supplied
+array that can be referenced.  Some implementations might recognize a the
+special form in the vector form to produce more efficient code.
+
+
+File: gcl.info,  Node: Examples of for-as-across subclause,  Next: The for-as-hash subclause,  Prev: The for-as-across subclause,  Up: Variable Initialization and Stepping Clauses
+
+Examples of for-as-across subclause
+...................................
+
+      (loop for char across (the simple-string (find-message channel))
+            do (write-char char stream))
+
+
+File: gcl.info,  Node: The for-as-hash subclause,  Next: The for-as-package subclause,  Prev: Examples of for-as-across subclause,  Up: Variable Initialization and Stepping Clauses
+
+The for-as-hash subclause
+.........................
+
+In the for-as-hash subclause the for or as construct iterates over the
+elements, keys, and values of a hash-table.  In this syntax, a compound
+preposition is used to designate access to a hash table.  The variable var
+takes on the value of each hash key or hash value in the supplied
+hash-table.  The following loop keywords serve as valid prepositions
+within this syntax:
+
+being
+     The keyword being introduces either the Loop schema hash-key or
+     hash-value.
+
+each, the
+     The loop keyword each follows the loop keyword being when hash-key or
+     hash-value is used.  The loop keyword the is used with hash-keys and
+     hash-values only for ease of reading.  This agreement isn't required.
+
+hash-key, hash-keys
+     These loop keywords access each key entry of the hash table.  If the
+     name hash-value is supplied in a using construct with one of these
+     Loop schemas, the iteration can optionally access the keyed value.
+     The order in which the keys are accessed is undefined; empty slots in
+     the hash table are ignored.
+
+hash-value, hash-values
+     These loop keywords access each value entry of a hash table.  If the
+     name hash-key is supplied in a using construct with one of these Loop
+     schemas, the iteration can optionally access the key that corresponds
+     to the value.  The order in which the keys are accessed is undefined;
+     empty slots in the hash table are ignored.
+
+using
+     The loop keyword using introduces the optional key or the keyed value
+     to be accessed.  It allows access to the hash key if iteration is over
+     the hash values, and the hash value if iteration is over the hash
+     keys.
+
+in, of
+     These loop prepositions introduce hash-table.
+
+In effect
+
+being {each | the} {hash-value  | hash-values | hash-key    | hash-keys}
+{in | of}
+
+is a compound preposition.
+
+Iteration stops when there are no more hash keys or hash values to be
+referenced in the supplied hash-table.
+
+
+File: gcl.info,  Node: The for-as-package subclause,  Next: Examples of for-as-package subclause,  Prev: The for-as-hash subclause,  Up: Variable Initialization and Stepping Clauses
+
+The for-as-package subclause
+............................
+
+In the for-as-package subclause the for or as construct iterates over the
+symbols in a package.  In this syntax, a compound preposition is used to
+designate access to a package.  The variable var takes on the value of
+each symbol in the supplied package.  The following loop keywords serve as
+valid prepositions within this syntax:
+
+being
+     The keyword being introduces either the Loop schema symbol,
+     present-symbol,  or external-symbol.
+
+each, the
+     The loop keyword each follows the loop keyword being when symbol,
+     present-symbol, or external-symbol is used.  The loop keyword the is
+     used with symbols, present-symbols, and external-symbols only for
+     ease of reading.  This agreement isn't required.
+
+present-symbol, present-symbols
+     These Loop schemas iterate over the symbols
+
+     that are present in a package.
+
+     The package to be iterated over is supplied in the same way that
+     package arguments to find-package are supplied.  If the package for
+     the iteration is not supplied, the current package is used.  If a
+     package that does not exist is supplied, an error of type
+     package-error is signaled.
+
+symbol, symbols
+     These Loop schemas iterate over symbols that are accessible in a
+     given package.  The package to be iterated over is supplied in the
+     same way that package arguments to find-package are supplied.  If the
+     package for the iteration is not supplied, the current package is
+     used.  If a package that does not exist is supplied, an error of type
+     package-error is signaled.
+
+external-symbol, external-symbols
+     These Loop schemas iterate over the external symbols of a package.
+     The package to be iterated over is supplied in the same way that
+     package arguments to find-package are supplied.  If the package for
+     the iteration is not supplied, the current package is used.  If a
+     package that does not exist is supplied, an error of type
+     package-error is signaled.
+
+in, of
+     These loop prepositions introduce package.
+
+In effect
+
+being {each | the} {symbol          | symbols         | present-symbol  |
+present-symbols | external-symbol | external-symbols} {in | of}
+
+is a compound preposition.
+
+Iteration stops when there are no more symbols to be referenced in the
+supplied package.
+
+
+File: gcl.info,  Node: Examples of for-as-package subclause,  Next: Local Variable Initializations,  Prev: The for-as-package subclause,  Up: Variable Initialization and Stepping Clauses
+
+Examples of for-as-package subclause
+....................................
+
+      (let ((*package* (make-package "TEST-PACKAGE-1")))
+        ;; For effect, intern some symbols
+        (read-from-string "(THIS IS A TEST)")
+        (export (intern "THIS"))
+        (loop for x being each present-symbol of *package*
+               do (print x)))
+      |>  A
+      |>  TEST
+      |>  THIS
+      |>  IS
+     =>  NIL
+
+
+File: gcl.info,  Node: Local Variable Initializations,  Next: Examples of WITH clause,  Prev: Examples of for-as-package subclause,  Up: Variable Initialization and Stepping Clauses
+
+Local Variable Initializations
+..............................
+
+When a loop form is executed, the local variables are bound and are
+initialized to some value.  These local variables exist until loop
+iteration terminates, at which point they cease to exist.  Implicit
+variables are also established by iteration control clauses and the into
+preposition of accumulation clauses.
+
+The with construct initializes variables that are local to a loop.  The
+variables are initialized one time only.  If the optional type-spec
+argument is supplied for the variable var, but there is no related
+expression to be evaluated, var is initialized to an appropriate default
+value for its type.  For example, for the types t, number, and float, the
+default values are nil, 0, and 0.0 respectively.  The consequences are
+undefined if a type-spec argument is supplied for var if the related
+expression returns a value that is not of the supplied type.  By default,
+the with construct initializes variables sequentially; that is, one
+variable is assigned a value before the next expression is evaluated.
+However, by using the loop keyword and to join several with clauses,
+initializations can be forced to occur in parallel; that is, all of the
+supplied forms are evaluated, and the results are bound to the respective
+variables simultaneously.
+
+Sequential binding is used when it is desireable for the initialization of
+some variables to depend on the values of previously bound variables.  For
+example, suppose the variables a, b, and c are to be bound in sequence:
+
+      (loop with a = 1
+            with b = (+ a 2)
+            with c = (+ b 3)
+            return (list a b c))
+     =>  (1 3 6)
+
+The execution of the above loop is equivalent to the execution of the
+following code:
+
+      (block nil
+        (let* ((a 1)
+               (b (+ a 2))
+               (c (+ b 3)))
+          (tagbody
+              (next-loop (return (list a b c))
+                         (go next-loop)
+                         end-loop))))
+
+If the values of previously bound variables are not needed for the
+initialization of other local variables, an and clause can be used to
+specify that the bindings are to occur in parallel:
+
+      (loop with a = 1
+            and b = 2
+            and c = 3
+            return (list a b c))
+     =>  (1 2 3)
+
+The execution of the above loop is equivalent to the execution of the
+following code:
+
+      (block nil
+        (let ((a 1)
+              (b 2)
+              (c 3))
+          (tagbody
+              (next-loop (return (list a b c))
+                         (go next-loop)
+                         end-loop))))
+
+
+File: gcl.info,  Node: Examples of WITH clause,  Prev: Local Variable Initializations,  Up: Variable Initialization and Stepping Clauses
+
+Examples of WITH clause
+.......................
+
+     ;; These bindings occur in sequence.
+      (loop with a = 1
+            with b = (+ a 2)
+            with c = (+ b 3)
+            return (list a b c))
+     =>  (1 3 6)
+     
+     ;; These bindings occur in parallel.
+      (setq a 5 b 10)
+     =>  10
+      (loop with a = 1
+            and b = (+ a 2)
+            and c = (+ b 3)
+            return (list a b c))
+     =>  (1 7 13)
+     
+     ;; This example shows a shorthand way to declare local variables
+     ;; that are of different types.
+      (loop with (a b c) of-type (float integer float)
+            return (format nil "~A ~A ~A" a b c))
+     =>  "0.0 0 0.0"
+     
+     ;; This example shows a shorthand way to declare local variables
+     ;; that are the same type.
+      (loop with (a b c) of-type float
+            return (format nil "~A ~A ~A" a b c))
+     =>  "0.0 0.0 0.0"
+
+
+File: gcl.info,  Node: Value Accumulation Clauses,  Next: Termination Test Clauses,  Prev: Variable Initialization and Stepping Clauses,  Up: The LOOP Facility
+
+Value Accumulation Clauses
+--------------------------
+
+The constructs collect, collecting, append, appending, nconc, nconcing,
+count, counting, maximize, maximizing, minimize, minimizing, sum, and
+summing, allow values to be accumulated in a loop.
+
+The constructs collect, collecting, append, appending, nconc, and nconcing,
+designate clauses that accumulate values in lists and return them.  The
+constructs count, counting, maximize, maximizing, minimize, minimizing,
+sum, and summing designate clauses that accumulate and return numerical
+values.
+
+During each iteration,  the constructs collect and collecting collect the
+value of the supplied form into a list.  When iteration terminates, the
+list is returned.  The argument var is set to the list of collected
+values; if var is supplied, the loop does not return the final list
+automatically.  If var is not supplied, it is equivalent to supplying an
+internal name for var and returning its value in a finally clause.  The
+var argument is bound as if by the construct with.  No mechanism is
+provided for declaring the type of var; it must be of type list.
+
+The constructs append, appending, nconc, and  nconcing are similar to
+collect except that the values of the supplied form must be lists.
+
+*
+     The append keyword causes its list values to be concatenated into a
+     single list, as if they were arguments to the function append.
+
+*
+     The nconc keyword causes its list values to be concatenated into a
+     single list, as if they were arguments to the function nconc.
+
+The argument var is set to the list of concatenated values; if var is
+supplied, loop does not return the final list automatically.  The var
+argument is bound as if by the construct with.  A type cannot be supplied
+for var; it must be of type list.  The construct nconc destructively
+modifies its argument lists.
+
+The count construct counts the number of times that the supplied form
+returns true.  The argument var accumulates the number of occurrences; if
+var is supplied, loop does not return the final count automatically.  The
+var argument is bound as if by the construct with to a zero of the
+appropriate type.  Subsequent values (including any necessary coercions)
+are computed as if by the function 1+.  If into var is used, a type can be
+supplied  for var with the type-spec argument; the consequences are
+unspecified if a nonnumeric type is supplied.  If there is no into
+variable, the optional type-spec argument applies to the internal variable
+that is keeping the count.  The default type is implementation-dependent;
+but it must be a supertype of type fixnum.
+
+The maximize and minimize constructs compare the value of the supplied
+form obtained during the first iteration with values obtained in
+successive iterations.  The maximum (for maximize) or minimum (for
+minimize) value encountered is determined (as if by the function max for
+maximize and as if by the function min for minimize) and returned.  If the
+maximize or minimize clause is never executed, the accumulated value is
+unspecified.  The argument var accumulates the maximum or minimum value;
+if var is supplied, loop does not return the maximum or minimum
+automatically.  The var argument is bound as if by the construct with.  If
+into var is used, a type can be supplied for var with the type-spec
+argument; the consequences are unspecified if a nonnumeric type is
+supplied.  If there is no into variable, the optional type-spec argument
+applies to the internal variable that is keeping the maximum or minimum
+value.  The default type is implementation-dependent; but it must be a
+supertype of type real.
+
+The sum construct forms a cumulative sum of the successive primary values
+of the supplied form at each iteration.  The argument var is used to
+accumulate the sum; if var is supplied, loop does not return the final sum
+automatically.  The var argument is bound as if by the construct with to a
+zero of the appropriate type.  Subsequent values (including any necessary
+coercions) are computed as if by the function +.  If into var is used, a
+type can be supplied for var with the type-spec argument; the consequences
+are unspecified if a nonnumeric type is supplied.  If there is no into
+variable, the optional type-spec argument applies to the internal variable
+that is keeping the sum.  The default type is implementation-dependent;
+but it must be a supertype of type number.
+
+If into is used, the construct does not provide a default return value;
+however, the variable is available for use in any finally clause.
+
+Certain kinds of accumulation clauses can be combined in a loop if their
+destination is the same (the result of loop or an into var) because they
+are considered to accumulate conceptually compatible quantities.  In
+particular, any elements of following sets of accumulation clauses can be
+mixed with other elements of the same set for the same destination in a
+loop form:
+
+*
+     collect, append, nconc
+
+*
+     sum, count
+
+*
+     maximize, minimize
+
+     ;; Collect every name and the kids in one list by using
+     ;; COLLECT and APPEND.
+      (loop for name in '(fred sue alice joe june)
+            for kids in '((bob ken) () () (kris sunshine) ())
+            collect name
+            append kids)
+     =>  (FRED BOB KEN SUE ALICE JOE KRIS SUNSHINE JUNE)
+
+Any two clauses that do not accumulate the same type of object can coexist
+in a loop only if each clause accumulates its values into a different
+variable.
+
+* Menu:
+
+* Examples of COLLECT clause::
+* Examples of APPEND and NCONC clauses::
+* Examples of COUNT clause::
+* Examples of MAXIMIZE and MINIMIZE clauses::
+* Examples of SUM clause::
+
+
+File: gcl.info,  Node: Examples of COLLECT clause,  Next: Examples of APPEND and NCONC clauses,  Prev: Value Accumulation Clauses,  Up: Value Accumulation Clauses
+
+Examples of COLLECT clause
+..........................
+
+     ;; Collect all the symbols in a list.
+      (loop for i in '(bird 3 4 turtle (1 . 4) horse cat)
+            when (symbolp i) collect i)
+     =>  (BIRD TURTLE HORSE CAT)
+     
+     ;; Collect and return odd numbers.
+      (loop for i from 1 to 10
+            if (oddp i) collect i)
+     =>  (1 3 5 7 9)
+     
+     ;; Collect items into local variable, but don't return them.
+      (loop for i in '(a b c d) by #'cddr
+            collect i into my-list
+            finally (print my-list))
+      |>  (A C)
+     =>  NIL
+
+
+File: gcl.info,  Node: Examples of APPEND and NCONC clauses,  Next: Examples of COUNT clause,  Prev: Examples of COLLECT clause,  Up: Value Accumulation Clauses
+
+Examples of APPEND and NCONC clauses
+....................................
+
+     ;; Use APPEND to concatenate some sublists.
+       (loop for x in '((a) (b) ((c)))
+             append x)
+     =>  (A B (C))
+     
+     ;; NCONC some sublists together.  Note that only lists made by the
+     ;; call to LIST are modified.
+       (loop for i upfrom 0
+             as x in '(a b (c))
+             nconc (if (evenp i) (list x) nil))
+     =>  (A (C))
+
+
+File: gcl.info,  Node: Examples of COUNT clause,  Next: Examples of MAXIMIZE and MINIMIZE clauses,  Prev: Examples of APPEND and NCONC clauses,  Up: Value Accumulation Clauses
+
+Examples of COUNT clause
+........................
+
+      (loop for i in '(a b nil c nil d e)
+            count i)
+     =>  5
+
+
+File: gcl.info,  Node: Examples of MAXIMIZE and MINIMIZE clauses,  Next: Examples of SUM clause,  Prev: Examples of COUNT clause,  Up: Value Accumulation Clauses
+
+Examples of MAXIMIZE and MINIMIZE clauses
+.........................................
+
+      (loop for i in '(2 1 5 3 4)
+            maximize i)
+     =>  5
+      (loop for i in '(2 1 5 3 4)
+            minimize i)
+     =>  1
+     
+     ;; In this example, FIXNUM applies to the internal variable that holds
+     ;; the maximum value.
+      (setq series '(1.2 4.3 5.7))
+     =>  (1.2 4.3 5.7)
+      (loop for v in series
+            maximize (round v) of-type fixnum)
+     =>  6
+     
+     ;; In this example, FIXNUM applies to the variable RESULT.
+      (loop for v of-type float in series
+            minimize (round v) into result of-type fixnum
+            finally (return result))
+     =>  1
+
+
+File: gcl.info,  Node: Examples of SUM clause,  Prev: Examples of MAXIMIZE and MINIMIZE clauses,  Up: Value Accumulation Clauses
+
+Examples of SUM clause
+......................
+
+      (loop for i of-type fixnum in '(1 2 3 4 5)
+            sum i)
+     =>  15
+      (setq series '(1.2 4.3 5.7))
+     =>  (1.2 4.3 5.7)
+      (loop for v in series
+            sum (* 2.0 v))
+     =>  22.4
+
+
+File: gcl.info,  Node: Termination Test Clauses,  Next: Unconditional Execution Clauses,  Prev: Value Accumulation Clauses,  Up: The LOOP Facility
+
+Termination Test Clauses
+------------------------
+
+The repeat construct causes iteration to terminate after a specified
+number of times.  The loop body executes n times, where n is the value of
+the expression form.  The form argument is evaluated one time in the loop
+prologue.  If the expression evaluates to 0 or to a negative number, the
+loop body is not evaluated.
+
+The constructs always, never, thereis, while, until, and the macro
+loop-finish allow conditional termination of iteration within a loop.
+
+The constructs always, never, and thereis provide specific values to be
+returned when a loop terminates.  Using always, never, or thereis in a
+loop with value accumulation clauses that are not into causes an error of
+type program-error to be signaled (at macro expansion time).  Since
+always, never, and thereis use
+
+the return-from special operator
+
+to terminate iteration, any finally clause that is supplied is not
+evaluated when exit occurs due to any of these constructs.  In all other
+respects these constructs behave like the while and until constructs.
+
+The always construct takes one form and terminates the loop if the form
+ever evaluates to nil; in this case, it returns nil.  Otherwise, it
+provides a default return value of t.  If the value of the supplied form
+is never nil, some other construct can terminate the iteration.
+
+The never construct terminates iteration the first time that the value of
+the supplied form is non-nil; the loop returns nil.  If the value of the
+supplied form is always  nil, some other construct can terminate the
+iteration.  Unless some other clause contributes a return value, the
+default value returned is t.
+
+The thereis construct terminates iteration the first time that the value
+of the supplied form is non-nil; the loop returns the value of the
+supplied form.  If the value of the supplied form is always  nil, some
+other construct can terminate the iteration.  Unless some other clause
+contributes a return value, the default value returned is nil.
+
+There are two differences between the thereis and until constructs:
+
+*
+     The until construct does not return a value or nil based on the value
+     of the supplied form.
+
+*
+     The until construct executes any finally clause.  Since thereis uses
+
+     the return-from special operator
+
+     to terminate iteration, any finally clause that is supplied is not
+     evaluated when exit occurs due to thereis.
+
+The while construct allows iteration to continue until the supplied form
+evaluates to false.  The supplied form is reevaluated at the location of
+the while clause.
+
+The until construct is equivalent to while (not form)\dots.  If the value
+of the supplied form is non-nil, iteration terminates.
+
+Termination-test control constructs can be used anywhere within the loop
+body.  The termination tests are used in the order in which they appear.
+If an until or while clause causes termination, any clauses that precede
+it in the source are still evaluated.  If the until and while constructs
+cause termination, control is passed to the loop epilogue, where any
+finally clauses will be executed.
+
+There are two differences between the never and until constructs:
+
+*
+     The until construct does not return t or nil based on the value of
+     the supplied form.
+
+*
+     The until construct does not bypass any finally clauses.  Since never
+     uses
+
+     the return-from special operator
+
+     to terminate iteration, any finally clause that is supplied is not
+     evaluated when exit occurs due to never.
+
+In most cases it is not necessary to use loop-finish because other loop
+control clauses terminate the loop.  The macro loop-finish is used to
+provide a normal exit from a nested conditional inside a loop.  Since
+loop-finish transfers control to the loop epilogue, using loop-finish
+within a finally expression can cause infinite looping.
+
+* Menu:
+
+* Examples of REPEAT clause::
+* Examples of ALWAYS::
+* Examples of WHILE and UNTIL clauses::
+
+
+File: gcl.info,  Node: Examples of REPEAT clause,  Next: Examples of ALWAYS,  Prev: Termination Test Clauses,  Up: Termination Test Clauses
+
+Examples of REPEAT clause
+.........................
+
+      (loop repeat 3
+            do (format t "~&What I say three times is true.~
+      |>  What I say three times is true.
+      |>  What I say three times is true.
+      |>  What I say three times is true.
+     =>  NIL
+      (loop repeat -15
+        do (format t "What you see is what you expect~
+     =>  NIL
+
+
+File: gcl.info,  Node: Examples of ALWAYS,  Next: Examples of WHILE and UNTIL clauses,  Prev: Examples of REPEAT clause,  Up: Termination Test Clauses
+
+Examples of ALWAYS, NEVER, and THEREIS clauses
+..............................................
+
+     ;; Make sure I is always less than 11 (two ways).
+     ;; The FOR construct terminates these loops.
+      (loop for i from 0 to 10
+            always (< i 11))
+     =>  T
+      (loop for i from 0 to 10
+            never (> i 11))
+     =>  T
+     
+     ;; If I exceeds 10 return I; otherwise, return NIL.
+     ;; The THEREIS construct terminates this loop.
+      (loop for i from 0
+            thereis (when (> i 10) i) )
+     =>  11
+     
+     ;;; The FINALLY clause is not evaluated in these examples.
+      (loop for i from 0 to 10
+            always (< i 9)
+            finally (print "you won't see this"))
+     =>  NIL
+      (loop never t
+            finally (print "you won't see this"))
+     =>  NIL
+      (loop thereis "Here is my value"
+            finally (print "you won't see this"))
+     =>  "Here is my value"
+     
+     ;; The FOR construct terminates this loop, so the FINALLY clause
+     ;; is evaluated.
+      (loop for i from 1 to 10
+            thereis (> i 11)
+            finally (prin1 'got-here))
+      |>  GOT-HERE
+     =>  NIL
+     
+     ;; If this code could be used to find a counterexample to Fermat's
+     ;; last theorem, it would still not return the value of the
+     ;; counterexample because all of the THEREIS clauses in this example
+     ;; only return T.  But if Fermat is right, that won't matter
+     ;; because this won't terminate.
+     
+      (loop for z upfrom 2
+            thereis
+              (loop for n upfrom 3 below (log z 2)
+                    thereis
+                      (loop for x below z
+                            thereis
+                              (loop for y below z
+                                    thereis (= (+ (expt x n) (expt y n))
+                                               (expt z n))))))
+
+
+File: gcl.info,  Node: Examples of WHILE and UNTIL clauses,  Prev: Examples of ALWAYS,  Up: Termination Test Clauses
+
+Examples of WHILE and UNTIL clauses
+...................................
+
+      (loop while (hungry-p) do (eat))
+     
+     ;; UNTIL NOT is equivalent to WHILE.
+      (loop until (not (hungry-p)) do (eat))
+     
+     ;; Collect the length and the items of STACK.
+      (let ((stack '(a b c d e f)))
+        (loop for item = (length stack) then (pop stack)
+              collect item
+              while stack))
+     =>  (6 A B C D E F)
+     
+     ;; Use WHILE to terminate a loop that otherwise wouldn't terminate.
+     ;; Note that WHILE occurs after the WHEN.
+      (loop for i fixnum from 3
+            when (oddp i) collect i
+            while (< i 5))
+     =>  (3 5)
+
+
+File: gcl.info,  Node: Unconditional Execution Clauses,  Next: Conditional Execution Clauses,  Prev: Termination Test Clauses,  Up: The LOOP Facility
+
+Unconditional Execution Clauses
+-------------------------------
+
+The do and doing constructs evaluate the supplied forms wherever they
+occur in the expanded form of loop.  The form argument can be any compound
+form.  Each form is evaluated in every iteration.  Because every loop
+clause must begin with a loop keyword, the keyword do is used when no
+control action other than execution is required.
+
+The return construct takes one form.  Any values returned by the form are
+immediately returned by the loop form.  It is equivalent to the clause do
+(return-from block-name value), where block-name is the name specified in
+a named clause, or nil if there is no named clause.
+
+* Menu:
+
+* Examples of unconditional execution::
+
+
+File: gcl.info,  Node: Examples of unconditional execution,  Prev: Unconditional Execution Clauses,  Up: Unconditional Execution Clauses
+
+Examples of unconditional execution
+...................................
+
+     ;; Print numbers and their squares.
+     ;; The DO construct applies to multiple forms.
+      (loop for i from 1 to 3
+            do (print i)
+               (print (* i i)))
+      |>  1
+      |>  1
+      |>  2
+      |>  4
+      |>  3
+      |>  9
+     =>  NIL
+
+
+File: gcl.info,  Node: Conditional Execution Clauses,  Next: Miscellaneous Clauses,  Prev: Unconditional Execution Clauses,  Up: The LOOP Facility
+
+Conditional Execution Clauses
+-----------------------------
+
+The if, when, and unless constructs establish conditional control in a
+loop. If the test passes, the succeeding loop clause is executed. If the
+test does not pass, the succeeding clause is skipped, and program control
+moves to the clause that follows the loop keyword else. If the test does
+not pass and no else clause is supplied, control is transferred to the
+clause or construct following the entire conditional clause.
+
+If conditional clauses are nested, each else is paired with the closest
+preceding conditional clause that has no associated else or end.
+
+In the if and when clauses, which are synonymous, the test passes if the
+value of form is true.
+
+In the unless clause, the test passes if the value of form is false.
+
+Clauses that follow the test expression can be grouped by using the loop
+keyword and to produce a conditional block consisting of a compound clause.
+
+The loop keyword it can be used to refer to the result of the test
+expression in a clause.  Use the loop keyword it in place of the form in a
+return clause or an accumulation clause that is inside a conditional
+execution clause.  If multiple clauses are connected with and, the it
+construct must be in the first clause in the block.
+
+The optional loop keyword end marks the end of the clause.  If this
+keyword is not supplied, the next loop keyword marks the end.  The
+construct end can be used to distinguish the scoping of compound clauses.
+
+* Menu:
+
+* Examples of WHEN clause::
+
+
+File: gcl.info,  Node: Examples of WHEN clause,  Prev: Conditional Execution Clauses,  Up: Conditional Execution Clauses
+
+Examples of WHEN clause
+.......................
+
+     ;; Signal an exceptional condition.
+      (loop for item in '(1 2 3 a 4 5)
+            when (not (numberp item))
+             return (cerror "enter new value" "non-numeric value: ~s" item))
+     Error: non-numeric value: A
+     
+     ;; The previous example is equivalent to the following one.
+      (loop for item in '(1 2 3 a 4 5)
+            when (not (numberp item))
+             do (return
+                 (cerror "Enter new value" "non-numeric value: ~s" item)))
+     Error: non-numeric value: A
+
+     ;; This example parses a simple printed string representation from
+     ;; BUFFER (which is itself a string) and returns the index of the
+     ;; closing double-quote character.
+      (let ((buffer "\"a\" \"b\""))
+        (loop initially (unless (char= (char buffer 0) #\")
+                          (loop-finish))
+              for i of-type fixnum from 1 below (length (the string buffer))
+              when (char= (char buffer i) #\")
+               return i))
+     =>  2
+     
+     ;; The collected value is returned.
+      (loop for i from 1 to 10
+            when (> i 5)
+              collect i
+            finally (prin1 'got-here))
+      |>  GOT-HERE
+     =>  (6 7 8 9 10)
+     
+     ;; Return both the count of collected numbers and the numbers.
+      (loop for i from 1 to 10
+            when (> i 5)
+              collect i into number-list
+              and count i into number-count
+            finally (return (values number-count number-list)))
+     =>  5, (6 7 8 9 10)
+
+
+File: gcl.info,  Node: Miscellaneous Clauses,  Next: Examples of Miscellaneous Loop Features,  Prev: Conditional Execution Clauses,  Up: The LOOP Facility
+
+Miscellaneous Clauses
+---------------------
+
+* Menu:
+
+* Control Transfer Clauses::
+* Examples of NAMED clause::
+* Initial and Final Execution::
+
+
+File: gcl.info,  Node: Control Transfer Clauses,  Next: Examples of NAMED clause,  Prev: Miscellaneous Clauses,  Up: Miscellaneous Clauses
+
+Control Transfer Clauses
+........................
+
+The named construct establishes a name for an implicit block surrounding
+the
+
+entire
+
+loop so that the return-from special operator can be used to return values
+from or to exit loop.  Only one name per loop form can be assigned.  If
+used, the named construct must be the first clause in the loop expression.
+
+The return construct takes one form.  Any values returned by the form are
+immediately returned by the loop form.
+
+This construct is similar to the return-from special operator and the
+return macro.  The return construct
+
+does not execute any finally clause that
+
+the loop form
+
+is given.
+
+
+File: gcl.info,  Node: Examples of NAMED clause,  Next: Initial and Final Execution,  Prev: Control Transfer Clauses,  Up: Miscellaneous Clauses
+
+Examples of NAMED clause
+........................
+
+     ;; Just name and return.
+      (loop named max
+            for i from 1 to 10
+            do (print i)
+            do (return-from max 'done))
+      |>  1
+     =>  DONE
+
+
+File: gcl.info,  Node: Initial and Final Execution,  Prev: Examples of NAMED clause,  Up: Miscellaneous Clauses
+
+Initial and Final Execution
+...........................
+
+The initially and finally constructs evaluate forms that occur before and
+after the loop body.
+
+The initially construct causes the supplied compound-forms to be evaluated
+in the loop prologue, which precedes all loop code except for initial
+settings supplied by constructs with, for, or as.  The code for any
+initially clauses is executed in the order in which the clauses appeared in
+the loop.
+
+The finally construct causes the supplied compound-forms to be evaluated
+in the loop epilogue after normal iteration terminates.  The code for any
+finally clauses is executed in the order in which the clauses appeared in
+the loop.  The collected code is executed once in the loop epilogue before
+any implicit values are returned from the accumulation clauses.  An
+explicit transfer of control (e.g., by return, go, or throw) from the loop
+body, however, will exit the loop without executing the epilogue code.
+
+Clauses such as return, always, never, and thereis can bypass the finally
+clause.
+
+return (or return-from, if the named option was supplied)
+
+can be used after finally to return values from a loop.
+
+Such an explicit return
+
+inside the finally clause takes precedence over returning the accumulation
+from clauses supplied by such keywords as collect, nconc, append, sum,
+count, maximize, and minimize; the accumulation values for these preempted
+clauses are not returned by loop if return or return-from is used.
+
+
+File: gcl.info,  Node: Examples of Miscellaneous Loop Features,  Next: Notes about Loop,  Prev: Miscellaneous Clauses,  Up: The LOOP Facility
+
+Examples of Miscellaneous Loop Features
+---------------------------------------
+
+      (let ((i 0))                     ; no loop keywords are used
+         (loop (incf i) (if (= i 3) (return i)))) =>  3
+      (let ((i 0)(j 0))
+         (tagbody
+           (loop (incf j 3) (incf i) (if (= i 3) (go exit)))
+           exit)
+         j) =>  9
+
+In the following example, the variable x is stepped before y is stepped;
+thus, the value of y reflects the updated value of x:
+
+      (loop for x from 1 to 10
+            for y = nil then x
+            collect (list x y))
+     =>  ((1 NIL) (2 2) (3 3) (4 4) (5 5) (6 6) (7 7) (8 8) (9 9) (10 10))
+
+In this example, x and y are stepped in parallel:
+
+      (loop for x from 1 to 10
+            and y = nil then x
+            collect (list x y))
+     =>  ((1 NIL) (2 1) (3 2) (4 3) (5 4) (6 5) (7 6) (8 7) (9 8) (10 9))
+
+* Menu:
+
+* Examples of clause grouping::
+
+
+File: gcl.info,  Node: Examples of clause grouping,  Prev: Examples of Miscellaneous Loop Features,  Up: Examples of Miscellaneous Loop Features
+
+Examples of clause grouping
+...........................
+
+     ;; Group conditional clauses.
+      (loop for i in '(1 324 2345 323 2 4 235 252)
+            when (oddp i)
+              do (print i)
+              and collect i into odd-numbers
+              and do (terpri)
+            else                              ; I is even.
+              collect i into even-numbers
+            finally
+              (return (values odd-numbers even-numbers)))
+      |>  1
+      |> 
+      |>  2345
+      |> 
+      |>  323
+      |> 
+      |>  235
+     =>  (1 2345 323 235), (324 2 4 252)
+     
+     ;; Collect numbers larger than 3.
+      (loop for i in '(1 2 3 4 5 6)
+            when (and (> i 3) i)
+            collect it)                      ; IT refers to (and (> i 3) i).
+     =>  (4 5 6)
+     
+     ;; Find a number in a list.
+      (loop for i in '(1 2 3 4 5 6)
+            when (and (> i 3) i)
+            return it)
+     =>  4
+     
+     ;; The above example is similar to the following one.
+      (loop for i in '(1 2 3 4 5 6)
+            thereis (and (> i 3) i))
+     =>  4
+     
+     ;; Nest conditional clauses.
+      (let ((list '(0 3.0 apple 4 5 9.8 orange banana)))
+        (loop for i in list
+              when (numberp i)
+                when (floatp i)
+                  collect i into float-numbers
+                else                                  ; Not (floatp i)
+                  collect i into other-numbers
+              else                                    ; Not (numberp i)
+                when (symbolp i)
+                  collect i into symbol-list
+                else                                  ; Not (symbolp i)
+                  do (error "found a funny value in list ~S, value ~S~
+              finally (return (values float-numbers other-numbers symbol-list))))
+     =>  (3.0 9.8), (0 4 5), (APPLE ORANGE BANANA)
+     
+     ;; Without the END preposition, the last AND would apply to the
+     ;; inner IF rather than the outer one.
+      (loop for x from 0 to 3
+            do (print x)
+            if (zerop (mod x 2))
+              do (princ " a")
+               and if (zerop (floor x 2))
+                     do (princ " b")
+                     end
+               and do (princ " c"))
+      |>  0  a b c
+      |>  1
+      |>  2  a c
+      |>  3
+     =>  NIL
+
+
+File: gcl.info,  Node: Notes about Loop,  Prev: Examples of Miscellaneous Loop Features,  Up: The LOOP Facility
+
+Notes about Loop
+----------------
+
+Types can be supplied for loop variables.  It is not necessary to supply a
+type for any variable, but supplying the type can ensure that the variable
+has a correctly typed initial value, and it can also enable compiler
+optimizations (depending on the implementation).
+
+The clause repeat n ... is roughly equivalent to a clause such as
+
+      (loop for internal-variable downfrom (- n 1) to 0 ...)
+
+but in some implementations, the repeat construct might be more efficient.
+
+Within the executable parts of the loop clauses and around the entire loop
+form, variables can be bound by using let.
+
+Use caution when using a variable named IT (in any package) in connection
+with loop, since it is a loop keyword that can be used in place of a form
+in certain contexts.
+
+There is
+
+no
+
+standardized mechanism for users to add extensions to loop.
+
+
+File: gcl.info,  Node: Iteration Dictionary,  Prev: The LOOP Facility,  Up: Iteration
+
+Iteration Dictionary
+====================
+
+* Menu:
+
+* do::
+* dotimes::
+* dolist::
+* loop::
+* loop-finish::
+

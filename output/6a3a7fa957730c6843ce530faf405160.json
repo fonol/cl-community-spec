@@ -1,0 +1,57 @@
+{
+    "name": "nth-value",
+    "prev": "multiple-values-limit",
+    "next": "prog",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "nth-value"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "nth-value",
+                    "text": " n form =>  object\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "n",
+                    "desc": "a non-negative integer; evaluated."
+                },
+                {
+                    "name": "form",
+                    "desc": "a form; evaluated as described below."
+                },
+                {
+                    "name": "object",
+                    "desc": "an object."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Evaluates n and then form, returning as its only value the nth value\nyielded by form, or nil if n is greater than or equal to the number of\nvalues returned by form.  (The first returned value is numbered 0.)\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (nth-value 0 (values 'a 'b)) =>  A\n      (nth-value 1 (values 'a 'b)) =>  B\n      (nth-value 2 (values 'a 'b)) =>  NIL\n      (let* ((x 83927472397238947423879243432432432)\n             (y 32423489732)\n             (a (nth-value 1 (floor x y)))\n             (b (mod x y)))\n        (values a b (= a b)))\n     =>  3332987528, 3332987528, true\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note multiple-value-list:: , *Note nth::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Operationally, the following relationship is true, although nth-value\nmight be more efficient in some implementations because, for example, some\nconsing might be avoided.\n      (nth-value n form) == (nth n (multiple-value-list form))\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: nth-value,  Next: prog,  Prev: multiple-values-limit,  Up: Data and Control Flow Dictionary\n\nnth-value                                                           [Macro]\n---------------------------------------------------------------------------\n\n`nth-value'  n form =>  object\n\nArguments and Values::\n......................\n\nn--a non-negative integer; evaluated.\n\nform--a form; evaluated as described below.\n\nobject--an object.\n\nDescription::\n.............\n\nEvaluates n and then form, returning as its only value the nth value\nyielded by form, or nil if n is greater than or equal to the number of\nvalues returned by form.  (The first returned value is numbered 0.)\n\nExamples::\n..........\n\n      (nth-value 0 (values 'a 'b)) =>  A\n      (nth-value 1 (values 'a 'b)) =>  B\n      (nth-value 2 (values 'a 'b)) =>  NIL\n      (let* ((x 83927472397238947423879243432432432)\n             (y 32423489732)\n             (a (nth-value 1 (floor x y)))\n             (b (mod x y)))\n        (values a b (= a b)))\n     =>  3332987528, 3332987528, true\n\nSee Also::\n..........\n\n*Note multiple-value-list:: , *Note nth::\n\nNotes::\n.......\n\nOperationally, the following relationship is true, although nth-value\nmight be more efficient in some implementations because, for example, some\nconsing might be avoided.\n\n      (nth-value n form) == (nth n (multiple-value-list form))\n\n"
+}

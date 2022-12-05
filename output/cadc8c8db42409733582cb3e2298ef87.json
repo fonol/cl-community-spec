@@ -1,0 +1,69 @@
+{
+    "name": "sort",
+    "prev": "reverse",
+    "next": "find",
+    "up": "Sequences Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "sort, stable-sort"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "sort",
+                    "text": " sequence predicate &key key =>  sorted-sequence\n"
+                },
+                {
+                    "name": "stable-sort",
+                    "text": " sequence predicate &key key =>  sorted-sequence\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "sequence",
+                    "desc": "a proper sequence."
+                },
+                {
+                    "name": "predicate",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "predicate",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "sorted-sequence",
+                    "desc": "a sequence."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "sort and stable-sort destructively sort sequences according to the order\ndetermined by the predicate function.\nIf sequence is a vector, the result is a vector that has the same actual\narray element type as sequence.  The result might or might not be simple,\nand might or might not be identical to sequence.  If sequence is a list,\nthe result is a list.\nsort determines the relationship between two elements by giving keys\nextracted from the elements to the predicate.  The first argument to the\npredicate function is the part of one element of sequence extracted by the\nkey function (if supplied); the second argument is the part of another\nelement of sequence extracted by the key function (if supplied).\nPredicate should return true if and only if the first argument is strictly\nless than the second (in some appropriate sense).  If the first argument\nis greater than or equal to the second (in the appropriate sense), then\nthe predicate should return false.\nThe argument to the key function is the sequence element.  The return\nvalue of the key function becomes an argument to predicate.  If key is not\nsupplied or nil, the sequence element itself is used.  There is no\nguarantee on the number of times the key will be called.\nIf the key and predicate always return, then the sorting operation will\nalways terminate, producing a sequence containing the same elements as\nsequence (that is, the result is a permutation of sequence).  This is\nguaranteed even if the predicate does not really consistently represent a\ntotal order (in which case the elements will be scrambled in some\nunpredictable way, but no element will be lost).  If the key consistently\nreturns meaningful keys, and the predicate does reflect some total\nordering criterion on those keys, then the elements of the sorted-sequence\nwill be properly sorted according to that ordering.\nThe sorting operation performed by sort is not guaranteed stable.\nElements considered equal by the predicate might or might not stay in\ntheir original order.  The predicate is assumed to consider two elements x\nand y to be equal if (funcall predicate x y) and (funcall predicate y x)\nare both false.  stable-sort guarantees stability.\nThe sorting operation can be destructive in all cases.  In the case of a\nvector argument, this is accomplished by permuting the elements in place.\nIn the case of a list, the list is destructively reordered in the same\nmanner as for nreverse.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq tester (copy-seq \"lkjashd\")) =>  \"lkjashd\"\n      (sort tester #'char-lessp) =>  \"adhjkls\"\n      (setq tester (list '(1 2 3) '(4 5 6) '(7 8 9))) =>  ((1 2 3) (4 5 6) (7 8 9))\n      (sort tester #'> :key #'car)  =>  ((7 8 9) (4 5 6) (1 2 3))\n      (setq tester (list 1 2 3 4 5 6 7 8 9 0)) =>  (1 2 3 4 5 6 7 8 9 0)\n      (stable-sort tester #'(lambda (x y) (and (oddp x) (evenp y))))\n     =>  (1 3 5 7 9 2 4 6 8 0)\n      (sort (setq committee-data\n                  (vector (list (list \"JonL\" \"White\") \"Iteration\")\n                          (list (list \"Dick\" \"Waters\") \"Iteration\")\n                          (list (list \"Dick\" \"Gabriel\") \"Objects\")\n                          (list (list \"Kent\" \"Pitman\") \"Conditions\")\n                          (list (list \"Gregor\" \"Kiczales\") \"Objects\")\n                          (list (list \"David\" \"Moon\") \"Objects\")\n                          (list (list \"Kathy\" \"Chapman\") \"Editorial\")\n                          (list (list \"Larry\" \"Masinter\") \"Cleanup\")\n                          (list (list \"Sandra\" \"Loosemore\") \"Compiler\")))\n            #'string-lessp :key #'cadar)\n     =>  #(((\"Kathy\" \"Chapman\") \"Editorial\")\n          ((\"Dick\" \"Gabriel\") \"Objects\")\n          ((\"Gregor\" \"Kiczales\") \"Objects\")\n          ((\"Sandra\" \"Loosemore\") \"Compiler\")\n          ((\"Larry\" \"Masinter\") \"Cleanup\")\n          ((\"David\" \"Moon\") \"Objects\")\n          ((\"Kent\" \"Pitman\") \"Conditions\")\n          ((\"Dick\" \"Waters\") \"Iteration\")\n          ((\"JonL\" \"White\") \"Iteration\"))\n      ;; Note that individual alphabetical order within `committees'\n      ;; is preserved.\n      (setq committee-data\n            (stable-sort committee-data #'string-lessp :key #'cadr))\n     =>  #(((\"Larry\" \"Masinter\") \"Cleanup\")\n          ((\"Sandra\" \"Loosemore\") \"Compiler\")\n          ((\"Kent\" \"Pitman\") \"Conditions\")\n          ((\"Kathy\" \"Chapman\") \"Editorial\")\n          ((\"Dick\" \"Waters\") \"Iteration\")\n          ((\"JonL\" \"White\") \"Iteration\")\n          ((\"Dick\" \"Gabriel\") \"Objects\")\n          ((\"Gregor\" \"Kiczales\") \"Objects\")\n          ((\"David\" \"Moon\") \"Objects\"))\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note merge:: ,\n*Note Compiler Terminology::,\n*Note Traversal Rules and Side Effects::,\n*Note Destructive Operations::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: sort,  Next: find,  Prev: reverse,  Up: Sequences Dictionary\n\nsort, stable-sort                                                [Function]\n---------------------------------------------------------------------------\n\n`sort'  sequence predicate &key key =>  sorted-sequence\n\n`stable-sort'  sequence predicate &key key =>  sorted-sequence\n\nArguments and Values::\n......................\n\nsequence--a proper sequence.\n\npredicate--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nkey--a designator for a function of one argument, or nil.\n\nsorted-sequence--a sequence.\n\nDescription::\n.............\n\nsort and stable-sort destructively sort sequences according to the order\ndetermined by the predicate function.\n\nIf sequence is a vector, the result is a vector that has the same actual\narray element type as sequence.  The result might or might not be simple,\nand might or might not be identical to sequence.  If sequence is a list,\nthe result is a list.\n\nsort determines the relationship between two elements by giving keys\nextracted from the elements to the predicate.  The first argument to the\npredicate function is the part of one element of sequence extracted by the\nkey function (if supplied); the second argument is the part of another\nelement of sequence extracted by the key function (if supplied).\nPredicate should return true if and only if the first argument is strictly\nless than the second (in some appropriate sense).  If the first argument\nis greater than or equal to the second (in the appropriate sense), then\nthe predicate should return false.\n\nThe argument to the key function is the sequence element.  The return\nvalue of the key function becomes an argument to predicate.  If key is not\nsupplied or nil, the sequence element itself is used.  There is no\nguarantee on the number of times the key will be called.\n\nIf the key and predicate always return, then the sorting operation will\nalways terminate, producing a sequence containing the same elements as\nsequence (that is, the result is a permutation of sequence).  This is\nguaranteed even if the predicate does not really consistently represent a\ntotal order (in which case the elements will be scrambled in some\nunpredictable way, but no element will be lost).  If the key consistently\nreturns meaningful keys, and the predicate does reflect some total\nordering criterion on those keys, then the elements of the sorted-sequence\nwill be properly sorted according to that ordering.\n\nThe sorting operation performed by sort is not guaranteed stable.\nElements considered equal by the predicate might or might not stay in\ntheir original order.  The predicate is assumed to consider two elements x\nand y to be equal if (funcall predicate x y) and (funcall predicate y x)\nare both false.  stable-sort guarantees stability.\n\nThe sorting operation can be destructive in all cases.  In the case of a\nvector argument, this is accomplished by permuting the elements in place.\nIn the case of a list, the list is destructively reordered in the same\nmanner as for nreverse.\n\nExamples::\n..........\n\n      (setq tester (copy-seq \"lkjashd\")) =>  \"lkjashd\"\n      (sort tester #'char-lessp) =>  \"adhjkls\"\n      (setq tester (list '(1 2 3) '(4 5 6) '(7 8 9))) =>  ((1 2 3) (4 5 6) (7 8 9))\n      (sort tester #'> :key #'car)  =>  ((7 8 9) (4 5 6) (1 2 3))\n      (setq tester (list 1 2 3 4 5 6 7 8 9 0)) =>  (1 2 3 4 5 6 7 8 9 0)\n      (stable-sort tester #'(lambda (x y) (and (oddp x) (evenp y))))\n     =>  (1 3 5 7 9 2 4 6 8 0)\n      (sort (setq committee-data\n                  (vector (list (list \"JonL\" \"White\") \"Iteration\")\n                          (list (list \"Dick\" \"Waters\") \"Iteration\")\n                          (list (list \"Dick\" \"Gabriel\") \"Objects\")\n                          (list (list \"Kent\" \"Pitman\") \"Conditions\")\n                          (list (list \"Gregor\" \"Kiczales\") \"Objects\")\n                          (list (list \"David\" \"Moon\") \"Objects\")\n                          (list (list \"Kathy\" \"Chapman\") \"Editorial\")\n                          (list (list \"Larry\" \"Masinter\") \"Cleanup\")\n                          (list (list \"Sandra\" \"Loosemore\") \"Compiler\")))\n            #'string-lessp :key #'cadar)\n     =>  #(((\"Kathy\" \"Chapman\") \"Editorial\")\n          ((\"Dick\" \"Gabriel\") \"Objects\")\n          ((\"Gregor\" \"Kiczales\") \"Objects\")\n          ((\"Sandra\" \"Loosemore\") \"Compiler\")\n          ((\"Larry\" \"Masinter\") \"Cleanup\")\n          ((\"David\" \"Moon\") \"Objects\")\n          ((\"Kent\" \"Pitman\") \"Conditions\")\n          ((\"Dick\" \"Waters\") \"Iteration\")\n          ((\"JonL\" \"White\") \"Iteration\"))\n      ;; Note that individual alphabetical order within `committees'\n      ;; is preserved.\n      (setq committee-data\n            (stable-sort committee-data #'string-lessp :key #'cadr))\n     =>  #(((\"Larry\" \"Masinter\") \"Cleanup\")\n          ((\"Sandra\" \"Loosemore\") \"Compiler\")\n          ((\"Kent\" \"Pitman\") \"Conditions\")\n          ((\"Kathy\" \"Chapman\") \"Editorial\")\n          ((\"Dick\" \"Waters\") \"Iteration\")\n          ((\"JonL\" \"White\") \"Iteration\")\n          ((\"Dick\" \"Gabriel\") \"Objects\")\n          ((\"Gregor\" \"Kiczales\") \"Objects\")\n          ((\"David\" \"Moon\") \"Objects\"))\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.\n\nSee Also::\n..........\n\n*Note merge:: ,\n\n*Note Compiler Terminology::,\n\n*Note Traversal Rules and Side Effects::,\n\n*Note Destructive Operations::\n\n"
+}

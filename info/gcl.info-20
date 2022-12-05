@@ -1,0 +1,1082 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: Initializing Newly Added Local Slots (Changing the Class of an Instance),  Next: Customizing the Change of Class of an Instance,  Prev: Modifying the Structure of the Instance,  Up: Changing the Class of an Instance
+
+Initializing Newly Added Local Slots
+------------------------------------
+
+The second step of the update initializes the newly added slots and
+performs any other user-defined actions.  This step is implemented by the
+generic function update-instance-for-different-class.  The generic
+function update-instance-for-different-class is invoked by change-class
+after the first step of the update has been completed.
+
+The generic function update-instance-for-different-class is invoked on
+arguments computed by change-class.  The first argument passed is a copy
+of the instance being updated and is an instance of the class C_{from};
+this copy has dynamic extent within the generic function change-class.
+The second argument is the instance as updated so far by change-class and
+is an instance of the class C_{to}.  The remaining arguments are an
+initialization argument list.
+
+There is a system-supplied primary method for
+update-instance-for-different-class that has two parameter specializers,
+each of which is the class standard-object.  First this method checks the
+validity of initialization arguments and signals an error if an
+initialization argument is supplied that is not declared as valid.  (For
+more information, see *Note Declaring the Validity of Initialization
+Arguments::.) Then it calls the generic function shared-initialize with
+the following arguments: the new instance, a list of names of the newly
+added slots, and the initialization arguments it received.
+
+
+File: gcl.info,  Node: Customizing the Change of Class of an Instance,  Prev: Initializing Newly Added Local Slots (Changing the Class of an Instance),  Up: Changing the Class of an Instance
+
+Customizing the Change of Class of an Instance
+----------------------------------------------
+
+Methods for update-instance-for-different-class may be defined to specify
+actions to be taken when an instance is updated.  If only after methods
+for update-instance-for-different-class are defined, they will be run
+after the system-supplied primary method for initialization and will not
+interfere with the default behavior of update-instance-for-different-class.
+
+Methods for shared-initialize may be defined to customize class
+redefinition.  For more information, see *Note Shared-Initialize::.
+
+
+File: gcl.info,  Node: Reinitializing an Instance,  Next: Meta-Objects,  Prev: Changing the Class of an Instance,  Up: Objects
+
+Reinitializing an Instance
+==========================
+
+The generic function reinitialize-instance may be used to change the
+values of slots according to initialization arguments.
+
+The process of reinitialization changes the values of some slots and
+performs any user-defined actions.  It does not modify the structure of an
+instance to add or delete slots, and it does not use any :initform forms
+to initialize slots.
+
+The generic function reinitialize-instance may be called directly.  It
+takes one required argument, the instance.  It also takes any number of
+initialization arguments to be used by methods for reinitialize-instance
+or for shared-initialize. The arguments after the required instance must
+form an initialization argument list.
+
+There is a system-supplied primary method for reinitialize-instance whose
+parameter specializer is the class standard-object.  First this method
+checks the validity of initialization arguments and signals an error if an
+initialization argument is supplied that is not declared as valid.  (For
+more information, see *Note Declaring the Validity of Initialization
+Arguments::.) Then it calls the generic function shared-initialize with
+the following arguments: the instance, nil, and the initialization
+arguments it received.
+
+* Menu:
+
+* Customizing Reinitialization::
+
+
+File: gcl.info,  Node: Customizing Reinitialization,  Prev: Reinitializing an Instance,  Up: Reinitializing an Instance
+
+Customizing Reinitialization
+----------------------------
+
+Methods for reinitialize-instance may be defined to specify actions to be
+taken when an instance is updated.  If only after methods for
+reinitialize-instance are defined, they will be run after the
+system-supplied primary method for initialization and therefore will not
+interfere with the default behavior of reinitialize-instance.
+
+Methods for shared-initialize may be defined to customize class
+redefinition.  For more information, see *Note Shared-Initialize::.
+
+
+File: gcl.info,  Node: Meta-Objects,  Next: Slots,  Prev: Reinitializing an Instance,  Up: Objects
+
+Meta-Objects
+============
+
+The implementation of the object system manipulates classes, methods, and
+generic functions.  The object system contains a set of generic functions
+defined by methods on classes; the behavior of those generic functions
+defines the behavior of the object system.  The instances of the classes
+on which those methods are defined are called meta-objects.
+
+* Menu:
+
+* Standard Meta-objects::
+
+
+File: gcl.info,  Node: Standard Meta-objects,  Prev: Meta-Objects,  Up: Meta-Objects
+
+Standard Meta-objects
+---------------------
+
+The object system supplies a set of meta-objects, called standard
+meta-objects.  These include the class standard-object and instances of
+the classes standard-method, standard-generic-function, and
+method-combination.
+
+     [Editorial Note by KMP: This is said redundantly in the definition of
+     STANDARD-METHOD.]
+
+*
+     The class standard-method is the default class of methods defined by
+     the defmethod and defgeneric forms.
+
+*
+     The class standard-generic-function is the default class of generic
+     functions defined by the forms defmethod, defgeneric,
+
+     and defclass.
+
+*
+     The class named standard-object is an instance of the class
+     standard-class and is a superclass of every class that is an instance
+     of standard-class except itself and structure-class.
+
+*
+     Every method combination object is an instance of a subclass of class
+     method-combination.
+
+
+File: gcl.info,  Node: Slots,  Next: Generic Functions and Methods,  Prev: Meta-Objects,  Up: Objects
+
+Slots
+=====
+
+* Menu:
+
+* Introduction to Slots::
+* Accessing Slots::
+* Inheritance of Slots and Slot Options::
+
+
+File: gcl.info,  Node: Introduction to Slots,  Next: Accessing Slots,  Prev: Slots,  Up: Slots
+
+Introduction to Slots
+---------------------
+
+An object of metaclass standard-class has zero or more named slots.  The
+slots of an object are determined by the class of the object.  Each slot
+can hold one value.
+
+[Reviewer Note by Barmar: All symbols are valid variable names.  Perhaps
+this means to preclude the use of named constants?  We have a terminology
+problem to solve.] The name of a slot is a symbol that is syntactically
+valid for use as a variable name.
+
+When a slot does not have a value, the slot is said to be unbound.  When
+an unbound slot is read,
+
+[Reviewer Note by Barmar: from an object whose metaclass is
+standard-class?] the generic function slot-unbound is invoked. The
+system-supplied primary method for slot-unbound on class t signals an
+error.
+
+If slot-unbound returns, its primary value is used that time as the value
+of the slot.
+
+The default initial value form for a slot is defined by the :initform slot
+option.  When the :initform form is used to supply a value, it is
+evaluated in the lexical environment in which the defclass form was
+evaluated. The :initform along with the lexical environment in which the
+defclass form was evaluated is called a captured initialization form.  For
+more details, see *Note Object Creation and Initialization::.
+
+A local slot is defined to be a slot that is accessible to exactly one
+instance, namely the one in which the slot is allocated.  A shared slot is
+defined to be a slot that is visible to more than one instance of a given
+class and its subclasses.
+
+A class is said to define a slot with a given name when the defclass form
+for that class contains a slot specifier with that name.  Defining a local
+slot does not immediately create a slot; it causes a slot to be created
+each time an instance of the class is created.  Defining a shared slot
+immediately creates a slot.
+
+The :allocation slot option to defclass controls the kind of slot that is
+defined.  If the value of the :allocation slot option is :instance, a
+local slot is created.  If the value of :allocation is :class, a shared
+slot is created.
+
+A slot is said to be accessible in an instance of a class if the slot is
+defined by the class of the instance or is inherited from a superclass of
+that class.  At most one slot of a given name can be accessible in an
+instance.  A shared slot defined by a class is accessible in all instances
+of that class.  A detailed explanation of the inheritance of slots is
+given in *Note Inheritance of Slots and Slot Options::.
+
+
+File: gcl.info,  Node: Accessing Slots,  Next: Inheritance of Slots and Slot Options,  Prev: Introduction to Slots,  Up: Slots
+
+Accessing Slots
+---------------
+
+Slots can be accessed in two ways: by use of the primitive function
+slot-value and by use of generic functions generated by the defclass form.
+
+The function slot-value can be used with any of the slot names specified
+in the defclass form to access a specific slot accessible in an instance
+of the given class.
+
+The macro defclass provides syntax for generating methods to read and
+write slots.  If a reader method is requested, a method is automatically
+generated for reading the value of the slot, but no method for storing a
+value into it is generated.  If a writer method is requested, a method is
+automatically generated for storing a value into the slot, but no method
+for reading its value is generated.  If an accessor method is requested, a
+method for reading the value of the slot and a method for storing a value
+into the slot are automatically generated.  Reader and writer methods are
+implemented using slot-value.
+
+When a reader or writer method is specified for a slot, the name of the
+generic function to which the generated method belongs is directly
+specified.  If the name specified for the writer method is the symbol
+name, the name of the generic function for writing the slot is the symbol
+name, and the generic function takes two arguments: the new value and the
+instance, in that order.  If the name specified for the accessor method is
+the symbol name, the name of the generic function for reading the slot is
+the symbol name, and the name of the generic function for writing the slot
+is the list (setf name).
+
+A generic function created or modified by supplying :reader, :writer, or
+:accessor slot options can be treated exactly as an ordinary generic
+function.
+
+Note that slot-value can be used to read or write the value of a slot
+whether or not reader or writer methods exist for that slot.  When
+slot-value is used, no reader or writer methods are invoked.
+
+The macro with-slots can be used to establish a lexical environment in
+which specified slots are lexically available as if they were variables.
+The macro with-slots invokes the function slot-value to access the
+specified slots.
+
+The macro with-accessors can be used to establish a lexical environment in
+which specified slots are lexically available through their accessors as
+if they were variables.  The macro with-accessors invokes the appropriate
+accessors to access the specified slots.
+
+
+File: gcl.info,  Node: Inheritance of Slots and Slot Options,  Prev: Accessing Slots,  Up: Slots
+
+Inheritance of Slots and Slot Options
+-------------------------------------
+
+The set of the names of all slots accessible in an instance of a class C
+is the union of the sets of names of slots defined by C and its
+superclasses. The structure of an instance is the set of names of local
+slots in that instance.
+
+In the simplest case, only one class among C and its superclasses defines
+a slot with a given slot name.  If a slot is defined by a superclass of C,
+the slot is said to be inherited.  The characteristics of the slot are
+determined by the slot specifier of the defining class.  Consider the
+defining class for a slot S.  If the value of the :allocation slot option
+is :instance, then S is a local slot and each instance of C has its own
+slot named S that stores its own value.  If the value of the :allocation
+slot option is :class, then S is a shared slot, the class that defined S
+stores the value, and all instances of C can access that single slot.  If
+the :allocation slot option is omitted, :instance is used.
+
+In general, more than one class among C and its superclasses can define a
+slot with a given name.  In such cases, only one slot with the given name
+is accessible in an instance of C, and the characteristics of that slot are
+a combination of the several slot specifiers, computed as follows:
+
+*
+     All the slot specifiers for a given slot name are ordered from most
+     specific to least specific, according to the order in C's class
+     precedence list of the classes that define them. All references to
+     the specificity of slot specifiers immediately below refers to this
+     ordering.
+
+*
+     The allocation of a slot is controlled by the most specific slot
+     specifier.  If the most specific slot specifier does not contain an
+     :allocation slot option, :instance is used.  Less specific slot
+     specifiers do not affect the allocation.
+
+*
+     The default initial value form for a slot is the value of the
+     :initform slot option in the most specific slot specifier that
+     contains one.  If no slot specifier contains an :initform slot
+     option, the slot has no default initial value form.
+
+*
+     The contents of a slot will always be of type (and T_1 ... T_n) where
+     T_1 ... T_n are the values of the :type slot options contained in all
+     of the slot specifiers.  If no slot specifier contains the :type slot
+     option, the contents of the slot will always be of type t. The
+     consequences of attempting to store in a slot a value that does not
+     satisfy the type of the slot are undefined.
+
+*
+     The set of initialization arguments that initialize a given slot is
+     the union of the initialization arguments declared in the :initarg
+     slot options in all the slot specifiers.
+
+*
+     The documentation string for a slot is the value of the
+     :documentation slot option in the most specific slot specifier that
+     contains one.  If no slot specifier contains a :documentation slot
+     option, the slot has no documentation string.
+
+A consequence of the allocation rule is that a shared slot can be
+shadowed.  For example, if a class C_1 defines a slot named S whose value
+for the :allocation slot option is :class, that slot is accessible in
+instances of C_1 and all of its subclasses.  However, if C_2 is a subclass
+of C_1 and also defines a slot named S, C_1's slot is not shared by
+instances of C_2 and its subclasses. When a class C_1 defines a shared
+slot, any subclass C_2 of C_1 will share this single slot unless the
+defclass form for C_2 specifies a slot of the same name or there is a
+superclass of C_2 that precedes C_1 in the class precedence list of C_2
+that defines a slot of the same name.
+
+A consequence of the type rule is that the value of a slot satisfies the
+type constraint of each slot specifier that contributes to that slot.
+Because the result of attempting to store in a slot a value that does not
+satisfy the type constraint for the slot is undefined, the value in a slot
+might fail to satisfy its type constraint.
+
+The :reader, :writer, and :accessor slot options create methods rather
+than define the characteristics of a slot.  Reader and writer methods are
+inherited in the sense described in *Note Inheritance of Methods::.
+
+Methods that access slots use only the name of the slot and the type of
+the slot's value.  Suppose a superclass provides a method that expects to
+access a shared slot of a given name, and a subclass defines a local slot
+with the same name.  If the method provided by the superclass is used on
+an instance of the subclass, the method accesses the local slot.
+
+
+File: gcl.info,  Node: Generic Functions and Methods,  Next: Objects Dictionary,  Prev: Slots,  Up: Objects
+
+Generic Functions and Methods
+=============================
+
+* Menu:
+
+* Introduction to Generic Functions::
+* Introduction to Methods::
+* Agreement on Parameter Specializers and Qualifiers::
+* Congruent Lambda-lists for all Methods of a Generic Function::
+* Keyword Arguments in Generic Functions and Methods::
+* Method Selection and Combination::
+* Inheritance of Methods::
+
+
+File: gcl.info,  Node: Introduction to Generic Functions,  Next: Introduction to Methods,  Prev: Generic Functions and Methods,  Up: Generic Functions and Methods
+
+Introduction to Generic Functions
+---------------------------------
+
+A generic function is a function whose behavior depends on the classes or
+identities of the arguments supplied to it.  A generic function object is
+associated with a set of methods, a lambda list, a method combination_2,
+and other information.
+
+Like an ordinary function, a generic function takes arguments, performs a
+series of operations, and perhaps returns useful values.  An ordinary
+function has a single body of code that is always executed when the
+function is called.  A generic function has a set of bodies of code of
+which a subset is selected for execution. The selected bodies of code and
+the manner of their combination are determined by the classes or
+identities of one or more of the arguments to the generic function and by
+its method combination.
+
+Ordinary functions and generic functions are called with identical syntax.
+
+Generic functions are true functions that can be passed as arguments and
+used as the first argument to funcall and apply.
+
+A binding of a function name to a generic function can be established in
+one of several ways.  It can be established in the global environment by
+ensure-generic-function, defmethod (implicitly, due to
+ensure-generic-function) or defgeneric (also implicitly, due to
+ensure-generic-function).
+
+No standardized mechanism is provided for establishing a binding of a
+function name to a generic function in the lexical environment.
+
+When a defgeneric form is evaluated, one of three actions is taken (due to
+ensure-generic-function):
+
+*
+     If a generic function of the given name already exists, the existing
+     generic function object is modified.  Methods specified by the
+     current defgeneric form are added, and any methods in the existing
+     generic function that were defined by a previous defgeneric form are
+     removed.  Methods added by the current defgeneric form might replace
+     methods defined by defmethod, defclass, define-condition, or
+     defstruct.  No other methods in the generic function are affected or
+     replaced.
+
+*
+     If the given name names an ordinary function, a  macro, or a special
+     operator, an error is signaled.
+
+*
+     Otherwise a generic function is created with the methods specified by
+     the method definitions in the defgeneric form.
+
+Some operators permit specification of the options of a generic function,
+such as the type of method combination it uses or its argument precedence
+order.  These operators will be referred to as "operators that specify
+generic function options."
+
+The only standardized operator in this category is defgeneric.
+
+Some operators define methods for a generic function.  These operators
+will be referred to as method-defining operators ; their associated forms
+are called method-defining forms.  The standardized method-defining
+operators are listed in Figure 7-2.
+
+  defgeneric        defmethod  defclass  
+  define-condition  defstruct            
+
+  Figure 7-2: Standardized Method-Defining Operators
+
+
+Note that of the standardized method-defining operators only defgeneric
+can specify generic function options.  defgeneric and any
+implementation-defined operators that can specify generic function options
+are also referred to as "operators that specify generic function options."
+
+
+File: gcl.info,  Node: Introduction to Methods,  Next: Agreement on Parameter Specializers and Qualifiers,  Prev: Introduction to Generic Functions,  Up: Generic Functions and Methods
+
+Introduction to Methods
+-----------------------
+
+Methods define the class-specific or identity-specific behavior and
+operations of a generic function.
+
+A method object is associated with code that implements the method's
+behavior, a sequence of parameter specializers that specify when the given
+method is applicable, a lambda list, and a sequence of qualifiers that are
+used by the method combination facility to distinguish among methods.
+
+A method object is not a function and cannot be invoked as a function.
+Various mechanisms in the object system take a method object and invoke
+its method function, as is the case when a generic function is invoked.
+When this occurs it is said that the method is invoked or called.
+
+A method-defining form contains the code that is to be run when the
+arguments to the generic function cause the method that it defines to be
+invoked.  When a method-defining form is evaluated, a method object is
+created and one of four actions is taken:
+
+*
+     If a generic function of the given name already exists and if a
+     method object already exists that agrees with the new one on
+     parameter specializers and qualifiers, the new method object replaces
+     the old one.  For a definition of one method agreeing with another on
+     parameter specializers and qualifiers, see *Note Agreement on
+     Parameter Specializers and Qualifiers::.
+
+*
+     If a generic function of the given name already exists and if there
+     is no method object that agrees with the new one on parameter
+     specializers and qualifiers, the existing generic function object is
+     modified to contain the new method object.
+
+*
+     If the given name names an ordinary function, a macro, or a special
+     operator, an error is signaled.
+
+*
+     Otherwise a generic function is created with the method specified by
+     the method-defining form.
+
+If the lambda list of a new method is not congruent with the lambda list
+of the generic function, an error is signaled.  If a method-defining
+operator that cannot specify generic function options creates a new
+generic function, a lambda list for that generic function is derived from
+the lambda list of the method in the method-defining form in such a way as
+to be congruent with it.  For a discussion of congruence , see *Note
+Congruent Lambda-lists for all Methods of a Generic Function::.
+
+Each method has a specialized lambda list, which determines when that
+method can be applied.  A specialized lambda list is like an ordinary
+lambda list except that a specialized parameter may occur instead of the
+name of a required parameter.  A specialized parameter is a list
+(variable-name parameter-specializer-name), where
+parameter-specializer-name is one of the following:
+
+a symbol
+     denotes a parameter specializer which is the class named by that
+     symbol.
+
+a class
+     denotes a parameter specializer which is the class itself.
+
+(eql form)
+     denotes a parameter specializer which satisfies the type specifier
+     (eql object), where object is the result of evaluating form.  The
+     form form is evaluated in the lexical environment in which the
+     method-defining form is evaluated.  Note that form is evaluated only
+     once, at the time the method is defined, not each time the generic
+     function is called.
+
+Parameter specializer names are used in macros intended as the user-level
+interface (defmethod), while parameter specializers are used in the
+functional interface.
+
+Only required parameters may be specialized, and there must be a parameter
+specializer for each required parameter.  For notational simplicity, if
+some required parameter in a specialized lambda list in a method-defining
+form is simply a variable name, its parameter specializer defaults to the
+class t.
+
+Given a generic function and a set of arguments, an applicable method is a
+method for that generic function whose parameter specializers are
+satisfied by their corresponding arguments.  The following definition
+specifies what it means for a method to be applicable and for an argument
+to satisfy a parameter specializer.
+
+Let < A_1, ..., A_n> be the required arguments to a generic function in
+order. Let < P_1, ..., P_n> be the parameter specializers corresponding to
+the required parameters of the method M in order.  The method M is
+applicable when each A_i is of the type specified by the type specifier
+P_i.  Because every valid parameter specializer is also a valid type
+specifier, the function typep can be used during method selection to
+determine whether an argument satisfies a parameter specializer.
+
+A method all of whose parameter specializers are the class t is called a
+default method ; it is always applicable but may be shadowed by a more
+specific method.
+
+Methods can have qualifiers, which give the method combination procedure a
+way to distinguish among methods.  A method that has one or more
+qualifiers is called a qualified method.  A method with no qualifiers is
+called an unqualified method.  A qualifier is any non-list.  The
+qualifiers defined by the standardized method combination types are
+symbols.
+
+In this specification, the terms "primary method" and "auxiliary method"
+are used to partition methods within a method combination type according
+to their intended use.  In standard method combination, primary methods are
+unqualified methods and auxiliary methods are methods with a single
+qualifier that is one of :around, :before, or :after.  Methods with these
+qualifiers are called around methods, before methods, and after methods,
+respectively.  When a method combination type is defined using the short
+form of define-method-combination, primary methods are methods qualified
+with the name of the type of method combination, and auxiliary methods
+have the qualifier :around.  Thus the terms "primary method" and
+"auxiliary method" have only a relative definition within a given method
+combination type.
+
+
+File: gcl.info,  Node: Agreement on Parameter Specializers and Qualifiers,  Next: Congruent Lambda-lists for all Methods of a Generic Function,  Prev: Introduction to Methods,  Up: Generic Functions and Methods
+
+Agreement on Parameter Specializers and Qualifiers
+--------------------------------------------------
+
+Two methods are said to agree with each other on parameter specializers
+and qualifiers if the following conditions hold:
+
+1.
+     Both methods have the same number of required parameters.  Suppose
+     the parameter specializers of the two methods are P_{1,1}... P_{1,n}
+     and P_{2,1}... P_{2,n}.
+
+2.
+     For each 1<= i<= n, P_{1,i} agrees with P_{2,i}.  The parameter
+     specializer P_{1,i} agrees with P_{2,i} if P_{1,i} and P_{2,i} are
+     the same class or if P_{1,i}=(eql object_1), P_{2,i}=(eql object_2),
+     and (eql object_1 object_2).  Otherwise P_{1,i} and P_{2,i} do not
+     agree.
+
+3.
+     The two lists of qualifiers are the same under equal.
+
+
+File: gcl.info,  Node: Congruent Lambda-lists for all Methods of a Generic Function,  Next: Keyword Arguments in Generic Functions and Methods,  Prev: Agreement on Parameter Specializers and Qualifiers,  Up: Generic Functions and Methods
+
+Congruent Lambda-lists for all Methods of a Generic Function
+------------------------------------------------------------
+
+These rules define the congruence of a set of lambda lists, including the
+lambda list of each method for a given generic function and the lambda
+list specified for the generic function itself, if given.
+
+1.
+     Each lambda list must have the same number of required parameters.
+
+2.
+     Each lambda list must have the same number of optional parameters.
+     Each method can supply its own default for an optional parameter.
+
+3.
+     If any lambda list mentions &rest or &key, each lambda list must
+     mention one or both of them.
+
+4.
+     If the generic function lambda list mentions &key, each method must
+     accept all of the keyword names mentioned after &key, either by
+     accepting them explicitly, by specifying &allow-other-keys, or by
+     specifying &rest but not &key.  Each method can accept additional
+     keyword arguments of its own.  The checking of the validity of
+     keyword names is done in the generic function, not in each method.  A
+     method is invoked as if the keyword argument pair whose name is
+     :allow-other-keys and whose value is true were supplied, though no
+     such argument pair will be passed.
+
+5.
+     The use of &allow-other-keys need not be consistent across lambda
+     lists.  If &allow-other-keys is mentioned in the lambda list of any
+     applicable method or of the generic function, any keyword arguments
+     may be mentioned in the call to the generic function.
+
+6.
+     The use of &aux need not be consistent across methods.
+
+     If a method-defining operator that cannot specify generic function
+     options creates a generic function, and if the lambda list for the
+     method mentions keyword arguments, the lambda list of the generic
+     function will mention &key (but no keyword arguments).
+
+
+File: gcl.info,  Node: Keyword Arguments in Generic Functions and Methods,  Next: Method Selection and Combination,  Prev: Congruent Lambda-lists for all Methods of a Generic Function,  Up: Generic Functions and Methods
+
+Keyword Arguments in Generic Functions and Methods
+--------------------------------------------------
+
+When a generic function or any of its methods mentions &key in a lambda
+list, the specific set of keyword arguments accepted by the generic
+function varies according to the applicable methods.  The set of keyword
+arguments accepted by the generic function for a particular call is the
+union of the keyword arguments accepted by all applicable methods and the
+keyword arguments mentioned after &key in the generic function definition,
+if any.  A method that has &rest but not &key does not affect the set of
+acceptable keyword arguments.  If the lambda list of any applicable method
+or of the generic function definition contains &allow-other-keys, all
+keyword arguments are accepted by the generic function.
+
+The lambda list congruence rules require that each method accept all of
+the keyword arguments mentioned after &key in the generic function
+definition, by accepting them explicitly, by specifying &allow-other-keys,
+or by specifying &rest but not &key.  Each method can accept additional
+keyword arguments of its own, in addition to the keyword arguments
+mentioned in the generic function definition.
+
+If a generic function is passed a keyword argument that no applicable
+method accepts, an error should be signaled; see *Note Error Checking in
+Function Calls::.
+
+* Menu:
+
+* Examples of Keyword Arguments in Generic Functions and Methods::
+
+
+File: gcl.info,  Node: Examples of Keyword Arguments in Generic Functions and Methods,  Prev: Keyword Arguments in Generic Functions and Methods,  Up: Keyword Arguments in Generic Functions and Methods
+
+Examples of Keyword Arguments in Generic Functions and Methods
+..............................................................
+
+For example, suppose there are two methods defined for width as follows:
+
+      (defmethod width ((c character-class) &key font) ...)
+     
+      (defmethod width ((p picture-class) &key pixel-size) ...)
+
+Assume that there are no other methods and no generic function definition
+for width. The evaluation of the following form should signal an error
+because the keyword argument :pixel-size is not accepted by the applicable
+method.
+
+      (width (make-instance `character-class :char #\Q)
+             :font 'baskerville :pixel-size 10)
+
+The evaluation of the following form should signal an error.
+
+      (width (make-instance `picture-class :glyph (glyph #\Q))
+             :font 'baskerville :pixel-size 10)
+
+The evaluation of the following form will not signal an error if the class
+named character-picture-class is a subclass of both picture-class and
+character-class.
+
+      (width (make-instance `character-picture-class :char #\Q)
+             :font 'baskerville :pixel-size 10)
+
+
+File: gcl.info,  Node: Method Selection and Combination,  Next: Inheritance of Methods,  Prev: Keyword Arguments in Generic Functions and Methods,  Up: Generic Functions and Methods
+
+Method Selection and Combination
+--------------------------------
+
+When a generic function is called with particular arguments, it must
+determine the code to execute.  This code is called the effective method
+for those arguments.  The effective method is a combination of the
+applicable methods in the generic function that calls some or all of the
+methods.
+
+If a generic function is called and no methods are applicable, the generic
+function no-applicable-method is invoked, with the results from that call
+being used as the results of the call to the original generic function.
+Calling no-applicable-method takes precedence over checking for acceptable
+keyword arguments; see *Note Keyword Arguments in Generic Functions and
+Methods::.
+
+When the effective method has been determined, it is invoked with the same
+arguments as were passed to the generic function.  Whatever values it
+returns are returned as the values of the generic function.
+
+* Menu:
+
+* Determining the Effective Method::
+* Selecting the Applicable Methods::
+* Sorting the Applicable Methods by Precedence Order::
+* Applying method combination to the sorted list of applicable methods::
+* Standard Method Combination::
+* Declarative Method Combination::
+* Built-in Method Combination Types::
+
+
+File: gcl.info,  Node: Determining the Effective Method,  Next: Selecting the Applicable Methods,  Prev: Method Selection and Combination,  Up: Method Selection and Combination
+
+Determining the Effective Method
+................................
+
+The effective method is determined by the following three-step procedure:
+
+1.
+     Select the applicable methods.
+
+2.
+     Sort the applicable methods by precedence order, putting the most
+     specific method first.
+
+3.
+     Apply method combination to the sorted list of applicable methods,
+     producing the effective method.
+
+
+File: gcl.info,  Node: Selecting the Applicable Methods,  Next: Sorting the Applicable Methods by Precedence Order,  Prev: Determining the Effective Method,  Up: Method Selection and Combination
+
+Selecting the Applicable Methods
+................................
+
+This step is described in *Note Introduction to Methods::.
+
+
+File: gcl.info,  Node: Sorting the Applicable Methods by Precedence Order,  Next: Applying method combination to the sorted list of applicable methods,  Prev: Selecting the Applicable Methods,  Up: Method Selection and Combination
+
+Sorting the Applicable Methods by Precedence Order
+..................................................
+
+To compare the precedence of two methods, their parameter specializers are
+examined in order.  The default examination order is from left to right,
+but an alternative order may be specified by the
+:argument-precedence-order option to defgeneric or to any of the other
+operators that specify generic function options.
+
+The corresponding parameter specializers from each method are compared.
+When a pair of parameter specializers agree, the next pair are compared
+for agreement.  If all corresponding parameter specializers agree, the two
+methods must have different qualifiers; in this case, either method can be
+selected to precede the other.  For information about agreement, see *Note
+Agreement on Parameter Specializers and Qualifiers::.
+
+If some corresponding parameter specializers do not agree, the first pair
+of parameter specializers that do not agree determines the precedence.  If
+both parameter specializers are classes, the more specific of the two
+methods is the method whose parameter specializer appears earlier in the
+class precedence list of the corresponding argument.  Because of the way
+in which the set of applicable methods is chosen, the parameter
+specializers are guaranteed to be present in the class precedence list of
+the class of the argument.
+
+If just one of a pair of corresponding parameter specializers is (eql
+object), the method with that parameter specializer precedes the other
+method.  If both parameter specializers are eql expressions, the
+specializers must agree (otherwise the two methods would not both have
+been applicable to this argument).
+
+The resulting list of applicable methods has the most specific method
+first and the least specific method last.
+
+
+File: gcl.info,  Node: Applying method combination to the sorted list of applicable methods,  Next: Standard Method Combination,  Prev: Sorting the Applicable Methods by Precedence Order,  Up: Method Selection and Combination
+
+Applying method combination to the sorted list of applicable methods
+....................................................................
+
+In the simple case--if standard method combination is used and all
+applicable methods are primary methods--the effective method is the most
+specific method.  That method can call the next most specific method by
+using the function call-next-method.  The method that call-next-method
+will call is referred to as the next method .  The predicate next-method-p
+tests whether a next method exists.  If call-next-method is called and
+there is no next most specific method, the generic function no-next-method
+is invoked.
+
+In general, the effective method is some combination of the applicable
+methods.  It is described by a form that contains calls to some or all of
+the applicable methods, returns the value or values that will be returned
+as the value or values of the generic function, and optionally makes some
+of the methods accessible by means of call-next-method.
+
+The role of each method in the effective method is determined by its
+qualifiers and the specificity of the method.  A qualifier serves to mark
+a method, and the meaning of a qualifier is determined by the way that
+these marks are used by this step of the procedure.  If an applicable
+method has an unrecognized qualifier, this step signals an error and does
+not include that method in the effective method.
+
+When standard method combination is used together with qualified methods,
+the effective method is produced as described in *Note Standard Method
+Combination::.
+
+Another type of method combination can be specified by using the
+:method-combination option of defgeneric or of any of the other operators
+that specify generic function options.  In this way this step of the
+procedure can be customized.
+
+New types of method combination can be defined by using the
+define-method-combination macro.
+
+
+File: gcl.info,  Node: Standard Method Combination,  Next: Declarative Method Combination,  Prev: Applying method combination to the sorted list of applicable methods,  Up: Method Selection and Combination
+
+Standard Method Combination
+...........................
+
+Standard method combination is supported by the class
+standard-generic-function.  It is used if no other type of method
+combination is specified or if the built-in method combination type
+standard is specified.
+
+Primary methods define the main action of the effective method, while
+auxiliary methods modify that action in one of three ways.  A primary
+method has no method qualifiers.
+
+An auxiliary method is a method whose qualifier is :before, :after, or
+:around.  Standard method combination allows no more than one qualifier
+per method; if a method definition specifies more than one qualifier per
+method, an error is signaled.
+
+*
+     A before method has the keyword :before as its only qualifier.  A
+     before method specifies code that is to be run before any primary
+     methods.
+
+*
+     An after method has the keyword :after as its only qualifier.  An
+     after method specifies code that is to be run after primary methods.
+
+*
+     An around method has the keyword :around as its only qualifier.  An
+     around method specifies code that is to be run instead of other
+     applicable methods, but which might contain explicit code which calls
+     some of those shadowed methods (via call-next-method).
+
+The semantics of standard method combination is as follows:
+
+*
+     If there are any around methods, the most specific around method is
+     called.  It supplies the value or values of the generic function.
+
+*
+     Inside the body of an around method, call-next-method can be used to
+     call the next method.  When the next method returns, the around
+     method can execute more code, perhaps based on the returned value or
+     values.  The generic function no-next-method is invoked if
+     call-next-method is used and there is no applicable method to call.
+     The function next-method-p may be used to determine whether a next
+     method exists.
+
+*
+     If an around method invokes call-next-method, the next most specific
+     around method is called, if one is applicable.  If there are no
+     around methods or if call-next-method is called by the least specific
+     around method, the other methods are called as follows:
+    -
+          All the before methods are called, in most-specific-first order.
+          Their values are ignored.  An error is signaled if
+          call-next-method is used in a before method.
+
+    -
+          The most specific primary method is called.  Inside the body of
+          a primary method, call-next-method may be used to call the next
+          most specific primary method.  When that method returns, the
+          previous primary method can execute more code, perhaps based on
+          the returned value or values.  The generic function
+          no-next-method is invoked if call-next-method is used and there
+          are no more applicable primary methods.  The function
+          next-method-p may be used to determine whether a next method
+          exists.  If call-next-method is not used, only the most specific
+          primary method is called.
+
+    -
+          All the after methods are called in most-specific-last order.
+          Their values are ignored.  An error is signaled if
+          call-next-method is used in an after method.
+
+*
+     If no around methods were invoked, the most specific primary method
+     supplies the value or values returned by the generic function.  The
+     value or values returned by the invocation of call-next-method in the
+     least specific around method are those returned by the most specific
+     primary method.
+
+In standard method combination, if there is an applicable method but no
+applicable primary method, an error is signaled.
+
+The before methods are run in most-specific-first order while the after
+methods are run in least-specific-first order.  The design rationale for
+this difference can be illustrated with an example.  Suppose class C_1
+modifies the behavior of its superclass, C_2, by adding before methods and
+after methods.  Whether the behavior of the class C_2 is defined directly
+by methods on C_2 or is inherited from its superclasses does not affect
+the relative order of invocation of methods on instances of the class C_1.
+Class C_1's before method runs before all of class C_2's methods.  Class
+C_1's after method runs after all of class C_2's methods.
+
+By contrast, all around methods run before any other methods run.  Thus a
+less specific around method runs before a more specific primary method.
+
+If only primary methods are used and if call-next-method is not used, only
+the most specific method is invoked; that is, more specific methods shadow
+more general ones.
+
+
+File: gcl.info,  Node: Declarative Method Combination,  Next: Built-in Method Combination Types,  Prev: Standard Method Combination,  Up: Method Selection and Combination
+
+Declarative Method Combination
+..............................
+
+The macro define-method-combination defines new forms of method
+combination.  It provides a mechanism for customizing the production of
+the effective method. The default procedure for producing an effective
+method is described in *Note Determining the Effective Method::.  There
+are two forms of define-method-combination.  The short form is a simple
+facility while the long form is more powerful and more verbose.  The long
+form resembles defmacro in that the body is an expression that computes a
+Lisp form; it provides mechanisms for implementing arbitrary control
+structures within method combination and for arbitrary processing of
+method qualifiers.
+
+
+File: gcl.info,  Node: Built-in Method Combination Types,  Prev: Declarative Method Combination,  Up: Method Selection and Combination
+
+Built-in Method Combination Types
+.................................
+
+The object system provides a set of built-in method combination types.  To
+specify that a generic function is to use one of these method combination
+types, the name of the method combination type is given as the argument to
+the :method-combination option to defgeneric or to the :method-combination
+option to any of the other operators that specify generic function options.
+
+The names of the built-in  method combination types are listed in Figure
+7-3.
+
+  +    append  max  nconc  progn        and  list    min  or     standard  
+
+  Figure 7-3: Built-in Method Combination Types
+
+
+The semantics of the standard built-in method combination type is
+described in *Note Standard Method Combination::.  The other built-in
+method combination types are called simple built-in method combination
+types.
+
+The simple built-in method combination types act as though they were
+defined by the short form of define-method-combination.  They recognize
+two roles for methods:
+
+*
+     An around method has the keyword symbol :around as its sole
+     qualifier.  The meaning of :around methods is the same as in standard
+     method combination.  Use of the functions call-next-method and
+     next-method-p is supported in around methods.
+
+*
+     A primary method has the name of the method combination type as its
+     sole qualifier.  For example, the built-in method combination type
+     and recognizes methods whose sole qualifier is and; these are primary
+     methods. Use of the functions call-next-method and next-method-p is
+     not supported in primary methods.
+
+The semantics of the simple built-in method combination types is as
+follows:
+
+*
+     If there are any around methods, the most specific around method is
+     called.   It supplies the value or values of the generic function.
+
+*
+     Inside the body of an around method, the function call-next-method
+     can be used to call the next method.  The generic function
+     no-next-method is invoked if call-next-method is used and there is no
+     applicable method to call.  The function next-method-p may be used to
+     determine whether a next method exists. When the next method returns,
+     the around method can execute more code, perhaps based on the
+     returned value or values.
+
+*
+     If an around method invokes call-next-method, the next most specific
+     around method is called, if one is applicable.  If there are no
+     around methods or if call-next-method is called by the least specific
+     around method, a Lisp form derived from the name of the built-in
+     method combination type and from the list of applicable primary
+     methods is evaluated to produce the value of the generic function.
+     Suppose the name of the method combination type is operator and the
+     call to the generic function is of the form
+
+                         (generic-function a_1... a_n)
+
+
+     Let M_1,...,M_k be the applicable primary methods in order; then the
+     derived Lisp form is
+
+                                (operator < M_1
+
+     a_1... a_n>...< M_k a_1... a_n>)
+
+
+     If the expression < M_i  a_1... a_n> is evaluated, the method M_i
+     will be applied to the arguments a_1... a_n.  For example, if
+     operator is or, the expression < M_i  a_1... a_n> is evaluated only
+     if < M_j  a_1... a_n>, 1<= j<i, returned nil.
+
+
+     The default order for the primary methods is :most-specific-first.
+     However, the order can be reversed by supplying :most-specific-last
+     as the second argument to the :method-combination option.
+
+The simple built-in method combination types require exactly one qualifier
+per method.  An error is signaled if there are applicable methods with no
+qualifiers or with qualifiers that are not supported by the method
+combination type. An error is signaled if there are applicable around
+methods and no applicable primary methods.
+
+
+File: gcl.info,  Node: Inheritance of Methods,  Prev: Method Selection and Combination,  Up: Generic Functions and Methods
+
+Inheritance of Methods
+----------------------
+
+A subclass inherits methods in the sense that any method applicable to all
+instances of a class is also applicable to all instances of any subclass
+of that class.
+
+The inheritance of methods acts the same way regardless of which of the
+method-defining operators created the methods.
+
+The inheritance of methods is described in detail in *Note Method
+Selection and Combination::.
+

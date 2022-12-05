@@ -1,0 +1,61 @@
+{
+    "name": "when",
+    "prev": "or",
+    "next": "case",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "when, unless"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "when",
+                    "text": " test-form {form}* =>  {result}*\n"
+                },
+                {
+                    "name": "unless",
+                    "text": " test-form {form}* =>  {result}*\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "test-form",
+                    "desc": "a form."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values of the forms in a  when   form if the test-form yields"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "when and unless allow the execution of forms to be dependent on a single\ntest-form.\nIn a when form, if the test-form yields true, the forms are evaluated in\norder from left to right and the values returned by the forms are returned\nfrom the when form.  Otherwise, if the test-form yields false, the forms\nare not evaluated, and the when form returns nil.\nIn an unless form, if the test-form yields false, the forms are evaluated\nin order from left to right and the values returned by the forms are\nreturned from the unless form.  Otherwise, if the test-form yields false,\nthe forms are not evaluated, and the unless form returns nil.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (when t 'hello) =>  HELLO\n      (unless t 'hello) =>  NIL\n      (when nil 'hello) =>  NIL\n      (unless nil 'hello) =>  HELLO\n      (when t) =>  NIL\n      (unless nil) =>  NIL\n      (when t (prin1 1) (prin1 2) (prin1 3))\n      |>  123\n     =>  3\n      (unless t (prin1 1) (prin1 2) (prin1 3)) =>  NIL\n      (when nil (prin1 1) (prin1 2) (prin1 3)) =>  NIL\n      (unless nil (prin1 1) (prin1 2) (prin1 3))\n      |>  123\n     =>  3\n      (let ((x 3))\n        (list (when (oddp x) (incf x) (list x))\n              (when (oddp x) (incf x) (list x))\n              (unless (oddp x) (incf x) (list x))\n              (unless (oddp x) (incf x) (list x))\n              (if (oddp x) (incf x) (list x))\n              (if (oddp x) (incf x) (list x))\n              (if (not (oddp x)) (incf x) (list x))\n              (if (not (oddp x)) (incf x) (list x))))\n     =>  ((4) NIL (5) NIL 6 (6) 7 (7))\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note and:: , *Note cond:: , *Note if:: , *Note or::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "      (when test {form}^+) == (and test (progn {form}^+))\n      (when test {form}^+) == (cond (test {form}^+))\n      (when test {form}^+) == (if test (progn {form}^+) nil)\n      (when test {form}^+) == (unless (not test) {form}^+)\n      (unless test {form}^+) == (cond ((not test) {form}^+))\n      (unless test {form}^+) == (if test nil (progn {form}^+))\n      (unless test {form}^+) == (when (not test) {form}^+)\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: when,  Next: case,  Prev: or,  Up: Data and Control Flow Dictionary\n\nwhen, unless                                                        [Macro]\n---------------------------------------------------------------------------\n\n`when'  test-form {form}* =>  {result}*\n\n`unless'  test-form {form}* =>  {result}*\n\nArguments and Values::\n......................\n\ntest-form--a form.\n\nforms--an implicit progn.\n\nresults--the values of the forms in a  when   form if the test-form yields\ntrue or in an unless form if the test-form yields false; otherwise nil.\n\nDescription::\n.............\n\nwhen and unless allow the execution of forms to be dependent on a single\ntest-form.\n\nIn a when form, if the test-form yields true, the forms are evaluated in\norder from left to right and the values returned by the forms are returned\nfrom the when form.  Otherwise, if the test-form yields false, the forms\nare not evaluated, and the when form returns nil.\n\nIn an unless form, if the test-form yields false, the forms are evaluated\nin order from left to right and the values returned by the forms are\nreturned from the unless form.  Otherwise, if the test-form yields false,\nthe forms are not evaluated, and the unless form returns nil.\n\nExamples::\n..........\n\n      (when t 'hello) =>  HELLO\n      (unless t 'hello) =>  NIL\n      (when nil 'hello) =>  NIL\n      (unless nil 'hello) =>  HELLO\n      (when t) =>  NIL\n      (unless nil) =>  NIL\n      (when t (prin1 1) (prin1 2) (prin1 3))\n      |>  123\n     =>  3\n      (unless t (prin1 1) (prin1 2) (prin1 3)) =>  NIL\n      (when nil (prin1 1) (prin1 2) (prin1 3)) =>  NIL\n      (unless nil (prin1 1) (prin1 2) (prin1 3))\n      |>  123\n     =>  3\n      (let ((x 3))\n        (list (when (oddp x) (incf x) (list x))\n              (when (oddp x) (incf x) (list x))\n              (unless (oddp x) (incf x) (list x))\n              (unless (oddp x) (incf x) (list x))\n              (if (oddp x) (incf x) (list x))\n              (if (oddp x) (incf x) (list x))\n              (if (not (oddp x)) (incf x) (list x))\n              (if (not (oddp x)) (incf x) (list x))))\n     =>  ((4) NIL (5) NIL 6 (6) 7 (7))\n\nSee Also::\n..........\n\n*Note and:: , *Note cond:: , *Note if:: , *Note or::\n\nNotes::\n.......\n\n      (when test {form}^+) == (and test (progn {form}^+))\n      (when test {form}^+) == (cond (test {form}^+))\n      (when test {form}^+) == (if test (progn {form}^+) nil)\n      (when test {form}^+) == (unless (not test) {form}^+)\n      (unless test {form}^+) == (cond ((not test) {form}^+))\n      (unless test {form}^+) == (if test nil (progn {form}^+))\n      (unless test {form}^+) == (when (not test) {form}^+)\n\n"
+}

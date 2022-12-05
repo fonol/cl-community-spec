@@ -1,0 +1,57 @@
+{
+    "name": "function-lambda-expression",
+    "prev": "function (Special Operator)",
+    "next": "functionp",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "function-lambda-expression"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "function-lambda-expression",
+                    "text": " function=>  lambda-expression, closure-p, name\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "function",
+                    "desc": "a function."
+                },
+                {
+                    "name": "lambda-expression",
+                    "desc": "a lambda expression or nil."
+                },
+                {
+                    "name": "closure-p",
+                    "desc": "a generalized boolean."
+                },
+                {
+                    "name": "name",
+                    "desc": "an object."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns information about function as follows:\nThe primary value, lambda-expression, is function's defining lambda\nexpression, or nil if the information is not available.  The lambda\nexpression may have been pre-processed in some ways, but it should remain\na suitable argument to compile or function.  Any implementation may\nlegitimately return nil as the lambda-expression of any function.\nThe secondary value, closure-p, is nil if function's definition was\nenclosed in the null lexical environment or something non-nil if\nfunction's definition might have been enclosed in some non-null lexical\nenvironment.  Any implementation may legitimately return true as the\nclosure-p of any function.\nThe tertiary value, name, is the \"name\" of function.  The name is intended\nfor debugging only and is not necessarily one that would be valid for use\nas a name in defun or function, for example.  By convention, nil is used\nto mean that function has no name.  Any implementation may legitimately\nreturn nil as the name of any function.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "The following examples illustrate some possible return values, but are not\nintended to be exhaustive:\n      (function-lambda-expression #'(lambda (x) x))\n     =>  NIL, false, NIL\n     OR=> NIL, true, NIL\n     OR=> (LAMBDA (X) X), true, NIL\n     OR=> (LAMBDA (X) X), false, NIL\n      (function-lambda-expression\n         (funcall #'(lambda () #'(lambda (x) x))))\n     =>  NIL, false, NIL\n     OR=> NIL, true, NIL\n     OR=> (LAMBDA (X) X), true, NIL\n     OR=> (LAMBDA (X) X), false, NIL\n      (function-lambda-expression\n         (funcall #'(lambda (x) #'(lambda () x)) nil))\n     =>  NIL, true, NIL\n     OR=> (LAMBDA () X), true, NIL\n     NOT=> NIL, false, NIL\n     NOT=> (LAMBDA () X), false, NIL\n      (flet ((foo (x) x))\n        (setf (symbol-function 'bar) #'foo)\n        (function-lambda-expression #'bar))\n     =>  NIL, false, NIL\n     OR=> NIL, true, NIL\n     OR=> (LAMBDA (X) (BLOCK FOO X)), true, NIL\n     OR=> (LAMBDA (X) (BLOCK FOO X)), false, FOO\n     OR=> (SI::BLOCK-LAMBDA FOO (X) X), false, FOO\n      (defun foo ()\n        (flet ((bar (x) x))\n          #'bar))\n      (function-lambda-expression (foo))\n     =>  NIL, false, NIL\n     OR=> NIL, true, NIL\n     OR=> (LAMBDA (X) (BLOCK BAR X)), true, NIL\n     OR=> (LAMBDA (X) (BLOCK BAR X)), true, (:INTERNAL FOO 0 BAR)\n     OR=> (LAMBDA (X) (BLOCK BAR X)), false, \"BAR in FOO\"\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Although implementations are free to return \"nil, true, nil\" in all cases,\nthey are encouraged to return a lambda expression as the primary value in\nthe case where the argument was created by a call to compile or eval (as\nopposed to being created by loading a compiled file).\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: function-lambda-expression,  Next: functionp,  Prev: function (Special Operator),  Up: Data and Control Flow Dictionary\n\nfunction-lambda-expression                                       [Function]\n---------------------------------------------------------------------------\n\n`function-lambda-expression'  function\n=>  lambda-expression, closure-p, name\n\nArguments and Values::\n......................\n\nfunction--a function.\n\nlambda-expression--a lambda expression or nil.\n\nclosure-p--a generalized boolean.\n\nname--an object.\n\nDescription::\n.............\n\nReturns information about function as follows:\n\nThe primary value, lambda-expression, is function's defining lambda\nexpression, or nil if the information is not available.  The lambda\nexpression may have been pre-processed in some ways, but it should remain\na suitable argument to compile or function.  Any implementation may\nlegitimately return nil as the lambda-expression of any function.\n\nThe secondary value, closure-p, is nil if function's definition was\nenclosed in the null lexical environment or something non-nil if\nfunction's definition might have been enclosed in some non-null lexical\nenvironment.  Any implementation may legitimately return true as the\nclosure-p of any function.\n\nThe tertiary value, name, is the \"name\" of function.  The name is intended\nfor debugging only and is not necessarily one that would be valid for use\nas a name in defun or function, for example.  By convention, nil is used\nto mean that function has no name.  Any implementation may legitimately\nreturn nil as the name of any function.\n\nExamples::\n..........\n\nThe following examples illustrate some possible return values, but are not\nintended to be exhaustive:\n\n      (function-lambda-expression #'(lambda (x) x))\n     =>  NIL, false, NIL\n     OR=> NIL, true, NIL\n     OR=> (LAMBDA (X) X), true, NIL\n     OR=> (LAMBDA (X) X), false, NIL\n     \n      (function-lambda-expression\n         (funcall #'(lambda () #'(lambda (x) x))))\n     =>  NIL, false, NIL\n     OR=> NIL, true, NIL\n     OR=> (LAMBDA (X) X), true, NIL\n     OR=> (LAMBDA (X) X), false, NIL\n     \n      (function-lambda-expression\n         (funcall #'(lambda (x) #'(lambda () x)) nil))\n     =>  NIL, true, NIL\n     OR=> (LAMBDA () X), true, NIL\n     NOT=> NIL, false, NIL\n     NOT=> (LAMBDA () X), false, NIL\n     \n      (flet ((foo (x) x))\n        (setf (symbol-function 'bar) #'foo)\n        (function-lambda-expression #'bar))\n     =>  NIL, false, NIL\n     OR=> NIL, true, NIL\n     OR=> (LAMBDA (X) (BLOCK FOO X)), true, NIL\n     OR=> (LAMBDA (X) (BLOCK FOO X)), false, FOO\n     OR=> (SI::BLOCK-LAMBDA FOO (X) X), false, FOO\n     \n      (defun foo ()\n        (flet ((bar (x) x))\n          #'bar))\n      (function-lambda-expression (foo))\n     =>  NIL, false, NIL\n     OR=> NIL, true, NIL\n     OR=> (LAMBDA (X) (BLOCK BAR X)), true, NIL\n     OR=> (LAMBDA (X) (BLOCK BAR X)), true, (:INTERNAL FOO 0 BAR)\n     OR=> (LAMBDA (X) (BLOCK BAR X)), false, \"BAR in FOO\"\n\nNotes::\n.......\n\nAlthough implementations are free to return \"nil, true, nil\" in all cases,\nthey are encouraged to return a lambda expression as the primary value in\nthe case where the argument was created by a call to compile or eval (as\nopposed to being created by loading a compiled file).\n\n"
+}

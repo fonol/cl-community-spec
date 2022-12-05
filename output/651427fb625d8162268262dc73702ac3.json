@@ -1,0 +1,53 @@
+{
+    "name": "ignore-errors",
+    "prev": "handler-case",
+    "next": "define-condition",
+    "up": "Conditions Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "ignore-errors"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "ignore-errors",
+                    "text": " {form}* =>  {result}*\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "results",
+                    "desc": "In the normal situation, the values of the forms are returned; in"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "ignore-errors is used to prevent conditions of type error from causing\nentry into the debugger.\nSpecifically, ignore-errors executes forms in a dynamic environment where\na handler for conditions of type error has been established; if invoked,\nit handles such conditions by returning two values, nil and the condition\nthat was signaled, from the ignore-errors form.\nIf a normal return from the forms occurs, any values returned are returned\nby ignore-errors.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defun load-init-file (program)\n        (let ((win nil))\n          (ignore-errors ;if this fails, don't enter debugger\n            (load (merge-pathnames (make-pathname :name program :type :lisp)\n                                   (user-homedir-pathname)))\n            (setq win t))\n          (unless win (format t \"~&Init file failed to load.~\n          win))\n      (load-init-file \"no-such-program\")\n      |>  Init file failed to load.\n     NIL\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note handler-case:: , *Note Condition System Concepts::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "      (ignore-errors . forms)\nis equivalent to:\n      (handler-case (progn . forms)\n        (error (condition) (values nil condition)))\nBecause the second return value is a condition in the exceptional case, it\nis common (but not required) to arrange for the second return value in the\nnormal case to be missing or nil so that the two situations can be\ndistinguished.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: ignore-errors,  Next: define-condition,  Prev: handler-case,  Up: Conditions Dictionary\n\nignore-errors                                                       [Macro]\n---------------------------------------------------------------------------\n\n`ignore-errors'  {form}* =>  {result}*\n\nArguments and Values::\n......................\n\nforms--an implicit progn.\n\nresults--In the normal situation, the values of the forms are returned; in\nthe exceptional situation, two values are returned: nil and the condition.\n\nDescription::\n.............\n\nignore-errors is used to prevent conditions of type error from causing\nentry into the debugger.\n\nSpecifically, ignore-errors executes forms in a dynamic environment where\na handler for conditions of type error has been established; if invoked,\nit handles such conditions by returning two values, nil and the condition\nthat was signaled, from the ignore-errors form.\n\nIf a normal return from the forms occurs, any values returned are returned\nby ignore-errors.\n\nExamples::\n..........\n\n      (defun load-init-file (program)\n        (let ((win nil))\n          (ignore-errors ;if this fails, don't enter debugger\n            (load (merge-pathnames (make-pathname :name program :type :lisp)\n                                   (user-homedir-pathname)))\n            (setq win t))\n          (unless win (format t \"~&Init file failed to load.~\n          win))\n     \n      (load-init-file \"no-such-program\")\n      |>  Init file failed to load.\n     NIL\n\nSee Also::\n..........\n\n*Note handler-case:: , *Note Condition System Concepts::\n\nNotes::\n.......\n\n      (ignore-errors . forms)\n\nis equivalent to:\n\n      (handler-case (progn . forms)\n        (error (condition) (values nil condition)))\n\nBecause the second return value is a condition in the exceptional case, it\nis common (but not required) to arrange for the second return value in the\nnormal case to be missing or nil so that the two situations can be\ndistinguished.\n\n"
+}

@@ -1,0 +1,53 @@
+{
+    "name": "sxhash",
+    "prev": "clrhash",
+    "next": null,
+    "up": "Hash Tables Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "sxhash"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "sxhash",
+                    "text": " object =>  hash-code\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "object",
+                    "desc": "an object."
+                },
+                {
+                    "name": "hash-code",
+                    "desc": "a non-negative fixnum."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "sxhash returns a hash code for object.\nThe manner in which the hash code is computed is implementation-dependent,\nbut subject to certain constraints:\n1.\n     (equal x y) implies (= (sxhash x) (sxhash y)).\n2.\n     For any two objects, x and y, both of which are bit vectors,\n     characters, conses, numbers, pathnames, strings, or symbols, and\n     which are similar, (sxhash x) and (sxhash y) yield the same\n     mathematical value even if x and y exist in different Lisp images of\n     the same implementation.  See *Note Literal Objects in Compiled\n     Files::.\n3.\n     The hash-code for an object is always the same within a single\n     session provided that the object is not visibly modified with regard\n     to the equivalence test equal.  See *Note Modifying Hash Table Keys::.\n4.\n     The hash-code is intended for hashing.  This places no verifiable\n     constraint on a conforming implementation, but the intent is that an\n     implementation should make a good-faith effort to produce hash-codes\n     that are well distributed within the range of non-negative fixnums.\n5.\n     Computation of the hash-code must terminate, even if the object\n     contains circularities.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (= (sxhash (list 'list \"ab\")) (sxhash (list 'list \"ab\"))) =>  true\n      (= (sxhash \"a\") (sxhash (make-string 1 :initial-element #\\a))) =>  true\n      (let ((r (make-random-state)))\n        (= (sxhash r) (sxhash (make-random-state r))))\n     =>  implementation-dependent\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "The implementation.\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Many common hashing needs are satisfied by make-hash-table and the related\nfunctions on hash tables.  sxhash is intended for use where the\npre-defined abstractions are insufficient.  Its main intent is to allow\nthe user a convenient means of implementing more complicated hashing\nparadigms than are provided through hash tables.\nThe hash codes returned by sxhash are not necessarily related to any\nhashing strategy used by any other function in Common Lisp.\nFor objects of types that equal compares with eq, item 3 requires that the\nhash-code be based on some immutable quality of the identity of the object.\nAnother legitimate implementation technique would be to have sxhash assign\n(and cache) a random hash code for these objects, since there is no\nrequirement that similar but non-eq objects have the same hash code.\nAlthough similarity is defined for symbols in terms of both the symbol's\nname and the packages in which the symbol is accessible, item 3 disallows\nusing package information to compute the hash code, since changes to the\npackage status of a symbol are not visible to equal.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: sxhash,  Prev: clrhash,  Up: Hash Tables Dictionary\n\nsxhash                                                           [Function]\n---------------------------------------------------------------------------\n\n`sxhash'  object =>  hash-code\n\nArguments and Values::\n......................\n\nobject--an object.\n\nhash-code--a non-negative fixnum.\n\nDescription::\n.............\n\nsxhash returns a hash code for object.\n\nThe manner in which the hash code is computed is implementation-dependent,\nbut subject to certain constraints:\n\n1.\n     (equal x y) implies (= (sxhash x) (sxhash y)).\n\n2.\n     For any two objects, x and y, both of which are bit vectors,\n     characters, conses, numbers, pathnames, strings, or symbols, and\n     which are similar, (sxhash x) and (sxhash y) yield the same\n     mathematical value even if x and y exist in different Lisp images of\n     the same implementation.  See *Note Literal Objects in Compiled\n     Files::.\n\n3.\n     The hash-code for an object is always the same within a single\n     session provided that the object is not visibly modified with regard\n     to the equivalence test equal.  See *Note Modifying Hash Table Keys::.\n\n4.\n     The hash-code is intended for hashing.  This places no verifiable\n     constraint on a conforming implementation, but the intent is that an\n     implementation should make a good-faith effort to produce hash-codes\n     that are well distributed within the range of non-negative fixnums.\n\n5.\n     Computation of the hash-code must terminate, even if the object\n     contains circularities.\n\nExamples::\n..........\n\n      (= (sxhash (list 'list \"ab\")) (sxhash (list 'list \"ab\"))) =>  true\n      (= (sxhash \"a\") (sxhash (make-string 1 :initial-element #\\a))) =>  true\n      (let ((r (make-random-state)))\n        (= (sxhash r) (sxhash (make-random-state r))))\n     =>  implementation-dependent\n\nAffected By::\n.............\n\nThe implementation.\n\nNotes::\n.......\n\nMany common hashing needs are satisfied by make-hash-table and the related\nfunctions on hash tables.  sxhash is intended for use where the\npre-defined abstractions are insufficient.  Its main intent is to allow\nthe user a convenient means of implementing more complicated hashing\nparadigms than are provided through hash tables.\n\nThe hash codes returned by sxhash are not necessarily related to any\nhashing strategy used by any other function in Common Lisp.\n\nFor objects of types that equal compares with eq, item 3 requires that the\nhash-code be based on some immutable quality of the identity of the object.\nAnother legitimate implementation technique would be to have sxhash assign\n(and cache) a random hash code for these objects, since there is no\nrequirement that similar but non-eq objects have the same hash code.\n\nAlthough similarity is defined for symbols in terms of both the symbol's\nname and the packages in which the symbol is accessible, item 3 disallows\nusing package information to compute the hash code, since changes to the\npackage status of a symbol are not visible to equal.\n\n"
+}

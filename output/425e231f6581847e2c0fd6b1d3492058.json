@@ -1,0 +1,69 @@
+{
+    "name": "peek-char",
+    "prev": "write-byte",
+    "next": "read-char",
+    "up": "Streams Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "peek-char"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "peek-char",
+                    "text": " &optional peek-type input-stream eof-error-p eof-valuerecursive-p =>  char\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "peek-type",
+                    "desc": "a character or t or nil."
+                },
+                {
+                    "name": "input-stream",
+                    "desc": "input stream designator.  The default is standard input."
+                },
+                {
+                    "name": "eof-error-p",
+                    "desc": "a generalized boolean.  The default is true."
+                },
+                {
+                    "name": "eof-value",
+                    "desc": "an object.  The default is nil."
+                },
+                {
+                    "name": "recursive-p",
+                    "desc": "a generalized boolean.  The default is false."
+                },
+                {
+                    "name": "char",
+                    "desc": "a character or the eof-value."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "peek-char obtains the next character in input-stream without actually\nreading it, thus leaving the character to be read at a later time.  It can\nalso be used to skip over and discard intervening characters in the\ninput-stream until a particular character is found.\nIf peek-type is not supplied or nil, peek-char returns the next character\nto be read from input-stream, without actually removing it from\ninput-stream.  The next time input is done from input-stream, the\ncharacter will still be there.  If peek-type is t, then peek-char skips\nover whitespace_2 characters, but not comments, and then performs the\npeeking operation on the next character.  The last character examined, the\none that starts an object, is not removed from input-stream.  If peek-type\nis a character, then peek-char skips over input characters until a\ncharacter that is char= to that character is found; that character is left\nin input-stream.\nIf an end of file_2 occurs and eof-error-p is false, eof-value is returned.\nIf recursive-p is true, this call is expected to be embedded in a\nhigher-level call to read or a similar function used by the Lisp reader.\nWhen input-stream is an echo stream, characters that are only peeked at\nare not echoed. In the case that peek-type is not nil, the characters that\nare passed by peek-char are treated as if by read-char, and so are echoed\nunless they have been marked otherwise by unread-char.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (with-input-from-string (input-stream \"    1 2 3 4 5\")\n         (format t \"~S ~S ~S\"\n                 (peek-char t input-stream)\n                 (peek-char #\\4 input-stream)\n                 (peek-char nil input-stream)))\n      |>  #\\1 #\\4 #\\4\n     =>  NIL\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "*readtable*, *standard-input*, *terminal-io*.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If eof-error-p is true and an end of file_2 occurs an error of type\nend-of-file is signaled.\nIf     peek-type is a character, an end of file_2 occurs, and eof-error-p\nis true, an error of type end-of-file is signaled.\nIf recursive-p is true and an end of file_2 occurs, an error of type\nend-of-file is signaled.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: peek-char,  Next: read-char,  Prev: write-byte,  Up: Streams Dictionary\n\npeek-char                                                        [Function]\n---------------------------------------------------------------------------\n\n`peek-char'  &optional peek-type input-stream eof-error-p eof-value\nrecursive-p =>  char\n\nArguments and Values::\n......................\n\npeek-type--a character or t or nil.\n\ninput-stream--input stream designator.  The default is standard input.\n\neof-error-p--a generalized boolean.  The default is true.\n\neof-value--an object.  The default is nil.\n\nrecursive-p--a generalized boolean.  The default is false.\n\nchar--a character or the eof-value.\n\nDescription::\n.............\n\npeek-char obtains the next character in input-stream without actually\nreading it, thus leaving the character to be read at a later time.  It can\nalso be used to skip over and discard intervening characters in the\ninput-stream until a particular character is found.\n\nIf peek-type is not supplied or nil, peek-char returns the next character\nto be read from input-stream, without actually removing it from\ninput-stream.  The next time input is done from input-stream, the\ncharacter will still be there.  If peek-type is t, then peek-char skips\nover whitespace_2 characters, but not comments, and then performs the\npeeking operation on the next character.  The last character examined, the\none that starts an object, is not removed from input-stream.  If peek-type\nis a character, then peek-char skips over input characters until a\ncharacter that is char= to that character is found; that character is left\nin input-stream.\n\nIf an end of file_2 occurs and eof-error-p is false, eof-value is returned.\n\nIf recursive-p is true, this call is expected to be embedded in a\nhigher-level call to read or a similar function used by the Lisp reader.\n\nWhen input-stream is an echo stream, characters that are only peeked at\nare not echoed. In the case that peek-type is not nil, the characters that\nare passed by peek-char are treated as if by read-char, and so are echoed\nunless they have been marked otherwise by unread-char.\n\nExamples::\n..........\n\n      (with-input-from-string (input-stream \"    1 2 3 4 5\")\n         (format t \"~S ~S ~S\"\n                 (peek-char t input-stream)\n                 (peek-char #\\4 input-stream)\n                 (peek-char nil input-stream)))\n      |>  #\\1 #\\4 #\\4\n     =>  NIL\n\nAffected By::\n.............\n\n*readtable*, *standard-input*, *terminal-io*.\n\nExceptional Situations::\n........................\n\nIf eof-error-p is true and an end of file_2 occurs an error of type\nend-of-file is signaled.\n\nIf     peek-type is a character, an end of file_2 occurs, and eof-error-p\nis true, an error of type end-of-file is signaled.\n\nIf recursive-p is true and an end of file_2 occurs, an error of type\nend-of-file is signaled.\n\n"
+}

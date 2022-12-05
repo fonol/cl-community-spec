@@ -1,0 +1,97 @@
+{
+    "name": "assoc",
+    "prev": "acons",
+    "next": "copy-alist",
+    "up": "Conses Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "assoc, assoc-if, assoc-if-not"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "assoc",
+                    "text": " item      alist &key key test test-not =>  entry\n"
+                },
+                {
+                    "name": "assoc-if",
+                    "text": " predicate alist &key key =>  entry\n\n"
+                },
+                {
+                    "name": "assoc-if-not",
+                    "text": " predicate alist &key key =>  entry\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "item",
+                    "desc": "an object."
+                },
+                {
+                    "name": "alist",
+                    "desc": "an association list."
+                },
+                {
+                    "name": "predicate",
+                    "desc": "a designator for a function of one argument that returns a"
+                },
+                {
+                    "name": "predicate",
+                    "desc": "a designator for a function of one argument that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "entry",
+                    "desc": "a cons that is an element of alist, or nil."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "assoc, assoc-if, and assoc-if-not return the first cons in alist whose car\nsatisfies the test, or nil if no such cons is found.\nFor assoc, assoc-if, and assoc-if-not, if nil appears in alist in place of\na pair, it is ignored.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq values '((x . 100) (y . 200) (z . 50))) =>  ((X . 100) (Y . 200) (Z . 50))\n      (assoc 'y values) =>  (Y . 200)\n      (rplacd (assoc 'y values) 201) =>  (Y . 201)\n      (assoc 'y values) =>  (Y . 201)\n      (setq alist '((1 . \"one\")(2 . \"two\")(3 . \"three\")))\n     =>  ((1 . \"one\") (2 . \"two\") (3 . \"three\"))\n      (assoc 2 alist) =>  (2 . \"two\")\n      (assoc-if #'evenp alist) =>  (2 . \"two\")\n      (assoc-if-not #'(lambda(x) (< x 3)) alist) =>  (3 . \"three\")\n      (setq alist '((\"one\" . 1)(\"two\" . 2))) =>  ((\"one\" . 1) (\"two\" . 2))\n      (assoc \"one\" alist) =>  NIL\n      (assoc \"one\" alist :test #'equalp) =>  (\"one\" . 1)\n      (assoc \"two\" alist :key #'(lambda(x) (char x 2))) =>  NIL\n      (assoc #\\o alist :key #'(lambda(x) (char x 2))) =>  (\"two\" . 2)\n      (assoc 'r '((a . b) (c . d) (r . x) (s . y) (r . z))) =>   (R . X)\n      (assoc 'goo '((foo . bar) (zoo . goo))) =>  NIL\n      (assoc '2 '((1 a b c) (2 b c d) (-7 x y z))) =>  (2 B C D)\n      (setq alist '((\"one\" . 1) (\"2\" . 2) (\"three\" . 3)))\n     =>  ((\"one\" . 1) (\"2\" . 2) (\"three\" . 3))\n      (assoc-if-not #'alpha-char-p alist\n                    :key #'(lambda (x) (char x 0))) =>  (\"2\" . 2)\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if alist is not\nan association list.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note rassoc; rassoc-if; rassoc-if-not:: , *Note find; find-if;\nfind-if-not:: , *Note member; member-if; member-if-not:: , *Note position;\nposition-if; position-if-not:: ,\n*Note Traversal Rules and Side Effects::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The :test-not parameter is deprecated.\nThe function assoc-if-not is deprecated.\nIt is possible to rplacd the result of assoc, provided that it is not nil,\nin order to \"update\" alist.\nThe two expressions\n      (assoc item list :test fn)\nand\n      (find item list :test fn :key #'car)\nare equivalent in meaning with one exception: if nil appears in alist in\nplace of a pair, and item is nil, find will compute the car of the nil in\nalist, find that it is equal to item, and return nil, whereas assoc will\nignore the nil in alist and continue to search for an actual cons whose\ncar is nil.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: assoc,  Next: copy-alist,  Prev: acons,  Up: Conses Dictionary\n\nassoc, assoc-if, assoc-if-not                                    [Function]\n---------------------------------------------------------------------------\n\n`assoc'  item      alist &key key test test-not =>  entry\n\n`assoc-if'  predicate alist &key key =>  entry\n\n`assoc-if-not'  predicate alist &key key =>  entry\n\nArguments and Values::\n......................\n\nitem--an object.\n\nalist--an association list.\n\npredicate--a designator for a function of one argument that returns a\ngeneralized boolean.\n\ntest--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\ntest-not--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nkey--a designator for a function of one argument, or nil.\n\nentry--a cons that is an element of alist, or nil.\n\nDescription::\n.............\n\nassoc, assoc-if, and assoc-if-not return the first cons in alist whose car\nsatisfies the test, or nil if no such cons is found.\n\nFor assoc, assoc-if, and assoc-if-not, if nil appears in alist in place of\na pair, it is ignored.\n\nExamples::\n..........\n\n      (setq values '((x . 100) (y . 200) (z . 50))) =>  ((X . 100) (Y . 200) (Z . 50))\n      (assoc 'y values) =>  (Y . 200)\n      (rplacd (assoc 'y values) 201) =>  (Y . 201)\n      (assoc 'y values) =>  (Y . 201)\n      (setq alist '((1 . \"one\")(2 . \"two\")(3 . \"three\")))\n     =>  ((1 . \"one\") (2 . \"two\") (3 . \"three\"))\n      (assoc 2 alist) =>  (2 . \"two\")\n      (assoc-if #'evenp alist) =>  (2 . \"two\")\n      (assoc-if-not #'(lambda(x) (< x 3)) alist) =>  (3 . \"three\")\n      (setq alist '((\"one\" . 1)(\"two\" . 2))) =>  ((\"one\" . 1) (\"two\" . 2))\n      (assoc \"one\" alist) =>  NIL\n      (assoc \"one\" alist :test #'equalp) =>  (\"one\" . 1)\n      (assoc \"two\" alist :key #'(lambda(x) (char x 2))) =>  NIL\n      (assoc #\\o alist :key #'(lambda(x) (char x 2))) =>  (\"two\" . 2)\n      (assoc 'r '((a . b) (c . d) (r . x) (s . y) (r . z))) =>   (R . X)\n      (assoc 'goo '((foo . bar) (zoo . goo))) =>  NIL\n      (assoc '2 '((1 a b c) (2 b c d) (-7 x y z))) =>  (2 B C D)\n      (setq alist '((\"one\" . 1) (\"2\" . 2) (\"three\" . 3)))\n     =>  ((\"one\" . 1) (\"2\" . 2) (\"three\" . 3))\n      (assoc-if-not #'alpha-char-p alist\n                    :key #'(lambda (x) (char x 0))) =>  (\"2\" . 2)\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if alist is not\nan association list.\n\nSee Also::\n..........\n\n*Note rassoc; rassoc-if; rassoc-if-not:: , *Note find; find-if;\nfind-if-not:: , *Note member; member-if; member-if-not:: , *Note position;\nposition-if; position-if-not:: ,\n\n*Note Traversal Rules and Side Effects::\n\nNotes::\n.......\n\nThe :test-not parameter is deprecated.\n\nThe function assoc-if-not is deprecated.\n\nIt is possible to rplacd the result of assoc, provided that it is not nil,\nin order to \"update\" alist.\n\nThe two expressions\n\n      (assoc item list :test fn)\n\nand\n\n      (find item list :test fn :key #'car)\n\nare equivalent in meaning with one exception: if nil appears in alist in\nplace of a pair, and item is nil, find will compute the car of the nil in\nalist, find that it is equal to item, and return nil, whereas assoc will\nignore the nil in alist and continue to search for an actual cons whose\ncar is nil.\n\n"
+}

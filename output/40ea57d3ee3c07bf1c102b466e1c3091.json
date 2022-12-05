@@ -1,0 +1,61 @@
+{
+    "name": "byte",
+    "prev": "logtest",
+    "next": "deposit-field",
+    "up": "Numbers Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "byte, byte-size, byte-position"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "byte",
+                    "text": " size position =>  bytespec\n"
+                },
+                {
+                    "name": "byte-size",
+                    "text": " bytespec =>  size\n\n"
+                },
+                {
+                    "name": "byte-position",
+                    "text": " bytespec =>  position\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "size, position",
+                    "desc": "a non-negative integer."
+                },
+                {
+                    "name": "bytespec",
+                    "desc": "a byte specifier."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "byte returns a byte specifier that indicates a byte of width size and\nwhose bits have weights 2^position + size - 1\\/ through 2^position, and\nwhose representation is implementation-dependent.\nbyte-size returns the number of bits specified by bytespec.\nbyte-position returns the position specified by bytespec.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq b (byte 100 200)) =>  #<BYTE-SPECIFIER size 100 position 200>\n      (byte-size b) =>  100\n      (byte-position b) =>  200\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note ldb:: , *Note dpb::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "      (byte-size (byte j k)) == j\n      (byte-position (byte j k)) == k\nA byte of size of 0 is permissible; it refers to a byte of width zero.\nFor example,\n      (ldb (byte 0 3) #o7777) =>  0\n      (dpb #o7777 (byte 0 3) 0) =>  0\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: byte,  Next: deposit-field,  Prev: logtest,  Up: Numbers Dictionary\n\nbyte, byte-size, byte-position                                   [Function]\n---------------------------------------------------------------------------\n\n`byte'  size position =>  bytespec\n\n`byte-size'  bytespec =>  size\n\n`byte-position'  bytespec =>  position\n\nArguments and Values::\n......................\n\nsize, position--a non-negative integer.\n\nbytespec--a byte specifier.\n\nDescription::\n.............\n\nbyte returns a byte specifier that indicates a byte of width size and\nwhose bits have weights 2^position + size - 1\\/ through 2^position, and\nwhose representation is implementation-dependent.\n\nbyte-size returns the number of bits specified by bytespec.\n\nbyte-position returns the position specified by bytespec.\n\nExamples::\n..........\n\n      (setq b (byte 100 200)) =>  #<BYTE-SPECIFIER size 100 position 200>\n      (byte-size b) =>  100\n      (byte-position b) =>  200\n\nSee Also::\n..........\n\n*Note ldb:: , *Note dpb::\n\nNotes::\n.......\n\n      (byte-size (byte j k)) == j\n      (byte-position (byte j k)) == k\n\nA byte of size of 0 is permissible; it refers to a byte of width zero.\nFor example,\n\n      (ldb (byte 0 3) #o7777) =>  0\n      (dpb #o7777 (byte 0 3) 0) =>  0\n\n"
+}

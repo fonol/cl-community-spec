@@ -1,0 +1,17 @@
+{
+    "name": "Left-Parenthesis",
+    "prev": "Standard Macro Characters",
+    "next": "Right-Parenthesis",
+    "up": "Standard Macro Characters",
+    "header": {
+        "type": null,
+        "text": "Left-Parenthesis"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": "The left-parenthesis initiates reading of a list.  read is called\nrecursively to read successive objects until a right parenthesis is found\nin the input stream.  A list of the objects read is returned.  Thus\n      (a b c)\nis read as a list of three objects (the symbols a, b, and c).  The right\nparenthesis need not immediately follow the printed representation of the\nlast object; whitespace_2 characters and comments may precede it.\nIf no objects precede the right parenthesis, it reads as a list of zero\nobjects (the empty list).\nIf a token that is just a dot not immediately preceded by an escape\ncharacter is read after some object then exactly one more object must\nfollow the dot, possibly preceded or followed by whitespace_2 or a comment,\nfollowed by the right parenthesis:\n      (a b c . d)\nThis means that the cdr of the last cons in the list is not nil, but\nrather the object whose representation followed the dot.  The above\nexample might have been the result of evaluating\n      (cons 'a (cons 'b (cons 'c 'd)))\nSimilarly,\n      (cons 'this-one 'that-one) =>  (this-one . that-one)\nIt is permissible for the object following the dot to be a list:\n      (a b c d . (e f . (g))) == (a b c d e f g)\nFor information on how the Lisp printer prints lists and conses, see *Note\nPrinting Lists and Conses::.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: Left-Parenthesis,  Next: Right-Parenthesis,  Prev: Standard Macro Characters,  Up: Standard Macro Characters\n\nLeft-Parenthesis\n----------------\n\nThe left-parenthesis initiates reading of a list.  read is called\nrecursively to read successive objects until a right parenthesis is found\nin the input stream.  A list of the objects read is returned.  Thus\n\n      (a b c)\n\nis read as a list of three objects (the symbols a, b, and c).  The right\nparenthesis need not immediately follow the printed representation of the\nlast object; whitespace_2 characters and comments may precede it.\n\nIf no objects precede the right parenthesis, it reads as a list of zero\nobjects (the empty list).\n\nIf a token that is just a dot not immediately preceded by an escape\ncharacter is read after some object then exactly one more object must\nfollow the dot, possibly preceded or followed by whitespace_2 or a comment,\nfollowed by the right parenthesis:\n\n      (a b c . d)\n\nThis means that the cdr of the last cons in the list is not nil, but\nrather the object whose representation followed the dot.  The above\nexample might have been the result of evaluating\n\n      (cons 'a (cons 'b (cons 'c 'd)))\n\nSimilarly,\n\n      (cons 'this-one 'that-one) =>  (this-one . that-one)\n\nIt is permissible for the object following the dot to be a list:\n\n      (a b c d . (e f . (g))) == (a b c d e f g)\n\nFor information on how the Lisp printer prints lists and conses, see *Note\nPrinting Lists and Conses::.\n\n"
+}

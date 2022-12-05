@@ -1,0 +1,57 @@
+{
+    "name": "signal",
+    "prev": "method-combination-error",
+    "next": "simple-condition",
+    "up": "Conditions Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "signal"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "signal",
+                    "text": " datum &rest arguments =>  nil\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "datum, arguments",
+                    "desc": "designators for a condition of default type"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Signals the condition denoted by the given datum and arguments.  If the\ncondition is not handled, signal returns nil.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defun handle-division-conditions (condition)\n        (format t \"Considering condition for division condition handling~\n        (when (and (typep condition 'arithmetic-error)\n                   (eq '/ (arithmetic-error-operation condition)))\n          (invoke-debugger condition)))\n     HANDLE-DIVISION-CONDITIONS\n      (defun handle-other-arithmetic-errors (condition)\n        (format t \"Considering condition for arithmetic condition handling~\n        (when (typep condition 'arithmetic-error)\n          (abort)))\n     HANDLE-OTHER-ARITHMETIC-ERRORS\n      (define-condition a-condition-with-no-handler (condition) ())\n     A-CONDITION-WITH-NO-HANDLER\n      (signal 'a-condition-with-no-handler)\n     NIL\n      (handler-bind ((condition #'handle-division-conditions)\n                       (condition #'handle-other-arithmetic-errors))\n        (signal 'a-condition-with-no-handler))\n     Considering condition for division condition handling\n     Considering condition for arithmetic condition handling\n     NIL\n      (handler-bind ((arithmetic-error #'handle-division-conditions)\n                       (arithmetic-error #'handle-other-arithmetic-errors))\n        (signal 'arithmetic-error :operation '* :operands '(1.2 b)))\n     Considering condition for division condition handling\n     Considering condition for arithmetic condition handling\n     Back to Lisp Toplevel\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "The debugger might be entered due to *break-on-signals*.\nHandlers for the condition being signaled might transfer control.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "Existing handler bindings.\n*break-on-signals*\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*break-on-signals*, *Note error:: , simple-condition, *Note Signaling and\nHandling Conditions::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "If (typep datum *break-on-signals*) yields true, the debugger is entered\nprior to beginning the signaling process.  The continue restart can be\nused to continue with the signaling process.  This is also true for all\nother functions and macros that should, might, or must signal conditions.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: signal,  Next: simple-condition,  Prev: method-combination-error,  Up: Conditions Dictionary\n\nsignal                                                           [Function]\n---------------------------------------------------------------------------\n\n`signal'  datum &rest arguments =>  nil\n\nArguments and Values::\n......................\n\ndatum, arguments--designators for a condition of default type\nsimple-condition.\n\nDescription::\n.............\n\nSignals the condition denoted by the given datum and arguments.  If the\ncondition is not handled, signal returns nil.\n\nExamples::\n..........\n\n      (defun handle-division-conditions (condition)\n        (format t \"Considering condition for division condition handling~\n        (when (and (typep condition 'arithmetic-error)\n                   (eq '/ (arithmetic-error-operation condition)))\n          (invoke-debugger condition)))\n     HANDLE-DIVISION-CONDITIONS\n      (defun handle-other-arithmetic-errors (condition)\n        (format t \"Considering condition for arithmetic condition handling~\n        (when (typep condition 'arithmetic-error)\n          (abort)))\n     HANDLE-OTHER-ARITHMETIC-ERRORS\n      (define-condition a-condition-with-no-handler (condition) ())\n     A-CONDITION-WITH-NO-HANDLER\n      (signal 'a-condition-with-no-handler)\n     NIL\n      (handler-bind ((condition #'handle-division-conditions)\n                       (condition #'handle-other-arithmetic-errors))\n        (signal 'a-condition-with-no-handler))\n     Considering condition for division condition handling\n     Considering condition for arithmetic condition handling\n     NIL\n      (handler-bind ((arithmetic-error #'handle-division-conditions)\n                       (arithmetic-error #'handle-other-arithmetic-errors))\n        (signal 'arithmetic-error :operation '* :operands '(1.2 b)))\n     Considering condition for division condition handling\n     Considering condition for arithmetic condition handling\n     Back to Lisp Toplevel\n\nSide Effects::\n..............\n\nThe debugger might be entered due to *break-on-signals*.\n\nHandlers for the condition being signaled might transfer control.\n\nAffected By::\n.............\n\nExisting handler bindings.\n\n*break-on-signals*\n\nSee Also::\n..........\n\n*break-on-signals*, *Note error:: , simple-condition, *Note Signaling and\nHandling Conditions::\n\nNotes::\n.......\n\nIf (typep datum *break-on-signals*) yields true, the debugger is entered\nprior to beginning the signaling process.  The continue restart can be\nused to continue with the signaling process.  This is also true for all\nother functions and macros that should, might, or must signal conditions.\n\n"
+}

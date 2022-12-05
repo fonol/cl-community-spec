@@ -1,0 +1,1506 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: every,  Next: and,  Prev: constantly,  Up: Data and Control Flow Dictionary
+
+every, some, notevery, notany                                    [Function]
+---------------------------------------------------------------------------
+
+`every'  predicate &rest sequences^+ =>  generalized-boolean
+
+`some'  predicate &rest sequences^+ =>  result
+
+`notevery'  predicate &rest sequences^+ =>  generalized-boolean
+
+`notany'  predicate &rest sequences^+ =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+predicate--a designator for a function of as many arguments as there are
+sequences.
+
+sequence--a sequence.
+
+result--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+every, some, notevery, and notany test elements of sequences for
+satisfaction of a given predicate.  The first argument to predicate is an
+element of the first sequence; each succeeding argument is an element of a
+succeeding sequence.
+
+Predicate is first applied to the elements with index 0 in each of the
+sequences, and possibly then to the elements with index 1, and so on,
+until a termination criterion is met or the end of the shortest of the
+sequences is reached.
+
+every returns false as soon as any invocation of predicate returns false.
+If the end of a sequence is reached, every returns true.  Thus, every
+returns true if and only if every invocation of predicate returns true.
+
+some returns the first non-nil value which is returned by an invocation of
+predicate.  If the end of a sequence is reached without any invocation of
+the predicate returning true, some returns false.  Thus, some returns true
+if and only if some invocation of predicate returns true.
+
+notany returns false as soon as any invocation of predicate returns true.
+If the end of a sequence is reached, notany returns true.  Thus, notany
+returns true if and only if it is not the case that any invocation of
+predicate returns true.
+
+notevery returns true as soon as any invocation of predicate returns false.
+If the end of a sequence is reached, notevery returns false.  Thus,
+notevery returns true if and only if it is not the case that every
+invocation of predicate returns true.
+
+Examples::
+..........
+
+      (every #'characterp "abc") =>  true
+      (some #'= '(1 2 3 4 5) '(5 4 3 2 1)) =>  true
+      (notevery #'< '(1 2 3 4) '(5 6 7 8) '(9 10 11 12)) =>  false
+      (notany #'> '(1 2 3 4) '(5 6 7 8) '(9 10 11 12)) =>  true
+
+Exceptional Situations::
+........................
+
+Should signal type-error if its first argument is neither a symbol nor a
+function or if any subsequent argument is not a proper sequence.
+
+Other exceptional situations are possible, depending on the nature of the
+predicate.
+
+See Also::
+..........
+
+*Note and:: , *Note or:: ,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+      (notany predicate {sequence}*) == (not (some predicate {sequence}*))
+      (notevery predicate {sequence}*) == (not (every predicate {sequence}*))
+
+
+File: gcl.info,  Node: and,  Next: cond,  Prev: every,  Up: Data and Control Flow Dictionary
+
+and                                                                 [Macro]
+---------------------------------------------------------------------------
+
+`and'  {form}* =>  {result}*
+
+Arguments and Values::
+......................
+
+form--a form.
+
+results--the values resulting from the evaluation of the last form, or the
+symbols nil or t.
+
+Description::
+.............
+
+The macro and evaluates each form one at a time from left to right.  As
+soon as any form evaluates to nil, and returns nil without evaluating the
+remaining forms.  If all forms but the last evaluate to true values, and
+returns the results produced by evaluating the last form.
+
+If no forms are supplied, (and) returns t.
+
+and passes back multiple values from the last subform but not from
+subforms other than the last.
+
+Examples::
+..........
+
+      (if (and (>= n 0)
+               (< n (length a-simple-vector))
+               (eq (elt a-simple-vector n) 'foo))
+          (princ "Foo!"))
+
+The above expression prints Foo! if element n of a-simple-vector is the
+symbol foo, provided also that n is indeed a valid index for
+a-simple-vector.  Because and guarantees left-to-right testing of its
+parts, elt is not called if n is out of range.
+
+      (setq temp1 1 temp2 1 temp3 1) =>  1
+      (and (incf temp1) (incf temp2) (incf temp3)) =>  2
+      (and (eql 2 temp1) (eql 2 temp2) (eql 2 temp3)) =>  true
+      (decf temp3) =>  1
+      (and (decf temp1) (decf temp2) (eq temp3 'nil) (decf temp3)) =>  NIL
+      (and (eql temp1 temp2) (eql temp2 temp3)) =>  true
+      (and) =>  T
+
+See Also::
+..........
+
+*Note cond:: , *Note every; some; notevery; notany:: , *Note if:: , *Note
+or:: , *Note when; unless::
+
+Notes::
+.......
+
+      (and form) == (let () form)
+      (and form1 form2 ...) == (when form1 (and form2 ...))
+
+
+File: gcl.info,  Node: cond,  Next: if,  Prev: and,  Up: Data and Control Flow Dictionary
+
+cond                                                                [Macro]
+---------------------------------------------------------------------------
+
+`cond'  {!clause}* =>  {result}*
+
+clause ::=(test-form {form}*)
+
+Arguments and Values::
+......................
+
+test-form--a form.
+
+forms--an implicit progn.
+
+results--the values of the forms in the first clause whose test-form
+yields true, or the primary value of the test-form if there are no forms
+in that clause, or else nil if no test-form yields true.
+
+Description::
+.............
+
+cond allows the execution of forms to be dependent on test-form.
+
+Test-forms are evaluated one at a time in the order in which they are
+given in the argument list until a test-form is found that evaluates to
+true.
+
+If there are no forms in that clause, the primary value of the test-form
+is returned by the cond form.  Otherwise, the forms associated with this
+test-form are evaluated in order, left to right, as an implicit progn, and
+the values returned by the last form are returned by the cond form.
+
+Once one test-form has yielded true, no additional test-forms are
+evaluated.  If no test-form yields true, nil is returned.
+
+Examples::
+..........
+
+      (defun select-options ()
+        (cond ((= a 1) (setq a 2))
+              ((= a 2) (setq a 3))
+              ((and (= a 3) (floor a 2)))
+              (t (floor a 3)))) =>  SELECT-OPTIONS
+      (setq a 1) =>  1
+      (select-options) =>  2
+      a =>  2
+      (select-options) =>  3
+      a =>  3
+      (select-options) =>  1
+      (setq a 5) =>  5
+      (select-options) =>  1, 2
+
+See Also::
+..........
+
+*Note if:: , *Note case; ccase; ecase:: .
+
+
+File: gcl.info,  Node: if,  Next: or,  Prev: cond,  Up: Data and Control Flow Dictionary
+
+if                                                       [Special Operator]
+---------------------------------------------------------------------------
+
+`if'  test-form then-form [else-form] =>  {result}*
+
+Arguments and Values::
+......................
+
+Test-form--a form.
+
+Then-form--a form.
+
+Else-form--a form.  The default is nil.
+
+results--if the test-form yielded true, the values returned by the
+then-form; otherwise, the values returned by the else-form.
+
+Description::
+.............
+
+if allows the execution of a form to be dependent on a single test-form.
+
+First test-form is evaluated.  If the result is true, then then-form is
+selected; otherwise else-form is selected.  Whichever form is selected is
+then evaluated.
+
+Examples::
+..........
+
+      (if t 1) =>  1
+      (if nil 1 2) =>  2
+      (defun test ()
+        (dolist (truth-value '(t nil 1 (a b c)))
+          (if truth-value (print 'true) (print 'false))
+          (prin1 truth-value))) =>  TEST
+      (test)
+      |>  TRUE T
+      |>  FALSE NIL
+      |>  TRUE 1
+      |>  TRUE (A B C)
+     =>  NIL
+
+See Also::
+..........
+
+*Note cond:: , unless, *Note when; unless::
+
+Notes::
+.......
+
+      (if test-form then-form else-form)
+      == (cond (test-form then-form) (t else-form))
+
+
+File: gcl.info,  Node: or,  Next: when,  Prev: if,  Up: Data and Control Flow Dictionary
+
+or                                                                  [Macro]
+---------------------------------------------------------------------------
+
+`or'  {form}* =>  {results}*
+
+Arguments and Values::
+......................
+
+form--a form.
+
+results--the values or primary value (see below) resulting from the
+evaluation of the last form executed or nil.
+
+Description::
+.............
+
+or evaluates each form, one at a time, from left to right.  The evaluation
+of all forms terminates when a form evaluates to true (i.e., something
+other than nil).
+
+If the evaluation of any form other than the last returns a primary value
+that is true, or immediately returns that value (but no additional values)
+without evaluating the remaining forms.  If every form but the last
+returns false as its primary value, or returns all values returned by the
+last form.  If no forms are supplied, or returns nil.
+
+Examples::
+..........
+
+      (or) =>  NIL
+      (setq temp0 nil temp1 10 temp2 20 temp3 30) =>  30
+      (or temp0 temp1 (setq temp2 37)) =>  10
+      temp2 =>  20
+      (or (incf temp1) (incf temp2) (incf temp3)) =>  11
+      temp1 =>  11
+      temp2 =>  20
+      temp3 =>  30
+      (or (values) temp1) =>  11
+      (or (values temp1 temp2) temp3) =>  11
+      (or temp0 (values temp1 temp2)) =>  11, 20
+      (or (values temp0 temp1) (values temp2 temp3)) =>  20, 30
+
+See Also::
+..........
+
+*Note and:: , some, unless
+
+
+File: gcl.info,  Node: when,  Next: case,  Prev: or,  Up: Data and Control Flow Dictionary
+
+when, unless                                                        [Macro]
+---------------------------------------------------------------------------
+
+`when'  test-form {form}* =>  {result}*
+
+`unless'  test-form {form}* =>  {result}*
+
+Arguments and Values::
+......................
+
+test-form--a form.
+
+forms--an implicit progn.
+
+results--the values of the forms in a  when   form if the test-form yields
+true or in an unless form if the test-form yields false; otherwise nil.
+
+Description::
+.............
+
+when and unless allow the execution of forms to be dependent on a single
+test-form.
+
+In a when form, if the test-form yields true, the forms are evaluated in
+order from left to right and the values returned by the forms are returned
+from the when form.  Otherwise, if the test-form yields false, the forms
+are not evaluated, and the when form returns nil.
+
+In an unless form, if the test-form yields false, the forms are evaluated
+in order from left to right and the values returned by the forms are
+returned from the unless form.  Otherwise, if the test-form yields false,
+the forms are not evaluated, and the unless form returns nil.
+
+Examples::
+..........
+
+      (when t 'hello) =>  HELLO
+      (unless t 'hello) =>  NIL
+      (when nil 'hello) =>  NIL
+      (unless nil 'hello) =>  HELLO
+      (when t) =>  NIL
+      (unless nil) =>  NIL
+      (when t (prin1 1) (prin1 2) (prin1 3))
+      |>  123
+     =>  3
+      (unless t (prin1 1) (prin1 2) (prin1 3)) =>  NIL
+      (when nil (prin1 1) (prin1 2) (prin1 3)) =>  NIL
+      (unless nil (prin1 1) (prin1 2) (prin1 3))
+      |>  123
+     =>  3
+      (let ((x 3))
+        (list (when (oddp x) (incf x) (list x))
+              (when (oddp x) (incf x) (list x))
+              (unless (oddp x) (incf x) (list x))
+              (unless (oddp x) (incf x) (list x))
+              (if (oddp x) (incf x) (list x))
+              (if (oddp x) (incf x) (list x))
+              (if (not (oddp x)) (incf x) (list x))
+              (if (not (oddp x)) (incf x) (list x))))
+     =>  ((4) NIL (5) NIL 6 (6) 7 (7))
+
+See Also::
+..........
+
+*Note and:: , *Note cond:: , *Note if:: , *Note or::
+
+Notes::
+.......
+
+      (when test {form}^+) == (and test (progn {form}^+))
+      (when test {form}^+) == (cond (test {form}^+))
+      (when test {form}^+) == (if test (progn {form}^+) nil)
+      (when test {form}^+) == (unless (not test) {form}^+)
+      (unless test {form}^+) == (cond ((not test) {form}^+))
+      (unless test {form}^+) == (if test nil (progn {form}^+))
+      (unless test {form}^+) == (when (not test) {form}^+)
+
+
+File: gcl.info,  Node: case,  Next: typecase,  Prev: when,  Up: Data and Control Flow Dictionary
+
+case, ccase, ecase                                                  [Macro]
+---------------------------------------------------------------------------
+
+`case'  keyform  {!normal-clause}* [!otherwise-clause] =>  {result}*
+
+`ccase'  keyplace {!normal-clause}* =>  {result}*
+
+`ecase'  keyform  {!normal-clause}* =>  {result}*
+
+normal-clause ::=(keys {form}*)
+
+otherwise-clause ::=({otherwise | t} {form}*)
+
+clause ::=normal-clause | otherwise-clause
+
+Arguments and Values::
+......................
+
+keyform--a form; evaluated to produce a test-key.
+
+keyplace--a form; evaluated initially to produce a test-key.  Possibly
+also used later as a place if no keys match.
+
+test-key--an object produced by evaluating keyform or keyplace.
+
+keys--a designator for a list of objects.  In the case of case, the
+symbols t and otherwise may not be used as the keys designator.  To refer
+to these symbols by themselves as keys, the designators (t) and
+(otherwise), respectively, must be used instead.
+
+forms--an implicit progn.
+
+results--the values returned by the forms in the matching clause.
+
+Description::
+.............
+
+These macros allow the conditional execution of a body of forms in a
+clause that is selected by matching the test-key on the basis of its
+identity.
+
+The keyform or keyplace is evaluated to produce the test-key.
+
+Each of the normal-clauses is then considered in turn.  If the test-key is
+the same as any key for that clause, the forms in that clause are
+evaluated as an implicit progn, and the values it returns are returned as
+the value of the case, ccase, or ecase form.
+
+These macros differ only in their behavior when no normal-clause matches;
+specifically:
+
+case
+     If no normal-clause matches, and there is an otherwise-clause, then
+     that otherwise-clause automatically matches; the forms in that clause
+     are evaluated as an implicit progn, and the values it returns are
+     returned as the value of the case.
+
+     If there is no otherwise-clause, case returns nil.
+
+ccase
+     If no normal-clause matches, a correctable error of type type-error
+     is signaled.  The offending datum is the test-key and the expected
+     type is type equivalent to (member key1 key2 ...).  The store-value
+     restart can be used to correct the error.
+
+     If the store-value restart is invoked, its argument becomes the new
+     test-key, and is stored in keyplace as if by (setf keyplace test-key).
+     Then ccase starts over, considering each clause anew.
+
+     [Reviewer Note by Barmar: Will it prompt for multiple values if
+     keyplace is a VALUES general ref?]
+
+     The subforms of keyplace might be evaluated again if none of the
+     cases holds.
+
+ecase
+     If no normal-clause matches, a non-correctable error of type
+     type-error is signaled.  The offending datum is the test-key and the
+     expected type is type equivalent to (member key1 key2 ...).
+
+     Note that in contrast with ccase, the caller of ecase may rely on the
+     fact that ecase does not return if a normal-clause does not match.
+
+Examples::
+..........
+
+      (dolist (k '(1 2 3 :four #\v () t 'other))
+         (format t "~S "
+            (case k ((1 2) 'clause1)
+                    (3 'clause2)
+                    (nil 'no-keys-so-never-seen)
+                    ((nil) 'nilslot)
+                    ((:four #\v) 'clause4)
+                    ((t) 'tslot)
+                    (otherwise 'others))))
+      |>  CLAUSE1 CLAUSE1 CLAUSE2 CLAUSE4 CLAUSE4 NILSLOT TSLOT OTHERS
+     =>  NIL
+      (defun add-em (x) (apply #'+ (mapcar #'decode x)))
+     =>  ADD-EM
+      (defun decode (x)
+        (ccase x
+          ((i uno) 1)
+          ((ii dos) 2)
+          ((iii tres) 3)
+          ((iv cuatro) 4)))
+     =>  DECODE
+      (add-em '(uno iii)) =>  4
+      (add-em '(uno iiii))
+      |>  Error: The value of X, IIII, is not I, UNO, II, DOS, III,
+      |>         TRES, IV, or CUATRO.
+      |>   1: Supply a value to use instead.
+      |>   2: Return to Lisp Toplevel.
+      |>  Debug> |>>:CONTINUE 1<<|
+      |>  Value to evaluate and use for X: |>>'IV<<|
+     =>  5
+
+Side Effects::
+..............
+
+The debugger might be entered.  If the store-value restart is invoked, the
+value of keyplace might be changed.
+
+Affected By::
+.............
+
+ccase and ecase, since they might signal an error, are potentially
+affected by existing handlers and *debug-io*.
+
+Exceptional Situations::
+........................
+
+ccase and ecase signal an error of type type-error if no normal-clause
+matches.
+
+See Also::
+..........
+
+*Note cond:: , *Note typecase; ctypecase; etypecase:: , *Note setf; psetf::
+, *Note Generalized Reference::
+
+Notes::
+.......
+
+     (case test-key
+       {(({key}*) {form}*)}*)
+     ==
+     (let ((#1=#:g0001 test-key))
+       (cond {((member #1# '({key}*)) {form}*)}*))
+
+The specific error message used by ecase and ccase can vary between
+implementations.  In situations where control of the specific wording of
+the error message is important, it is better to use case with an
+otherwise-clause that explicitly signals an error with an appropriate
+message.
+
+
+File: gcl.info,  Node: typecase,  Next: multiple-value-bind,  Prev: case,  Up: Data and Control Flow Dictionary
+
+typecase, ctypecase, etypecase                                      [Macro]
+---------------------------------------------------------------------------
+
+`typecase'  keyform  {!normal-clause}* [!otherwise-clause] =>  {result}*
+
+`ctypecase'  keyplace {!normal-clause}* =>  {result}*
+
+`etypecase'  keyform  {!normal-clause}* =>  {result}*
+
+normal-clause ::=(type {form}*)
+
+otherwise-clause ::=({otherwise | t} {form}*)
+
+clause ::=normal-clause | otherwise-clause
+
+Arguments and Values::
+......................
+
+keyform--a form; evaluated to produce a test-key.
+
+keyplace--a form; evaluated initially to produce a test-key.  Possibly
+also used later as a place if no types match.
+
+test-key--an object produced by evaluating keyform or keyplace.
+
+type--a type specifier.
+
+forms--an implicit progn.
+
+results--the values returned by the forms in the matching clause.
+
+Description::
+.............
+
+These macros allow the conditional execution of a body of forms in a
+clause that is selected by matching the test-key on the basis of its type.
+
+The keyform or keyplace is evaluated to produce the test-key.
+
+Each of the normal-clauses is then considered in turn.  If the test-key is
+of the type given by the clauses's type, the forms in that clause are
+evaluated as an implicit progn, and the values it returns are returned as
+the value of the typecase, ctypecase, or etypecase form.
+
+These macros differ only in their behavior when no normal-clause matches;
+specifically:
+
+typecase
+     If no normal-clause matches, and there is an otherwise-clause, then
+     that otherwise-clause automatically matches; the forms in that clause
+     are evaluated as an implicit progn, and the values it returns are
+     returned as the value of the typecase.
+
+     If there is no otherwise-clause, typecase returns nil.
+
+ctypecase
+     If no normal-clause matches, a correctable error of type type-error
+     is signaled.  The offending datum is the test-key and the expected
+     type is type equivalent to (or type1 type2 ...).  The store-value
+     restart can be used to correct the error.
+
+     If the store-value restart is invoked, its argument becomes the new
+     test-key, and is stored in keyplace as if by (setf keyplace test-key).
+     Then ctypecase starts over, considering each clause anew.
+
+     If the store-value restart is invoked interactively, the user is
+     prompted for a new test-key to use.
+
+     The subforms of keyplace might be evaluated again if none of the
+     cases holds.
+
+etypecase
+     If no normal-clause matches, a non-correctable error of type
+     type-error is signaled.  The offending datum is the test-key and the
+     expected type is type equivalent to (or type1 type2 ...).
+
+     Note that in contrast with ctypecase, the caller of etypecase may
+     rely on the fact that etypecase does not return if a normal-clause
+     does not match.
+
+In all three cases, is permissible for more than one clause to specify a
+matching type, particularly if one is a subtype of another; the earliest
+applicable clause is chosen.
+
+Examples::
+..........
+
+     ;;; (Note that the parts of this example which use TYPE-OF
+     ;;;  are implementation-dependent.)
+      (defun what-is-it (x)
+        (format t "~&~S is ~A.~
+                x (typecase x
+                    (float "a float")
+                    (null "a symbol, boolean false, or the empty list")
+                    (list "a list")
+                    (t (format nil "a(n) ~(~A~)" (type-of x))))))
+     =>  WHAT-IS-IT
+      (map 'nil #'what-is-it '(nil (a b) 7.0 7 box))
+      |>  NIL is a symbol, boolean false, or the empty list.
+      |>  (A B) is a list.
+      |>  7.0 is a float.
+      |>  7 is a(n) integer.
+      |>  BOX is a(n) symbol.
+     =>  NIL
+      (setq x 1/3)
+     =>  1/3
+      (ctypecase x
+          (integer (* x 4))
+          (symbol  (symbol-value x)))
+      |>  Error: The value of X, 1/3, is neither an integer nor a symbol.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Specify a value to use instead.
+      |>   2: Return to Lisp Toplevel.
+      |>  Debug> |>>:CONTINUE 1<<|
+      |>  Use value: |>>3.7<<|
+      |>  Error: The value of X, 3.7, is neither an integer nor a symbol.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Specify a value to use instead.
+      |>   2: Return to Lisp Toplevel.
+      |>  Debug> |>>:CONTINUE 1<<|
+      |>  Use value: |>>12<<|
+     =>  48
+      x =>  12
+
+Affected By::
+.............
+
+ctypecase and etypecase, since they might signal an error, are potentially
+affected by existing handlers and *debug-io*.
+
+Exceptional Situations::
+........................
+
+ctypecase and etypecase signal an error of type type-error if no
+normal-clause matches.
+
+The compiler may choose to issue a warning of type style-warning if a
+clause will never be selected because it is completely shadowed by earlier
+clauses.
+
+See Also::
+..........
+
+*Note case; ccase; ecase:: , *Note cond:: , *Note setf; psetf:: , *Note
+Generalized Reference::
+
+Notes::
+.......
+
+     (typecase test-key
+       {(type {form}*)}*)
+     ==
+     (let ((#1=#:g0001 test-key))
+       (cond {((typep #1# 'type) {form}*)}*))
+
+The specific error message used by etypecase and ctypecase can vary
+between implementations.  In situations where control of the specific
+wording of the error message is important, it is better to use typecase
+with an otherwise-clause that explicitly signals an error with an
+appropriate message.
+
+
+File: gcl.info,  Node: multiple-value-bind,  Next: multiple-value-call,  Prev: typecase,  Up: Data and Control Flow Dictionary
+
+multiple-value-bind                                                 [Macro]
+---------------------------------------------------------------------------
+
+`multiple-value-bind'  ({var}*) values-form {declaration}* {form}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+var--a symbol naming a variable; not evaluated.
+
+values-form--a form; evaluated.
+
+declaration--a declare expression; not evaluated.
+
+forms--an implicit progn.
+
+results--the values returned by the forms.
+
+Description::
+.............
+
+Creates new variable bindings for the vars and executes a series of forms
+that use these bindings.
+
+The variable bindings created are lexical unless special declarations are
+specified.
+
+Values-form is evaluated, and each of the vars is bound to the respective
+value returned by that form.  If there are more vars than values returned,
+extra values of nil are given to the remaining vars. If there are more
+values than vars, the excess values are discarded.  The vars are bound to
+the values over the execution of the forms, which make up an implicit
+progn.  The consequences are unspecified if a type declaration is specified
+for a var, but the value to which that var is bound  is not consistent with
+the type declaration.
+
+The scopes of the name binding and declarations do not include the
+values-form.
+
+Examples::
+..........
+
+      (multiple-value-bind (f r)
+          (floor 130 11)
+        (list f r)) =>  (11 9)
+
+See Also::
+..........
+
+*Note let; let*:: , *Note multiple-value-call::
+
+Notes::
+.......
+
+      (multiple-value-bind ({var}*) values-form {form}*)
+      == (multiple-value-call #'(lambda (&optional {var}* &rest #1=#:ignore)
+                                  (declare (ignore #1#))
+                                  {form}*)
+                              values-form)
+
+
+File: gcl.info,  Node: multiple-value-call,  Next: multiple-value-list,  Prev: multiple-value-bind,  Up: Data and Control Flow Dictionary
+
+multiple-value-call                                      [Special Operator]
+---------------------------------------------------------------------------
+
+`multiple-value-call'  function-form form* =>  {result}*
+
+Arguments and Values::
+......................
+
+function-form--a form; evaluated to produce function.
+
+function--a function designator resulting from the evaluation of
+function-form.
+
+form--a form.
+
+results--the values returned by the function.
+
+Description::
+.............
+
+Applies function to a list of the objects collected from groups of
+multiple values_2.
+
+multiple-value-call first evaluates the function-form to obtain function,
+and then evaluates each form.  All the values of each form are gathered
+together (not just one value from each) and given as arguments to the
+function.
+
+Examples::
+..........
+
+      (multiple-value-call #'list 1 '/ (values 2 3) '/ (values) '/ (floor 2.5))
+     =>  (1 / 2 3 / / 2 0.5)
+      (+ (floor 5 3) (floor 19 4)) == (+ 1 4)
+     =>  5
+      (multiple-value-call #'+ (floor 5 3) (floor 19 4)) == (+ 1 2 4 3)
+     =>  10
+
+See Also::
+..........
+
+*Note multiple-value-list:: , *Note multiple-value-bind::
+
+
+File: gcl.info,  Node: multiple-value-list,  Next: multiple-value-prog1,  Prev: multiple-value-call,  Up: Data and Control Flow Dictionary
+
+multiple-value-list                                                 [Macro]
+---------------------------------------------------------------------------
+
+`multiple-value-list'  form =>  list
+
+Arguments and Values::
+......................
+
+form--a form; evaluated as described below.
+
+list--a list of the values returned by form.
+
+Description::
+.............
+
+multiple-value-list evaluates form and creates a list of the multiple
+values_2 it returns.
+
+Examples::
+..........
+
+      (multiple-value-list (floor -3 4)) =>  (-1 1)
+
+See Also::
+..........
+
+*Note values-list:: , *Note multiple-value-call::
+
+Notes::
+.......
+
+multiple-value-list and values-list are inverses of each other.
+
+      (multiple-value-list form) == (multiple-value-call #'list form)
+
+
+File: gcl.info,  Node: multiple-value-prog1,  Next: multiple-value-setq,  Prev: multiple-value-list,  Up: Data and Control Flow Dictionary
+
+multiple-value-prog1                                     [Special Operator]
+---------------------------------------------------------------------------
+
+`multiple-value-prog'  1 =>  first-form {form}*
+
+first-form-results
+
+Arguments and Values::
+......................
+
+first-form--a form; evaluated as described below.
+
+form--a form; evaluated as described below.
+
+first-form-results--the values resulting from the evaluation of first-form.
+
+Description::
+.............
+
+multiple-value-prog1 evaluates first-form and saves all the values
+produced by that form. It then evaluates each form from left to right,
+discarding their values.
+
+Examples::
+..........
+
+      (setq temp '(1 2 3)) =>  (1 2 3)
+      (multiple-value-prog1
+         (values-list temp)
+         (setq temp nil)
+         (values-list temp)) =>  1, 2, 3
+
+See Also::
+..........
+
+*Note prog1; prog2::
+
+
+File: gcl.info,  Node: multiple-value-setq,  Next: values,  Prev: multiple-value-prog1,  Up: Data and Control Flow Dictionary
+
+multiple-value-setq                                                 [Macro]
+---------------------------------------------------------------------------
+
+`multiple-value-setq'  vars form =>  result
+
+Arguments and Values::
+......................
+
+vars--a list of symbols that are either variable names or names of symbol
+macros.
+
+form--a form.
+
+result--The primary value returned by the form.
+
+Description::
+.............
+
+multiple-value-setq assigns values to vars.
+
+The form is evaluated, and each var is assigned to the corresponding value
+returned by that form.  If there are more vars than values returned, nil
+is assigned to the extra vars.  If there are more values than vars, the
+extra values are discarded.
+
+If any var is the name of a symbol macro, then it is assigned as if by
+setf.  Specifically,
+
+      (multiple-value-setq (symbol_1 ... symbol_n) value-producing-form)
+
+is defined to always behave in the same way as
+
+      (values (setf (values symbol_1 ... symbol_n) value-producing-form))
+
+in order that the rules for order of evaluation and side-effects be
+consistent with those used by setf.
+
+See *Note VALUES Forms as Places::.
+
+Examples::
+..........
+
+      (multiple-value-setq (quotient remainder) (truncate 3.2 2)) =>  1
+      quotient =>  1
+      remainder =>  1.2
+      (multiple-value-setq (a b c) (values 1 2)) =>  1
+      a =>  1
+      b =>  2
+      c =>  NIL
+      (multiple-value-setq (a b) (values 4 5 6)) =>  4
+      a =>  4
+      b =>  5
+
+See Also::
+..........
+
+*Note setq:: , *Note symbol-macrolet::
+
+
+File: gcl.info,  Node: values,  Next: values-list,  Prev: multiple-value-setq,  Up: Data and Control Flow Dictionary
+
+values                                                           [Accessor]
+---------------------------------------------------------------------------
+
+`values'  &rest object =>  {object}*
+
+(setf (`         values' &rest place) new-values)
+Arguments and Values::
+......................
+
+object--an object.
+
+place--a place.
+
+new-value--an object.
+
+Description::
+.............
+
+values returns the objects as multiple values_2.
+
+setf of values is used to store the multiple values_2 new-values into the
+places.  See *Note VALUES Forms as Places::.
+
+Examples::
+..........
+
+      (values) =>  <no values>
+      (values 1) =>  1
+      (values 1 2) =>  1, 2
+      (values 1 2 3) =>  1, 2, 3
+      (values (values 1 2 3) 4 5) =>  1, 4, 5
+      (defun polar (x y)
+        (values (sqrt (+ (* x x) (* y y))) (atan y x))) =>  POLAR
+      (multiple-value-bind (r theta) (polar 3.0 4.0)
+        (vector r theta))
+     =>  #(5.0 0.927295)
+
+Sometimes it is desirable to indicate explicitly that a function returns
+exactly one value.  For example, the function
+
+      (defun foo (x y)
+        (floor (+ x y) y)) =>  FOO
+
+returns two values because floor returns two values.  It may be that the
+second value makes no sense, or that for efficiency reasons it is desired
+not to compute the second value.  values is the standard idiom for
+indicating that only one value is to be returned:
+
+      (defun foo (x y)
+        (values (floor (+ x y) y))) =>  FOO
+
+This works because values returns exactly one value for each of args; as
+for any function call, if any of args produces more than one value, all
+but the first are discarded.
+
+See Also::
+..........
+
+*Note values-list:: , *Note multiple-value-bind:: , *Note
+multiple-values-limit:: , *Note Evaluation::
+
+Notes::
+.......
+
+Since values is a function, not a macro or special form, it receives as
+arguments only the primary values of its argument forms.
+
+
+File: gcl.info,  Node: values-list,  Next: multiple-values-limit,  Prev: values,  Up: Data and Control Flow Dictionary
+
+values-list                                                      [Function]
+---------------------------------------------------------------------------
+
+`values-list'  list =>  {element}*
+
+Arguments and Values::
+......................
+
+list--a list.
+
+elements--the elements of the list.
+
+Description::
+.............
+
+Returns the elements of the list as multiple values_2.
+
+Examples::
+..........
+
+      (values-list nil) =>  <no values>
+      (values-list '(1)) =>  1
+      (values-list '(1 2)) =>  1, 2
+      (values-list '(1 2 3)) =>  1, 2, 3
+
+Exceptional Situations::
+........................
+
+Should signal type-error if its argument is not a proper list.
+
+See Also::
+..........
+
+*Note multiple-value-bind:: , *Note multiple-value-list:: , *Note
+multiple-values-limit:: , *Note values::
+
+Notes::
+.......
+
+      (values-list list) == (apply #'values list)
+
+(equal x (multiple-value-list (values-list x))) returns true for all lists
+x.
+
+
+File: gcl.info,  Node: multiple-values-limit,  Next: nth-value,  Prev: values-list,  Up: Data and Control Flow Dictionary
+
+multiple-values-limit                                   [Constant Variable]
+---------------------------------------------------------------------------
+
+Constant Value::
+................
+
+An integer not smaller than 20, the exact magnitude of which is
+implementation-dependent.
+
+Description::
+.............
+
+The upper exclusive bound on the number of values that may be returned
+from a function,
+
+bound or assigned by multiple-value-bind or multiple-value-setq, or passed
+as a first argument to nth-value.  (If these individual limits might
+differ, the minimum value is used.)
+
+See Also::
+..........
+
+*Note lambda-parameters-limit:: , *Note call-arguments-limit::
+
+Notes::
+.......
+
+Implementors are encouraged to make this limit as large as possible.
+
+
+File: gcl.info,  Node: nth-value,  Next: prog,  Prev: multiple-values-limit,  Up: Data and Control Flow Dictionary
+
+nth-value                                                           [Macro]
+---------------------------------------------------------------------------
+
+`nth-value'  n form =>  object
+
+Arguments and Values::
+......................
+
+n--a non-negative integer; evaluated.
+
+form--a form; evaluated as described below.
+
+object--an object.
+
+Description::
+.............
+
+Evaluates n and then form, returning as its only value the nth value
+yielded by form, or nil if n is greater than or equal to the number of
+values returned by form.  (The first returned value is numbered 0.)
+
+Examples::
+..........
+
+      (nth-value 0 (values 'a 'b)) =>  A
+      (nth-value 1 (values 'a 'b)) =>  B
+      (nth-value 2 (values 'a 'b)) =>  NIL
+      (let* ((x 83927472397238947423879243432432432)
+             (y 32423489732)
+             (a (nth-value 1 (floor x y)))
+             (b (mod x y)))
+        (values a b (= a b)))
+     =>  3332987528, 3332987528, true
+
+See Also::
+..........
+
+*Note multiple-value-list:: , *Note nth::
+
+Notes::
+.......
+
+Operationally, the following relationship is true, although nth-value
+might be more efficient in some implementations because, for example, some
+consing might be avoided.
+
+      (nth-value n form) == (nth n (multiple-value-list form))
+
+
+File: gcl.info,  Node: prog,  Next: prog1,  Prev: nth-value,  Up: Data and Control Flow Dictionary
+
+prog, prog*                                                         [Macro]
+---------------------------------------------------------------------------
+
+`prog'  ({var | (var [init-form])}*) {declaration}* {tag | statement}*
+=>  {result}*
+
+`prog*'  ({var | (var [init-form])}*) {declaration}* {tag | statement}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+var--variable name.
+
+init-form--a form.
+
+declaration--a declare expression; not evaluated.
+
+tag--a go tag; not evaluated.
+
+statement--a compound form; evaluated as described below.
+
+results--nil if a normal return occurs, or else, if an explicit return
+occurs, the values that were transferred.
+
+Description::
+.............
+
+Three distinct operations are performed by prog and prog*: they bind local
+variables, they permit use of the return statement, and they permit use of
+the go statement.  A typical prog looks like this:
+
+      (prog (var1 var2 (var3 init-form-3) var4 (var5 init-form-5))
+            {declaration}*
+            statement1
+       tag1
+            statement2
+            statement3
+            statement4
+       tag2
+            statement5
+            ...
+            )
+
+For prog, init-forms are evaluated first, in the order in which they are
+supplied. The vars are then bound to the corresponding values in parallel.
+If no init-form is supplied for a given var, that var is  bound to nil.
+
+The body of prog is executed as if it were a tagbody form; the go
+statement can be used to transfer control to a tag.  Tags label statements.
+
+prog implicitly establishes a block named nil around the entire prog form,
+so that return can be used at any time to exit from the prog form.
+
+The difference between prog* and prog is that in prog* the binding and
+initialization of the vars is done sequentially, so that the init-form for
+each one can use the values of previous ones.
+
+Examples::
+..........
+
+     (prog* ((y z) (x (car y)))
+            (return x))
+
+returns the car of the value of z.
+
+      (setq a 1) =>  1
+      (prog ((a 2) (b a)) (return (if (= a b) '= '/=))) =>  /=
+      (prog* ((a 2) (b a)) (return (if (= a b) '= '/=))) =>  =
+      (prog () 'no-return-value) =>  NIL
+
+      (defun king-of-confusion (w)
+        "Take a cons of two lists and make a list of conses.
+         Think of this function as being like a zipper."
+        (prog (x y z)          ;Initialize x, y, z to NIL
+             (setq y (car w) z (cdr w))
+         loop
+             (cond ((null y) (return x))
+                   ((null z) (go err)))
+         rejoin
+             (setq x (cons (cons (car y) (car z)) x))
+             (setq y (cdr y) z (cdr z))
+             (go loop)
+         err
+             (cerror "Will self-pair extraneous items"
+                     "Mismatch - gleep!  ~S" y)
+             (setq z y)
+             (go rejoin))) =>  KING-OF-CONFUSION
+
+This can be accomplished more perspicuously as follows:
+
+      (defun prince-of-clarity (w)
+        "Take a cons of two lists and make a list of conses.
+         Think of this function as being like a zipper."
+        (do ((y (car w) (cdr y))
+             (z (cdr w) (cdr z))
+             (x '() (cons (cons (car y) (car z)) x)))
+            ((null y) x)
+          (when (null z)
+            (cerror "Will self-pair extraneous items"
+                   "Mismatch - gleep!  ~S" y)
+            (setq z y)))) =>  PRINCE-OF-CLARITY
+
+See Also::
+..........
+
+*Note block:: , *Note let; let*:: , *Note tagbody:: , *Note go:: , *Note
+return:: , *Note Evaluation::
+
+Notes::
+.......
+
+prog can be explained in terms of block, let, and tagbody as follows:
+
+      (prog variable-list declaration . body)
+         == (block nil (let variable-list declaration (tagbody . body)))
+
+
+File: gcl.info,  Node: prog1,  Next: progn,  Prev: prog,  Up: Data and Control Flow Dictionary
+
+prog1, prog2                                                        [Macro]
+---------------------------------------------------------------------------
+
+`prog'  1 =>  first-form             {form}* result-1 `prog'  2 =>
+first-form second-form {form}* result-2
+
+Arguments and Values::
+......................
+
+first-form--a form; evaluated as described below.
+
+second-form--a form; evaluated as described below.
+
+forms--an implicit progn; evaluated as described below.
+
+result-1--the primary value resulting from the evaluation of first-form.
+
+result-2--the primary value resulting from the evaluation of second-form.
+
+Description::
+.............
+
+prog1 evaluates first-form and then forms, yielding as its only value the
+primary value yielded by first-form.
+
+prog2 evaluates first-form, then second-form, and then forms, yielding as
+its only value the primary value yielded by first-form.
+
+Examples::
+..........
+
+      (setq temp 1) =>  1
+      (prog1 temp (print temp) (incf temp) (print temp))
+      |>  1
+      |>  2
+     =>  1
+      (prog1 temp (setq temp nil)) =>  2
+      temp =>  NIL
+      (prog1 (values 1 2 3) 4) =>  1
+      (setq temp (list 'a 'b 'c))
+      (prog1 (car temp) (setf (car temp) 'alpha)) =>  A
+      temp =>  (ALPHA B C)
+      (flet ((swap-symbol-values (x y)
+               (setf (symbol-value x)
+                     (prog1 (symbol-value y)
+                            (setf (symbol-value y) (symbol-value x))))))
+        (let ((*foo* 1) (*bar* 2))
+          (declare (special *foo* *bar*))
+          (swap-symbol-values '*foo* '*bar*)
+          (values *foo* *bar*)))
+     =>  2, 1
+      (setq temp 1) =>  1
+      (prog2 (incf temp) (incf temp) (incf temp)) =>  3
+      temp =>  4
+      (prog2 1 (values 2 3 4) 5) =>  2
+
+See Also::
+..........
+
+*Note multiple-value-prog1:: , *Note progn::
+
+Notes::
+.......
+
+prog1 and prog2 are typically used to evaluate one or more forms with side
+effects and return a value that must be computed before some or all of the
+side effects happen.
+
+      (prog1 {form}*) == (values (multiple-value-prog1 {form}*))
+      (prog2 form1 {form}*) == (let () form1 (prog1 {form}*))
+
+
+File: gcl.info,  Node: progn,  Next: define-modify-macro,  Prev: prog1,  Up: Data and Control Flow Dictionary
+
+progn                                                    [Special Operator]
+---------------------------------------------------------------------------
+
+`progn'  {form}* =>  {result}*
+
+Arguments and Values::
+......................
+
+forms--an implicit progn.
+
+results--the values of the forms.
+
+Description::
+.............
+
+progn evaluates forms, in the order in which they are given.
+
+The values of each form but the last are discarded.
+
+If progn appears as a top level form, then all forms within that progn are
+considered by the compiler to be top level forms.
+
+Examples::
+..........
+
+      (progn) =>  NIL
+      (progn 1 2 3) =>  3
+      (progn (values 1 2 3)) =>  1, 2, 3
+      (setq a 1) =>  1
+      (if a
+           (progn (setq a nil) 'here)
+           (progn (setq a t) 'there)) =>  HERE
+      a =>  NIL
+
+See Also::
+..........
+
+*Note prog1; prog2:: , prog2, *Note Evaluation::
+
+Notes::
+.......
+
+Many places in Common Lisp involve syntax that uses implicit progns.  That
+is, part of their syntax allows many forms to be written that are to be
+evaluated sequentially, discarding the results of all forms but the last
+and returning the results of the last form.  Such places include, but are
+not limited to, the following: the body of a lambda expression; the bodies
+of various control and conditional forms (e.g., case, catch, progn, and
+when).
+
+
+File: gcl.info,  Node: define-modify-macro,  Next: defsetf,  Prev: progn,  Up: Data and Control Flow Dictionary
+
+define-modify-macro                                                 [Macro]
+---------------------------------------------------------------------------
+
+`define-modify-macro'  name lambda-list function [documentation] =>  name
+
+Arguments and Values::
+......................
+
+name--a symbol.
+
+lambda-list--a define-modify-macro lambda list
+
+function--a symbol.
+
+documentation--a string; not evaluated.
+
+Description::
+.............
+
+define-modify-macro defines a macro named name to read and write a place.
+
+The arguments to the new macro are a place, followed by the arguments that
+are supplied in lambda-list.
+
+Macros defined with define-modify-macro correctly pass the environment
+parameter to
+
+get-setf-expansion.
+
+When the macro is invoked, function is applied to the old contents of the
+place and the lambda-list arguments to obtain the new value, and the place
+is updated to contain the result.
+
+Except for the issue of avoiding multiple evaluation (see below), the
+expansion of a define-modify-macro is equivalent to the following:
+
+      (defmacro name (reference . lambda-list)
+        documentation
+        `(setf ,reference
+               (function ,reference ,arg1 ,arg2 ...)))
+
+where arg1, arg2, ..., are the parameters appearing in lambda-list;
+appropriate provision is made for a rest parameter.
+
+The subforms of the macro calls defined by define-modify-macro are
+evaluated as specified in *Note Evaluation of Subforms to Places::.
+
+Documentation is attached as a documentation string to name (as kind
+function) and to the macro function.
+
+If a define-modify-macro form appears as a top level form, the compiler
+must store the macro definition at compile time, so that occurrences of
+the macro later on in the file can be expanded correctly.
+
+Examples::
+..........
+
+      (define-modify-macro appendf (&rest args)
+         append "Append onto list") =>  APPENDF
+      (setq x '(a b c) y x) =>  (A B C)
+      (appendf x '(d e f) '(1 2 3)) =>  (A B C D E F 1 2 3)
+      x =>  (A B C D E F 1 2 3)
+      y =>  (A B C)
+      (define-modify-macro new-incf (&optional (delta 1)) +)
+      (define-modify-macro unionf (other-set &rest keywords) union)
+
+Side Effects::
+..............
+
+A macro definition is assigned to name.
+
+See Also::
+..........
+
+*Note defsetf:: ,
+
+*Note define-setf-expander:: ,
+
+*Note documentation; (setf documentation):: , *Note Syntactic Interaction
+of Documentation Strings and Declarations::
+

@@ -1,0 +1,65 @@
+{
+    "name": "with-open-stream",
+    "prev": "close",
+    "next": "listen",
+    "up": "Streams Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "with-open-stream"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "with-open-stream",
+                    "text": " (var stream) {declaration}* {form}*=>  {result}*\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "var",
+                    "desc": "a variable name."
+                },
+                {
+                    "name": "stream",
+                    "desc": "a form; evaluated to produce a stream."
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values returned by the forms."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "with-open-stream performs a series of operations on stream, returns a\nvalue, and then closes the stream.\nVar is bound to the value of stream, and then forms are executed as an\nimplicit progn.  stream is automatically closed on exit from\nwith-open-stream, no matter whether the exit is normal or abnormal.\nThe stream has dynamic extent; its extent ends when the form is exited.\nThe consequences are undefined if an attempt is made to assign the the\nvariable var with the forms.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (with-open-stream (s (make-string-input-stream \"1 2 3 4\"))\n         (+ (read s) (read s) (read s))) =>  6\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "The stream is closed (upon exit).\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note close::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: with-open-stream,  Next: listen,  Prev: close,  Up: Streams Dictionary\n\nwith-open-stream                                                    [Macro]\n---------------------------------------------------------------------------\n\n`with-open-stream'  (var stream) {declaration}* {form}*\n=>  {result}*\n\nArguments and Values::\n......................\n\nvar--a variable name.\n\nstream--a form; evaluated to produce a stream.\n\ndeclaration--a declare expression; not evaluated.\n\nforms--an implicit progn.\n\nresults--the values returned by the forms.\n\nDescription::\n.............\n\nwith-open-stream performs a series of operations on stream, returns a\nvalue, and then closes the stream.\n\nVar is bound to the value of stream, and then forms are executed as an\nimplicit progn.  stream is automatically closed on exit from\nwith-open-stream, no matter whether the exit is normal or abnormal.\n\nThe stream has dynamic extent; its extent ends when the form is exited.\n\nThe consequences are undefined if an attempt is made to assign the the\nvariable var with the forms.\n\nExamples::\n..........\n\n      (with-open-stream (s (make-string-input-stream \"1 2 3 4\"))\n         (+ (read s) (read s) (read s))) =>  6\n\nSide Effects::\n..............\n\nThe stream is closed (upon exit).\n\nSee Also::\n..........\n\n*Note close::\n\n"
+}

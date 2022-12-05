@@ -1,0 +1,57 @@
+{
+    "name": "reverse",
+    "prev": "length",
+    "next": "sort",
+    "up": "Sequences Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "reverse, nreverse"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "reverse",
+                    "text": " sequence =>  reversed-sequence\n"
+                },
+                {
+                    "name": "nreverse",
+                    "text": " sequence =>  reversed-sequence\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "sequence",
+                    "desc": "a proper sequence."
+                },
+                {
+                    "name": "reversed-sequence",
+                    "desc": "a sequence."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "reverse and nreverse return a new sequence of the same kind as sequence,\ncontaining the same elements, but in reverse order.\nreverse and nreverse differ in that reverse always creates and returns a\nnew sequence, whereas nreverse might modify and return the given sequence.\nreverse never modifies the given sequence.\nFor reverse, if sequence is a vector, the result is a fresh simple array\nof rank one that has the same actual array element type as sequence.  If\nsequence is a list, the result is a fresh list.\nFor nreverse, if sequence is a vector, the result is a vector that has the\nsame actual array element type as sequence.  If sequence is a list, the\nresult is a list.\nFor nreverse, sequence might be destroyed and re-used to produce the\nresult.  The result might or might not be identical to sequence.\nSpecifically, when sequence is a list, nreverse is permitted to setf any\npart, car or cdr, of any cons that is part of the list structure of\nsequence.  When sequence is a vector, nreverse is permitted to re-order\nthe elements of sequence in order to produce the resulting vector.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq str \"abc\") =>  \"abc\"\n      (reverse str) =>  \"cba\"\n      str =>  \"abc\"\n      (setq str (copy-seq str)) =>  \"abc\"\n      (nreverse str) =>  \"cba\"\n      str =>  implementation-dependent\n      (setq l (list 1 2 3)) =>  (1 2 3)\n      (nreverse l) =>  (3 2 1)\n      l =>  implementation-dependent\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "nreverse might either create a new sequence, modify the argument sequence,\nor both.  (reverse does not modify sequence.)\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: reverse,  Next: sort,  Prev: length,  Up: Sequences Dictionary\n\nreverse, nreverse                                                [Function]\n---------------------------------------------------------------------------\n\n`reverse'  sequence =>  reversed-sequence\n\n`nreverse'  sequence =>  reversed-sequence\n\nArguments and Values::\n......................\n\nsequence--a proper sequence.\n\nreversed-sequence--a sequence.\n\nDescription::\n.............\n\nreverse and nreverse return a new sequence of the same kind as sequence,\ncontaining the same elements, but in reverse order.\n\nreverse and nreverse differ in that reverse always creates and returns a\nnew sequence, whereas nreverse might modify and return the given sequence.\nreverse never modifies the given sequence.\n\nFor reverse, if sequence is a vector, the result is a fresh simple array\nof rank one that has the same actual array element type as sequence.  If\nsequence is a list, the result is a fresh list.\n\nFor nreverse, if sequence is a vector, the result is a vector that has the\nsame actual array element type as sequence.  If sequence is a list, the\nresult is a list.\n\nFor nreverse, sequence might be destroyed and re-used to produce the\nresult.  The result might or might not be identical to sequence.\n\nSpecifically, when sequence is a list, nreverse is permitted to setf any\npart, car or cdr, of any cons that is part of the list structure of\nsequence.  When sequence is a vector, nreverse is permitted to re-order\nthe elements of sequence in order to produce the resulting vector.\n\nExamples::\n..........\n\n      (setq str \"abc\") =>  \"abc\"\n      (reverse str) =>  \"cba\"\n      str =>  \"abc\"\n      (setq str (copy-seq str)) =>  \"abc\"\n      (nreverse str) =>  \"cba\"\n      str =>  implementation-dependent\n      (setq l (list 1 2 3)) =>  (1 2 3)\n      (nreverse l) =>  (3 2 1)\n      l =>  implementation-dependent\n\nSide Effects::\n..............\n\nnreverse might either create a new sequence, modify the argument sequence,\nor both.  (reverse does not modify sequence.)\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.\n\n"
+}

@@ -1,0 +1,89 @@
+{
+    "name": "set-exclusive-or",
+    "prev": "set-difference",
+    "next": "subsetp",
+    "up": "Conses Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "set-exclusive-or, nset-exclusive-or"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "set-exclusive-or",
+                    "text": " list-1 list-2 &key key test test-not =>  result-list\n"
+                },
+                {
+                    "name": "nset-exclusive-or",
+                    "text": " list-1 list-2 &key key test test-not =>  result-list\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "list-1",
+                    "desc": "a proper list."
+                },
+                {
+                    "name": "list-2",
+                    "desc": "a proper list."
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "result-list",
+                    "desc": "a list."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "set-exclusive-or returns a list of elements that appear in exactly one of\nlist-1 and list-2.\nnset-exclusive-or is the destructive version of set-exclusive-or.\nFor all possible ordered pairs consisting of one element from list-1 and\none element from list-2, the :test or :test-not function is used to\ndetermine whether they satisfy the test.\nIf :key is supplied, it is used to extract the part to be tested from the\nlist-1 or list-2 element.  The first argument to the :test or :test-not\nfunction is the part of an element of list-1 extracted by the :key\nfunction (if supplied); the second argument  is the part of an element of\nlist-2 extracted by the :key function (if supplied).  If :key is not\nsupplied or nil, the list-1 or list-2 element is used.\nThe result contains precisely those elements of list-1 and list-2 that\nappear in no matching pair.\nThe result list of set-exclusive-or might share storage with one of list-1\nor list-2.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq lst1 (list 1 \"a\" \"b\")\n            lst2 (list 1 \"A\" \"b\")) =>  (1 \"A\" \"b\")\n      (set-exclusive-or lst1 lst2) =>  (\"b\" \"A\" \"b\" \"a\")\n      (set-exclusive-or lst1 lst2 :test #'equal) =>  (\"A\" \"a\")\n      (set-exclusive-or lst1 lst2 :test 'equalp) =>  NIL\n      (nset-exclusive-or lst1 lst2) =>  (\"a\" \"b\" \"A\" \"b\")\n      (setq lst1 (list ((\"a\" . \"b\") (\"c\" . \"d\") (\"e\" . \"f\"))))\n     =>  ((\"a\" . \"b\") (\"c\" . \"d\") (\"e\" . \"f\"))\n      (setq lst2 (list ((\"c\" . \"a\") (\"e\" . \"b\") (\"d\" . \"a\"))))\n     =>  ((\"c\" . \"a\") (\"e\" . \"b\") (\"d\" . \"a\"))\n      (nset-exclusive-or lst1 lst2 :test #'string= :key #'cdr)\n     =>  ((\"c\" . \"d\") (\"e\" . \"f\") (\"c\" . \"a\") (\"d\" . \"a\"))\n      lst1 =>  ((\"a\" . \"b\") (\"c\" . \"d\") (\"e\" . \"f\"))\n      lst2 =>  ((\"c\" . \"a\") (\"d\" . \"a\"))\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "nset-exclusive-or is permitted to modify any part, car or cdr, of the list\nstructure of list-1 or list-2.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if list-1 and\nlist-2 are not proper lists.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note Compiler Terminology::,\n*Note Traversal Rules and Side Effects::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The :test-not parameter is deprecated.\nSince the nset-exclusive-or side effect is not required, it should not be\nused in for-effect-only positions in portable code.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: set-exclusive-or,  Next: subsetp,  Prev: set-difference,  Up: Conses Dictionary\n\nset-exclusive-or, nset-exclusive-or                              [Function]\n---------------------------------------------------------------------------\n\n`set-exclusive-or'  list-1 list-2 &key key test test-not =>  result-list\n\n`nset-exclusive-or'  list-1 list-2 &key key test test-not =>  result-list\n\nArguments and Values::\n......................\n\nlist-1--a proper list.\n\nlist-2--a proper list.\n\ntest--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\ntest-not--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nkey--a designator for a function of one argument, or nil.\n\nresult-list--a list.\n\nDescription::\n.............\n\nset-exclusive-or returns a list of elements that appear in exactly one of\nlist-1 and list-2.\n\nnset-exclusive-or is the destructive version of set-exclusive-or.\n\nFor all possible ordered pairs consisting of one element from list-1 and\none element from list-2, the :test or :test-not function is used to\ndetermine whether they satisfy the test.\n\nIf :key is supplied, it is used to extract the part to be tested from the\nlist-1 or list-2 element.  The first argument to the :test or :test-not\nfunction is the part of an element of list-1 extracted by the :key\nfunction (if supplied); the second argument  is the part of an element of\nlist-2 extracted by the :key function (if supplied).  If :key is not\nsupplied or nil, the list-1 or list-2 element is used.\n\nThe result contains precisely those elements of list-1 and list-2 that\nappear in no matching pair.\n\nThe result list of set-exclusive-or might share storage with one of list-1\nor list-2.\n\nExamples::\n..........\n\n      (setq lst1 (list 1 \"a\" \"b\")\n            lst2 (list 1 \"A\" \"b\")) =>  (1 \"A\" \"b\")\n      (set-exclusive-or lst1 lst2) =>  (\"b\" \"A\" \"b\" \"a\")\n      (set-exclusive-or lst1 lst2 :test #'equal) =>  (\"A\" \"a\")\n      (set-exclusive-or lst1 lst2 :test 'equalp) =>  NIL\n      (nset-exclusive-or lst1 lst2) =>  (\"a\" \"b\" \"A\" \"b\")\n      (setq lst1 (list ((\"a\" . \"b\") (\"c\" . \"d\") (\"e\" . \"f\"))))\n     =>  ((\"a\" . \"b\") (\"c\" . \"d\") (\"e\" . \"f\"))\n      (setq lst2 (list ((\"c\" . \"a\") (\"e\" . \"b\") (\"d\" . \"a\"))))\n     =>  ((\"c\" . \"a\") (\"e\" . \"b\") (\"d\" . \"a\"))\n      (nset-exclusive-or lst1 lst2 :test #'string= :key #'cdr)\n     =>  ((\"c\" . \"d\") (\"e\" . \"f\") (\"c\" . \"a\") (\"d\" . \"a\"))\n      lst1 =>  ((\"a\" . \"b\") (\"c\" . \"d\") (\"e\" . \"f\"))\n      lst2 =>  ((\"c\" . \"a\") (\"d\" . \"a\"))\n\nSide Effects::\n..............\n\nnset-exclusive-or is permitted to modify any part, car or cdr, of the list\nstructure of list-1 or list-2.\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if list-1 and\nlist-2 are not proper lists.\n\nSee Also::\n..........\n\n*Note Compiler Terminology::,\n\n*Note Traversal Rules and Side Effects::\n\nNotes::\n.......\n\nThe :test-not parameter is deprecated.\n\nSince the nset-exclusive-or side effect is not required, it should not be\nused in for-effect-only positions in portable code.\n\n"
+}

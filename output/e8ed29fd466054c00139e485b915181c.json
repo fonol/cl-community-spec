@@ -1,0 +1,81 @@
+{
+    "name": "pushnew",
+    "prev": "adjoin",
+    "next": "set-difference",
+    "up": "Conses Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "pushnew"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "pushnew",
+                    "text": " item place &key key test test-not=>  new-place-value\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "item",
+                    "desc": "an object."
+                },
+                {
+                    "name": "place",
+                    "desc": "a place, the value of which is a proper list."
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "new-place-value",
+                    "desc": "a list (the new value of place)."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "pushnew tests whether  item is the same as any existing element of the\nlist stored in place.  If item is not, it is prepended to the list, and\nthe new list is stored in place.\npushnew returns the new list that is stored in place.\nWhether or not item is already a member of the list that is in place is\ndetermined by comparisons using :test or :test-not.  The first argument to\nthe :test or :test-not function is item; the second argument is an element\nof the list in place as returned by the :key function (if supplied).\nIf :key is supplied, it is used to extract the part to be tested from both\nitem and the list element, as for adjoin.\nThe argument to the :key function is an element of the list stored in\nplace. The :key function typically returns part part of the element of the\nlist.  If :key is not supplied or nil, the list element is used.\nFor information about the evaluation of subforms of place, see *Note\nEvaluation of Subforms to Places::.\nIt is implementation-dependent whether or not pushnew actually executes\nthe storing form for its place in the situation where the item is already\na member of the list held by place.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq x '(a (b c) d)) =>  (A (B C) D)\n      (pushnew 5 (cadr x)) =>  (5 B C)\n      x =>  (A (5 B C) D)\n      (pushnew 'b (cadr x)) =>  (5 B C)\n      x =>  (A (5 B C) D)\n      (setq lst '((1) (1 2) (1 2 3))) =>  ((1) (1 2) (1 2 3))\n      (pushnew '(2) lst) =>  ((2) (1) (1 2) (1 2 3))\n      (pushnew '(1) lst) =>  ((1) (2) (1) (1 2) (1 2 3))\n      (pushnew '(1) lst :test 'equal) =>  ((1) (2) (1) (1 2) (1 2 3))\n      (pushnew '(1) lst :key #'car) =>  ((1) (2) (1) (1 2) (1 2 3))\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "The contents of place may be modified.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note push:: , *Note adjoin:: , *Note Generalized Reference::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The effect of\n      (pushnew item place :test p)\nis roughly equivalent to\n      (setf place (adjoin item place :test p))\nexcept that the subforms of place are evaluated only once, and item is\nevaluated before place.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: pushnew,  Next: set-difference,  Prev: adjoin,  Up: Conses Dictionary\n\npushnew                                                             [Macro]\n---------------------------------------------------------------------------\n\n`pushnew'  item place &key key test test-not\n=>  new-place-value\n\nArguments and Values::\n......................\n\nitem--an object.\n\nplace--a place, the value of which is a proper list.\n\ntest--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\ntest-not--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nkey--a designator for a function of one argument, or nil.\n\nnew-place-value--a list (the new value of place).\n\nDescription::\n.............\n\npushnew tests whether  item is the same as any existing element of the\nlist stored in place.  If item is not, it is prepended to the list, and\nthe new list is stored in place.\n\npushnew returns the new list that is stored in place.\n\nWhether or not item is already a member of the list that is in place is\ndetermined by comparisons using :test or :test-not.  The first argument to\nthe :test or :test-not function is item; the second argument is an element\nof the list in place as returned by the :key function (if supplied).\n\nIf :key is supplied, it is used to extract the part to be tested from both\nitem and the list element, as for adjoin.\n\nThe argument to the :key function is an element of the list stored in\nplace. The :key function typically returns part part of the element of the\nlist.  If :key is not supplied or nil, the list element is used.\n\nFor information about the evaluation of subforms of place, see *Note\nEvaluation of Subforms to Places::.\n\nIt is implementation-dependent whether or not pushnew actually executes\nthe storing form for its place in the situation where the item is already\na member of the list held by place.\n\nExamples::\n..........\n\n      (setq x '(a (b c) d)) =>  (A (B C) D)\n      (pushnew 5 (cadr x)) =>  (5 B C)\n      x =>  (A (5 B C) D)\n      (pushnew 'b (cadr x)) =>  (5 B C)\n      x =>  (A (5 B C) D)\n      (setq lst '((1) (1 2) (1 2 3))) =>  ((1) (1 2) (1 2 3))\n      (pushnew '(2) lst) =>  ((2) (1) (1 2) (1 2 3))\n      (pushnew '(1) lst) =>  ((1) (2) (1) (1 2) (1 2 3))\n      (pushnew '(1) lst :test 'equal) =>  ((1) (2) (1) (1 2) (1 2 3))\n      (pushnew '(1) lst :key #'car) =>  ((1) (2) (1) (1 2) (1 2 3))\n\nSide Effects::\n..............\n\nThe contents of place may be modified.\n\nSee Also::\n..........\n\n*Note push:: , *Note adjoin:: , *Note Generalized Reference::\n\nNotes::\n.......\n\nThe effect of\n      (pushnew item place :test p)\n\nis roughly equivalent to\n      (setf place (adjoin item place :test p))\n\nexcept that the subforms of place are evaluated only once, and item is\nevaluated before place.\n\n"
+}

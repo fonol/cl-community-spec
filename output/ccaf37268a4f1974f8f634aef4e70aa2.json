@@ -1,0 +1,57 @@
+{
+    "name": "multiple-value-setq",
+    "prev": "multiple-value-prog1",
+    "next": "values",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "multiple-value-setq"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "multiple-value-setq",
+                    "text": " vars form =>  result\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "vars",
+                    "desc": "a list of symbols that are either variable names or names of symbol"
+                },
+                {
+                    "name": "vars",
+                    "desc": "a list of symbols that are either variable names or names of symbolmacros.\n"
+                },
+                {
+                    "name": "form",
+                    "desc": "a form."
+                },
+                {
+                    "name": "result",
+                    "desc": "The primary value returned by the form."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "multiple-value-setq assigns values to vars.\nThe form is evaluated, and each var is assigned to the corresponding value\nreturned by that form.  If there are more vars than values returned, nil\nis assigned to the extra vars.  If there are more values than vars, the\nextra values are discarded.\nIf any var is the name of a symbol macro, then it is assigned as if by\nsetf.  Specifically,\n      (multiple-value-setq (symbol_1 ... symbol_n) value-producing-form)\nis defined to always behave in the same way as\n      (values (setf (values symbol_1 ... symbol_n) value-producing-form))\nin order that the rules for order of evaluation and side-effects be\nconsistent with those used by setf.\nSee *Note VALUES Forms as Places::.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (multiple-value-setq (quotient remainder) (truncate 3.2 2)) =>  1\n      quotient =>  1\n      remainder =>  1.2\n      (multiple-value-setq (a b c) (values 1 2)) =>  1\n      a =>  1\n      b =>  2\n      c =>  NIL\n      (multiple-value-setq (a b) (values 4 5 6)) =>  4\n      a =>  4\n      b =>  5\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note setq:: , *Note symbol-macrolet::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: multiple-value-setq,  Next: values,  Prev: multiple-value-prog1,  Up: Data and Control Flow Dictionary\n\nmultiple-value-setq                                                 [Macro]\n---------------------------------------------------------------------------\n\n`multiple-value-setq'  vars form =>  result\n\nArguments and Values::\n......................\n\nvars--a list of symbols that are either variable names or names of symbol\nmacros.\n\nform--a form.\n\nresult--The primary value returned by the form.\n\nDescription::\n.............\n\nmultiple-value-setq assigns values to vars.\n\nThe form is evaluated, and each var is assigned to the corresponding value\nreturned by that form.  If there are more vars than values returned, nil\nis assigned to the extra vars.  If there are more values than vars, the\nextra values are discarded.\n\nIf any var is the name of a symbol macro, then it is assigned as if by\nsetf.  Specifically,\n\n      (multiple-value-setq (symbol_1 ... symbol_n) value-producing-form)\n\nis defined to always behave in the same way as\n\n      (values (setf (values symbol_1 ... symbol_n) value-producing-form))\n\nin order that the rules for order of evaluation and side-effects be\nconsistent with those used by setf.\n\nSee *Note VALUES Forms as Places::.\n\nExamples::\n..........\n\n      (multiple-value-setq (quotient remainder) (truncate 3.2 2)) =>  1\n      quotient =>  1\n      remainder =>  1.2\n      (multiple-value-setq (a b c) (values 1 2)) =>  1\n      a =>  1\n      b =>  2\n      c =>  NIL\n      (multiple-value-setq (a b) (values 4 5 6)) =>  4\n      a =>  4\n      b =>  5\n\nSee Also::\n..........\n\n*Note setq:: , *Note symbol-macrolet::\n\n"
+}

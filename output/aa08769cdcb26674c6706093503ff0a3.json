@@ -1,0 +1,97 @@
+{
+    "name": "member",
+    "prev": "rest",
+    "next": "mapc",
+    "up": "Conses Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "member, member-if, member-if-not"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "member",
+                    "text": " item      list &key key test test-not =>  tail\n"
+                },
+                {
+                    "name": "member-if",
+                    "text": " predicate list &key key =>  tail\n\n"
+                },
+                {
+                    "name": "member-if-not",
+                    "text": " predicate list &key key =>  tail\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "item",
+                    "desc": "an object."
+                },
+                {
+                    "name": "list",
+                    "desc": "a proper list."
+                },
+                {
+                    "name": "predicate",
+                    "desc": "a designator for a function of one argument that returns a"
+                },
+                {
+                    "name": "predicate",
+                    "desc": "a designator for a function of one argument that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "tail",
+                    "desc": "a list."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "member, member-if, and member-if-not each search list for item or for a\ntop-level element that satisfies the test.  The argument to the predicate\nfunction is an element of list.\nIf some element satisfies the test, the tail of list beginning with this\nelement is returned; otherwise nil is returned.\nlist is searched on the top level only.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (member 2 '(1 2 3)) =>  (2 3)\n      (member 2 '((1 . 2) (3 . 4)) :test-not #'= :key #'cdr) =>  ((3 . 4))\n      (member 'e '(a b c d)) =>  NIL\n      (member-if #'listp '(a b nil c d)) =>  (NIL C D)\n      (member-if #'numberp '(a #\\Space 5/3 foo)) =>  (5/3 FOO)\n      (member-if-not #'zerop\n                      '(3 6 9 11 . 12)\n                      :key #'(lambda (x) (mod x 3))) =>  (11 . 12)\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if list is not a\nproper list.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note find; find-if; find-if-not:: , *Note position; position-if;\nposition-if-not:: ,\n*Note Traversal Rules and Side Effects::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The :test-not parameter is deprecated.\nThe function member-if-not is deprecated.\nIn the following\n      (member 'a '(g (a y) c a d e a f)) =>  (A D E A F)\nthe value returned by member is identical to the portion of the list\nbeginning with a.  Thus rplaca on the result of member can be used to\nalter the part of the list where a was found (assuming a check has been\nmade that member did not return nil).\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: member,  Next: mapc,  Prev: rest,  Up: Conses Dictionary\n\nmember, member-if, member-if-not                                 [Function]\n---------------------------------------------------------------------------\n\n`member'  item      list &key key test test-not =>  tail\n\n`member-if'  predicate list &key key =>  tail\n\n`member-if-not'  predicate list &key key =>  tail\n\nArguments and Values::\n......................\n\nitem--an object.\n\nlist--a proper list.\n\npredicate--a designator for a function of one argument that returns a\ngeneralized boolean.\n\ntest--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\ntest-not--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nkey--a designator for a function of one argument, or nil.\n\ntail--a list.\n\nDescription::\n.............\n\nmember, member-if, and member-if-not each search list for item or for a\ntop-level element that satisfies the test.  The argument to the predicate\nfunction is an element of list.\n\nIf some element satisfies the test, the tail of list beginning with this\nelement is returned; otherwise nil is returned.\n\nlist is searched on the top level only.\n\nExamples::\n..........\n\n      (member 2 '(1 2 3)) =>  (2 3)\n      (member 2 '((1 . 2) (3 . 4)) :test-not #'= :key #'cdr) =>  ((3 . 4))\n      (member 'e '(a b c d)) =>  NIL\n\n      (member-if #'listp '(a b nil c d)) =>  (NIL C D)\n      (member-if #'numberp '(a #\\Space 5/3 foo)) =>  (5/3 FOO)\n      (member-if-not #'zerop\n                      '(3 6 9 11 . 12)\n                      :key #'(lambda (x) (mod x 3))) =>  (11 . 12)\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if list is not a\nproper list.\n\nSee Also::\n..........\n\n*Note find; find-if; find-if-not:: , *Note position; position-if;\nposition-if-not:: ,\n\n*Note Traversal Rules and Side Effects::\n\nNotes::\n.......\n\nThe :test-not parameter is deprecated.\n\nThe function member-if-not is deprecated.\n\nIn the following\n\n      (member 'a '(g (a y) c a d e a f)) =>  (A D E A F)\n\nthe value returned by member is identical to the portion of the list\nbeginning with a.  Thus rplaca on the result of member can be used to\nalter the part of the list where a was found (assuming a check has been\nmade that member did not return nil).\n\n"
+}

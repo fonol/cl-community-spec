@@ -1,0 +1,1152 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: History,  Prev: Scope and Purpose,  Up: Scope
+
+History
+-------
+
+Lisp is a family of languages with a long history.  Early key ideas in
+Lisp were developed by John McCarthy during the 1956 Dartmouth Summer
+Research Project on Artificial Intelligence.  McCarthy's motivation was to
+develop an algebraic list processing language for artificial intelligence
+work.  Implementation efforts for early dialects of Lisp were undertaken on
+the IBM~704, the IBM~7090, the Digital Equipment Corporation (DEC) PDP-1,
+the DEC~PDP-6, and the PDP-10. The primary dialect of Lisp between 1960
+and 1965 was Lisp~1.5. By the early 1970's there were two predominant
+dialects of Lisp, both arising from these early efforts: MacLisp and
+Interlisp.  For further information about very early Lisp dialects, see
+The Anatomy of Lisp or Lisp 1.5 Programmer's Manual.
+
+MacLisp improved on the Lisp~1.5 notion of special variables and error
+handling. MacLisp also introduced the concept of functions that could take
+a variable number of arguments, macros, arrays, non-local dynamic exits,
+fast arithmetic, the first good Lisp compiler, and an emphasis on
+execution speed.  By the end of the 1970's, MacLisp was in use at over 50
+sites.  For further information about Maclisp, see Maclisp Reference
+Manual, Revision~0 or The Revised Maclisp Manual.
+
+Interlisp introduced many ideas into Lisp programming environments and
+methodology. One of the Interlisp ideas that influenced Common Lisp was an
+iteration construct implemented by Warren Teitelman that inspired the loop
+macro used both on the Lisp Machines and in MacLisp, and now in Common
+Lisp.  For further information about Interlisp, see Interlisp Reference
+Manual.
+
+Although the first implementations of Lisp were on the IBM~704 and the
+IBM~7090, later work focussed on the DEC PDP-6 and, later, PDP-10
+computers, the latter being the mainstay of Lisp and artificial
+intelligence work at such places as Massachusetts Institute of Technology
+(MIT), Stanford University, and Carnegie Mellon University (CMU) from the
+mid-1960's through much of the 1970's.  The PDP-10 computer and its
+predecessor the PDP-6 computer were, by design, especially well-suited to
+Lisp because they had 36-bit words and 18-bit addresses. This architecture
+allowed a cons cell to be stored in one word; single instructions could
+extract the car and cdr parts.  The PDP-6 and PDP-10 had fast, powerful
+stack instructions that enabled fast function calling.  But the
+limitations of the PDP-10 were evident by 1973: it supported a small
+number of researchers using Lisp, and the small, 18-bit address space
+(2^18 = 262,144 words) limited the size of a single program.  One response
+to the address space problem was the Lisp Machine, a special-purpose
+computer designed to run Lisp programs.  The other response was to use
+general-purpose computers with address spaces larger than 18~bits, such as
+the DEC VAX and the S-1~Mark~IIA.  For further information about S-1
+Common Lisp, see "S-1 Common Lisp Implementation."
+
+The Lisp machine concept was developed in the late 1960's.  In the early
+1970's, Peter Deutsch, working with Daniel Bobrow, implemented a Lisp on
+the Alto, a single-user minicomputer, using microcode to interpret a
+byte-code implementation language. Shortly thereafter, Richard Greenblatt
+began work on a different hardware and instruction set design at MIT.
+Although the Alto was not a total success as a Lisp machine, a dialect of
+Interlisp known as Interlisp-D became available on the D-series machines
+manufactured by Xerox--the Dorado, Dandelion, Dandetiger, and Dove (or
+Daybreak).  An upward-compatible extension of MacLisp called Lisp Machine
+Lisp became available on the early MIT Lisp Machines.  Commercial Lisp
+machines from Xerox, Lisp Machines (LMI), and Symbolics were on the market
+by 1981.  For further information about Lisp Machine Lisp, see Lisp
+Machine Manual.
+
+During the late 1970's, Lisp Machine Lisp began to expand towards a much
+fuller language.  Sophisticated lambda lists, setf, multiple values, and
+structures like those in Common Lisp are the results of early
+experimentation with programming styles by the Lisp Machine group.  Jonl
+White and others migrated these features to MacLisp.  Around 1980, Scott
+Fahlman and others at CMU began work on a Lisp to run on the Scientific
+Personal Integrated Computing Environment (SPICE) workstation.  One of the
+goals of the project was to design a simpler dialect than Lisp Machine
+Lisp.
+
+The Macsyma group at MIT began a project during the late 1970's called the
+New Implementation of Lisp (NIL) for the VAX, which was headed by White.
+One of the stated goals of the NIL project was to fix many of the
+historic, but annoying, problems with Lisp while retaining significant
+compatibility with MacLisp.  At about the same time, a research group at
+Stanford University and Lawrence Livermore National Laboratory headed by
+Richard P. Gabriel began the design of a Lisp to run on the S-1~Mark~IIA
+supercomputer.  S-1~Lisp, never completely functional, was the test bed
+for adapting advanced compiler techniques to Lisp implementation.
+Eventually the S-1 and NIL groups collaborated.  For further information
+about the NIL project, see "NIL--A Perspective."
+
+The first effort towards Lisp standardization was made in 1969, when
+Anthony Hearn and Martin Griss at the University of Utah defined Standard
+Lisp--a subset of Lisp~1.5 and other dialects--to transport REDUCE, a
+symbolic algebra system.  During the 1970's, the Utah group implemented
+first a retargetable optimizing compiler for Standard Lisp, and then an
+extended implementation known as Portable Standard Lisp (PSL).  By the mid
+1980's, PSL ran on about a dozen kinds of computers.  For further
+information about Standard Lisp, see "Standard LISP Report."
+
+PSL and Franz Lisp--a MacLisp-like dialect for Unix machines--were the
+first examples of widely available Lisp dialects on multiple hardware
+platforms.
+
+One of the most important developments in Lisp occurred during the second
+half of the 1970's: Scheme. Scheme, designed by Gerald J.  Sussman and Guy
+L. Steele Jr., is a simple dialect of Lisp whose design brought to Lisp
+some of the ideas from programming language semantics developed in the
+1960's.  Sussman was one of the prime innovators behind many other
+advances in Lisp technology from the late 1960's through the 1970's.  The
+major contributions of Scheme were lexical scoping, lexical closures,
+first-class continuations, and simplified syntax (no separation of value
+cells and function cells). Some of these contributions made a large impact
+on the design of Common Lisp.  For further information about Scheme, see
+IEEE Standard for the Scheme Programming Language or "Revised^3 Report on
+the Algorithmic Language Scheme."
+
+In the late 1970's object-oriented programming concepts started to make a
+strong impact on Lisp.  At MIT, certain ideas from Smalltalk made their
+way into several widely used programming systems.  Flavors, an
+object-oriented programming system with multiple inheritance, was
+developed at MIT for the Lisp machine community by Howard Cannon and
+others.  At Xerox, the experience with Smalltalk and Knowledge
+Representation Language (KRL) led to the development of Lisp Object
+Oriented Programming System (LOOPS) and later Common LOOPS.  For further
+information on Smalltalk, see Smalltalk-80: The Language and its
+Implementation.  For further information on Flavors, see Flavors: A
+Non-Hierarchical Approach to Object-Oriented Programming.
+
+These systems influenced the design of the Common Lisp Object System
+(CLOS).  CLOS was developed specifically for this standardization effort,
+and was separately written up in "Common Lisp Object System
+Specification."  However, minor details of its design have changed
+slightly since that publication, and that paper should not be taken as an
+authoritative reference to the semantics of the object system as described
+in this document.
+
+In 1980 Symbolics and LMI were developing Lisp Machine Lisp; stock-hardware
+implementation groups were developing NIL, Franz Lisp, and PSL; Xerox was
+developing Interlisp; and the SPICE project at CMU was developing a
+MacLisp-like dialect of Lisp called SpiceLisp.
+
+In April 1981, after a DARPA-sponsored meeting concerning the splintered
+Lisp community, Symbolics, the SPICE project, the NIL project, and the
+S-1~Lisp project joined together to define Common Lisp.  Initially
+spearheaded by White and Gabriel, the driving force behind this grassroots
+effort was provided by Fahlman, Daniel Weinreb, David Moon, Steele,  and
+Gabriel.  Common Lisp was designed as a description of a family of
+languages.  The primary influences on Common Lisp were Lisp Machine Lisp,
+MacLisp, NIL, S-1~Lisp, Spice Lisp, and Scheme.  Common Lisp: The Language
+is a description of that design.  Its semantics were intentionally
+underspecified in places where it was felt that a tight specification
+would overly constrain Common Lisp research and use.
+
+In 1986 X3J13 was formed as a technical working group to produce a draft
+for an ANSI Common Lisp standard. Because of the acceptance of Common
+Lisp, the goals of this group differed from those of the original
+designers. These new goals included stricter standardization for
+portability, an object-oriented programming system, a condition system,
+iteration facilities, and a way to handle large character sets.  To
+accommodate those goals, a new language specification, this document, was
+developed.
+
+
+File: gcl.info,  Node: Organization of the Document,  Next: Referenced Publications,  Prev: Scope,  Up: Introduction (Introduction)
+
+Organization of the Document
+============================
+
+This is a reference document, not a tutorial document.  Where possible and
+convenient, the order of presentation has been chosen so that the more
+primitive topics precede those that build upon them;  however, linear
+readability has not been a priority.
+
+This document is divided into chapters by topic.  Any given chapter might
+contain conceptual material, dictionary entries, or both.
+
+Defined names within the dictionary portion of a chapter are grouped in a
+way that brings related topics into physical proximity.  Many such
+groupings were possible, and no deep significance should be inferred from
+the particular grouping that was chosen.  To see defined names grouped
+alphabetically, consult the index.  For a complete list of defined names,
+see *Note Symbols in the COMMON-LISP Package::.
+
+In order to compensate for the sometimes-unordered portions of this
+document, a glossary has been provided; see *Note Glossary::.  The
+glossary provides connectivity by providing easy access to definitions of
+terms, and in some cases by providing examples or cross references to
+additional conceptual material.
+
+For information about notational conventions used in this document, see
+*Note Definitions::.
+
+For information about conformance, see *Note Conformance::.
+
+For information about extensions and subsets, see *Note Language
+Extensions:: and *Note Language Subsets::.
+
+For information about how programs in the language are parsed by the Lisp
+reader, see *Note Syntax::.
+
+For information about how programs in the language are compiled and
+executed, see *Note Evaluation and Compilation::.
+
+For information about data types, see *Note Types and Classes::.  Not all
+types and classes are defined in this chapter; many are defined in chapter
+corresponding to their topic-for example, the numeric types are defined in
+*Note Numbers::.  For a complete list of standardized types, see
+Figure~4-2.
+
+For information about general purpose control and data flow, see *Note
+Data and Control Flow:: or *Note Iteration::.
+
+
+File: gcl.info,  Node: Referenced Publications,  Next: Definitions,  Prev: Organization of the Document,  Up: Introduction (Introduction)
+
+Referenced Publications
+=======================
+
+*
+     The Anatomy of Lisp, John Allen, McGraw-Hill, Inc., 1978.
+
+*
+     The Art of Computer Programming, Volume 3, Donald E. Knuth,
+     Addison-Wesley Company (Reading, MA), 1973.
+
+*
+     The Art of the Metaobject Protocol, Kiczales et al., MIT Press
+     (Cambridge, MA), 1991.
+
+*
+     "Common Lisp Object System Specification," D. Bobrow, L. DiMichiel,
+     R.P. Gabriel, S. Keene, G. Kiczales, D. Moon, SIGPLAN Notices V23,
+     September, 1988.
+
+*
+     Common Lisp: The Language, Guy L. Steele Jr., Digital Press
+     (Burlington, MA), 1984.
+
+*
+     Common Lisp: The Language, Second Edition, Guy L. Steele Jr., Digital
+     Press (Bedford, MA), 1990.
+
+*
+     Exceptional Situations in Lisp, Kent M. Pitman, Proceedings of the
+     First European Conference on the Practical Application of LISP\/
+     (EUROPAL '90), Churchill College, Cambridge, England, March 27-29,
+     1990.
+
+*
+     Flavors: A Non-Hierarchical Approach to Object-Oriented Programming,
+     Howard I. Cannon, 1982.
+
+*
+     IEEE Standard for Binary Floating-Point Arithmetic, ANSI/IEEE Std
+     754-1985, Institute of Electrical and Electronics Engineers, Inc.
+     (New York), 1985.
+
+*
+     IEEE Standard for the Scheme Programming Language, IEEE Std 1178-1990,
+     Institute of Electrical and Electronic Engineers, Inc. (New York),
+     1991.
+
+*
+     Interlisp Reference Manual, Third Revision, Teitelman, Warren, et al,
+     Xerox Palo Alto Research Center (Palo Alto, CA), 1978.
+
+*
+     ISO 6937/2, Information processing--Coded character sets for text
+     communication--Part 2: Latin alphabetic and non-alphabetic graphic
+     characters, ISO, 1983.
+
+*
+     Lisp 1.5 Programmer's Manual, John McCarthy, MIT Press (Cambridge,
+     MA), August, 1962.
+
+*
+     Lisp Machine Manual, D.L. Weinreb and D.A. Moon, Artificial
+     Intelligence Laboratory, MIT (Cambridge, MA), July, 1981.
+
+*
+     Maclisp Reference Manual, Revision~0, David A. Moon, Project MAC
+     (Laboratory for Computer Science), MIT (Cambridge, MA), March, 1974.
+
+*
+     "NIL--A Perspective," JonL White, Macsyma User's Conference, 1979.
+
+*
+     Performance and Evaluation of Lisp Programs, Richard P. Gabriel, MIT
+     Press (Cambridge, MA), 1985.
+
+*
+     "Principal Values and Branch Cuts in Complex APL," Paul Penfield Jr.,
+     APL 81 Conference Proceedings, ACM SIGAPL (San Francisco, September
+     1981), 248-256.  Proceedings published as APL Quote Quad 12, 1
+     (September 1981).
+
+*
+     The Revised Maclisp Manual, Kent M. Pitman, Technical Report 295,
+     Laboratory for Computer Science, MIT (Cambridge, MA), May 1983.
+
+*
+     "Revised^3 Report on the Algorithmic Language Scheme," Jonathan Rees
+     and William Clinger (editors), SIGPLAN Notices V21, #12, December,
+     1986.
+
+*
+     "S-1 Common Lisp Implementation," R.A. Brooks, R.P. Gabriel, and G.L.
+     Steele, Conference Record of the 1982 ACM Symposium on Lisp and
+     Functional Programming, 108-113, 1982.
+
+*
+     Smalltalk-80: The Language and its Implementation, A. Goldberg and D.
+     Robson, Addison-Wesley, 1983.
+
+*
+     "Standard LISP Report," J.B. Marti, A.C. Hearn, M.L. Griss, and C.
+     Griss, SIGPLAN Notices V14, #10, October, 1979.
+
+*
+     Webster's Third New International Dictionary the English Language,
+     Unabridged, Merriam Webster (Springfield, MA), 1986.
+
+*
+     XP: A Common Lisp Pretty Printing System, R.C. Waters, Memo 1102a,
+     Artificial Intelligence Laboratory, MIT (Cambridge, MA), September
+     1989.
+
+
+File: gcl.info,  Node: Definitions,  Next: Conformance,  Prev: Referenced Publications,  Up: Introduction (Introduction)
+
+Definitions
+===========
+
+This section contains notational conventions and definitions of terms used
+in this manual.
+
+* Menu:
+
+* Notational Conventions::
+* Error Terminology::
+* Sections Not Formally Part Of This Standard::
+* Interpreting Dictionary Entries::
+
+
+File: gcl.info,  Node: Notational Conventions,  Next: Error Terminology,  Prev: Definitions,  Up: Definitions
+
+Notational Conventions
+----------------------
+
+The following notational conventions are used throughout this document.
+
+* Menu:
+
+* Font Key::
+* Modified BNF Syntax::
+* Splicing in Modified BNF Syntax::
+* Indirection in Modified BNF Syntax::
+* Additional Uses for Indirect Definitions in Modified BNF Syntax::
+* Special Symbols::
+* Objects with Multiple Notations::
+* Case in Symbols::
+* Numbers (Objects with Multiple Notations)::
+* Use of the Dot Character::
+* NIL::
+* Designators::
+* Nonsense Words::
+
+
+File: gcl.info,  Node: Font Key,  Next: Modified BNF Syntax,  Prev: Notational Conventions,  Up: Notational Conventions
+
+Font Key
+........
+
+Fonts are used in this document to convey information.
+
+name
+     Denotes a formal term whose meaning is defined in the Glossary.  When
+     this font is used, the Glossary definition takes precedence over
+     normal English usage.
+
+     Sometimes a glossary term appears subscripted, as in "whitespace_2."
+     Such a notation selects one particular Glossary definition out of
+     several, in this case the second.  The subscript notation for
+     Glossary terms is generally used where the context might be
+     insufficient to disambiguate among the available definitions.
+
+name
+     Denotes the introduction of a formal term locally to the current text.
+     There is still a corresponding glossary entry, and is formally
+     equivalent to a use of "name," but the hope is that making such uses
+     conspicuous will save the reader a trip to the glossary in some cases.
+
+name
+     Denotes a symbol in the COMMON-LISP package.  For information about
+     case conventions, see *Note Case in Symbols::.
+
+name
+     Denotes a sample name or piece of code that a programmer might write
+     in Common Lisp.
+
+     This font is also used for certain standardized names that are not
+     names of external symbols of the COMMON-LISP package, such as
+     keywords_1, package names, and loop keywords.
+
+name
+     Denotes the name of a parameter or value.
+
+     In some situations the notation "<<name>>" (i.e., the same font, but
+     with surrounding "angle brackets") is used instead in order to
+     provide better visual separation from surrounding characters.  These
+     "angle brackets" are metasyntactic, and never actually appear in
+     program input or output.
+
+
+File: gcl.info,  Node: Modified BNF Syntax,  Next: Splicing in Modified BNF Syntax,  Prev: Font Key,  Up: Notational Conventions
+
+Modified BNF Syntax
+...................
+
+This specification uses an extended Backus Normal Form (BNF) to describe
+the syntax of Common Lisp macro forms and special forms.  This section
+discusses the syntax of BNF expressions.
+
+
+File: gcl.info,  Node: Splicing in Modified BNF Syntax,  Next: Indirection in Modified BNF Syntax,  Prev: Modified BNF Syntax,  Up: Notational Conventions
+
+Splicing in Modified BNF Syntax
+...............................
+
+The primary extension used is the following:
+
+                                  [[O]]
+
+An expression of this form appears whenever a list of elements is to be
+spliced into a larger structure and the elements can appear in any order.
+The symbol O represents a description of the syntax of some number of
+syntactic elements to be spliced; that description must be of the form
+
+                             O_1 | ... | O_l
+
+where each O_i can be of the form S or of the form S* or of the form S^1.
+
+The expression [[O]] means that a list of the form
+
+                       (O_{i_1}... O_{i_j})  1<= j
+
+is spliced into the enclosing expression, such that if n != m and 1<=
+n,m<= j, then either O_{i_n}!= O_{i_m} or O_{i_n} = O_{i_m} = Q_k, where
+for some 1<= k <= n, O_k is of the form Q_k*.
+
+Furthermore, for each O_{i_n} that is of the form Q_k^1, that element is
+required to appear somewhere in the list to be spliced.
+
+For example, the expression
+
+(x [[A | B* | C]] y)
+
+means that at most one A, any number of B's, and at most one C can occur
+in any order.  It is a description of any of these:
+
+      (x y)
+      (x B A C y)
+      (x A B B B B B C y)
+      (x C B A B B B y)
+
+but not any of these:
+
+      (x B B A A C C y)
+      (x C B C y)
+
+In the first case, both A and C appear too often, and in the second case C
+appears too often.
+
+The notation [[O_1 | O_2 | ...]]^+ adds the additional restriction that at
+least one item from among the possible choices must be used.  For example:
+
+(x [[A | B* | C]]^+ y)
+
+means that at most one A, any number of B's, and at most one C can occur
+in any order, but that in any case at least one of these options must be
+selected.  It is a description of any of these:
+
+      (x B y)
+      (x B A C y)
+      (x A B B B B B C y)
+      (x C B A B B B y)
+
+but not any of these:
+
+      (x y)
+      (x B B A A C C y)
+      (x C B C y)
+
+In the first case, no item was used; in the second case, both A and C
+appear too often; and in the third case C appears too often.
+
+Also, the expression:
+
+(x [[A^1 | B^1 | C]] y)
+
+can generate exactly these and no others:
+
+      (x A B C y)
+      (x A C B y)
+      (x A B y)
+      (x B A C y)
+      (x B C A y)
+      (x B A y)
+      (x C A B y)
+      (x C B A y)
+
+
+File: gcl.info,  Node: Indirection in Modified BNF Syntax,  Next: Additional Uses for Indirect Definitions in Modified BNF Syntax,  Prev: Splicing in Modified BNF Syntax,  Up: Notational Conventions
+
+Indirection in Modified BNF Syntax
+..................................
+
+An indirection extension is introduced in order to make this new syntax
+more readable:
+
+                                    !O
+
+If O is a non-terminal symbol, the right-hand side of its definition is
+substituted for the entire expression !O.  For example, the following BNF
+is equivalent to the BNF in the previous example:
+
+(x [[!O]] y)
+
+O ::=A | B* | C
+
+
+File: gcl.info,  Node: Additional Uses for Indirect Definitions in Modified BNF Syntax,  Next: Special Symbols,  Prev: Indirection in Modified BNF Syntax,  Up: Notational Conventions
+
+Additional Uses for Indirect Definitions in Modified BNF Syntax
+...............................................................
+
+In some cases, an auxiliary definition in the BNF might appear to be unused
+within the BNF, but might still be useful elsewhere.  For example,
+consider the following definitions:
+
+`case'  keyform  {!normal-clause}* [!otherwise-clause] =>  {result}*
+
+`ccase'  keyplace {!normal-clause}* =>  {result}*
+
+`ecase'  keyform  {!normal-clause}* =>  {result}*
+
+normal-clause ::=(keys {form}*)
+
+otherwise-clause ::=({otherwise | t} {form}*)
+
+clause ::=normal-clause | otherwise-clause
+
+Here the term "clause" might appear to be "dead" in that it is not used in
+the BNF.  However, the purpose of the BNF is not just to guide parsing,
+but also to define useful terms for reference in the descriptive text
+which follows.  As such, the term "clause" might appear in text that
+follows, as shorthand for "normal-clause or otherwise-clause."
+
+
+File: gcl.info,  Node: Special Symbols,  Next: Objects with Multiple Notations,  Prev: Additional Uses for Indirect Definitions in Modified BNF Syntax,  Up: Notational Conventions
+
+Special Symbols
+...............
+
+The special symbols described here are used as a notational convenience
+within this document, and are part of neither the Common Lisp language nor
+its environment.
+
+=>
+     This indicates evaluation.  For example:
+
+           (+ 4 5) =>  9
+
+     This means that the result of evaluating the form (+ 4 5) is 9.
+
+     If a form returns multiple values, those values might be shown
+     separated by spaces, line breaks, or commas.  For example:
+
+           (truncate 7 5)
+          =>  1 2
+           (truncate 7 5)
+          =>  1
+             2
+           (truncate 7 5)
+          =>  1, 2
+
+     Each of the above three examples is equivalent, and specifies that
+     (truncate 7 5) returns two values, which are 1 and 2.
+
+     Some conforming implementations actually type an arrow (or some other
+     indicator) before showing return values, while others do not.
+
+OR=>
+     The notation "OR=>" is used to denote one of several possible
+     alternate results.  The example
+
+           (char-name #\a)
+          =>  NIL
+          OR=> "LOWERCASE-a"
+          OR=> "Small-A"
+          OR=> "LA01"
+
+     indicates that nil, "LOWERCASE-a", "Small-A", "LA01" are among the
+     possible results of (char-name #\a)--each with equal preference.
+     Unless explicitly specified otherwise, it should not be assumed that
+     the set of possible results shown is exhaustive.  Formally, the above
+     example is equivalent to
+
+           (char-name #\a) =>  implementation-dependent
+
+     but it is intended to provide additional information to illustrate
+     some of the ways in which it is permitted for implementations to
+     diverge.
+
+NOT=>
+     The notation "NOT=>" is used to denote a result which is not possible.
+     This might be used, for example, in order to emphasize a situation
+     where some anticipated misconception might lead the reader to falsely
+     believe that the result might be possible.  For example,
+
+           (function-lambda-expression
+              (funcall #'(lambda (x) #'(lambda () x)) nil))
+          =>  NIL, true, NIL
+          OR=> (LAMBDA () X), true, NIL
+          NOT=> NIL, false, NIL
+          NOT=> (LAMBDA () X), false, NIL
+
+==
+     This indicates code equivalence. For example:
+
+           (gcd x (gcd y z)) == (gcd (gcd x y) z)
+
+     This means that the results and observable side-effects of evaluating
+     the form (gcd x (gcd y z))  are always the same as the results and
+     observable side-effects of (gcd (gcd x y) z)  for any x, y, and z.
+
+ |>
+     Common Lisp specifies input and output with respect to a
+     non-interactive stream model.  The specific details of how
+     interactive input and output are mapped onto that non-interactive
+     model are implementation-defined.
+
+     For example, conforming implementations are permitted to differ in
+     issues of how interactive input is terminated.  For example, the
+     function read terminates when the final delimiter is typed on a
+     non-interactive stream.  In some implementations, an interactive call
+     to read returns as soon as the final delimiter is typed, even if that
+     delimiter is not a newline.  In other implementations, a final
+     newline is always required.  In still other implementations, there
+     might be a command which "activates" a buffer full of input without
+     the command itself being visible on the program's input stream.
+
+     In the examples in this document, the notation " |> " precedes lines
+     where interactive input and output occurs.  Within such a scenario,
+     "|>>this notation<<|" notates user input.
+
+     For example, the notation
+
+           (+ 1 (print (+ (sqrt (read)) (sqrt (read)))))
+           |>  |>>9 16 <<|
+           |>  7
+          =>  8
+
+     shows an interaction in which ``(+ 1 (print (+ (sqrt (read)) (sqrt
+     (read)))))" is a form to be evaluated, ``9 16 " is interactive input,
+     ``7" is interactive output, and ``8" is the value yielded from the
+     evaluation.
+
+     The use of this notation is intended to disguise small differences in
+     interactive input and output behavior between implementations.
+
+     Sometimes, the non-interactive stream model calls for a newline.  How
+     that newline character is interactively entered is an
+     implementation-defined detail of the user interface, but in that
+     case, either the notation "<Newline>" or "[<-~]" might be used.
+
+           (progn (format t "~&Who? ") (read-line))
+           |>  Who? |>>Fred, Mary, and Sally[<--~]<<|
+          =>  "Fred, Mary, and Sally", false
+
+
+File: gcl.info,  Node: Objects with Multiple Notations,  Next: Case in Symbols,  Prev: Special Symbols,  Up: Notational Conventions
+
+Objects with Multiple Notations
+...............................
+
+Some objects in Common Lisp can be notated in more than one way.  In such
+situations, the choice of which notation to use is technically arbitrary,
+but conventions may exist which convey a "point of view" or "sense of
+intent."
+
+
+File: gcl.info,  Node: Case in Symbols,  Next: Numbers (Objects with Multiple Notations),  Prev: Objects with Multiple Notations,  Up: Notational Conventions
+
+Case in Symbols
+...............
+
+While case is significant in the process of interning a symbol, the Lisp
+reader, by default, attempts to canonicalize the case of a symbol prior to
+interning; see *Note Effect of Readtable Case on the Lisp Reader::.  As
+such, case in symbols is not, by default, significant.  Throughout this
+document, except as explicitly noted otherwise, the case in which a symbol
+appears is not significant; that is, HELLO, Hello, hElLo, and hello are
+all equivalent ways to denote a symbol whose name is "HELLO".
+
+The characters backslash and vertical-bar are used to explicitly quote the
+case and other parsing-related aspects of characters.  As such, the
+notations |hello| and \h\e\l\l\o are equivalent ways to refer to a symbol
+whose name is "hello", and which is distinct from any symbol whose name is
+"HELLO".
+
+The symbols that correspond to Common Lisp defined names have uppercase
+names even though their names generally appear in lowercase in this
+document.
+
+
+File: gcl.info,  Node: Numbers (Objects with Multiple Notations),  Next: Use of the Dot Character,  Prev: Case in Symbols,  Up: Notational Conventions
+
+Numbers
+.......
+
+Although Common Lisp provides a variety of ways for programs to manipulate
+the input and output radix for rational numbers, all numbers in this
+document are in decimal notation unless explicitly noted otherwise.
+
+
+File: gcl.info,  Node: Use of the Dot Character,  Next: NIL,  Prev: Numbers (Objects with Multiple Notations),  Up: Notational Conventions
+
+Use of the Dot Character
+........................
+
+The dot appearing by itself in an expression such as
+
+(item1 item2 . tail)
+
+means that tail represents a list of objects at the end of a list.  For
+example,
+
+(A B C . (D E F))
+
+is notationally equivalent to:
+
+(A B C D E F)
+
+Although dot is a valid constituent character in a symbol, no standardized
+symbols contain the character dot, so a period that follows a reference to
+a symbol at the end of a sentence in this document should always be
+interpreted as a period and never as part of the symbol's name.  For
+example, within this document, a sentence such as ``This sample sentence
+refers to the symbol car." refers to a symbol whose name is "CAR" (with
+three letters), and never to a four-letter symbol "CAR."
+
+
+File: gcl.info,  Node: NIL,  Next: Designators,  Prev: Use of the Dot Character,  Up: Notational Conventions
+
+NIL
+...
+
+nil has a variety of meanings.  It is a symbol in the COMMON-LISP package
+with the name "NIL", it is boolean (and generalized boolean) false, it is
+the empty list, and it is the name of the empty type (a subtype of all
+types).
+
+Within Common Lisp, nil can be notated interchangeably as either NIL or ().
+By convention, the choice of notation offers a hint as to which of its many
+roles it is playing.
+
+  For Evaluation?  Notation  Typically Implied Role       
+  ________________________________________________________
+  Yes              nil       use as a boolean.            
+  Yes              'nil      use as a symbol.             
+  Yes              '()       use as an empty list         
+  No               nil       use as a symbol or boolean.  
+  No               ()        use as an empty list.        
+
+               Figure 1-1: Notations for NIL             
+
+
+Within this document only, nil is also sometimes notated as false to
+emphasize its role as a boolean.
+
+For example:
+
+      (print ())                          ;avoided
+      (defun three nil 3)                 ;avoided
+      '(nil nil)                          ;list of two symbols
+      '(() ())                            ;list of empty lists
+      (defun three () 3)                  ;Emphasize empty parameter list.
+      (append '() '()) =>  ()              ;Emphasize use of empty lists
+      (not nil) =>  true                   ;Emphasize use as Boolean false
+      (get 'nil 'color)                   ;Emphasize use as a symbol
+
+A function is sometimes said to "be false" or "be true" in some
+circumstance.  Since no function object can be the same as nil and all
+function objects represent true when viewed as booleans, it would be
+meaningless to say that the function was literally false and uninteresting
+to say that it was literally true.  Instead, these phrases are just
+traditional alternative ways of saying that the function "returns false"
+or "returns true," respectively.
+
+
+File: gcl.info,  Node: Designators,  Next: Nonsense Words,  Prev: NIL,  Up: Notational Conventions
+
+Designators
+...........
+
+A designator is an object that denotes another object.
+
+Where a parameter of an operator is described as a designator, the
+description of the operator is written in a way that assumes that the
+value of the parameter is the denoted object; that is, that the parameter
+is already of the denoted type.  (The specific nature of the object
+denoted by a "<<type>> designator" or a "designator for a <<type>>" can be
+found in the Glossary entry for "<<type>> designator.")
+
+For example, "nil" and "the value of *standard-output*" are operationally
+indistinguishable as stream designators.  Similarly, the symbol foo and
+the string "FOO" are operationally indistinguishable as string designators.
+
+Except as otherwise noted, in a situation where the denoted object might
+be used multiple times, it is implementation-dependent whether the object
+is coerced only once or whether the coercion occurs each time the object
+must be used.
+
+For example, mapcar receives a function designator as an argument, and its
+description is written as if this were simply a function.  In fact, it is
+implementation-dependent whether the function designator is coerced right
+away or whether it is carried around internally in the form that it was
+given as an argument and re-coerced each time it is needed.  In most
+cases, conforming programs cannot detect the distinction, but there are
+some pathological situations (particularly those involving self-redefining
+or mutually-redefining functions) which do conform and which can detect
+this difference.  The following program is a conforming program, but might
+or might not have portably correct results, depending on whether its
+correctness depends on one or the other of the results:
+
+      (defun add-some (x)
+        (defun add-some (x) (+ x 2))
+        (+ x 1)) =>  ADD-SOME
+      (mapcar 'add-some '(1 2 3 4))
+     =>  (2 3 4 5)
+     OR=> (2 4 5 6)
+
+In a few rare situations, there may be a need in a dictionary entry to
+refer to the object that was the original designator for a parameter.
+Since naming the parameter would refer to the denoted object, the phrase
+"the <<parameter-name>> designator" can be used to refer to the designator
+which was the argument from which the value of <<parameter-name>> was
+computed.
+
+
+File: gcl.info,  Node: Nonsense Words,  Prev: Designators,  Up: Notational Conventions
+
+Nonsense Words
+..............
+
+When a word having no pre-attached semantics is required (e.g., in an
+example), it is common in the Lisp community to use one of the words
+"foo," "bar," "baz," and "quux."  For example, in
+
+      (defun foo (x) (+ x 1))
+
+the use of the name foo is just a shorthand way of saying "please
+substitute your favorite name here."
+
+These nonsense words have gained such prevalance of usage, that it is
+commonplace for newcomers to the community to begin to wonder if there is
+an attached semantics which they are overlooking--there is not.
+
+
+File: gcl.info,  Node: Error Terminology,  Next: Sections Not Formally Part Of This Standard,  Prev: Notational Conventions,  Up: Definitions
+
+Error Terminology
+-----------------
+
+Situations in which errors might, should, or must be signaled are described
+in the standard.  The wording used to describe such situations is intended
+to have precise meaning. The following list is a glossary of those
+meanings.
+
+Safe code
+     This is code processed with the safety optimization at its highest
+     setting (3).  safety is a lexical property of code.  The phrase "the
+     function F should signal an error" means that if F is invoked from
+     code processed with the highest safety optimization, an error is
+     signaled.  It is implementation-dependent whether F or the calling
+     code signals the error.
+
+Unsafe code
+     This is code processed with lower safety levels.
+
+     Unsafe code might do error checking.  Implementations are permitted to
+     treat all code as safe code all the time.
+
+An error is signaled
+     This means that an error is signaled in both safe and unsafe code.
+     Conforming code may rely on the fact that the error is signaled in
+     both safe and unsafe code.  Every implementation is required to
+     detect the error in both safe and unsafe code. For example, "an error
+     is signaled if unexport is given a symbol not accessible in the
+     current package."
+
+     If an explicit error type is not specified, the default is error.
+
+An error should be signaled
+     This means that an error is signaled in safe code, and an error might
+     be signaled in unsafe code.  Conforming code may rely on the fact
+     that the error is signaled in safe code.  Every implementation is
+     required to detect the error at least in safe code.  When the error
+     is not signaled, the "consequences are undefined" (see below).  For
+     example, "+ should signal an error of type type-error if any argument
+     is not of type number."
+
+Should be prepared to signal an error
+     This is similar to "should be signaled" except that it does not imply
+     that `extra effort' has to be taken on the part of an operator to
+     discover an erroneous situation if the normal action of that operator
+     can be performed successfully with only `lazy' checking.  An
+     implementation is always permitted to signal an error, but even in
+     safe code, it is only required to signal the error when failing to
+     signal it might lead to incorrect results.  In unsafe code, the
+     consequences are undefined.
+
+     For example, defining that ``find should be prepared to signal an
+     error of type type-error if its second argument is not a proper list"
+     does not imply that an error is always signaled.  The form
+
+           (find 'a '(a b . c))
+
+     must either signal an error of type type-error in safe code, else
+     return A.  In unsafe code, the consequences are undefined.  By
+     contrast,
+
+           (find 'd '(a b . c))
+
+     must signal an error of type type-error in safe code.  In unsafe
+     code, the consequences are undefined.  Also,
+
+           (find 'd '#1=(a b . #1#))
+
+     in safe code might return nil (as an implementation-defined
+     extension), might never return, or might signal an error of type
+     type-error.  In unsafe code, the consequences are undefined.
+
+     Typically, the "should be prepared to signal" terminology is used in
+     type checking situations where there are efficiency considerations
+     that make it impractical to detect errors that are not relevant to the
+     correct operation of the operator.
+
+The consequences are unspecified
+     This means that the consequences are unpredictable but harmless.
+     Implementations are permitted to specify the consequences of this
+     situation. No conforming code may depend on the results or effects of
+     this situation, and all conforming code is required to treat the
+     results and effects of this situation as unpredictable but harmless.
+     For example, "if the second argument to shared-initialize specifies a
+     name that does not correspond to any slots accessible in the object,
+     the results are unspecified."
+
+The consequences are undefined
+     This means that the consequences are unpredictable. The consequences
+     may range from harmless to fatal.  No conforming code may depend on
+     the results or effects. Conforming code must treat the consequences as
+     unpredictable.  In places where the words "must," "must not," or "may
+     not" are used, then "the consequences are undefined" if the stated
+     requirement is not met and no specific consequence is explicitly
+     stated.  An implementation is permitted to signal an error in this
+     case.
+
+     For example: "Once a name has been declared by defconstant to be
+     constant, any further assignment or binding of that variable has
+     undefined consequences."
+
+An error might be signaled
+     This means that the situation has undefined consequences; however, if
+     an error is signaled, it is of the specified type.  For example,
+     "open might signal an error of type file-error."
+
+The return values are unspecified
+     This means that only the number and nature of the return values of a
+     form are not specified.  However, the issue of whether or not any
+     side-effects or transfer of control occurs is still well-specified.
+
+     A program can be well-specified even if it uses a function whose
+     returns values are unspecified.  For example, even if the return
+     values of some function F are unspecified, an expression such as
+     (length (list (F))) is still well-specified because it does not rely
+     on any particular aspect of the value or values returned by F.
+
+Implementations may be extended to cover this situation
+     This means that the situation has undefined consequences; however, a
+     conforming implementation is free to treat the situation in a more
+     specific way.  For example, an implementation might define that
+     an error is signaled, or that      an error should be signaled, or
+     even that a certain well-defined non-error behavior occurs.
+
+     No conforming code may depend on the consequences of such a situation;
+     all conforming code must treat the consequences of the situation as
+     undefined. Implementations are required to document how the situation
+     is treated.
+
+     For example, "implementations may be extended to define other type
+     specifiers to have a corresponding class."
+
+Implementations are free to extend the syntax
+     This means that in this situation implementations are permitted to
+     define unambiguous extensions to the syntax of the form being
+     described.  No conforming code may depend on this extension.
+     Implementations are required to document each such extension. All
+     conforming code is required to treat the syntax as meaningless. The
+     standard might disallow certain extensions while allowing others. For
+     example, "no implementation is free to extend the syntax of defclass."
+
+A warning might be issued
+     This means that implementations are encouraged to issue a warning if
+     the context is appropriate (e.g., when compiling).  However, a
+     conforming implementation is not required to issue a warning.
+
+
+File: gcl.info,  Node: Sections Not Formally Part Of This Standard,  Next: Interpreting Dictionary Entries,  Prev: Error Terminology,  Up: Definitions
+
+Sections Not Formally Part Of This Standard
+-------------------------------------------
+
+Front matter and back matter, such as the "Table of Contents," "Index,"
+"Figures," "Credits," and "Appendix" are not considered formally part of
+this standard, so that we retain the flexibility needed to update these
+sections even at the last minute without fear of needing a formal vote to
+change those parts of the document.  These items are quite short and very
+useful, however, and it is not recommended that they be removed even in an
+abridged version of this document.
+
+Within the concept sections, subsections whose names begin with the words
+"Note" or "Notes" or "Example" or "Examples" are provided for illustration
+purposes only, and are not considered part of the standard.
+
+An attempt has been made to place these sections last in their parent
+section, so that they could be removed without disturbing the contiguous
+numbering of the surrounding sections in order to produce a document of
+smaller size.
+
+Likewise, the "Examples" and "Notes" sections in a dictionary entry are
+not considered part of the standard and could be removed if necessary.
+
+Nevertheless, the examples provide important clarifications and consistency
+checks for the rest of the material, and such abridging is not recommended
+unless absolutely unavoidable.
+
+
+File: gcl.info,  Node: Interpreting Dictionary Entries,  Prev: Sections Not Formally Part Of This Standard,  Up: Definitions
+
+Interpreting Dictionary Entries
+-------------------------------
+
+The dictionary entry for each defined name is partitioned into sections.
+Except as explicitly indicated otherwise below, each section is introduced
+by a label identifying that section.  The omission of a section implies
+that the section is either not applicable, or would provide no interesting
+information.
+
+This section defines the significance of each potential section in a
+dictionary entry.
+
+* Menu:
+
+* The "Affected By" Section of a Dictionary Entry::
+* The "Arguments" Section of a Dictionary Entry::
+* The "Arguments and Values" Section of a Dictionary Entry::
+* The "Binding Types Affected" Section of a Dictionary Entry::
+* The "Class Precedence List" Section of a Dictionary Entry::
+* Dictionary Entries for Type Specifiers::
+* The "Compound Type Specifier Kind" Section of a Dictionary Entry::
+* The "Compound Type Specifier Syntax" Section of a Dictionary Entry::
+* The "Compound Type Specifier Arguments" Section of a Dictionary Entry::
+* The "Compound Type Specifier Description" Section of a Dictionary Entry::
+* The "Constant Value" Section of a Dictionary Entry::
+* The "Description" Section of a Dictionary Entry::
+* The "Examples" Section of a Dictionary Entry::
+* The "Exceptional Situations" Section of a Dictionary Entry::
+* The "Initial Value" Section of a Dictionary Entry::
+* The "Argument Precedence Order" Section of a Dictionary Entry::
+* The "Method Signature" Section of a Dictionary Entry::
+* The "Name" Section of a Dictionary Entry::
+* The "Notes" Section of a Dictionary Entry::
+* The "Pronunciation" Section of a Dictionary Entry::
+* The "See Also" Section of a Dictionary Entry::
+* The "Side Effects" Section of a Dictionary Entry::
+* The "Supertypes" Section of a Dictionary Entry::
+* The "Syntax" Section of a Dictionary Entry::
+* Special "Syntax" Notations for Overloaded Operators::
+* Naming Conventions for Rest Parameters::
+* Requiring Non-Null Rest Parameters in the "Syntax" Section::
+* Return values in the "Syntax" Section::
+* No Arguments or Values in the "Syntax" Section::
+* Unconditional Transfer of Control in the "Syntax" Section::
+* The "Valid Context" Section of a Dictionary Entry::
+* The "Value Type" Section of a Dictionary Entry::
+
+
+File: gcl.info,  Node: The ``Affected By'' Section of a Dictionary Entry,  Next: The ``Arguments'' Section of a Dictionary Entry,  Prev: Interpreting Dictionary Entries,  Up: Interpreting Dictionary Entries
+
+The "Affected By" Section of a Dictionary Entry
+...............................................
+
+For an operator, anything that can affect the side effects of or values
+returned by the operator.
+
+For a variable, anything that can affect the value of the variable
+including functions that bind or assign it.
+
+
+File: gcl.info,  Node: The ``Arguments'' Section of a Dictionary Entry,  Next: The ``Arguments and Values'' Section of a Dictionary Entry,  Prev: The ``Affected By'' Section of a Dictionary Entry,  Up: Interpreting Dictionary Entries
+
+The "Arguments" Section of a Dictionary Entry
+.............................................
+
+This information describes the syntax information of entries such as those
+for declarations and special expressions which are never evaluated as
+forms, and so do not return values.
+
+
+File: gcl.info,  Node: The ``Arguments and Values'' Section of a Dictionary Entry,  Next: The ``Binding Types Affected'' Section of a Dictionary Entry,  Prev: The ``Arguments'' Section of a Dictionary Entry,  Up: Interpreting Dictionary Entries
+
+The "Arguments and Values" Section of a Dictionary Entry
+........................................................
+
+An English language description of what arguments the operator accepts and
+what values it returns, including information about defaults for parameters
+corresponding to omittable arguments (such as optional parameters and
+keyword parameters).  For special operators and macros, their arguments
+are not evaluated unless it is explicitly stated in their descriptions
+that they are evaluated.
+
+
+File: gcl.info,  Node: The ``Binding Types Affected'' Section of a Dictionary Entry,  Next: The ``Class Precedence List'' Section of a Dictionary Entry,  Prev: The ``Arguments and Values'' Section of a Dictionary Entry,  Up: Interpreting Dictionary Entries
+
+The "Binding Types Affected" Section of a Dictionary Entry
+..........................................................
+
+This information alerts the reader to the kinds of bindings that might
+potentially be affected by a declaration.  Whether in fact any particular
+such binding is actually affected is dependent on additional factors as
+well.  See the "Description" section of the declaration in question for
+details.
+

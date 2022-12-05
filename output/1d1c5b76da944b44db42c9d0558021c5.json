@@ -1,0 +1,97 @@
+{
+    "name": "mismatch",
+    "prev": "search",
+    "next": "replace",
+    "up": "Sequences Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "mismatch"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "mismatch",
+                    "text": " sequence-1 sequence-2 &key from-end test test-not key start1start2 end1 end2\n=>  position\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "Sequence-1",
+                    "desc": "a sequence."
+                },
+                {
+                    "name": "Sequence-2",
+                    "desc": "a sequence."
+                },
+                {
+                    "name": "from-end",
+                    "desc": "a generalized boolean.  The default is false."
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "start1, end1",
+                    "desc": "bounding index designators of sequence-1.  The defaults for"
+                },
+                {
+                    "name": "start1, end1",
+                    "desc": "bounding index designators of sequence-1.  The defaults forstart1 and end1 are 0 and nil, respectively.\n"
+                },
+                {
+                    "name": "start2, end2",
+                    "desc": "bounding index designators of sequence-2.  The defaults for"
+                },
+                {
+                    "name": "start2, end2",
+                    "desc": "bounding index designators of sequence-2.  The defaults forstart2 and end2 are 0 and nil, respectively.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "position",
+                    "desc": "a bounding index of sequence-1, or nil."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "The specified subsequences of sequence-1 and sequence-2 are compared\nelement-wise.\nThe key argument is used for both the sequence-1 and the sequence-2.\nIf sequence-1 and sequence-2 are of equal length and match in every\nelement, the result is false.  Otherwise, the result is a non-negative\ninteger, the index within sequence-1 of the leftmost or rightmost\nposition, depending on from-end, at which the two subsequences fail to\nmatch.  If one subsequence is shorter than and a matching prefix of the\nother, the result is the index relative to sequence-1 beyond the last\nposition tested.\nIf from-end is true, then one plus the index of the rightmost position in\nwhich the sequences differ is returned.  In effect, the subsequences are\naligned at their right-hand ends; then, the last elements are compared,\nthe penultimate elements, and so on.  The index returned is an index\nrelative to sequence-1.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (mismatch \"abcd\" \"ABCDE\" :test #'char-equal) =>  4\n      (mismatch '(3 2 1 1 2 3) '(1 2 3) :from-end t) =>  3\n      (mismatch '(1 2 3) '(2 3 4) :test-not #'eq :key #'oddp) =>  NIL\n      (mismatch '(1 2 3 4 5 6) '(3 4 5 6 7) :start1 2 :end2 4) =>  NIL\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note Traversal Rules and Side Effects::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The :test-not argument is deprecated.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: mismatch,  Next: replace,  Prev: search,  Up: Sequences Dictionary\n\nmismatch                                                         [Function]\n---------------------------------------------------------------------------\n\n`mismatch'  sequence-1 sequence-2 &key from-end test test-not key start1\nstart2 end1 end2\n=>  position\n\nArguments and Values::\n......................\n\nSequence-1--a sequence.\n\nSequence-2--a sequence.\n\nfrom-end--a generalized boolean.  The default is false.\n\ntest--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\ntest-not--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nstart1, end1--bounding index designators of sequence-1.  The defaults for\nstart1 and end1 are 0 and nil, respectively.\n\nstart2, end2--bounding index designators of sequence-2.  The defaults for\nstart2 and end2 are 0 and nil, respectively.\n\nkey--a designator for a function of one argument, or nil.\n\nposition--a bounding index of sequence-1, or nil.\n\nDescription::\n.............\n\nThe specified subsequences of sequence-1 and sequence-2 are compared\nelement-wise.\n\nThe key argument is used for both the sequence-1 and the sequence-2.\n\nIf sequence-1 and sequence-2 are of equal length and match in every\nelement, the result is false.  Otherwise, the result is a non-negative\ninteger, the index within sequence-1 of the leftmost or rightmost\nposition, depending on from-end, at which the two subsequences fail to\nmatch.  If one subsequence is shorter than and a matching prefix of the\nother, the result is the index relative to sequence-1 beyond the last\nposition tested.\n\nIf from-end is true, then one plus the index of the rightmost position in\nwhich the sequences differ is returned.  In effect, the subsequences are\naligned at their right-hand ends; then, the last elements are compared,\nthe penultimate elements, and so on.  The index returned is an index\nrelative to sequence-1.\n\nExamples::\n..........\n\n      (mismatch \"abcd\" \"ABCDE\" :test #'char-equal) =>  4\n      (mismatch '(3 2 1 1 2 3) '(1 2 3) :from-end t) =>  3\n      (mismatch '(1 2 3) '(2 3 4) :test-not #'eq :key #'oddp) =>  NIL\n      (mismatch '(1 2 3 4 5 6) '(3 4 5 6 7) :start1 2 :end2 4) =>  NIL\n\nSee Also::\n..........\n\n*Note Traversal Rules and Side Effects::\n\nNotes::\n.......\n\nThe :test-not argument is deprecated.\n\n"
+}

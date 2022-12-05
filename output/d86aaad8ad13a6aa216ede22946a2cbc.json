@@ -1,0 +1,61 @@
+{
+    "name": "deftype",
+    "prev": "coerce",
+    "next": "subtypep",
+    "up": "Types and Classes Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "deftype"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "deftype",
+                    "text": " name lambda-list [[{declaration}* | documentation]] {form}* =>name\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "name",
+                    "desc": "a symbol."
+                },
+                {
+                    "name": "lambda-list",
+                    "desc": "a deftype lambda list."
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "documentation",
+                    "desc": "a string; not evaluated."
+                },
+                {
+                    "name": "form",
+                    "desc": "a form."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "deftype defines a derived type specifier named name.\nThe meaning of the new type specifier is given in terms of a function\nwhich expands the type specifier into another type specifier, which itself\nwill be expanded if it contains references to another derived type\nspecifier.\nThe newly defined type specifier may be referenced as a list of the form\n(name arg_1 arg_2 ...)\\/.  The number of arguments must be appropriate to\nthe lambda-list.  If the new type specifier takes no arguments, or if all\nof its arguments are optional, the type specifier may be used as an atomic\ntype specifier.\nThe argument expressions to the type specifier, arg_1 ... arg_n, are not\nevaluated.  Instead, these literal objects become the objects to which\ncorresponding parameters become bound.\nThe body of the deftype form\n(but not the lambda-list)\nis\nimplicitly enclosed in a block named name,\nand is evaluated as an implicit progn, returning a new type specifier.\nThe lexical environment of the body is the one which was current at the\ntime the deftype form was evaluated, augmented by the variables in the\nlambda-list.\nRecursive expansion of the type specifier returned as the expansion must\nterminate, including the expansion of type specifiers which are nested\nwithin the expansion.\nThe consequences are undefined if the result of fully expanding a type\nspecifier contains any circular structure, except within the objects\nreferred to by member and eql type specifiers.\nDocumentation is attached to name as a documentation string of kind type.\nIf a deftype form appears as a top level form, the compiler must ensure\nthat the name is recognized in subsequent type declarations.  The\nprogrammer must ensure that the body of a deftype form can be evaluated at\ncompile time if the name is referenced in subsequent type declarations.\nIf the expansion of a type specifier is not defined fully at compile time\n(perhaps because it expands into an unknown type specifier or a satisfies\nof a named function that isn't defined in the compile-time environment),\nan implementation may ignore any references to this type in declarations\nand/or signal a warning.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defun equidimensional (a)\n        (or (< (array-rank a) 2)\n            (apply #'= (array-dimensions a)))) =>  EQUIDIMENSIONAL\n      (deftype square-matrix (&optional type size)\n        `(and (array ,type (,size ,size))\n              (satisfies equidimensional))) =>  SQUARE-MATRIX\n"
+        },
+        {
+            "type": "See Also",
+            "text": "declare, *Note defmacro:: , *Note documentation; (setf documentation):: ,\n*Note Type Specifiers::, *Note Syntactic Interaction of Documentation\nStrings and Declarations::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: deftype,  Next: subtypep,  Prev: coerce,  Up: Types and Classes Dictionary\n\ndeftype                                                             [Macro]\n---------------------------------------------------------------------------\n\n`deftype'  name lambda-list [[{declaration}* | documentation]] {form}* =>\nname\n\nArguments and Values::\n......................\n\nname--a symbol.\n\nlambda-list--a deftype lambda list.\n\ndeclaration--a declare expression; not evaluated.\n\ndocumentation--a string; not evaluated.\n\nform--a form.\n\nDescription::\n.............\n\ndeftype defines a derived type specifier named name.\n\nThe meaning of the new type specifier is given in terms of a function\nwhich expands the type specifier into another type specifier, which itself\nwill be expanded if it contains references to another derived type\nspecifier.\n\nThe newly defined type specifier may be referenced as a list of the form\n(name arg_1 arg_2 ...)\\/.  The number of arguments must be appropriate to\nthe lambda-list.  If the new type specifier takes no arguments, or if all\nof its arguments are optional, the type specifier may be used as an atomic\ntype specifier.\n\nThe argument expressions to the type specifier, arg_1 ... arg_n, are not\nevaluated.  Instead, these literal objects become the objects to which\ncorresponding parameters become bound.\n\nThe body of the deftype form\n\n(but not the lambda-list)\n\nis\n\nimplicitly enclosed in a block named name,\n\nand is evaluated as an implicit progn, returning a new type specifier.\n\nThe lexical environment of the body is the one which was current at the\ntime the deftype form was evaluated, augmented by the variables in the\nlambda-list.\n\nRecursive expansion of the type specifier returned as the expansion must\nterminate, including the expansion of type specifiers which are nested\nwithin the expansion.\n\nThe consequences are undefined if the result of fully expanding a type\nspecifier contains any circular structure, except within the objects\nreferred to by member and eql type specifiers.\n\nDocumentation is attached to name as a documentation string of kind type.\n\nIf a deftype form appears as a top level form, the compiler must ensure\nthat the name is recognized in subsequent type declarations.  The\nprogrammer must ensure that the body of a deftype form can be evaluated at\ncompile time if the name is referenced in subsequent type declarations.\nIf the expansion of a type specifier is not defined fully at compile time\n(perhaps because it expands into an unknown type specifier or a satisfies\nof a named function that isn't defined in the compile-time environment),\nan implementation may ignore any references to this type in declarations\nand/or signal a warning.\n\nExamples::\n..........\n\n      (defun equidimensional (a)\n        (or (< (array-rank a) 2)\n            (apply #'= (array-dimensions a)))) =>  EQUIDIMENSIONAL\n      (deftype square-matrix (&optional type size)\n        `(and (array ,type (,size ,size))\n              (satisfies equidimensional))) =>  SQUARE-MATRIX\n\nSee Also::\n..........\n\ndeclare, *Note defmacro:: , *Note documentation; (setf documentation):: ,\n*Note Type Specifiers::, *Note Syntactic Interaction of Documentation\nStrings and Declarations::\n\n"
+}

@@ -1,0 +1,1464 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: Objects Dictionary,  Prev: Generic Functions and Methods,  Up: Objects
+
+Objects Dictionary
+==================
+
+* Menu:
+
+* function-keywords::
+* ensure-generic-function::
+* allocate-instance::
+* reinitialize-instance::
+* shared-initialize::
+* update-instance-for-different-class::
+* update-instance-for-redefined-class::
+* change-class::
+* slot-boundp::
+* slot-exists-p::
+* slot-makunbound::
+* slot-missing::
+* slot-unbound::
+* slot-value::
+* method-qualifiers::
+* no-applicable-method::
+* no-next-method::
+* remove-method::
+* make-instance::
+* make-instances-obsolete::
+* make-load-form::
+* make-load-form-saving-slots::
+* with-accessors::
+* with-slots::
+* defclass::
+* defgeneric::
+* defmethod::
+* find-class::
+* next-method-p::
+* call-method::
+* call-next-method::
+* compute-applicable-methods::
+* define-method-combination::
+* find-method::
+* add-method::
+* initialize-instance::
+* class-name::
+* (setf class-name)::
+* class-of::
+* unbound-slot::
+* unbound-slot-instance::
+
+
+File: gcl.info,  Node: function-keywords,  Next: ensure-generic-function,  Prev: Objects Dictionary,  Up: Objects Dictionary
+
+function-keywords                               [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`function-keywords'  method =>  keys, allow-other-keys-p
+
+Method Signatures::
+...................
+
+`function-keywords'  (method standard-method)
+
+Arguments and Values::
+......................
+
+method--a method.
+
+keys--a list.
+
+allow-other-keys-p--a generalized boolean.
+
+Description::
+.............
+
+Returns the keyword parameter specifiers for a method.
+
+Two values are returned: a list of the explicitly named keywords and a
+generalized boolean that states whether &allow-other-keys had been
+specified in the method definition.
+
+Examples::
+..........
+
+      (defmethod gf1 ((a integer) &optional (b 2)
+                      &key (c 3) ((:dee d) 4) e ((eff f)))
+        (list a b c d e f))
+     =>  #<STANDARD-METHOD GF1 (INTEGER) 36324653>
+      (find-method #'gf1 '() (list (find-class 'integer)))
+     =>  #<STANDARD-METHOD GF1 (INTEGER) 36324653>
+      (function-keywords *)
+     =>  (:C :DEE :E EFF), false
+      (defmethod gf2 ((a integer))
+        (list a b c d e f))
+     =>  #<STANDARD-METHOD GF2 (INTEGER) 42701775>
+      (function-keywords (find-method #'gf1 '() (list (find-class 'integer))))
+     =>  (), false
+      (defmethod gf3 ((a integer) &key b c d &allow-other-keys)
+        (list a b c d e f))
+      (function-keywords *)
+     =>  (:B :C :D), true
+
+Affected By::
+.............
+
+defmethod
+
+See Also::
+..........
+
+*Note defmethod::
+
+
+File: gcl.info,  Node: ensure-generic-function,  Next: allocate-instance,  Prev: function-keywords,  Up: Objects Dictionary
+
+ensure-generic-function                                          [Function]
+---------------------------------------------------------------------------
+
+`ensure-generic-function'  function-name &key argument-precedence-order
+declare documentation environment generic-function-class lambda-list
+method-class method-combination
+=>  generic-function
+
+Arguments and Values::
+......................
+
+function-name--a function name.
+
+The keyword arguments correspond to the option arguments of defgeneric,
+except that the :method-class and :generic-function-class arguments can be
+class objects as well as names.
+
+Method-combination - method combination object.
+
+Environment - the same as the &environment argument to macro expansion
+functions and is used to distinguish between compile-time and run-time
+environments.
+
+[Editorial Note by KMP: What about documentation. Missing from this
+arguments enumeration, and confusing in description below.]
+
+generic-function--a generic function object.
+
+Description::
+.............
+
+The function ensure-generic-function is used to define a globally named
+generic function with no methods or to specify or modify options and
+declarations that pertain to a globally named generic function as a whole.
+
+If function-name is not fbound in the global environment, a new generic
+function is created.  If
+
+(fdefinition function-name)
+
+is an ordinary function, a macro, or a special operator, an error is
+signaled.
+
+If function-name is a list, it must be of the form (setf symbol).  If
+function-name specifies a generic function that has a different value for
+any of the following arguments, the generic function is modified to have
+the new value: :argument-precedence-order, :declare, :documentation,
+:method-combination.
+
+If function-name specifies a generic function that has a different value
+for the :lambda-list argument, and the new value is congruent with the
+lambda lists of all existing methods or there are no methods, the value is
+changed; otherwise an error is signaled.
+
+If function-name specifies a generic function that has a different value
+for the :generic-function-class argument and if the new generic function
+class is compatible with the old, change-class is called to change the
+class of the generic function; otherwise an error is signaled.
+
+If function-name specifies a generic function that has a different value
+for the :method-class argument, the value is changed, but any existing
+methods are not changed.
+
+Affected By::
+.............
+
+Existing function binding of function-name.
+
+Exceptional Situations::
+........................
+
+If
+
+(fdefinition function-name)
+
+is an ordinary function, a macro, or a special operator, an error of type
+error is signaled.
+
+If function-name specifies a generic function that has a different value
+for the :lambda-list argument, and the new value is not congruent with the
+lambda list of any existing method, an error of type error is signaled.
+
+If function-name specifies a generic function that has a different value
+for the :generic-function-class argument and if the new generic function
+class not is compatible with the old, an error of type error is signaled.
+
+See Also::
+..........
+
+*Note defgeneric::
+
+
+File: gcl.info,  Node: allocate-instance,  Next: reinitialize-instance,  Prev: ensure-generic-function,  Up: Objects Dictionary
+
+allocate-instance                               [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`allocate-instance'  class &rest initargs &key &allow-other-keys =>
+new-instance
+
+Method Signatures::
+...................
+
+`allocate-instance'  (class standard-class) &rest initargs
+
+`allocate-instance'  (class structure-class) &rest initargs
+
+Arguments and Values::
+......................
+
+class--a class.
+
+initargs--a list of keyword/value pairs (initialization argument names and
+values).
+
+new-instance--an object whose class is class.
+
+Description::
+.............
+
+The generic function allocate-instance creates and returns a new instance
+of the class, without initializing it.  When the class is a standard
+class, this means that the slots are unbound; when the class is a
+structure class, this means the slots' values are unspecified.
+
+The caller of allocate-instance is expected to have already checked the
+initialization arguments.
+
+The generic function allocate-instance is called by make-instance, as
+described in *Note Object Creation and Initialization::.
+
+See Also::
+..........
+
+*Note defclass:: , *Note make-instance:: , *Note class-of:: , *Note Object
+Creation and Initialization::
+
+Notes::
+.......
+
+The consequences of adding methods to allocate-instance is unspecified.
+This capability might be added by the Metaobject Protocol.
+
+
+File: gcl.info,  Node: reinitialize-instance,  Next: shared-initialize,  Prev: allocate-instance,  Up: Objects Dictionary
+
+reinitialize-instance                           [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`reinitialize-instance'  instance &rest initargs &key &allow-other-keys =>
+instance
+
+Method Signatures::
+...................
+
+`reinitialize-instance'  (instance standard-object) &rest initargs
+
+Arguments and Values::
+......................
+
+instance--an object.
+
+initargs--an initialization argument list.
+
+Description::
+.............
+
+The generic function reinitialize-instance can be used to change the
+values of local slots of an instance according to initargs.  This generic
+function can be called by users.
+
+The system-supplied primary method for reinitialize-instance checks the
+validity of initargs and signals an error if an initarg is supplied that
+is not declared as valid.  The method then calls the generic function
+shared-initialize with the following arguments:  the instance, nil (which
+means no slots should be initialized according to their initforms), and the
+initargs it received.
+
+Side Effects::
+..............
+
+The generic function reinitialize-instance changes the values of local
+slots.
+
+Exceptional Situations::
+........................
+
+The system-supplied primary method for reinitialize-instance signals an
+error if an initarg is supplied that is not declared as valid.
+
+See Also::
+..........
+
+*Note Initialize-Instance:: , *Note Shared-Initialize:: , *Note
+update-instance-for-redefined-class:: , *Note
+update-instance-for-different-class:: , *Note slot-boundp:: , *Note
+slot-makunbound:: , *Note Reinitializing an Instance::, *Note Rules for
+Initialization Arguments::, *Note Declaring the Validity of Initialization
+Arguments::
+
+Notes::
+.......
+
+Initargs are declared as valid by using the :initarg option to defclass,
+or by defining methods for reinitialize-instance or shared-initialize.
+The keyword name of each keyword parameter specifier in the lambda list of
+any method defined on reinitialize-instance or shared-initialize is
+declared as a valid initialization argument name for all classes for which
+that method is applicable.
+
+
+File: gcl.info,  Node: shared-initialize,  Next: update-instance-for-different-class,  Prev: reinitialize-instance,  Up: Objects Dictionary
+
+shared-initialize                               [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`shared-initialize'  instance slot-names &rest initargs &key
+&allow-other-keys =>  instance
+
+Method Signatures::
+...................
+
+`shared-initialize'  (instance standard-object) slot-names &rest initargs
+
+Arguments and Values::
+......................
+
+instance--an object.
+
+slot-names--a list or t.
+
+initargs--a list of keyword/value pairs (of initialization argument names
+and values).
+
+Description::
+.............
+
+The generic function shared-initialize is used to fill the slots of an
+instance using initargs and :initform forms.  It is called when an
+instance is created, when an instance is re-initialized, when an instance
+is updated to conform to a redefined class, and when an instance is
+updated to conform to a different class. The generic function
+shared-initialize is called by the system-supplied primary method for
+initialize-instance, reinitialize-instance,
+update-instance-for-redefined-class, and
+update-instance-for-different-class.
+
+The generic function shared-initialize takes the following arguments: the
+instance to be initialized, a specification of a set of slot-names
+accessible in that instance, and any number of initargs.  The arguments
+after the first two must form an initialization argument list.  The
+system-supplied primary method on shared-initialize initializes the slots
+with values according to the initargs and supplied :initform forms.
+Slot-names indicates which slots should be initialized according to their
+:initform forms if no initargs are provided for those slots.
+
+The system-supplied primary method behaves as follows, regardless of
+whether the slots are local or shared:
+
+*
+     If an initarg in the initialization argument list specifies a value
+     for that slot, that value is stored into the slot, even if a value has
+     already been stored in the slot before the method is run.
+
+*
+     Any slots indicated by slot-names that are still unbound at this
+     point are initialized according to their :initform forms.  For any
+     such slot that has an :initform form, that form is evaluated in the
+     lexical environment of its defining defclass form and the result is
+     stored into the slot.  For example, if a before method stores a value
+     in the slot, the :initform form will not be used to supply a value
+     for the slot.
+
+*
+     The rules mentioned in *Note Rules for Initialization Arguments:: are
+     obeyed.
+
+The slots-names argument specifies the slots that are to be initialized
+according to their :initform forms if no initialization arguments apply.
+It can be a list of slot names, which specifies the set of those slot
+names; or it can be the symbol t, which specifies the set of all of the
+slots.
+
+See Also::
+..........
+
+*Note Initialize-Instance:: , *Note reinitialize-instance:: , *Note
+update-instance-for-redefined-class:: , *Note
+update-instance-for-different-class:: , *Note slot-boundp:: , *Note
+slot-makunbound:: , *Note Object Creation and Initialization::, *Note
+Rules for Initialization Arguments::, *Note Declaring the Validity of
+Initialization Arguments::
+
+Notes::
+.......
+
+Initargs are declared as valid by using the :initarg option to defclass,
+or by defining methods for shared-initialize.  The keyword name of each
+keyword parameter specifier in the lambda list of any method defined on
+shared-initialize is declared as a valid initarg name for all classes for
+which that method is applicable.
+
+Implementations are permitted to optimize :initform forms that neither
+produce nor depend on side effects, by evaluating these forms and storing
+them into slots before running any initialize-instance methods, rather
+than by handling them in the primary initialize-instance method.  (This
+optimization might be implemented by having the allocate-instance method
+copy a prototype instance.)
+
+Implementations are permitted to optimize default initial value forms for
+initargs associated with slots by not actually creating the complete
+initialization argument list when the only method that would receive the
+complete list is the method on standard-object.  In this case default
+initial value forms can be treated like :initform forms.  This
+optimization has no visible effects other than a performance improvement.
+
+
+File: gcl.info,  Node: update-instance-for-different-class,  Next: update-instance-for-redefined-class,  Prev: shared-initialize,  Up: Objects Dictionary
+
+update-instance-for-different-class             [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`update-instance-for-different-class'  previous current &rest initargs
+&key &allow-other-keys =>  implementation-dependent
+
+Method Signatures::
+...................
+
+`update-instance-for-different-class'  (previous standard-object) (current
+standard-object) &rest initargs
+
+Arguments and Values::
+......................
+
+previous--a copy of the original instance.
+
+current--the original instance (altered).
+
+initargs--an initialization argument list.
+
+Description::
+.............
+
+The generic function update-instance-for-different-class is not intended
+to be called by programmers.  Programmers may write methods for it.  The
+function update-instance-for-different-class is called only by the
+function change-class.
+
+The system-supplied primary method on update-instance-for-different-class
+checks the validity of initargs and signals an error if an initarg is
+supplied that is not declared as valid.  This method then initializes
+slots with values according to the initargs, and initializes the newly
+added slots with values according to their :initform forms.  It does this
+by calling the generic function shared-initialize with the following
+arguments: the instance (current), a list of names of the newly added
+slots, and the initargs it received.  Newly added slots are those local
+slots for which no slot of the same name exists in the previous class.
+
+Methods for update-instance-for-different-class can be defined to specify
+actions to be taken when an instance is updated.  If only after methods
+for update-instance-for-different-class are defined, they will be run
+after the system-supplied primary method for initialization and therefore
+will not interfere with the default behavior of
+update-instance-for-different-class.
+
+Methods on update-instance-for-different-class can be defined to
+initialize slots differently from change-class.  The default behavior of
+change-class is described in *Note Changing the Class of an Instance::.
+
+The arguments to update-instance-for-different-class are computed by
+change-class.  When change-class is invoked on an instance, a copy of that
+instance is made; change-class then destructively alters the original
+instance. The first argument to update-instance-for-different-class,
+previous, is that copy; it holds the old slot values temporarily.  This
+argument has dynamic extent within change-class; if it is referenced in any
+way once update-instance-for-different-class returns, the results are
+undefined.  The second argument to update-instance-for-different-class,
+current, is the altered original instance.  The intended use of previous
+is to extract old slot values by using slot-value or with-slots or by
+invoking a reader generic function, or to run other methods that were
+applicable to instances of the original class.
+
+Examples::
+..........
+
+See the example for the function change-class.
+
+Exceptional Situations::
+........................
+
+The system-supplied primary method on update-instance-for-different-class
+signals an error if an initialization argument is supplied that is not
+declared as valid.
+
+See Also::
+..........
+
+*Note change-class:: , *Note Shared-Initialize:: , *Note Changing the
+Class of an Instance::, *Note Rules for Initialization Arguments::, *Note
+Declaring the Validity of Initialization Arguments::
+
+Notes::
+.......
+
+Initargs are declared as valid by using the :initarg option to defclass,
+or by defining methods for update-instance-for-different-class or
+shared-initialize.  The keyword name of each keyword parameter specifier
+in the lambda list of any method defined on
+update-instance-for-different-class or shared-initialize is declared as a
+valid initarg name for all classes for which that method is applicable.
+
+The value returned by update-instance-for-different-class is ignored by
+change-class.
+
+
+File: gcl.info,  Node: update-instance-for-redefined-class,  Next: change-class,  Prev: update-instance-for-different-class,  Up: Objects Dictionary
+
+update-instance-for-redefined-class             [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`update-instance-for-redefined-class'  instance added-slots discarded-slots
+property-list &rest initargs &key &allow-other-keys
+=>  {result}*
+
+Method Signatures::
+...................
+
+`update-instance-for-redefined-class'  (instance standard-object)
+added-slots discarded-slots property-list &rest initargs
+
+Arguments and Values::
+......................
+
+instance--an object.
+
+added-slots--a list.
+
+discarded-slots--a list.
+
+property-list--a list.
+
+initargs--an initialization argument list.
+
+result--an object.
+
+Description::
+.............
+
+The generic function update-instance-for-redefined-class is not intended
+to be called by programmers. Programmers may write methods for it.  The
+generic function update-instance-for-redefined-class is called by the
+mechanism activated by make-instances-obsolete.
+
+The system-supplied primary method on update-instance-for-redefined-class
+checks the validity of initargs and signals an error if an initarg is
+supplied that is not declared as valid.  This method then initializes
+slots with values according to the initargs, and initializes the newly
+added-slots with values according to their :initform forms.  It does this
+by calling the generic function shared-initialize with the following
+arguments: the instance, a list of names of the newly added-slots to
+instance, and the initargs it received.  Newly added-slots are those local
+slots for which no slot of the same name exists in the old version of the
+class.
+
+When make-instances-obsolete is invoked or when a class has been redefined
+and an instance is being updated, a property-list is created that captures
+the slot names and values of all the discarded-slots with values in the
+original instance.  The structure of the instance is transformed so that
+it conforms to the current class definition.  The arguments to
+update-instance-for-redefined-class are this transformed instance, a list
+of added-slots to the instance, a list discarded-slots from the instance,
+and the property-list containing the slot names and values for slots that
+were discarded and had values.  Included in this list of discarded slots
+are slots that were local in the old class and are shared in the new class.
+
+The value returned by update-instance-for-redefined-class is ignored.
+
+Examples::
+..........
+
+
+      (defclass position () ())
+     
+      (defclass x-y-position (position)
+          ((x :initform 0 :accessor position-x)
+           (y :initform 0 :accessor position-y)))
+     
+     ;;; It turns out polar coordinates are used more than Cartesian
+     ;;; coordinates, so the representation is altered and some new
+     ;;; accessor methods are added.
+     
+      (defmethod update-instance-for-redefined-class :before
+         ((pos x-y-position) added deleted plist &key)
+        ;; Transform the x-y coordinates to polar coordinates
+        ;; and store into the new slots.
+        (let ((x (getf plist 'x))
+              (y (getf plist 'y)))
+          (setf (position-rho pos) (sqrt (+ (* x x) (* y y)))
+                (position-theta pos) (atan y x))))
+     
+      (defclass x-y-position (position)
+          ((rho :initform 0 :accessor position-rho)
+           (theta :initform 0 :accessor position-theta)))
+     
+     ;;; All instances of the old x-y-position class will be updated
+     ;;; automatically.
+     
+     ;;; The new representation is given the look and feel of the old one.
+     
+      (defmethod position-x ((pos x-y-position))
+         (with-slots (rho theta) pos (* rho (cos theta))))
+     
+      (defmethod (setf position-x) (new-x (pos x-y-position))
+         (with-slots (rho theta) pos
+           (let ((y (position-y pos)))
+             (setq rho (sqrt (+ (* new-x new-x) (* y y)))
+                   theta (atan y new-x))
+             new-x)))
+     
+      (defmethod position-y ((pos x-y-position))
+         (with-slots (rho theta) pos (* rho (sin theta))))
+     
+      (defmethod (setf position-y) (new-y (pos x-y-position))
+         (with-slots (rho theta) pos
+           (let ((x (position-x pos)))
+             (setq rho (sqrt (+ (* x x) (* new-y new-y)))
+                   theta (atan new-y x))
+             new-y)))
+
+Exceptional Situations::
+........................
+
+The system-supplied primary method on update-instance-for-redefined-class
+signals an error if an initarg is supplied that is not declared as valid.
+
+See Also::
+..........
+
+*Note make-instances-obsolete:: , *Note Shared-Initialize:: , *Note
+Redefining Classes::, *Note Rules for Initialization Arguments::, *Note
+Declaring the Validity of Initialization Arguments::
+
+Notes::
+.......
+
+Initargs are declared as valid by using the :initarg option to defclass,
+or by defining methods for update-instance-for-redefined-class or
+shared-initialize.  The keyword name of each keyword parameter specifier
+in the lambda list of any method defined on
+update-instance-for-redefined-class or shared-initialize is declared as a
+valid initarg name for all classes for which that method is applicable.
+
+
+File: gcl.info,  Node: change-class,  Next: slot-boundp,  Prev: update-instance-for-redefined-class,  Up: Objects Dictionary
+
+change-class                                    [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`change-class'  instance new-class &key &allow-other-keys =>  instance
+
+Method Signatures::
+...................
+
+`change-class'  (instance standard-object) (new-class standard-class)
+&rest initargs
+
+`change-class'  (instance t) (new-class symbol) &rest initargs
+
+Arguments and Values::
+......................
+
+instance--an object.
+
+new-class--a class designator.
+
+initargs--an initialization argument list.
+
+Description::
+.............
+
+The generic function change-class changes the class of an instance to
+new-class.  It destructively modifies and returns the instance.
+
+If in the old class there is any slot of the same name as a local slot in
+the new-class, the value of that slot is retained.  This means that if the
+slot has a value, the value returned by slot-value after change-class is
+invoked is eql to the value returned by slot-value before change-class is
+invoked.  Similarly, if the slot was unbound, it remains unbound.  The
+other slots are initialized as described in *Note Changing the Class of an
+Instance::.
+
+After completing all other actions, change-class invokes
+update-instance-for-different-class.  The generic function
+update-instance-for-different-class can be used to assign values to slots
+in the transformed instance.
+
+See *Note Initializing Newly Added Local Slots::.
+
+If the second of the above methods is selected, that method invokes
+change-class on instance, (find-class new-class), and the initargs.
+
+Examples::
+..........
+
+
+      (defclass position () ())
+     
+      (defclass x-y-position (position)
+          ((x :initform 0 :initarg :x)
+           (y :initform 0 :initarg :y)))
+     
+      (defclass rho-theta-position (position)
+          ((rho :initform 0)
+           (theta :initform 0)))
+     
+      (defmethod update-instance-for-different-class :before ((old x-y-position)
+                                                              (new rho-theta-position)
+                                                              &key)
+        ;; Copy the position information from old to new to make new
+        ;; be a rho-theta-position at the same position as old.
+        (let ((x (slot-value old 'x))
+              (y (slot-value old 'y)))
+          (setf (slot-value new 'rho) (sqrt (+ (* x x) (* y y)))
+                (slot-value new 'theta) (atan y x))))
+     
+     ;;; At this point an instance of the class x-y-position can be
+     ;;; changed to be an instance of the class rho-theta-position using
+     ;;; change-class:
+     
+      (setq p1 (make-instance 'x-y-position :x 2 :y 0))
+     
+      (change-class p1 'rho-theta-position)
+     
+     ;;; The result is that the instance bound to p1 is now an instance of
+     ;;; the class rho-theta-position.   The update-instance-for-different-class
+     ;;; method performed the initialization of the rho and theta slots based
+     ;;; on the value of the x and y slots, which were maintained by
+     ;;; the old instance.
+
+See Also::
+..........
+
+*Note update-instance-for-different-class:: , *Note Changing the Class of
+an Instance::
+
+Notes::
+.......
+
+The generic function change-class has several semantic difficulties.
+First, it performs a destructive operation that can be invoked within a
+method on an instance that was used to select that method.  When multiple
+methods are involved because methods are being combined, the methods
+currently executing or about to be executed may no longer be applicable.
+Second, some implementations might use compiler optimizations of slot
+access, and when the class of an instance is changed the assumptions the
+compiler made might be violated.  This implies that a programmer must not
+use change-class inside a method if any methods for that generic function
+access any slots, or the results are undefined.
+
+
+File: gcl.info,  Node: slot-boundp,  Next: slot-exists-p,  Prev: change-class,  Up: Objects Dictionary
+
+slot-boundp                                                      [Function]
+---------------------------------------------------------------------------
+
+`slot-boundp'  instance slot-name =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+instance--an object.
+
+slot-name--a symbol naming a slot of instance.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if the slot named slot-name in instance is bound; otherwise,
+returns false.
+
+Exceptional Situations::
+........................
+
+If no slot of the name slot-name exists in the instance, slot-missing is
+called as follows:
+
+      (slot-missing (class-of instance)
+                    instance
+                    slot-name
+                    'slot-boundp)
+
+(If slot-missing is invoked and returns a value, a boolean equivalent to
+its primary value is returned by slot-boundp.)
+
+The specific behavior depends on instance's metaclass.  An error is never
+signaled if instance has metaclass standard-class.  An error is always
+signaled if instance has metaclass built-in-class.  The consequences are
+undefined if instance has any other metaclass-an error might or might not
+be signaled in this situation.  Note in particular that the behavior for
+conditions and structures is not specified.
+
+See Also::
+..........
+
+*Note slot-makunbound:: , *Note slot-missing::
+
+Notes::
+.......
+
+The function slot-boundp allows for writing after methods on
+initialize-instance in order to initialize only those slots that have not
+already been bound.
+
+Although no implementation is required to do so, implementors are strongly
+encouraged to implement the function slot-boundp using the function
+slot-boundp-using-class described in the Metaobject Protocol.
+
+
+File: gcl.info,  Node: slot-exists-p,  Next: slot-makunbound,  Prev: slot-boundp,  Up: Objects Dictionary
+
+slot-exists-p                                                    [Function]
+---------------------------------------------------------------------------
+
+`slot-exists-p'  object slot-name =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+slot-name--a symbol.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if the object has a slot named slot-name.
+
+Affected By::
+.............
+
+defclass, defstruct
+
+See Also::
+..........
+
+*Note defclass:: , *Note slot-missing::
+
+Notes::
+.......
+
+Although no implementation is required to do so, implementors are strongly
+encouraged to implement the function slot-exists-p using the function
+slot-exists-p-using-class described in the Metaobject Protocol.
+
+
+File: gcl.info,  Node: slot-makunbound,  Next: slot-missing,  Prev: slot-exists-p,  Up: Objects Dictionary
+
+slot-makunbound                                                  [Function]
+---------------------------------------------------------------------------
+
+`slot-makunbound'  instance slot-name =>  instance
+
+Arguments and Values::
+......................
+
+instance - instance.
+
+Slot-name--a symbol.
+
+Description::
+.............
+
+The function slot-makunbound restores a slot of the name slot-name in an
+instance to the unbound state.
+
+Exceptional Situations::
+........................
+
+If no slot of the name slot-name exists in the instance, slot-missing is
+called as follows:
+
+     (slot-missing (class-of instance)
+                   instance
+                   slot-name
+                   'slot-makunbound)
+
+(Any values returned by slot-missing in this case are ignored by
+slot-makunbound.)
+
+The specific behavior depends on instance's metaclass.  An error is never
+signaled if instance has metaclass standard-class.  An error is always
+signaled if instance has metaclass built-in-class.  The consequences are
+undefined if instance has any other metaclass-an error might or might not
+be signaled in this situation.  Note in particular that the behavior for
+conditions and structures is not specified.
+
+See Also::
+..........
+
+*Note slot-boundp:: , *Note slot-missing::
+
+Notes::
+.......
+
+Although no implementation is required to do so, implementors are strongly
+encouraged to implement the function slot-makunbound using the function
+slot-makunbound-using-class described in the Metaobject Protocol.
+
+
+File: gcl.info,  Node: slot-missing,  Next: slot-unbound,  Prev: slot-makunbound,  Up: Objects Dictionary
+
+slot-missing                                    [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`slot-missing'  class object slot-name operation &optional new-value =>
+{result}*
+
+Method Signatures::
+...................
+
+`slot-missing'  (class t) object slot-name operation &optional new-value
+
+Arguments and Values::
+......................
+
+class--the class of object.
+
+object--an object.
+
+slot-name--a symbol (the name of a would-be slot).
+
+operation--one of the symbols setf, slot-boundp, slot-makunbound, or
+slot-value.
+
+new-value--an object.
+
+result--an object.
+
+Description::
+.............
+
+The generic function slot-missing is invoked when an attempt is made to
+access a slot in an object whose metaclass is standard-class and the slot
+of the name slot-name is not a name of a slot in that class.  The default
+method signals an error.
+
+The generic function slot-missing is not intended to be called by
+programmers.  Programmers may write methods for it.
+
+The generic function slot-missing may be called during evaluation of
+slot-value, (setf slot-value), slot-boundp, and slot-makunbound.  For each
+of these operations the corresponding symbol for the operation argument is
+slot-value, setf, slot-boundp, and slot-makunbound respectively.
+
+The optional new-value argument to slot-missing is used when the operation
+is attempting to set the value of the slot.
+
+If slot-missing returns, its values will be treated as follows:
+
+*
+     If the operation is setf or slot-makunbound, any values will be
+     ignored by the caller.
+
+*
+     If the operation is slot-value, only the primary value will be used
+     by the caller, and all other values will be ignored.
+
+*
+     If the operation is slot-boundp, any boolean equivalent of the
+     primary value of the method might be is used, and all other values
+     will be ignored.
+
+Exceptional Situations::
+........................
+
+The default method on slot-missing signals an error of type error.
+
+See Also::
+..........
+
+*Note defclass:: , *Note slot-exists-p:: , *Note slot-value::
+
+Notes::
+.......
+
+The set of arguments (including the class of the instance) facilitates
+defining methods on the metaclass for slot-missing.
+
+
+File: gcl.info,  Node: slot-unbound,  Next: slot-value,  Prev: slot-missing,  Up: Objects Dictionary
+
+slot-unbound                                    [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`slot-unbound'  class instance slot-name =>  {result}*
+
+Method Signatures::
+...................
+
+`slot-unbound'  (class t) instance slot-name
+
+Arguments and Values::
+......................
+
+class--the class of the instance.
+
+instance--the instance in which an attempt was made to read the unbound
+slot.
+
+slot-name--the name of the unbound slot.
+
+result--an object.
+
+Description::
+.............
+
+The generic function slot-unbound is called when an unbound slot is read in
+an instance whose metaclass is standard-class.  The default method signals
+an error
+
+of type unbound-slot.  The name slot of the unbound-slot condition is
+initialized to the name of the offending variable, and the instance slot
+of the unbound-slot condition is initialized to the offending instance.
+
+The generic function slot-unbound is not intended to be called by
+programmers.  Programmers may write methods for it.  The function
+slot-unbound is called only indirectly by slot-value.
+
+If slot-unbound returns, only the primary value will be used by the caller,
+and all other values will be ignored.
+
+Exceptional Situations::
+........................
+
+The default method on slot-unbound signals an error of type unbound-slot.
+
+See Also::
+..........
+
+*Note slot-makunbound::
+
+Notes::
+.......
+
+An unbound slot may occur if no :initform form was specified for the slot
+and the slot value has not been set, or if slot-makunbound has been called
+on the slot.
+
+
+File: gcl.info,  Node: slot-value,  Next: method-qualifiers,  Prev: slot-unbound,  Up: Objects Dictionary
+
+slot-value                                                       [Function]
+---------------------------------------------------------------------------
+
+`slot-value'  object slot-name =>  value
+
+Arguments and Values::
+......................
+
+object--an object.
+
+name--a symbol.
+
+value--an object.
+
+Description::
+.............
+
+The function slot-value returns the value of the slot named slot-name in
+the object.  If there is no slot named slot-name, slot-missing is called.
+If the slot is unbound, slot-unbound is called.
+
+The macro setf can be used with slot-value to change the value of a slot.
+
+Examples::
+..........
+
+      (defclass foo ()
+        ((a :accessor foo-a :initarg :a :initform 1)
+         (b :accessor foo-b :initarg :b)
+         (c :accessor foo-c :initform 3)))
+     =>  #<STANDARD-CLASS FOO 244020371>
+      (setq foo1 (make-instance 'foo :a 'one :b 'two))
+     =>  #<FOO 36325624>
+      (slot-value foo1 'a) =>  ONE
+      (slot-value foo1 'b) =>  TWO
+      (slot-value foo1 'c) =>  3
+      (setf (slot-value foo1 'a) 'uno) =>  UNO
+      (slot-value foo1 'a) =>  UNO
+      (defmethod foo-method ((x foo))
+        (slot-value x 'a))
+     =>  #<STANDARD-METHOD FOO-METHOD (FOO) 42720573>
+      (foo-method foo1) =>  UNO
+
+Exceptional Situations::
+........................
+
+If an attempt is made to read a slot and no slot of the name slot-name
+exists in the object, slot-missing is called as follows:
+
+      (slot-missing (class-of instance)
+                    instance
+                    slot-name
+                    'slot-value)
+
+(If slot-missing is invoked, its primary value is returned by slot-value.)
+
+If an attempt is made to write a slot and no slot of the name slot-name
+exists in the object, slot-missing is called as follows:
+
+      (slot-missing (class-of instance)
+                    instance
+                    slot-name
+                    'setf
+                    new-value)
+
+(If slot-missing returns in this case, any values are ignored.)
+
+The specific behavior depends on object's metaclass.  An error is never
+signaled if object has metaclass standard-class.  An error is always
+signaled if object has metaclass built-in-class.  The consequences are
+unspecified if object has any other metaclass-an error might or might not
+be signaled in this situation.  Note in particular that the behavior for
+conditions and structures is not specified.
+
+See Also::
+..........
+
+*Note slot-missing:: , *Note slot-unbound:: , *Note with-slots::
+
+Notes::
+.......
+
+Although no implementation is required to do so, implementors are strongly
+encouraged to implement the function slot-value using the function
+slot-value-using-class described in the Metaobject Protocol.
+
+Implementations may optimize slot-value by compiling it inline.
+
+
+File: gcl.info,  Node: method-qualifiers,  Next: no-applicable-method,  Prev: slot-value,  Up: Objects Dictionary
+
+method-qualifiers                               [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`method-qualifiers'  method =>  qualifiers
+
+Method Signatures::
+...................
+
+`method-qualifiers'  (method standard-method)
+
+Arguments and Values::
+......................
+
+method--a method.
+
+qualifiers--a proper list.
+
+Description::
+.............
+
+Returns a list of the qualifiers of the method.
+
+Examples::
+..........
+
+      (defmethod some-gf :before ((a integer)) a)
+     =>  #<STANDARD-METHOD SOME-GF (:BEFORE) (INTEGER) 42736540>
+      (method-qualifiers *) =>  (:BEFORE)
+
+See Also::
+..........
+
+*Note define-method-combination::
+
+
+File: gcl.info,  Node: no-applicable-method,  Next: no-next-method,  Prev: method-qualifiers,  Up: Objects Dictionary
+
+no-applicable-method                            [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`no-applicable-method'  generic-function &rest function-arguments =>
+{result}*
+
+Method Signatures::
+...................
+
+`no-applicable-method'  (generic-function t) &rest function-arguments
+
+Arguments and Values::
+......................
+
+generic-function--a generic function on which no applicable method was
+found.
+
+function-arguments--arguments to the generic-function.
+
+result--an object.
+
+Description::
+.............
+
+The generic function no-applicable-method is called when a generic function
+is invoked and no method on that generic function is applicable.  The
+default method signals an error.
+
+The generic function no-applicable-method is not intended to be called by
+programmers.  Programmers may write methods for it.
+
+Exceptional Situations::
+........................
+
+The default method signals an error of type error.
+
+See Also::
+..........
+
+
+File: gcl.info,  Node: no-next-method,  Next: remove-method,  Prev: no-applicable-method,  Up: Objects Dictionary
+
+no-next-method                                  [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`no-next-method'  generic-function method &rest args =>  {result}*
+
+Method Signatures::
+...................
+
+`no-next-method'  (generic-function standard-generic-function) (method
+standard-method) &rest args
+
+Arguments and Values::
+......................
+
+generic-function - generic function to which method belongs.
+
+method - method that contained the call to call-next-method for which
+there is no next method.
+
+args - arguments to call-next-method.
+
+result--an object.
+
+Description::
+.............
+
+The generic function no-next-method is called by call-next-method when
+there is no next method.
+
+The generic function no-next-method is not intended to be called by
+programmers.  Programmers may write methods for it.
+
+Exceptional Situations::
+........................
+
+The system-supplied method on no-next-method signals an error of type
+error.  [Editorial Note by KMP: perhaps control-error??]
+
+See Also::
+..........
+
+*Note call-next-method::
+
+
+File: gcl.info,  Node: remove-method,  Next: make-instance,  Prev: no-next-method,  Up: Objects Dictionary
+
+remove-method                                   [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`remove-method'  generic-function method =>  generic-function
+
+Method Signatures::
+...................
+
+`remove-method'  (generic-function standard-generic-function) method
+
+Arguments and Values::
+......................
+
+generic-function--a generic function.
+
+method--a method.
+
+Description::
+.............
+
+The generic function remove-method removes a method from generic-function
+by modifying the generic-function (if necessary).
+
+remove-method must not signal an error if the method is not one of the
+methods on the generic-function.
+
+See Also::
+..........
+
+*Note find-method::
+
+
+File: gcl.info,  Node: make-instance,  Next: make-instances-obsolete,  Prev: remove-method,  Up: Objects Dictionary
+
+make-instance                                   [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`make-instance'  class &rest initargs &key &allow-other-keys =>  instance
+
+Method Signatures::
+...................
+
+`make-instance'  (class standard-class) &rest initargs
+
+`make-instance'  (class symbol) &rest initargs
+
+Arguments and Values::
+......................
+
+class--a class, or a symbol that names a class.
+
+initargs--an initialization argument list.
+
+instance--a fresh instance of class class.
+
+Description::
+.............
+
+The generic function make-instance creates and returns a new instance of
+the given class.
+
+If the second of the above methods is selected, that method invokes
+make-instance on the arguments (find-class class) and initargs.
+
+The initialization arguments are checked within make-instance.
+
+The generic function make-instance may be used as described in *Note
+Object Creation and Initialization::.
+
+Exceptional Situations::
+........................
+
+If any of the initialization arguments has not been declared as valid, an
+error of type error is signaled.
+
+See Also::
+..........
+
+*Note defclass:: , *Note class-of:: , *Note allocate-instance:: , *Note
+Initialize-Instance:: , *Note Object Creation and Initialization::
+
+
+File: gcl.info,  Node: make-instances-obsolete,  Next: make-load-form,  Prev: make-instance,  Up: Objects Dictionary
+
+make-instances-obsolete                         [Standard Generic Function]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`make-instances-obsolete'  class =>  class
+
+Method Signatures::
+...................
+
+`make-instances-obsolete'  (class standard-class)
+
+`make-instances-obsolete'  (class symbol)
+
+Arguments and Values::
+......................
+
+class--a class designator.
+
+Description::
+.............
+
+The function make-instances-obsolete has the effect of initiating the
+process of updating the instances of the class. During updating, the
+generic function update-instance-for-redefined-class will be invoked.
+
+The generic function make-instances-obsolete is invoked automatically by
+the system when defclass has been used to redefine an existing standard
+class and the set of local slots accessible in an instance is changed or
+the order of slots in storage is changed.  It can also be explicitly
+invoked by the user.
+
+If the second of the above methods is selected, that method invokes
+make-instances-obsolete on (find-class class).
+
+Examples::
+..........
+
+See Also::
+..........
+
+*Note update-instance-for-redefined-class:: , *Note Redefining Classes::
+

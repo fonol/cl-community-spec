@@ -1,0 +1,77 @@
+{
+    "name": "do-symbols",
+    "prev": "defpackage",
+    "next": "intern",
+    "up": "Packages Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "do-symbols, do-external-symbols, do-all-symbols"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "do-symbols",
+                    "text": " (var [package [result-form]]) {declaration}* {tag |statement}*\n=>  {result}*\n\n"
+                },
+                {
+                    "name": "do-external-symbols",
+                    "text": " (var [package [result-form]]) {declaration}* {tag |\nstatement}*\n=>  {result}*\n\n"
+                },
+                {
+                    "name": "do-all-symbols",
+                    "text": " (var [result-form]) {declaration}* {tag | statement}*\n=>  {result}*\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "var",
+                    "desc": "a variable name; not evaluated."
+                },
+                {
+                    "name": "package",
+                    "desc": "a package designator; evaluated.The default in do-symbols and do-external-symbols is the current package.\n"
+                },
+                {
+                    "name": "result-form",
+                    "desc": "a form; evaluated as described below.  The default is nil."
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "tag",
+                    "desc": "a go tag; not evaluated."
+                },
+                {
+                    "name": "statement",
+                    "desc": "a compound form; evaluated as described below."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values returned by the result-form if a normal return occurs,"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "do-symbols, do-external-symbols, and do-all-symbols iterate over the\nsymbols of packages.  For each symbol in the set of packages chosen, the\nvar is bound to the symbol, and the statements in the body are executed.\nWhen all the symbols have been processed, result-form is evaluated and\nreturned as the value of the macro.\ndo-symbols iterates over the symbols accessible in package.\nStatements may execute more than once for symbols that are inherited from\nmultiple packages.\ndo-all-symbols iterates on every registered package.  do-all-symbols will\nnot process every symbol whatsoever, because a symbol not accessible in any\nregistered package will not be processed.  do-all-symbols may cause a\nsymbol that is present in several packages to be processed more than once.\ndo-external-symbols iterates on the external symbols of package.\nWhen result-form is evaluated, var is bound and has the value nil.\nAn implicit block named nil surrounds the entire do-symbols,\ndo-external-symbols, or do-all-symbols form.\nreturn or return-from may be used to terminate the iteration prematurely.\nIf execution of the body affects which symbols are contained in the set of\npackages over which iteration is occurring, other than to remove the symbol\ncurrently the value of var by using unintern, the consequences are\nundefined.\nFor each of these macros, the scope of the name binding does not include\nany initial value form, but the optional result forms are included.\nAny tag in the body is treated as with tagbody.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (make-package 'temp :use nil) =>  #<PACKAGE \"TEMP\">\n      (intern \"SHY\" 'temp) =>  TEMP::SHY, NIL ;SHY will be an internal symbol\n                                              ;in the package TEMP\n      (export (intern \"BOLD\" 'temp) 'temp)  =>  T  ;BOLD will be external\n      (let ((lst ()))\n        (do-symbols (s (find-package 'temp)) (push s lst))\n        lst)\n     =>  (TEMP::SHY TEMP:BOLD)\n     OR=> (TEMP:BOLD TEMP::SHY)\n      (let ((lst ()))\n        (do-external-symbols (s (find-package 'temp) lst) (push s lst))\n        lst)\n     =>  (TEMP:BOLD)\n      (let ((lst ()))\n        (do-all-symbols (s lst)\n          (when (eq (find-package 'temp) (symbol-package s)) (push s lst)))\n        lst)\n     =>  (TEMP::SHY TEMP:BOLD)\n     OR=> (TEMP:BOLD TEMP::SHY)\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note intern:: , *Note export:: ,\n*Note Traversal Rules and Side Effects::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: do-symbols,  Next: intern,  Prev: defpackage,  Up: Packages Dictionary\n\ndo-symbols, do-external-symbols, do-all-symbols                     [Macro]\n---------------------------------------------------------------------------\n\n`do-symbols'  (var [package [result-form]]) {declaration}* {tag |\nstatement}*\n=>  {result}*\n\n`do-external-symbols'  (var [package [result-form]]) {declaration}* {tag |\nstatement}*\n=>  {result}*\n\n`do-all-symbols'  (var [result-form]) {declaration}* {tag | statement}*\n=>  {result}*\n\nArguments and Values::\n......................\n\nvar--a variable name; not evaluated.\n\npackage--a package designator; evaluated.\n\nThe default in do-symbols and do-external-symbols is the current package.\n\nresult-form--a form; evaluated as described below.  The default is nil.\n\ndeclaration--a declare expression; not evaluated.\n\ntag--a go tag; not evaluated.\n\nstatement--a compound form; evaluated as described below.\n\nresults--the values returned by the result-form if a normal return occurs,\nor else, if an explicit return occurs, the values that were transferred.\n\nDescription::\n.............\n\ndo-symbols, do-external-symbols, and do-all-symbols iterate over the\nsymbols of packages.  For each symbol in the set of packages chosen, the\nvar is bound to the symbol, and the statements in the body are executed.\nWhen all the symbols have been processed, result-form is evaluated and\nreturned as the value of the macro.\n\ndo-symbols iterates over the symbols accessible in package.\n\nStatements may execute more than once for symbols that are inherited from\nmultiple packages.\n\ndo-all-symbols iterates on every registered package.  do-all-symbols will\nnot process every symbol whatsoever, because a symbol not accessible in any\nregistered package will not be processed.  do-all-symbols may cause a\nsymbol that is present in several packages to be processed more than once.\n\ndo-external-symbols iterates on the external symbols of package.\n\nWhen result-form is evaluated, var is bound and has the value nil.\n\nAn implicit block named nil surrounds the entire do-symbols,\ndo-external-symbols, or do-all-symbols form.\n\nreturn or return-from may be used to terminate the iteration prematurely.\n\nIf execution of the body affects which symbols are contained in the set of\npackages over which iteration is occurring, other than to remove the symbol\ncurrently the value of var by using unintern, the consequences are\nundefined.\n\nFor each of these macros, the scope of the name binding does not include\nany initial value form, but the optional result forms are included.\n\nAny tag in the body is treated as with tagbody.\n\nExamples::\n..........\n\n      (make-package 'temp :use nil) =>  #<PACKAGE \"TEMP\">\n      (intern \"SHY\" 'temp) =>  TEMP::SHY, NIL ;SHY will be an internal symbol\n                                              ;in the package TEMP\n      (export (intern \"BOLD\" 'temp) 'temp)  =>  T  ;BOLD will be external\n      (let ((lst ()))\n        (do-symbols (s (find-package 'temp)) (push s lst))\n        lst)\n     =>  (TEMP::SHY TEMP:BOLD)\n     OR=> (TEMP:BOLD TEMP::SHY)\n      (let ((lst ()))\n        (do-external-symbols (s (find-package 'temp) lst) (push s lst))\n        lst)\n     =>  (TEMP:BOLD)\n      (let ((lst ()))\n        (do-all-symbols (s lst)\n          (when (eq (find-package 'temp) (symbol-package s)) (push s lst)))\n        lst)\n     =>  (TEMP::SHY TEMP:BOLD)\n     OR=> (TEMP:BOLD TEMP::SHY)\n\nSee Also::\n..........\n\n*Note intern:: , *Note export:: ,\n\n*Note Traversal Rules and Side Effects::\n\n"
+}

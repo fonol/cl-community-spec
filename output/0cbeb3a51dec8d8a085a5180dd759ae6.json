@@ -1,0 +1,49 @@
+{
+    "name": "delete-file",
+    "prev": "rename-file",
+    "next": "file-error",
+    "up": "Files Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "delete-file"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "delete-file",
+                    "text": " filespec =>  t\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "filespec",
+                    "desc": "a pathname designator."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Deletes the file specified by filespec.\nIf the filespec designator is an open stream, then filespec and the file\nassociated with it are affected (if the file system permits), in which\ncase filespec might be closed immediately, and the deletion might be\nimmediate or delayed until filespec is explicitly closed, depending on the\nrequirements of the file system.\nIt is implementation-dependent whether an attempt to delete a nonexistent\nfile is considered to be successful.\ndelete-file returns true if it succeeds, or signals an error of type\nfile-error if it does not.\nThe consequences are undefined if filespec has a wild component, or if\nfilespec has a nil component and the file system does not permit a nil\ncomponent.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (with-open-file (s \"delete-me.text\" :direction :output :if-exists :error))\n     =>  NIL\n      (setq p (probe-file \"delete-me.text\")) =>  #P\"R:>fred>delete-me.text.1\"\n      (delete-file p) =>  T\n      (probe-file \"delete-me.text\") =>  false\n      (with-open-file (s \"delete-me.text\" :direction :output :if-exists :error)\n        (delete-file s))\n     =>  T\n      (probe-file \"delete-me.text\") =>  false\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If the deletion operation is not successful, an error of type file-error\nis signaled.\nAn error of type file-error might be signaled if filespec is wild.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "pathname, logical-pathname, *Note File System Concepts::,\n*Note Pathnames as Filenames::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: delete-file,  Next: file-error,  Prev: rename-file,  Up: Files Dictionary\n\ndelete-file                                                      [Function]\n---------------------------------------------------------------------------\n\n`delete-file'  filespec =>  t\n\nArguments and Values::\n......................\n\nfilespec--a pathname designator.\n\nDescription::\n.............\n\nDeletes the file specified by filespec.\n\nIf the filespec designator is an open stream, then filespec and the file\nassociated with it are affected (if the file system permits), in which\ncase filespec might be closed immediately, and the deletion might be\nimmediate or delayed until filespec is explicitly closed, depending on the\nrequirements of the file system.\n\nIt is implementation-dependent whether an attempt to delete a nonexistent\nfile is considered to be successful.\n\ndelete-file returns true if it succeeds, or signals an error of type\nfile-error if it does not.\n\nThe consequences are undefined if filespec has a wild component, or if\nfilespec has a nil component and the file system does not permit a nil\ncomponent.\n\nExamples::\n..........\n\n      (with-open-file (s \"delete-me.text\" :direction :output :if-exists :error))\n     =>  NIL\n      (setq p (probe-file \"delete-me.text\")) =>  #P\"R:>fred>delete-me.text.1\"\n      (delete-file p) =>  T\n      (probe-file \"delete-me.text\") =>  false\n      (with-open-file (s \"delete-me.text\" :direction :output :if-exists :error)\n        (delete-file s))\n     =>  T\n      (probe-file \"delete-me.text\") =>  false\n\nExceptional Situations::\n........................\n\nIf the deletion operation is not successful, an error of type file-error\nis signaled.\n\nAn error of type file-error might be signaled if filespec is wild.\n\nSee Also::\n..........\n\npathname, logical-pathname, *Note File System Concepts::,\n\n*Note Pathnames as Filenames::\n\n"
+}

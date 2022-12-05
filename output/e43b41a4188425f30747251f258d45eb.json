@@ -1,0 +1,17 @@
+{
+    "name": "Examples of Miscellaneous Loop Features",
+    "prev": "Miscellaneous Clauses",
+    "next": "Notes about Loop",
+    "up": "The LOOP Facility",
+    "header": {
+        "type": null,
+        "text": "Examples of Miscellaneous Loop Features"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": "      (let ((i 0))                     ; no loop keywords are used\n         (loop (incf i) (if (= i 3) (return i)))) =>  3\n      (let ((i 0)(j 0))\n         (tagbody\n           (loop (incf j 3) (incf i) (if (= i 3) (go exit)))\n           exit)\n         j) =>  9\nIn the following example, the variable x is stepped before y is stepped;\nthus, the value of y reflects the updated value of x:\n      (loop for x from 1 to 10\n            for y = nil then x\n            collect (list x y))\n     =>  ((1 NIL) (2 2) (3 3) (4 4) (5 5) (6 6) (7 7) (8 8) (9 9) (10 10))\nIn this example, x and y are stepped in parallel:\n      (loop for x from 1 to 10\n            and y = nil then x\n            collect (list x y))\n     =>  ((1 NIL) (2 1) (3 2) (4 3) (5 4) (6 5) (7 6) (8 7) (9 8) (10 9))\n* Menu:\n* Examples of clause grouping::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: Examples of Miscellaneous Loop Features,  Next: Notes about Loop,  Prev: Miscellaneous Clauses,  Up: The LOOP Facility\n\nExamples of Miscellaneous Loop Features\n---------------------------------------\n\n      (let ((i 0))                     ; no loop keywords are used\n         (loop (incf i) (if (= i 3) (return i)))) =>  3\n      (let ((i 0)(j 0))\n         (tagbody\n           (loop (incf j 3) (incf i) (if (= i 3) (go exit)))\n           exit)\n         j) =>  9\n\nIn the following example, the variable x is stepped before y is stepped;\nthus, the value of y reflects the updated value of x:\n\n      (loop for x from 1 to 10\n            for y = nil then x\n            collect (list x y))\n     =>  ((1 NIL) (2 2) (3 3) (4 4) (5 5) (6 6) (7 7) (8 8) (9 9) (10 10))\n\nIn this example, x and y are stepped in parallel:\n\n      (loop for x from 1 to 10\n            and y = nil then x\n            collect (list x y))\n     =>  ((1 NIL) (2 1) (3 2) (4 3) (5 4) (6 5) (7 6) (8 7) (9 8) (10 9))\n\n* Menu:\n\n* Examples of clause grouping::\n\n"
+}

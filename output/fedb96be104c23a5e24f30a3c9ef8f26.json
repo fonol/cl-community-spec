@@ -1,0 +1,87 @@
+{
+    "name": "update-instance-for-redefined-class",
+    "prev": "update-instance-for-different-class",
+    "next": "change-class",
+    "up": "Objects Dictionary",
+    "header": {
+        "type": "Standard Generic Function",
+        "text": "update-instance-for-redefined-class"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "update-instance-for-redefined-class",
+                    "text": " instance added-slots discarded-slotsproperty-list &rest initargs &key &allow-other-keys\n=>  {result}*\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "update-instance-for-redefined-class",
+                    "text": " (instance standard-object)added-slots discarded-slots property-list &rest initargs\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "instance",
+                    "desc": "an object."
+                },
+                {
+                    "name": "added-slots",
+                    "desc": "a list."
+                },
+                {
+                    "name": "discarded-slots",
+                    "desc": "a list."
+                },
+                {
+                    "name": "property-list",
+                    "desc": "a list."
+                },
+                {
+                    "name": "initargs",
+                    "desc": "an initialization argument list."
+                },
+                {
+                    "name": "result",
+                    "desc": "an object."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "The generic function update-instance-for-redefined-class is not intended\nto be called by programmers. Programmers may write methods for it.  The\ngeneric function update-instance-for-redefined-class is called by the\nmechanism activated by make-instances-obsolete.\nThe system-supplied primary method on update-instance-for-redefined-class\nchecks the validity of initargs and signals an error if an initarg is\nsupplied that is not declared as valid.  This method then initializes\nslots with values according to the initargs, and initializes the newly\nadded-slots with values according to their :initform forms.  It does this\nby calling the generic function shared-initialize with the following\narguments: the instance, a list of names of the newly added-slots to\ninstance, and the initargs it received.  Newly added-slots are those local\nslots for which no slot of the same name exists in the old version of the\nclass.\nWhen make-instances-obsolete is invoked or when a class has been redefined\nand an instance is being updated, a property-list is created that captures\nthe slot names and values of all the discarded-slots with values in the\noriginal instance.  The structure of the instance is transformed so that\nit conforms to the current class definition.  The arguments to\nupdate-instance-for-redefined-class are this transformed instance, a list\nof added-slots to the instance, a list discarded-slots from the instance,\nand the property-list containing the slot names and values for slots that\nwere discarded and had values.  Included in this list of discarded slots\nare slots that were local in the old class and are shared in the new class.\nThe value returned by update-instance-for-redefined-class is ignored.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defclass position () ())\n      (defclass x-y-position (position)\n          ((x :initform 0 :accessor position-x)\n           (y :initform 0 :accessor position-y)))\n     ;;; It turns out polar coordinates are used more than Cartesian\n     ;;; coordinates, so the representation is altered and some new\n     ;;; accessor methods are added.\n      (defmethod update-instance-for-redefined-class :before\n         ((pos x-y-position) added deleted plist &key)\n        ;; Transform the x-y coordinates to polar coordinates\n        ;; and store into the new slots.\n        (let ((x (getf plist 'x))\n              (y (getf plist 'y)))\n          (setf (position-rho pos) (sqrt (+ (* x x) (* y y)))\n                (position-theta pos) (atan y x))))\n      (defclass x-y-position (position)\n          ((rho :initform 0 :accessor position-rho)\n           (theta :initform 0 :accessor position-theta)))\n     ;;; All instances of the old x-y-position class will be updated\n     ;;; automatically.\n     ;;; The new representation is given the look and feel of the old one.\n      (defmethod position-x ((pos x-y-position))\n         (with-slots (rho theta) pos (* rho (cos theta))))\n      (defmethod (setf position-x) (new-x (pos x-y-position))\n         (with-slots (rho theta) pos\n           (let ((y (position-y pos)))\n             (setq rho (sqrt (+ (* new-x new-x) (* y y)))\n                   theta (atan y new-x))\n             new-x)))\n      (defmethod position-y ((pos x-y-position))\n         (with-slots (rho theta) pos (* rho (sin theta))))\n      (defmethod (setf position-y) (new-y (pos x-y-position))\n         (with-slots (rho theta) pos\n           (let ((x (position-x pos)))\n             (setq rho (sqrt (+ (* x x) (* new-y new-y)))\n                   theta (atan new-y x))\n             new-y)))\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "The system-supplied primary method on update-instance-for-redefined-class\nsignals an error if an initarg is supplied that is not declared as valid.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note make-instances-obsolete:: , *Note Shared-Initialize:: , *Note\nRedefining Classes::, *Note Rules for Initialization Arguments::, *Note\nDeclaring the Validity of Initialization Arguments::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Initargs are declared as valid by using the :initarg option to defclass,\nor by defining methods for update-instance-for-redefined-class or\nshared-initialize.  The keyword name of each keyword parameter specifier\nin the lambda list of any method defined on\nupdate-instance-for-redefined-class or shared-initialize is declared as a\nvalid initarg name for all classes for which that method is applicable.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: update-instance-for-redefined-class,  Next: change-class,  Prev: update-instance-for-different-class,  Up: Objects Dictionary\n\nupdate-instance-for-redefined-class             [Standard Generic Function]\n---------------------------------------------------------------------------\n\nSyntax::\n........\n\n`update-instance-for-redefined-class'  instance added-slots discarded-slots\nproperty-list &rest initargs &key &allow-other-keys\n=>  {result}*\n\nMethod Signatures::\n...................\n\n`update-instance-for-redefined-class'  (instance standard-object)\nadded-slots discarded-slots property-list &rest initargs\n\nArguments and Values::\n......................\n\ninstance--an object.\n\nadded-slots--a list.\n\ndiscarded-slots--a list.\n\nproperty-list--a list.\n\ninitargs--an initialization argument list.\n\nresult--an object.\n\nDescription::\n.............\n\nThe generic function update-instance-for-redefined-class is not intended\nto be called by programmers. Programmers may write methods for it.  The\ngeneric function update-instance-for-redefined-class is called by the\nmechanism activated by make-instances-obsolete.\n\nThe system-supplied primary method on update-instance-for-redefined-class\nchecks the validity of initargs and signals an error if an initarg is\nsupplied that is not declared as valid.  This method then initializes\nslots with values according to the initargs, and initializes the newly\nadded-slots with values according to their :initform forms.  It does this\nby calling the generic function shared-initialize with the following\narguments: the instance, a list of names of the newly added-slots to\ninstance, and the initargs it received.  Newly added-slots are those local\nslots for which no slot of the same name exists in the old version of the\nclass.\n\nWhen make-instances-obsolete is invoked or when a class has been redefined\nand an instance is being updated, a property-list is created that captures\nthe slot names and values of all the discarded-slots with values in the\noriginal instance.  The structure of the instance is transformed so that\nit conforms to the current class definition.  The arguments to\nupdate-instance-for-redefined-class are this transformed instance, a list\nof added-slots to the instance, a list discarded-slots from the instance,\nand the property-list containing the slot names and values for slots that\nwere discarded and had values.  Included in this list of discarded slots\nare slots that were local in the old class and are shared in the new class.\n\nThe value returned by update-instance-for-redefined-class is ignored.\n\nExamples::\n..........\n\n\n      (defclass position () ())\n     \n      (defclass x-y-position (position)\n          ((x :initform 0 :accessor position-x)\n           (y :initform 0 :accessor position-y)))\n     \n     ;;; It turns out polar coordinates are used more than Cartesian\n     ;;; coordinates, so the representation is altered and some new\n     ;;; accessor methods are added.\n     \n      (defmethod update-instance-for-redefined-class :before\n         ((pos x-y-position) added deleted plist &key)\n        ;; Transform the x-y coordinates to polar coordinates\n        ;; and store into the new slots.\n        (let ((x (getf plist 'x))\n              (y (getf plist 'y)))\n          (setf (position-rho pos) (sqrt (+ (* x x) (* y y)))\n                (position-theta pos) (atan y x))))\n     \n      (defclass x-y-position (position)\n          ((rho :initform 0 :accessor position-rho)\n           (theta :initform 0 :accessor position-theta)))\n     \n     ;;; All instances of the old x-y-position class will be updated\n     ;;; automatically.\n     \n     ;;; The new representation is given the look and feel of the old one.\n     \n      (defmethod position-x ((pos x-y-position))\n         (with-slots (rho theta) pos (* rho (cos theta))))\n     \n      (defmethod (setf position-x) (new-x (pos x-y-position))\n         (with-slots (rho theta) pos\n           (let ((y (position-y pos)))\n             (setq rho (sqrt (+ (* new-x new-x) (* y y)))\n                   theta (atan y new-x))\n             new-x)))\n     \n      (defmethod position-y ((pos x-y-position))\n         (with-slots (rho theta) pos (* rho (sin theta))))\n     \n      (defmethod (setf position-y) (new-y (pos x-y-position))\n         (with-slots (rho theta) pos\n           (let ((x (position-x pos)))\n             (setq rho (sqrt (+ (* x x) (* new-y new-y)))\n                   theta (atan new-y x))\n             new-y)))\n\nExceptional Situations::\n........................\n\nThe system-supplied primary method on update-instance-for-redefined-class\nsignals an error if an initarg is supplied that is not declared as valid.\n\nSee Also::\n..........\n\n*Note make-instances-obsolete:: , *Note Shared-Initialize:: , *Note\nRedefining Classes::, *Note Rules for Initialization Arguments::, *Note\nDeclaring the Validity of Initialization Arguments::\n\nNotes::\n.......\n\nInitargs are declared as valid by using the :initarg option to defclass,\nor by defining methods for update-instance-for-redefined-class or\nshared-initialize.  The keyword name of each keyword parameter specifier\nin the lambda list of any method defined on\nupdate-instance-for-redefined-class or shared-initialize is declared as a\nvalid initarg name for all classes for which that method is applicable.\n\n"
+}

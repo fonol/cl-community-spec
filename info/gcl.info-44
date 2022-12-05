@@ -1,0 +1,1674 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: read-char,  Next: read-char-no-hang,  Prev: peek-char,  Up: Streams Dictionary
+
+read-char                                                        [Function]
+---------------------------------------------------------------------------
+
+`read-char'  &optional input-stream eof-error-p eof-value recursive-p =>
+char
+
+Arguments and Values::
+......................
+
+input-stream--an input stream designator.  The default is standard input.
+
+eof-error-p--a generalized boolean.  The default is true.
+
+eof-value--an object.  The default is nil.
+
+recursive-p--a generalized boolean.  The default is false.
+
+char--a character or the eof-value.
+
+Description::
+.............
+
+read-char returns the next character from input-stream.
+
+When input-stream is an echo stream, the character is echoed on
+input-stream the first time the character is seen.  Characters that are
+not echoed by read-char are those that were put there by unread-char and
+hence are assumed to have been echoed already by a previous call to
+read-char.
+
+If recursive-p is true, this call is expected to be embedded in a
+higher-level call to read or a similar function used by the Lisp reader.
+
+If an end of file_2 occurs and eof-error-p is false, eof-value is returned.
+
+Examples::
+..........
+
+      (with-input-from-string (is "0123")
+         (do ((c (read-char is) (read-char is nil 'the-end)))
+             ((not (characterp c)))
+          (format t "~S " c)))
+      |>  #\0 #\1 #\2 #\3
+     =>  NIL
+
+Affected By::
+.............
+
+*standard-input*, *terminal-io*.
+
+Exceptional Situations::
+........................
+
+If an end of file_2 occurs before a character can be read, and eof-error-p
+is true, an error of type end-of-file is signaled.
+
+See Also::
+..........
+
+*Note read-byte:: ,
+
+*Note read-sequence:: ,
+
+*Note write-char:: , *Note read; read-preserving-whitespace::
+
+Notes::
+.......
+
+The corresponding output function is write-char.
+
+
+File: gcl.info,  Node: read-char-no-hang,  Next: terpri,  Prev: read-char,  Up: Streams Dictionary
+
+read-char-no-hang                                                [Function]
+---------------------------------------------------------------------------
+
+`read-char-no-hang'  &optional input-stream eof-error-p eof-value
+recursive-p =>  char
+
+Arguments and Values::
+......................
+
+input-stream - an input stream designator.  The default is standard input.
+
+eof-error-p--a generalized boolean.  The default is true.
+
+eof-value--an object.  The default is nil.
+
+recursive-p--a generalized boolean.  The default is false.
+
+char--a character or nil or the eof-value.
+
+Description::
+.............
+
+read-char-no-hang returns a character from input-stream if such a
+character is available.  If no character is available, read-char-no-hang
+returns nil.
+
+If recursive-p is true, this call is expected to be embedded in a
+higher-level call to read or a similar function used by the Lisp reader.
+
+If an end of file_2 occurs and eof-error-p is false, eof-value is returned.
+
+Examples::
+..........
+
+     ;; This code assumes an implementation in which a newline is not
+     ;; required to terminate input from the console.
+      (defun test-it ()
+        (unread-char (read-char))
+        (list (read-char-no-hang)
+              (read-char-no-hang)
+              (read-char-no-hang)))
+     =>  TEST-IT
+     ;; Implementation A, where a Newline is not required to terminate
+     ;; interactive input on the console.
+      (test-it)
+      |>  |>>a<<|
+     =>  (#\a NIL NIL)
+     ;; Implementation B, where a Newline is required to terminate
+     ;; interactive input on the console, and where that Newline remains
+     ;; on the input stream.
+      (test-it)
+      |>  |>>a[<--~]<<|
+     =>  (#\a #\Newline NIL)
+
+Affected By::
+.............
+
+*standard-input*, *terminal-io*.
+
+Exceptional Situations::
+........................
+
+If an end of file_2 occurs when eof-error-p is true, an error of type
+end-of-file is signaled .
+
+See Also::
+..........
+
+*Note listen::
+
+Notes::
+.......
+
+read-char-no-hang is exactly like read-char, except that if it would be
+necessary to wait in order to get a character (as from a keyboard), nil is
+immediately returned without waiting.
+
+
+File: gcl.info,  Node: terpri,  Next: unread-char,  Prev: read-char-no-hang,  Up: Streams Dictionary
+
+terpri, fresh-line                                               [Function]
+---------------------------------------------------------------------------
+
+`terpri'  &optional output-stream =>  nil
+
+`fresh-line'  &optional output-stream =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+output-stream - an output stream designator.  The default is standard
+output.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+terpri outputs a newline to output-stream.
+
+fresh-line is similar to terpri but outputs a newline only if the
+output-stream is not already at the start of a line.  If for some reason
+this cannot be determined, then a newline is output anyway.  fresh-line
+returns true if it outputs a newline; otherwise it returns false.
+
+Examples::
+..........
+
+      (with-output-to-string (s)
+         (write-string "some text" s)
+         (terpri s)
+         (terpri s)
+         (write-string "more text" s))
+     =>  "some text
+     
+     more text"
+      (with-output-to-string (s)
+         (write-string "some text" s)
+         (fresh-line s)
+         (fresh-line s)
+         (write-string "more text" s))
+     =>  "some text
+     more text"
+
+Side Effects::
+..............
+
+The output-stream is modified.
+
+Affected By::
+.............
+
+*standard-output*, *terminal-io*.
+
+Exceptional Situations::
+........................
+
+None.
+
+[Reviewer Note by Barmar: What if stream is closed?]
+
+Notes::
+.......
+
+terpri is identical in effect to
+
+      (write-char #\Newline output-stream)
+
+
+File: gcl.info,  Node: unread-char,  Next: write-char,  Prev: terpri,  Up: Streams Dictionary
+
+unread-char                                                      [Function]
+---------------------------------------------------------------------------
+
+`unread-char'  character &optional input-stream =>  nil
+
+Arguments and Values::
+......................
+
+character--a character; must be the last character that was read from
+input-stream.
+
+input-stream--an input stream designator.  The default is standard input.
+
+Description::
+.............
+
+unread-char places character back onto the front of input-stream so that
+it will again be the next character in input-stream.
+
+When input-stream is an echo stream, no attempt is made to undo any
+echoing of the character that might already have been done on
+input-stream. However, characters placed on input-stream by unread-char
+are marked in such a way as to inhibit later re-echo by read-char.
+
+It is an error to invoke unread-char twice consecutively on the same stream
+without an intervening call to read-char (or some other input operation
+which implicitly reads characters) on that stream.
+
+Invoking peek-char or read-char commits all previous characters.  The
+consequences of invoking unread-char on any character preceding that which
+is returned by peek-char (including those passed over by peek-char that
+has a non-nil peek-type) are unspecified.  In particular, the consequences
+of invoking unread-char after peek-char are unspecified.
+
+Examples::
+..........
+
+      (with-input-from-string (is "0123")
+         (dotimes (i 6)
+           (let ((c (read-char is)))
+             (if (evenp i) (format t "~&~S ~S~
+      |>  0 #\0
+      |>  2 #\1
+      |>  4 #\2
+     =>  NIL
+
+Affected By::
+.............
+
+*standard-input*, *terminal-io*.
+
+See Also::
+..........
+
+*Note peek-char:: , *Note read-char:: , *Note Stream Concepts::
+
+Notes::
+.......
+
+unread-char is intended to be an efficient mechanism for allowing the Lisp
+reader and other parsers to perform one-character lookahead in
+input-stream.
+
+
+File: gcl.info,  Node: write-char,  Next: read-line,  Prev: unread-char,  Up: Streams Dictionary
+
+write-char                                                       [Function]
+---------------------------------------------------------------------------
+
+`write-char'  character &optional output-stream =>  character
+
+Arguments and Values::
+......................
+
+character--a character.
+
+output-stream - an output stream designator.  The default is standard
+output.
+
+Description::
+.............
+
+write-char outputs character to output-stream.
+
+Examples::
+..........
+
+      (write-char #\a)
+      |>  a
+     =>  #\a
+      (with-output-to-string (s)
+        (write-char #\a s)
+        (write-char #\Space s)
+        (write-char #\b s))
+     =>  "a b"
+
+Side Effects::
+..............
+
+The output-stream is modified.
+
+Affected By::
+.............
+
+*standard-output*, *terminal-io*.
+
+See Also::
+..........
+
+*Note read-char:: , *Note write-byte:: ,
+
+*Note write-sequence::
+
+
+File: gcl.info,  Node: read-line,  Next: write-string,  Prev: write-char,  Up: Streams Dictionary
+
+read-line                                                        [Function]
+---------------------------------------------------------------------------
+
+`read-line'  &optional input-stream eof-error-p eof-value recursive-p
+=>  line, missing-newline-p
+
+Arguments and Values::
+......................
+
+input-stream--an input stream designator.  The default is standard input.
+
+eof-error-p--a generalized boolean.  The default is true.
+
+eof-value--an object.  The default is nil.
+
+recursive-p--a generalized boolean.  The default is false.
+
+line--a string or the eof-value.
+
+missing-newline-p--a generalized boolean.
+
+Description::
+.............
+
+Reads from input-stream a line of text that is terminated by a newline or
+end of file.
+
+If recursive-p is true, this call is expected to be embedded in a
+higher-level call to read or a similar function used by the Lisp reader.
+
+The primary value, line, is the line that is read, represented as a string
+(without the trailing newline, if any).  If  eof-error-p is false and the
+end of file for input-stream is reached before any characters are read,
+eof-value is returned as the line.
+
+The secondary value, missing-newline-p, is a generalized boolean that is
+false if the line was terminated by a newline, or true  if the line was
+terminated by the end of file for input-stream (or if the line is the
+eof-value).
+
+Examples::
+..........
+
+      (setq a "line 1
+      line2")
+     =>  "line 1
+      line2"
+      (read-line (setq input-stream (make-string-input-stream a)))
+     =>  "line 1", false
+      (read-line input-stream)
+     =>  "line2", true
+      (read-line input-stream nil nil)
+     =>  NIL, true
+
+Affected By::
+.............
+
+*standard-input*, *terminal-io*.
+
+Exceptional Situations::
+........................
+
+If an end of file_2 occurs before any characters are read in the line, an
+error is signaled if eof-error-p is true.
+
+See Also::
+..........
+
+*Note read; read-preserving-whitespace::
+
+Notes::
+.......
+
+The corresponding output function is write-line.
+
+
+File: gcl.info,  Node: write-string,  Next: read-sequence,  Prev: read-line,  Up: Streams Dictionary
+
+write-string, write-line                                         [Function]
+---------------------------------------------------------------------------
+
+`write-string'  string &optional output-stream &key start end =>  string
+
+`write-line'  string &optional output-stream &key start end =>  string
+
+Arguments and Values::
+......................
+
+string--a string.
+
+output-stream - an output stream designator.  The default is standard
+output.
+
+start, end--bounding index designators of string.  The defaults for start
+and end are 0 and nil, respectively.
+
+Description::
+.............
+
+write-string writes the characters of the subsequence of string bounded by
+start and end to output-stream.  write-line does the same thing, but then
+outputs a newline afterwards.
+
+Examples::
+..........
+
+      (prog1 (write-string "books" nil :end 4) (write-string "worms"))
+      |>  bookworms
+     =>  "books"
+      (progn (write-char #\*)
+             (write-line "test12" *standard-output* :end 5)
+             (write-line "*test2")
+             (write-char #\*)
+             nil)
+      |>  *test1
+      |>  *test2
+      |>  *
+     =>  NIL
+
+Affected By::
+.............
+
+*standard-output*, *terminal-io*.
+
+See Also::
+..........
+
+*Note read-line:: , *Note write-char::
+
+Notes::
+.......
+
+write-line and write-string return string, not the substring bounded by
+start and end.
+
+      (write-string string)
+     == (dotimes (i (length string)
+           (write-char (char string i)))
+     
+      (write-line string)
+     == (prog1 (write-string string) (terpri))
+
+
+File: gcl.info,  Node: read-sequence,  Next: write-sequence,  Prev: write-string,  Up: Streams Dictionary
+
+read-sequence                                                    [Function]
+---------------------------------------------------------------------------
+
+`read-sequence'  sequence stream &key start end =>  position
+
+sequence--a sequence.
+
+stream--an input stream.
+
+start, end--bounding index designators of sequence.  The defaults for
+start and end are 0 and nil, respectively.
+
+position--an integer greater than or equal to zero, and less than or equal
+to the length of the sequence.
+
+Description::
+.............
+
+Destructively modifies sequence by replacing the elements of sequence
+bounded by start and end with elements read from stream.
+
+Sequence is destructively modified by copying successive elements into it
+from stream.  If the end of file for stream is reached before copying all
+elements of the subsequence, then the extra elements near the end of
+sequence are not updated.
+
+Position is the index of the first element of sequence that was not
+updated, which might be less than end because the end of file was reached.
+
+Examples::
+..........
+
+      (defvar *data* (make-array 15 :initial-element nil))
+      (values (read-sequence *data* (make-string-input-stream "test string")) *data*)
+      =>  11, #(#\t #\e #\s #\t #\Space #\s #\t #\r #\i #\n #\g NIL NIL NIL NIL)
+
+Side Effects::
+..............
+
+Modifies stream and sequence.
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if sequence is
+not a proper sequence.  Should signal an error of type type-error if start
+is not a non-negative integer.  Should signal an error of type type-error
+if end is not a non-negative integer or nil.
+
+Might signal an error of type type-error if an element read from the
+stream is not a member of the element type of the sequence.
+
+See Also::
+..........
+
+*Note Compiler Terminology::, *Note write-sequence:: , *Note read-line::
+
+Notes::
+.......
+
+read-sequence is identical in effect to iterating over the indicated
+subsequence and reading one element at a time from stream and storing it
+into sequence, but may be more efficient than the equivalent loop.  An
+efficient implementation is more likely to exist for the case where the
+sequence is a vector with the same element type as the stream.
+
+
+File: gcl.info,  Node: write-sequence,  Next: file-length,  Prev: read-sequence,  Up: Streams Dictionary
+
+write-sequence                                                   [Function]
+---------------------------------------------------------------------------
+
+`write-sequence'  sequence stream &key start end =>  sequence
+
+sequence--a sequence.
+
+stream--an output stream.
+
+start, end--bounding index designators of sequence.  The defaults for
+start and end are 0 and nil, respectively.
+
+Description::
+.............
+
+write-sequence writes the elements of the subsequence of sequence bounded
+by start and end to stream.
+
+Examples::
+..........
+
+      (write-sequence "bookworms" *standard-output* :end 4)
+       |>  book
+      =>  "bookworms"
+
+Side Effects::
+..............
+
+Modifies stream.
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if sequence is
+not a proper sequence.  Should signal an error of type type-error if start
+is not a non-negative integer.  Should signal an error of type type-error
+if end is not a non-negative integer or nil.
+
+Might signal an error of type type-error if an element of the bounded
+sequence is not a member of the stream element type of the stream.
+
+See Also::
+..........
+
+*Note Compiler Terminology::, *Note read-sequence:: , *Note write-string;
+write-line:: , write-line
+
+Notes::
+.......
+
+write-sequence is identical in effect to iterating over the indicated
+subsequence and writing one element at a time to stream, but may be more
+efficient than the equivalent loop.  An efficient implementation is more
+likely to exist for the case where the sequence is a vector with the same
+element type as the stream.
+
+
+File: gcl.info,  Node: file-length,  Next: file-position,  Prev: write-sequence,  Up: Streams Dictionary
+
+file-length                                                      [Function]
+---------------------------------------------------------------------------
+
+`file-length'  stream =>  length
+
+Arguments and Values::
+......................
+
+stream--a stream associated with a file.
+
+length--a non-negative integer or nil.
+
+Description::
+.............
+
+file-length returns the length of stream, or nil if the length cannot be
+determined.
+
+For a binary file, the length is measured in units of the element type of
+the stream.
+
+Examples::
+..........
+
+      (with-open-file (s "decimal-digits.text"
+                         :direction :output :if-exists :error)
+        (princ "0123456789" s)
+        (truename s))
+     =>  #P"A:>Joe>decimal-digits.text.1"
+      (with-open-file (s "decimal-digits.text")
+        (file-length s))
+     =>  10
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if stream is not a stream
+associated with a file.
+
+See Also::
+..........
+
+*Note open::
+
+
+File: gcl.info,  Node: file-position,  Next: file-string-length,  Prev: file-length,  Up: Streams Dictionary
+
+file-position                                                    [Function]
+---------------------------------------------------------------------------
+
+`file-position'  stream =>  position
+
+`file-position'  stream position-spec =>  success-p
+
+Arguments and Values::
+......................
+
+stream--a stream.
+
+position-spec--a file position designator.
+
+position--a file position or nil.
+
+success-p--a generalized boolean.
+
+Description::
+.............
+
+Returns or changes the current position within a stream.
+
+When position-spec is not supplied, file-position returns the current file
+position in the stream, or nil if this cannot be determined.
+
+When position-spec is supplied, the file position in stream is set to that
+file position (if possible).  file-position returns true if the
+repositioning is performed successfully, or false if it is not.
+
+An integer returned by file-position of one argument should be acceptable
+as position-spec for use with the same file.
+
+For a character file, performing a single read-char or write-char operation
+may cause the file position to be increased by more than 1 because of
+character-set translations (such as translating between the Common Lisp
+#\Newline character and an external ASCII carriage-return/line-feed
+sequence) and other aspects of the implementation.  For a binary file,
+every read-byte or write-byte operation increases the file position by 1.
+
+Examples::
+..........
+
+      (defun tester ()
+        (let ((noticed '()) file-written)
+          (flet ((notice (x) (push x noticed) x))
+            (with-open-file (s "test.bin"
+                               :element-type '(unsigned-byte 8)
+                               :direction :output
+                               :if-exists :error)
+               (notice (file-position s)) ;1
+               (write-byte 5 s)
+               (write-byte 6 s)
+               (let ((p (file-position s)))
+                 (notice p) ;2
+                 (notice (when p (file-position s (1- p))))) ;3
+               (write-byte 7 s)
+               (notice (file-position s)) ;4
+               (setq file-written (truename s)))
+             (with-open-file (s file-written
+                                :element-type '(unsigned-byte 8)
+                                :direction :input)
+               (notice (file-position s)) ;5
+               (let ((length (file-length s)))
+                 (notice length) ;6
+                 (when length
+                   (dotimes (i length)
+                     (notice (read-byte s)))))) ;7,...
+             (nreverse noticed))))
+     =>  tester
+      (tester)
+     =>  (0 2 T 2 0 2 5 7)
+     OR=> (0 2 NIL 3 0 3 5 6 7)
+     OR=> (NIL NIL NIL NIL NIL NIL)
+
+Side Effects::
+..............
+
+When the position-spec argument is supplied, the file position in the
+stream might be moved.
+
+Affected By::
+.............
+
+The value returned by file-position increases monotonically as input or
+output operations are performed.
+
+Exceptional Situations::
+........................
+
+If position-spec is supplied, but is too large or otherwise inappropriate,
+an error is signaled.
+
+See Also::
+..........
+
+*Note file-length:: , *Note file-string-length:: , *Note open::
+
+Notes::
+.......
+
+Implementations that have character files represented as a sequence of
+records of bounded size might choose to encode the file position as, for
+example, <<record-number>>*<<max-record-size>>+<<character-within-record>>.
+This is a valid encoding because it increases monotonically as each
+character is read or written, though not necessarily by 1 at each step.
+An integer might then be considered "inappropriate" as position-spec to
+file-position if, when decoded into record number and character number, it
+turned out that the supplied record was too short for the specified
+character number.
+
+
+File: gcl.info,  Node: file-string-length,  Next: open,  Prev: file-position,  Up: Streams Dictionary
+
+file-string-length                                               [Function]
+---------------------------------------------------------------------------
+
+`file-string-length'  stream object =>  length
+
+Arguments and Values::
+......................
+
+stream--an output character file stream.
+
+object--a string or a character.
+
+length--a non-negative integer, or nil.
+
+Description::
+.............
+
+file-string-length returns the difference between what (file-position
+stream) would be after writing object and its current value, or nil if
+this cannot be determined.
+
+The returned value corresponds to the current state of stream at the time
+of the call and might not be the same if it is called again when the state
+of the stream has changed.
+
+
+File: gcl.info,  Node: open,  Next: stream-external-format,  Prev: file-string-length,  Up: Streams Dictionary
+
+open                                                             [Function]
+---------------------------------------------------------------------------
+
+`open'  filespec &key direction element-type if-exists if-does-not-exist
+external-format
+=>  stream
+
+Arguments and Values::
+......................
+
+filespec--a pathname designator.
+
+direction--one of :input, :output, :io, or :probe.  The default is :input.
+
+element-type--a type specifier for recognizable subtype of character; or a
+type specifier for a finite recognizable subtype of integer; or one of the
+symbols signed-byte, unsigned-byte, or :default.  The default is character.
+
+if-exists--one of :error, :new-version, :rename, :rename-and-delete,
+:overwrite, :append, :supersede, or nil.  The default is :new-version if
+the version component of filespec is :newest, or :error otherwise.
+
+if-does-not-exist--one of :error, :create, or nil.  The default is :error
+if direction is :input or if-exists is :overwrite or :append; :create if
+direction is :output or :io, and if-exists is neither :overwrite nor
+:append; or nil when direction is :probe.
+
+external-format--an external file format designator.  The default is
+:default.
+
+stream--a file stream or nil.
+
+Description::
+.............
+
+open creates, opens, and returns a file stream that is connected to the
+file specified by filespec.  Filespec is the name of the file to be opened.
+If the filespec designator is a stream, that stream is not closed first or
+otherwise affected.
+
+The keyword arguments to open specify the characteristics of the file
+stream that is returned, and how to handle errors.
+
+If direction is :input or :probe, or if if-exists is not :new-version and
+the version component of the filespec is :newest, then the file opened is
+that file already existing in the file system that has a version greater
+than that of any other file in the file system whose other pathname
+components are the same as those of filespec.
+
+An implementation is required to recognize all of the open keyword options
+and to do something reasonable in the context of the host operating system.
+For example, if a file system does not support distinct file versions and
+does not distinguish the notions of deletion and expunging, :new-version
+might be treated the same as :rename or :supersede, and :rename-and-delete
+might be treated the same as :supersede.
+
+:direction
+     These are the possible values for direction, and how they affect the
+     nature of the stream that is created:
+
+    :input
+          Causes the creation of an input file stream.
+
+    :output
+          Causes the creation of an output file stream.
+
+    :io
+          Causes the creation of a bidirectional file stream.
+
+    :probe
+          Causes the creation of a "no-directional" file stream; in
+          effect, the file stream is created and then closed prior to
+          being returned by open.
+
+:element-type
+     The element-type specifies the unit of transaction for the file
+     stream.  If it is :default, the unit is determined by file system,
+     possibly based on the file.
+
+:if-exists
+     if-exists specifies the action to be taken if direction is :output or
+     :io and a file of the name filespec already exists.  If direction is
+     :input, not supplied, or :probe, if-exists is ignored.  These are the
+     results of open as modified by if-exists:
+
+    :error
+          An error of type file-error is signaled.
+
+    :new-version
+          A new file is created with a larger version number.
+
+    :rename
+          The existing file is renamed to some other name and then a new
+          file is created.
+
+    :rename-and-delete
+          The existing file is renamed to some other name, then it is
+          deleted but not expunged, and then a new file is created.
+
+    :overwrite
+          Output operations on the stream destructively modify the
+          existing file.  If direction is :io the file is opened in a
+          bidirectional mode that allows both reading and writing.  The
+          file pointer is initially positioned at the beginning of the
+          file; however, the file is not truncated back to length zero
+          when it is opened.
+
+    :append
+          Output operations on the stream destructively modify the
+          existing file.  The file pointer is initially positioned at the
+          end of the file.
+
+          If direction is :io, the file is opened in a bidirectional mode
+          that allows both reading and writing.
+
+    :supersede
+          The existing file is superseded; that is, a new file with the
+          same name as the old one is created.  If possible, the
+          implementation should not destroy the old file until the new
+          stream is closed.
+
+    nil
+          No file or stream is created; instead, nil is returned to
+          indicate failure.
+
+:if-does-not-exist
+     if-does-not-exist specifies the action to be taken if a file of name
+     filespec does not already exist.  These are the results of open as
+     modified by if-does-not-exist:
+
+    :error
+          An error of type file-error is signaled.
+
+    :create
+          An empty file is created.  Processing continues  as if the file
+          had already existed but no processing as directed by if-exists
+          is performed.
+
+    nil
+          No file or stream is created; instead, nil is returned to
+          indicate failure.
+
+:external-format
+     This option selects an external file format for the file: The only
+     standardized value for this option is :default, although
+     implementations are permitted to define additional external file
+     formats and implementation-dependent values returned by
+     stream-external-format can also be used by conforming programs.
+
+     The external-format is meaningful for any kind of file stream whose
+     element type is a subtype of character.  This option is ignored for
+     streams for which it is not meaningful; however, implementations may
+     define other element types for which it is meaningful.  The
+     consequences are unspecified if a character is written that cannot be
+     represented by the given external file format.
+
+When a file is opened, a file stream is constructed to serve as the file
+system's ambassador to the Lisp environment; operations on the file stream
+are reflected by operations on the file in the file system.
+
+A file can be deleted, renamed, or destructively modified by open.
+
+For information about opening relative pathnames, see *Note Merging
+Pathnames::.
+
+Examples::
+..........
+
+      (open filespec :direction :probe)  =>  #<Closed Probe File Stream...>
+      (setq q (merge-pathnames (user-homedir-pathname) "test"))
+     =>  #<PATHNAME :HOST NIL :DEVICE device-name :DIRECTORY directory-name
+         :NAME "test" :TYPE NIL :VERSION :NEWEST>
+      (open filespec :if-does-not-exist :create) =>  #<Input File Stream...>
+      (setq s (open filespec :direction :probe)) =>  #<Closed Probe File Stream...>
+      (truename s) =>  #<PATHNAME :HOST NIL :DEVICE device-name :DIRECTORY
+         directory-name :NAME filespec :TYPE extension :VERSION 1>
+      (open s :direction :output :if-exists nil) =>  NIL
+
+Affected By::
+.............
+
+The nature and state of the host computer's file system.
+
+Exceptional Situations::
+........................
+
+If if-exists is :error, (subject to the constraints on the meaning of
+if-exists listed above), an error of type file-error is signaled.
+
+If if-does-not-exist is :error (subject to the constraints on the meaning
+of if-does-not-exist listed above), an error of type file-error is
+signaled.
+
+If it is impossible for an implementation to handle some option in a
+manner close to what is specified here, an error of type error might be
+signaled.
+
+An error of type file-error is signaled if (wild-pathname-p filespec)
+returns true.
+
+An error of type error is signaled if the external-format is not
+understood by the implementation.
+
+The various file systems in existence today have widely differing
+capabilities, and some aspects of the file system are beyond the scope of
+this specification to define.  A given implementation might not be able to
+support all of these options in exactly the manner stated.  An
+implementation is required to recognize all of these option keywords and
+to try to do something "reasonable" in the context of the host file
+system.  Where necessary to accomodate the file system, an implementation
+deviate slightly from the semantics specified here without being
+disqualified for consideration as a conforming implementation.  If it is
+utterly impossible for an implementation to handle some option in a manner
+similar to what is specified here, it may simply signal an error.
+
+With regard to the :element-type option, if a type is requested that is
+not supported by the file system, a substitution of types such as that
+which goes on in upgrading is permissible.  As a minimum requirement, it
+should be the case that opening an output stream to a file in a given
+element type and later opening an input stream to the same file in the
+same element type should work compatibly.
+
+See Also::
+..........
+
+*Note with-open-file:: , *Note close:: , pathname, logical-pathname,
+
+*Note Merging Pathnames::,
+
+*Note Pathnames as Filenames::
+
+Notes::
+.......
+
+open does not automatically close the file when an abnormal exit occurs.
+
+When element-type is a subtype of character, read-char and/or write-char
+can be used on the resulting file stream.
+
+When element-type is a subtype of integer, read-byte and/or write-byte can
+be used on the resulting file stream.
+
+When element-type is :default, the type can be determined by using
+stream-element-type.
+
+
+File: gcl.info,  Node: stream-external-format,  Next: with-open-file,  Prev: open,  Up: Streams Dictionary
+
+stream-external-format                                           [Function]
+---------------------------------------------------------------------------
+
+`stream-external-format'  stream =>  format
+
+Arguments and Values::
+......................
+
+stream--a file stream.
+
+format--an external file format.
+
+Description::
+.............
+
+Returns an external file format designator for the stream.
+
+Examples::
+..........
+
+      (with-open-file (stream "test" :direction :output)
+        (stream-external-format stream))
+     =>  :DEFAULT
+     OR=> :ISO8859/1-1987
+     OR=> (:ASCII :SAIL)
+     OR=> ACME::PROPRIETARY-FILE-FORMAT-17
+     OR=> #<FILE-FORMAT :ISO646-1983 2343673>
+
+See Also::
+..........
+
+the :external-format argument to the function *Note open:: and the *Note
+with-open-file:: macro.
+
+Notes::
+.......
+
+The format returned is not necessarily meaningful to other implementations.
+
+
+File: gcl.info,  Node: with-open-file,  Next: close,  Prev: stream-external-format,  Up: Streams Dictionary
+
+with-open-file                                                      [macro]
+---------------------------------------------------------------------------
+
+Syntax::
+........
+
+`with-open-file'  (stream filespec {options}*) {declaration}* {form}*
+=>  results
+
+Arguments and Values::
+......................
+
+stream - a variable.
+
+filespec--a pathname designator.
+
+options - forms; evaluated.
+
+declaration--a declare expression; not evaluated.
+
+forms--an implicit progn.
+
+results--the values returned by the forms.
+
+Description::
+.............
+
+with-open-file uses open to create a file stream
+
+to file named by filespec.  Filespec is the name of the file to be opened.
+Options are used as keyword arguments to open.
+
+The stream object to which the stream variable is bound has dynamic extent;
+its extent ends when the form is exited.
+
+with-open-file evaluates the forms as an implicit progn with stream bound
+to
+
+the value returned by open.
+
+When control leaves the body, either normally or abnormally (such as by
+use of throw), the file is automatically closed.  If a new output file is
+being written, and control leaves abnormally, the file is aborted and the
+file system is left, so far as possible, as if the file had never been
+opened.
+
+It is possible by the use of :if-exists nil or :if-does-not-exist nil for
+stream to be bound to nil.
+
+Users of :if-does-not-exist nil should check for a valid stream.
+
+The consequences are undefined if an attempt is made to assign the stream
+variable.  The compiler may choose to issue a warning if such an attempt
+is detected.
+
+Examples::
+..........
+
+      (setq p (merge-pathnames "test"))
+     =>  #<PATHNAME :HOST NIL :DEVICE device-name :DIRECTORY directory-name
+         :NAME "test" :TYPE NIL :VERSION :NEWEST>
+      (with-open-file (s p :direction :output :if-exists :supersede)
+         (format s "Here are a couple~
+      (with-open-file (s p)
+         (do ((l (read-line s) (read-line s nil 'eof)))
+             ((eq l 'eof) "Reached end of file.")
+          (format t "~&*** ~A~
+      |>  *** Here are a couple
+      |>  *** of test data lines
+     =>  "Reached end of file."
+
+     ;; Normally one would not do this intentionally because it is
+     ;; not perspicuous, but beware when using :IF-DOES-NOT-EXIST NIL
+     ;; that this doesn't happen to you accidentally...
+      (with-open-file (foo "no-such-file" :if-does-not-exist nil)
+        (read foo))
+      |>  |>>hello?<<|
+     =>  HELLO? ;This value was read from the terminal, not a file!
+     
+     ;; Here's another bug to avoid...
+      (with-open-file (foo "no-such-file" :direction :output :if-does-not-exist nil)
+        (format foo "Hello"))
+     =>  "Hello" ;FORMAT got an argument of NIL!
+
+Side Effects::
+..............
+
+Creates a stream to the file named by filename (upon entry), and closes
+the stream (upon exit).  In some implementations, the file might be locked
+in some way while it is open.  If the stream is an output stream, a file
+might be created.
+
+Affected By::
+.............
+
+The host computer's file system.
+
+Exceptional Situations::
+........................
+
+See the function open.
+
+See Also::
+..........
+
+*Note open:: , *Note close:: , pathname, logical-pathname,
+
+*Note Pathnames as Filenames::
+
+
+File: gcl.info,  Node: close,  Next: with-open-stream,  Prev: with-open-file,  Up: Streams Dictionary
+
+close                                                            [Function]
+---------------------------------------------------------------------------
+
+`close'  stream &key abort =>  result
+
+Arguments and Values::
+......................
+
+stream--a stream (either open or closed).
+
+abort--a generalized boolean.  The default is false.
+
+result--t if the stream was open at the time it was received as an
+argument, or implementation-dependent otherwise.
+
+Description::
+.............
+
+close closes stream.  Closing a stream means that it may no longer be used
+in input or output operations.  The act of closing a file stream ends the
+association between the stream and its associated file; the transaction
+with the file system is terminated, and input/output may no longer be
+performed on the stream.
+
+If abort is true, an attempt is made to clean up any side effects of
+having created stream.  If stream performs output to a file that was
+created when the stream was created, the file is deleted and any
+previously existing file is not superseded.
+
+It is permissible to close an already closed stream, but in that case the
+result is implementation-dependent.
+
+After stream is closed, it is still possible to perform the following
+query operations upon it:
+
+streamp, pathname, truename, merge-pathnames, pathname-host,
+pathname-device, pathname-directory,pathname-name, pathname-type,
+pathname-version, namestring, file-namestring, directory-namestring,
+host-namestring, enough-namestring, open, probe-file, and directory.
+
+The effect of close on a constructed stream is to close the argument
+stream only.  There is no effect on the constituents of composite streams.
+
+For a stream created with make-string-output-stream, the result of
+get-output-stream-string is unspecified after close.
+
+Examples::
+..........
+
+      (setq s (make-broadcast-stream)) =>  #<BROADCAST-STREAM>
+      (close s) =>  T
+      (output-stream-p s) =>  true
+
+Side Effects::
+..............
+
+The stream is closed (if necessary).  If abort is true and the stream is
+an output file stream, its associated file might be deleted.
+
+See Also::
+..........
+
+*Note open::
+
+
+File: gcl.info,  Node: with-open-stream,  Next: listen,  Prev: close,  Up: Streams Dictionary
+
+with-open-stream                                                    [Macro]
+---------------------------------------------------------------------------
+
+`with-open-stream'  (var stream) {declaration}* {form}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+var--a variable name.
+
+stream--a form; evaluated to produce a stream.
+
+declaration--a declare expression; not evaluated.
+
+forms--an implicit progn.
+
+results--the values returned by the forms.
+
+Description::
+.............
+
+with-open-stream performs a series of operations on stream, returns a
+value, and then closes the stream.
+
+Var is bound to the value of stream, and then forms are executed as an
+implicit progn.  stream is automatically closed on exit from
+with-open-stream, no matter whether the exit is normal or abnormal.
+
+The stream has dynamic extent; its extent ends when the form is exited.
+
+The consequences are undefined if an attempt is made to assign the the
+variable var with the forms.
+
+Examples::
+..........
+
+      (with-open-stream (s (make-string-input-stream "1 2 3 4"))
+         (+ (read s) (read s) (read s))) =>  6
+
+Side Effects::
+..............
+
+The stream is closed (upon exit).
+
+See Also::
+..........
+
+*Note close::
+
+
+File: gcl.info,  Node: listen,  Next: clear-input,  Prev: with-open-stream,  Up: Streams Dictionary
+
+listen                                                           [Function]
+---------------------------------------------------------------------------
+
+`listen'  &optional input-stream =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+input-stream--an input stream designator.  The default is standard input.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if there is a character immediately available from
+input-stream; otherwise, returns false.  On a non-interactive input-stream,
+listen returns true except when at end of file_1.  If an end of file is
+encountered, listen returns false.  listen is intended to be used when
+input-stream obtains characters from an interactive device such as a
+keyboard.
+
+Examples::
+..........
+
+      (progn (unread-char (read-char)) (list (listen) (read-char)))
+      |>  |>>1<<|
+     =>  (T #\1)
+      (progn (clear-input) (listen))
+     =>  NIL ;Unless you're a very fast typist!
+
+Affected By::
+.............
+
+*standard-input*
+
+See Also::
+..........
+
+*Note interactive-stream-p:: , *Note read-char-no-hang::
+
+
+File: gcl.info,  Node: clear-input,  Next: finish-output,  Prev: listen,  Up: Streams Dictionary
+
+clear-input                                                      [Function]
+---------------------------------------------------------------------------
+
+`clear-input'  &optional input-stream =>  nil
+
+Arguments and Values::
+......................
+
+input-stream--an input stream designator.  The default is standard input.
+
+Description::
+.............
+
+Clears any available input from input-stream.
+
+If clear-input does not make sense for input-stream, then clear-input does
+nothing.
+
+Examples::
+..........
+
+     ;; The exact I/O behavior of this example might vary from implementation
+     ;; to implementation depending on the kind of interactive buffering that
+     ;; occurs.  (The call to SLEEP here is intended to help even out the
+     ;; differences in implementations which do not do line-at-a-time buffering.)
+     
+     (defun read-sleepily (&optional (clear-p nil) (zzz 0))
+       (list (progn (print '>) (read))
+             ;; Note that input typed within the first ZZZ seconds
+             ;; will be discarded.
+             (progn (print '>)
+                    (if zzz (sleep zzz))
+                    (print '>>)
+                    (if clear-p (clear-input))
+                    (read))))
+     
+     (read-sleepily)
+      |>  > |>>10<<|
+      |>  >
+      |>  >> |>>20<<|
+     =>  (10 20)
+     
+     (read-sleepily t)
+      |>  > |>>10<<|
+      |>  >
+      |>  >> |>>20<<|
+     =>  (10 20)
+     
+     (read-sleepily t 10)
+      |>  > |>>10<<|
+      |>  > |>>20<<|  ; Some implementations won't echo typeahead here.
+      |>  >> |>>30<<|
+     =>  (10 30)
+
+Side Effects::
+..............
+
+The input-stream is modified.
+
+Affected By::
+.............
+
+*standard-input*
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if input-stream is not a stream
+designator.
+
+See Also::
+..........
+
+clear-output
+
+
+File: gcl.info,  Node: finish-output,  Next: y-or-n-p,  Prev: clear-input,  Up: Streams Dictionary
+
+finish-output, force-output, clear-output                        [Function]
+---------------------------------------------------------------------------
+
+`finish-output'  &optional output-stream =>  nil
+
+`force-output'  &optional output-stream =>  nil
+
+`clear-output'  &optional output-stream =>  nil
+
+Arguments and Values::
+......................
+
+output-stream--an output stream designator.  The default is standard
+output.
+
+Description::
+.............
+
+finish-output, force-output, and clear-output exercise control over the
+internal handling of buffered stream output.
+
+finish-output attempts to ensure that any buffered output sent to
+output-stream has reached its destination, and then returns.
+
+force-output initiates the emptying of any internal buffers but does not
+wait for completion or acknowledgment to return.
+
+clear-output attempts to abort any outstanding output operation in
+progress in order to allow as little output as possible to continue to the
+destination.
+
+If any of these operations does not make sense for output-stream, then it
+does nothing.  The precise actions of these functions are
+implementation-dependent.
+
+Examples::
+..........
+
+     ;; Implementation A
+      (progn (princ "am i seen?") (clear-output))
+     =>  NIL
+     
+     ;; Implementation B
+      (progn (princ "am i seen?") (clear-output))
+      |>  am i seen?
+     =>  NIL
+
+Affected By::
+.............
+
+*standard-output*
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if output-stream is not a stream
+designator.
+
+See Also::
+..........
+
+*Note clear-input::
+
+
+File: gcl.info,  Node: y-or-n-p,  Next: make-synonym-stream,  Prev: finish-output,  Up: Streams Dictionary
+
+y-or-n-p, yes-or-no-p                                            [Function]
+---------------------------------------------------------------------------
+
+`y-or-n-p'  &optional control &rest arguments =>  generalized-boolean
+
+`yes-or-no-p'  &optional control &rest arguments =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+control--a format control.
+
+arguments--format arguments for control.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+These functions ask a question and parse a response from the user.  They
+return true if the answer is affirmative, or false if the answer is
+negative.
+
+y-or-n-p is for asking the user a question whose answer is either "yes" or
+"no." It is intended that the reply require the user to answer a yes-or-no
+question with a single character.  yes-or-no-p is also for asking the user
+a question whose answer is either "Yes" or "No." It is intended that the
+reply require the user to take more action than just a single keystroke,
+such as typing the full word yes or no followed by a newline.
+
+y-or-n-p types out a message (if supplied), reads an answer in some
+implementation-dependent manner (intended to be short and simple, such as
+reading a single character such as Y or N).  yes-or-no-p types out a
+message (if supplied), attracts the user's attention (for example, by
+ringing the terminal's bell), and reads an answer in some
+implementation-dependent manner (intended to be multiple characters, such
+as YES or NO).
+
+If format-control is supplied and not nil, then a fresh-line operation is
+performed; then a message is printed as if format-control and arguments
+were given to format.  In any case, yes-or-no-p and y-or-n-p will provide
+a prompt such as "(Y or N)" or "(Yes or No)" if appropriate.
+
+All input and output are performed using query I/O.
+
+Examples::
+..........
+
+      (y-or-n-p "(t or nil) given by")
+      |>  (t or nil) given by (Y or N) |>>Y<<|
+     =>  true
+      (yes-or-no-p "a ~S message" 'frightening)
+      |>  a FRIGHTENING message (Yes or No) |>>no<<|
+     =>  false
+      (y-or-n-p "Produce listing file?")
+      |>  Produce listing file?
+      |>  Please respond with Y or N. |>>n<<|
+     =>  false
+
+Side Effects::
+..............
+
+Output to and input from query I/O will occur.
+
+Affected By::
+.............
+
+*query-io*.
+
+See Also::
+..........
+
+*Note format::
+
+Notes::
+.......
+
+yes-or-no-p and yes-or-no-p do not add question marks to the end of the
+prompt string, so any desired question mark or other punctuation should be
+explicitly included in the text query.
+
+
+File: gcl.info,  Node: make-synonym-stream,  Next: synonym-stream-symbol,  Prev: y-or-n-p,  Up: Streams Dictionary
+
+make-synonym-stream                                              [Function]
+---------------------------------------------------------------------------
+
+`make-synonym-stream'  symbol =>  synonym-stream
+
+Arguments and Values::
+......................
+
+symbol--a symbol that names a dynamic variable.
+
+synonym-stream--a synonym stream.
+
+Description::
+.............
+
+Returns a synonym stream whose synonym stream symbol is symbol.
+
+Examples::
+..........
+
+      (setq a-stream (make-string-input-stream "a-stream")
+             b-stream (make-string-input-stream "b-stream"))
+     =>  #<String Input Stream>
+      (setq s-stream (make-synonym-stream 'c-stream))
+     =>  #<SYNONYM-STREAM for C-STREAM>
+      (setq c-stream a-stream)
+     =>  #<String Input Stream>
+      (read s-stream) =>  A-STREAM
+      (setq c-stream b-stream)
+     =>  #<String Input Stream>
+      (read s-stream) =>  B-STREAM
+
+Exceptional Situations::
+........................
+
+Should signal type-error if its argument is not a symbol.
+
+See Also::
+..........
+
+*Note Stream Concepts::
+
+
+File: gcl.info,  Node: synonym-stream-symbol,  Next: broadcast-stream-streams,  Prev: make-synonym-stream,  Up: Streams Dictionary
+
+synonym-stream-symbol                                            [Function]
+---------------------------------------------------------------------------
+
+`synonym-stream-symbol'  synonym-stream =>  symbol
+
+Arguments and Values::
+......................
+
+synonym-stream--a synonym stream.
+
+symbol--a symbol.
+
+Description::
+.............
+
+Returns the symbol whose symbol-value the synonym-stream is using.
+
+See Also::
+..........
+
+*Note make-synonym-stream::
+

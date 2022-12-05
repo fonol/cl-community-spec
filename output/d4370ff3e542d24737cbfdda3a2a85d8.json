@@ -1,0 +1,57 @@
+{
+    "name": "cerror",
+    "prev": "error",
+    "next": "check-type",
+    "up": "Conditions Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "cerror"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "cerror",
+                    "text": " continue-format-control datum &rest arguments =>  nil\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "Continue-format-control",
+                    "desc": "a format control.[Reviewer Note by Barmar: What is continue-format-control used for??]\n"
+                },
+                {
+                    "name": "datum, arguments",
+                    "desc": "designators for a condition of default type simple-error."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "cerror effectively invokes error on the condition named by datum.  As with\nany function that implicitly calls error, if the condition is not handled,\n(invoke-debugger condition) is executed.  While signaling is going on, and\nwhile in the debugger if it is reached, it is possible to continue code\nexecution (i.e., to return from cerror) using the continue restart.\nIf datum is a condition, arguments can be supplied, but are used only in\nconjunction with the continue-format-control.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defun real-sqrt (n)\n        (when (minusp n)\n          (setq n (- n))\n          (cerror \"Return sqrt(~D) instead.\" \"Tried to take sqrt(-~D).\" n))\n        (sqrt n))\n      (real-sqrt 4)\n     =>  2.0\n      (real-sqrt -9)\n      |>  Correctable error in REAL-SQRT: Tried to take sqrt(-9).\n      |>  Restart options:\n      |>   1: Return sqrt(9) instead.\n      |>   2: Top level.\n      |>  Debug> |>>:continue 1<<|\n     =>  3.0\n      (define-condition not-a-number (error)\n        ((argument :reader not-a-number-argument :initarg :argument))\n        (:report (lambda (condition stream)\n                   (format stream \"~S is not a number.\"\n                           (not-a-number-argument condition)))))\n      (defun assure-number (n)\n        (loop (when (numberp n) (return n))\n              (cerror \"Enter a number.\"\n                      'not-a-number :argument n)\n              (format t \"~&Type a number: \")\n              (setq n (read))\n              (fresh-line)))\n      (assure-number 'a)\n      |>  Correctable error in ASSURE-NUMBER: A is not a number.\n      |>  Restart options:\n      |>   1: Enter a number.\n      |>   2: Top level.\n      |>  Debug> |>>:continue 1<<|\n      |>  Type a number: |>>1/2<<|\n     =>  1/2\n      (defun assure-large-number (n)\n        (loop (when (and (numberp n) (> n 73)) (return n))\n              (cerror \"Enter a number~:[~; a bit larger than ~D~].\"\n                      \"~*~A is not a large number.\"\n                      (numberp n) n)\n              (format t \"~&Type a large number: \")\n              (setq n (read))\n              (fresh-line)))\n      (assure-large-number 10000)\n     =>  10000\n      (assure-large-number 'a)\n      |>  Correctable error in ASSURE-LARGE-NUMBER: A is not a large number.\n      |>  Restart options:\n      |>   1: Enter a number.\n      |>   2: Top level.\n      |>  Debug> |>>:continue 1<<|\n      |>  Type a large number: |>>88<<|\n     =>  88\n      (assure-large-number 37)\n      |>  Correctable error in ASSURE-LARGE-NUMBER: 37 is not a large number.\n      |>  Restart options:\n      |>   1: Enter a number a bit larger than 37.\n      |>   2: Top level.\n      |>  Debug> |>>:continue 1<<|\n      |>  Type a large number: |>>259<<|\n     =>  259\n      (define-condition not-a-large-number (error)\n        ((argument :reader not-a-large-number-argument :initarg :argument))\n        (:report (lambda (condition stream)\n                   (format stream \"~S is not a large number.\"\n                           (not-a-large-number-argument condition)))))\n      (defun assure-large-number (n)\n        (loop (when (and (numberp n) (> n 73)) (return n))\n              (cerror \"Enter a number~3*~:[~; a bit larger than ~*~D~].\"\n                      'not-a-large-number\n                      :argument n\n                      :ignore (numberp n)\n                      :ignore n\n                      :allow-other-keys t)\n              (format t \"~&Type a large number: \")\n              (setq n (read))\n              (fresh-line)))\n      (assure-large-number 'a)\n      |>  Correctable error in ASSURE-LARGE-NUMBER: A is not a large number.\n      |>  Restart options:\n      |>   1: Enter a number.\n      |>   2: Top level.\n      |>  Debug> |>>:continue 1<<|\n      |>  Type a large number: |>>88<<|\n     =>  88\n      (assure-large-number 37)\n      |>  Correctable error in ASSURE-LARGE-NUMBER: A is not a large number.\n      |>  Restart options:\n      |>   1: Enter a number a bit larger than 37.\n      |>   2: Top level.\n      |>  Debug> |>>:continue 1<<|\n      |>  Type a large number: |>>259<<|\n     =>  259\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "*break-on-signals*.\nExisting handler bindings.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note error:: , *Note format:: , *Note handler-bind:: ,\n*break-on-signals*, simple-type-error\n"
+        },
+        {
+            "type": "Notes",
+            "text": "If datum is a condition type rather than a string, the format directive ~*\nmay be especially useful in the continue-format-control in order to ignore\nthe keywords in the initialization argument list.  For example:\n     (cerror \"enter a new value to replace ~*~s\"\n             'not-a-number\n             :argument a)\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: cerror,  Next: check-type,  Prev: error,  Up: Conditions Dictionary\n\ncerror                                                           [Function]\n---------------------------------------------------------------------------\n\n`cerror'  continue-format-control datum &rest arguments =>  nil\n\nArguments and Values::\n......................\n\nContinue-format-control--a format control.\n\n[Reviewer Note by Barmar: What is continue-format-control used for??]\n\ndatum, arguments--designators for a condition of default type simple-error.\n\nDescription::\n.............\n\ncerror effectively invokes error on the condition named by datum.  As with\nany function that implicitly calls error, if the condition is not handled,\n(invoke-debugger condition) is executed.  While signaling is going on, and\nwhile in the debugger if it is reached, it is possible to continue code\nexecution (i.e., to return from cerror) using the continue restart.\n\nIf datum is a condition, arguments can be supplied, but are used only in\nconjunction with the continue-format-control.\n\nExamples::\n..........\n\n      (defun real-sqrt (n)\n        (when (minusp n)\n          (setq n (- n))\n          (cerror \"Return sqrt(~D) instead.\" \"Tried to take sqrt(-~D).\" n))\n        (sqrt n))\n     \n      (real-sqrt 4)\n     =>  2.0\n     \n      (real-sqrt -9)\n      |>  Correctable error in REAL-SQRT: Tried to take sqrt(-9).\n      |>  Restart options:\n      |>   1: Return sqrt(9) instead.\n      |>   2: Top level.\n      |>  Debug> |>>:continue 1<<|\n     =>  3.0\n     \n      (define-condition not-a-number (error)\n        ((argument :reader not-a-number-argument :initarg :argument))\n        (:report (lambda (condition stream)\n                   (format stream \"~S is not a number.\"\n                           (not-a-number-argument condition)))))\n     \n      (defun assure-number (n)\n        (loop (when (numberp n) (return n))\n              (cerror \"Enter a number.\"\n                      'not-a-number :argument n)\n              (format t \"~&Type a number: \")\n              (setq n (read))\n              (fresh-line)))\n     \n      (assure-number 'a)\n      |>  Correctable error in ASSURE-NUMBER: A is not a number.\n      |>  Restart options:\n      |>   1: Enter a number.\n      |>   2: Top level.\n      |>  Debug> |>>:continue 1<<|\n      |>  Type a number: |>>1/2<<|\n     =>  1/2\n     \n      (defun assure-large-number (n)\n        (loop (when (and (numberp n) (> n 73)) (return n))\n              (cerror \"Enter a number~:[~; a bit larger than ~D~].\"\n                      \"~*~A is not a large number.\"\n                      (numberp n) n)\n              (format t \"~&Type a large number: \")\n              (setq n (read))\n              (fresh-line)))\n     \n      (assure-large-number 10000)\n     =>  10000\n     \n      (assure-large-number 'a)\n      |>  Correctable error in ASSURE-LARGE-NUMBER: A is not a large number.\n      |>  Restart options:\n      |>   1: Enter a number.\n      |>   2: Top level.\n      |>  Debug> |>>:continue 1<<|\n      |>  Type a large number: |>>88<<|\n     =>  88\n     \n      (assure-large-number 37)\n      |>  Correctable error in ASSURE-LARGE-NUMBER: 37 is not a large number.\n      |>  Restart options:\n      |>   1: Enter a number a bit larger than 37.\n      |>   2: Top level.\n      |>  Debug> |>>:continue 1<<|\n      |>  Type a large number: |>>259<<|\n     =>  259\n     \n      (define-condition not-a-large-number (error)\n        ((argument :reader not-a-large-number-argument :initarg :argument))\n        (:report (lambda (condition stream)\n                   (format stream \"~S is not a large number.\"\n                           (not-a-large-number-argument condition)))))\n     \n      (defun assure-large-number (n)\n        (loop (when (and (numberp n) (> n 73)) (return n))\n              (cerror \"Enter a number~3*~:[~; a bit larger than ~*~D~].\"\n                      'not-a-large-number\n                      :argument n\n                      :ignore (numberp n)\n                      :ignore n\n                      :allow-other-keys t)\n              (format t \"~&Type a large number: \")\n              (setq n (read))\n              (fresh-line)))\n     \n      (assure-large-number 'a)\n      |>  Correctable error in ASSURE-LARGE-NUMBER: A is not a large number.\n      |>  Restart options:\n      |>   1: Enter a number.\n      |>   2: Top level.\n      |>  Debug> |>>:continue 1<<|\n      |>  Type a large number: |>>88<<|\n     =>  88\n     \n      (assure-large-number 37)\n      |>  Correctable error in ASSURE-LARGE-NUMBER: A is not a large number.\n      |>  Restart options:\n      |>   1: Enter a number a bit larger than 37.\n      |>   2: Top level.\n      |>  Debug> |>>:continue 1<<|\n      |>  Type a large number: |>>259<<|\n     =>  259\n\nAffected By::\n.............\n\n*break-on-signals*.\n\nExisting handler bindings.\n\nSee Also::\n..........\n\n*Note error:: , *Note format:: , *Note handler-bind:: ,\n*break-on-signals*, simple-type-error\n\nNotes::\n.......\n\nIf datum is a condition type rather than a string, the format directive ~*\nmay be especially useful in the continue-format-control in order to ignore\nthe keywords in the initialization argument list.  For example:\n\n     (cerror \"enter a new value to replace ~*~s\"\n             'not-a-number\n             :argument a)\n\n"
+}

@@ -1,0 +1,41 @@
+{
+    "name": "*print-circle*",
+    "prev": "*print-case*",
+    "next": "*print-escape*",
+    "up": "Printer Dictionary",
+    "header": {
+        "type": "Variable",
+        "text": "*print-circle*"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Value Type",
+            "text": "a generalized boolean.\n"
+        },
+        {
+            "type": "Initial Value",
+            "text": "false.\n"
+        },
+        {
+            "type": "Description",
+            "text": "Controls the attempt to detect circularity and sharing in an object being\nprinted.\nIf false, the printing process merely proceeds by recursive descent\nwithout attempting to detect circularity and sharing.\nIf true, the printer will endeavor to detect cycles and sharing in the\nstructure to be printed, and to use #n= and #n# syntax to indicate the\ncircularities or shared components.\nIf true, a user-defined\nprint-object method\ncan print objects to the supplied stream using write, prin1, princ, or\nformat and expect circularities and sharing to be detected and printed\nusing the #n# syntax.\nIf a user-defined\nprint-object method\nprints to a stream other than the one that was supplied, then circularity\ndetection starts over for that stream.\nNote that implementations should not use #n# notation when the Lisp reader\nwould automatically assure sharing without it (e.g., as happens with\ninterned symbols).\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (let ((a (list 1 2 3)))\n        (setf (cdddr a) a)\n        (let ((*print-circle* t))\n          (write a)\n          :done))\n      |>  #1=(1 2 3 . #1#)\n     =>  :DONE\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note write; prin1; print; pprint; princ::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "An attempt to print a circular structure with *print-circle* set to nil\nmay lead to looping behavior and failure to terminate.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: *print-circle*,  Next: *print-escape*,  Prev: *print-case*,  Up: Printer Dictionary\n\n*print-circle*                                                   [Variable]\n---------------------------------------------------------------------------\n\nValue Type::\n............\n\na generalized boolean.\n\nInitial Value::\n...............\n\nfalse.\n\nDescription::\n.............\n\nControls the attempt to detect circularity and sharing in an object being\nprinted.\n\nIf false, the printing process merely proceeds by recursive descent\nwithout attempting to detect circularity and sharing.\n\nIf true, the printer will endeavor to detect cycles and sharing in the\nstructure to be printed, and to use #n= and #n# syntax to indicate the\ncircularities or shared components.\n\nIf true, a user-defined\n\nprint-object method\n\ncan print objects to the supplied stream using write, prin1, princ, or\nformat and expect circularities and sharing to be detected and printed\nusing the #n# syntax.\n\nIf a user-defined\n\nprint-object method\n\nprints to a stream other than the one that was supplied, then circularity\ndetection starts over for that stream.\n\nNote that implementations should not use #n# notation when the Lisp reader\nwould automatically assure sharing without it (e.g., as happens with\ninterned symbols).\n\nExamples::\n..........\n\n      (let ((a (list 1 2 3)))\n        (setf (cdddr a) a)\n        (let ((*print-circle* t))\n          (write a)\n          :done))\n      |>  #1=(1 2 3 . #1#)\n     =>  :DONE\n\nSee Also::\n..........\n\n*Note write; prin1; print; pprint; princ::\n\nNotes::\n.......\n\nAn attempt to print a circular structure with *print-circle* set to nil\nmay lead to looping behavior and failure to terminate.\n\n"
+}

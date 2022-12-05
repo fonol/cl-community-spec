@@ -1,0 +1,41 @@
+{
+    "name": "*print-base*",
+    "prev": "*print-array*",
+    "next": "*print-case*",
+    "up": "Printer Dictionary",
+    "header": {
+        "type": "Variable",
+        "text": "*print-base*, *print-radix*"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Value Type",
+            "text": "*print-base*--a radix.  *print-radix*--a generalized boolean.\n"
+        },
+        {
+            "type": "Initial Value",
+            "text": "The initial value of *print-base* is 10.  The initial value of\n*print-radix* is false.\n"
+        },
+        {
+            "type": "Description",
+            "text": "*print-base* and *print-radix* control the printing of rationals.  The\nvalue of *print-base* is called the current output base .\nThe value of *print-base* is the radix in which the printer will print\nrationals.   For radices above 10, letters of the alphabet are used to\nrepresent digits above 9.\nIf the value of *print-radix* is true, the printer will print a radix\nspecifier to indicate the radix in which it is printing a rational number.\nThe radix specifier is always printed using lowercase letters.  If\n*print-base* is 2, 8, or 16, then the radix specifier used is #b, #o, or\n#x, respectively.  For integers, base ten is indicated by a trailing\ndecimal point instead of a leading radix specifier; for ratios, #10r is\nused.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (let ((*print-base* 24.) (*print-radix* t))\n        (print 23.))\n      |>  #24rN\n     =>  23\n      (setq *print-base* 10) =>  10\n      (setq *print-radix* nil) =>  NIL\n      (dotimes (i 35)\n         (let ((*print-base* (+ i 2)))           ;print the decimal number 40\n           (write 40)                            ;in each base from 2 to 36\n           (if (zerop (mod i 10)) (terpri) (format t \" \"))))\n      |>  101000\n      |>  1111 220 130 104 55 50 44 40 37 34\n      |>  31 2C 2A 28 26 24 22 20 1J 1I\n      |>  1H 1G 1F 1E 1D 1C 1B 1A 19 18\n      |>  17 16 15 14\n     =>  NIL\n      (dolist (pb '(2 3 8 10 16))\n         (let ((*print-radix* t)                 ;print the integer 10 and\n               (*print-base* pb))                ;the ratio 1/10 in bases 2,\n          (format t \"~&~S  ~S~\n      |>  #b1010  #b1/1010\n      |>  #3r101  #3r1/101\n      |>  #o12  #o1/12\n      |>  10.  #10r1/10\n      |>  #xA  #x1/A\n     =>  NIL\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "Might be bound by format, and write, write-to-string.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note format:: , *Note write; prin1; print; pprint; princ:: , *Note\nwrite-to-string; prin1-to-string; princ-to-string::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: *print-base*,  Next: *print-case*,  Prev: *print-array*,  Up: Printer Dictionary\n\n*print-base*, *print-radix*                                      [Variable]\n---------------------------------------------------------------------------\n\nValue Type::\n............\n\n*print-base*--a radix.  *print-radix*--a generalized boolean.\n\nInitial Value::\n...............\n\nThe initial value of *print-base* is 10.  The initial value of\n*print-radix* is false.\n\nDescription::\n.............\n\n*print-base* and *print-radix* control the printing of rationals.  The\nvalue of *print-base* is called the current output base .\n\nThe value of *print-base* is the radix in which the printer will print\nrationals.   For radices above 10, letters of the alphabet are used to\nrepresent digits above 9.\n\nIf the value of *print-radix* is true, the printer will print a radix\nspecifier to indicate the radix in which it is printing a rational number.\nThe radix specifier is always printed using lowercase letters.  If\n*print-base* is 2, 8, or 16, then the radix specifier used is #b, #o, or\n#x, respectively.  For integers, base ten is indicated by a trailing\ndecimal point instead of a leading radix specifier; for ratios, #10r is\nused.\n\nExamples::\n..........\n\n      (let ((*print-base* 24.) (*print-radix* t))\n        (print 23.))\n      |>  #24rN\n     =>  23\n      (setq *print-base* 10) =>  10\n      (setq *print-radix* nil) =>  NIL\n      (dotimes (i 35)\n         (let ((*print-base* (+ i 2)))           ;print the decimal number 40\n           (write 40)                            ;in each base from 2 to 36\n           (if (zerop (mod i 10)) (terpri) (format t \" \"))))\n      |>  101000\n      |>  1111 220 130 104 55 50 44 40 37 34\n      |>  31 2C 2A 28 26 24 22 20 1J 1I\n      |>  1H 1G 1F 1E 1D 1C 1B 1A 19 18\n      |>  17 16 15 14\n     =>  NIL\n      (dolist (pb '(2 3 8 10 16))\n         (let ((*print-radix* t)                 ;print the integer 10 and\n               (*print-base* pb))                ;the ratio 1/10 in bases 2,\n          (format t \"~&~S  ~S~\n      |>  #b1010  #b1/1010\n      |>  #3r101  #3r1/101\n      |>  #o12  #o1/12\n      |>  10.  #10r1/10\n      |>  #xA  #x1/A\n     =>  NIL\n\nAffected By::\n.............\n\nMight be bound by format, and write, write-to-string.\n\nSee Also::\n..........\n\n*Note format:: , *Note write; prin1; print; pprint; princ:: , *Note\nwrite-to-string; prin1-to-string; princ-to-string::\n\n"
+}

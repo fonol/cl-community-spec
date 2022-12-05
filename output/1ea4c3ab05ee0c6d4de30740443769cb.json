@@ -1,0 +1,57 @@
+{
+    "name": "warn",
+    "prev": "simple-condition-format-control",
+    "next": "simple-warning",
+    "up": "Conditions Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "warn"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "warn",
+                    "text": " datum &rest arguments =>  nil\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "datum, arguments",
+                    "desc": "designators for a condition of default type"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Signals a condition of type warning.  If the condition is not handled,\nreports the condition to error output.\nThe precise mechanism for warning is as follows:\nThe warning condition is signaled\n     While the warning condition is being signaled, the muffle-warning\n     restart is established for use by a handler.  If invoked, this\n     restart bypasses further action by warn, which in turn causes warn to\n     immediately return nil.\nIf no handler for the warning condition is found\n     If no handlers for the warning condition are found, or if all such\n     handlers decline, then the condition is reported to error output by\n     warn in an implementation-dependent format.\nnil is returned\n     The value returned by warn if it returns is nil.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "       (defun foo (x)\n         (let ((result (* x 2)))\n           (if (not (typep result 'fixnum))\n               (warn \"You're using very big numbers.\"))\n           result))\n     =>  FOO\n       (foo 3)\n     =>  6\n       (foo most-positive-fixnum)\n      |>  Warning: You're using very big numbers.\n     =>  4294967294\n       (setq *break-on-signals* t)\n     =>  T\n       (foo most-positive-fixnum)\n      |>  Break: Caveat emptor.\n      |>  To continue, type :CONTINUE followed by an option number.\n      |>   1: Return from Break.\n      |>   2: Abort to Lisp Toplevel.\n      |>  Debug> :continue 1\n      |>  Warning: You're using very big numbers.\n     =>  4294967294\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "A warning is issued.  The debugger might be entered.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "Existing handler bindings.\n*break-on-signals*, *error-output*.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If datum is a condition and if the condition is not of type warning, or\narguments is non-nil, an error of type type-error is signaled.\nIf datum is a condition type, the result of (apply #'make-condition datum\narguments) must be of type warning or an error of type type-error is\nsignaled.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*break-on-signals*, *Note muffle-warning:: , *Note signal::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: warn,  Next: simple-warning,  Prev: simple-condition-format-control,  Up: Conditions Dictionary\n\nwarn                                                             [Function]\n---------------------------------------------------------------------------\n\n`warn'  datum &rest arguments =>  nil\n\nArguments and Values::\n......................\n\ndatum, arguments--designators for a condition of default type\nsimple-warning.\n\nDescription::\n.............\n\nSignals a condition of type warning.  If the condition is not handled,\nreports the condition to error output.\n\nThe precise mechanism for warning is as follows:\n\nThe warning condition is signaled\n     While the warning condition is being signaled, the muffle-warning\n     restart is established for use by a handler.  If invoked, this\n     restart bypasses further action by warn, which in turn causes warn to\n     immediately return nil.\n\nIf no handler for the warning condition is found\n     If no handlers for the warning condition are found, or if all such\n     handlers decline, then the condition is reported to error output by\n     warn in an implementation-dependent format.\n\nnil is returned\n     The value returned by warn if it returns is nil.\n\nExamples::\n..........\n\n       (defun foo (x)\n         (let ((result (* x 2)))\n           (if (not (typep result 'fixnum))\n               (warn \"You're using very big numbers.\"))\n           result))\n     =>  FOO\n     \n       (foo 3)\n     =>  6\n     \n       (foo most-positive-fixnum)\n      |>  Warning: You're using very big numbers.\n     =>  4294967294\n     \n       (setq *break-on-signals* t)\n     =>  T\n     \n       (foo most-positive-fixnum)\n      |>  Break: Caveat emptor.\n      |>  To continue, type :CONTINUE followed by an option number.\n      |>   1: Return from Break.\n      |>   2: Abort to Lisp Toplevel.\n      |>  Debug> :continue 1\n      |>  Warning: You're using very big numbers.\n     =>  4294967294\n\nSide Effects::\n..............\n\nA warning is issued.  The debugger might be entered.\n\nAffected By::\n.............\n\nExisting handler bindings.\n\n*break-on-signals*, *error-output*.\n\nExceptional Situations::\n........................\n\nIf datum is a condition and if the condition is not of type warning, or\narguments is non-nil, an error of type type-error is signaled.\n\nIf datum is a condition type, the result of (apply #'make-condition datum\narguments) must be of type warning or an error of type type-error is\nsignaled.\n\nSee Also::\n..........\n\n*break-on-signals*, *Note muffle-warning:: , *Note signal::\n\n"
+}

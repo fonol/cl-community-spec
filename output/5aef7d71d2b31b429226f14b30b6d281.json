@@ -1,0 +1,21 @@
+{
+    "name": "Examples of Keyword Arguments in Generic Functions and Methods",
+    "prev": "Keyword Arguments in Generic Functions and Methods",
+    "next": null,
+    "up": "Keyword Arguments in Generic Functions and Methods",
+    "header": {
+        "type": null,
+        "text": null
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Examples of Keyword Arguments in Generic Functions and Methods",
+            "text": "For example, suppose there are two methods defined for width as follows:\n      (defmethod width ((c character-class) &key font) ...)\n      (defmethod width ((p picture-class) &key pixel-size) ...)\nAssume that there are no other methods and no generic function definition\nfor width. The evaluation of the following form should signal an error\nbecause the keyword argument :pixel-size is not accepted by the applicable\nmethod.\n      (width (make-instance `character-class :char #\\Q)\n             :font 'baskerville :pixel-size 10)\nThe evaluation of the following form should signal an error.\n      (width (make-instance `picture-class :glyph (glyph #\\Q))\n             :font 'baskerville :pixel-size 10)\nThe evaluation of the following form will not signal an error if the class\nnamed character-picture-class is a subclass of both picture-class and\ncharacter-class.\n      (width (make-instance `character-picture-class :char #\\Q)\n             :font 'baskerville :pixel-size 10)\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: Examples of Keyword Arguments in Generic Functions and Methods,  Prev: Keyword Arguments in Generic Functions and Methods,  Up: Keyword Arguments in Generic Functions and Methods\n\nExamples of Keyword Arguments in Generic Functions and Methods\n..............................................................\n\nFor example, suppose there are two methods defined for width as follows:\n\n      (defmethod width ((c character-class) &key font) ...)\n     \n      (defmethod width ((p picture-class) &key pixel-size) ...)\n\nAssume that there are no other methods and no generic function definition\nfor width. The evaluation of the following form should signal an error\nbecause the keyword argument :pixel-size is not accepted by the applicable\nmethod.\n\n      (width (make-instance `character-class :char #\\Q)\n             :font 'baskerville :pixel-size 10)\n\nThe evaluation of the following form should signal an error.\n\n      (width (make-instance `picture-class :glyph (glyph #\\Q))\n             :font 'baskerville :pixel-size 10)\n\nThe evaluation of the following form will not signal an error if the class\nnamed character-picture-class is a subclass of both picture-class and\ncharacter-class.\n\n      (width (make-instance `character-picture-class :char #\\Q)\n             :font 'baskerville :pixel-size 10)\n\n"
+}

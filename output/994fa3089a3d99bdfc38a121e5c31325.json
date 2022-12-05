@@ -1,0 +1,17 @@
+{
+    "name": "Examples of Printer Behavior",
+    "prev": "Default Print-Object Methods",
+    "next": null,
+    "up": "The Lisp Printer",
+    "header": {
+        "type": null,
+        "text": "Examples of Printer Behavior"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": "      (let ((*print-escape* t)) (fresh-line) (write #\\a))\n      |>  #\\a\n     =>  #\\a\n      (let ((*print-escape* nil) (*print-readably* nil))\n        (fresh-line)\n        (write #\\a))\n      |>  a\n     =>  #\\a\n      (progn (fresh-line) (prin1 #\\a))\n      |>  #\\a\n     =>  #\\a\n      (progn (fresh-line) (print #\\a))\n      |> \n      |>  #\\a\n     =>  #\\a\n      (progn (fresh-line) (princ #\\a))\n      |>  a\n     =>  #\\a\n      (dolist (val '(t nil))\n        (let ((*print-escape* val) (*print-readably* val))\n          (print '#\\a)\n          (prin1 #\\a) (write-char #\\Space)\n          (princ #\\a) (write-char #\\Space)\n          (write #\\a)))\n      |>  #\\a #\\a a #\\a\n      |>  #\\a #\\a a a\n     =>  NIL\n      (progn (fresh-line) (write '(let ((a 1) (b 2)) (+ a b))))\n      |>  (LET ((A 1) (B 2)) (+ A B))\n     =>  (LET ((A 1) (B 2)) (+ A B))\n      (progn (fresh-line) (pprint '(let ((a 1) (b 2)) (+ a b))))\n      |>  (LET ((A 1)\n      |>        (B 2))\n      |>    (+ A B))\n     =>  (LET ((A 1) (B 2)) (+ A B))\n      (progn (fresh-line)\n             (write '(let ((a 1) (b 2)) (+ a b)) :pretty t))\n      |>  (LET ((A 1)\n      |>        (B 2))\n      |>    (+ A B))\n     =>  (LET ((A 1) (B 2)) (+ A B))\n      (with-output-to-string (s)\n         (write 'write :stream s)\n         (prin1 'prin1 s))\n     =>  \"WRITEPRIN1\"\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: Examples of Printer Behavior,  Prev: Default Print-Object Methods,  Up: The Lisp Printer\n\nExamples of Printer Behavior\n----------------------------\n\n      (let ((*print-escape* t)) (fresh-line) (write #\\a))\n      |>  #\\a\n     =>  #\\a\n      (let ((*print-escape* nil) (*print-readably* nil))\n        (fresh-line)\n        (write #\\a))\n      |>  a\n     =>  #\\a\n      (progn (fresh-line) (prin1 #\\a))\n      |>  #\\a\n     =>  #\\a\n      (progn (fresh-line) (print #\\a))\n      |> \n      |>  #\\a\n     =>  #\\a\n      (progn (fresh-line) (princ #\\a))\n      |>  a\n     =>  #\\a\n     \n      (dolist (val '(t nil))\n        (let ((*print-escape* val) (*print-readably* val))\n          (print '#\\a)\n          (prin1 #\\a) (write-char #\\Space)\n          (princ #\\a) (write-char #\\Space)\n          (write #\\a)))\n      |>  #\\a #\\a a #\\a\n      |>  #\\a #\\a a a\n     =>  NIL\n     \n      (progn (fresh-line) (write '(let ((a 1) (b 2)) (+ a b))))\n      |>  (LET ((A 1) (B 2)) (+ A B))\n     =>  (LET ((A 1) (B 2)) (+ A B))\n     \n      (progn (fresh-line) (pprint '(let ((a 1) (b 2)) (+ a b))))\n      |>  (LET ((A 1)\n      |>        (B 2))\n      |>    (+ A B))\n     =>  (LET ((A 1) (B 2)) (+ A B))\n     \n      (progn (fresh-line)\n             (write '(let ((a 1) (b 2)) (+ a b)) :pretty t))\n      |>  (LET ((A 1)\n      |>        (B 2))\n      |>    (+ A B))\n     =>  (LET ((A 1) (B 2)) (+ A B))\n     \n      (with-output-to-string (s)\n         (write 'write :stream s)\n         (prin1 'prin1 s))\n     =>  \"WRITEPRIN1\"\n\n"
+}

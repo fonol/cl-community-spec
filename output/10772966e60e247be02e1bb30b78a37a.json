@@ -1,0 +1,47 @@
+{
+    "name": "read-sequence",
+    "prev": "write-string",
+    "next": "write-sequence",
+    "up": "Streams Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "read-sequence"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "read-sequence",
+                    "text": " sequence stream &key start end =>  position\nsequence--a sequence.\n\nstream--an input stream.\n\nstart, end--bounding index designators of sequence.  The defaults for\nstart and end are 0 and nil, respectively.\n\nposition--an integer greater than or equal to zero, and less than or equal\nto the length of the sequence.\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Description",
+            "text": "Destructively modifies sequence by replacing the elements of sequence\nbounded by start and end with elements read from stream.\nSequence is destructively modified by copying successive elements into it\nfrom stream.  If the end of file for stream is reached before copying all\nelements of the subsequence, then the extra elements near the end of\nsequence are not updated.\nPosition is the index of the first element of sequence that was not\nupdated, which might be less than end because the end of file was reached.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defvar *data* (make-array 15 :initial-element nil))\n      (values (read-sequence *data* (make-string-input-stream \"test string\")) *data*)\n      =>  11, #(#\\t #\\e #\\s #\\t #\\Space #\\s #\\t #\\r #\\i #\\n #\\g NIL NIL NIL NIL)\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "Modifies stream and sequence.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.  Should signal an error of type type-error if start\nis not a non-negative integer.  Should signal an error of type type-error\nif end is not a non-negative integer or nil.\nMight signal an error of type type-error if an element read from the\nstream is not a member of the element type of the sequence.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note Compiler Terminology::, *Note write-sequence:: , *Note read-line::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "read-sequence is identical in effect to iterating over the indicated\nsubsequence and reading one element at a time from stream and storing it\ninto sequence, but may be more efficient than the equivalent loop.  An\nefficient implementation is more likely to exist for the case where the\nsequence is a vector with the same element type as the stream.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: read-sequence,  Next: write-sequence,  Prev: write-string,  Up: Streams Dictionary\n\nread-sequence                                                    [Function]\n---------------------------------------------------------------------------\n\n`read-sequence'  sequence stream &key start end =>  position\n\nsequence--a sequence.\n\nstream--an input stream.\n\nstart, end--bounding index designators of sequence.  The defaults for\nstart and end are 0 and nil, respectively.\n\nposition--an integer greater than or equal to zero, and less than or equal\nto the length of the sequence.\n\nDescription::\n.............\n\nDestructively modifies sequence by replacing the elements of sequence\nbounded by start and end with elements read from stream.\n\nSequence is destructively modified by copying successive elements into it\nfrom stream.  If the end of file for stream is reached before copying all\nelements of the subsequence, then the extra elements near the end of\nsequence are not updated.\n\nPosition is the index of the first element of sequence that was not\nupdated, which might be less than end because the end of file was reached.\n\nExamples::\n..........\n\n      (defvar *data* (make-array 15 :initial-element nil))\n      (values (read-sequence *data* (make-string-input-stream \"test string\")) *data*)\n      =>  11, #(#\\t #\\e #\\s #\\t #\\Space #\\s #\\t #\\r #\\i #\\n #\\g NIL NIL NIL NIL)\n\nSide Effects::\n..............\n\nModifies stream and sequence.\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.  Should signal an error of type type-error if start\nis not a non-negative integer.  Should signal an error of type type-error\nif end is not a non-negative integer or nil.\n\nMight signal an error of type type-error if an element read from the\nstream is not a member of the element type of the sequence.\n\nSee Also::\n..........\n\n*Note Compiler Terminology::, *Note write-sequence:: , *Note read-line::\n\nNotes::\n.......\n\nread-sequence is identical in effect to iterating over the indicated\nsubsequence and reading one element at a time from stream and storing it\ninto sequence, but may be more efficient than the equivalent loop.  An\nefficient implementation is more likely to exist for the case where the\nsequence is a vector with the same element type as the stream.\n\n"
+}

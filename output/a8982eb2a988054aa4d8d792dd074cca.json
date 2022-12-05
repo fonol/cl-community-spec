@@ -1,0 +1,61 @@
+{
+    "name": "catch",
+    "prev": "block",
+    "next": "go",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Special Operator",
+        "text": "catch"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "catch",
+                    "text": " tag {form}* =>  {result}*\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "tag",
+                    "desc": "a catch tag; evaluated."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "results",
+                    "desc": "if the forms exit normally, the values returned by the forms; if"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "catch is used as the destination of a non-local control transfer by throw.\nTags are used to find the catch to which a throw is transferring control.\n(catch 'foo form) catches a (throw 'foo form) but not a (throw 'bar form).\nThe order of execution of catch follows:\n1.\n     Tag is evaluated.  It serves as the name of the catch.\n2.\n     Forms are then evaluated as an implicit progn, and the results of the\n     last form are returned unless a throw occurs.\n3.\n     If a throw occurs during the execution of one of the forms, control\n     is transferred  to the catch form whose tag is eq to the tag argument\n     of the throw and which is the most recently established catch with\n     that tag.  No further evaluation of forms occurs.\n4.\n     The tag established by catch is disestablished just before the\n     results are returned.\nIf during the execution of one of the forms, a throw is executed whose tag\nis eq to the catch tag, then the values specified by the throw are\nreturned as the result of the dynamically most recently established catch\nform with that tag.\nThe mechanism for catch and throw works even if throw is not within the\nlexical scope of catch.  throw must occur within the dynamic extent of the\nevaluation of the body of a catch with a corresponding tag.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (catch 'dummy-tag 1 2 (throw 'dummy-tag 3) 4) =>  3\n      (catch 'dummy-tag 1 2 3 4) =>  4\n      (defun throw-back (tag) (throw tag t)) =>  THROW-BACK\n      (catch 'dummy-tag (throw-back 'dummy-tag) 2) =>  T\n      ;; Contrast behavior of this example with corresponding example of BLOCK.\n      (catch 'c\n        (flet ((c1 () (throw 'c 1)))\n          (catch 'c (c1) (print 'unreachable))\n          2)) =>  2\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "An error of type control-error is signaled if throw is done when there is\nno suitable catch tag.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note throw:: , *Note Evaluation::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "It is customary for symbols to be used as tags, but any object is\npermitted.  However, numbers should not be used because the comparison is\ndone using eq.\ncatch differs from block in that catch tags have dynamic scope while block\nnames have lexical scope.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: catch,  Next: go,  Prev: block,  Up: Data and Control Flow Dictionary\n\ncatch                                                    [Special Operator]\n---------------------------------------------------------------------------\n\n`catch'  tag {form}* =>  {result}*\n\nArguments and Values::\n......................\n\ntag--a catch tag; evaluated.\n\nforms--an implicit progn.\n\nresults--if the forms exit normally, the values returned by the forms; if\na throw occurs to the tag, the values that are thrown.\n\nDescription::\n.............\n\ncatch is used as the destination of a non-local control transfer by throw.\nTags are used to find the catch to which a throw is transferring control.\n(catch 'foo form) catches a (throw 'foo form) but not a (throw 'bar form).\n\nThe order of execution of catch follows:\n\n1.\n     Tag is evaluated.  It serves as the name of the catch.\n\n2.\n     Forms are then evaluated as an implicit progn, and the results of the\n     last form are returned unless a throw occurs.\n\n3.\n     If a throw occurs during the execution of one of the forms, control\n     is transferred  to the catch form whose tag is eq to the tag argument\n     of the throw and which is the most recently established catch with\n     that tag.  No further evaluation of forms occurs.\n\n4.\n     The tag established by catch is disestablished just before the\n     results are returned.\n\nIf during the execution of one of the forms, a throw is executed whose tag\nis eq to the catch tag, then the values specified by the throw are\nreturned as the result of the dynamically most recently established catch\nform with that tag.\n\nThe mechanism for catch and throw works even if throw is not within the\nlexical scope of catch.  throw must occur within the dynamic extent of the\nevaluation of the body of a catch with a corresponding tag.\n\nExamples::\n..........\n\n      (catch 'dummy-tag 1 2 (throw 'dummy-tag 3) 4) =>  3\n      (catch 'dummy-tag 1 2 3 4) =>  4\n      (defun throw-back (tag) (throw tag t)) =>  THROW-BACK\n      (catch 'dummy-tag (throw-back 'dummy-tag) 2) =>  T\n     \n      ;; Contrast behavior of this example with corresponding example of BLOCK.\n      (catch 'c\n        (flet ((c1 () (throw 'c 1)))\n          (catch 'c (c1) (print 'unreachable))\n          2)) =>  2\n\nExceptional Situations::\n........................\n\nAn error of type control-error is signaled if throw is done when there is\nno suitable catch tag.\n\nSee Also::\n..........\n\n*Note throw:: , *Note Evaluation::\n\nNotes::\n.......\n\nIt is customary for symbols to be used as tags, but any object is\npermitted.  However, numbers should not be used because the comparison is\ndone using eq.\n\ncatch differs from block in that catch tags have dynamic scope while block\nnames have lexical scope.\n\n"
+}

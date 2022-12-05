@@ -1,0 +1,53 @@
+{
+    "name": "type-of",
+    "prev": "subtypep",
+    "next": "typep",
+    "up": "Types and Classes Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "type-of"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "type-of",
+                    "text": " object =>  typespec\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "object",
+                    "desc": "an object."
+                },
+                {
+                    "name": "typespec",
+                    "desc": "a type specifier."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns a type specifier, typespec, for a type that has the object as an\nelement.  The typespec satisfies the following:\n1.\n     For any object that is an element of some built-in type:\n    a.\n          the type returned is a recognizable subtype of that built-in\n          type.\n    b.\n          the type returned does not involve and, eql, member, not, or,\n          satisfies, or values.\n2.\n     For all objects, (typep object (type-of object)) returns true.\n     Implicit in this is that type specifiers which are not valid for use\n     with typep, such as the list form of the function type specifier, are\n     never returned by type-of.\n3.\n     The type returned by type-of is always a recognizable subtype of the\n     class returned by class-of.  That is,\n           (subtypep (type-of object) (class-of object)) =>  true, true\n4.\n     For objects of metaclass structure-class or standard-class,\n     and for conditions,\n     type-of returns the proper name of the class returned by class-of if\n     it has a proper name, and otherwise returns the class itself.  In\n     particular, for objects created by the constructor function of a\n     structure defined with defstruct without a :type option, type-of\n     returns the structure name; and for objects created by\n     make-condition, the typespec is the name of the condition type.\n5.\n     For each of the types short-float, single-float, double-float, or\n     long-float of which the object is an element, the typespec is a\n     recognizable subtype of that type.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (type-of 'a) =>  SYMBOL\n      (type-of '(1 . 2))\n     =>  CONS\n     OR=> (CONS FIXNUM FIXNUM)\n      (type-of #c(0 1))\n     =>  COMPLEX\n     OR=> (COMPLEX INTEGER)\n      (defstruct temp-struct x y z) =>  TEMP-STRUCT\n      (type-of (make-temp-struct)) =>  TEMP-STRUCT\n      (type-of \"abc\")\n     =>  STRING\n     OR=> (STRING 3)\n      (subtypep (type-of \"abc\") 'string) =>  true, true\n      (type-of (expt 2 40))\n     =>  BIGNUM\n     OR=> INTEGER\n     OR=> (INTEGER 1099511627776 1099511627776)\n     OR=> SYSTEM::TWO-WORD-BIGNUM\n     OR=> FIXNUM\n      (subtypep (type-of 112312) 'integer) =>  true, true\n      (defvar *foo* (make-array 5 :element-type t)) =>  *FOO*\n      (class-name (class-of *foo*)) =>  VECTOR\n      (type-of *foo*)\n     =>  VECTOR\n     OR=> (VECTOR T 5)\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note array-element-type:: , *Note class-of:: , *Note defstruct:: , *Note\ntypecase; ctypecase; etypecase:: , *Note typep:: , *Note Types::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Implementors are encouraged to arrange for type-of to return\na portable value.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: type-of,  Next: typep,  Prev: subtypep,  Up: Types and Classes Dictionary\n\ntype-of                                                          [Function]\n---------------------------------------------------------------------------\n\n`type-of'  object =>  typespec\n\nArguments and Values::\n......................\n\nobject--an object.\n\ntypespec--a type specifier.\n\nDescription::\n.............\n\nReturns a type specifier, typespec, for a type that has the object as an\nelement.  The typespec satisfies the following:\n\n1.\n     For any object that is an element of some built-in type:\n\n    a.\n          the type returned is a recognizable subtype of that built-in\n          type.\n\n    b.\n          the type returned does not involve and, eql, member, not, or,\n          satisfies, or values.\n\n2.\n     For all objects, (typep object (type-of object)) returns true.\n     Implicit in this is that type specifiers which are not valid for use\n     with typep, such as the list form of the function type specifier, are\n     never returned by type-of.\n\n3.\n     The type returned by type-of is always a recognizable subtype of the\n     class returned by class-of.  That is,\n\n           (subtypep (type-of object) (class-of object)) =>  true, true\n\n4.\n     For objects of metaclass structure-class or standard-class,\n\n     and for conditions,\n\n     type-of returns the proper name of the class returned by class-of if\n     it has a proper name, and otherwise returns the class itself.  In\n     particular, for objects created by the constructor function of a\n     structure defined with defstruct without a :type option, type-of\n     returns the structure name; and for objects created by\n     make-condition, the typespec is the name of the condition type.\n\n5.\n     For each of the types short-float, single-float, double-float, or\n     long-float of which the object is an element, the typespec is a\n     recognizable subtype of that type.\n\nExamples::\n..........\n\n\n      (type-of 'a) =>  SYMBOL\n      (type-of '(1 . 2))\n     =>  CONS\n     OR=> (CONS FIXNUM FIXNUM)\n      (type-of #c(0 1))\n     =>  COMPLEX\n     OR=> (COMPLEX INTEGER)\n      (defstruct temp-struct x y z) =>  TEMP-STRUCT\n      (type-of (make-temp-struct)) =>  TEMP-STRUCT\n      (type-of \"abc\")\n     =>  STRING\n     OR=> (STRING 3)\n      (subtypep (type-of \"abc\") 'string) =>  true, true\n      (type-of (expt 2 40))\n     =>  BIGNUM\n     OR=> INTEGER\n     OR=> (INTEGER 1099511627776 1099511627776)\n     OR=> SYSTEM::TWO-WORD-BIGNUM\n     OR=> FIXNUM\n      (subtypep (type-of 112312) 'integer) =>  true, true\n      (defvar *foo* (make-array 5 :element-type t)) =>  *FOO*\n      (class-name (class-of *foo*)) =>  VECTOR\n      (type-of *foo*)\n     =>  VECTOR\n     OR=> (VECTOR T 5)\n\nSee Also::\n..........\n\n*Note array-element-type:: , *Note class-of:: , *Note defstruct:: , *Note\ntypecase; ctypecase; etypecase:: , *Note typep:: , *Note Types::\n\nNotes::\n.......\n\nImplementors are encouraged to arrange for type-of to return\n\na portable value.\n\n"
+}

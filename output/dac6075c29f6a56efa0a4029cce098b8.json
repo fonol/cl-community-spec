@@ -1,0 +1,89 @@
+{
+    "name": "string-upcase",
+    "prev": "string",
+    "next": "string-trim",
+    "up": "Strings Dictionary",
+    "header": {
+        "type": null,
+        "text": "nstring-upcase, nstring-downcase, nstring-capitalize"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "string-upcase",
+                    "text": " string &key start end =>  cased-string\n"
+                },
+                {
+                    "name": "string-downcase",
+                    "text": " string &key start end =>  cased-string\n\n"
+                },
+                {
+                    "name": "string-capitalize",
+                    "text": " string &key start end =>  cased-string\n\n"
+                },
+                {
+                    "name": "nstring-upcase",
+                    "text": " string &key start end =>  string\n\n"
+                },
+                {
+                    "name": "nstring-downcase",
+                    "text": " string &key start end =>  string\n\n"
+                },
+                {
+                    "name": "nstring-capitalize",
+                    "text": " string &key start end =>  string\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "string",
+                    "desc": "a string designator.  For nstring-upcase, nstring-downcase, and"
+                },
+                {
+                    "name": "string",
+                    "desc": "a string designator.  For nstring-upcase, nstring-downcase, andnstring-capitalize, the string designator must be a string.\n"
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of string.  The defaults for start"
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of string.  The defaults for startand end are 0 and nil, respectively.\n"
+                },
+                {
+                    "name": "cased-string",
+                    "desc": "a string."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "string-upcase,  string-downcase,  string-capitalize, nstring-upcase,\nnstring-downcase, nstring-capitalize change the case of the subsequence of\nstring bounded by start and end as follows:\nstring-upcase\n     string-upcase returns a string just like string with all lowercase\n     characters replaced by the corresponding uppercase characters.  More\n     precisely, each character of the result string is produced by\n     applying the function char-upcase to the corresponding character of\n     string.\nstring-downcase\n     string-downcase is like string-upcase except that all uppercase\n     characters are replaced by the corresponding lowercase characters\n     (using char-downcase).\nstring-capitalize\n     string-capitalize produces a copy of string such that, for every word\n     in the copy, the first character of the \"word,\" if it has case, is\n     uppercase and any other characters with case in the word are\n     lowercase.  For the purposes of string-capitalize, a \"word\" is\n     defined to be a consecutive subsequence consisting of alphanumeric\n     characters, delimited at each end either by a non-alphanumeric\n     character or by an end of the string.\nnstring-upcase, nstring-downcase, nstring-capitalize\n     nstring-upcase, nstring-downcase, and nstring-capitalize are\n     identical to string-upcase, string-downcase, and string-capitalize\n     respectively except that they  modify string.\nFor string-upcase, string-downcase, and string-capitalize, string is not\nmodified.  However, if no characters in string require conversion, the\nresult may be either string or a copy of it, at the implementation's\ndiscretion.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (string-upcase \"abcde\") =>  \"ABCDE\"\n      (string-upcase \"Dr. Livingston, I presume?\")\n     =>  \"DR. LIVINGSTON, I PRESUME?\"\n      (string-upcase \"Dr. Livingston, I presume?\" :start 6 :end 10)\n     =>  \"Dr. LiVINGston, I presume?\"\n      (string-downcase \"Dr. Livingston, I presume?\")\n     =>  \"dr. livingston, i presume?\"\n      (string-capitalize \"elm 13c arthur;fig don't\") =>  \"Elm 13c Arthur;Fig Don'T\"\n      (string-capitalize \" hello \") =>  \" Hello \"\n      (string-capitalize \"occlUDeD cASEmenTs FOreSTAll iNADVertent DEFenestraTION\")\n     =>   \"Occluded Casements Forestall Inadvertent Defenestration\"\n      (string-capitalize 'kludgy-hash-search) =>  \"Kludgy-Hash-Search\"\n      (string-capitalize \"DON'T!\") =>  \"Don'T!\"    ;not \"Don't!\"\n      (string-capitalize \"pipe 13a, foo16c\") =>  \"Pipe 13a, Foo16c\"\n      (setq str (copy-seq \"0123ABCD890a\")) =>  \"0123ABCD890a\"\n      (nstring-downcase str :start 5 :end 7) =>  \"0123AbcD890a\"\n      str =>  \"0123AbcD890a\"\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "nstring-upcase, nstring-downcase, and nstring-capitalize modify string as\nappropriate rather than constructing a new string.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note char-upcase; char-downcase:: , char-downcase\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The result is always of the same length as string.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: string-upcase,  Next: string-trim,  Prev: string,  Up: Strings Dictionary\n\nstring-upcase, string-downcase, string-capitalize,\n--------------------------------------------------\n\nnstring-upcase, nstring-downcase, nstring-capitalize\n----------------------------------------------------\n\n                                                                [Function]\n\n`string-upcase'  string &key start end =>  cased-string\n\n`string-downcase'  string &key start end =>  cased-string\n\n`string-capitalize'  string &key start end =>  cased-string\n\n`nstring-upcase'  string &key start end =>  string\n\n`nstring-downcase'  string &key start end =>  string\n\n`nstring-capitalize'  string &key start end =>  string\n\nArguments and Values::\n......................\n\nstring--a string designator.  For nstring-upcase, nstring-downcase, and\nnstring-capitalize, the string designator must be a string.\n\nstart, end--bounding index designators of string.  The defaults for start\nand end are 0 and nil, respectively.\n\ncased-string--a string.\n\nDescription::\n.............\n\nstring-upcase,  string-downcase,  string-capitalize, nstring-upcase,\nnstring-downcase, nstring-capitalize change the case of the subsequence of\nstring bounded by start and end as follows:\n\nstring-upcase\n     string-upcase returns a string just like string with all lowercase\n     characters replaced by the corresponding uppercase characters.  More\n     precisely, each character of the result string is produced by\n     applying the function char-upcase to the corresponding character of\n     string.\n\nstring-downcase\n     string-downcase is like string-upcase except that all uppercase\n     characters are replaced by the corresponding lowercase characters\n     (using char-downcase).\n\nstring-capitalize\n     string-capitalize produces a copy of string such that, for every word\n     in the copy, the first character of the \"word,\" if it has case, is\n     uppercase and any other characters with case in the word are\n     lowercase.  For the purposes of string-capitalize, a \"word\" is\n     defined to be a consecutive subsequence consisting of alphanumeric\n     characters, delimited at each end either by a non-alphanumeric\n     character or by an end of the string.\n\nnstring-upcase, nstring-downcase, nstring-capitalize\n     nstring-upcase, nstring-downcase, and nstring-capitalize are\n     identical to string-upcase, string-downcase, and string-capitalize\n     respectively except that they  modify string.\n\nFor string-upcase, string-downcase, and string-capitalize, string is not\nmodified.  However, if no characters in string require conversion, the\nresult may be either string or a copy of it, at the implementation's\ndiscretion.\n\nExamples::\n..........\n\n      (string-upcase \"abcde\") =>  \"ABCDE\"\n      (string-upcase \"Dr. Livingston, I presume?\")\n     =>  \"DR. LIVINGSTON, I PRESUME?\"\n      (string-upcase \"Dr. Livingston, I presume?\" :start 6 :end 10)\n     =>  \"Dr. LiVINGston, I presume?\"\n      (string-downcase \"Dr. Livingston, I presume?\")\n     =>  \"dr. livingston, i presume?\"\n     \n      (string-capitalize \"elm 13c arthur;fig don't\") =>  \"Elm 13c Arthur;Fig Don'T\"\n      (string-capitalize \" hello \") =>  \" Hello \"\n      (string-capitalize \"occlUDeD cASEmenTs FOreSTAll iNADVertent DEFenestraTION\")\n     =>   \"Occluded Casements Forestall Inadvertent Defenestration\"\n      (string-capitalize 'kludgy-hash-search) =>  \"Kludgy-Hash-Search\"\n      (string-capitalize \"DON'T!\") =>  \"Don'T!\"    ;not \"Don't!\"\n      (string-capitalize \"pipe 13a, foo16c\") =>  \"Pipe 13a, Foo16c\"\n     \n      (setq str (copy-seq \"0123ABCD890a\")) =>  \"0123ABCD890a\"\n      (nstring-downcase str :start 5 :end 7) =>  \"0123AbcD890a\"\n      str =>  \"0123AbcD890a\"\n\nSide Effects::\n..............\n\nnstring-upcase, nstring-downcase, and nstring-capitalize modify string as\nappropriate rather than constructing a new string.\n\nSee Also::\n..........\n\n*Note char-upcase; char-downcase:: , char-downcase\n\nNotes::\n.......\n\nThe result is always of the same length as string.\n\n"
+}

@@ -1,0 +1,61 @@
+{
+    "name": "char",
+    "prev": "simple-string-p",
+    "next": "string",
+    "up": "Strings Dictionary",
+    "header": {
+        "type": "Accessor",
+        "text": "char, schar"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "char",
+                    "text": " string index =>  character\n"
+                },
+                {
+                    "name": "schar",
+                    "text": " string index =>  character\n\n(setf (`char' string index) new-character)\n(setf (`schar' string index) new-character)\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "string",
+                    "desc": "for char,  a string; for schar, a simple string."
+                },
+                {
+                    "name": "index",
+                    "desc": "a valid array index for the string."
+                },
+                {
+                    "name": "character, new-character",
+                    "desc": "a character."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "char and schar access the element of string specified by index.\nchar ignores fill pointers when accessing elements.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq my-simple-string (make-string 6 :initial-element #\\A)) =>  \"AAAAAA\"\n      (schar my-simple-string 4) =>  #\\A\n      (setf (schar my-simple-string 4) #\\B) =>  #\\B\n      my-simple-string =>  \"AAAABA\"\n      (setq my-filled-string\n            (make-array 6 :element-type 'character\n                          :fill-pointer 5\n                          :initial-contents my-simple-string))\n     =>  \"AAAAB\"\n      (char my-filled-string 4) =>  #\\B\n      (char my-filled-string 5) =>  #\\A\n      (setf (char my-filled-string 3) #\\C) =>  #\\C\n      (setf (char my-filled-string 5) #\\D) =>  #\\D\n      (setf (fill-pointer my-filled-string) 6) =>  6\n      my-filled-string =>  \"AAACBD\"\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note aref:: , *Note elt:: ,\n*Note Compiler Terminology::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "      (char s j) == (aref (the string s) j)\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: char,  Next: string,  Prev: simple-string-p,  Up: Strings Dictionary\n\nchar, schar                                                      [Accessor]\n---------------------------------------------------------------------------\n\n`char'  string index =>  character\n\n`schar'  string index =>  character\n\n(setf (`char' string index) new-character)\n(setf (`schar' string index) new-character)\nArguments and Values::\n......................\n\nstring--for char,  a string; for schar, a simple string.\n\nindex--a valid array index for the string.\n\ncharacter, new-character--a character.\n\nDescription::\n.............\n\nchar and schar access the element of string specified by index.\n\nchar ignores fill pointers when accessing elements.\n\nExamples::\n..........\n\n      (setq my-simple-string (make-string 6 :initial-element #\\A)) =>  \"AAAAAA\"\n      (schar my-simple-string 4) =>  #\\A\n      (setf (schar my-simple-string 4) #\\B) =>  #\\B\n      my-simple-string =>  \"AAAABA\"\n      (setq my-filled-string\n            (make-array 6 :element-type 'character\n                          :fill-pointer 5\n                          :initial-contents my-simple-string))\n     =>  \"AAAAB\"\n      (char my-filled-string 4) =>  #\\B\n      (char my-filled-string 5) =>  #\\A\n      (setf (char my-filled-string 3) #\\C) =>  #\\C\n      (setf (char my-filled-string 5) #\\D) =>  #\\D\n      (setf (fill-pointer my-filled-string) 6) =>  6\n      my-filled-string =>  \"AAACBD\"\n\nSee Also::\n..........\n\n*Note aref:: , *Note elt:: ,\n\n*Note Compiler Terminology::\n\nNotes::\n.......\n\n      (char s j) == (aref (the string s) j)\n\n"
+}

@@ -1,0 +1,61 @@
+{
+    "name": "list",
+    "prev": "copy-list",
+    "next": "list-length",
+    "up": "Conses Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "list, list*"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "list",
+                    "text": " &rest objects =>  list\n"
+                },
+                {
+                    "name": "list*",
+                    "text": " &rest objects^+ =>  result\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "object",
+                    "desc": "an object."
+                },
+                {
+                    "name": "list",
+                    "desc": "a list."
+                },
+                {
+                    "name": "result",
+                    "desc": "an object."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "list returns a list containing the supplied objects.\nlist* is like list except that the last argument to list becomes the car\nof the last cons constructed, while the last argument to list* becomes the\ncdr of the last cons constructed.  Hence, any given call to list* always\nproduces one fewer conses than a call to list with the same number of\narguments.\nIf the last argument to list* is a list, the effect is to construct a new\nlist which is similar, but which has additional elements added to the\nfront corresponding to the preceding arguments of list*.\nIf list* receives only one object, that object is returned, regardless of\nwhether or not it is a list.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (list 1) =>  (1)\n      (list* 1) =>  1\n      (setq a 1) =>  1\n      (list a 2) =>  (1 2)\n      '(a 2) =>  (A 2)\n      (list 'a 2) =>  (A 2)\n      (list* a 2) =>  (1 . 2)\n      (list) =>  NIL ;i.e., ()\n      (setq a '(1 2)) =>  (1 2)\n      (eq a (list* a)) =>  true\n      (list 3 4 'a (car '(b . c)) (+ 6 -2)) =>  (3 4 A B 4)\n      (list* 'a 'b 'c 'd) == (cons 'a (cons 'b (cons 'c 'd))) =>  (A B C . D)\n      (list* 'a 'b 'c '(d e f)) =>  (A B C D E F)\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note cons::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "      (list* x) == x\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: list,  Next: list-length,  Prev: copy-list,  Up: Conses Dictionary\n\nlist, list*                                                      [Function]\n---------------------------------------------------------------------------\n\n`list'  &rest objects =>  list\n\n`list*'  &rest objects^+ =>  result\n\nArguments and Values::\n......................\n\nobject--an object.\n\nlist--a list.\n\nresult--an object.\n\nDescription::\n.............\n\nlist returns a list containing the supplied objects.\n\nlist* is like list except that the last argument to list becomes the car\nof the last cons constructed, while the last argument to list* becomes the\ncdr of the last cons constructed.  Hence, any given call to list* always\nproduces one fewer conses than a call to list with the same number of\narguments.\n\nIf the last argument to list* is a list, the effect is to construct a new\nlist which is similar, but which has additional elements added to the\nfront corresponding to the preceding arguments of list*.\n\nIf list* receives only one object, that object is returned, regardless of\nwhether or not it is a list.\n\nExamples::\n..........\n\n      (list 1) =>  (1)\n      (list* 1) =>  1\n      (setq a 1) =>  1\n      (list a 2) =>  (1 2)\n      '(a 2) =>  (A 2)\n      (list 'a 2) =>  (A 2)\n      (list* a 2) =>  (1 . 2)\n      (list) =>  NIL ;i.e., ()\n      (setq a '(1 2)) =>  (1 2)\n      (eq a (list* a)) =>  true\n      (list 3 4 'a (car '(b . c)) (+ 6 -2)) =>  (3 4 A B 4)\n      (list* 'a 'b 'c 'd) == (cons 'a (cons 'b (cons 'c 'd))) =>  (A B C . D)\n      (list* 'a 'b 'c '(d e f)) =>  (A B C D E F)\n\nSee Also::\n..........\n\n*Note cons::\n\nNotes::\n.......\n\n      (list* x) == x\n\n"
+}

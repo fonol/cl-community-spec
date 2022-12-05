@@ -1,0 +1,61 @@
+{
+    "name": "find-restart",
+    "prev": "compute-restarts",
+    "next": "invoke-restart",
+    "up": "Conditions Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "find-restart"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "find-restart",
+                    "text": " identifier &optional condition restart\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "identifier",
+                    "desc": "a non-nil symbol, or a restart."
+                },
+                {
+                    "name": "condition",
+                    "desc": "a condition object, or nil."
+                },
+                {
+                    "name": "restart",
+                    "desc": "a restart or nil."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "find-restart searches for a particular restart in the current dynamic\nenvironment.\nWhen condition is non-nil, only those restarts are considered that are\neither explicitly associated with that condition, or not associated with\nany condition; that is, the excluded restarts are those that are\nassociated with a non-empty set of conditions of which the given condition\nis not an element.  If condition is nil, all restarts are considered.\nIf identifier is a symbol, then the innermost (most recently established)\napplicable restart with that name is returned.  nil is returned if no such\nrestart is found.\nIf identifier is a currently active restart, then it is returned.\nOtherwise, nil is returned.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (restart-case\n          (let ((r (find-restart 'my-restart)))\n            (format t \"~S is named ~S\" r (restart-name r)))\n        (my-restart () nil))\n      |>  #<RESTART 32307325> is named MY-RESTART\n     =>  NIL\n      (find-restart 'my-restart)\n     =>  NIL\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "Existing restarts.\nrestart-case, restart-bind, with-condition-restarts.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note compute-restarts::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "      (find-restart identifier)\n      == (find identifier (compute-restarts) :key :restart-name)\nAlthough anonymous restarts have a name of nil, the consequences are\nunspecified if nil is given as an identifier.  Occasionally, programmers\nlament that nil is not permissible as an identifier argument.  In most\nsuch cases, compute-restarts can probably be used to simulate the desired\neffect.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: find-restart,  Next: invoke-restart,  Prev: compute-restarts,  Up: Conditions Dictionary\n\nfind-restart                                                     [Function]\n---------------------------------------------------------------------------\n\n`find-restart'  identifier &optional condition restart\n\nArguments and Values::\n......................\n\nidentifier--a non-nil symbol, or a restart.\n\ncondition--a condition object, or nil.\n\nrestart--a restart or nil.\n\nDescription::\n.............\n\nfind-restart searches for a particular restart in the current dynamic\nenvironment.\n\nWhen condition is non-nil, only those restarts are considered that are\neither explicitly associated with that condition, or not associated with\nany condition; that is, the excluded restarts are those that are\nassociated with a non-empty set of conditions of which the given condition\nis not an element.  If condition is nil, all restarts are considered.\n\nIf identifier is a symbol, then the innermost (most recently established)\napplicable restart with that name is returned.  nil is returned if no such\nrestart is found.\n\nIf identifier is a currently active restart, then it is returned.\nOtherwise, nil is returned.\n\nExamples::\n..........\n\n      (restart-case\n          (let ((r (find-restart 'my-restart)))\n            (format t \"~S is named ~S\" r (restart-name r)))\n        (my-restart () nil))\n      |>  #<RESTART 32307325> is named MY-RESTART\n     =>  NIL\n      (find-restart 'my-restart)\n     =>  NIL\n\nAffected By::\n.............\n\nExisting restarts.\n\nrestart-case, restart-bind, with-condition-restarts.\n\nSee Also::\n..........\n\n*Note compute-restarts::\n\nNotes::\n.......\n\n      (find-restart identifier)\n      == (find identifier (compute-restarts) :key :restart-name)\n\nAlthough anonymous restarts have a name of nil, the consequences are\nunspecified if nil is given as an identifier.  Occasionally, programmers\nlament that nil is not permissible as an identifier argument.  In most\nsuch cases, compute-restarts can probably be used to simulate the desired\neffect.\n\n"
+}

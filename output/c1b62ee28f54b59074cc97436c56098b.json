@@ -1,0 +1,37 @@
+{
+    "name": "*print-level*",
+    "prev": "*print-gensym*",
+    "next": "*print-lines*",
+    "up": "Printer Dictionary",
+    "header": {
+        "type": "Variable",
+        "text": "*print-level*, *print-length*"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Value Type",
+            "text": "a non-negative integer, or nil.\n"
+        },
+        {
+            "type": "Initial Value",
+            "text": "nil.\n"
+        },
+        {
+            "type": "Description",
+            "text": "*print-level* controls how many levels deep a nested object will print.\nIf it is false, then no control is exercised.  Otherwise, it is an integer\nindicating the maximum level to be printed.  An object to be printed is at\nlevel 0; its components (as of a list or vector) are at level 1; and so on.\nIf an object to be recursively printed has components and is at a level\nequal to or greater than the value of *print-level*, then the object is\nprinted as \"#\".\n*print-length* controls how many elements at a given level are printed.\nIf it is false, there is no limit to the number of components printed.\nOtherwise, it is an integer indicating the maximum number of elements of\nan object to be printed.  If exceeded, the printer will print \"...\" in\nplace of the other elements.  In the case of a dotted list, if the list\ncontains exactly as many elements as the value of *print-length*, the\nterminating atom is printed rather than printing \"...\"\n*print-level* and *print-length* affect the printing of an any object\nprinted with a list-like syntax.  They do not affect the printing of\nsymbols, strings, and bit vectors.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq a '(1 (2 (3 (4 (5 (6))))))) =>  (1 (2 (3 (4 (5 (6))))))\n      (dotimes (i 8)\n        (let ((*print-level* i))\n          (format t \"~&~D -- ~S~\n      |>  0 -- #\n      |>  1 -- (1 #)\n      |>  2 -- (1 (2 #))\n      |>  3 -- (1 (2 (3 #)))\n      |>  4 -- (1 (2 (3 (4 #))))\n      |>  5 -- (1 (2 (3 (4 (5 #)))))\n      |>  6 -- (1 (2 (3 (4 (5 (6))))))\n      |>  7 -- (1 (2 (3 (4 (5 (6))))))\n     =>  NIL\n      (setq a '(1 2 3 4 5 6)) =>  (1 2 3 4 5 6)\n      (dotimes (i 7)\n        (let ((*print-length* i))\n          (format t \"~&~D -- ~S~\n      |>  0 -- (...)\n      |>  1 -- (1 ...)\n      |>  2 -- (1 2 ...)\n      |>  3 -- (1 2 3 ...)\n      |>  4 -- (1 2 3 4 ...)\n      |>  5 -- (1 2 3 4 5 6)\n      |>  6 -- (1 2 3 4 5 6)\n     =>  NIL\n     (dolist (level-length '((0 1) (1 1) (1 2) (1 3) (1 4)\n                             (2 1) (2 2) (2 3) (3 2) (3 3) (3 4)))\n      (let ((*print-level*  (first  level-length))\n            (*print-length* (second level-length)))\n        (format t \"~&~D ~D -- ~S~\n                *print-level* *print-length*\n                '(if (member x y) (+ (car x) 3) '(foo . #(a b c d \"Baz\"))))))\n      |>  0 1 -- #\n      |>  1 1 -- (IF ...)\n      |>  1 2 -- (IF # ...)\n      |>  1 3 -- (IF # # ...)\n      |>  1 4 -- (IF # # #)\n      |>  2 1 -- (IF ...)\n      |>  2 2 -- (IF (MEMBER X ...) ...)\n      |>  2 3 -- (IF (MEMBER X Y) (+ # 3) ...)\n      |>  3 2 -- (IF (MEMBER X ...) ...)\n      |>  3 3 -- (IF (MEMBER X Y) (+ (CAR X) 3) ...)\n      |>  3 4 -- (IF (MEMBER X Y) (+ (CAR X) 3) '(FOO . #(A B C D ...)))\n     =>  NIL\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note write; prin1; print; pprint; princ::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: *print-level*,  Next: *print-lines*,  Prev: *print-gensym*,  Up: Printer Dictionary\n\n*print-level*, *print-length*                                    [Variable]\n---------------------------------------------------------------------------\n\nValue Type::\n............\n\na non-negative integer, or nil.\n\nInitial Value::\n...............\n\nnil.\n\nDescription::\n.............\n\n*print-level* controls how many levels deep a nested object will print.\nIf it is false, then no control is exercised.  Otherwise, it is an integer\nindicating the maximum level to be printed.  An object to be printed is at\nlevel 0; its components (as of a list or vector) are at level 1; and so on.\nIf an object to be recursively printed has components and is at a level\nequal to or greater than the value of *print-level*, then the object is\nprinted as \"#\".\n\n*print-length* controls how many elements at a given level are printed.\nIf it is false, there is no limit to the number of components printed.\nOtherwise, it is an integer indicating the maximum number of elements of\nan object to be printed.  If exceeded, the printer will print \"...\" in\nplace of the other elements.  In the case of a dotted list, if the list\ncontains exactly as many elements as the value of *print-length*, the\nterminating atom is printed rather than printing \"...\"\n\n*print-level* and *print-length* affect the printing of an any object\nprinted with a list-like syntax.  They do not affect the printing of\nsymbols, strings, and bit vectors.\n\nExamples::\n..........\n\n      (setq a '(1 (2 (3 (4 (5 (6))))))) =>  (1 (2 (3 (4 (5 (6))))))\n      (dotimes (i 8)\n        (let ((*print-level* i))\n          (format t \"~&~D -- ~S~\n      |>  0 -- #\n      |>  1 -- (1 #)\n      |>  2 -- (1 (2 #))\n      |>  3 -- (1 (2 (3 #)))\n      |>  4 -- (1 (2 (3 (4 #))))\n      |>  5 -- (1 (2 (3 (4 (5 #)))))\n      |>  6 -- (1 (2 (3 (4 (5 (6))))))\n      |>  7 -- (1 (2 (3 (4 (5 (6))))))\n     =>  NIL\n     \n      (setq a '(1 2 3 4 5 6)) =>  (1 2 3 4 5 6)\n      (dotimes (i 7)\n        (let ((*print-length* i))\n          (format t \"~&~D -- ~S~\n      |>  0 -- (...)\n      |>  1 -- (1 ...)\n      |>  2 -- (1 2 ...)\n      |>  3 -- (1 2 3 ...)\n      |>  4 -- (1 2 3 4 ...)\n      |>  5 -- (1 2 3 4 5 6)\n      |>  6 -- (1 2 3 4 5 6)\n     =>  NIL\n     \n     (dolist (level-length '((0 1) (1 1) (1 2) (1 3) (1 4)\n                             (2 1) (2 2) (2 3) (3 2) (3 3) (3 4)))\n      (let ((*print-level*  (first  level-length))\n            (*print-length* (second level-length)))\n        (format t \"~&~D ~D -- ~S~\n                *print-level* *print-length*\n                '(if (member x y) (+ (car x) 3) '(foo . #(a b c d \"Baz\"))))))\n      |>  0 1 -- #\n      |>  1 1 -- (IF ...)\n      |>  1 2 -- (IF # ...)\n      |>  1 3 -- (IF # # ...)\n      |>  1 4 -- (IF # # #)\n      |>  2 1 -- (IF ...)\n      |>  2 2 -- (IF (MEMBER X ...) ...)\n      |>  2 3 -- (IF (MEMBER X Y) (+ # 3) ...)\n      |>  3 2 -- (IF (MEMBER X ...) ...)\n      |>  3 3 -- (IF (MEMBER X Y) (+ (CAR X) 3) ...)\n      |>  3 4 -- (IF (MEMBER X Y) (+ (CAR X) 3) '(FOO . #(A B C D ...)))\n     =>  NIL\n\nSee Also::\n..........\n\n*Note write; prin1; print; pprint; princ::\n\n"
+}

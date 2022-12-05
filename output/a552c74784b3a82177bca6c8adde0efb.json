@@ -1,0 +1,65 @@
+{
+    "name": "fill",
+    "prev": "elt",
+    "next": "make-sequence",
+    "up": "Sequences Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "fill"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "fill",
+                    "text": " sequence item &key start end =>  sequence\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "sequence",
+                    "desc": "a proper sequence."
+                },
+                {
+                    "name": "item",
+                    "desc": "a sequence."
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of sequence.  The defaults for"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Replaces the elements of sequence bounded by start and end with item.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (fill (list 0 1 2 3 4 5) '(444)) =>  ((444) (444) (444) (444) (444) (444))\n      (fill (copy-seq \"01234\") #\\e :start 3) =>  \"012ee\"\n      (setq x (vector 'a 'b 'c 'd 'e)) =>  #(A B C D E)\n      (fill x 'z :start 1 :end 3) =>  #(A Z Z D E)\n      x =>  #(A Z Z D E)\n      (fill x 'p) =>  #(P P P P P)\n      x =>  #(P P P P P)\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "Sequence is destructively modified.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.  Should signal an error of type type-error if start\nis not a non-negative integer.  Should signal an error of type type-error\nif end is not a non-negative integer or nil.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note replace:: , nsubstitute\n"
+        },
+        {
+            "type": "Notes",
+            "text": "(fill sequence item) == (nsubstitute-if item (constantly t) sequence)\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: fill,  Next: make-sequence,  Prev: elt,  Up: Sequences Dictionary\n\nfill                                                             [Function]\n---------------------------------------------------------------------------\n\n`fill'  sequence item &key start end =>  sequence\n\nArguments and Values::\n......................\n\nsequence--a proper sequence.\n\nitem--a sequence.\n\nstart, end--bounding index designators of sequence.  The defaults for\nstart and end are 0 and nil, respectively.\n\nDescription::\n.............\n\nReplaces the elements of sequence bounded by start and end with item.\n\nExamples::\n..........\n\n      (fill (list 0 1 2 3 4 5) '(444)) =>  ((444) (444) (444) (444) (444) (444))\n      (fill (copy-seq \"01234\") #\\e :start 3) =>  \"012ee\"\n      (setq x (vector 'a 'b 'c 'd 'e)) =>  #(A B C D E)\n      (fill x 'z :start 1 :end 3) =>  #(A Z Z D E)\n      x =>  #(A Z Z D E)\n      (fill x 'p) =>  #(P P P P P)\n      x =>  #(P P P P P)\n\nSide Effects::\n..............\n\nSequence is destructively modified.\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.  Should signal an error of type type-error if start\nis not a non-negative integer.  Should signal an error of type type-error\nif end is not a non-negative integer or nil.\n\nSee Also::\n..........\n\n*Note replace:: , nsubstitute\n\nNotes::\n.......\n\n(fill sequence item) == (nsubstitute-if item (constantly t) sequence)\n\n"
+}

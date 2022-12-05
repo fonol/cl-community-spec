@@ -1,0 +1,129 @@
+{
+    "name": "remove",
+    "prev": "merge",
+    "next": "remove-duplicates",
+    "up": "Sequences Dictionary",
+    "header": {
+        "type": null,
+        "text": "delete, delete-if, delete-if-not"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "remove",
+                    "text": " item sequence &key from-end test test-not start end count key =>result-sequence\n\n"
+                },
+                {
+                    "name": "remove-if",
+                    "text": " test sequence &key from-end start end count key =>\nresult-sequence\n\n"
+                },
+                {
+                    "name": "remove-if-not",
+                    "text": " test sequence &key from-end start end count key =>\nresult-sequence\n\n"
+                },
+                {
+                    "name": "delete",
+                    "text": " item sequence &key from-end test test-not start end count key =>\nresult-sequence\n\n"
+                },
+                {
+                    "name": "delete-if",
+                    "text": " test sequence &key from-end start end count key =>\nresult-sequence\n\n"
+                },
+                {
+                    "name": "delete-if-not",
+                    "text": " test sequence &key from-end start end count key =>\nresult-sequence\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "item",
+                    "desc": "an object."
+                },
+                {
+                    "name": "sequence",
+                    "desc": "a proper sequence."
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of one argument that returns a"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of one argument that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "from-end",
+                    "desc": "a generalized boolean.  The default is false."
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of sequence.  The defaults for"
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of sequence.  The defaults forstart and end are 0 and nil, respectively.\n"
+                },
+                {
+                    "name": "count",
+                    "desc": "an integer or nil.The default is nil.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "result-sequence",
+                    "desc": "a sequence."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "remove, remove-if, and remove-if-not return a sequence from which the\nelements that satisfy the test have been removed.\ndelete, delete-if, and delete-if-not are like remove, remove-if, and\nremove-if-not respectively, but they may modify sequence.\nIf sequence is a vector, the result is a vector that has the same actual\narray element type as sequence.  The result might or might not be simple,\nand might or might not be identical to sequence.  If sequence is a list,\nthe result is a list.\nSupplying a from-end of true matters only when the count is provided; in\nthat case only the rightmost count elements satisfying the test are\ndeleted.\nCount, if supplied, limits the number of elements removed or deleted; if\nmore than count elements satisfy the test, then of these elements only the\nleftmost or rightmost, depending on from-end, are deleted or removed, as\nmany as specified by count.\nIf count is supplied and negative, the behavior is as if zero had been\nsupplied instead.\nIf count is nil, all matching items are affected.\nFor all these functions, elements not removed or deleted occur in the same\norder in the result as they did in sequence.\nremove, remove-if, remove-if-not return a sequence of the same type as\nsequence that has the same elements except that those in the subsequence\nbounded by start and end and satisfying the test have been removed.  This\nis a non-destructive operation. If any elements need to be removed, the\nresult will be a copy.  The result of remove may share with sequence; the\nresult may be identical to the input sequence if no elements need to be\nremoved.\ndelete, delete-if, and delete-if-not return a sequence of the same type as\nsequence that has the same elements except that those in the subsequence\nbounded by start and end and satisfying the test have been deleted.\nSequence may be destroyed and used to construct the result; however, the\nresult might or might not be identical to sequence.\ndelete, when sequence is a list, is permitted to setf any part, car or\ncdr, of the top-level list structure in that sequence.  When sequence is a\nvector,  delete is permitted to change the dimensions of the vector and to\nslide its elements into new positions without permuting them to produce\nthe resulting vector.\ndelete-if is constrained to behave exactly as follows:\n      (delete nil sequence\n                  :test #'(lambda (ignore item) (funcall test item))\n                  ...)\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (remove 4 '(1 3 4 5 9)) =>  (1 3 5 9)\n      (remove 4 '(1 2 4 1 3 4 5)) =>  (1 2 1 3 5)\n      (remove 4 '(1 2 4 1 3 4 5) :count 1) =>  (1 2 1 3 4 5)\n      (remove 4 '(1 2 4 1 3 4 5) :count 1 :from-end t) =>  (1 2 4 1 3 5)\n      (remove 3 '(1 2 4 1 3 4 5) :test #'>) =>  (4 3 4 5)\n      (setq lst '(list of four elements)) =>  (LIST OF FOUR ELEMENTS)\n      (setq lst2 (copy-seq lst)) =>  (LIST OF FOUR ELEMENTS)\n      (setq lst3 (delete 'four lst)) =>  (LIST OF ELEMENTS)\n      (equal lst lst2) =>  false\n      (remove-if #'oddp '(1 2 4 1 3 4 5)) =>  (2 4 4)\n      (remove-if #'evenp '(1 2 4 1 3 4 5) :count 1 :from-end t)\n     =>  (1 2 4 1 3 5)\n      (remove-if-not #'evenp '(1 2 3 4 5 6 7 8 9) :count 2 :from-end t)\n     =>  (1 2 3 4 5 6 8)\n      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)\n      (delete 4 tester) =>  (1 2 1 3 5)\n      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)\n      (delete 4 tester :count 1) =>  (1 2 1 3 4 5)\n      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)\n      (delete 4 tester :count 1 :from-end t) =>  (1 2 4 1 3 5)\n      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)\n      (delete 3 tester :test #'>) =>  (4 3 4 5)\n      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)\n      (delete-if #'oddp tester) =>  (2 4 4)\n      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)\n      (delete-if #'evenp tester :count 1 :from-end t) =>  (1 2 4 1 3 5)\n      (setq tester (list 1 2 3 4 5 6)) =>  (1 2 3 4 5 6)\n      (delete-if #'evenp tester) =>  (1 3 5)\n      tester =>  implementation-dependent\n      (setq foo (list 'a 'b 'c)) =>  (A B C)\n      (setq bar (cdr foo)) =>  (B C)\n      (setq foo (delete 'b foo)) =>  (A C)\n      bar =>  ((C)) or ...\n      (eq (cdr foo) (car bar)) =>  T or ...\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "For delete, delete-if, and delete-if-not, sequence may be destroyed and\nused to construct the result.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note Compiler Terminology::,\n*Note Traversal Rules and Side Effects::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The :test-not argument is deprecated.\nThe functions delete-if-not and remove-if-not are deprecated.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: remove,  Next: remove-duplicates,  Prev: merge,  Up: Sequences Dictionary\n\nremove, remove-if, remove-if-not,\n---------------------------------\n\ndelete, delete-if, delete-if-not\n--------------------------------\n\n                                                                [Function]\n\n`remove'  item sequence &key from-end test test-not start end count key =>\nresult-sequence\n\n`remove-if'  test sequence &key from-end start end count key =>\nresult-sequence\n\n`remove-if-not'  test sequence &key from-end start end count key =>\nresult-sequence\n\n`delete'  item sequence &key from-end test test-not start end count key =>\nresult-sequence\n\n`delete-if'  test sequence &key from-end start end count key =>\nresult-sequence\n\n`delete-if-not'  test sequence &key from-end start end count key =>\nresult-sequence\n\nArguments and Values::\n......................\n\nitem--an object.\n\nsequence--a proper sequence.\n\ntest--a designator for a function of one argument that returns a\ngeneralized boolean.\n\nfrom-end--a generalized boolean.  The default is false.\n\ntest--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\ntest-not--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nstart, end--bounding index designators of sequence.  The defaults for\nstart and end are 0 and nil, respectively.\n\ncount--an integer or nil.\n\nThe default is nil.\n\nkey--a designator for a function of one argument, or nil.\n\nresult-sequence--a sequence.\n\nDescription::\n.............\n\nremove, remove-if, and remove-if-not return a sequence from which the\nelements that satisfy the test have been removed.\n\ndelete, delete-if, and delete-if-not are like remove, remove-if, and\nremove-if-not respectively, but they may modify sequence.\n\nIf sequence is a vector, the result is a vector that has the same actual\narray element type as sequence.  The result might or might not be simple,\nand might or might not be identical to sequence.  If sequence is a list,\nthe result is a list.\n\nSupplying a from-end of true matters only when the count is provided; in\nthat case only the rightmost count elements satisfying the test are\ndeleted.\n\nCount, if supplied, limits the number of elements removed or deleted; if\nmore than count elements satisfy the test, then of these elements only the\nleftmost or rightmost, depending on from-end, are deleted or removed, as\nmany as specified by count.\n\nIf count is supplied and negative, the behavior is as if zero had been\nsupplied instead.\n\nIf count is nil, all matching items are affected.\n\nFor all these functions, elements not removed or deleted occur in the same\norder in the result as they did in sequence.\n\nremove, remove-if, remove-if-not return a sequence of the same type as\nsequence that has the same elements except that those in the subsequence\nbounded by start and end and satisfying the test have been removed.  This\nis a non-destructive operation. If any elements need to be removed, the\nresult will be a copy.  The result of remove may share with sequence; the\nresult may be identical to the input sequence if no elements need to be\nremoved.\n\ndelete, delete-if, and delete-if-not return a sequence of the same type as\nsequence that has the same elements except that those in the subsequence\nbounded by start and end and satisfying the test have been deleted.\nSequence may be destroyed and used to construct the result; however, the\nresult might or might not be identical to sequence.\n\ndelete, when sequence is a list, is permitted to setf any part, car or\ncdr, of the top-level list structure in that sequence.  When sequence is a\nvector,  delete is permitted to change the dimensions of the vector and to\nslide its elements into new positions without permuting them to produce\nthe resulting vector.\n\ndelete-if is constrained to behave exactly as follows:\n\n      (delete nil sequence\n                  :test #'(lambda (ignore item) (funcall test item))\n                  ...)\n\nExamples::\n..........\n\n      (remove 4 '(1 3 4 5 9)) =>  (1 3 5 9)\n      (remove 4 '(1 2 4 1 3 4 5)) =>  (1 2 1 3 5)\n      (remove 4 '(1 2 4 1 3 4 5) :count 1) =>  (1 2 1 3 4 5)\n      (remove 4 '(1 2 4 1 3 4 5) :count 1 :from-end t) =>  (1 2 4 1 3 5)\n      (remove 3 '(1 2 4 1 3 4 5) :test #'>) =>  (4 3 4 5)\n      (setq lst '(list of four elements)) =>  (LIST OF FOUR ELEMENTS)\n      (setq lst2 (copy-seq lst)) =>  (LIST OF FOUR ELEMENTS)\n      (setq lst3 (delete 'four lst)) =>  (LIST OF ELEMENTS)\n      (equal lst lst2) =>  false\n      (remove-if #'oddp '(1 2 4 1 3 4 5)) =>  (2 4 4)\n      (remove-if #'evenp '(1 2 4 1 3 4 5) :count 1 :from-end t)\n     =>  (1 2 4 1 3 5)\n      (remove-if-not #'evenp '(1 2 3 4 5 6 7 8 9) :count 2 :from-end t)\n     =>  (1 2 3 4 5 6 8)\n      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)\n      (delete 4 tester) =>  (1 2 1 3 5)\n      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)\n      (delete 4 tester :count 1) =>  (1 2 1 3 4 5)\n      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)\n      (delete 4 tester :count 1 :from-end t) =>  (1 2 4 1 3 5)\n      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)\n      (delete 3 tester :test #'>) =>  (4 3 4 5)\n      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)\n      (delete-if #'oddp tester) =>  (2 4 4)\n      (setq tester (list 1 2 4 1 3 4 5)) =>  (1 2 4 1 3 4 5)\n      (delete-if #'evenp tester :count 1 :from-end t) =>  (1 2 4 1 3 5)\n      (setq tester (list 1 2 3 4 5 6)) =>  (1 2 3 4 5 6)\n      (delete-if #'evenp tester) =>  (1 3 5)\n      tester =>  implementation-dependent\n\n      (setq foo (list 'a 'b 'c)) =>  (A B C)\n      (setq bar (cdr foo)) =>  (B C)\n      (setq foo (delete 'b foo)) =>  (A C)\n      bar =>  ((C)) or ...\n      (eq (cdr foo) (car bar)) =>  T or ...\n\nSide Effects::\n..............\n\nFor delete, delete-if, and delete-if-not, sequence may be destroyed and\nused to construct the result.\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.\n\nSee Also::\n..........\n\n*Note Compiler Terminology::,\n\n*Note Traversal Rules and Side Effects::\n\nNotes::\n.......\n\nThe :test-not argument is deprecated.\n\nThe functions delete-if-not and remove-if-not are deprecated.\n\n"
+}

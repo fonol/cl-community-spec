@@ -1,0 +1,53 @@
+{
+    "name": "shadowing-import",
+    "prev": "shadow",
+    "next": "delete-package",
+    "up": "Packages Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "shadowing-import"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "shadowing-import",
+                    "text": " symbols &optional package =>  t\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "symbols",
+                    "desc": "a designator for a list of symbols."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "shadowing-import is like import, but it does not signal an error even if\nthe importation of a symbol would shadow some symbol already accessible in\npackage.\nshadowing-import inserts each of symbols into package as an internal\nsymbol, regardless of whether another symbol of the same name is shadowed\nby this action.  If a different symbol of the same name is already present\nin package, that symbol is first uninterned from package.  The new symbol\nis added to package's shadowing-symbols list.\nshadowing-import does name-conflict checking to the extent that it checks\nwhether a distinct existing symbol with the same name is accessible; if\nso, it is shadowed by the new symbol, which implies that it must be\nuninterned if it was present in package.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (in-package \"COMMON-LISP-USER\") =>  #<PACKAGE \"COMMON-LISP-USER\">\n      (setq sym (intern \"CONFLICT\")) =>  CONFLICT\n      (intern \"CONFLICT\" (make-package 'temp)) =>  TEMP::CONFLICT, NIL\n      (package-shadowing-symbols 'temp) =>  NIL\n      (shadowing-import sym 'temp) =>  T\n      (package-shadowing-symbols 'temp) =>  (CONFLICT)\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "shadowing-import changes the state of the package system in such a way that\nthe consistency rules do not hold across the change.\npackage's shadowing-symbols list is modified.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "Current state of the package system.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note import:: , *Note unintern:: , *Note package-shadowing-symbols::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: shadowing-import,  Next: delete-package,  Prev: shadow,  Up: Packages Dictionary\n\nshadowing-import                                                 [Function]\n---------------------------------------------------------------------------\n\n`shadowing-import'  symbols &optional package =>  t\n\nArguments and Values::\n......................\n\nsymbols--a designator for a list of symbols.\n\npackage --a package designator.\n\nThe default is the current package.\n\nDescription::\n.............\n\nshadowing-import is like import, but it does not signal an error even if\nthe importation of a symbol would shadow some symbol already accessible in\npackage.\n\nshadowing-import inserts each of symbols into package as an internal\nsymbol, regardless of whether another symbol of the same name is shadowed\nby this action.  If a different symbol of the same name is already present\nin package, that symbol is first uninterned from package.  The new symbol\nis added to package's shadowing-symbols list.\n\nshadowing-import does name-conflict checking to the extent that it checks\nwhether a distinct existing symbol with the same name is accessible; if\nso, it is shadowed by the new symbol, which implies that it must be\nuninterned if it was present in package.\n\nExamples::\n..........\n\n      (in-package \"COMMON-LISP-USER\") =>  #<PACKAGE \"COMMON-LISP-USER\">\n      (setq sym (intern \"CONFLICT\")) =>  CONFLICT\n      (intern \"CONFLICT\" (make-package 'temp)) =>  TEMP::CONFLICT, NIL\n      (package-shadowing-symbols 'temp) =>  NIL\n      (shadowing-import sym 'temp) =>  T\n      (package-shadowing-symbols 'temp) =>  (CONFLICT)\n\nSide Effects::\n..............\n\nshadowing-import changes the state of the package system in such a way that\nthe consistency rules do not hold across the change.\n\npackage's shadowing-symbols list is modified.\n\nAffected By::\n.............\n\nCurrent state of the package system.\n\nSee Also::\n..........\n\n*Note import:: , *Note unintern:: , *Note package-shadowing-symbols::\n\n"
+}

@@ -1,0 +1,1459 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: do-symbols,  Next: intern,  Prev: defpackage,  Up: Packages Dictionary
+
+do-symbols, do-external-symbols, do-all-symbols                     [Macro]
+---------------------------------------------------------------------------
+
+`do-symbols'  (var [package [result-form]]) {declaration}* {tag |
+statement}*
+=>  {result}*
+
+`do-external-symbols'  (var [package [result-form]]) {declaration}* {tag |
+statement}*
+=>  {result}*
+
+`do-all-symbols'  (var [result-form]) {declaration}* {tag | statement}*
+=>  {result}*
+
+Arguments and Values::
+......................
+
+var--a variable name; not evaluated.
+
+package--a package designator; evaluated.
+
+The default in do-symbols and do-external-symbols is the current package.
+
+result-form--a form; evaluated as described below.  The default is nil.
+
+declaration--a declare expression; not evaluated.
+
+tag--a go tag; not evaluated.
+
+statement--a compound form; evaluated as described below.
+
+results--the values returned by the result-form if a normal return occurs,
+or else, if an explicit return occurs, the values that were transferred.
+
+Description::
+.............
+
+do-symbols, do-external-symbols, and do-all-symbols iterate over the
+symbols of packages.  For each symbol in the set of packages chosen, the
+var is bound to the symbol, and the statements in the body are executed.
+When all the symbols have been processed, result-form is evaluated and
+returned as the value of the macro.
+
+do-symbols iterates over the symbols accessible in package.
+
+Statements may execute more than once for symbols that are inherited from
+multiple packages.
+
+do-all-symbols iterates on every registered package.  do-all-symbols will
+not process every symbol whatsoever, because a symbol not accessible in any
+registered package will not be processed.  do-all-symbols may cause a
+symbol that is present in several packages to be processed more than once.
+
+do-external-symbols iterates on the external symbols of package.
+
+When result-form is evaluated, var is bound and has the value nil.
+
+An implicit block named nil surrounds the entire do-symbols,
+do-external-symbols, or do-all-symbols form.
+
+return or return-from may be used to terminate the iteration prematurely.
+
+If execution of the body affects which symbols are contained in the set of
+packages over which iteration is occurring, other than to remove the symbol
+currently the value of var by using unintern, the consequences are
+undefined.
+
+For each of these macros, the scope of the name binding does not include
+any initial value form, but the optional result forms are included.
+
+Any tag in the body is treated as with tagbody.
+
+Examples::
+..........
+
+      (make-package 'temp :use nil) =>  #<PACKAGE "TEMP">
+      (intern "SHY" 'temp) =>  TEMP::SHY, NIL ;SHY will be an internal symbol
+                                              ;in the package TEMP
+      (export (intern "BOLD" 'temp) 'temp)  =>  T  ;BOLD will be external
+      (let ((lst ()))
+        (do-symbols (s (find-package 'temp)) (push s lst))
+        lst)
+     =>  (TEMP::SHY TEMP:BOLD)
+     OR=> (TEMP:BOLD TEMP::SHY)
+      (let ((lst ()))
+        (do-external-symbols (s (find-package 'temp) lst) (push s lst))
+        lst)
+     =>  (TEMP:BOLD)
+      (let ((lst ()))
+        (do-all-symbols (s lst)
+          (when (eq (find-package 'temp) (symbol-package s)) (push s lst)))
+        lst)
+     =>  (TEMP::SHY TEMP:BOLD)
+     OR=> (TEMP:BOLD TEMP::SHY)
+
+See Also::
+..........
+
+*Note intern:: , *Note export:: ,
+
+*Note Traversal Rules and Side Effects::
+
+
+File: gcl.info,  Node: intern,  Next: package-name,  Prev: do-symbols,  Up: Packages Dictionary
+
+intern                                                           [Function]
+---------------------------------------------------------------------------
+
+`intern'  string &optional package =>  symbol, status
+
+Arguments and Values::
+......................
+
+string--a string.
+
+package--a package designator.
+
+The default is the current package.
+
+symbol--a symbol.
+
+status--one of :inherited, :external, :internal, or nil.
+
+Description::
+.............
+
+intern enters a symbol named string into package.  If a symbol whose name
+is the same as string is already accessible in package, it is returned.
+If no such symbol is accessible in package, a new symbol with the given
+name is created and entered into package as an internal symbol, or as an
+external symbol if the package is the KEYWORD package; package becomes the
+home package of the created symbol.
+
+The first value returned by intern, symbol, is the symbol that was found or
+created.  The meaning of the secondary value, status, is as follows:
+:internal
+     The symbol was found and is present in package as an internal symbol.
+
+:external
+     The symbol was found and is present as an external symbol.
+
+:inherited
+     The symbol was found and is inherited via use-package (which implies
+     that the symbol is internal).
+
+nil
+     No pre-existing symbol was found, so one was created.
+
+     It is implementation-dependent whether the string that becomes the
+     new symbol's name is the given string or a copy of it.  Once a string
+     has been given as the string argument to intern in this situation
+     where a new symbol is created, the consequences are undefined if a
+     subsequent attempt is made to alter that string.
+
+Examples::
+..........
+
+      (in-package "COMMON-LISP-USER") =>  #<PACKAGE "COMMON-LISP-USER">
+      (intern "Never-Before") =>  |Never-Before|, NIL
+      (intern "Never-Before") =>  |Never-Before|, :INTERNAL
+      (intern "NEVER-BEFORE" "KEYWORD") =>  :NEVER-BEFORE, NIL
+      (intern "NEVER-BEFORE" "KEYWORD") =>  :NEVER-BEFORE, :EXTERNAL
+
+See Also::
+..........
+
+*Note find-symbol:: , *Note read; read-preserving-whitespace:: , symbol,
+*Note unintern:: , *Note Symbols as Tokens::
+
+Notes::
+.......
+
+intern does not need to do any name conflict checking because it never
+creates a new symbol if there is already an accessible symbol with the
+name given.
+
+
+File: gcl.info,  Node: package-name,  Next: package-nicknames,  Prev: intern,  Up: Packages Dictionary
+
+package-name                                                     [Function]
+---------------------------------------------------------------------------
+
+`package-name'  package =>  name
+
+Arguments and Values::
+......................
+
+package--a package designator.
+
+name--a string
+
+or nil.
+
+Description::
+.............
+
+package-name returns the string that names package,
+
+or nil if the package designator is a package object that has no name (see
+the function delete-package).
+
+Examples::
+..........
+
+      (in-package "COMMON-LISP-USER") =>  #<PACKAGE "COMMON-LISP-USER">
+      (package-name *package*) =>  "COMMON-LISP-USER"
+      (package-name (symbol-package :test)) =>  "KEYWORD"
+      (package-name (find-package 'common-lisp)) =>  "COMMON-LISP"
+
+      (defvar *foo-package* (make-package "FOO"))
+      (rename-package "FOO" "FOO0")
+      (package-name *foo-package*) =>  "FOO0"
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if package is not a package
+designator.
+
+
+File: gcl.info,  Node: package-nicknames,  Next: package-shadowing-symbols,  Prev: package-name,  Up: Packages Dictionary
+
+package-nicknames                                                [Function]
+---------------------------------------------------------------------------
+
+`package-nicknames'  package =>  nicknames
+
+Arguments and Values::
+......................
+
+package--a package designator.
+
+nicknames--a list of strings.
+
+Description::
+.............
+
+Returns the list of nickname strings for package, not including the name
+of package.
+
+Examples::
+..........
+
+      (package-nicknames (make-package 'temporary
+                                        :nicknames '("TEMP" "temp")))
+     =>  ("temp" "TEMP")
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if package is not a package
+designator.
+
+
+File: gcl.info,  Node: package-shadowing-symbols,  Next: package-use-list,  Prev: package-nicknames,  Up: Packages Dictionary
+
+package-shadowing-symbols                                        [Function]
+---------------------------------------------------------------------------
+
+`package-shadowing-symbols'  package =>  symbols
+
+Arguments and Values::
+......................
+
+package--a package designator.
+
+symbols--a list of symbols.
+
+Description::
+.............
+
+Returns a list of symbols that have been declared as shadowing symbols in
+package by shadow or shadowing-import (or the equivalent defpackage
+options).  All symbols on this list are present in package.
+
+Examples::
+..........
+
+      (package-shadowing-symbols (make-package 'temp)) =>  ()
+      (shadow 'cdr 'temp) =>  T
+      (package-shadowing-symbols 'temp) =>  (TEMP::CDR)
+      (intern "PILL" 'temp) =>  TEMP::PILL, NIL
+      (shadowing-import 'pill 'temp) =>  T
+      (package-shadowing-symbols 'temp) =>  (PILL TEMP::CDR)
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if package is not a package
+designator.
+
+See Also::
+..........
+
+*Note shadow:: , *Note shadowing-import::
+
+Notes::
+.......
+
+Whether the list of symbols is fresh is implementation-dependent.
+
+
+File: gcl.info,  Node: package-use-list,  Next: package-used-by-list,  Prev: package-shadowing-symbols,  Up: Packages Dictionary
+
+package-use-list                                                 [Function]
+---------------------------------------------------------------------------
+
+`package-use-list'  package =>  use-list
+
+Arguments and Values::
+......................
+
+package--a package designator.
+
+use-list--a list of package objects.
+
+Description::
+.............
+
+Returns a list of other packages used by package.
+
+Examples::
+..........
+
+      (package-use-list (make-package 'temp)) =>  (#<PACKAGE "COMMON-LISP">)
+      (use-package 'common-lisp-user 'temp) =>  T
+      (package-use-list 'temp) =>  (#<PACKAGE "COMMON-LISP"> #<PACKAGE "COMMON-LISP-USER">)
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if package is not a package
+designator.
+
+See Also::
+..........
+
+*Note use-package:: , *Note unuse-package::
+
+
+File: gcl.info,  Node: package-used-by-list,  Next: packagep,  Prev: package-use-list,  Up: Packages Dictionary
+
+package-used-by-list                                             [Function]
+---------------------------------------------------------------------------
+
+`package-used-by-list'  package =>  used-by-list
+
+Arguments and Values::
+......................
+
+package--a package designator.
+
+used-by-list--a list of package objects.
+
+Description::
+.............
+
+package-used-by-list returns a list of other packages that use package.
+
+Examples::
+..........
+
+      (package-used-by-list (make-package 'temp)) =>  ()
+      (make-package 'trash :use '(temp)) =>  #<PACKAGE "TRASH">
+      (package-used-by-list 'temp) =>  (#<PACKAGE "TRASH">)
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if package is not a package.
+
+See Also::
+..........
+
+*Note use-package:: , *Note unuse-package::
+
+
+File: gcl.info,  Node: packagep,  Next: *package*,  Prev: package-used-by-list,  Up: Packages Dictionary
+
+packagep                                                         [Function]
+---------------------------------------------------------------------------
+
+`packagep'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type package; otherwise, returns false.
+
+Examples::
+..........
+
+      (packagep *package*) =>  true
+      (packagep 'common-lisp) =>  false
+      (packagep (find-package 'common-lisp)) =>  true
+
+Notes::
+.......
+
+      (packagep object) == (typep object 'package)
+
+
+File: gcl.info,  Node: *package*,  Next: package-error,  Prev: packagep,  Up: Packages Dictionary
+
+*package*                                                        [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a package object.
+
+Initial Value::
+...............
+
+the COMMON-LISP-USER package.
+
+Description::
+.............
+
+Whatever package object is currently the value of *package* is referred to
+as the current package.
+
+Examples::
+..........
+
+      (in-package "COMMON-LISP-USER") =>  #<PACKAGE "COMMON-LISP-USER">
+      *package* =>  #<PACKAGE "COMMON-LISP-USER">
+      (make-package "SAMPLE-PACKAGE" :use '("COMMON-LISP"))
+     =>  #<PACKAGE "SAMPLE-PACKAGE">
+      (list
+        (symbol-package
+          (let ((*package* (find-package 'sample-package)))
+            (setq *some-symbol* (read-from-string "just-testing"))))
+        *package*)
+     =>  (#<PACKAGE "SAMPLE-PACKAGE"> #<PACKAGE "COMMON-LISP-USER">)
+      (list (symbol-package (read-from-string "just-testing"))
+            *package*)
+     =>  (#<PACKAGE "COMMON-LISP-USER"> #<PACKAGE "COMMON-LISP-USER">)
+      (eq 'foo (intern "FOO")) =>  true
+      (eq 'foo (let ((*package* (find-package 'sample-package)))
+                 (intern "FOO")))
+     =>  false
+
+Affected By::
+.............
+
+load, compile-file, in-package
+
+See Also::
+..........
+
+*Note compile-file:: , *Note in-package:: , *Note load:: , *Note package::
+
+
+File: gcl.info,  Node: package-error,  Next: package-error-package,  Prev: *package*,  Up: Packages Dictionary
+
+package-error                                              [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+package-error, error, serious-condition, condition, t
+
+Description::
+.............
+
+The type package-error consists of error conditions related to operations
+on packages.  The offending package (or package name) is initialized by
+the :package initialization argument to make-condition, and is accessed by
+the function package-error-package.
+
+See Also::
+..........
+
+*Note package-error-package:: , *Note Conditions::
+
+
+File: gcl.info,  Node: package-error-package,  Prev: package-error,  Up: Packages Dictionary
+
+package-error-package                                            [Function]
+---------------------------------------------------------------------------
+
+`package-error-package'  condition =>  package
+
+Arguments and Values::
+......................
+
+condition--a condition of type package-error.
+
+package--a package designator.
+
+Description::
+.............
+
+Returns a designator for the offending package in the situation
+represented by the condition.
+
+Examples::
+..........
+
+      (package-error-package
+        (make-condition 'package-error
+          :package (find-package "COMMON-LISP")))
+     =>  #<Package "COMMON-LISP">
+
+See Also::
+..........
+
+package-error
+
+
+File: gcl.info,  Node: Numbers (Numbers),  Next: Characters,  Prev: Packages,  Up: Top
+
+Numbers
+*******
+
+* Menu:
+
+* Number Concepts::
+* Numbers Dictionary::
+
+
+File: gcl.info,  Node: Number Concepts,  Next: Numbers Dictionary,  Prev: Numbers (Numbers),  Up: Numbers (Numbers)
+
+Number Concepts
+===============
+
+* Menu:
+
+* Numeric Operations::
+* Implementation-Dependent Numeric Constants::
+* Rational Computations::
+* Floating-point Computations::
+* Complex Computations::
+* Interval Designators::
+* Random-State Operations::
+
+
+File: gcl.info,  Node: Numeric Operations,  Next: Implementation-Dependent Numeric Constants,  Prev: Number Concepts,  Up: Number Concepts
+
+Numeric Operations
+------------------
+
+Common Lisp provides a large variety of operations related to numbers.
+This section provides an overview of those operations by grouping them
+into categories that emphasize some of the relationships among them.
+
+Figure 12-1 shows operators relating to arithmetic operations.
+
+  *  1+         gcd      +  1-         incf     -  conjugate  lcm   
+  /  decf             
+
+  Figure 12-1: Operators relating to Arithmetic.
+
+
+Figure 12-2 shows defined names relating to exponential, logarithmic, and
+trigonometric operations.
+
+  abs    cos    signum     acos   cosh   sin        acosh  exp    sinh    
+  asin   expt   sqrt       asinh  isqrt  tan        atan   log    tanh    
+  atanh  phase             cis    pi             
+
+  Figure 12-2: Defined names relating to Exponentials, Logarithms, and Trigonometry.
+
+
+Figure 12-3 shows operators relating to numeric comparison and predication.
+
+  /=  >=      oddp      <   evenp   plusp     <=  max     zerop  
+  =   min               >   minusp         
+
+  Figure 12-3: Operators for numeric comparison and predication.
+
+
+Figure 12-4 shows defined names relating to numeric type manipulation and
+coercion.
+
+  ceiling          float-radix           rational     
+  complex          float-sign            rationalize  
+  decode-float     floor                 realpart     
+  denominator      fround                rem          
+  fceiling         ftruncate             round        
+  ffloor           imagpart              scale-float  
+  float            integer-decode-float  truncate     
+  float-digits     mod                                
+  float-precision  numerator                          
+
+  Figure 12-4: Defined names relating to numeric type manipulation and coercion.
+
+
+* Menu:
+
+* Associativity and Commutativity in Numeric Operations::
+* Examples of Associativity and Commutativity in Numeric Operations::
+* Contagion in Numeric Operations::
+* Viewing Integers as Bits and Bytes::
+* Logical Operations on Integers::
+* Byte Operations on Integers::
+
+
+File: gcl.info,  Node: Associativity and Commutativity in Numeric Operations,  Next: Examples of Associativity and Commutativity in Numeric Operations,  Prev: Numeric Operations,  Up: Numeric Operations
+
+Associativity and Commutativity in Numeric Operations
+.....................................................
+
+For functions that are mathematically associative (and possibly
+commutative), a conforming implementation may process the arguments in any
+manner consistent with associative (and possibly commutative)
+rearrangement.  This does not affect the order in which the argument forms
+are evaluated; for a discussion of evaluation order, see *Note Function
+Forms::.  What is unspecified is only the order in which the parameter
+values are processed.  This implies that implementations may differ in
+which automatic coercions are applied; see *Note Contagion in Numeric
+Operations::.
+
+A conforming program can control the order of processing explicitly by
+separating the operations into separate (possibly nested) function forms,
+or by writing explicit calls to functions that perform coercions.
+
+
+File: gcl.info,  Node: Examples of Associativity and Commutativity in Numeric Operations,  Next: Contagion in Numeric Operations,  Prev: Associativity and Commutativity in Numeric Operations,  Up: Numeric Operations
+
+Examples of Associativity and Commutativity in Numeric Operations
+.................................................................
+
+Consider the following expression, in which we assume that 1.0 and 1.0e-15
+both denote single floats:
+
+      (+ 1/3 2/3 1.0d0 1.0 1.0e-15)
+
+One conforming implementation might process the arguments from left to
+right, first adding 1/3 and 2/3 to get 1, then converting that to a double
+float for combination with 1.0d0, then successively converting and adding
+1.0 and 1.0e-15.
+
+Another conforming implementation might process the arguments from right
+to left, first performing a single float addition of 1.0 and 1.0e-15
+(perhaps losing accuracy in the process), then converting the sum to a
+double float and adding 1.0d0, then converting 2/3 to a double float and
+adding it, and then converting 1/3 and adding that.
+
+A third conforming implementation might first scan all the arguments,
+process all the rationals first to keep that part of the computation exact,
+then find an argument of the largest floating-point format among all the
+arguments and add that, and then add in all other arguments, converting
+each in turn (all in a perhaps misguided attempt to make the computation
+as accurate as possible).
+
+In any case, all three strategies are legitimate.
+
+A conforming program could control the order by writing, for example,
+
+      (+ (+ 1/3 2/3) (+ 1.0d0 1.0e-15) 1.0)
+
+
+File: gcl.info,  Node: Contagion in Numeric Operations,  Next: Viewing Integers as Bits and Bytes,  Prev: Examples of Associativity and Commutativity in Numeric Operations,  Up: Numeric Operations
+
+Contagion in Numeric Operations
+...............................
+
+For information about the contagion rules for implicit coercions of
+arguments in numeric operations, see *Note Rule of Float Precision
+Contagion::, *Note Rule of Float and Rational Contagion::, and *Note Rule
+of Complex Contagion::.
+
+
+File: gcl.info,  Node: Viewing Integers as Bits and Bytes,  Next: Logical Operations on Integers,  Prev: Contagion in Numeric Operations,  Up: Numeric Operations
+
+Viewing Integers as Bits and Bytes
+..................................
+
+
+File: gcl.info,  Node: Logical Operations on Integers,  Next: Byte Operations on Integers,  Prev: Viewing Integers as Bits and Bytes,  Up: Numeric Operations
+
+Logical Operations on Integers
+..............................
+
+Logical operations require integers as arguments; an error of type
+type-error should be signaled if an argument is supplied that is not an
+integer.  Integer arguments to logical operations are treated as if they
+were represented in two's-complement notation.
+
+Figure 12-5 shows defined names relating to logical operations on numbers.
+
+  ash          boole-ior       logbitp   
+  boole        boole-nand      logcount  
+  boole-1      boole-nor       logeqv    
+  boole-2      boole-orc1      logior    
+  boole-and    boole-orc2      lognand   
+  boole-andc1  boole-set       lognor    
+  boole-andc2  boole-xor       lognot    
+  boole-c1     integer-length  logorc1   
+  boole-c2     logand          logorc2   
+  boole-clr    logandc1        logtest   
+  boole-eqv    logandc2        logxor    
+
+  Figure 12-5: Defined names relating to logical operations on numbers.
+
+
+
+File: gcl.info,  Node: Byte Operations on Integers,  Prev: Logical Operations on Integers,  Up: Numeric Operations
+
+Byte Operations on Integers
+...........................
+
+The byte-manipulation functions use objects called byte specifiers to
+designate the size and position of a specific byte within an integer.  The
+representation of a byte specifier is implementation-dependent; it might
+or might not be a number.  The function byte will construct a byte
+specifier, which various other byte-manipulation functions will accept.
+
+Figure 12-6 shows defined names relating to manipulating bytes of numbers.
+
+  byte           deposit-field  ldb-test    
+  byte-position  dpb            mask-field  
+  byte-size      ldb                        
+
+  Figure 12-6: Defined names relating to byte manipulation.
+
+
+
+File: gcl.info,  Node: Implementation-Dependent Numeric Constants,  Next: Rational Computations,  Prev: Numeric Operations,  Up: Number Concepts
+
+Implementation-Dependent Numeric Constants
+------------------------------------------
+
+Figure 12-7 shows defined names relating to implementation-dependent
+details about numbers.
+
+  double-float-epsilon           most-negative-fixnum           
+  double-float-negative-epsilon  most-negative-long-float       
+  least-negative-double-float    most-negative-short-float      
+  least-negative-long-float      most-negative-single-float     
+  least-negative-short-float     most-positive-double-float     
+  least-negative-single-float    most-positive-fixnum           
+  least-positive-double-float    most-positive-long-float       
+  least-positive-long-float      most-positive-short-float      
+  least-positive-short-float     most-positive-single-float     
+  least-positive-single-float    short-float-epsilon            
+  long-float-epsilon             short-float-negative-epsilon   
+  long-float-negative-epsilon    single-float-epsilon           
+  most-negative-double-float     single-float-negative-epsilon  
+
+  Figure 12-7: Defined names relating to implementation-dependent details about numbers.
+
+
+
+File: gcl.info,  Node: Rational Computations,  Next: Floating-point Computations,  Prev: Implementation-Dependent Numeric Constants,  Up: Number Concepts
+
+Rational Computations
+---------------------
+
+The rules in this section apply to rational computations.
+
+* Menu:
+
+* Rule of Unbounded Rational Precision::
+* Rule of Canonical Representation for Rationals::
+* Rule of Float Substitutability::
+
+
+File: gcl.info,  Node: Rule of Unbounded Rational Precision,  Next: Rule of Canonical Representation for Rationals,  Prev: Rational Computations,  Up: Rational Computations
+
+Rule of Unbounded Rational Precision
+....................................
+
+Rational computations cannot overflow in the usual sense (though there may
+not be enough storage to represent a result), since integers and ratios
+may in principle be of any magnitude.
+
+
+File: gcl.info,  Node: Rule of Canonical Representation for Rationals,  Next: Rule of Float Substitutability,  Prev: Rule of Unbounded Rational Precision,  Up: Rational Computations
+
+Rule of Canonical Representation for Rationals
+..............................................
+
+If any computation produces a result that is a mathematical ratio of two
+integers such that the denominator evenly divides the numerator, then the
+result is converted to the equivalent integer.
+
+If the denominator does not evenly divide the numerator, the canonical
+representation of a rational number is as the ratio that numerator and
+that denominator, where the greatest common divisor of the numerator and
+denominator is one, and where the denominator is positive and greater than
+one.
+
+When used as input (in the default syntax), the notation -0 always denotes
+the integer 0.  A conforming implementation must not have a representation
+of "minus zero" for integers that is distinct from its representation of
+zero for integers.  However, such a distinction is possible for floats;
+see the type float.
+
+
+File: gcl.info,  Node: Rule of Float Substitutability,  Prev: Rule of Canonical Representation for Rationals,  Up: Rational Computations
+
+Rule of Float Substitutability
+..............................
+
+When the arguments to an irrational mathematical function
+
+[Reviewer Note by Barmar: There should be a table of these functions.] are
+all rational and the true mathematical result is also (mathematically)
+rational, then unless otherwise noted an implementation is free to return
+either an accurate rational result or a single float approximation.  If
+the arguments are all rational but the result cannot be expressed as a
+rational number, then a single float approximation is always returned.
+
+If the arguments to a mathematical function are all of type (or rational
+(complex rational)) and the true mathematical result is (mathematically) a
+complex number with rational real and imaginary parts, then unless
+otherwise noted an implementation is free to return either an accurate
+result of type (or rational (complex rational)) or a single float
+(permissible only if the imaginary part of the true mathematical result is
+zero) or (complex single-float). If the arguments are all of type (or
+rational (complex rational)) but the result cannot be expressed as a
+rational or complex rational, then the returned value will be of type
+single-float (permissible only if the imaginary part of the true
+mathematical result is zero) or (complex single-float).
+
+  Function  Sample Results                                   
+  abs       (abs #c(3 4)) =>  5 or 5.0                       
+  acos      (acos 1) =>  0 or 0.0                            
+  acosh     (acosh 1) =>  0 or 0.0                           
+  asin      (asin 0) =>  0 or 0.0                            
+  asinh     (asinh 0) =>  0 or 0.0                           
+  atan      (atan 0) =>  0 or 0.0                            
+  atanh     (atanh 0) =>  0 or 0.0                           
+  cis       (cis 0) =>  #c(1 0) or #c(1.0 0.0)               
+  cos       (cos 0) =>  1 or 1.0                             
+  cosh      (cosh 0) =>  1 or 1.0                            
+  exp       (exp 0) =>  1 or 1.0                             
+  expt      (expt 8 1/3) =>  2 or 2.0                        
+  log       (log 1) =>  0 or 0.0                             
+            (log 8 2) =>  3 or 3.0                           
+  phase     (phase 7) =>  0 or 0.0                           
+  signum    (signum #c(3 4)) =>  #c(3/5 4/5) or #c(0.6 0.8)  
+  sin       (sin 0) =>  0 or 0.0                             
+  sinh      (sinh 0) =>  0 or 0.0                            
+  sqrt      (sqrt 4) =>  2 or 2.0                            
+            (sqrt 9/16) =>  3/4 or 0.75                      
+  tan       (tan 0) =>  0 or 0.0                             
+  tanh      (tanh 0) =>  0 or 0.0                            
+
+  Figure 12-8: Functions Affected by Rule of Float Substitutability
+
+
+
+File: gcl.info,  Node: Floating-point Computations,  Next: Complex Computations,  Prev: Rational Computations,  Up: Number Concepts
+
+Floating-point Computations
+---------------------------
+
+The following rules apply to floating point computations.
+
+* Menu:
+
+* Rule of Float and Rational Contagion::
+* Examples of Rule of Float and Rational Contagion::
+* Rule of Float Approximation::
+* Rule of Float Underflow and Overflow::
+* Rule of Float Precision Contagion::
+
+
+File: gcl.info,  Node: Rule of Float and Rational Contagion,  Next: Examples of Rule of Float and Rational Contagion,  Prev: Floating-point Computations,  Up: Floating-point Computations
+
+Rule of Float and Rational Contagion
+....................................
+
+When rationals and floats are combined by a numerical function, the
+rational is first converted to a float of the same format.  For functions
+such as + that take more than two arguments, it is permitted that part of
+the operation be carried out exactly using rationals and the rest be done
+using floating-point arithmetic.
+
+When rationals and floats are compared by a numerical function, the
+function rational is effectively called to convert the float to a rational
+and then an exact comparison is performed. In the case of complex numbers,
+the real and imaginary parts are effectively handled individually.
+
+
+File: gcl.info,  Node: Examples of Rule of Float and Rational Contagion,  Next: Rule of Float Approximation,  Prev: Rule of Float and Rational Contagion,  Up: Floating-point Computations
+
+Examples of Rule of Float and Rational Contagion
+................................................
+
+      ;;;; Combining rationals with floats.
+      ;;; This example assumes an implementation in which
+      ;;; (float-radix 0.5) is 2 (as in IEEE) or 16 (as in IBM/360),
+      ;;; or else some other implementation in which 1/2 has an exact
+      ;;;  representation in floating point.
+      (+ 1/2 0.5) =>  1.0
+      (- 1/2 0.5d0) =>  0.0d0
+      (+ 0.5 -0.5 1/2) =>  0.5
+     
+      ;;;; Comparing rationals with floats.
+      ;;; This example assumes an implementation in which the default float
+      ;;; format is IEEE single-float, IEEE double-float, or some other format
+      ;;; in which 5/7 is rounded upwards by FLOAT.
+      (< 5/7 (float 5/7)) =>  true
+      (< 5/7 (rational (float 5/7))) =>  true
+      (< (float 5/7) (float 5/7)) =>  false
+
+
+File: gcl.info,  Node: Rule of Float Approximation,  Next: Rule of Float Underflow and Overflow,  Prev: Examples of Rule of Float and Rational Contagion,  Up: Floating-point Computations
+
+Rule of Float Approximation
+...........................
+
+Computations with floats are only approximate, although they are described
+as if the results were mathematically accurate.  Two mathematically
+identical expressions may be computationally different because of errors
+inherent in the floating-point approximation process.  The precision of a
+float is not necessarily correlated with the accuracy of that number.  For
+instance, 3.142857142857142857 is a more precise approximation to \pi than
+3.14159, but the latter is more accurate.  The precision refers to the
+number of bits retained in the representation.  When an operation combines
+a short float with a long float, the result will be a long float.  Common
+Lisp functions assume that the accuracy of arguments to them does not
+exceed their precision.  Therefore when two small floats are combined, the
+result is a small float.  Common Lisp functions never convert
+automatically from a larger size to a smaller one.
+
+
+File: gcl.info,  Node: Rule of Float Underflow and Overflow,  Next: Rule of Float Precision Contagion,  Prev: Rule of Float Approximation,  Up: Floating-point Computations
+
+Rule of Float Underflow and Overflow
+....................................
+
+An error of type floating-point-overflow or floating-point-underflow
+should be signaled if a floating-point computation causes exponent
+overflow or underflow, respectively.
+
+
+File: gcl.info,  Node: Rule of Float Precision Contagion,  Prev: Rule of Float Underflow and Overflow,  Up: Floating-point Computations
+
+Rule of Float Precision Contagion
+.................................
+
+The result of a numerical function is a float of the largest format among
+all the floating-point arguments to the function.
+
+
+File: gcl.info,  Node: Complex Computations,  Next: Interval Designators,  Prev: Floating-point Computations,  Up: Number Concepts
+
+Complex Computations
+--------------------
+
+The following rules apply to complex computations:
+
+* Menu:
+
+* Rule of Complex Substitutability::
+* Rule of Complex Contagion::
+* Rule of Canonical Representation for Complex Rationals::
+* Examples of Rule of Canonical Representation for Complex Rationals::
+* Principal Values and Branch Cuts::
+
+
+File: gcl.info,  Node: Rule of Complex Substitutability,  Next: Rule of Complex Contagion,  Prev: Complex Computations,  Up: Complex Computations
+
+Rule of Complex Substitutability
+................................
+
+Except during the execution of irrational and transcendental functions, no
+numerical function ever yields a complex unless one or more of its
+arguments is a complex.
+
+
+File: gcl.info,  Node: Rule of Complex Contagion,  Next: Rule of Canonical Representation for Complex Rationals,  Prev: Rule of Complex Substitutability,  Up: Complex Computations
+
+Rule of Complex Contagion
+.........................
+
+When a
+
+real
+
+and a complex are both part of a computation, the
+
+real
+
+is first converted to a complex by providing an imaginary part of 0.
+
+
+File: gcl.info,  Node: Rule of Canonical Representation for Complex Rationals,  Next: Examples of Rule of Canonical Representation for Complex Rationals,  Prev: Rule of Complex Contagion,  Up: Complex Computations
+
+Rule of Canonical Representation for Complex Rationals
+......................................................
+
+If the result of any computation would be a complex number whose real part
+is of type rational and whose imaginary part is zero, the result is
+converted to the rational which is the real part.  This rule does not
+apply to complex numbers whose parts are floats.  For example, #C(5 0) and
+5 are not different objects in Common Lisp (they are always the same under
+eql); #C(5.0 0.0) and 5.0 are always different objects in Common Lisp
+(they are never the same under eql, although they are the same under
+equalp and =).
+
+
+File: gcl.info,  Node: Examples of Rule of Canonical Representation for Complex Rationals,  Next: Principal Values and Branch Cuts,  Prev: Rule of Canonical Representation for Complex Rationals,  Up: Complex Computations
+
+Examples of Rule of Canonical Representation for Complex Rationals
+..................................................................
+
+      #c(1.0 1.0) =>  #C(1.0 1.0)
+      #c(0.0 0.0) =>  #C(0.0 0.0)
+      #c(1.0 1) =>  #C(1.0 1.0)
+      #c(0.0 0) =>  #C(0.0 0.0)
+      #c(1 1) =>  #C(1 1)
+      #c(0 0) =>  0
+      (typep #c(1 1) '(complex (eql 1))) =>  true
+      (typep #c(0 0) '(complex (eql 0))) =>  false
+
+
+File: gcl.info,  Node: Principal Values and Branch Cuts,  Prev: Examples of Rule of Canonical Representation for Complex Rationals,  Up: Complex Computations
+
+Principal Values and Branch Cuts
+................................
+
+Many of the irrational and transcendental functions are multiply defined
+in the complex domain; for example, there are in general an infinite
+number of complex values for the logarithm function.  In each such case, a
+principal value must be chosen for the function to return.  In general,
+such values cannot be chosen so as to make the range continuous; lines in
+the domain called branch cuts must be defined, which in turn define the
+discontinuities in the range.  Common Lisp defines the branch cuts,
+principal values, and boundary conditions for the complex functions
+following "Principal Values and Branch Cuts in Complex APL." The branch
+cut rules that apply to each function are located with the description of
+that function.
+
+Figure 12-9 lists the identities that are obeyed throughout the applicable
+portion of the complex domain, even on the branch cuts:
+
+  sin i z = i sinh z  sinh i z = i sin z        arctan i z = i arctanh z  
+  cos i z = cosh z    cosh i z = cos z          arcsinh i z = i arcsin z  
+  tan i z = i tanh z  arcsin i z = i arcsinh z  arctanh i z = i arctan z  
+
+         Figure 12-9: Trigonometric Identities for Complex Domain        
+
+
+The quadrant numbers referred to in the discussions of branch cuts are as
+illustrated in Figure 12-10.
+
+                                Imaginary Axis
+     	                         |
+     	        		 |
+     	        	II       |        I
+     	        	         |
+     	        	         |
+     	        	         |
+     	       ______________________________________ Real Axis
+     	        	         |
+     	        	         |
+     	        	         |
+     	               III       |     	   IV
+     	        		 |
+     	        		 |
+     	        		 |
+     	        		 |
+
+  Figure 12-9: Quadrant Numbering for Branch Cuts
+
+
+File: gcl.info,  Node: Interval Designators,  Next: Random-State Operations,  Prev: Complex Computations,  Up: Number Concepts
+
+Interval Designators
+--------------------
+
+The compound type specifier form of the numeric type specifiers in Figure
+12-10 permit the user to specify an interval on the real number line which
+describe a subtype of the type which would be described by the
+corresponding atomic type specifier.  A subtype of some type T is
+specified using an ordered pair of objects called interval designators for
+type T.
+
+The first of the two interval designators for type T can be any of the
+following:
+
+a number N of type T
+     This denotes a lower inclusive bound of N.  That is, elements of the
+     subtype of T will be greater than or equal to N.
+
+a singleton list whose element is
+     a number M of type T This denotes a lower exclusive bound of M.  That
+     is, elements of the subtype of T will be greater than M.
+
+the symbol *
+     This denotes the absence of a lower bound on the interval.
+
+The second of the two interval designators for type T can be any of the
+following:
+
+a number N of type T
+     This denotes an upper inclusive bound of N.  That is, elements of the
+     subtype of T will be less than or equal to N.
+
+a singleton list whose element is
+     a number M of type T This denotes an upper exclusive bound of M.
+     That is, elements of the subtype of T will be less than M.
+
+the symbol *
+     This denotes the absence of an upper bound on the interval.
+
+
+File: gcl.info,  Node: Random-State Operations,  Prev: Interval Designators,  Up: Number Concepts
+
+Random-State Operations
+-----------------------
+
+Figure 12-10 lists some defined names that are applicable to random states.
+
+  *random-state*     random            
+  make-random-state  random-state-p    
+
+  Figure 12-10: Random-state defined names
+
+
+
+File: gcl.info,  Node: Numbers Dictionary,  Prev: Number Concepts,  Up: Numbers (Numbers)
+
+Numbers Dictionary
+==================
+
+* Menu:
+
+* number::
+* complex (System Class)::
+* real::
+* float (System Class)::
+* short-float::
+* rational::
+* ratio::
+* integer::
+* signed-byte::
+* unsigned-byte::
+* mod::
+* bit::
+* fixnum::
+* bignum::
+* =::
+* max::
+* minusp::
+* zerop::
+* floor::
+* sin::
+* asin::
+* pi::
+* sinh::
+* *::
+* +::
+* -::
+* /::
+* 1+::
+* abs::
+* evenp::
+* exp::
+* gcd::
+* incf::
+* lcm::
+* log::
+* mod::
+* signum::
+* sqrt::
+* random-state::
+* make-random-state::
+* random::
+* random-state-p::
+* *random-state*::
+* numberp::
+* cis::
+* complex::
+* complexp::
+* conjugate::
+* phase::
+* realpart::
+* upgraded-complex-part-type::
+* realp::
+* numerator::
+* rational::
+* rationalp::
+* ash::
+* integer-length::
+* integerp::
+* parse-integer::
+* boole::
+* boole-1::
+* logand::
+* logbitp::
+* logcount::
+* logtest::
+* byte::
+* deposit-field::
+* dpb::
+* ldb::
+* ldb-test::
+* mask-field::
+* most-positive-fixnum::
+* decode-float::
+* float::
+* floatp::
+* most-positive-short-float::
+* short-float-epsilon::
+* arithmetic-error::
+* arithmetic-error-operands::
+* division-by-zero::
+* floating-point-invalid-operation::
+* floating-point-inexact::
+* floating-point-overflow::
+* floating-point-underflow::
+
+
+File: gcl.info,  Node: number,  Next: complex (System Class),  Prev: Numbers Dictionary,  Up: Numbers Dictionary
+
+number                                                       [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+number, t
+
+Description::
+.............
+
+The type number contains objects which represent mathematical numbers.
+
+The types real and complex are disjoint subtypes of number.
+
+The function = tests for numerical equality.  The function eql, when its
+arguments are both numbers, tests that they have both the same type and
+numerical value.  Two numbers that are the same under eql or = are not
+necessarily the same under eq.
+
+Notes::
+.......
+
+Common Lisp differs from mathematics on some naming issues.  In
+mathematics, the set of real numbers is traditionally described as a
+subset of the complex numbers, but in Common Lisp, the type real and the
+type complex are disjoint.  The Common Lisp type which includes all
+mathematical complex numbers is called number.  The reasons for these
+differences include historical precedent, compatibility with most other
+popular computer languages, and various issues of time and space
+efficiency.
+
+
+File: gcl.info,  Node: complex (System Class),  Next: real,  Prev: number,  Up: Numbers Dictionary
+
+complex                                                      [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+complex, number, t
+
+Description::
+.............
+
+The type complex includes all mathematical complex numbers other than
+those included in the type rational.  Complexes are expressed in Cartesian
+form with a real part and an imaginary part, each of which is a real.  The
+real part and imaginary part are either both rational or both of the same
+float type.  The imaginary part can be a float zero, but can never be a
+rational zero, for such a number is always represented by Common Lisp as a
+rational rather than a complex.
+
+Compound Type Specifier Kind::
+..............................
+
+Specializing.
+
+Compound Type Specifier Syntax::
+................................
+
+(`complex'{[typespec | *]})
+
+Compound Type Specifier Arguments::
+...................................
+
+typespec--a type specifier that denotes a subtype of type real.
+
+Compound Type Specifier Description::
+.....................................
+
+[Editorial Note by KMP: If you ask me, this definition is a complete mess.
+Looking at issue ARRAY-TYPE-ELEMENT-TYPE-SEMANTICS:UNIFY-UPGRADING does
+not help me figure it out, either.  Anyone got any suggestions?]
+
+Every element of this type is a complex whose real part and imaginary part
+are each of type
+
+(upgraded-complex-part-type typespec).
+
+This type encompasses those complexes that can result by giving numbers of
+type typespec to complex.
+
+(complex type-specifier) refers to all complexes that can result from
+giving numbers of type type-specifier to the function complex, plus all
+other complexes of the same specialized representation.
+
+See Also::
+..........
+
+*Note Rule of Canonical Representation for Complex Rationals::, *Note
+Constructing Numbers from Tokens::, *Note Printing Complexes::
+
+Notes::
+.......
+
+The input syntax for a complex with real part r and imaginary part i is
+#C(r i).  For further details, see *Note Standard Macro Characters::.
+
+For every float, n, there is a complex which represents the same
+mathematical number and which can be obtained by (COERCE n 'COMPLEX).
+
+
+File: gcl.info,  Node: real,  Next: float (System Class),  Prev: complex (System Class),  Up: Numbers Dictionary
+
+real                                                         [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+real, number, t
+
+Description::
+.............
+
+The type real includes all numbers that represent mathematical real
+numbers, though there are mathematical real numbers (e.g., irrational
+numbers) that do not have an exact representation in Common Lisp.  Only
+reals can be ordered using the <, >, <=, and >= functions.
+
+The types rational and float are disjoint subtypes of type real.
+
+Compound Type Specifier Kind::
+..............................
+
+Abbreviating.
+
+Compound Type Specifier Syntax::
+................................
+
+(`real'{[lower-limit [upper-limit]]})
+
+Compound Type Specifier Arguments::
+...................................
+
+lower-limit, upper-limit--interval designators for type real.  The
+defaults for each of lower-limit and upper-limit is the symbol *.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the reals on the interval described by lower-limit and
+upper-limit.
+
+
+File: gcl.info,  Node: float (System Class),  Next: short-float,  Prev: real,  Up: Numbers Dictionary
+
+float                                                        [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+float,
+
+real,
+
+number, t
+
+Description::
+.............
+
+A float is a mathematical rational (but not a Common Lisp rational) of the
+form s\cdot f\cdot b^e-p, where s is +1 or -1, the sign; b is an integer
+greater than~1, the base or radix of the representation; p is a positive
+integer, the precision (in base-b digits) of the float; f is a positive
+integer between b^p-1 and b^p-1 (inclusive), the significand; and e is an
+integer, the exponent.  The value of p and the range of~e depends on the
+implementation and on the type of float within that implementation. In
+addition, there is a floating-point zero; depending on the implementation,
+there can also be a "minus zero". If there is no minus zero, then 0.0
+and~-0.0 are both interpreted as simply a floating-point zero.  (= 0.0
+-0.0) is always true.  If there is a minus zero, (eql -0.0 0.0) is false,
+otherwise it is true.
+
+[Reviewer Note by Barmar: What about IEEE NaNs and infinities?]
+
+[Reviewer Note by RWK: In the following, what is the "ordering"?
+precision? range?  Can there be additional subtypes of float or does
+"others" in the list of four?]
+
+The types short-float, single-float, double-float, and long-float are
+subtypes of type float.  Any two of them must be either disjoint types or
+the same type; if the same type, then any other types between them in the
+above ordering must also be the same type.  For example, if the type
+single-float and the type long-float are the same type, then the type
+double-float must be the same type also.
+
+Compound Type Specifier Kind::
+..............................
+
+Abbreviating.
+
+Compound Type Specifier Syntax::
+................................
+
+(`float'{[lower-limit [upper-limit]]})
+
+Compound Type Specifier Arguments::
+...................................
+
+lower-limit, upper-limit--interval designators for type float.  The
+defaults for each of lower-limit and upper-limit is the symbol *.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the floats on the interval described by lower-limit and
+upper-limit.
+
+See Also::
+..........
+
+Figure~2-9, *Note Constructing Numbers from Tokens::, *Note Printing
+Floats::
+
+Notes::
+.......
+
+Note that all mathematical integers are representable not only as Common
+Lisp reals, but also as complex floats.  For example, possible
+representations of the mathematical number 1 include the integer 1, the
+float 1.0, or the complex #C(1.0 0.0).
+

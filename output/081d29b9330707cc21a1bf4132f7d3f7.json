@@ -1,0 +1,61 @@
+{
+    "name": "intern",
+    "prev": "do-symbols",
+    "next": "package-name",
+    "up": "Packages Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "intern"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "intern",
+                    "text": " string &optional package =>  symbol, status\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "string",
+                    "desc": "a string."
+                },
+                {
+                    "name": "package",
+                    "desc": "a package designator.The default is the current package.\n"
+                },
+                {
+                    "name": "symbol",
+                    "desc": "a symbol."
+                },
+                {
+                    "name": "status",
+                    "desc": "one of :inherited, :external, :internal, or nil."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "intern enters a symbol named string into package.  If a symbol whose name\nis the same as string is already accessible in package, it is returned.\nIf no such symbol is accessible in package, a new symbol with the given\nname is created and entered into package as an internal symbol, or as an\nexternal symbol if the package is the KEYWORD package; package becomes the\nhome package of the created symbol.\nThe first value returned by intern, symbol, is the symbol that was found or\ncreated.  The meaning of the secondary value, status, is as follows:\n:internal\n     The symbol was found and is present in package as an internal symbol.\n:external\n     The symbol was found and is present as an external symbol.\n:inherited\n     The symbol was found and is inherited via use-package (which implies\n     that the symbol is internal).\nnil\n     No pre-existing symbol was found, so one was created.\n     It is implementation-dependent whether the string that becomes the\n     new symbol's name is the given string or a copy of it.  Once a string\n     has been given as the string argument to intern in this situation\n     where a new symbol is created, the consequences are undefined if a\n     subsequent attempt is made to alter that string.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (in-package \"COMMON-LISP-USER\") =>  #<PACKAGE \"COMMON-LISP-USER\">\n      (intern \"Never-Before\") =>  |Never-Before|, NIL\n      (intern \"Never-Before\") =>  |Never-Before|, :INTERNAL\n      (intern \"NEVER-BEFORE\" \"KEYWORD\") =>  :NEVER-BEFORE, NIL\n      (intern \"NEVER-BEFORE\" \"KEYWORD\") =>  :NEVER-BEFORE, :EXTERNAL\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note find-symbol:: , *Note read; read-preserving-whitespace:: , symbol,\n*Note unintern:: , *Note Symbols as Tokens::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "intern does not need to do any name conflict checking because it never\ncreates a new symbol if there is already an accessible symbol with the\nname given.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: intern,  Next: package-name,  Prev: do-symbols,  Up: Packages Dictionary\n\nintern                                                           [Function]\n---------------------------------------------------------------------------\n\n`intern'  string &optional package =>  symbol, status\n\nArguments and Values::\n......................\n\nstring--a string.\n\npackage--a package designator.\n\nThe default is the current package.\n\nsymbol--a symbol.\n\nstatus--one of :inherited, :external, :internal, or nil.\n\nDescription::\n.............\n\nintern enters a symbol named string into package.  If a symbol whose name\nis the same as string is already accessible in package, it is returned.\nIf no such symbol is accessible in package, a new symbol with the given\nname is created and entered into package as an internal symbol, or as an\nexternal symbol if the package is the KEYWORD package; package becomes the\nhome package of the created symbol.\n\nThe first value returned by intern, symbol, is the symbol that was found or\ncreated.  The meaning of the secondary value, status, is as follows:\n:internal\n     The symbol was found and is present in package as an internal symbol.\n\n:external\n     The symbol was found and is present as an external symbol.\n\n:inherited\n     The symbol was found and is inherited via use-package (which implies\n     that the symbol is internal).\n\nnil\n     No pre-existing symbol was found, so one was created.\n\n     It is implementation-dependent whether the string that becomes the\n     new symbol's name is the given string or a copy of it.  Once a string\n     has been given as the string argument to intern in this situation\n     where a new symbol is created, the consequences are undefined if a\n     subsequent attempt is made to alter that string.\n\nExamples::\n..........\n\n      (in-package \"COMMON-LISP-USER\") =>  #<PACKAGE \"COMMON-LISP-USER\">\n      (intern \"Never-Before\") =>  |Never-Before|, NIL\n      (intern \"Never-Before\") =>  |Never-Before|, :INTERNAL\n      (intern \"NEVER-BEFORE\" \"KEYWORD\") =>  :NEVER-BEFORE, NIL\n      (intern \"NEVER-BEFORE\" \"KEYWORD\") =>  :NEVER-BEFORE, :EXTERNAL\n\nSee Also::\n..........\n\n*Note find-symbol:: , *Note read; read-preserving-whitespace:: , symbol,\n*Note unintern:: , *Note Symbols as Tokens::\n\nNotes::\n.......\n\nintern does not need to do any name conflict checking because it never\ncreates a new symbol if there is already an accessible symbol with the\nname given.\n\n"
+}

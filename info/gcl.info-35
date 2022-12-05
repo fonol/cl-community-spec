@@ -1,0 +1,1725 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: car,  Next: copy-tree,  Prev: rplaca,  Up: Conses Dictionary
+
+car,    cdr,
+------------
+
+caar,   cadr,   cdar,   cddr,
+-----------------------------
+
+caaar,  caadr,  cadar,  caddr,  cdaar,  cdadr,  cddar,  cdddr,
+--------------------------------------------------------------
+
+caaaar, caaadr, caadar, caaddr, cadaar, cadadr, caddar, cadddr,
+---------------------------------------------------------------
+
+cdaaar, cdaadr, cdadar, cdaddr, cddaar, cddadr, cdddar, cddddr
+--------------------------------------------------------------
+
+                                                                [Accessor]
+
+`car'  x =>  object (setf (`car' x) new-object)
+`cdr'  x =>  object (setf (`cdr' x) new-object)
+`\vksip 5pt'  x =>  object (setf (`\vksip 5pt' x) new-object)
+`caar'  x =>  object (setf (`caar' x) new-object)
+`cadr'  x =>  object (setf (`cadr' x) new-object)
+`cdar'  x =>  object (setf (`cdar' x) new-object)
+`cddr'  x =>  object (setf (`cddr' x) new-object)
+`\vksip 5pt'  x =>  object (setf (`\vksip 5pt' x) new-object)
+`caaar'  x =>  object (setf (`caaar' x) new-object)
+`caadr'  x =>  object (setf (`caadr' x) new-object)
+`cadar'  x =>  object (setf (`cadar' x) new-object)
+`caddr'  x =>  object (setf (`caddr' x) new-object)
+`cdaar'  x =>  object (setf (`cdaar' x) new-object)
+`cdadr'  x =>  object (setf (`cdadr' x) new-object)
+`cddar'  x =>  object (setf (`cddar' x) new-object)
+`cdddr'  x =>  object (setf (`cdddr' x) new-object)
+`\vksip 5pt'  x =>  object (setf (`\vksip 5pt' x) new-object)
+`caaaar'  x =>  object (setf (`caaaar' x) new-object)
+`caaadr'  x =>  object (setf (`caaadr' x) new-object)
+`caadar'  x =>  object (setf (`caadar' x) new-object)
+`caaddr'  x =>  object (setf (`caaddr' x) new-object)
+`cadaar'  x =>  object (setf (`cadaar' x) new-object)
+`cadadr'  x =>  object (setf (`cadadr' x) new-object)
+`caddar'  x =>  object (setf (`caddar' x) new-object)
+`cadddr'  x =>  object (setf (`cadddr' x) new-object)
+`cdaaar'  x =>  object (setf (`cdaaar' x) new-object)
+`cdaadr'  x =>  object (setf (`cdaadr' x) new-object)
+`cdadar'  x =>  object (setf (`cdadar' x) new-object)
+`cdaddr'  x =>  object (setf (`cdaddr' x) new-object)
+`cddaar'  x =>  object (setf (`cddaar' x) new-object)
+`cddadr'  x =>  object (setf (`cddadr' x) new-object)
+`cdddar'  x =>  object (setf (`cdddar' x) new-object)
+`cddddr'  x =>  object (setf (`cddddr' x) new-object)
+Pronunciation::
+...............
+
+cadr: pronounced 'ka ,de r
+
+caddr: pronounced 'kad e ,de r or pronounced 'ka ,dude r
+
+cdr: pronounced 'ku ,de r
+
+cddr: pronounced 'kud e ,de r or pronounced 'ke ,dude r
+
+Arguments and Values::
+......................
+
+x--a list.
+
+object--an object.
+
+new-object--an object.
+
+Description::
+.............
+
+If x is a cons, car returns the car of that cons.  If x is nil, car
+returns nil.
+
+If x is a cons, cdr returns the cdr of that cons.  If x is nil, cdr
+returns nil.
+
+Functions are provided which perform compositions of up to four car and
+cdr operations.  Their names consist of a C, followed by two, three, or
+four occurrences of A or D, and finally an R.  The series of A's and D's
+in each function's name is chosen to identify the series of car and cdr
+operations that is performed by the function.  The order in which the A's
+and D's appear is the inverse of the order in which the corresponding
+operations are performed.  Figure 14-6 defines the relationships precisely.
+
+  This place ...  Is equivalent to this place ...  
+  (caar x)        (car (car x))                    
+  (cadr x)        (car (cdr x))                    
+  (cdar x)        (cdr (car x))                    
+  (cddr x)        (cdr (cdr x))                    
+  (caaar x)       (car (car (car x)))              
+  (caadr x)       (car (car (cdr x)))              
+  (cadar x)       (car (cdr (car x)))              
+  (caddr x)       (car (cdr (cdr x)))              
+  (cdaar x)       (cdr (car (car x)))              
+  (cdadr x)       (cdr (car (cdr x)))              
+  (cddar x)       (cdr (cdr (car x)))              
+  (cdddr x)       (cdr (cdr (cdr x)))              
+  (caaaar x)      (car (car (car (car x))))        
+  (caaadr x)      (car (car (car (cdr x))))        
+  (caadar x)      (car (car (cdr (car x))))        
+  (caaddr x)      (car (car (cdr (cdr x))))        
+  (cadaar x)      (car (cdr (car (car x))))        
+  (cadadr x)      (car (cdr (car (cdr x))))        
+  (caddar x)      (car (cdr (cdr (car x))))        
+  (cadddr x)      (car (cdr (cdr (cdr x))))        
+  (cdaaar x)      (cdr (car (car (car x))))        
+  (cdaadr x)      (cdr (car (car (cdr x))))        
+  (cdadar x)      (cdr (car (cdr (car x))))        
+  (cdaddr x)      (cdr (car (cdr (cdr x))))        
+  (cddaar x)      (cdr (cdr (car (car x))))        
+  (cddadr x)      (cdr (cdr (car (cdr x))))        
+  (cdddar x)      (cdr (cdr (cdr (car x))))        
+  (cddddr x)      (cdr (cdr (cdr (cdr x))))        
+
+         Figure 14-6: CAR and CDR variants        
+
+
+setf can also be used with any of these functions to change an existing
+component of x, but setf will not make new components.  So, for example,
+the car of a cons can be assigned with setf of car, but the car of nil
+cannot be assigned with setf of car.  Similarly, the car of the car of a
+cons whose car is a cons can be assigned with setf of caar, but neither
+nil nor a cons whose car is nil can be assigned with setf of caar.
+
+The argument x is permitted to be a dotted list or a circular list.
+
+Examples::
+..........
+
+      (car nil) =>  NIL
+      (cdr '(1 . 2)) =>  2
+      (cdr '(1 2)) =>  (2)
+      (cadr '(1 2)) =>  2
+      (car '(a b c)) =>  A
+      (cdr '(a b c)) =>  (B C)
+
+Exceptional Situations::
+........................
+
+The functions car and cdr should signal type-error if they receive an
+argument which is not a list.  The other functions (caar, cadr, ...
+cddddr) should behave for the purpose of error checking as if defined by
+appropriate calls to car and cdr.
+
+See Also::
+..........
+
+*Note rplaca; rplacd:: , *Note first; second; third; fourth; fifth; sixth;
+seventh; eighth; ninth; tenth:: , *Note rest::
+
+Notes::
+.......
+
+The car of a cons can also be altered by using rplaca, and the cdr of a
+cons can be altered by using rplacd.
+
+     (car x)    == (first x)
+     (cadr x)   == (second x) == (car (cdr x))
+     (caddr x)  == (third x)  == (car (cdr (cdr x)))
+     (cadddr x) == (fourth x) == (car (cdr (cdr (cdr x))))
+
+
+File: gcl.info,  Node: copy-tree,  Next: sublis,  Prev: car,  Up: Conses Dictionary
+
+copy-tree                                                        [Function]
+---------------------------------------------------------------------------
+
+`copy-tree'  tree =>  new-tree
+
+Arguments and Values::
+......................
+
+tree--a tree.
+
+new-tree--a tree.
+
+Description::
+.............
+
+Creates a copy of a tree of conses.
+
+If tree is not a cons, it is returned; otherwise, the result is a new cons
+of the results of calling copy-tree on the car and cdr of tree.  In other
+words, all conses in the tree represented by tree are copied recursively,
+stopping only when non-conses are encountered.
+
+copy-tree does not preserve circularities and the sharing of substructure.
+
+Examples::
+..........
+
+      (setq object (list (cons 1 "one")
+                         (cons 2 (list 'a 'b 'c))))
+     =>  ((1 . "one") (2 A B C))
+      (setq object-too object) =>  ((1 . "one") (2 A B C))
+      (setq copy-as-list (copy-list object))
+      (setq copy-as-alist (copy-alist object))
+      (setq copy-as-tree (copy-tree object))
+      (eq object object-too) =>  true
+      (eq copy-as-tree object) =>  false
+      (eql copy-as-tree object) =>  false
+      (equal copy-as-tree object) =>  true
+      (setf (first (cdr (second object))) "a"
+            (car (second object)) "two"
+            (car object) '(one . 1)) =>  (ONE . 1)
+      object =>  ((ONE . 1) ("two" "a" B C))
+      object-too =>  ((ONE . 1) ("two" "a" B C))
+      copy-as-list =>  ((1 . "one") ("two" "a" B C))
+      copy-as-alist =>  ((1 . "one") (2 "a" B C))
+      copy-as-tree =>  ((1 . "one") (2 A B C))
+
+See Also::
+..........
+
+*Note tree-equal::
+
+
+File: gcl.info,  Node: sublis,  Next: subst,  Prev: copy-tree,  Up: Conses Dictionary
+
+sublis, nsublis                                                  [Function]
+---------------------------------------------------------------------------
+
+`sublis'  alist tree &key key test test-not =>  new-tree
+
+`nsublis'  alist tree &key key test test-not =>  new-tree
+
+Arguments and Values::
+......................
+
+alist--an association list.
+
+tree--a tree.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+key--a designator for a function of one argument, or nil.
+
+new-tree--a tree.
+
+Description::
+.............
+
+sublis makes substitutions for objects in tree (a structure of conses).
+nsublis is like sublis but destructively modifies the relevant parts of
+the tree.
+
+sublis looks at all subtrees and leaves of tree; if a subtree or leaf
+appears as a key in alist (that is, the key and the subtree or leaf
+satisfy the test), it is replaced by the object with which that key is
+associated.  This operation is non-destructive.  In effect, sublis can
+perform several subst operations simultaneously.
+
+If sublis succeeds, a new copy of tree is returned in which each
+occurrence of such a subtree or leaf is replaced by the object with which
+it is associated.   If no changes are made, the original tree is returned.
+The original tree is left unchanged, but the result tree may share cells
+with it.
+
+nsublis is permitted to modify tree but otherwise returns the same values
+as sublis.
+
+Examples::
+..........
+
+      (sublis '((x . 100) (z . zprime))
+              '(plus x (minus g z x p) 4 . x))
+     =>  (PLUS 100 (MINUS G ZPRIME 100 P) 4 . 100)
+      (sublis '(((+ x y) . (- x y)) ((- x y) . (+ x y)))
+              '(* (/ (+ x y) (+ x p)) (- x y))
+              :test #'equal)
+     =>  (* (/ (- X Y) (+ X P)) (+ X Y))
+      (setq tree1 '(1 (1 2) ((1 2 3)) (((1 2 3 4)))))
+     =>  (1 (1 2) ((1 2 3)) (((1 2 3 4))))
+      (sublis '((3 . "three")) tree1)
+     =>  (1 (1 2) ((1 2 "three")) (((1 2 "three" 4))))
+      (sublis '((t . "string"))
+               (sublis '((1 . "") (4 . 44)) tree1)
+               :key #'stringp)
+     =>  ("string" ("string" 2) (("string" 2 3)) ((("string" 2 3 44))))
+      tree1 =>  (1 (1 2) ((1 2 3)) (((1 2 3 4))))
+      (setq tree2 '("one" ("one" "two") (("one" "Two" "three"))))
+     =>  ("one" ("one" "two") (("one" "Two" "three")))
+      (sublis '(("two" . 2)) tree2)
+     =>  ("one" ("one" "two") (("one" "Two" "three")))
+      tree2 =>  ("one" ("one" "two") (("one" "Two" "three")))
+      (sublis '(("two" . 2)) tree2 :test 'equal)
+     =>  ("one" ("one" 2) (("one" "Two" "three")))
+     
+      (nsublis '((t . 'temp))
+                tree1
+                :key #'(lambda (x) (or (atom x) (< (list-length x) 3))))
+     =>  ((QUOTE TEMP) (QUOTE TEMP) QUOTE TEMP)
+
+Side Effects::
+..............
+
+nsublis modifies tree.
+
+See Also::
+..........
+
+*Note subst; subst-if; subst-if-not; nsubst; nsubst-if; nsubst-if-not:: ,
+
+*Note Compiler Terminology::,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not parameter is deprecated.
+
+Because the side-effecting variants (e.g., nsublis) potentially change the
+path that is being traversed, their effects in the presence of shared or
+circular structure structure may vary in surprising ways when compared to
+their non-side-effecting alternatives.  To see this, consider the
+following side-effect behavior, which might be exhibited by some
+implementations:
+
+      (defun test-it (fn)
+        (let* ((shared-piece (list 'a 'b))
+               (data (list shared-piece shared-piece)))
+          (funcall fn '((a . b) (b . a)) data)))
+      (test-it #'sublis) =>  ((B A) (B A))
+      (test-it #'nsublis) =>  ((A B) (A B))
+
+
+File: gcl.info,  Node: subst,  Next: tree-equal,  Prev: sublis,  Up: Conses Dictionary
+
+subst, subst-if, subst-if-not, nsubst, nsubst-if, nsubst-if-not
+---------------------------------------------------------------
+
+                                                                [Function]
+
+`subst'  new old  tree &key key test test-not =>  new-tree
+
+`subst-if'  new predicate tree &key key =>  new-tree
+
+`subst-if-not'  new predicate tree &key key =>  new-tree
+
+`nsubst'  new old  tree &key key test test-not =>  new-tree
+
+`nsubst-if'  new predicate tree &key key =>  new-tree
+
+`nsubst-if-not'  new predicate tree &key key =>  new-tree
+
+Arguments and Values::
+......................
+
+new--an object.
+
+old--an object.
+
+predicate--a symbol that names a function, or a function of one argument
+that returns a generalized boolean value.
+
+tree--a tree.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+key--a designator for a function of one argument, or nil.
+
+new-tree--a tree.
+
+Description::
+.............
+
+subst, subst-if, and subst-if-not perform substitution operations on tree.
+Each function searches tree for occurrences of a particular old item of an
+element or subexpression that satisfies the test.
+
+nsubst, nsubst-if, and nsubst-if-not are like subst, subst-if, and
+subst-if-not respectively, except that the original tree is  modified.
+
+subst makes a copy of tree, substituting new for every subtree or leaf of
+tree (whether the subtree or leaf is a car or a cdr of its parent) such
+that old and the subtree or leaf satisfy the test.
+
+nsubst is a destructive version of subst.  The list structure of tree is
+altered by destructively replacing with new each leaf of the tree such
+that old and the leaf satisfy the test.
+
+For subst, subst-if, and subst-if-not, if the functions succeed, a new
+copy of the tree is returned in which each  occurrence of such an element
+is replaced by the new element or subexpression.  If no changes are made,
+the original tree may be returned.  The original tree is left unchanged,
+but the result tree may share storage with it.
+
+For nsubst, nsubst-if, and nsubst-if-not the original tree is  modified
+and returned as the function result, but the result may not be eq to tree.
+
+Examples::
+..........
+
+      (setq tree1 '(1 (1 2) (1 2 3) (1 2 3 4))) =>  (1 (1 2) (1 2 3) (1 2 3 4))
+      (subst "two" 2 tree1) =>  (1 (1 "two") (1 "two" 3) (1 "two" 3 4))
+      (subst "five" 5 tree1) =>  (1 (1 2) (1 2 3) (1 2 3 4))
+      (eq tree1 (subst "five" 5 tree1)) =>  implementation-dependent
+      (subst 'tempest 'hurricane
+             '(shakespeare wrote (the hurricane)))
+     =>  (SHAKESPEARE WROTE (THE TEMPEST))
+      (subst 'foo 'nil '(shakespeare wrote (twelfth night)))
+     =>  (SHAKESPEARE WROTE (TWELFTH NIGHT . FOO) . FOO)
+      (subst '(a . cons) '(old . pair)
+             '((old . spice) ((old . shoes) old . pair) (old . pair))
+             :test #'equal)
+     =>  ((OLD . SPICE) ((OLD . SHOES) A . CONS) (A . CONS))
+     
+      (subst-if 5 #'listp tree1) =>  5
+      (subst-if-not '(x) #'consp tree1)
+     =>  (1 X)
+     
+      tree1 =>  (1 (1 2) (1 2 3) (1 2 3 4))
+      (nsubst 'x 3 tree1 :key #'(lambda (y) (and (listp y) (third y))))
+     =>  (1 (1 2) X X)
+      tree1 =>  (1 (1 2) X X)
+
+Side Effects::
+..............
+
+nsubst, nsubst-if, and nsubst-if-not might alter the tree structure of
+tree.
+
+See Also::
+..........
+
+*Note substitute; substitute-if; substitute-if-not; nsubstitute;
+nsubstitute-if; nsubstitute-if-not:: , nsubstitute,
+
+*Note Compiler Terminology::,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not parameter is deprecated.
+
+The functions subst-if-not and nsubst-if-not are deprecated.
+
+One possible definition of subst:
+
+      (defun subst (old new tree &rest x &key test test-not key)
+        (cond ((satisfies-the-test old tree :test test
+                                      :test-not test-not :key key)
+              new)
+             ((atom tree) tree)
+             (t (let ((a (apply #'subst old new (car tree) x))
+                      (d (apply #'subst old new (cdr tree) x)))
+                  (if (and (eql a (car tree))
+                           (eql d (cdr tree)))
+                      tree
+                      (cons a d))))))
+
+
+File: gcl.info,  Node: tree-equal,  Next: copy-list,  Prev: subst,  Up: Conses Dictionary
+
+tree-equal                                                       [Function]
+---------------------------------------------------------------------------
+
+`tree-equal'  tree-1 tree-2 &key test test-not =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+tree-1--a tree.
+
+tree-2--a tree.
+
+test--a designator for a function of two arguments that returns a
+generalized boolean.
+
+test-not--a designator for a function of two arguments that returns a
+generalized boolean.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+tree-equal tests whether two trees are of the same shape and have the same
+leaves.  tree-equal returns true if tree-1 and tree-2  are both atoms and
+satisfy the test, or if they are both conses and the car of tree-1 is
+tree-equal to the car of tree-2 and the cdr of tree-1 is tree-equal to the
+cdr of tree-2.  Otherwise, tree-equal returns false.
+
+tree-equal recursively compares conses but not any other objects that have
+components.
+
+The first argument to the :test or :test-not function is tree-1 or a car
+or cdr of tree-1; the second argument is tree-2 or a car or cdr of tree-2.
+
+Examples::
+..........
+
+      (setq tree1 '(1 (1 2))
+            tree2 '(1 (1 2))) =>  (1 (1 2))
+      (tree-equal tree1 tree2) =>  true
+      (eql tree1 tree2) =>  false
+      (setq tree1 '('a ('b 'c))
+            tree2 '('a ('b 'c))) =>  ('a ('b 'c))
+     =>  ((QUOTE A) ((QUOTE B) (QUOTE C)))
+      (tree-equal tree1 tree2 :test 'eq) =>  true
+
+Exceptional Situations::
+........................
+
+The consequences are undefined if both tree-1 and tree-2 are circular.
+
+See Also::
+..........
+
+*Note equal:: ,
+
+*Note Traversal Rules and Side Effects::
+
+Notes::
+.......
+
+The :test-not parameter is deprecated.
+
+
+File: gcl.info,  Node: copy-list,  Next: list,  Prev: tree-equal,  Up: Conses Dictionary
+
+copy-list                                                        [Function]
+---------------------------------------------------------------------------
+
+`copy-list'  list =>  copy
+
+Arguments and Values::
+......................
+
+list--a proper list or a dotted list.
+
+copy--a list.
+
+Description::
+.............
+
+Returns a copy of list.  If list is a dotted list, the resulting list will
+also be a dotted list.
+
+Only the list structure of list is copied; the elements of the resulting
+list are the same as the corresponding elements of the given list.
+
+Examples::
+..........
+
+      (setq lst (list 1 (list 2 3))) =>  (1 (2 3))
+      (setq slst lst) =>  (1 (2 3))
+      (setq clst (copy-list lst)) =>  (1 (2 3))
+      (eq slst lst) =>  true
+      (eq clst lst) =>  false
+      (equal clst lst) =>  true
+      (rplaca lst "one") =>  ("one" (2 3))
+      slst =>  ("one" (2 3))
+      clst =>  (1 (2 3))
+      (setf (caadr lst) "two") =>  "two"
+      lst =>  ("one" ("two" 3))
+      slst =>  ("one" ("two" 3))
+      clst =>  (1 ("two" 3))
+
+Exceptional Situations::
+........................
+
+The consequences are undefined if list is a circular list.
+
+See Also::
+..........
+
+*Note copy-alist:: , *Note copy-seq:: , *Note copy-tree::
+
+Notes::
+.......
+
+The copy created is equal to list, but not eq.
+
+
+File: gcl.info,  Node: list,  Next: list-length,  Prev: copy-list,  Up: Conses Dictionary
+
+list, list*                                                      [Function]
+---------------------------------------------------------------------------
+
+`list'  &rest objects =>  list
+
+`list*'  &rest objects^+ =>  result
+
+Arguments and Values::
+......................
+
+object--an object.
+
+list--a list.
+
+result--an object.
+
+Description::
+.............
+
+list returns a list containing the supplied objects.
+
+list* is like list except that the last argument to list becomes the car
+of the last cons constructed, while the last argument to list* becomes the
+cdr of the last cons constructed.  Hence, any given call to list* always
+produces one fewer conses than a call to list with the same number of
+arguments.
+
+If the last argument to list* is a list, the effect is to construct a new
+list which is similar, but which has additional elements added to the
+front corresponding to the preceding arguments of list*.
+
+If list* receives only one object, that object is returned, regardless of
+whether or not it is a list.
+
+Examples::
+..........
+
+      (list 1) =>  (1)
+      (list* 1) =>  1
+      (setq a 1) =>  1
+      (list a 2) =>  (1 2)
+      '(a 2) =>  (A 2)
+      (list 'a 2) =>  (A 2)
+      (list* a 2) =>  (1 . 2)
+      (list) =>  NIL ;i.e., ()
+      (setq a '(1 2)) =>  (1 2)
+      (eq a (list* a)) =>  true
+      (list 3 4 'a (car '(b . c)) (+ 6 -2)) =>  (3 4 A B 4)
+      (list* 'a 'b 'c 'd) == (cons 'a (cons 'b (cons 'c 'd))) =>  (A B C . D)
+      (list* 'a 'b 'c '(d e f)) =>  (A B C D E F)
+
+See Also::
+..........
+
+*Note cons::
+
+Notes::
+.......
+
+      (list* x) == x
+
+
+File: gcl.info,  Node: list-length,  Next: listp,  Prev: list,  Up: Conses Dictionary
+
+list-length                                                      [Function]
+---------------------------------------------------------------------------
+
+`list-length'  list =>  length
+
+Arguments and Values::
+......................
+
+list--a proper list or a circular list.
+
+length--a non-negative integer, or nil.
+
+Description::
+.............
+
+Returns the length of list if list is a proper list.  Returns nil if list
+is a circular list.
+
+Examples::
+..........
+
+      (list-length '(a b c d)) =>  4
+      (list-length '(a (b c) d)) =>  3
+      (list-length '()) =>  0
+      (list-length nil) =>  0
+      (defun circular-list (&rest elements)
+        (let ((cycle (copy-list elements)))
+          (nconc cycle cycle)))
+      (list-length (circular-list 'a 'b)) =>  NIL
+      (list-length (circular-list 'a)) =>  NIL
+      (list-length (circular-list)) =>  0
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if list is not a proper list or
+a circular list.
+
+See Also::
+..........
+
+*Note length::
+
+Notes::
+.......
+
+list-length could be implemented as follows:
+
+      (defun list-length (x)
+        (do ((n 0 (+ n 2))           ;Counter.
+             (fast x (cddr fast))    ;Fast pointer: leaps by 2.
+             (slow x (cdr slow)))    ;Slow pointer: leaps by 1.
+            (nil)
+          ;; If fast pointer hits the end, return the count.
+          (when (endp fast) (return n))
+          (when (endp (cdr fast)) (return (+ n 1)))
+          ;; If fast pointer eventually equals slow pointer,
+          ;;  then we must be stuck in a circular list.
+          ;; (A deeper property is the converse: if we are
+          ;;  stuck in a circular list, then eventually the
+          ;;  fast pointer will equal the slow pointer.
+          ;;  That fact justifies this implementation.)
+          (when (and (eq fast slow) (> n 0)) (return nil))))
+
+
+File: gcl.info,  Node: listp,  Next: make-list,  Prev: list-length,  Up: Conses Dictionary
+
+listp                                                            [Function]
+---------------------------------------------------------------------------
+
+`listp'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type list; otherwise, returns false.
+
+Examples::
+..........
+
+      (listp nil) =>  true
+      (listp (cons 1 2)) =>  true
+      (listp (make-array 6)) =>  false
+      (listp t) =>  false
+
+See Also::
+..........
+
+*Note consp::
+
+Notes::
+.......
+
+If object is a cons, listp does not check whether object is a proper list;
+it returns true for any kind of list.
+
+      (listp object) == (typep object 'list) == (typep object '(or cons null))
+
+
+File: gcl.info,  Node: make-list,  Next: push,  Prev: listp,  Up: Conses Dictionary
+
+make-list                                                        [Function]
+---------------------------------------------------------------------------
+
+`make-list'  size &key initial-element =>  list
+
+Arguments and Values::
+......................
+
+size--a non-negative integer.
+
+initial-element--an object.  The default is nil.
+
+list--a list.
+
+Description::
+.............
+
+Returns a list of length given by size, each of the elements of which is
+initial-element.
+
+Examples::
+..........
+
+      (make-list 5) =>  (NIL NIL NIL NIL NIL)
+      (make-list 3 :initial-element 'rah) =>  (RAH RAH RAH)
+      (make-list 2 :initial-element '(1 2 3)) =>  ((1 2 3) (1 2 3))
+      (make-list 0) =>  NIL ;i.e., ()
+      (make-list 0 :initial-element 'new-element) =>  NIL
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if size is not a non-negative
+integer.
+
+See Also::
+..........
+
+*Note cons:: , *Note list::
+
+
+File: gcl.info,  Node: push,  Next: pop,  Prev: make-list,  Up: Conses Dictionary
+
+push                                                                [Macro]
+---------------------------------------------------------------------------
+
+`push'  item place =>  new-place-value
+
+Arguments and Values::
+......................
+
+item--an object.
+
+place--a place, the value of which may be any object.
+
+new-place-value--a list (the new value of place).
+
+Description::
+.............
+
+push prepends item to the list that is stored in place, stores the
+resulting list in place, and returns the list.
+
+For information about the evaluation of subforms of place, see *Note
+Evaluation of Subforms to Places::.
+
+Examples::
+..........
+
+      (setq llst '(nil)) =>  (NIL)
+      (push 1 (car llst)) =>  (1)
+      llst =>  ((1))
+      (push 1 (car llst)) =>  (1 1)
+      llst =>  ((1 1))
+      (setq x '(a (b c) d)) =>  (A (B C) D)
+      (push 5 (cadr x)) =>  (5 B C)
+      x =>  (A (5 B C) D)
+
+Side Effects::
+..............
+
+The contents of place are modified.
+
+See Also::
+..........
+
+*Note pop:: , *Note pushnew:: , *Note Generalized Reference::
+
+Notes::
+.......
+
+The effect of (push item place) is equivalent to
+
+      (setf place (cons item place))
+
+except that the subforms of place are evaluated only once, and item is
+evaluated before place.
+
+
+File: gcl.info,  Node: pop,  Next: first,  Prev: push,  Up: Conses Dictionary
+
+pop                                                                 [Macro]
+---------------------------------------------------------------------------
+
+`pop'  place =>  element
+
+Arguments and Values::
+......................
+
+place--a place, the value of which is a list (possibly, but necessarily, a
+dotted list or circular list).
+
+element--an object (the car of the contents of place).
+
+Description::
+.............
+
+pop reads the value of place, remembers the car of the list which was
+retrieved, writes the cdr of the list back into the place, and finally
+yields the car of the originally retrieved list.
+
+For information about the evaluation of subforms of place, see *Note
+Evaluation of Subforms to Places::.
+
+Examples::
+..........
+
+      (setq stack '(a b c)) =>  (A B C)
+      (pop stack) =>  A
+      stack =>  (B C)
+      (setq llst '((1 2 3 4))) =>  ((1 2 3 4))
+      (pop (car llst)) =>  1
+      llst =>  ((2 3 4))
+
+Side Effects::
+..............
+
+The contents of place are modified.
+
+See Also::
+..........
+
+*Note push:: , *Note pushnew:: , *Note Generalized Reference::
+
+Notes::
+.......
+
+The effect of (pop place) is roughly equivalent to
+
+      (prog1 (car place) (setf place (cdr place)))
+
+except that the latter would evaluate any subforms of place three times,
+while pop evaluates them only once.
+
+
+File: gcl.info,  Node: first,  Next: nth,  Prev: pop,  Up: Conses Dictionary
+
+first, second, third, fourth, fifth,
+------------------------------------
+
+sixth, seventh, eighth, ninth, tenth
+------------------------------------
+
+                                                                [Accessor]
+
+`first'  list =>  object (setf (`first' list) new-object)
+`second'  list =>  object (setf (`second' list) new-object)
+`third'  list =>  object (setf (`third' list) new-object)
+`fourth'  list =>  object (setf (`fourth' list) new-object)
+`fifth'  list =>  object (setf (`fifth' list) new-object)
+`sixth'  list =>  object (setf (`sixth' list) new-object)
+`seventh'  list =>  object (setf (`seventh' list) new-object)
+`eighth'  list =>  object (setf (`eighth' list) new-object)
+`ninth'  list =>  object (setf (`ninth' list) new-object)
+`tenth'  list =>  object (setf (`tenth' list) new-object)
+Arguments and Values::
+......................
+
+list--a list,
+
+which might be a dotted list or a circular list.
+
+object, new-object--an object.
+
+Description::
+.............
+
+The functions first, second, third, fourth, fifth, sixth, seventh, eighth,
+ninth, and tenth access the first, second, third, fourth, fifth, sixth,
+seventh, eighth, ninth, and tenth elements of list, respectively.
+Specifically,
+
+      (first list)    ==  (car list)
+      (second list)   ==  (car (cdr list))
+      (third list)    ==  (car (cddr list))
+      (fourth list)   ==  (car (cdddr list))
+      (fifth list)    ==  (car (cddddr list))
+      (sixth list)    ==  (car (cdr (cddddr list)))
+      (seventh list)  ==  (car (cddr (cddddr list)))
+      (eighth list)   ==  (car (cdddr (cddddr list)))
+      (ninth list)    ==  (car (cddddr (cddddr list)))
+      (tenth list)    ==  (car (cdr (cddddr (cddddr list))))
+
+setf can also be used with any of these functions to change an existing
+component.  The same equivalences apply.  For example:
+
+      (setf (fifth list) new-object) == (setf (car (cddddr list)) new-object)
+
+Examples::
+..........
+
+      (setq lst '(1 2 3 (4 5 6) ((V)) vi 7 8 9 10))
+     =>  (1 2 3 (4 5 6) ((V)) VI 7 8 9 10)
+      (first lst) =>  1
+      (tenth lst) =>  10
+      (fifth lst) =>  ((V))
+      (second (fourth lst)) =>  5
+      (sixth '(1 2 3)) =>  NIL
+      (setf (fourth lst) "four") =>  "four"
+      lst =>  (1 2 3 "four" ((V)) VI 7 8 9 10)
+
+See Also::
+..........
+
+*Note car; cdr; caar; cadr; cdar; cddr; caaar; caadr; cadar; caddr; cdaar;
+cdadr; cddar; cdddr; caaaar; caaadr; caadar; caaddr; cadaar; cadadr;
+caddar; cadddr; cdaaar; cdaadr; cdadar; cdaddr; cddaar; cddadr; cdddar;
+cddddr:: , *Note nth::
+
+Notes::
+.......
+
+first  is functionally equivalent to car, second is functionally
+equivalent to cadr, third  is functionally equivalent to caddr, and fourth
+is functionally equivalent to cadddr.
+
+The ordinal numbering used here is one-origin, as opposed to the
+zero-origin numbering used by nth:
+
+      (fifth x) == (nth 4 x)
+
+
+File: gcl.info,  Node: nth,  Next: endp,  Prev: first,  Up: Conses Dictionary
+
+nth                                                              [Accessor]
+---------------------------------------------------------------------------
+
+`nth'  n list =>  object
+
+(setf (`         nth' n list) new-object)
+Arguments and Values::
+......................
+
+n--a non-negative integer.
+
+list--a list,
+
+which might be a dotted list or a circular list.
+
+object--an object.
+
+new-object--an object.
+
+Description::
+.............
+
+nth locates the nth element of list, where the car of the list is the
+"zeroth" element.
+
+Specifically,
+
+      (nth n list) == (car (nthcdr n list))
+
+nth may be used to specify a place to setf.
+
+Specifically,
+
+      (setf (nth n list) new-object) == (setf (car (nthcdr n list)) new-object)
+
+Examples::
+..........
+
+      (nth 0 '(foo bar baz)) =>  FOO
+      (nth 1 '(foo bar baz)) =>  BAR
+      (nth 3 '(foo bar baz)) =>  NIL
+      (setq 0-to-3 (list 0 1 2 3)) =>  (0 1 2 3)
+      (setf (nth 2 0-to-3) "two") =>  "two"
+      0-to-3 =>  (0 1 "two" 3)
+
+See Also::
+..........
+
+*Note elt:: , *Note first; second; third; fourth; fifth; sixth; seventh;
+eighth; ninth; tenth:: , *Note nthcdr::
+
+
+File: gcl.info,  Node: endp,  Next: null,  Prev: nth,  Up: Conses Dictionary
+
+endp                                                             [Function]
+---------------------------------------------------------------------------
+
+`endp'  list =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+list--a list,
+
+which might be a dotted list or a circular list.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true  if list is the empty list.  Returns false if list is a cons.
+
+Examples::
+..........
+
+      (endp nil) =>  true
+      (endp '(1 2)) =>  false
+      (endp (cddr '(1 2))) =>  true
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if list is not a list.
+
+Notes::
+.......
+
+The purpose of endp is to test for the end of proper list.  Since endp
+does not descend into a cons, it is well-defined to pass it a dotted list.
+However, if shorter "lists" are iteratively produced by calling cdr on
+such a dotted list and those "lists" are tested with endp, a situation
+that has undefined consequences will eventually result when the non-nil
+atom (which is not in fact a list) finally becomes the argument to endp.
+Since this is the usual way in which endp is used, it is conservative
+programming style and consistent with the intent of endp to treat endp as
+simply a function on proper lists which happens not to enforce an argument
+type of proper list except when the argument is atomic.
+
+
+File: gcl.info,  Node: null,  Next: nconc,  Prev: endp,  Up: Conses Dictionary
+
+null                                                             [Function]
+---------------------------------------------------------------------------
+
+`null'  object =>  boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+boolean--a boolean.
+
+Description::
+.............
+
+Returns t if object is the empty list; otherwise, returns nil.
+
+Examples::
+..........
+
+      (null '()) =>  T
+      (null nil) =>  T
+      (null t) =>  NIL
+      (null 1) =>  NIL
+
+See Also::
+..........
+
+*Note not::
+
+Notes::
+.......
+
+null is intended to be used to test for the empty list whereas not is
+intended to be used to invert a boolean (or generalized boolean).
+Operationally, null and not compute the same result; which to use is a
+matter of style.
+
+      (null object) == (typep object 'null) == (eq object '())
+
+
+File: gcl.info,  Node: nconc,  Next: append,  Prev: null,  Up: Conses Dictionary
+
+nconc                                                            [Function]
+---------------------------------------------------------------------------
+
+`nconc'  &rest lists =>  concatenated-list
+
+Arguments and Values::
+......................
+
+list--each but the last must be a list (which might be a dotted list but
+must not be a circular list); the last list may be any object.
+
+concatenated-list--a list.
+
+Description::
+.............
+
+Returns a list that is the concatenation of lists.  If no lists are
+supplied, (nconc) returns nil.
+
+nconc is defined using the following recursive relationship:
+
+      (nconc) =>  ()
+      (nconc nil . lists) == (nconc . lists)
+      (nconc list) =>  list
+      (nconc list-1 list-2) == (progn (rplacd (last list-1) list-2) list-1)
+      (nconc list-1 list-2 . lists) == (nconc (nconc list-1 list-2) . lists)
+
+Examples::
+..........
+
+      (nconc) =>  NIL
+      (setq x '(a b c)) =>  (A B C)
+      (setq y '(d e f)) =>  (D E F)
+      (nconc x y) =>  (A B C D E F)
+      x =>  (A B C D E F)
+
+Note, in the example, that the value of x is now different, since its last
+cons has been rplacd'd to the value of y.  If (nconc x y) were evaluated
+again, it would yield a piece of a circular list, whose printed
+representation would be (A B C D E F D E F D E F ...), repeating forever;
+if the *print-circle* switch were non-nil, it would be printed as (A B C .
+#1=(D E F . #1#)).
+
+      (setq foo (list 'a 'b 'c 'd 'e)
+            bar (list 'f 'g 'h 'i 'j)
+            baz (list 'k 'l 'm)) =>  (K L M)
+      (setq foo (nconc foo bar baz)) =>  (A B C D E F G H I J K L M)
+      foo =>  (A B C D E F G H I J K L M)
+      bar =>  (F G H I J K L M)
+      baz =>  (K L M)
+     
+      (setq foo (list 'a 'b 'c 'd 'e)
+            bar (list 'f 'g 'h 'i 'j)
+            baz (list 'k 'l 'm)) =>  (K L M)
+      (setq foo (nconc nil foo bar nil baz)) =>  (A B C D E F G H I J K L M)
+      foo =>  (A B C D E F G H I J K L M)
+      bar =>  (F G H I J K L M)
+      baz =>  (K L M)
+
+Side Effects::
+..............
+
+The lists are modified rather than copied.
+
+See Also::
+..........
+
+*Note append:: , *Note concatenate::
+
+
+File: gcl.info,  Node: append,  Next: revappend,  Prev: nconc,  Up: Conses Dictionary
+
+append                                                           [Function]
+---------------------------------------------------------------------------
+
+`append'  &rest lists =>  result
+
+Arguments and Values::
+......................
+
+list--each must be a proper list except the last, which may be any object.
+
+result--an object.  This will be a list unless the last list was not a list
+and all preceding lists were null.
+
+Description::
+.............
+
+append returns a new list that is the concatenation of the copies.  lists
+are left unchanged; the list structure of each of lists except the last is
+copied.  The last argument is not copied; it becomes the cdr of the final
+dotted pair of the concatenation of the preceding lists, or is returned
+directly if there are no preceding non-empty lists.
+
+Examples::
+..........
+
+      (append '(a b c) '(d e f) '() '(g)) =>  (A B C D E F G)
+      (append '(a b c) 'd) =>  (A B C . D)
+      (setq lst '(a b c)) =>  (A B C)
+      (append lst '(d)) =>  (A B C D)
+      lst =>  (A B C)
+      (append) =>  NIL
+      (append 'a) =>  A
+
+See Also::
+..........
+
+*Note nconc:: , *Note concatenate::
+
+
+File: gcl.info,  Node: revappend,  Next: butlast,  Prev: append,  Up: Conses Dictionary
+
+revappend, nreconc                                               [Function]
+---------------------------------------------------------------------------
+
+`revappend'  list tail =>  result-list
+
+`nreconc'  list tail =>  result-list
+
+Arguments and Values::
+......................
+
+list--a proper list.
+
+tail--an object.
+
+result-list--an object.
+
+Description::
+.............
+
+revappend constructs a copy_2 of list, but with the elements in reverse
+order.  It then appends (as if by nconc) the tail to that reversed list
+and returns the result.
+
+nreconc reverses the order of elements in list (as if by nreverse).  It
+then appends (as if by nconc) the tail to that reversed list and returns
+the result.
+
+The resulting list shares list structure with tail.
+
+Examples::
+..........
+
+      (let ((list-1 (list 1 2 3))
+            (list-2 (list 'a 'b 'c)))
+        (print (revappend list-1 list-2))
+        (print (equal list-1 '(1 2 3)))
+        (print (equal list-2 '(a b c))))
+      |>  (3 2 1 A B C)
+      |>  T
+      |>  T
+     =>  T
+     
+      (revappend '(1 2 3) '()) =>  (3 2 1)
+      (revappend '(1 2 3) '(a . b)) =>  (3 2 1 A . B)
+      (revappend '() '(a b c)) =>  (A B C)
+      (revappend '(1 2 3) 'a) =>  (3 2 1 . A)
+      (revappend '() 'a) =>  A   ;degenerate case
+     
+      (let ((list-1 '(1 2 3))
+            (list-2 '(a b c)))
+        (print (nreconc list-1 list-2))
+        (print (equal list-1 '(1 2 3)))
+        (print (equal list-2 '(a b c))))
+      |>  (3 2 1 A B C)
+      |>  NIL
+      |>  T
+     =>  T
+
+Side Effects::
+..............
+
+revappend does not modify either of its arguments.  nreconc is permitted
+to modify list but not tail.
+
+Although it might be implemented differently, nreconc is constrained to
+have side-effect behavior equivalent to:
+
+      (nconc (nreverse list) tail)
+
+See Also::
+..........
+
+*Note reverse; nreverse:: , nreverse, *Note nconc::
+
+Notes::
+.......
+
+The following functional equivalences are true, although good
+implementations will typically use a faster algorithm for achieving the
+same effect:
+
+      (revappend list tail) == (nconc (reverse list) tail)
+      (nreconc list tail) == (nconc (nreverse list) tail)
+
+
+File: gcl.info,  Node: butlast,  Next: last,  Prev: revappend,  Up: Conses Dictionary
+
+butlast, nbutlast                                                [Function]
+---------------------------------------------------------------------------
+
+`butlast'  list &optional n =>  result-list
+
+`nbutlast'  list &optional n =>  result-list
+
+Arguments and Values::
+......................
+
+list--a list,
+
+which might be a dotted list but must not be a circular list.
+
+n--a non-negative integer.
+
+result-list--a list.
+
+Description::
+.............
+
+butlast returns a copy of list from which the last n
+
+conses
+
+have been omitted.  If n is not supplied, its value is 1.  If there are
+fewer than n
+
+conses
+
+in list, nil is returned and, in the case of nbutlast, list is not
+modified.
+
+nbutlast is like butlast, but nbutlast may modify list.  It changes the
+cdr of the cons n+1 from the end of the list to nil.
+
+Examples::
+..........
+
+      (setq lst '(1 2 3 4 5 6 7 8 9)) =>  (1 2 3 4 5 6 7 8 9)
+      (butlast lst) =>  (1 2 3 4 5 6 7 8)
+      (butlast lst 5) =>  (1 2 3 4)
+      (butlast lst (+ 5 5)) =>  NIL
+      lst =>  (1 2 3 4 5 6 7 8 9)
+      (nbutlast lst 3) =>  (1 2 3 4 5 6)
+      lst =>  (1 2 3 4 5 6)
+      (nbutlast lst 99) =>  NIL
+      lst =>  (1 2 3 4 5 6)
+      (butlast '(a b c d)) =>  (A B C)
+      (butlast '((a b) (c d))) =>  ((A B))
+      (butlast '(a)) =>  NIL
+      (butlast nil) =>  NIL
+      (setq foo (list 'a 'b 'c 'd)) =>  (A B C D)
+      (nbutlast foo) =>  (A B C)
+      foo =>  (A B C)
+      (nbutlast (list 'a)) =>  NIL
+      (nbutlast '()) =>  NIL
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if list is not a proper list or
+a dotted list.
+
+Should signal an error of type type-error if n is not a non-negative
+integer.
+
+Notes::
+.......
+
+      (butlast list n) == (ldiff list (last list n))
+
+
+File: gcl.info,  Node: last,  Next: ldiff,  Prev: butlast,  Up: Conses Dictionary
+
+last                                                             [Function]
+---------------------------------------------------------------------------
+
+`last'  list &optional n =>  tail
+
+Arguments and Values::
+......................
+
+list--a list,
+
+which might be a dotted list but must not be a circular list.
+
+n--a non-negative integer.  The default is 1.
+
+tail--an object.
+
+Description::
+.............
+
+last returns the last n conses (not the last n elements) of list).  If
+list is (), last returns ().
+
+If n is zero, the atom that terminates list is returned.  If n is greater
+than or equal to the number of cons cells in list, the result is list.
+
+Examples::
+..........
+
+      (last nil) =>  NIL
+      (last '(1 2 3)) =>  (3)
+      (last '(1 2 . 3)) =>  (2 . 3)
+      (setq x (list 'a 'b 'c 'd)) =>  (A B C D)
+      (last x) =>  (D)
+      (rplacd (last x) (list 'e 'f)) x =>  (A B C D E F)
+      (last x) =>  (F)
+     
+      (last '(a b c))   =>  (C)
+     
+      (last '(a b c) 0) =>  ()
+      (last '(a b c) 1) =>  (C)
+      (last '(a b c) 2) =>  (B C)
+      (last '(a b c) 3) =>  (A B C)
+      (last '(a b c) 4) =>  (A B C)
+     
+      (last '(a . b) 0) =>  B
+      (last '(a . b) 1) =>  (A . B)
+      (last '(a . b) 2) =>  (A . B)
+
+Exceptional Situations::
+........................
+
+The consequences are undefined if list is a circular list.
+
+Should signal an error of type type-error if n is not a non-negative
+integer.
+
+See Also::
+..........
+
+*Note butlast; nbutlast:: , *Note nth::
+
+Notes::
+.......
+
+The following code could be used to define last.
+
+      (defun last (list &optional (n 1))
+        (check-type n (integer 0))
+        (do ((l list (cdr l))
+             (r list)
+             (i 0 (+ i 1)))
+            ((atom l) r)
+          (if (>= i n) (pop r))))
+
+
+File: gcl.info,  Node: ldiff,  Next: nthcdr,  Prev: last,  Up: Conses Dictionary
+
+ldiff, tailp                                                     [Function]
+---------------------------------------------------------------------------
+
+`ldiff'  list object =>  result-list
+
+`tailp'  object list =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+list--a list,
+
+which might be a dotted list.
+
+object--an object.
+
+result-list--a list.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+If object is the same as some tail of list, tailp returns true; otherwise,
+it returns false.
+
+If object is the same as some tail of list, ldiff returns a fresh list of
+the elements of list that precede object in the list structure of list;
+otherwise, it returns a copy_2 of list.
+
+Examples::
+..........
+
+      (let ((lists '#((a b c) (a b c . d))))
+        (dotimes (i (length lists)) ()
+          (let ((list (aref lists i)))
+            (format t "~2&list=~S ~21T(tailp object list)~
+                       ~44T(ldiff list object)~
+              (let ((objects (vector list (cddr list) (copy-list (cddr list))
+                                     '(f g h) '() 'd 'x)))
+                (dotimes (j (length objects)) ()
+                  (let ((object (aref objects j)))
+                    (format t "~& object=~S ~21T~S ~44T~S"
+                            object (tailp object list) (ldiff list object))))))))
+      |> 
+      |>  list=(A B C)         (tailp object list)    (ldiff list object)
+      |>   object=(A B C)      T                      NIL
+      |>   object=(C)          T                      (A B)
+      |>   object=(C)          NIL                    (A B C)
+      |>   object=(F G H)      NIL                    (A B C)
+      |>   object=NIL          T                      (A B C)
+      |>   object=D            NIL                    (A B C)
+      |>   object=X            NIL                    (A B C)
+      |> 
+      |>  list=(A B C . D)     (tailp object list)    (ldiff list object)
+      |>   object=(A B C . D)  T                      NIL
+      |>   object=(C . D)      T                      (A B)
+      |>   object=(C . D)      NIL                    (A B C . D)
+      |>   object=(F G H)      NIL                    (A B C . D)
+      |>   object=NIL          NIL                    (A B C . D)
+      |>   object=D            T                      (A B C)
+      |>   object=X            NIL                    (A B C . D)
+     =>  NIL
+
+Side Effects::
+..............
+
+Neither ldiff nor tailp modifies either of its arguments.
+
+Exceptional Situations::
+........................
+
+Should be prepared to signal an error of type type-error if list is not a
+proper list or a dotted list.
+
+See Also::
+..........
+
+*Note set-difference; nset-difference::
+
+Notes::
+.......
+
+If the list is a circular list, tailp will reliably yield a value only if
+the given object is in fact a tail of list.  Otherwise, the consequences
+are unspecified: a given implementation which detects the circularity must
+return false, but since an implementation is not obliged to detect such a
+situation, tailp might just loop indefinitely without returning in that
+case.
+
+tailp could be defined as follows:
+
+      (defun tailp (object list)
+        (do ((list list (cdr list)))
+            ((atom list) (eql list object))
+           (if (eql object list)
+               (return t))))
+
+and ldiff could be defined by:
+
+     (defun ldiff (list object)
+       (do ((list list (cdr list))
+            (r '() (cons (car list) r)))
+           ((atom list)
+            (if (eql list object) (nreverse r) (nreconc r list)))
+         (when (eql object list)
+           (return (nreverse r)))))
+
+
+File: gcl.info,  Node: nthcdr,  Next: rest,  Prev: ldiff,  Up: Conses Dictionary
+
+nthcdr                                                           [Function]
+---------------------------------------------------------------------------
+
+`nthcdr'  n list =>  tail
+
+Arguments and Values::
+......................
+
+n--a non-negative integer.
+
+list--a list,
+
+which might be a dotted list or a circular list.
+
+tail--an object.
+
+Description::
+.............
+
+Returns the tail of list that would be obtained by calling cdr n times in
+succession.
+
+Examples::
+..........
+
+      (nthcdr 0 '()) =>  NIL
+      (nthcdr 3 '()) =>  NIL
+      (nthcdr 0 '(a b c)) =>  (A B C)
+      (nthcdr 2 '(a b c)) =>  (C)
+      (nthcdr 4 '(a b c)) =>  ()
+      (nthcdr 1 '(0 . 1)) =>  1
+     
+      (locally (declare (optimize (safety 3)))
+        (nthcdr 3 '(0 . 1)))
+      Error: Attempted to take CDR of 1.
+
+Exceptional Situations::
+........................
+
+Should signal an error of type type-error if n is not a non-negative
+integer.
+
+For n being an integer greater than 1, the error checking done by (nthcdr
+n list) is the same as for (nthcdr (- n 1) (cdr list)); see the function
+cdr.
+
+See Also::
+..........
+
+cdr, *Note nth:: , *Note rest::
+
+
+File: gcl.info,  Node: rest,  Next: member,  Prev: nthcdr,  Up: Conses Dictionary
+
+rest                                                             [Accessor]
+---------------------------------------------------------------------------
+
+`rest'  list =>  tail
+
+(setf (`         rest' list) new-tail)
+Arguments and Values::
+......................
+
+list--a list,
+
+which might be a dotted list or a circular list.
+
+tail--an object.
+
+Description::
+.............
+
+rest performs the same operation as cdr, but mnemonically complements
+first.  Specifically,
+
+      (rest list) == (cdr list)
+      (setf (rest list) new-tail) == (setf (cdr list) new-tail)
+
+Examples::
+..........
+
+      (rest '(1 2)) =>  (2)
+      (rest '(1 . 2)) =>  2
+      (rest '(1)) =>  NIL
+      (setq *cons* '(1 . 2)) =>  (1 . 2)
+      (setf (rest *cons*) "two") =>  "two"
+      *cons* =>  (1 . "two")
+
+See Also::
+..........
+
+cdr, *Note nthcdr::
+
+Notes::
+.......
+
+rest is often preferred stylistically over cdr when the argument is to
+being subjectively viewed as a list rather than as a cons.
+

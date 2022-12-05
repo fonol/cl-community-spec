@@ -1,0 +1,69 @@
+{
+    "name": "typep",
+    "prev": "type-of",
+    "next": "type-error",
+    "up": "Types and Classes Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "typep"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "typep",
+                    "text": " object type-specifier &optional environment =>generalized-boolean\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "object",
+                    "desc": "an object."
+                },
+                {
+                    "name": "type-specifier",
+                    "desc": "any type specifier exceptvalues, or a type specifier list whose first element is either function or\nvalues.\n"
+                },
+                {
+                    "name": "environment",
+                    "desc": "an environment object.  The default is nil, denoting the null"
+                },
+                {
+                    "name": "environment",
+                    "desc": "an environment object.  The default is nil, denoting the nulllexical environment and the and current global environment.\n"
+                },
+                {
+                    "name": "generalized-boolean",
+                    "desc": "a generalized boolean."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns true if object is of the type specified by type-specifier;\notherwise, returns false.\nA type-specifier of the form (satisfies fn) is handled by applying the\nfunction fn to object.\n(typep object '(array type-specifier)), where type-specifier is not *,\nreturns true if and only if object is an array that could be the result of\nsupplying type-specifier as the :element-type argument to make-array.\n(array *) refers to all arrays regardless of element type, while (array\ntype-specifier) refers only to those arrays that can result from giving\ntype-specifier as the :element-type argument to make-array.  A similar\ninterpretation applies to (simple-array type-specifier) and (vector\ntype-specifier).  See *Note Array Upgrading::.\n(typep object '(complex type-specifier)) returns true for all complex\nnumbers that can result from giving numbers of type type-specifier to the\nfunction complex, plus all other complex numbers of the same specialized\nrepresentation.  Both the real and the imaginary parts of any such complex\nnumber must satisfy:\n      (typep realpart 'type-specifier)\n      (typep imagpart 'type-specifier)\nSee the function upgraded-complex-part-type.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (typep 12 'integer) =>  true\n      (typep (1+ most-positive-fixnum) 'fixnum) =>  false\n      (typep nil t) =>  true\n      (typep nil nil) =>  false\n      (typep 1 '(mod 2)) =>  true\n      (typep #c(1 1) '(complex (eql 1))) =>  true\n     ;; To understand this next example, you might need to refer to\n     ;; *Note Rule of Canonical Representation for Complex Rationals::.\n      (typep #c(0 0) '(complex (eql 0))) =>  false\nLet A_x and A_y be two type specifiers that denote different types, but\nfor which\n      (upgraded-array-element-type 'A_x)\nand\n      (upgraded-array-element-type 'A_y)\ndenote the same type.  Notice that\n      (typep (make-array 0 :element-type 'A_x) '(array A_x)) =>  true\n      (typep (make-array 0 :element-type 'A_y) '(array A_y)) =>  true\n      (typep (make-array 0 :element-type 'A_x) '(array A_y)) =>  true\n      (typep (make-array 0 :element-type 'A_y) '(array A_x)) =>  true\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "An error of type error is signaled if type-specifier is values, or a type\nspecifier list whose first element is either function or values.\nThe consequences are undefined if the type-specifier is not a type\nspecifier.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note type-of:: , *Note upgraded-array-element-type:: , *Note\nupgraded-complex-part-type:: , *Note Type Specifiers::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Implementations are encouraged to recognize and optimize the case of\n(typep x (the class y)), since it does not involve any need for expansion\nof deftype information at runtime.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: typep,  Next: type-error,  Prev: type-of,  Up: Types and Classes Dictionary\n\ntypep                                                            [Function]\n---------------------------------------------------------------------------\n\n`typep'  object type-specifier &optional environment =>\ngeneralized-boolean\n\nArguments and Values::\n......................\n\nobject--an object.\n\ntype-specifier--any type specifier except\n\nvalues, or a type specifier list whose first element is either function or\nvalues.\n\nenvironment--an environment object.  The default is nil, denoting the null\nlexical environment and the and current global environment.\n\ngeneralized-boolean--a generalized boolean.\n\nDescription::\n.............\n\nReturns true if object is of the type specified by type-specifier;\notherwise, returns false.\n\nA type-specifier of the form (satisfies fn) is handled by applying the\nfunction fn to object.\n\n(typep object '(array type-specifier)), where type-specifier is not *,\nreturns true if and only if object is an array that could be the result of\nsupplying type-specifier as the :element-type argument to make-array.\n(array *) refers to all arrays regardless of element type, while (array\ntype-specifier) refers only to those arrays that can result from giving\ntype-specifier as the :element-type argument to make-array.  A similar\ninterpretation applies to (simple-array type-specifier) and (vector\ntype-specifier).  See *Note Array Upgrading::.\n\n(typep object '(complex type-specifier)) returns true for all complex\nnumbers that can result from giving numbers of type type-specifier to the\nfunction complex, plus all other complex numbers of the same specialized\nrepresentation.  Both the real and the imaginary parts of any such complex\nnumber must satisfy:\n\n      (typep realpart 'type-specifier)\n      (typep imagpart 'type-specifier)\n\nSee the function upgraded-complex-part-type.\n\nExamples::\n..........\n\n      (typep 12 'integer) =>  true\n      (typep (1+ most-positive-fixnum) 'fixnum) =>  false\n      (typep nil t) =>  true\n      (typep nil nil) =>  false\n      (typep 1 '(mod 2)) =>  true\n      (typep #c(1 1) '(complex (eql 1))) =>  true\n     ;; To understand this next example, you might need to refer to\n     ;; *Note Rule of Canonical Representation for Complex Rationals::.\n      (typep #c(0 0) '(complex (eql 0))) =>  false\n\nLet A_x and A_y be two type specifiers that denote different types, but\nfor which\n\n      (upgraded-array-element-type 'A_x)\n\nand\n\n      (upgraded-array-element-type 'A_y)\n\ndenote the same type.  Notice that\n\n      (typep (make-array 0 :element-type 'A_x) '(array A_x)) =>  true\n      (typep (make-array 0 :element-type 'A_y) '(array A_y)) =>  true\n      (typep (make-array 0 :element-type 'A_x) '(array A_y)) =>  true\n      (typep (make-array 0 :element-type 'A_y) '(array A_x)) =>  true\n\nExceptional Situations::\n........................\n\nAn error of type error is signaled if type-specifier is values, or a type\nspecifier list whose first element is either function or values.\n\nThe consequences are undefined if the type-specifier is not a type\nspecifier.\n\nSee Also::\n..........\n\n*Note type-of:: , *Note upgraded-array-element-type:: , *Note\nupgraded-complex-part-type:: , *Note Type Specifiers::\n\nNotes::\n.......\n\nImplementations are encouraged to recognize and optimize the case of\n(typep x (the class y)), since it does not involve any need for expansion\nof deftype information at runtime.\n\n\n"
+}

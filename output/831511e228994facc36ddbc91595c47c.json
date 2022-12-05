@@ -1,0 +1,61 @@
+{
+    "name": "make-load-form-saving-slots",
+    "prev": "make-load-form",
+    "next": "with-accessors",
+    "up": "Objects Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "make-load-form-saving-slots"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "make-load-form-saving-slots",
+                    "text": " object &key slot-names environment=>  creation-form, initialization-form\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "object",
+                    "desc": "an object."
+                },
+                {
+                    "name": "slot-names",
+                    "desc": "a list."
+                },
+                {
+                    "name": "environment",
+                    "desc": "an environment object."
+                },
+                {
+                    "name": "creation-form",
+                    "desc": "a form."
+                },
+                {
+                    "name": "initialization-form",
+                    "desc": "a form."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns forms that, when evaluated, will construct an object equivalent to\nobject, without executing initialization forms.  The slots in the new\nobject that correspond to initialized slots in object are initialized\nusing the values from object.  Uninitialized slots in object are not\ninitialized in the new object.  make-load-form-saving-slots works for any\ninstance of standard-object or structure-object.\nSlot-names is a list of the names of the slots to preserve. If slot-names\nis not supplied, its value is all of the local slots.\nmake-load-form-saving-slots returns two values, thus it can deal with\ncircular structures.  Whether the result is useful in an application\ndepends on whether the object's type and slot contents fully capture the\napplication's idea of the object's state.\nEnvironment is the environment in which the forms will be processed.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note make-load-form:: , *Note make-instance:: , *Note setf; psetf:: ,\n*Note slot-value:: , *Note slot-makunbound::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "make-load-form-saving-slots can be useful in user-written make-load-form\nmethods.\nWhen the object is an instance of standard-object,\nmake-load-form-saving-slots could return a creation form that calls\nallocate-instance and an initialization form that contains calls to setf\nof slot-value and slot-makunbound, though other functions of similar effect\nmight actually be used.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: make-load-form-saving-slots,  Next: with-accessors,  Prev: make-load-form,  Up: Objects Dictionary\n\nmake-load-form-saving-slots                                      [Function]\n---------------------------------------------------------------------------\n\n`make-load-form-saving-slots'  object &key slot-names environment\n=>  creation-form, initialization-form\n\nArguments and Values::\n......................\n\nobject--an object.\n\nslot-names--a list.\n\nenvironment--an environment object.\n\ncreation-form--a form.\n\ninitialization-form--a form.\n\nDescription::\n.............\n\nReturns forms that, when evaluated, will construct an object equivalent to\nobject, without executing initialization forms.  The slots in the new\nobject that correspond to initialized slots in object are initialized\nusing the values from object.  Uninitialized slots in object are not\ninitialized in the new object.  make-load-form-saving-slots works for any\ninstance of standard-object or structure-object.\n\nSlot-names is a list of the names of the slots to preserve. If slot-names\nis not supplied, its value is all of the local slots.\n\nmake-load-form-saving-slots returns two values, thus it can deal with\ncircular structures.  Whether the result is useful in an application\ndepends on whether the object's type and slot contents fully capture the\napplication's idea of the object's state.\n\nEnvironment is the environment in which the forms will be processed.\n\nSee Also::\n..........\n\n*Note make-load-form:: , *Note make-instance:: , *Note setf; psetf:: ,\n*Note slot-value:: , *Note slot-makunbound::\n\nNotes::\n.......\n\nmake-load-form-saving-slots can be useful in user-written make-load-form\nmethods.\n\nWhen the object is an instance of standard-object,\nmake-load-form-saving-slots could return a creation form that calls\nallocate-instance and an initialization form that contains calls to setf\nof slot-value and slot-makunbound, though other functions of similar effect\nmight actually be used.\n\n"
+}

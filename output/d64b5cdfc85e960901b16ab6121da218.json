@@ -1,0 +1,89 @@
+{
+    "name": "flet",
+    "prev": "fmakunbound",
+    "next": "funcall",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Special Operator",
+        "text": "flet, labels, macrolet"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "flet",
+                    "text": " ({(function-name lambda-list [[{local-declaration}* |local-documentation]] {local-form}*)}*) {declaration}* {form}*\n=>  {result}*\n\n"
+                },
+                {
+                    "name": "labels",
+                    "text": " ({(function-name lambda-list [[{local-declaration}* |\nlocal-documentation]] {local-form}*)}*) {declaration}* {form}*\n=>  {result}*\n\n"
+                },
+                {
+                    "name": "macrolet",
+                    "text": " ({(name lambda-list [[{local-declaration}* |\nlocal-documentation]] {local-form}*)}*) {declaration}* {form}*\n=>  {result}*\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "function-name",
+                    "desc": "a function name."
+                },
+                {
+                    "name": "name",
+                    "desc": "a symbol."
+                },
+                {
+                    "name": "lambda-list",
+                    "desc": "a lambda list; for flet and labels, it is an ordinary lambda"
+                },
+                {
+                    "name": "lambda-list",
+                    "desc": "a lambda list; for flet and labels, it is an ordinary lambdalist; for macrolet, it is a macro lambda list.\n"
+                },
+                {
+                    "name": "local-declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "local-documentation",
+                    "desc": "a string; not evaluated."
+                },
+                {
+                    "name": "local-forms, forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values of the forms."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "flet, labels, and macrolet define local functions and macros, and execute\nforms using the local definitions.  Forms are executed  in order of\noccurrence.\nThe body forms (but not the lambda list)\nof each function created by flet and labels and each macro created by\nmacrolet are enclosed in an implicit block whose name is the function\nblock name of the function-name or name, as appropriate.\nThe scope of the declarations between the list of local function/macro\ndefinitions and the body forms in flet and labels does not include the\nbodies of the locally defined functions, except that for labels, any\ninline, notinline, or ftype declarations that refer to the locally defined\nfunctions do apply to the local function bodies. That is, their scope is\nthe same as the function name that they affect.\nThe scope of these declarations does not include the bodies of the macro\nexpander functions defined by macrolet.\nflet\n     flet defines locally named functions and executes a series of forms\n     with these definition bindings.  Any number of such local functions\n     can be defined.\n     The scope of the name binding encompasses only the body.  Within the\n     body of flet, function-names matching those defined by flet refer to\n     the locally defined functions rather than to the global function\n     definitions of the same name.\n     Also, within the scope of flet, global setf expander definitions of\n     the function-name defined by flet do not apply.  Note that this\n     applies to (defsetf f ...), not (defmethod (setf f) ...).\n     The names of functions defined by flet are in the lexical\n     environment; they retain their local definitions only within the body\n     of flet.  The function definition bindings are visible only in the\n     body of flet, not the definitions themselves.  Within the function\n     definitions, local function names that match those being defined\n     refer to functions or macros defined outside the flet.  flet can\n     locally shadow a global function name, and the new definition can\n     refer to the global definition.\n     Any local-documentation is attached to the corresponding local\n     function (if one is actually created) as a documentation string.\nlabels\n     labels is equivalent to flet except that the scope of the defined\n     function names for labels encompasses the function definitions\n     themselves as well as the body.\nmacrolet\n     macrolet establishes local macro definitions, using the same format\n     used by defmacro.\n     Within the body of macrolet, global setf expander definitions of the\n     names defined by the macrolet do not apply; rather, setf expands the\n     macro form and recursively process the resulting form.\n     The macro-expansion functions defined by macrolet are defined in the\n     lexical environment in which the macrolet form appears.  Declarations\n     and macrolet and symbol-macrolet definitions affect the local macro\n     definitions in a macrolet, but the consequences are undefined if the\n     local macro definitions reference any local variable or function\n     bindings that are visible in that lexical environment.\n     Any local-documentation is attached to the corresponding local macro\n     function as a documentation string.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defun foo (x flag)\n        (macrolet ((fudge (z)\n                      ;The parameters x and flag are not accessible\n                      ; at this point; a reference to flag would be to\n                      ; the global variable of that name.\n                      ` (if flag (* ,z ,z) ,z)))\n         ;The parameters x and flag are accessible here.\n          (+ x\n             (fudge x)\n             (fudge (+ x 1)))))\n      ==\n      (defun foo (x flag)\n        (+ x\n           (if flag (* x x) x)\n           (if flag (* (+ x 1) (+ x 1)) (+ x 1))))\nafter macro expansion.  The occurrences of x and flag legitimately refer\nto the parameters of the function foo because those parameters are visible\nat the site of the macro call which produced the expansion.\n      (flet ((flet1 (n) (+ n n)))\n         (flet ((flet1 (n) (+ 2 (flet1 n))))\n           (flet1 2))) =>  6\n      (defun dummy-function () 'top-level) =>  DUMMY-FUNCTION\n      (funcall #'dummy-function) =>  TOP-LEVEL\n      (flet ((dummy-function () 'shadow))\n           (funcall #'dummy-function)) =>  SHADOW\n      (eq (funcall #'dummy-function) (funcall 'dummy-function))\n     =>  true\n      (flet ((dummy-function () 'shadow))\n        (eq (funcall #'dummy-function)\n            (funcall 'dummy-function)))\n     =>  false\n      (defun recursive-times (k n)\n        (labels ((temp (n)\n                   (if (zerop n) 0 (+ k (temp (1- n))))))\n          (temp n))) =>  RECURSIVE-TIMES\n      (recursive-times 2 3) =>  6\n      (defmacro mlets (x &environment env)\n         (let ((form `(babbit ,x)))\n           (macroexpand form env))) =>  MLETS\n      (macrolet ((babbit (z) `(+ ,z ,z))) (mlets 5)) =>  10\n      (flet ((safesqrt (x) (sqrt (abs x))))\n       ;; The safesqrt function is used in two places.\n        (safesqrt (apply #'+ (map 'list #'safesqrt '(1 2 3 4 5 6)))))\n     =>  3.291173\n      (defun integer-power (n k)\n        (declare (integer n))\n        (declare (type (integer 0 *) k))\n        (labels ((expt0 (x k a)\n                   (declare (integer x a) (type (integer 0 *) k))\n                   (cond ((zerop k) a)\n                         ((evenp k) (expt1 (* x x) (floor k 2) a))\n                         (t (expt0 (* x x) (floor k 2) (* x a)))))\n                 (expt1 (x k a)\n                   (declare (integer x a) (type (integer 0 *) k))\n                   (cond ((evenp k) (expt1 (* x x) (floor k 2) a))\n                         (t (expt0 (* x x) (floor k 2) (* x a))))))\n         (expt0 n k 1))) =>  INTEGER-POWER\n      (defun example (y l)\n        (flet ((attach (x)\n                 (setq l (append l (list x)))))\n          (declare (inline attach))\n          (dolist (x y)\n            (unless (null (cdr x))\n              (attach x)))\n          l))\n      (example '((a apple apricot) (b banana) (c cherry) (d) (e))\n               '((1) (2) (3) (4 2) (5) (6 3 2)))\n     =>  ((1) (2) (3) (4 2) (5) (6 3 2) (A APPLE APRICOT) (B BANANA) (C CHERRY))\n"
+        },
+        {
+            "type": "See Also",
+            "text": "declare, *Note defmacro:: , *Note defun:: , *Note documentation; (setf\ndocumentation):: , *Note let; let*:: , *Note Evaluation::, *Note Syntactic\nInteraction of Documentation Strings and Declarations::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "It is not possible to define recursive functions with flet.  labels can be\nused to define mutually recursive functions.\nIf a macrolet form is a top level form, the body forms are also processed\nas top level forms.  See *Note File Compilation::.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: flet,  Next: funcall,  Prev: fmakunbound,  Up: Data and Control Flow Dictionary\n\nflet, labels, macrolet                                   [Special Operator]\n---------------------------------------------------------------------------\n\n`flet'  ({(function-name lambda-list [[{local-declaration}* |\nlocal-documentation]] {local-form}*)}*) {declaration}* {form}*\n=>  {result}*\n\n`labels'  ({(function-name lambda-list [[{local-declaration}* |\nlocal-documentation]] {local-form}*)}*) {declaration}* {form}*\n=>  {result}*\n\n`macrolet'  ({(name lambda-list [[{local-declaration}* |\nlocal-documentation]] {local-form}*)}*) {declaration}* {form}*\n=>  {result}*\n\nArguments and Values::\n......................\n\nfunction-name--a function name.\n\nname--a symbol.\n\nlambda-list--a lambda list; for flet and labels, it is an ordinary lambda\nlist; for macrolet, it is a macro lambda list.\n\nlocal-declaration--a declare expression; not evaluated.\n\ndeclaration--a declare expression; not evaluated.\n\nlocal-documentation--a string; not evaluated.\n\nlocal-forms, forms--an implicit progn.\n\nresults--the values of the forms.\n\nDescription::\n.............\n\nflet, labels, and macrolet define local functions and macros, and execute\nforms using the local definitions.  Forms are executed  in order of\noccurrence.\n\nThe body forms (but not the lambda list)\n\nof each function created by flet and labels and each macro created by\nmacrolet are enclosed in an implicit block whose name is the function\nblock name of the function-name or name, as appropriate.\n\nThe scope of the declarations between the list of local function/macro\ndefinitions and the body forms in flet and labels does not include the\nbodies of the locally defined functions, except that for labels, any\ninline, notinline, or ftype declarations that refer to the locally defined\nfunctions do apply to the local function bodies. That is, their scope is\nthe same as the function name that they affect.\n\nThe scope of these declarations does not include the bodies of the macro\nexpander functions defined by macrolet.\n\nflet\n     flet defines locally named functions and executes a series of forms\n     with these definition bindings.  Any number of such local functions\n     can be defined.\n\n     The scope of the name binding encompasses only the body.  Within the\n     body of flet, function-names matching those defined by flet refer to\n     the locally defined functions rather than to the global function\n     definitions of the same name.\n\n     Also, within the scope of flet, global setf expander definitions of\n     the function-name defined by flet do not apply.  Note that this\n     applies to (defsetf f ...), not (defmethod (setf f) ...).\n\n     The names of functions defined by flet are in the lexical\n     environment; they retain their local definitions only within the body\n     of flet.  The function definition bindings are visible only in the\n     body of flet, not the definitions themselves.  Within the function\n     definitions, local function names that match those being defined\n     refer to functions or macros defined outside the flet.  flet can\n     locally shadow a global function name, and the new definition can\n     refer to the global definition.\n\n     Any local-documentation is attached to the corresponding local\n     function (if one is actually created) as a documentation string.\n\nlabels\n     labels is equivalent to flet except that the scope of the defined\n     function names for labels encompasses the function definitions\n     themselves as well as the body.\n\nmacrolet\n     macrolet establishes local macro definitions, using the same format\n     used by defmacro.\n\n     Within the body of macrolet, global setf expander definitions of the\n     names defined by the macrolet do not apply; rather, setf expands the\n     macro form and recursively process the resulting form.\n\n     The macro-expansion functions defined by macrolet are defined in the\n\n     lexical environment in which the macrolet form appears.  Declarations\n     and macrolet and symbol-macrolet definitions affect the local macro\n     definitions in a macrolet, but the consequences are undefined if the\n     local macro definitions reference any local variable or function\n     bindings that are visible in that lexical environment.\n\n     Any local-documentation is attached to the corresponding local macro\n     function as a documentation string.\n\nExamples::\n..........\n\n      (defun foo (x flag)\n        (macrolet ((fudge (z)\n                      ;The parameters x and flag are not accessible\n                      ; at this point; a reference to flag would be to\n                      ; the global variable of that name.\n                      ` (if flag (* ,z ,z) ,z)))\n         ;The parameters x and flag are accessible here.\n          (+ x\n             (fudge x)\n             (fudge (+ x 1)))))\n      ==\n      (defun foo (x flag)\n        (+ x\n           (if flag (* x x) x)\n           (if flag (* (+ x 1) (+ x 1)) (+ x 1))))\n\nafter macro expansion.  The occurrences of x and flag legitimately refer\nto the parameters of the function foo because those parameters are visible\nat the site of the macro call which produced the expansion.\n\n      (flet ((flet1 (n) (+ n n)))\n         (flet ((flet1 (n) (+ 2 (flet1 n))))\n           (flet1 2))) =>  6\n     \n      (defun dummy-function () 'top-level) =>  DUMMY-FUNCTION\n      (funcall #'dummy-function) =>  TOP-LEVEL\n      (flet ((dummy-function () 'shadow))\n           (funcall #'dummy-function)) =>  SHADOW\n      (eq (funcall #'dummy-function) (funcall 'dummy-function))\n     =>  true\n      (flet ((dummy-function () 'shadow))\n        (eq (funcall #'dummy-function)\n            (funcall 'dummy-function)))\n     =>  false\n     \n      (defun recursive-times (k n)\n        (labels ((temp (n)\n                   (if (zerop n) 0 (+ k (temp (1- n))))))\n          (temp n))) =>  RECURSIVE-TIMES\n      (recursive-times 2 3) =>  6\n     \n      (defmacro mlets (x &environment env)\n         (let ((form `(babbit ,x)))\n           (macroexpand form env))) =>  MLETS\n      (macrolet ((babbit (z) `(+ ,z ,z))) (mlets 5)) =>  10\n\n      (flet ((safesqrt (x) (sqrt (abs x))))\n       ;; The safesqrt function is used in two places.\n        (safesqrt (apply #'+ (map 'list #'safesqrt '(1 2 3 4 5 6)))))\n     =>  3.291173\n\n      (defun integer-power (n k)\n        (declare (integer n))\n        (declare (type (integer 0 *) k))\n        (labels ((expt0 (x k a)\n                   (declare (integer x a) (type (integer 0 *) k))\n                   (cond ((zerop k) a)\n                         ((evenp k) (expt1 (* x x) (floor k 2) a))\n                         (t (expt0 (* x x) (floor k 2) (* x a)))))\n                 (expt1 (x k a)\n                   (declare (integer x a) (type (integer 0 *) k))\n                   (cond ((evenp k) (expt1 (* x x) (floor k 2) a))\n                         (t (expt0 (* x x) (floor k 2) (* x a))))))\n         (expt0 n k 1))) =>  INTEGER-POWER\n\n      (defun example (y l)\n        (flet ((attach (x)\n                 (setq l (append l (list x)))))\n          (declare (inline attach))\n          (dolist (x y)\n            (unless (null (cdr x))\n              (attach x)))\n          l))\n     \n      (example '((a apple apricot) (b banana) (c cherry) (d) (e))\n               '((1) (2) (3) (4 2) (5) (6 3 2)))\n     =>  ((1) (2) (3) (4 2) (5) (6 3 2) (A APPLE APRICOT) (B BANANA) (C CHERRY))\n\nSee Also::\n..........\n\ndeclare, *Note defmacro:: , *Note defun:: , *Note documentation; (setf\ndocumentation):: , *Note let; let*:: , *Note Evaluation::, *Note Syntactic\nInteraction of Documentation Strings and Declarations::\n\nNotes::\n.......\n\nIt is not possible to define recursive functions with flet.  labels can be\nused to define mutually recursive functions.\n\nIf a macrolet form is a top level form, the body forms are also processed\nas top level forms.  See *Note File Compilation::.\n\n"
+}

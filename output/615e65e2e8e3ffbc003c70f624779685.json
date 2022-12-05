@@ -1,0 +1,61 @@
+{
+    "name": "coerce",
+    "prev": "eql (Type Specifier)",
+    "next": "deftype",
+    "up": "Types and Classes Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "coerce"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "coerce",
+                    "text": " object result-type =>  result\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "object",
+                    "desc": "an object."
+                },
+                {
+                    "name": "result-type",
+                    "desc": "a type specifier."
+                },
+                {
+                    "name": "result",
+                    "desc": "an object, of type result-type except in situations described in"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Coerces the object to type result-type.\nIf object is already of type result-type, the object itself is returned,\nregardless of whether it would have been possible in general to coerce an\nobject of some other type to result-type.\nOtherwise, the object is coerced to type result-type according to the\nfollowing rules:\nsequence\n     If the result-type is a recognizable subtype of list, and the object\n     is a sequence, then the result is a list that has the same elements\n     as object.\n     If the result-type is a recognizable subtype of vector, and the\n     object is a sequence, then the result is a vector that has the same\n     elements as object.  If result-type is a specialized type, the result\n     has an actual array element type that is the result of upgrading the\n     element type part of that specialized type.  If no element type is\n     specified, the element type defaults to t.  If the implementation\n     cannot determine the element type, an error is signaled.\ncharacter\n     If the result-type is character and the object is a character\n     designator, the result is the character it denotes.\ncomplex\n     If the result-type is complex and the object is a number, then the\n     result is obtained by constructing a complex whose real part is the\n     object and whose imaginary part is the result of coercing an integer\n     zero to the type of the object (using coerce).  (If the real part is\n     a rational, however, then the result must be represented as a\n     rational rather than a complex; see *Note Rule of Canonical\n     Representation for Complex Rationals::.  So, for example, (coerce 3\n     'complex) is permissible, but will return 3, which is not a complex.)\nfloat\n     If the result-type is any of float, short-float, single-float,\n     double-float, long-float, and the object is a\n     real,\n     then the result is a float of type result-type which is equal in sign\n     and magnitude to the object to whatever degree of representational\n     precision is permitted by that float representation.  (If the\n     result-type is float and object is not already a float, then the\n     result is a single float.)\nfunction\n     If the result-type is function, and object is any\n     function name\n     that is fbound but that is globally defined neither as a macro name\n     nor as a special operator, then the result is the functional value of\n     object.\n     If the result-type is function, and object is a lambda expression,\n     then the result is a closure of object in the null lexical\n     environment.\nt\n     Any object can be coerced to an object of type t.  In this case, the\n     object is simply returned.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (coerce '(a b c) 'vector) =>  #(A B C)\n      (coerce 'a 'character) =>  #\\A\n      (coerce 4.56 'complex) =>  #C(4.56 0.0)\n      (coerce 4.5s0 'complex) =>  #C(4.5s0 0.0s0)\n      (coerce 7/2 'complex) =>  7/2\n      (coerce 0 'short-float) =>  0.0s0\n      (coerce 3.5L0 'float) =>  3.5L0\n      (coerce 7/2 'float) =>  3.5\n      (coerce (cons 1 2) t) =>  (1 . 2)\nAll the following forms should signal an error:\n      (coerce '(a b c) '(vector * 4))\n      (coerce #(a b c) '(vector * 4))\n      (coerce '(a b c) '(vector * 2))\n      (coerce #(a b c) '(vector * 2))\n      (coerce \"foo\" '(string 2))\n      (coerce #(#\\a #\\b #\\c) '(string 2))\n      (coerce '(0 1) '(simple-bit-vector 3))\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If a coercion is not possible, an error of type type-error is signaled.\n(coerce x 'nil) always signals an error of type type-error.\nAn error of type error is signaled if the result-type is function but\nobject is a symbol that is not fbound or if the symbol names a macro or a\nspecial operator.\nAn error of type type-error should be signaled if result-type specifies\nthe number of elements and object is of a different length.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note rational:: , *Note floor; ffloor; ceiling; fceiling; truncate;\nftruncate; round; fround:: , *Note char-code:: , *Note char-int::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Coercions from floats to rationals and from ratios to integers are not\nprovided because of rounding problems.\n      (coerce x 't) == (identity x) == x\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: coerce,  Next: deftype,  Prev: eql (Type Specifier),  Up: Types and Classes Dictionary\n\ncoerce                                                           [Function]\n---------------------------------------------------------------------------\n\n`coerce'  object result-type =>  result\n\nArguments and Values::\n......................\n\nobject--an object.\n\nresult-type--a type specifier.\n\nresult--an object, of type result-type except in situations described in\n*Note Rule of Canonical Representation for Complex Rationals::.\n\nDescription::\n.............\n\nCoerces the object to type result-type.\n\nIf object is already of type result-type, the object itself is returned,\nregardless of whether it would have been possible in general to coerce an\nobject of some other type to result-type.\n\nOtherwise, the object is coerced to type result-type according to the\nfollowing rules:\n\nsequence\n     If the result-type is a recognizable subtype of list, and the object\n     is a sequence, then the result is a list that has the same elements\n     as object.\n\n     If the result-type is a recognizable subtype of vector, and the\n     object is a sequence, then the result is a vector that has the same\n     elements as object.  If result-type is a specialized type, the result\n     has an actual array element type that is the result of upgrading the\n     element type part of that specialized type.  If no element type is\n     specified, the element type defaults to t.  If the implementation\n     cannot determine the element type, an error is signaled.\n\ncharacter\n     If the result-type is character and the object is a character\n     designator, the result is the character it denotes.\n\ncomplex\n     If the result-type is complex and the object is a number, then the\n     result is obtained by constructing a complex whose real part is the\n     object and whose imaginary part is the result of coercing an integer\n     zero to the type of the object (using coerce).  (If the real part is\n     a rational, however, then the result must be represented as a\n     rational rather than a complex; see *Note Rule of Canonical\n     Representation for Complex Rationals::.  So, for example, (coerce 3\n     'complex) is permissible, but will return 3, which is not a complex.)\n\nfloat\n     If the result-type is any of float, short-float, single-float,\n     double-float, long-float, and the object is a\n\n     real,\n\n     then the result is a float of type result-type which is equal in sign\n     and magnitude to the object to whatever degree of representational\n     precision is permitted by that float representation.  (If the\n     result-type is float and object is not already a float, then the\n     result is a single float.)\n\nfunction\n     If the result-type is function, and object is any\n\n     function name\n\n     that is fbound but that is globally defined neither as a macro name\n     nor as a special operator, then the result is the functional value of\n     object.\n\n     If the result-type is function, and object is a lambda expression,\n     then the result is a closure of object in the null lexical\n     environment.\n\nt\n     Any object can be coerced to an object of type t.  In this case, the\n     object is simply returned.\n\nExamples::\n..........\n\n      (coerce '(a b c) 'vector) =>  #(A B C)\n      (coerce 'a 'character) =>  #\\A\n      (coerce 4.56 'complex) =>  #C(4.56 0.0)\n      (coerce 4.5s0 'complex) =>  #C(4.5s0 0.0s0)\n      (coerce 7/2 'complex) =>  7/2\n      (coerce 0 'short-float) =>  0.0s0\n      (coerce 3.5L0 'float) =>  3.5L0\n      (coerce 7/2 'float) =>  3.5\n      (coerce (cons 1 2) t) =>  (1 . 2)\n\nAll the following forms should signal an error:\n\n      (coerce '(a b c) '(vector * 4))\n      (coerce #(a b c) '(vector * 4))\n      (coerce '(a b c) '(vector * 2))\n      (coerce #(a b c) '(vector * 2))\n      (coerce \"foo\" '(string 2))\n      (coerce #(#\\a #\\b #\\c) '(string 2))\n      (coerce '(0 1) '(simple-bit-vector 3))\n\nExceptional Situations::\n........................\n\nIf a coercion is not possible, an error of type type-error is signaled.\n\n(coerce x 'nil) always signals an error of type type-error.\n\nAn error of type error is signaled if the result-type is function but\nobject is a symbol that is not fbound or if the symbol names a macro or a\nspecial operator.\n\nAn error of type type-error should be signaled if result-type specifies\nthe number of elements and object is of a different length.\n\nSee Also::\n..........\n\n*Note rational:: , *Note floor; ffloor; ceiling; fceiling; truncate;\nftruncate; round; fround:: , *Note char-code:: , *Note char-int::\n\nNotes::\n.......\n\nCoercions from floats to rationals and from ratios to integers are not\nprovided because of rounding problems.\n\n      (coerce x 't) == (identity x) == x\n\n"
+}

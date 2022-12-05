@@ -1,0 +1,81 @@
+{
+    "name": "reduce",
+    "prev": "map-into",
+    "next": "count",
+    "up": "Sequences Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "reduce"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "reduce",
+                    "text": " function sequence &key key from-end start end initial-value =>result\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "function",
+                    "desc": "a designator for a function that might be called with either"
+                },
+                {
+                    "name": "function",
+                    "desc": "a designator for a function that might be called with eitherzero or two arguments.\n"
+                },
+                {
+                    "name": "sequence",
+                    "desc": "a proper sequence."
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "from-end",
+                    "desc": "a generalized boolean.  The default is false."
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of sequence.  The defaults for"
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of sequence.  The defaults forstart and end are 0 and nil, respectively.\n"
+                },
+                {
+                    "name": "initial-value",
+                    "desc": "an object."
+                },
+                {
+                    "name": "result",
+                    "desc": "an object."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "reduce uses a binary operation, function, to combine the elements of\nsequence bounded by start and end.\nThe function must accept as arguments two elements of sequence or the\nresults from combining those elements.  The function must also be able to\naccept no arguments.\nIf key is supplied, it is used is used to extract the values to reduce.\nThe key function is applied exactly once to each element of sequence in\nthe order implied by the reduction order but not to the value of\ninitial-value, if supplied.\nThe key function typically returns part of the element of sequence.  If\nkey is not supplied or is nil, the sequence element itself is used.\nThe reduction is left-associative, unless from-end is true in which case\nit is right-associative.\nIf initial-value is supplied, it is logically placed before the subsequence\n(or after it if from-end is true) and included in the reduction operation.\nIn the normal case, the result of reduce is the combined result of\nfunction's being applied to successive pairs of elements of sequence.  If\nthe subsequence contains exactly one element and no initial-value is given,\nthen that element is returned and function is not called.  If the\nsubsequence is empty and an initial-value is given, then the initial-value\nis returned and function is not called.  If the subsequence is empty and\nno initial-value is given, then the function is called with zero arguments,\nand reduce returns whatever function does.  This is the only case where the\nfunction is called with other than two arguments.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (reduce #'* '(1 2 3 4 5)) =>  120\n      (reduce #'append '((1) (2)) :initial-value '(i n i t)) =>  (I N I T 1 2)\n      (reduce #'append '((1) (2)) :from-end t\n                                  :initial-value '(i n i t)) =>  (1 2 I N I T)\n      (reduce #'- '(1 2 3 4)) == (- (- (- 1 2) 3) 4) =>  -8\n      (reduce #'- '(1 2 3 4) :from-end t)    ;Alternating sum.\n     == (- 1 (- 2 (- 3 4))) =>  -2\n      (reduce #'+ '()) =>  0\n      (reduce #'+ '(3)) =>  3\n      (reduce #'+ '(foo)) =>  FOO\n      (reduce #'list '(1 2 3 4)) =>  (((1 2) 3) 4)\n      (reduce #'list '(1 2 3 4) :from-end t) =>  (1 (2 (3 4)))\n      (reduce #'list '(1 2 3 4) :initial-value 'foo) =>  ((((foo 1) 2) 3) 4)\n      (reduce #'list '(1 2 3 4)\n             :from-end t :initial-value 'foo) =>  (1 (2 (3 (4 foo))))\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note Traversal Rules and Side Effects::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: reduce,  Next: count,  Prev: map-into,  Up: Sequences Dictionary\n\nreduce                                                           [Function]\n---------------------------------------------------------------------------\n\n`reduce'  function sequence &key key from-end start end initial-value =>\nresult\n\nArguments and Values::\n......................\n\nfunction--a designator for a function that might be called with either\nzero or two arguments.\n\nsequence--a proper sequence.\n\nkey--a designator for a function of one argument, or nil.\n\nfrom-end--a generalized boolean.  The default is false.\n\nstart, end--bounding index designators of sequence.  The defaults for\nstart and end are 0 and nil, respectively.\n\ninitial-value--an object.\n\nresult--an object.\n\nDescription::\n.............\n\nreduce uses a binary operation, function, to combine the elements of\nsequence bounded by start and end.\n\nThe function must accept as arguments two elements of sequence or the\nresults from combining those elements.  The function must also be able to\naccept no arguments.\n\nIf key is supplied, it is used is used to extract the values to reduce.\nThe key function is applied exactly once to each element of sequence in\nthe order implied by the reduction order but not to the value of\ninitial-value, if supplied.\n\nThe key function typically returns part of the element of sequence.  If\nkey is not supplied or is nil, the sequence element itself is used.\n\nThe reduction is left-associative, unless from-end is true in which case\nit is right-associative.\n\nIf initial-value is supplied, it is logically placed before the subsequence\n(or after it if from-end is true) and included in the reduction operation.\n\nIn the normal case, the result of reduce is the combined result of\nfunction's being applied to successive pairs of elements of sequence.  If\nthe subsequence contains exactly one element and no initial-value is given,\nthen that element is returned and function is not called.  If the\nsubsequence is empty and an initial-value is given, then the initial-value\nis returned and function is not called.  If the subsequence is empty and\nno initial-value is given, then the function is called with zero arguments,\nand reduce returns whatever function does.  This is the only case where the\nfunction is called with other than two arguments.\n\nExamples::\n..........\n\n      (reduce #'* '(1 2 3 4 5)) =>  120\n      (reduce #'append '((1) (2)) :initial-value '(i n i t)) =>  (I N I T 1 2)\n      (reduce #'append '((1) (2)) :from-end t\n                                  :initial-value '(i n i t)) =>  (1 2 I N I T)\n      (reduce #'- '(1 2 3 4)) == (- (- (- 1 2) 3) 4) =>  -8\n      (reduce #'- '(1 2 3 4) :from-end t)    ;Alternating sum.\n     == (- 1 (- 2 (- 3 4))) =>  -2\n      (reduce #'+ '()) =>  0\n      (reduce #'+ '(3)) =>  3\n      (reduce #'+ '(foo)) =>  FOO\n      (reduce #'list '(1 2 3 4)) =>  (((1 2) 3) 4)\n      (reduce #'list '(1 2 3 4) :from-end t) =>  (1 (2 (3 4)))\n      (reduce #'list '(1 2 3 4) :initial-value 'foo) =>  ((((foo 1) 2) 3) 4)\n      (reduce #'list '(1 2 3 4)\n             :from-end t :initial-value 'foo) =>  (1 (2 (3 (4 foo))))\n\nExceptional Situations::\n........................\n\nShould be prepared to signal an error of type type-error if sequence is\nnot a proper sequence.\n\nSee Also::\n..........\n\n*Note Traversal Rules and Side Effects::\n\n"
+}

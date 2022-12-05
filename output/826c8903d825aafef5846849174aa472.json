@@ -1,0 +1,87 @@
+{
+    "name": "slot-missing",
+    "prev": "slot-makunbound",
+    "next": "slot-unbound",
+    "up": "Objects Dictionary",
+    "header": {
+        "type": "Standard Generic Function",
+        "text": "slot-missing"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "slot-missing",
+                    "text": " class object slot-name operation &optional new-value =>{result}*\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "slot-missing",
+                    "text": " (class t) object slot-name operation &optional new-value\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "class",
+                    "desc": "the class of object."
+                },
+                {
+                    "name": "object",
+                    "desc": "an object."
+                },
+                {
+                    "name": "slot-name",
+                    "desc": "a symbol (the name of a would-be slot)."
+                },
+                {
+                    "name": "operation",
+                    "desc": "one of the symbols setf, slot-boundp, slot-makunbound, or"
+                },
+                {
+                    "name": "operation",
+                    "desc": "one of the symbols setf, slot-boundp, slot-makunbound, orslot-value.\n"
+                },
+                {
+                    "name": "new-value",
+                    "desc": "an object."
+                },
+                {
+                    "name": "result",
+                    "desc": "an object."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "The generic function slot-missing is invoked when an attempt is made to\naccess a slot in an object whose metaclass is standard-class and the slot\nof the name slot-name is not a name of a slot in that class.  The default\nmethod signals an error.\nThe generic function slot-missing is not intended to be called by\nprogrammers.  Programmers may write methods for it.\nThe generic function slot-missing may be called during evaluation of\nslot-value, (setf slot-value), slot-boundp, and slot-makunbound.  For each\nof these operations the corresponding symbol for the operation argument is\nslot-value, setf, slot-boundp, and slot-makunbound respectively.\nThe optional new-value argument to slot-missing is used when the operation\nis attempting to set the value of the slot.\nIf slot-missing returns, its values will be treated as follows:\n*\n     If the operation is setf or slot-makunbound, any values will be\n     ignored by the caller.\n*\n     If the operation is slot-value, only the primary value will be used\n     by the caller, and all other values will be ignored.\n*\n     If the operation is slot-boundp, any boolean equivalent of the\n     primary value of the method might be is used, and all other values\n     will be ignored.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "The default method on slot-missing signals an error of type error.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note defclass:: , *Note slot-exists-p:: , *Note slot-value::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The set of arguments (including the class of the instance) facilitates\ndefining methods on the metaclass for slot-missing.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: slot-missing,  Next: slot-unbound,  Prev: slot-makunbound,  Up: Objects Dictionary\n\nslot-missing                                    [Standard Generic Function]\n---------------------------------------------------------------------------\n\nSyntax::\n........\n\n`slot-missing'  class object slot-name operation &optional new-value =>\n{result}*\n\nMethod Signatures::\n...................\n\n`slot-missing'  (class t) object slot-name operation &optional new-value\n\nArguments and Values::\n......................\n\nclass--the class of object.\n\nobject--an object.\n\nslot-name--a symbol (the name of a would-be slot).\n\noperation--one of the symbols setf, slot-boundp, slot-makunbound, or\nslot-value.\n\nnew-value--an object.\n\nresult--an object.\n\nDescription::\n.............\n\nThe generic function slot-missing is invoked when an attempt is made to\naccess a slot in an object whose metaclass is standard-class and the slot\nof the name slot-name is not a name of a slot in that class.  The default\nmethod signals an error.\n\nThe generic function slot-missing is not intended to be called by\nprogrammers.  Programmers may write methods for it.\n\nThe generic function slot-missing may be called during evaluation of\nslot-value, (setf slot-value), slot-boundp, and slot-makunbound.  For each\nof these operations the corresponding symbol for the operation argument is\nslot-value, setf, slot-boundp, and slot-makunbound respectively.\n\nThe optional new-value argument to slot-missing is used when the operation\nis attempting to set the value of the slot.\n\nIf slot-missing returns, its values will be treated as follows:\n\n*\n     If the operation is setf or slot-makunbound, any values will be\n     ignored by the caller.\n\n*\n     If the operation is slot-value, only the primary value will be used\n     by the caller, and all other values will be ignored.\n\n*\n     If the operation is slot-boundp, any boolean equivalent of the\n     primary value of the method might be is used, and all other values\n     will be ignored.\n\nExceptional Situations::\n........................\n\nThe default method on slot-missing signals an error of type error.\n\nSee Also::\n..........\n\n*Note defclass:: , *Note slot-exists-p:: , *Note slot-value::\n\nNotes::\n.......\n\nThe set of arguments (including the class of the instance) facilitates\ndefining methods on the metaclass for slot-missing.\n\n"
+}

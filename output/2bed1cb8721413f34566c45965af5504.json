@@ -1,0 +1,21 @@
+{
+    "name": "Package Prefixes for Symbols",
+    "prev": "Printing Symbols",
+    "next": "Effect of Readtable Case on the Lisp Printer",
+    "up": "Default Print-Object Methods",
+    "header": {
+        "type": null,
+        "text": null
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Package Prefixes for Symbols",
+            "text": "Package prefixes are printed if necessary.  The rules for package prefixes\nare as follows.  When the symbol is printed, if it is in the KEYWORD\npackage, then it is printed with a preceding colon; otherwise, if it is\naccessible in the current package, it is printed without any package\nprefix; otherwise, it is printed with a package prefix.\nA symbol that is apparently uninterned is printed preceded by \"#:\"\nif *print-gensym* is true and printer escaping is enabled; if\n*print-gensym* is false or printer escaping is disabled,\nthen the symbol is printed without a prefix, as if it were in the current\npackage.\nBecause the #: syntax does not intern the following symbol, it is\nnecessary to use circular-list syntax if *print-circle* is true and the\nsame uninterned symbol appears several times in an expression to be\nprinted.  For example, the result of\n      (let ((x (make-symbol \"FOO\"))) (list x x))\nwould be printed as (#:foo #:foo) if *print-circle* were false, but as\n(#1=#:foo #1#) if *print-circle* were true.\nA summary of the preceding package prefix rules follows:\nfoo:bar\n     foo:bar is printed when symbol bar is external in its home package foo\n     and is not accessible in the current package.\nfoo::bar\n     foo::bar is printed when bar is internal in its home package foo and\n     is not accessible in the current package.\n:bar\n     :bar is printed when the home package of bar is the KEYWORD package.\n#:bar\n     #:bar is printed when bar is apparently uninterned, even in the\n     pathological case that bar has no home package but is nevertheless\n     somehow accessible in the current package.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: Package Prefixes for Symbols,  Next: Effect of Readtable Case on the Lisp Printer,  Prev: Printing Symbols,  Up: Default Print-Object Methods\n\nPackage Prefixes for Symbols\n............................\n\nPackage prefixes are printed if necessary.  The rules for package prefixes\nare as follows.  When the symbol is printed, if it is in the KEYWORD\npackage, then it is printed with a preceding colon; otherwise, if it is\naccessible in the current package, it is printed without any package\nprefix; otherwise, it is printed with a package prefix.\n\nA symbol that is apparently uninterned is printed preceded by \"#:\"\n\nif *print-gensym* is true and printer escaping is enabled; if\n*print-gensym* is false or printer escaping is disabled,\n\nthen the symbol is printed without a prefix, as if it were in the current\npackage.\n\nBecause the #: syntax does not intern the following symbol, it is\nnecessary to use circular-list syntax if *print-circle* is true and the\nsame uninterned symbol appears several times in an expression to be\nprinted.  For example, the result of\n\n      (let ((x (make-symbol \"FOO\"))) (list x x))\n\nwould be printed as (#:foo #:foo) if *print-circle* were false, but as\n(#1=#:foo #1#) if *print-circle* were true.\n\nA summary of the preceding package prefix rules follows:\n\nfoo:bar\n     foo:bar is printed when symbol bar is external in its home package foo\n     and is not accessible in the current package.\n\nfoo::bar\n     foo::bar is printed when bar is internal in its home package foo and\n     is not accessible in the current package.\n\n:bar\n     :bar is printed when the home package of bar is the KEYWORD package.\n\n#:bar\n     #:bar is printed when bar is apparently uninterned, even in the\n     pathological case that bar has no home package but is nevertheless\n     somehow accessible in the current package.\n\n"
+}

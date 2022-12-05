@@ -1,0 +1,77 @@
+{
+    "name": "with-accessors",
+    "prev": "make-load-form-saving-slots",
+    "next": "with-slots",
+    "up": "Objects Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "with-accessors"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "with-accessors",
+                    "text": " ({slot-entry}*) instance-form {declaration}* {form}*=>  {result}*\n\nslot-entry ::=(variable-name accessor-name)\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "variable-name",
+                    "desc": "a variable name; not evaluated."
+                },
+                {
+                    "name": "accessor-name",
+                    "desc": "a function name; not evaluated."
+                },
+                {
+                    "name": "instance-form",
+                    "desc": "a form; evaluated."
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "results",
+                    "desc": "the values returned by the forms."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Creates a lexical environment in which the slots specified by slot-entry\nare lexically available through their accessors as if they were variables.\nThe macro with-accessors invokes the appropriate accessors to access the\nslots specified by slot-entry.  Both setf and setq can be used to set the\nvalue of the slot.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defclass thing ()\n                ((x :initarg :x :accessor thing-x)\n                 (y :initarg :y :accessor thing-y)))\n     =>  #<STANDARD-CLASS THING 250020173>\n      (defmethod (setf thing-x) :before (new-x (thing thing))\n        (format t \"~&Changing X from ~D to ~D in ~S.~\n                (thing-x thing) new-x thing))\n      (setq thing1 (make-instance 'thing :x 1 :y 2)) =>  #<THING 43135676>\n      (setq thing2 (make-instance 'thing :x 7 :y 8)) =>  #<THING 43147374>\n      (with-accessors ((x1 thing-x) (y1 thing-y))\n                      thing1\n        (with-accessors ((x2 thing-x) (y2 thing-y))\n                        thing2\n          (list (list x1 (thing-x thing1) y1 (thing-y thing1)\n                      x2 (thing-x thing2) y2 (thing-y thing2))\n                (setq x1 (+ y1 x2))\n                (list x1 (thing-x thing1) y1 (thing-y thing1)\n                      x2 (thing-x thing2) y2 (thing-y thing2))\n                (setf (thing-x thing2) (list x1))\n                (list x1 (thing-x thing1) y1 (thing-y thing1)\n                      x2 (thing-x thing2) y2 (thing-y thing2)))))\n      |>  Changing X from 1 to 9 in #<THING 43135676>.\n      |>  Changing X from 7 to (9) in #<THING 43147374>.\n     =>  ((1 1 2 2 7 7 8 8)\n          9\n          (9 9 2 2 7 7 8 8)\n          (9)\n          (9 9 2 2 (9) (9) 8 8))\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "defclass\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "The consequences are undefined if any accessor-name is not the name of an\naccessor for the instance.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note with-slots:: , *Note symbol-macrolet::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "A with-accessors expression of the form:\n     (with-accessors (slot-entry_1 ...slot-entry_n) instance-form form_1 ...form_k)\nexpands into the equivalent of\n     (let ((in instance-form))\n      (symbol-macrolet (Q_1... Q_n) form_1 ...form_k))\nwhere Q_i is\n     (variable-name_i ()\n     (accessor-name_i in))\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: with-accessors,  Next: with-slots,  Prev: make-load-form-saving-slots,  Up: Objects Dictionary\n\nwith-accessors                                                      [Macro]\n---------------------------------------------------------------------------\n\n`with-accessors'  ({slot-entry}*) instance-form {declaration}* {form}*\n=>  {result}*\n\nslot-entry ::=(variable-name accessor-name)\n\nArguments and Values::\n......................\n\nvariable-name--a variable name; not evaluated.\n\naccessor-name--a function name; not evaluated.\n\ninstance-form--a form; evaluated.\n\ndeclaration--a declare expression; not evaluated.\n\nforms--an implicit progn.\n\nresults--the values returned by the forms.\n\nDescription::\n.............\n\nCreates a lexical environment in which the slots specified by slot-entry\nare lexically available through their accessors as if they were variables.\nThe macro with-accessors invokes the appropriate accessors to access the\nslots specified by slot-entry.  Both setf and setq can be used to set the\nvalue of the slot.\n\nExamples::\n..........\n\n      (defclass thing ()\n                ((x :initarg :x :accessor thing-x)\n                 (y :initarg :y :accessor thing-y)))\n     =>  #<STANDARD-CLASS THING 250020173>\n      (defmethod (setf thing-x) :before (new-x (thing thing))\n        (format t \"~&Changing X from ~D to ~D in ~S.~\n                (thing-x thing) new-x thing))\n      (setq thing1 (make-instance 'thing :x 1 :y 2)) =>  #<THING 43135676>\n      (setq thing2 (make-instance 'thing :x 7 :y 8)) =>  #<THING 43147374>\n      (with-accessors ((x1 thing-x) (y1 thing-y))\n                      thing1\n        (with-accessors ((x2 thing-x) (y2 thing-y))\n                        thing2\n          (list (list x1 (thing-x thing1) y1 (thing-y thing1)\n                      x2 (thing-x thing2) y2 (thing-y thing2))\n                (setq x1 (+ y1 x2))\n                (list x1 (thing-x thing1) y1 (thing-y thing1)\n                      x2 (thing-x thing2) y2 (thing-y thing2))\n                (setf (thing-x thing2) (list x1))\n                (list x1 (thing-x thing1) y1 (thing-y thing1)\n                      x2 (thing-x thing2) y2 (thing-y thing2)))))\n      |>  Changing X from 1 to 9 in #<THING 43135676>.\n      |>  Changing X from 7 to (9) in #<THING 43147374>.\n     =>  ((1 1 2 2 7 7 8 8)\n          9\n          (9 9 2 2 7 7 8 8)\n          (9)\n          (9 9 2 2 (9) (9) 8 8))\n\nAffected By::\n.............\n\ndefclass\n\nExceptional Situations::\n........................\n\nThe consequences are undefined if any accessor-name is not the name of an\naccessor for the instance.\n\nSee Also::\n..........\n\n*Note with-slots:: , *Note symbol-macrolet::\n\nNotes::\n.......\n\nA with-accessors expression of the form:\n\n                                     \n\n     (with-accessors (slot-entry_1 ...slot-entry_n) instance-form form_1 ...form_k)\n\nexpands into the equivalent of\n\n                                     \n\n     (let ((in instance-form))\n\n      (symbol-macrolet (Q_1... Q_n) form_1 ...form_k))\n\nwhere Q_i is\n\n                                     \n     (variable-name_i ()\n     (accessor-name_i in))\n\n"
+}

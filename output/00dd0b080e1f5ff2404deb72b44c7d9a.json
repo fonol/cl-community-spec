@@ -1,0 +1,77 @@
+{
+    "name": "read-line",
+    "prev": "write-char",
+    "next": "write-string",
+    "up": "Streams Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "read-line"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "read-line",
+                    "text": " &optional input-stream eof-error-p eof-value recursive-p=>  line, missing-newline-p\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "input-stream",
+                    "desc": "an input stream designator.  The default is standard input."
+                },
+                {
+                    "name": "eof-error-p",
+                    "desc": "a generalized boolean.  The default is true."
+                },
+                {
+                    "name": "eof-value",
+                    "desc": "an object.  The default is nil."
+                },
+                {
+                    "name": "recursive-p",
+                    "desc": "a generalized boolean.  The default is false."
+                },
+                {
+                    "name": "line",
+                    "desc": "a string or the eof-value."
+                },
+                {
+                    "name": "missing-newline-p",
+                    "desc": "a generalized boolean."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Reads from input-stream a line of text that is terminated by a newline or\nend of file.\nIf recursive-p is true, this call is expected to be embedded in a\nhigher-level call to read or a similar function used by the Lisp reader.\nThe primary value, line, is the line that is read, represented as a string\n(without the trailing newline, if any).  If  eof-error-p is false and the\nend of file for input-stream is reached before any characters are read,\neof-value is returned as the line.\nThe secondary value, missing-newline-p, is a generalized boolean that is\nfalse if the line was terminated by a newline, or true  if the line was\nterminated by the end of file for input-stream (or if the line is the\neof-value).\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (setq a \"line 1\n      line2\")\n     =>  \"line 1\n      line2\"\n      (read-line (setq input-stream (make-string-input-stream a)))\n     =>  \"line 1\", false\n      (read-line input-stream)\n     =>  \"line2\", true\n      (read-line input-stream nil nil)\n     =>  NIL, true\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "*standard-input*, *terminal-io*.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If an end of file_2 occurs before any characters are read in the line, an\nerror is signaled if eof-error-p is true.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note read; read-preserving-whitespace::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The corresponding output function is write-line.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: read-line,  Next: write-string,  Prev: write-char,  Up: Streams Dictionary\n\nread-line                                                        [Function]\n---------------------------------------------------------------------------\n\n`read-line'  &optional input-stream eof-error-p eof-value recursive-p\n=>  line, missing-newline-p\n\nArguments and Values::\n......................\n\ninput-stream--an input stream designator.  The default is standard input.\n\neof-error-p--a generalized boolean.  The default is true.\n\neof-value--an object.  The default is nil.\n\nrecursive-p--a generalized boolean.  The default is false.\n\nline--a string or the eof-value.\n\nmissing-newline-p--a generalized boolean.\n\nDescription::\n.............\n\nReads from input-stream a line of text that is terminated by a newline or\nend of file.\n\nIf recursive-p is true, this call is expected to be embedded in a\nhigher-level call to read or a similar function used by the Lisp reader.\n\nThe primary value, line, is the line that is read, represented as a string\n(without the trailing newline, if any).  If  eof-error-p is false and the\nend of file for input-stream is reached before any characters are read,\neof-value is returned as the line.\n\nThe secondary value, missing-newline-p, is a generalized boolean that is\nfalse if the line was terminated by a newline, or true  if the line was\nterminated by the end of file for input-stream (or if the line is the\neof-value).\n\nExamples::\n..........\n\n      (setq a \"line 1\n      line2\")\n     =>  \"line 1\n      line2\"\n      (read-line (setq input-stream (make-string-input-stream a)))\n     =>  \"line 1\", false\n      (read-line input-stream)\n     =>  \"line2\", true\n      (read-line input-stream nil nil)\n     =>  NIL, true\n\nAffected By::\n.............\n\n*standard-input*, *terminal-io*.\n\nExceptional Situations::\n........................\n\nIf an end of file_2 occurs before any characters are read in the line, an\nerror is signaled if eof-error-p is true.\n\nSee Also::\n..........\n\n*Note read; read-preserving-whitespace::\n\nNotes::\n.......\n\nThe corresponding output function is write-line.\n\n"
+}

@@ -1,0 +1,57 @@
+{
+    "name": "eql",
+    "prev": "eq",
+    "next": "equal",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "eql"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "eql",
+                    "text": " x y =>  generalized-boolean\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "x",
+                    "desc": "an object."
+                },
+                {
+                    "name": "y",
+                    "desc": "an object."
+                },
+                {
+                    "name": "generalized-boolean",
+                    "desc": "a generalized boolean."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "The value of eql is true of two objects, x and y, in the folowing cases:\n1.\n     If x and y are eq.\n2.\n     If x and y are both numbers of the same type and the same value.\n3.\n     If they are both characters that represent the same character.\nOtherwise the value of eql is false.\nIf an implementation supports positive and negative zeros as distinct\nvalues, then (eql 0.0 -0.0) returns false.  Otherwise, when the syntax\n-0.0 is read it is interpreted as the value 0.0, and so (eql 0.0 -0.0)\nreturns true.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (eql 'a 'b) =>  false\n      (eql 'a 'a) =>  true\n      (eql 3 3) =>  true\n      (eql 3 3.0) =>  false\n      (eql 3.0 3.0) =>  true\n      (eql #c(3 -4) #c(3 -4)) =>  true\n      (eql #c(3 -4.0) #c(3 -4)) =>  false\n      (eql (cons 'a 'b) (cons 'a 'c)) =>  false\n      (eql (cons 'a 'b) (cons 'a 'b)) =>  false\n      (eql '(a . b) '(a . b))\n     =>  true\n     OR=> false\n      (progn (setq x (cons 'a 'b)) (eql x x)) =>  true\n      (progn (setq x '(a . b)) (eql x x)) =>  true\n      (eql #\\A #\\A) =>  true\n      (eql \"Foo\" \"Foo\")\n     =>  true\n     OR=> false\n      (eql \"Foo\" (copy-seq \"Foo\")) =>  false\n      (eql \"FOO\" \"foo\") =>  false\nNormally (eql 1.0s0 1.0d0) is false, under the assumption that 1.0s0 and\n1.0d0 are of distinct data types.  However, implementations that do not\nprovide four distinct floating-point formats are permitted to \"collapse\"\nthe four formats into some smaller number of them; in such an\nimplementation (eql 1.0s0 1.0d0) might be true.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note eq:: , *Note equal:: , *Note equalp:: , *Note =; /=; <; >; <=; >=:: ,\n*Note char=; char/=; char<; char>; char<=; char>=; char-equal;\nchar-not-equal; char-lessp; char-greaterp; char-not-greaterp;\nchar-not-lessp::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "eql is the same as eq, except that if the arguments are characters or\nnumbers of the same type then their values are compared.  Thus eql tells\nwhether two objects are conceptually the same, whereas eq tells whether two\nobjects are implementationally identical.  It is for this reason that eql,\nnot eq, is the default comparison predicate for operators that take\nsequences as arguments.\neql may not be true of two floats even when they represent the same value.\n= is used to compare mathematical values.\nTwo complex numbers are considered to be eql if their real parts are eql\nand their imaginary parts are eql.  For example, (eql #C(4 5) #C(4 5)) is\ntrue and (eql #C(4 5) #C(4.0 5.0)) is false.  Note that while (eql #C(5.0\n0.0) 5.0) is false, (eql #C(5 0) 5) is true.  In the case of (eql #C(5.0\n0.0) 5.0) the two arguments are of different types, and so cannot satisfy\neql.  In the case of (eql #C(5 0) 5), #C(5 0) is not a complex number, but\nis automatically reduced to the integer 5.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: eql,  Next: equal,  Prev: eq,  Up: Data and Control Flow Dictionary\n\neql                                                              [Function]\n---------------------------------------------------------------------------\n\n`eql'  x y =>  generalized-boolean\n\nArguments and Values::\n......................\n\nx--an object.\n\ny--an object.\n\ngeneralized-boolean--a generalized boolean.\n\nDescription::\n.............\n\nThe value of eql is true of two objects, x and y, in the folowing cases:\n1.\n     If x and y are eq.\n\n2.\n     If x and y are both numbers of the same type and the same value.\n\n3.\n     If they are both characters that represent the same character.\n\nOtherwise the value of eql is false.\n\nIf an implementation supports positive and negative zeros as distinct\nvalues, then (eql 0.0 -0.0) returns false.  Otherwise, when the syntax\n-0.0 is read it is interpreted as the value 0.0, and so (eql 0.0 -0.0)\nreturns true.\n\nExamples::\n..........\n\n      (eql 'a 'b) =>  false\n      (eql 'a 'a) =>  true\n      (eql 3 3) =>  true\n      (eql 3 3.0) =>  false\n      (eql 3.0 3.0) =>  true\n      (eql #c(3 -4) #c(3 -4)) =>  true\n      (eql #c(3 -4.0) #c(3 -4)) =>  false\n      (eql (cons 'a 'b) (cons 'a 'c)) =>  false\n      (eql (cons 'a 'b) (cons 'a 'b)) =>  false\n      (eql '(a . b) '(a . b))\n     =>  true\n     OR=> false\n      (progn (setq x (cons 'a 'b)) (eql x x)) =>  true\n      (progn (setq x '(a . b)) (eql x x)) =>  true\n      (eql #\\A #\\A) =>  true\n      (eql \"Foo\" \"Foo\")\n     =>  true\n     OR=> false\n      (eql \"Foo\" (copy-seq \"Foo\")) =>  false\n      (eql \"FOO\" \"foo\") =>  false\n\nNormally (eql 1.0s0 1.0d0) is false, under the assumption that 1.0s0 and\n1.0d0 are of distinct data types.  However, implementations that do not\nprovide four distinct floating-point formats are permitted to \"collapse\"\nthe four formats into some smaller number of them; in such an\nimplementation (eql 1.0s0 1.0d0) might be true.\n\nSee Also::\n..........\n\n*Note eq:: , *Note equal:: , *Note equalp:: , *Note =; /=; <; >; <=; >=:: ,\n*Note char=; char/=; char<; char>; char<=; char>=; char-equal;\nchar-not-equal; char-lessp; char-greaterp; char-not-greaterp;\nchar-not-lessp::\n\nNotes::\n.......\n\neql is the same as eq, except that if the arguments are characters or\nnumbers of the same type then their values are compared.  Thus eql tells\nwhether two objects are conceptually the same, whereas eq tells whether two\nobjects are implementationally identical.  It is for this reason that eql,\nnot eq, is the default comparison predicate for operators that take\nsequences as arguments.\n\neql may not be true of two floats even when they represent the same value.\n= is used to compare mathematical values.\n\nTwo complex numbers are considered to be eql if their real parts are eql\nand their imaginary parts are eql.  For example, (eql #C(4 5) #C(4 5)) is\ntrue and (eql #C(4 5) #C(4.0 5.0)) is false.  Note that while (eql #C(5.0\n0.0) 5.0) is false, (eql #C(5 0) 5) is true.  In the case of (eql #C(5.0\n0.0) 5.0) the two arguments are of different types, and so cannot satisfy\neql.  In the case of (eql #C(5 0) 5), #C(5 0) is not a complex number, but\nis automatically reduced to the integer 5.\n\n"
+}

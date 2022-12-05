@@ -1,0 +1,61 @@
+{
+    "name": "setq",
+    "prev": "progv",
+    "next": "psetq",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Special Form",
+        "text": "setq"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "setq",
+                    "text": " {!pair}* =>  result\npair ::=var form\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Pronunciation",
+            "text": "pronounced 'set ,ky\\\"u\n"
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "var",
+                    "desc": "a symbol naming a variable other than a constant variable."
+                },
+                {
+                    "name": "form",
+                    "desc": "a form."
+                },
+                {
+                    "name": "result",
+                    "desc": "the primary value of the last form, or nil if no pairs were"
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Assigns values to variables.\n(setq var1 form1 var2 form2 ...) is the simple variable assignment\nstatement of Lisp.  First form1 is evaluated and the result is stored in\nthe variable var1, then form2 is evaluated and the result stored in var2,\nand so forth.  setq may be used for assignment of both lexical and dynamic\nvariables.\nIf any var refers to a binding made by symbol-macrolet, then that var is\ntreated as if setf (not setq) had been used.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      ;; A simple use of SETQ to establish values for variables.\n      (setq a 1 b 2 c 3) =>  3\n      a =>  1\n      b =>  2\n      c =>  3\n      ;; Use of SETQ to update values by sequential assignment.\n      (setq a (1+ b) b (1+ a) c (+ a b)) =>  7\n      a =>  3\n      b =>  4\n      c =>  7\n      ;; This illustrates the use of SETQ on a symbol macro.\n      (let ((x (list 10 20 30)))\n        (symbol-macrolet ((y (car x)) (z (cadr x)))\n          (setq y (1+ z) z (1+ y))\n          (list x y z)))\n     =>  ((21 22 30) 21 22)\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "The primary value of each form is assigned to the corresponding var.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note psetq:: , *Note set:: , *Note setf; psetf::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: setq,  Next: psetq,  Prev: progv,  Up: Data and Control Flow Dictionary\n\nsetq                                                         [Special Form]\n---------------------------------------------------------------------------\n\n`setq'  {!pair}* =>  result\n\npair ::=var form\n\nPronunciation::\n...............\n\npronounced 'set ,ky\\\"u\n\nArguments and Values::\n......................\n\nvar--a symbol naming a variable other than a constant variable.\n\nform--a form.\n\nresult--the primary value of the last form, or nil if no pairs were\nsupplied.\n\nDescription::\n.............\n\nAssigns values to variables.\n\n(setq var1 form1 var2 form2 ...) is the simple variable assignment\nstatement of Lisp.  First form1 is evaluated and the result is stored in\nthe variable var1, then form2 is evaluated and the result stored in var2,\nand so forth.  setq may be used for assignment of both lexical and dynamic\nvariables.\n\nIf any var refers to a binding made by symbol-macrolet, then that var is\ntreated as if setf (not setq) had been used.\n\nExamples::\n..........\n\n      ;; A simple use of SETQ to establish values for variables.\n      (setq a 1 b 2 c 3) =>  3\n      a =>  1\n      b =>  2\n      c =>  3\n     \n      ;; Use of SETQ to update values by sequential assignment.\n      (setq a (1+ b) b (1+ a) c (+ a b)) =>  7\n      a =>  3\n      b =>  4\n      c =>  7\n     \n      ;; This illustrates the use of SETQ on a symbol macro.\n      (let ((x (list 10 20 30)))\n        (symbol-macrolet ((y (car x)) (z (cadr x)))\n          (setq y (1+ z) z (1+ y))\n          (list x y z)))\n     =>  ((21 22 30) 21 22)\n\nSide Effects::\n..............\n\nThe primary value of each form is assigned to the corresponding var.\n\nSee Also::\n..........\n\n*Note psetq:: , *Note set:: , *Note setf; psetf::\n\n"
+}

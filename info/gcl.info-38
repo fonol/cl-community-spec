@@ -1,0 +1,1657 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: array-total-size-limit,  Next: simple-vector-p,  Prev: array-rank-limit,  Up: Arrays Dictionary
+
+array-total-size-limit                                  [Constant Variable]
+---------------------------------------------------------------------------
+
+Constant Value::
+................
+
+A positive
+
+fixnum,
+
+the exact magnitude of which is implementation-dependent, but which is not
+less than 1024.
+
+Description::
+.............
+
+The upper exclusive bound on the array total size of an array.
+
+The actual limit on the array total size imposed by the implementation
+might vary according the element type of the array; in this case, the
+value of array-total-size-limit will be the smallest of these possible
+limits.
+
+See Also::
+..........
+
+*Note make-array:: , *Note array-element-type::
+
+
+File: gcl.info,  Node: simple-vector-p,  Next: svref,  Prev: array-total-size-limit,  Up: Arrays Dictionary
+
+simple-vector-p                                                  [Function]
+---------------------------------------------------------------------------
+
+`simple-vector-p'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type simple-vector; otherwise, returns false..
+
+Examples::
+..........
+
+      (simple-vector-p (make-array 6)) =>  true
+      (simple-vector-p "aaaaaa") =>  false
+      (simple-vector-p (make-array 6 :fill-pointer t)) =>  false
+
+See Also::
+..........
+
+simple-vector
+
+Notes::
+.......
+
+      (simple-vector-p object) == (typep object 'simple-vector)
+
+
+File: gcl.info,  Node: svref,  Next: vector,  Prev: simple-vector-p,  Up: Arrays Dictionary
+
+svref                                                            [Accessor]
+---------------------------------------------------------------------------
+
+`svref'  simple-vector index =>  element
+
+(setf (`         svref' simple-vector index) new-element)
+Arguments and Values::
+......................
+
+simple-vector--a simple vector.
+
+index--a valid array index for the simple-vector.
+
+element, new-element--an object (whose type is a subtype of the array
+element type of the simple-vector).
+
+Description::
+.............
+
+Accesses the element of simple-vector specified by index.
+
+Examples::
+..........
+
+      (simple-vector-p (setq v (vector 1 2 'sirens))) =>  true
+      (svref v 0) =>  1
+      (svref v 2) =>  SIRENS
+      (setf (svref v 1) 'newcomer) =>  NEWCOMER
+      v =>  #(1 NEWCOMER SIRENS)
+
+See Also::
+..........
+
+*Note aref:: , sbit, schar, *Note vector:: ,
+
+*Note Compiler Terminology::
+
+Notes::
+.......
+
+svref is identical to aref except that it requires its first argument to
+be a simple vector.
+
+      (svref v i) == (aref (the simple-vector v) i)
+
+
+File: gcl.info,  Node: vector,  Next: vector-pop,  Prev: svref,  Up: Arrays Dictionary
+
+vector                                                           [Function]
+---------------------------------------------------------------------------
+
+`vector'  &rest objects =>  vector
+
+Arguments and Values::
+......................
+
+object--an object.
+
+vector--a vector of type (vector t *).
+
+Description::
+.............
+
+Creates a fresh simple general vector whose size corresponds to the number
+of objects.
+
+The vector is initialized to contain the objects.
+
+Examples::
+..........
+
+      (arrayp (setq v (vector 1 2 'sirens))) =>  true
+      (vectorp v) =>  true
+      (simple-vector-p v) =>  true
+      (length v) =>  3
+
+See Also::
+..........
+
+*Note make-array::
+
+Notes::
+.......
+
+vector is analogous to list.
+
+      (vector a_1 a_2 ... a_n)
+       == (make-array (list n) :element-type t
+                               :initial-contents
+                                 (list a_1 a_2 ... a_n))
+
+
+File: gcl.info,  Node: vector-pop,  Next: vector-push,  Prev: vector,  Up: Arrays Dictionary
+
+vector-pop                                                       [Function]
+---------------------------------------------------------------------------
+
+`vector-pop'  vector =>  element
+
+Arguments and Values::
+......................
+
+vector--a vector with a fill pointer.
+
+element--an object.
+
+Description::
+.............
+
+Decreases the fill pointer of vector by one, and retrieves the element of
+vector that is designated by the new fill pointer.
+
+Examples::
+..........
+
+      (vector-push (setq fable (list 'fable))
+                   (setq fa (make-array 8
+                                        :fill-pointer 2
+                                        :initial-element 'sisyphus))) =>  2
+      (fill-pointer fa) =>  3
+      (eq (vector-pop fa) fable) =>  true
+      (vector-pop fa) =>  SISYPHUS
+      (fill-pointer fa) =>  1
+
+Side Effects::
+..............
+
+The fill pointer is decreased by one.
+
+Affected By::
+.............
+
+The value of the fill pointer.
+
+Exceptional Situations::
+........................
+
+An error of type type-error is signaled if vector does not have a fill
+pointer.
+
+If the fill pointer is zero, vector-pop signals an error of type error.
+
+See Also::
+..........
+
+*Note vector-push; vector-push-extend:: , vector-push-extend, *Note
+fill-pointer::
+
+
+File: gcl.info,  Node: vector-push,  Next: vectorp,  Prev: vector-pop,  Up: Arrays Dictionary
+
+vector-push, vector-push-extend                                  [Function]
+---------------------------------------------------------------------------
+
+`vector-push'  new-element vector =>  new-index-p
+
+`vector-push-extend'  new-element vector &optional extension =>  new-index
+
+Arguments and Values::
+......................
+
+new-element--an object.
+
+vector--a vector with a fill pointer.
+
+extension--a positive integer.  The default is implementation-dependent.
+
+new-index-p--a valid array index for vector, or nil.
+
+new-index--a valid array index for vector.
+
+Description::
+.............
+
+vector-push and vector-push-extend store new-element in vector.
+vector-push attempts to store new-element in the element of vector
+designated by the fill pointer, and to increase the fill pointer by one.
+If the (>= (fill-pointer vector) (array-dimension vector 0)), neither
+vector nor its fill pointer are affected.  Otherwise, the store and
+increment take place and vector-push returns the former value of the fill
+pointer which is one less than the one it leaves in vector.
+
+vector-push-extend is just like vector-push except that if the fill
+pointer gets too large, vector is extended using adjust-array so that it
+can contain more elements.  Extension is the minimum number of elements to
+be added to vector if it must be extended.
+
+vector-push and vector-push-extend return the index of new-element in
+vector.  If (>= (fill-pointer vector) (array-dimension vector 0)),
+vector-push returns nil.
+
+Examples::
+..........
+
+      (vector-push (setq fable (list 'fable))
+                   (setq fa (make-array 8
+                                        :fill-pointer 2
+                                        :initial-element 'first-one))) =>  2
+      (fill-pointer fa) =>  3
+      (eq (aref fa 2) fable) =>  true
+      (vector-push-extend #\X
+                         (setq aa
+                               (make-array 5
+                                           :element-type 'character
+                                           :adjustable t
+                                           :fill-pointer 3))) =>  3
+      (fill-pointer aa) =>  4
+      (vector-push-extend #\Y aa 4) =>  4
+      (array-total-size aa) =>  at least 5
+      (vector-push-extend #\Z aa 4) =>  5
+      (array-total-size aa) =>  9 ;(or more)
+
+Affected By::
+.............
+
+The value of the fill pointer.
+
+How vector was created.
+
+Exceptional Situations::
+........................
+
+An error of type error is signaled by vector-push-extend if it tries to
+extend vector and vector is not actually adjustable.
+
+An error of type error is signaled if vector does not have a fill pointer.
+
+See Also::
+..........
+
+*Note adjustable-array-p:: , *Note fill-pointer:: , *Note vector-pop::
+
+
+File: gcl.info,  Node: vectorp,  Next: bit,  Prev: vector-push,  Up: Arrays Dictionary
+
+vectorp                                                          [Function]
+---------------------------------------------------------------------------
+
+`vectorp'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type vector; otherwise, returns false.
+
+Examples::
+..........
+
+      (vectorp "aaaaaa") =>  true
+      (vectorp (make-array 6 :fill-pointer t)) =>  true
+      (vectorp (make-array '(2 3 4))) =>  false
+      (vectorp #*11) =>  true
+      (vectorp #b11) =>  false
+
+Notes::
+.......
+
+      (vectorp object) == (typep object 'vector)
+
+
+File: gcl.info,  Node: bit,  Next: bit-and,  Prev: vectorp,  Up: Arrays Dictionary
+
+bit, sbit                                                        [Accessor]
+---------------------------------------------------------------------------
+
+`bit'  bit-array &rest subscripts =>  bit
+
+`sbit'  bit-array &rest subscripts =>  bit
+
+(setf (`bit' bit-array &rest subscripts) new-bit)
+(setf (`sbit' bit-array &rest subscripts) new-bit)
+Arguments and Values::
+......................
+
+bit-array--for bit,  a bit array; for sbit, a simple bit array.
+
+subscripts--a list of valid array indices for the bit-array.
+
+bit--a bit.
+
+Description::
+.............
+
+bit and sbit access the bit-array element specified by subscripts.
+
+These functions ignore the fill pointer when accessing elements.
+
+Examples::
+..........
+
+      (bit (setq ba (make-array 8
+                                 :element-type 'bit
+                                 :initial-element 1))
+            3) =>  1
+      (setf (bit ba 3) 0) =>  0
+      (bit ba 3) =>  0
+      (sbit ba 5) =>  1
+      (setf (sbit ba 5) 1) =>  1
+      (sbit ba 5) =>  1
+
+See Also::
+..........
+
+*Note aref:: ,
+
+*Note Compiler Terminology::
+
+Notes::
+.......
+
+bit and sbit are like aref except that they require arrays to be a bit
+array and a simple bit array, respectively.
+
+bit and sbit, unlike char and schar, allow the first argument to be an
+array of any rank.
+
+
+File: gcl.info,  Node: bit-and,  Next: bit-vector-p,  Prev: bit,  Up: Arrays Dictionary
+
+bit-and, bit-andc1, bit-andc2, bit-eqv,
+---------------------------------------
+
+bit-ior, bit-nand, bit-nor, bit-not, bit-orc1, bit-orc2, bit-xor
+----------------------------------------------------------------
+
+                                                                [Function]
+
+`bit-and'  bit-array1 bit-array2 &optional opt-arg =>  resulting-bit-array
+
+`bit-andc1'  bit-array1 bit-array2 &optional opt-arg =>
+resulting-bit-array
+
+`bit-andc2'  bit-array1 bit-array2 &optional opt-arg =>
+resulting-bit-array
+
+`bit-eqv'  bit-array1 bit-array2 &optional opt-arg =>  resulting-bit-array
+
+`bit-ior'  bit-array1 bit-array2 &optional opt-arg =>  resulting-bit-array
+
+`bit-nand'  bit-array1 bit-array2 &optional opt-arg =>  resulting-bit-array
+
+`bit-nor'  bit-array1 bit-array2 &optional opt-arg =>  resulting-bit-array
+
+`bit-orc1'  bit-array1 bit-array2 &optional opt-arg =>  resulting-bit-array
+
+`bit-orc2'  bit-array1 bit-array2 &optional opt-arg =>  resulting-bit-array
+
+`bit-xor'  bit-array1 bit-array2 &optional opt-arg =>  resulting-bit-array
+
+`bit-not'  bit-array &optional opt-arg =>  resulting-bit-array
+
+Arguments and Values::
+......................
+
+bit-array, bit-array1, bit-array2--a bit array.
+
+Opt-arg--a bit array, or t, or nil.  The default is nil.
+
+Bit-array, bit-array1, bit-array2, and opt-arg (if an array) must all be
+of the same rank and dimensions.
+
+resulting-bit-array--a bit array.
+
+Description::
+.............
+
+These functions perform bit-wise logical operations on bit-array1 and
+bit-array2 and return an array of matching rank and dimensions, such that
+any given bit of the result is produced by operating on corresponding bits
+from each of the arguments.
+
+In the case of bit-not, an array of rank and dimensions matching bit-array
+is returned that contains a copy of bit-array with all the bits inverted.
+
+If opt-arg is of type (array bit) the contents of the result are
+destructively placed into opt-arg.  If opt-arg is the symbol t, bit-array
+or bit-array1 is replaced with the result; if opt-arg is nil or omitted, a
+new array is created to contain the result.
+
+Figure 15-4 indicates the logical operation performed by each of the
+functions.
+
+2
+Function                                                   Operation                                   
+_______________________________________________________________________________________________________
+                                                           
+bit-and                                                    and                                         
+bit-eqv                                                    equivalence (exclusive nor)                 
+bit-not                                                    complement                                  
+bit-ior                                                    inclusive or                                
+bit-xor                                                    exclusive or                                
+bit-nand                                                   complement of bit-array1 and bit-array2     
+bit-nor                                                    complement of bit-array1 or bit-array2      
+bit-andc1                                                  and complement of bit-array1 with bit-array2
+bit-andc2                                                  and bit-array1 with complement of bit-array2
+bit-orc1                                                   or complement of bit-array1 with bit-array2 
+bit-orc2                                                   or bit-array1 with complement of bit-array2 
+  Figure 15-3: Bit-wise Logical Operations on Bit Arrays 
+
+Examples::
+..........
+
+      (bit-and (setq ba #*11101010) #*01101011) =>  #*01101010
+      (bit-and #*1100 #*1010) =>  #*1000
+      (bit-andc1 #*1100 #*1010) =>  #*0010
+      (setq rba (bit-andc2 ba #*00110011 t)) =>  #*11001000
+      (eq rba ba) =>  true
+      (bit-not (setq ba #*11101010)) =>  #*00010101
+      (setq rba (bit-not ba
+                          (setq tba (make-array 8
+                                                :element-type 'bit))))
+     =>  #*00010101
+      (equal rba tba) =>  true
+      (bit-xor #*1100 #*1010) =>  #*0110
+
+See Also::
+..........
+
+lognot, *Note logand; logandc1; logandc2; logeqv; logior; lognand; lognor;
+lognot; logorc1; logorc2; logxor::
+
+
+File: gcl.info,  Node: bit-vector-p,  Next: simple-bit-vector-p,  Prev: bit-and,  Up: Arrays Dictionary
+
+bit-vector-p                                                     [Function]
+---------------------------------------------------------------------------
+
+`bit-vector-p'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type bit-vector; otherwise, returns false.
+
+Examples::
+..........
+
+      (bit-vector-p (make-array 6
+                                :element-type 'bit
+                                :fill-pointer t)) =>  true
+      (bit-vector-p #*) =>  true
+      (bit-vector-p (make-array 6)) =>  false
+
+See Also::
+..........
+
+*Note typep::
+
+Notes::
+.......
+
+      (bit-vector-p object) == (typep object 'bit-vector)
+
+
+File: gcl.info,  Node: simple-bit-vector-p,  Prev: bit-vector-p,  Up: Arrays Dictionary
+
+simple-bit-vector-p                                              [Function]
+---------------------------------------------------------------------------
+
+`simple-bit-vector-p'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type simple-bit-vector; otherwise, returns
+false.
+
+Examples::
+..........
+
+      (simple-bit-vector-p (make-array 6)) =>  false
+      (simple-bit-vector-p #*) =>  true
+
+See Also::
+..........
+
+*Note simple-vector-p::
+
+Notes::
+.......
+
+      (simple-bit-vector-p object) == (typep object 'simple-bit-vector)
+
+
+File: gcl.info,  Node: Strings,  Next: Sequences,  Prev: Arrays,  Up: Top
+
+Strings
+*******
+
+* Menu:
+
+* String Concepts::
+* Strings Dictionary::
+
+
+File: gcl.info,  Node: String Concepts,  Next: Strings Dictionary,  Prev: Strings,  Up: Strings
+
+String Concepts
+===============
+
+* Menu:
+
+* Implications of Strings Being Arrays::
+* Subtypes of STRING::
+
+
+File: gcl.info,  Node: Implications of Strings Being Arrays,  Next: Subtypes of STRING,  Prev: String Concepts,  Up: String Concepts
+
+Implications of Strings Being Arrays
+------------------------------------
+
+Since all strings are arrays, all rules which apply generally to arrays
+also apply to strings.  See *Note Array Concepts::.
+
+For example, strings can have fill pointers, and strings are also subject
+to the rules of element type upgrading that apply to arrays.
+
+
+File: gcl.info,  Node: Subtypes of STRING,  Prev: Implications of Strings Being Arrays,  Up: String Concepts
+
+Subtypes of STRING
+------------------
+
+All functions that operate on strings will operate on subtypes of string
+as well.
+
+However, the consequences are undefined if a character is inserted into a
+string for which the element type of the string does not include that
+character.
+
+
+File: gcl.info,  Node: Strings Dictionary,  Prev: String Concepts,  Up: Strings
+
+Strings Dictionary
+==================
+
+* Menu:
+
+* string (System Class)::
+* base-string::
+* simple-string::
+* simple-base-string::
+* simple-string-p::
+* char::
+* string::
+* string-upcase::
+* string-trim::
+* string=::
+* stringp::
+* make-string::
+
+
+File: gcl.info,  Node: string (System Class),  Next: base-string,  Prev: Strings Dictionary,  Up: Strings Dictionary
+
+string                                                       [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+string, vector, array, sequence, t
+
+Description::
+.............
+
+A string is a specialized vector whose elements are of type character or a
+subtype of type character.  When used as a type specifier for object
+creation, string means (vector character).
+
+Compound Type Specifier Kind::
+..............................
+
+Abbreviating.
+
+Compound Type Specifier Syntax::
+................................
+
+(`string'{[size]})
+
+Compound Type Specifier Arguments::
+...................................
+
+size--a non-negative fixnum, or the symbol *.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the union of all types (array c (size)) for all subtypes c of
+character; that is, the set of strings of size size.
+
+See Also::
+..........
+
+*Note String Concepts::, *Note Double-Quote::, *Note Printing Strings::
+
+
+File: gcl.info,  Node: base-string,  Next: simple-string,  Prev: string (System Class),  Up: Strings Dictionary
+
+base-string                                                          [Type]
+---------------------------------------------------------------------------
+
+Supertypes::
+............
+
+base-string, string, vector, array, sequence, t
+
+Description::
+.............
+
+The type base-string is equivalent to
+
+(vector base-char).
+
+The base string representation is the most efficient string representation
+that can hold an arbitrary sequence of standard characters.
+
+Compound Type Specifier Kind::
+..............................
+
+Abbreviating.
+
+Compound Type Specifier Syntax::
+................................
+
+(`base-string'{[size]})
+
+Compound Type Specifier Arguments::
+...................................
+
+size--a non-negative fixnum, or the symbol *.
+
+Compound Type Specifier Description::
+.....................................
+
+This is equivalent to the type (vector base-char size); that is, the set
+of base strings of size size.
+
+
+File: gcl.info,  Node: simple-string,  Next: simple-base-string,  Prev: base-string,  Up: Strings Dictionary
+
+simple-string                                                        [Type]
+---------------------------------------------------------------------------
+
+Supertypes::
+............
+
+simple-string, string, vector, simple-array, array, sequence, t
+
+Description::
+.............
+
+A simple string is a specialized one-dimensional simple array whose
+elements are of type character or a subtype of type character.  When used
+as a type specifier for object creation, simple-string means (simple-array
+character (size)).
+
+Compound Type Specifier Kind::
+..............................
+
+Abbreviating.
+
+Compound Type Specifier Syntax::
+................................
+
+(`simple-string'{[size]})
+
+Compound Type Specifier Arguments::
+...................................
+
+size--a non-negative fixnum, or the symbol *.
+
+Compound Type Specifier Description::
+.....................................
+
+This denotes the union of all types (simple-array c (size)) for all
+subtypes c of character; that is, the set of simple strings of size size.
+
+
+File: gcl.info,  Node: simple-base-string,  Next: simple-string-p,  Prev: simple-string,  Up: Strings Dictionary
+
+simple-base-string                                                   [Type]
+---------------------------------------------------------------------------
+
+Supertypes::
+............
+
+simple-base-string, base-string, simple-string, string, vector,
+simple-array, array, sequence, t
+
+Description::
+.............
+
+The type simple-base-string is equivalent to
+
+(simple-array base-char (*)).
+
+Compound Type Specifier Kind::
+..............................
+
+Abbreviating.
+
+Compound Type Specifier Syntax::
+................................
+
+(`simple-base-string'{[size]})
+
+Compound Type Specifier Arguments::
+...................................
+
+size--a non-negative fixnum, or the symbol *.
+
+Compound Type Specifier Description::
+.....................................
+
+This is equivalent to the type (simple-array base-char (size)); that is,
+the set of simple base strings of size size.
+
+
+File: gcl.info,  Node: simple-string-p,  Next: char,  Prev: simple-base-string,  Up: Strings Dictionary
+
+simple-string-p                                                  [Function]
+---------------------------------------------------------------------------
+
+`simple-string-p'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type simple-string; otherwise, returns false.
+
+Examples::
+..........
+
+      (simple-string-p "aaaaaa") =>  true
+      (simple-string-p (make-array 6
+                                   :element-type 'character
+                                   :fill-pointer t)) =>  false
+
+Notes::
+.......
+
+      (simple-string-p object) == (typep object 'simple-string)
+
+
+File: gcl.info,  Node: char,  Next: string,  Prev: simple-string-p,  Up: Strings Dictionary
+
+char, schar                                                      [Accessor]
+---------------------------------------------------------------------------
+
+`char'  string index =>  character
+
+`schar'  string index =>  character
+
+(setf (`char' string index) new-character)
+(setf (`schar' string index) new-character)
+Arguments and Values::
+......................
+
+string--for char,  a string; for schar, a simple string.
+
+index--a valid array index for the string.
+
+character, new-character--a character.
+
+Description::
+.............
+
+char and schar access the element of string specified by index.
+
+char ignores fill pointers when accessing elements.
+
+Examples::
+..........
+
+      (setq my-simple-string (make-string 6 :initial-element #\A)) =>  "AAAAAA"
+      (schar my-simple-string 4) =>  #\A
+      (setf (schar my-simple-string 4) #\B) =>  #\B
+      my-simple-string =>  "AAAABA"
+      (setq my-filled-string
+            (make-array 6 :element-type 'character
+                          :fill-pointer 5
+                          :initial-contents my-simple-string))
+     =>  "AAAAB"
+      (char my-filled-string 4) =>  #\B
+      (char my-filled-string 5) =>  #\A
+      (setf (char my-filled-string 3) #\C) =>  #\C
+      (setf (char my-filled-string 5) #\D) =>  #\D
+      (setf (fill-pointer my-filled-string) 6) =>  6
+      my-filled-string =>  "AAACBD"
+
+See Also::
+..........
+
+*Note aref:: , *Note elt:: ,
+
+*Note Compiler Terminology::
+
+Notes::
+.......
+
+      (char s j) == (aref (the string s) j)
+
+
+File: gcl.info,  Node: string,  Next: string-upcase,  Prev: char,  Up: Strings Dictionary
+
+string                                                           [Function]
+---------------------------------------------------------------------------
+
+`string'  x =>  string
+
+Arguments and Values::
+......................
+
+x--a string, a symbol, or a character.
+
+string--a string.
+
+Description::
+.............
+
+Returns a string described by x; specifically:
+
+*
+     If x is a string, it is returned.
+
+*
+     If x is a symbol, its name is returned.
+
+*
+     If x is a character,
+
+     then a string containing that one character is returned.
+
+*
+     string might perform additional, implementation-defined conversions.
+
+Examples::
+..........
+
+      (string "already a string") =>  "already a string"
+      (string 'elm) =>  "ELM"
+      (string #\c) =>  "c"
+
+Exceptional Situations::
+........................
+
+In the case where a conversion is defined neither by this specification nor
+by the implementation, an error of type type-error is signaled.
+
+See Also::
+..........
+
+*Note coerce:: , string (type).
+
+Notes::
+.......
+
+coerce can be used to convert a sequence of characters to a string.
+
+prin1-to-string, princ-to-string, write-to-string, or format (with a first
+argument of nil) can be used to get a string representation of a number or
+any other object.
+
+
+File: gcl.info,  Node: string-upcase,  Next: string-trim,  Prev: string,  Up: Strings Dictionary
+
+string-upcase, string-downcase, string-capitalize,
+--------------------------------------------------
+
+nstring-upcase, nstring-downcase, nstring-capitalize
+----------------------------------------------------
+
+                                                                [Function]
+
+`string-upcase'  string &key start end =>  cased-string
+
+`string-downcase'  string &key start end =>  cased-string
+
+`string-capitalize'  string &key start end =>  cased-string
+
+`nstring-upcase'  string &key start end =>  string
+
+`nstring-downcase'  string &key start end =>  string
+
+`nstring-capitalize'  string &key start end =>  string
+
+Arguments and Values::
+......................
+
+string--a string designator.  For nstring-upcase, nstring-downcase, and
+nstring-capitalize, the string designator must be a string.
+
+start, end--bounding index designators of string.  The defaults for start
+and end are 0 and nil, respectively.
+
+cased-string--a string.
+
+Description::
+.............
+
+string-upcase,  string-downcase,  string-capitalize, nstring-upcase,
+nstring-downcase, nstring-capitalize change the case of the subsequence of
+string bounded by start and end as follows:
+
+string-upcase
+     string-upcase returns a string just like string with all lowercase
+     characters replaced by the corresponding uppercase characters.  More
+     precisely, each character of the result string is produced by
+     applying the function char-upcase to the corresponding character of
+     string.
+
+string-downcase
+     string-downcase is like string-upcase except that all uppercase
+     characters are replaced by the corresponding lowercase characters
+     (using char-downcase).
+
+string-capitalize
+     string-capitalize produces a copy of string such that, for every word
+     in the copy, the first character of the "word," if it has case, is
+     uppercase and any other characters with case in the word are
+     lowercase.  For the purposes of string-capitalize, a "word" is
+     defined to be a consecutive subsequence consisting of alphanumeric
+     characters, delimited at each end either by a non-alphanumeric
+     character or by an end of the string.
+
+nstring-upcase, nstring-downcase, nstring-capitalize
+     nstring-upcase, nstring-downcase, and nstring-capitalize are
+     identical to string-upcase, string-downcase, and string-capitalize
+     respectively except that they  modify string.
+
+For string-upcase, string-downcase, and string-capitalize, string is not
+modified.  However, if no characters in string require conversion, the
+result may be either string or a copy of it, at the implementation's
+discretion.
+
+Examples::
+..........
+
+      (string-upcase "abcde") =>  "ABCDE"
+      (string-upcase "Dr. Livingston, I presume?")
+     =>  "DR. LIVINGSTON, I PRESUME?"
+      (string-upcase "Dr. Livingston, I presume?" :start 6 :end 10)
+     =>  "Dr. LiVINGston, I presume?"
+      (string-downcase "Dr. Livingston, I presume?")
+     =>  "dr. livingston, i presume?"
+     
+      (string-capitalize "elm 13c arthur;fig don't") =>  "Elm 13c Arthur;Fig Don'T"
+      (string-capitalize " hello ") =>  " Hello "
+      (string-capitalize "occlUDeD cASEmenTs FOreSTAll iNADVertent DEFenestraTION")
+     =>   "Occluded Casements Forestall Inadvertent Defenestration"
+      (string-capitalize 'kludgy-hash-search) =>  "Kludgy-Hash-Search"
+      (string-capitalize "DON'T!") =>  "Don'T!"    ;not "Don't!"
+      (string-capitalize "pipe 13a, foo16c") =>  "Pipe 13a, Foo16c"
+     
+      (setq str (copy-seq "0123ABCD890a")) =>  "0123ABCD890a"
+      (nstring-downcase str :start 5 :end 7) =>  "0123AbcD890a"
+      str =>  "0123AbcD890a"
+
+Side Effects::
+..............
+
+nstring-upcase, nstring-downcase, and nstring-capitalize modify string as
+appropriate rather than constructing a new string.
+
+See Also::
+..........
+
+*Note char-upcase; char-downcase:: , char-downcase
+
+Notes::
+.......
+
+The result is always of the same length as string.
+
+
+File: gcl.info,  Node: string-trim,  Next: string=,  Prev: string-upcase,  Up: Strings Dictionary
+
+string-trim, string-left-trim, string-right-trim                 [Function]
+---------------------------------------------------------------------------
+
+`string-trim'  character-bag string =>  trimmed-string
+
+`string-left-trim'  character-bag string =>  trimmed-string
+
+`string-right-trim'  character-bag string =>  trimmed-string
+
+Arguments and Values::
+......................
+
+character-bag--a sequence containing characters.
+
+string--a string designator.
+
+trimmed-string--a string.
+
+Description::
+.............
+
+string-trim returns a substring of string, with all characters in
+character-bag stripped off the beginning and end.  string-left-trim is
+similar but strips characters off only the beginning; string-right-trim
+strips off only the end.
+
+If no characters need to be trimmed from the string, then either string
+itself or a copy of it may be returned, at the discretion of the
+implementation.
+
+All of these functions observe the fill pointer.
+
+Examples::
+..........
+
+      (string-trim "abc" "abcaakaaakabcaaa") =>  "kaaak"
+      (string-trim '(#\Space #\Tab #\Newline) " garbanzo beans
+             ") =>  "garbanzo beans"
+      (string-trim " (*)" " ( *three (silly) words* ) ")
+     =>  "three (silly) words"
+     
+      (string-left-trim "abc" "labcabcabc") =>  "labcabcabc"
+      (string-left-trim " (*)" " ( *three (silly) words* ) ")
+     =>  "three (silly) words* ) "
+     
+      (string-right-trim " (*)" " ( *three (silly) words* ) ")
+     =>  " ( *three (silly) words"
+
+Affected By::
+.............
+
+The implementation.
+
+
+File: gcl.info,  Node: string=,  Next: stringp,  Prev: string-trim,  Up: Strings Dictionary
+
+string=, string/=, string<, string>, string<=, string>=,
+--------------------------------------------------------
+
+string-equal, string-not-equal, string-lessp,
+---------------------------------------------
+
+string-greaterp, string-not-greaterp, string-not-lessp
+------------------------------------------------------
+
+                                                                [Function]
+
+`string='  string1 string2 &key start1 end1 start2 end2 =>
+generalized-boolean
+
+`string/='  string1 string2 &key start1 end1 start2 end2 =>  mismatch-index
+
+`string<'  string1 string2 &key start1 end1 start2 end2 =>  mismatch-index
+
+`string>'  string1 string2 &key start1 end1 start2 end2 =>  mismatch-index
+
+`string<='  string1 string2 &key start1 end1 start2 end2 =>  mismatch-index
+
+`string>='  string1 string2 &key start1 end1 start2 end2 =>  mismatch-index
+
+`string-equal'  string1 string2 &key start1 end1 start2 end2 =>
+generalized-boolean
+
+`string-not-equal'  string1 string2 &key start1 end1 start2 end2 =>
+mismatch-index
+
+`string-lessp'  string1 string2 &key start1 end1 start2 end2 =>
+mismatch-index
+
+`string-greaterp'  string1 string2 &key start1 end1 start2 end2 =>
+mismatch-index
+
+`string-not-greaterp'  string1 string2 &key start1 end1 start2 end2 =>
+mismatch-index
+
+`string-not-lessp'  string1 string2 &key start1 end1 start2 end2 =>
+mismatch-index
+
+Arguments and Values::
+......................
+
+string1--a string designator.
+
+string2--a string designator.
+
+start1, end1--bounding index designators of string1.  The defaults for
+start and end are 0 and nil, respectively.
+
+start2, end2--bounding index designators of string2.  The defaults for
+start and end are 0 and nil, respectively.
+
+generalized-boolean--a generalized boolean.
+
+mismatch-index--a bounding index of string1, or nil.
+
+Description::
+.............
+
+These functions perform lexicographic comparisons on string1 and string2.
+string= and string-equal are called equality functions; the others are
+called inequality functions.  The comparison operations these functions
+perform are restricted to the subsequence of string1 bounded by start1 and
+end1 and to the subsequence of string2 bounded by start2 and end2.
+
+A string a is equal to a string b if it contains the same number of
+characters, and the corresponding characters are the same under char= or
+char-equal, as appropriate.
+
+A string a is less than a string b if in the first position in which they
+differ the character of a is less than the corresponding character of b
+according to char< or char-lessp as appropriate, or if string a is a
+proper prefix of string b (of shorter length and matching in all the
+characters of a).
+
+The equality functions return a generalized boolean that is true if the
+strings are equal, or false otherwise.
+
+The inequality functions return a mismatch-index that is true if the
+strings are not equal, or false otherwise.  When the mismatch-index is
+true, it is an integer representing the first character position at which
+the two substrings differ, as an offset from the beginning of string1.
+
+The comparison has one of the following results:
+
+string=
+     string= is true if the supplied substrings are of the same length and
+     contain the same characters in corresponding positions; otherwise it
+     is false.
+
+string/=
+     string/= is true if the supplied substrings are different; otherwise
+     it is false.
+
+string-equal
+     string-equal is just like string= except that differences in case are
+     ignored; two characters are considered to be the same if char-equal
+     is true of them.
+
+string<
+     string< is true if substring1 is less than substring2; otherwise it
+     is false.
+
+string>
+     string> is true if substring1 is greater than substring2; otherwise
+     it is false.
+
+string-lessp, string-greaterp
+     string-lessp and string-greaterp are exactly like string< and
+     string>, respectively, except that distinctions between uppercase and
+     lowercase letters are ignored.  It is as if char-lessp were used
+     instead of char< for comparing characters.
+
+string<=
+     string<= is true if substring1 is less than or equal to substring2;
+     otherwise it is false.
+
+string>=
+     string>= is true if substring1 is greater than or equal to substring2;
+     otherwise it is false.
+
+string-not-greaterp, string-not-lessp
+     string-not-greaterp and string-not-lessp are exactly like string<=
+     and string>=, respectively, except that distinctions between
+     uppercase and lowercase letters are ignored.  It is as if char-lessp
+     were used instead of char< for comparing characters.
+
+Examples::
+..........
+
+      (string= "foo" "foo") =>  true
+      (string= "foo" "Foo") =>  false
+      (string= "foo" "bar") =>  false
+      (string= "together" "frog" :start1 1 :end1 3 :start2 2) =>  true
+      (string-equal "foo" "Foo") =>  true
+      (string= "abcd" "01234abcd9012" :start2 5 :end2 9) =>  true
+      (string< "aaaa" "aaab") =>  3
+      (string>= "aaaaa" "aaaa") =>  4
+      (string-not-greaterp "Abcde" "abcdE") =>  5
+      (string-lessp "012AAAA789" "01aaab6" :start1 3 :end1 7
+                                           :start2 2 :end2 6) =>  6
+      (string-not-equal "AAAA" "aaaA") =>  false
+
+See Also::
+..........
+
+*Note char=; char/=; char<; char>; char<=; char>=; char-equal;
+char-not-equal; char-lessp; char-greaterp; char-not-greaterp;
+char-not-lessp::
+
+Notes::
+.......
+
+equal calls string= if applied to two strings.
+
+
+File: gcl.info,  Node: stringp,  Next: make-string,  Prev: string=,  Up: Strings Dictionary
+
+stringp                                                          [Function]
+---------------------------------------------------------------------------
+
+`stringp'  object =>  generalized-boolean
+
+Arguments and Values::
+......................
+
+object--an object.
+
+generalized-boolean--a generalized boolean.
+
+Description::
+.............
+
+Returns true if object is of type string; otherwise, returns false.
+
+Examples::
+..........
+
+      (stringp "aaaaaa") =>  true
+      (stringp #\a) =>  false
+
+See Also::
+..........
+
+*Note typep:: , string (type)
+
+Notes::
+.......
+
+      (stringp object) == (typep object 'string)
+
+
+File: gcl.info,  Node: make-string,  Prev: stringp,  Up: Strings Dictionary
+
+make-string                                                      [Function]
+---------------------------------------------------------------------------
+
+`make-string'  size &key initial-element element-type =>  string
+
+Arguments and Values::
+......................
+
+size--a valid array dimension.
+
+initial-element--a character.
+
+The default is implementation-dependent.
+
+element-type--a type specifier.  The default is character.
+
+string--a simple string.
+
+Description::
+.............
+
+make-string returns a simple string of length size whose elements have
+been initialized to initial-element.
+
+The element-type names the type of the elements of the string; a string is
+constructed of the most specialized type that can accommodate elements of
+the given type.
+
+Examples::
+..........
+
+      (make-string 10 :initial-element #\5) =>  "5555555555"
+      (length (make-string 10)) =>  10
+
+Affected By::
+.............
+
+The implementation.
+
+
+File: gcl.info,  Node: Sequences,  Next: Hash Tables,  Prev: Strings,  Up: Top
+
+Sequences
+*********
+
+* Menu:
+
+* Sequence Concepts::
+* Rules about Test Functions::
+* Sequences Dictionary::
+
+
+File: gcl.info,  Node: Sequence Concepts,  Next: Rules about Test Functions,  Prev: Sequences,  Up: Sequences
+
+Sequence Concepts
+=================
+
+A sequence is an ordered collection of elements, implemented as either a
+vector or a list.
+
+Sequences can be created by the function make-sequence, as well as other
+functions that create objects of types that are subtypes of sequence
+(e.g., list, make-list, mapcar, and vector).
+
+A sequence function is a function defined by this specification or added
+as an extension by the implementation that operates on one or more
+sequences.  Whenever a sequence function must construct and return a new
+vector, it always returns a simple vector.  Similarly, any strings
+constructed will be simple strings.
+
+  concatenate        length              remove             
+  copy-seq           map                 remove-duplicates  
+  count              map-into            remove-if          
+  count-if           merge               remove-if-not      
+  count-if-not       mismatch            replace            
+  delete             notany              reverse            
+  delete-duplicates  notevery            search             
+  delete-if          nreverse            some               
+  delete-if-not      nsubstitute         sort               
+  elt                nsubstitute-if      stable-sort        
+  every              nsubstitute-if-not  subseq             
+  fill               position            substitute         
+  find               position-if         substitute-if      
+  find-if            position-if-not     substitute-if-not  
+  find-if-not        reduce                                 
+
+        Figure 17-1: Standardized Sequence Functions       
+
+
+* Menu:
+
+* General Restrictions on Parameters that must be Sequences::
+
+
+File: gcl.info,  Node: General Restrictions on Parameters that must be Sequences,  Prev: Sequence Concepts,  Up: Sequence Concepts
+
+General Restrictions on Parameters that must be Sequences
+---------------------------------------------------------
+
+In general, lists (including association lists and property lists) that
+are treated as sequences must be proper lists.
+
+
+File: gcl.info,  Node: Rules about Test Functions,  Next: Sequences Dictionary,  Prev: Sequence Concepts,  Up: Sequences
+
+Rules about Test Functions
+==========================
+
+* Menu:
+
+* Satisfying a Two-Argument Test::
+* Satisfying a One-Argument Test::
+
+
+File: gcl.info,  Node: Satisfying a Two-Argument Test,  Next: Satisfying a One-Argument Test,  Prev: Rules about Test Functions,  Up: Rules about Test Functions
+
+Satisfying a Two-Argument Test
+------------------------------
+
+When an object O is being considered iteratively against each element E_i
+of a sequence S by an operator F listed in Figure 17-2, it is sometimes
+useful to control the way in which the presence of O is tested in S is
+tested by F.  This control is offered on the basis of a function
+designated with either a :test or :test-not argument.
+
+  adjoin           nset-exclusive-or  search            
+  assoc            nsublis            set-difference    
+  count            nsubst             set-exclusive-or  
+  delete           nsubstitute        sublis            
+  find             nunion             subsetp           
+  intersection     position           subst             
+  member           pushnew            substitute        
+  mismatch         rassoc             tree-equal        
+  nintersection    remove             union             
+  nset-difference  remove-duplicates                    
+
+  Figure 17-2: Operators that have Two-Argument Tests to be Satisfied
+
+
+The object O might not be compared directly to E_i.  If a :key argument is
+provided, it is a designator for a function of one argument to be called
+with each E_i as an argument, and yielding an object Z_i to be used for
+comparison.  (If there is no :key argument, Z_i is E_i.)
+
+The function designated by the :key argument is never called on O itself.
+However, if the function operates on multiple sequences (e.g., as happens
+in set-difference), O will be the result of calling the :key function on an
+element of the other sequence.
+
+A :test argument, if supplied to F, is a designator for a  function of two
+arguments, O and Z_i.  An E_i is said (or, sometimes, an O and an E_i are
+said) to satisfy the test
+
+if this :test function returns a generalized boolean representing true.
+
+A :test-not argument, if supplied to F, is designator for a function of
+two arguments, O and Z_i.  An E_i is said (or, sometimes, an O and an E_i
+are said) to satisfy the test
+
+if this :test-not function returns a generalized boolean representing
+false.
+
+If neither a :test nor a :test-not argument is supplied, it is as if a
+:test argument of #'eql was supplied.
+
+The consequences are unspecified if both a :test and a :test-not argument
+are supplied in the same call to F.
+
+* Menu:
+
+* Examples of Satisfying a Two-Argument Test::
+
+
+File: gcl.info,  Node: Examples of Satisfying a Two-Argument Test,  Prev: Satisfying a Two-Argument Test,  Up: Satisfying a Two-Argument Test
+
+Examples of Satisfying a Two-Argument Test
+..........................................
+
+      (remove "FOO" '(foo bar "FOO" "BAR" "foo" "bar") :test #'equal)
+     =>  (foo bar "BAR" "foo" "bar")
+      (remove "FOO" '(foo bar "FOO" "BAR" "foo" "bar") :test #'equalp)
+     =>  (foo bar "BAR" "bar")
+      (remove "FOO" '(foo bar "FOO" "BAR" "foo" "bar") :test #'string-equal)
+     =>  (bar "BAR" "bar")
+      (remove "FOO" '(foo bar "FOO" "BAR" "foo" "bar") :test #'string=)
+     =>  (BAR "BAR" "foo" "bar")
+     
+      (remove 1 '(1 1.0 #C(1.0 0.0) 2 2.0 #C(2.0 0.0)) :test-not #'eql)
+     =>  (1)
+      (remove 1 '(1 1.0 #C(1.0 0.0) 2 2.0 #C(2.0 0.0)) :test-not #'=)
+     =>  (1 1.0 #C(1.0 0.0))
+      (remove 1 '(1 1.0 #C(1.0 0.0) 2 2.0 #C(2.0 0.0)) :test (complement #'=))
+     =>  (1 1.0 #C(1.0 0.0))
+     
+      (count 1 '((one 1) (uno 1) (two 2) (dos 2)) :key #'cadr) =>  2
+     
+      (count 2.0 '(1 2 3) :test #'eql :key #'float) =>  1
+     
+      (count "FOO" (list (make-pathname :name "FOO" :type "X")
+                         (make-pathname :name "FOO" :type "Y"))
+             :key #'pathname-name
+             :test #'equal)
+     =>  2
+
+
+File: gcl.info,  Node: Satisfying a One-Argument Test,  Prev: Satisfying a Two-Argument Test,  Up: Rules about Test Functions
+
+Satisfying a One-Argument Test
+------------------------------
+
+When using one of the functions in Figure 17-3, the elements E of a
+sequence S are filtered not on the basis of the presence or absence of an
+object O under a two argument predicate, as with the functions described
+in *Note Satisfying a Two-Argument Test::, but rather on the basis of a
+one argument predicate.
+
+  assoc-if       member-if           rassoc-if          
+  assoc-if-not   member-if-not       rassoc-if-not      
+  count-if       nsubst-if           remove-if          
+  count-if-not   nsubst-if-not       remove-if-not      
+  delete-if      nsubstitute-if      subst-if           
+  delete-if-not  nsubstitute-if-not  subst-if-not       
+  find-if        position-if         substitute-if      
+  find-if-not    position-if-not     substitute-if-not  
+
+  Figure 17-3: Operators that have One-Argument Tests to be Satisfied
+
+
+The element E_i might not be considered directly.  If a :key argument is
+provided, it is a designator for a function of one argument to be called
+with each E_i as an argument, and yielding an object Z_i to be used for
+comparison.  (If there is no :key argument, Z_i is E_i.)
+
+Functions defined in this specification and having a name that ends in
+"-if" accept a first argument that is a designator for a function of one
+argument, Z_i.  An E_i is said to satisfy the test if this :test function
+returns a generalized boolean representing true.
+
+Functions defined in this specification and having a name that ends in
+"-if-not" accept a first argument that is a designator for a function of
+one argument, Z_i.  An E_i is said to satisfy the test if this :test
+function returns a generalized boolean representing false.
+
+* Menu:
+
+* Examples of Satisfying a One-Argument Test::
+
+
+File: gcl.info,  Node: Examples of Satisfying a One-Argument Test,  Prev: Satisfying a One-Argument Test,  Up: Satisfying a One-Argument Test
+
+Examples of Satisfying a One-Argument Test
+..........................................
+
+      (count-if #'zerop '(1 #C(0.0 0.0) 0 0.0d0 0.0s0 3)) =>  4
+     
+      (remove-if-not #'symbolp '(0 1 2 3 4 5 6 7 8 9 A B C D E F))
+     =>  (A B C D E F)
+      (remove-if (complement #'symbolp) '(0 1 2 3 4 5 6 7 8 9 A B C D E F))
+     =>  (A B C D E F)
+     
+      (count-if #'zerop '("foo" "" "bar" "" "" "baz" "quux") :key #'length)
+     =>  3
+
+
+File: gcl.info,  Node: Sequences Dictionary,  Prev: Rules about Test Functions,  Up: Sequences
+
+Sequences Dictionary
+====================
+
+* Menu:
+
+* sequence::
+* copy-seq::
+* elt::
+* fill::
+* make-sequence::
+* subseq::
+* map::
+* map-into::
+* reduce::
+* count::
+* length::
+* reverse::
+* sort::
+* find::
+* position::
+* search::
+* mismatch::
+* replace::
+* substitute::
+* concatenate::
+* merge::
+* remove::
+* remove-duplicates::
+
+
+File: gcl.info,  Node: sequence,  Next: copy-seq,  Prev: Sequences Dictionary,  Up: Sequences Dictionary
+
+sequence                                                     [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+sequence, t
+
+Description::
+.............
+
+Sequences are ordered collections of objects, called the elements of the
+sequence.
+
+The types vector and the type list are disjoint subtypes of type sequence,
+but are not necessarily an exhaustive partition of sequence.
+
+When viewing a vector as a sequence, only the active elements of that
+vector are considered elements of the sequence; that is, sequence
+operations respect the fill pointer when given sequences represented as
+vectors.
+

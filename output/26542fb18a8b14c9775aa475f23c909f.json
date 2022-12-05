@@ -1,0 +1,49 @@
+{
+    "name": "cond",
+    "prev": "and",
+    "next": "if",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "cond"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "cond",
+                    "text": " {!clause}* =>  {result}*\nclause ::=(test-form {form}*)\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "test-form",
+                    "desc": "a form."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "cond allows the execution of forms to be dependent on test-form.\nTest-forms are evaluated one at a time in the order in which they are\ngiven in the argument list until a test-form is found that evaluates to\ntrue.\nIf there are no forms in that clause, the primary value of the test-form\nis returned by the cond form.  Otherwise, the forms associated with this\ntest-form are evaluated in order, left to right, as an implicit progn, and\nthe values returned by the last form are returned by the cond form.\nOnce one test-form has yielded true, no additional test-forms are\nevaluated.  If no test-form yields true, nil is returned.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defun select-options ()\n        (cond ((= a 1) (setq a 2))\n              ((= a 2) (setq a 3))\n              ((and (= a 3) (floor a 2)))\n              (t (floor a 3)))) =>  SELECT-OPTIONS\n      (setq a 1) =>  1\n      (select-options) =>  2\n      a =>  2\n      (select-options) =>  3\n      a =>  3\n      (select-options) =>  1\n      (setq a 5) =>  5\n      (select-options) =>  1, 2\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note if:: , *Note case; ccase; ecase:: .\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: cond,  Next: if,  Prev: and,  Up: Data and Control Flow Dictionary\n\ncond                                                                [Macro]\n---------------------------------------------------------------------------\n\n`cond'  {!clause}* =>  {result}*\n\nclause ::=(test-form {form}*)\n\nArguments and Values::\n......................\n\ntest-form--a form.\n\nforms--an implicit progn.\n\nresults--the values of the forms in the first clause whose test-form\nyields true, or the primary value of the test-form if there are no forms\nin that clause, or else nil if no test-form yields true.\n\nDescription::\n.............\n\ncond allows the execution of forms to be dependent on test-form.\n\nTest-forms are evaluated one at a time in the order in which they are\ngiven in the argument list until a test-form is found that evaluates to\ntrue.\n\nIf there are no forms in that clause, the primary value of the test-form\nis returned by the cond form.  Otherwise, the forms associated with this\ntest-form are evaluated in order, left to right, as an implicit progn, and\nthe values returned by the last form are returned by the cond form.\n\nOnce one test-form has yielded true, no additional test-forms are\nevaluated.  If no test-form yields true, nil is returned.\n\nExamples::\n..........\n\n      (defun select-options ()\n        (cond ((= a 1) (setq a 2))\n              ((= a 2) (setq a 3))\n              ((and (= a 3) (floor a 2)))\n              (t (floor a 3)))) =>  SELECT-OPTIONS\n      (setq a 1) =>  1\n      (select-options) =>  2\n      a =>  2\n      (select-options) =>  3\n      a =>  3\n      (select-options) =>  1\n      (setq a 5) =>  5\n      (select-options) =>  1, 2\n\nSee Also::\n..........\n\n*Note if:: , *Note case; ccase; ecase:: .\n\n"
+}

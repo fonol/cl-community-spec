@@ -1,0 +1,57 @@
+{
+    "name": "get-setf-expansion",
+    "prev": "define-setf-expander",
+    "next": "setf",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "get-setf-expansion"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "get-setf-expansion",
+                    "text": " place &optional environment=>  vars, vals, store-vars, writer-form, reader-form\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "place",
+                    "desc": "a place."
+                },
+                {
+                    "name": "environment",
+                    "desc": "an environment object."
+                },
+                {
+                    "name": "vars, vals, store-vars, writer-form, reader-form",
+                    "desc": "a setf expansion."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Determines five values constituting the setf expansion for place in\nenvironment; see *Note Setf Expansions::.\nIf environment is not supplied or nil, the environment is the null lexical\nenvironment.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (get-setf-expansion 'x)\n     =>  NIL, NIL, (#:G0001), (SETQ X #:G0001), X\n     ;;; This macro is like POP\n      (defmacro xpop (place &environment env)\n        (multiple-value-bind (dummies vals new setter getter)\n                             (get-setf-expansion place env)\n           `(let* (,@(mapcar #'list dummies vals) (,(car new) ,getter))\n              (if (cdr new) (error \"Can't expand this.\"))\n              (prog1 (car ,(car new))\n                     (setq ,(car new) (cdr ,(car new)))\n                     ,setter))))\n      (defsetf frob (x) (value)\n          `(setf (car ,x) ,value)) =>  FROB\n     ;;; The following is an error; an error might be signaled at macro expansion time\n      (flet ((frob (x) (cdr x)))  ;Invalid\n        (xpop (frob z)))\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note defsetf:: , *Note define-setf-expander:: , *Note setf; psetf::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Any compound form is a valid place, since any compound form whose operator\nf has no setf expander are expanded into a call to (setf f).\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: get-setf-expansion,  Next: setf,  Prev: define-setf-expander,  Up: Data and Control Flow Dictionary\n\nget-setf-expansion                                               [Function]\n---------------------------------------------------------------------------\n\n`get-setf-expansion'  place &optional environment\n=>  vars, vals, store-vars, writer-form, reader-form\n\nArguments and Values::\n......................\n\nplace--a place.\n\nenvironment--an environment object.\n\nvars, vals, store-vars, writer-form, reader-form--a setf expansion.\n\nDescription::\n.............\n\nDetermines five values constituting the setf expansion for place in\nenvironment; see *Note Setf Expansions::.\n\nIf environment is not supplied or nil, the environment is the null lexical\nenvironment.\n\nExamples::\n..........\n\n      (get-setf-expansion 'x)\n     =>  NIL, NIL, (#:G0001), (SETQ X #:G0001), X\n\n     ;;; This macro is like POP\n     \n      (defmacro xpop (place &environment env)\n        (multiple-value-bind (dummies vals new setter getter)\n                             (get-setf-expansion place env)\n           `(let* (,@(mapcar #'list dummies vals) (,(car new) ,getter))\n              (if (cdr new) (error \"Can't expand this.\"))\n              (prog1 (car ,(car new))\n                     (setq ,(car new) (cdr ,(car new)))\n                     ,setter))))\n     \n      (defsetf frob (x) (value)\n          `(setf (car ,x) ,value)) =>  FROB\n     ;;; The following is an error; an error might be signaled at macro expansion time\n      (flet ((frob (x) (cdr x)))  ;Invalid\n        (xpop (frob z)))\n\nSee Also::\n..........\n\n*Note defsetf:: , *Note define-setf-expander:: , *Note setf; psetf::\n\nNotes::\n.......\n\nAny compound form is a valid place, since any compound form whose operator\nf has no setf expander are expanded into a call to (setf f).\n\n"
+}

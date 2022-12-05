@@ -1,0 +1,53 @@
+{
+    "name": "row-major-aref",
+    "prev": "fill-pointer",
+    "next": "upgraded-array-element-type",
+    "up": "Arrays Dictionary",
+    "header": {
+        "type": "Accessor",
+        "text": "row-major-aref"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "row-major-aref",
+                    "text": " array index =>  element\n(setf (`         row-major-aref' array index) new-element)\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "array",
+                    "desc": "an array."
+                },
+                {
+                    "name": "index",
+                    "desc": "a valid array row-major index for the array."
+                },
+                {
+                    "name": "element, new-element",
+                    "desc": "an object."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Considers array as a vector by viewing its elements in row-major order,\nand returns the element of that vector which is referred to by the given\nindex.\nrow-major-aref is valid for use with setf.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note aref:: , *Note array-row-major-index::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "      (row-major-aref array index) ==\n        (aref (make-array (array-total-size array)\n                          :displaced-to array\n                          :element-type (array-element-type array))\n              index)\n      (aref array i1 i2 ...) ==\n          (row-major-aref array (array-row-major-index array i1 i2))\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: row-major-aref,  Next: upgraded-array-element-type,  Prev: fill-pointer,  Up: Arrays Dictionary\n\nrow-major-aref                                                   [Accessor]\n---------------------------------------------------------------------------\n\n`row-major-aref'  array index =>  element\n\n(setf (`         row-major-aref' array index) new-element)\nArguments and Values::\n......................\n\narray--an array.\n\nindex--a valid array row-major index for the array.\n\nelement, new-element--an object.\n\nDescription::\n.............\n\nConsiders array as a vector by viewing its elements in row-major order,\nand returns the element of that vector which is referred to by the given\nindex.\n\nrow-major-aref is valid for use with setf.\n\nSee Also::\n..........\n\n*Note aref:: , *Note array-row-major-index::\n\nNotes::\n.......\n\n      (row-major-aref array index) ==\n        (aref (make-array (array-total-size array)\n                          :displaced-to array\n                          :element-type (array-element-type array))\n              index)\n     \n      (aref array i1 i2 ...) ==\n          (row-major-aref array (array-row-major-index array i1 i2))\n\n"
+}

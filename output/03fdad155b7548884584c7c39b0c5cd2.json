@@ -1,0 +1,45 @@
+{
+    "name": "inline",
+    "prev": "type",
+    "next": "ftype",
+    "up": "Evaluation and Compilation Dictionary",
+    "header": {
+        "type": "Declaration",
+        "text": "inline, notinline"
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Syntax",
+            "text": "(inline {function-name}*)\n(notinline {function-name}*)\n"
+        },
+        {
+            "type": "Arguments",
+            "text": "function-name--a function name.\n"
+        },
+        {
+            "type": "Valid Context",
+            "text": "declaration or proclamation\n"
+        },
+        {
+            "type": "Binding Types Affected",
+            "text": "function\n"
+        },
+        {
+            "type": "Description",
+            "text": "inline specifies that it is desirable for the compiler to produce inline\ncalls to the functions named by function-names; that is, the code for a\nspecified function-name\nshould be integrated into the calling routine, appearing \"in line\" in\nplace of a procedure call.  A compiler is free to ignore this declaration.\ninline declarations never apply to variable bindings.\nIf one of the functions mentioned has a lexically apparent local definition\n(as made by flet or labels), then the declaration applies to that local\ndefinition and not to the global function definition.\nWhile no conforming implementation is required to perform inline expansion\nof user-defined functions, those implementations that do attempt to\nrecognize the following paradigm:\nTo define a function f that is not inline by default but for which\n(declare (inline f)) will make f be locally inlined, the proper definition\nsequence is:\n      (declaim (inline f))\n      (defun f ...)\n      (declaim (notinline f))\nThe inline proclamation preceding the defun form ensures that the compiler\nhas the opportunity save the information necessary for inline expansion,\nand the notinline proclamation following the defun form prevents f from\nbeing expanded inline everywhere.\nnotinline specifies that it is\nundesirable to compile the functions named by function-names in-line.  A\ncompiler is not free to ignore this declaration; calls to the specified\nfunctions must be implemented as out-of-line subroutine calls.\nIf one of the functions mentioned has a lexically apparent local definition\n(as made by flet or labels), then the declaration applies to that local\ndefinition and not to the global function definition.\nIn the presence of a compiler macro definition for function-name, a\nnotinline declaration prevents that\ncompiler macro from being used.\nAn inline declaration may be used to encourage use of compiler macro\ndefinitions.  inline and notinline declarations otherwise have no effect\nwhen the lexically visible definition of function-name is a macro\ndefinition.\ninline and notinline declarations can be free declarations or bound\ndeclarations.  inline and notinline declarations of functions that appear\nbefore the body of a flet or  labels\nform that defines that function are bound declarations.  Such declarations\nin other contexts are free declarations.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      ;; The globally defined function DISPATCH should be open-coded,\n      ;; if the implementation supports inlining, unless a NOTINLINE\n      ;; declaration overrides this effect.\n      (declaim (inline dispatch))\n      (defun dispatch (x) (funcall (get (car x) 'dispatch) x))\n      ;; Here is an example where inlining would be encouraged.\n      (defun top-level-1 () (dispatch (read-command)))\n      ;; Here is an example where inlining would be prohibited.\n      (defun top-level-2 ()\n        (declare (notinline dispatch))\n        (dispatch (read-command)))\n      ;; Here is an example where inlining would be prohibited.\n      (declaim (notinline dispatch))\n      (defun top-level-3 () (dispatch (read-command)))\n      ;; Here is an example where inlining would be encouraged.\n      (defun top-level-4 ()\n        (declare (inline dispatch))\n        (dispatch (read-command)))\n"
+        },
+        {
+            "type": "See Also",
+            "text": "declare, *Note declaim:: , *Note proclaim::\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: inline,  Next: ftype,  Prev: type,  Up: Evaluation and Compilation Dictionary\n\ninline, notinline                                             [Declaration]\n---------------------------------------------------------------------------\n\nSyntax::\n........\n\n(inline {function-name}*)\n\n(notinline {function-name}*)\n\nArguments::\n...........\n\nfunction-name--a function name.\n\nValid Context::\n...............\n\ndeclaration or proclamation\n\nBinding Types Affected::\n........................\n\nfunction\n\nDescription::\n.............\n\ninline specifies that it is desirable for the compiler to produce inline\ncalls to the functions named by function-names; that is, the code for a\nspecified function-name\n\nshould be integrated into the calling routine, appearing \"in line\" in\nplace of a procedure call.  A compiler is free to ignore this declaration.\ninline declarations never apply to variable bindings.\n\nIf one of the functions mentioned has a lexically apparent local definition\n(as made by flet or labels), then the declaration applies to that local\ndefinition and not to the global function definition.\n\nWhile no conforming implementation is required to perform inline expansion\nof user-defined functions, those implementations that do attempt to\nrecognize the following paradigm:\n\nTo define a function f that is not inline by default but for which\n(declare (inline f)) will make f be locally inlined, the proper definition\nsequence is:\n\n      (declaim (inline f))\n      (defun f ...)\n      (declaim (notinline f))\n\nThe inline proclamation preceding the defun form ensures that the compiler\nhas the opportunity save the information necessary for inline expansion,\nand the notinline proclamation following the defun form prevents f from\nbeing expanded inline everywhere.\n\nnotinline specifies that it is\n\nundesirable to compile the functions named by function-names in-line.  A\ncompiler is not free to ignore this declaration; calls to the specified\nfunctions must be implemented as out-of-line subroutine calls.\n\nIf one of the functions mentioned has a lexically apparent local definition\n(as made by flet or labels), then the declaration applies to that local\ndefinition and not to the global function definition.\n\nIn the presence of a compiler macro definition for function-name, a\nnotinline declaration prevents that\n\ncompiler macro from being used.\n\nAn inline declaration may be used to encourage use of compiler macro\ndefinitions.  inline and notinline declarations otherwise have no effect\nwhen the lexically visible definition of function-name is a macro\ndefinition.\n\ninline and notinline declarations can be free declarations or bound\ndeclarations.  inline and notinline declarations of functions that appear\nbefore the body of a flet or  labels\n\nform that defines that function are bound declarations.  Such declarations\nin other contexts are free declarations.\n\nExamples::\n..........\n\n      ;; The globally defined function DISPATCH should be open-coded,\n      ;; if the implementation supports inlining, unless a NOTINLINE\n      ;; declaration overrides this effect.\n      (declaim (inline dispatch))\n      (defun dispatch (x) (funcall (get (car x) 'dispatch) x))\n      ;; Here is an example where inlining would be encouraged.\n      (defun top-level-1 () (dispatch (read-command)))\n      ;; Here is an example where inlining would be prohibited.\n      (defun top-level-2 ()\n        (declare (notinline dispatch))\n        (dispatch (read-command)))\n      ;; Here is an example where inlining would be prohibited.\n      (declaim (notinline dispatch))\n      (defun top-level-3 () (dispatch (read-command)))\n      ;; Here is an example where inlining would be encouraged.\n      (defun top-level-4 ()\n        (declare (inline dispatch))\n        (dispatch (read-command)))\n\nSee Also::\n..........\n\ndeclare, *Note declaim:: , *Note proclaim::\n\n"
+}

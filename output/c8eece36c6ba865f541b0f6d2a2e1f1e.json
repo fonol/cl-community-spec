@@ -1,0 +1,21 @@
+{
+    "name": "Tilde Left-Paren-> Case Conversion",
+    "prev": "FORMAT Miscellaneous Operations",
+    "next": "Tilde Right-Paren-> End of Case Conversion",
+    "up": "FORMAT Miscellaneous Operations",
+    "header": {
+        "type": null,
+        "text": null
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "Tilde Left-Paren: Case Conversion",
+            "text": "~(str~)\nThe contained control string str is processed, and what it produces is\nsubject to case conversion.\nWith no flags, every uppercase character is converted to the corresponding\nlowercase character.\n~:( capitalizes all words, as if by string-capitalize.\n~@( capitalizes just the first word and forces the rest to lower case.\n~:@( converts every lowercase character to the corresponding uppercase\ncharacter.\nIn this example ~@( is used to cause the first word produced by ~@R to be\ncapitalized:\n      (format nil \"~@R ~(~@R~)\" 14 14)\n     =>  \"XIV xiv\"\n      (defun f (n) (format nil \"~@(~R~) error~:P detected.\" n)) =>  F\n      (f 0) =>  \"Zero errors detected.\"\n      (f 1) =>  \"One error detected.\"\n      (f 23) =>  \"Twenty-three errors detected.\"\nWhen case conversions appear nested, the outer conversion dominates, as\nillustrated in the following example:\n      (format nil \"~@(how is ~:(BOB SMITH~)?~)\")\n      =>  \"How is bob smith?\"\n      NOT=> \"How is Bob Smith?\"\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: Tilde Left-Paren-> Case Conversion,  Next: Tilde Right-Paren-> End of Case Conversion,  Prev: FORMAT Miscellaneous Operations,  Up: FORMAT Miscellaneous Operations\n\nTilde Left-Paren: Case Conversion\n.................................\n\n~(str~)\n\nThe contained control string str is processed, and what it produces is\nsubject to case conversion.\n\nWith no flags, every uppercase character is converted to the corresponding\nlowercase character.\n\n~:( capitalizes all words, as if by string-capitalize.\n\n~@( capitalizes just the first word and forces the rest to lower case.\n\n~:@( converts every lowercase character to the corresponding uppercase\ncharacter.\n\nIn this example ~@( is used to cause the first word produced by ~@R to be\ncapitalized:\n\n      (format nil \"~@R ~(~@R~)\" 14 14)\n     =>  \"XIV xiv\"\n      (defun f (n) (format nil \"~@(~R~) error~:P detected.\" n)) =>  F\n      (f 0) =>  \"Zero errors detected.\"\n      (f 1) =>  \"One error detected.\"\n      (f 23) =>  \"Twenty-three errors detected.\"\n\nWhen case conversions appear nested, the outer conversion dominates, as\nillustrated in the following example:\n\n      (format nil \"~@(how is ~:(BOB SMITH~)?~)\")\n      =>  \"How is bob smith?\"\n      NOT=> \"How is Bob Smith?\"\n\n"
+}

@@ -1,0 +1,21 @@
+{
+    "name": "APPLY Forms as Places",
+    "prev": "THE Forms as Places",
+    "next": "Setf Expansions and Places",
+    "up": "Kinds of Places",
+    "header": {
+        "type": null,
+        "text": null
+    },
+    "sections": [
+        {
+            "type": "",
+            "text": ""
+        },
+        {
+            "type": "APPLY Forms as Places",
+            "text": "The following situations involving setf of apply must be supported:\n*\n     (setf (apply #'aref array {subscript}* more-subscripts) new-element)\n*\n     (setf (apply #'bit array {subscript}* more-subscripts) new-element)\n*\n     (setf (apply #'sbit array {subscript}* more-subscripts) new-element)\nIn all three cases, the element of array designated by the concatenation\nof subscripts and more-subscripts (i.e., the same element which would be\nread by the call to apply if it were not part of a setf form) is changed\nto have the value given by new-element.\nFor these usages, the function name (aref, bit, or sbit) must refer to the\nglobal function definition, rather than a locally defined function.\nNo other standardized function is required to be supported, but an\nimplementation may define such support.  An implementation may also define\nsupport for implementation-defined operators.\nIf a user-defined function is used in this context, the following\nequivalence is true, except that care is taken to preserve proper\nleft-to-right evaluation of argument subforms:\n      (setf (apply #'name {arg}*) val)\n      == (apply #'(setf name) val {arg}*)\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: APPLY Forms as Places,  Next: Setf Expansions and Places,  Prev: THE Forms as Places,  Up: Kinds of Places\n\nAPPLY Forms as Places\n.....................\n\nThe following situations involving setf of apply must be supported:\n\n*\n     (setf (apply #'aref array {subscript}* more-subscripts) new-element)\n\n*\n     (setf (apply #'bit array {subscript}* more-subscripts) new-element)\n\n*\n     (setf (apply #'sbit array {subscript}* more-subscripts) new-element)\n\nIn all three cases, the element of array designated by the concatenation\nof subscripts and more-subscripts (i.e., the same element which would be\nread by the call to apply if it were not part of a setf form) is changed\nto have the value given by new-element.\n\nFor these usages, the function name (aref, bit, or sbit) must refer to the\nglobal function definition, rather than a locally defined function.\n\nNo other standardized function is required to be supported, but an\nimplementation may define such support.  An implementation may also define\nsupport for implementation-defined operators.\n\nIf a user-defined function is used in this context, the following\nequivalence is true, except that care is taken to preserve proper\nleft-to-right evaluation of argument subforms:\n\n      (setf (apply #'name {arg}*) val)\n      == (apply #'(setf name) val {arg}*)\n\n"
+}

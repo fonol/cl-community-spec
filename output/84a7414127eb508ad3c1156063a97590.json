@@ -1,0 +1,57 @@
+{
+    "name": "equalp",
+    "prev": "equal",
+    "next": "identity",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "equalp"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "equalp",
+                    "text": " x y =>  generalized-boolean\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "x",
+                    "desc": "an object."
+                },
+                {
+                    "name": "y",
+                    "desc": "an object."
+                },
+                {
+                    "name": "generalized-boolean",
+                    "desc": "a generalized boolean."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Returns true if x and y are equal, or if they have components that are of\nthe same type as each other and if those components are equalp;\nspecifically, equalp returns true in the following cases:\nCharacters\n     If two characters are char-equal.\nNumbers\n     If two numbers are the same under =.\nConses\n     If the two cars in the conses are equalp and the two cdrs in the\n     conses are equalp.\nArrays\n     If two arrays have the same number of dimensions, the dimensions\n     match, and the corresponding active elements are equalp.  The types\n     for which the arrays are specialized need not match; for example, a\n     string and a general array that happens to contain the same\n     characters are equalp.  Because equalp performs element-by-element\n     comparisons of strings and ignores the case of characters, case\n     distinctions are ignored when equalp compares strings.\nStructures\n     If two structures S_1 and S_2 have the same class and the value of\n     each slot in S_1 is the same under equalp as the value of the\n     corresponding slot in S_2.\nHash Tables\n     equalp descends hash-tables by first comparing the count of entries\n     and the :test function; if those are the same, it compares the keys\n     of the tables using the :test function and then the values of the\n     matching keys using equalp recursively.\nequalp does not descend any objects other than the ones explicitly\nspecified above.  Figure 5-13 summarizes the information given in the\nprevious list.  In addition, the figure specifies the priority of the\nbehavior of equalp, with upper entries taking priority over lower ones.\n  Type          Behavior                      \n  number        uses =                        \n  character     uses char-equal               \n  cons          descends                      \n  bit vector    descends                      \n  string        descends                      \n  pathname      same as equal                 \n  structure     descends, as described above  \n  Other array   descends                      \n  hash table    descends, as described above  \n  Other object  uses eq                       \n  Figure 5-13: Summary and priorities of behavior of equalp\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (equalp 'a 'b) =>  false\n      (equalp 'a 'a) =>  true\n      (equalp 3 3) =>  true\n      (equalp 3 3.0) =>  true\n      (equalp 3.0 3.0) =>  true\n      (equalp #c(3 -4) #c(3 -4)) =>  true\n      (equalp #c(3 -4.0) #c(3 -4)) =>  true\n      (equalp (cons 'a 'b) (cons 'a 'c)) =>  false\n      (equalp (cons 'a 'b) (cons 'a 'b)) =>  true\n      (equalp #\\A #\\A) =>  true\n      (equalp #\\A #\\a) =>  true\n      (equalp \"Foo\" \"Foo\") =>  true\n      (equalp \"Foo\" (copy-seq \"Foo\")) =>  true\n      (equalp \"FOO\" \"foo\") =>  true\n      (setq array1 (make-array 6 :element-type 'integer\n                                 :initial-contents '(1 1 1 3 5 7)))\n     =>  #(1 1 1 3 5 7)\n      (setq array2 (make-array 8 :element-type 'integer\n                                 :initial-contents '(1 1 1 3 5 7 2 6)\n                                 :fill-pointer 6))\n     =>  #(1 1 1 3 5 7)\n      (equalp array1 array2) =>  true\n      (setq vector1 (vector 1 1 1 3 5 7)) =>  #(1 1 1 3 5 7)\n      (equalp array1 vector1) =>  true\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note eq:: , *Note eql:: , *Note equal:: , *Note =; /=; <; >; <=; >=:: ,\n*Note string=; string/=; string<; string>; string<=; string>=;\nstring-equal; string-not-equal; string-lessp; string-greaterp;\nstring-not-greaterp; string-not-lessp:: , string-equal, *Note char=;\nchar/=; char<; char>; char<=; char>=; char-equal; char-not-equal;\nchar-lessp; char-greaterp; char-not-greaterp; char-not-lessp:: , char-equal\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Object equality is not a concept for which there is a uniquely determined\ncorrect algorithm. The appropriateness of an equality predicate can be\njudged only in the context of the needs of some particular program.\nAlthough these functions take any type of argument and their names sound\nvery generic, equal and equalp are not appropriate for every application.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: equalp,  Next: identity,  Prev: equal,  Up: Data and Control Flow Dictionary\n\nequalp                                                           [Function]\n---------------------------------------------------------------------------\n\n`equalp'  x y =>  generalized-boolean\n\nArguments and Values::\n......................\n\nx--an object.\n\ny--an object.\n\ngeneralized-boolean--a generalized boolean.\n\nDescription::\n.............\n\nReturns true if x and y are equal, or if they have components that are of\nthe same type as each other and if those components are equalp;\nspecifically, equalp returns true in the following cases:\nCharacters\n     If two characters are char-equal.\n\nNumbers\n     If two numbers are the same under =.\n\nConses\n     If the two cars in the conses are equalp and the two cdrs in the\n     conses are equalp.\n\nArrays\n     If two arrays have the same number of dimensions, the dimensions\n     match, and the corresponding active elements are equalp.  The types\n     for which the arrays are specialized need not match; for example, a\n     string and a general array that happens to contain the same\n     characters are equalp.  Because equalp performs element-by-element\n     comparisons of strings and ignores the case of characters, case\n     distinctions are ignored when equalp compares strings.\n\nStructures\n     If two structures S_1 and S_2 have the same class and the value of\n     each slot in S_1 is the same under equalp as the value of the\n     corresponding slot in S_2.\n\nHash Tables\n     equalp descends hash-tables by first comparing the count of entries\n     and the :test function; if those are the same, it compares the keys\n     of the tables using the :test function and then the values of the\n     matching keys using equalp recursively.\n\nequalp does not descend any objects other than the ones explicitly\nspecified above.  Figure 5-13 summarizes the information given in the\nprevious list.  In addition, the figure specifies the priority of the\nbehavior of equalp, with upper entries taking priority over lower ones.\n\n  Type          Behavior                      \n  number        uses =                        \n  character     uses char-equal               \n  cons          descends                      \n  bit vector    descends                      \n  string        descends                      \n  pathname      same as equal                 \n  structure     descends, as described above  \n  Other array   descends                      \n  hash table    descends, as described above  \n  Other object  uses eq                       \n\n  Figure 5-13: Summary and priorities of behavior of equalp\n\n\nExamples::\n..........\n\n      (equalp 'a 'b) =>  false\n      (equalp 'a 'a) =>  true\n      (equalp 3 3) =>  true\n      (equalp 3 3.0) =>  true\n      (equalp 3.0 3.0) =>  true\n      (equalp #c(3 -4) #c(3 -4)) =>  true\n      (equalp #c(3 -4.0) #c(3 -4)) =>  true\n      (equalp (cons 'a 'b) (cons 'a 'c)) =>  false\n      (equalp (cons 'a 'b) (cons 'a 'b)) =>  true\n      (equalp #\\A #\\A) =>  true\n      (equalp #\\A #\\a) =>  true\n      (equalp \"Foo\" \"Foo\") =>  true\n      (equalp \"Foo\" (copy-seq \"Foo\")) =>  true\n      (equalp \"FOO\" \"foo\") =>  true\n\n      (setq array1 (make-array 6 :element-type 'integer\n                                 :initial-contents '(1 1 1 3 5 7)))\n     =>  #(1 1 1 3 5 7)\n      (setq array2 (make-array 8 :element-type 'integer\n                                 :initial-contents '(1 1 1 3 5 7 2 6)\n                                 :fill-pointer 6))\n     =>  #(1 1 1 3 5 7)\n      (equalp array1 array2) =>  true\n      (setq vector1 (vector 1 1 1 3 5 7)) =>  #(1 1 1 3 5 7)\n      (equalp array1 vector1) =>  true\n\nSee Also::\n..........\n\n*Note eq:: , *Note eql:: , *Note equal:: , *Note =; /=; <; >; <=; >=:: ,\n*Note string=; string/=; string<; string>; string<=; string>=;\nstring-equal; string-not-equal; string-lessp; string-greaterp;\nstring-not-greaterp; string-not-lessp:: , string-equal, *Note char=;\nchar/=; char<; char>; char<=; char>=; char-equal; char-not-equal;\nchar-lessp; char-greaterp; char-not-greaterp; char-not-lessp:: , char-equal\n\nNotes::\n.......\n\nObject equality is not a concept for which there is a uniquely determined\ncorrect algorithm. The appropriateness of an equality predicate can be\njudged only in the context of the needs of some particular program.\nAlthough these functions take any type of argument and their names sound\nvery generic, equal and equalp are not appropriate for every application.\n\n"
+}

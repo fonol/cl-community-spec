@@ -1,0 +1,65 @@
+{
+    "name": "wild-pathname-p",
+    "prev": "parse-namestring",
+    "next": "pathname-match-p",
+    "up": "Filenames Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "wild-pathname-p"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "wild-pathname-p",
+                    "text": " pathname &optional field-key =>  generalized-boolean\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "pathname",
+                    "desc": "a pathname designator."
+                },
+                {
+                    "name": "Field-key",
+                    "desc": "one of :host, :device :directory, :name, :type, :version, or"
+                },
+                {
+                    "name": "Field-key",
+                    "desc": "one of :host, :device :directory, :name, :type, :version, ornil.\n"
+                },
+                {
+                    "name": "generalized-boolean",
+                    "desc": "a generalized boolean."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "wild-pathname-p tests pathname for the presence of wildcard components.\nIf pathname is a pathname (as returned by pathname) it represents the name\nused to open the file. This may be, but is not required to be, the actual\nname of the file.\nIf field-key is not supplied or nil, wild-pathname-p returns true if\npathname has any wildcard components, nil if pathname has none.  If\nfield-key is non-nil, wild-pathname-p returns true if the indicated\ncomponent of pathname is a wildcard, nil if the component is not a\nwildcard.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      ;;;The following examples are not portable.  They are written to run\n      ;;;with particular file systems and particular wildcard conventions.\n      ;;;Other implementations will behave differently.  These examples are\n      ;;;intended to be illustrative, not to be prescriptive.\n      (wild-pathname-p (make-pathname :name :wild)) =>  true\n      (wild-pathname-p (make-pathname :name :wild) :name) =>  true\n      (wild-pathname-p (make-pathname :name :wild) :type) =>  false\n      (wild-pathname-p (pathname \"s:>foo>**>\")) =>  true ;Lispm\n      (wild-pathname-p (pathname :name \"F*O\")) =>  true ;Most places\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "If pathname is not a pathname, a string, or a stream associated with a\nfile an error of type type-error is signaled.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "pathname, logical-pathname, *Note File System Concepts::,\n*Note Pathnames as Filenames::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "Not all implementations support wildcards in all fields.  See *Note ->WILD\nas a Component Value:: and *Note Restrictions on Wildcard Pathnames::.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: wild-pathname-p,  Next: pathname-match-p,  Prev: parse-namestring,  Up: Filenames Dictionary\n\nwild-pathname-p                                                  [Function]\n---------------------------------------------------------------------------\n\n`wild-pathname-p'  pathname &optional field-key =>  generalized-boolean\n\nArguments and Values::\n......................\n\npathname--a pathname designator.\n\nField-key--one of :host, :device :directory, :name, :type, :version, or\nnil.\n\ngeneralized-boolean--a generalized boolean.\n\nDescription::\n.............\n\nwild-pathname-p tests pathname for the presence of wildcard components.\n\nIf pathname is a pathname (as returned by pathname) it represents the name\nused to open the file. This may be, but is not required to be, the actual\nname of the file.\n\nIf field-key is not supplied or nil, wild-pathname-p returns true if\npathname has any wildcard components, nil if pathname has none.  If\nfield-key is non-nil, wild-pathname-p returns true if the indicated\ncomponent of pathname is a wildcard, nil if the component is not a\nwildcard.\n\nExamples::\n..........\n\n      ;;;The following examples are not portable.  They are written to run\n      ;;;with particular file systems and particular wildcard conventions.\n      ;;;Other implementations will behave differently.  These examples are\n      ;;;intended to be illustrative, not to be prescriptive.\n     \n      (wild-pathname-p (make-pathname :name :wild)) =>  true\n      (wild-pathname-p (make-pathname :name :wild) :name) =>  true\n      (wild-pathname-p (make-pathname :name :wild) :type) =>  false\n      (wild-pathname-p (pathname \"s:>foo>**>\")) =>  true ;Lispm\n      (wild-pathname-p (pathname :name \"F*O\")) =>  true ;Most places\n\nExceptional Situations::\n........................\n\nIf pathname is not a pathname, a string, or a stream associated with a\nfile an error of type type-error is signaled.\n\nSee Also::\n..........\n\npathname, logical-pathname, *Note File System Concepts::,\n\n*Note Pathnames as Filenames::\n\nNotes::\n.......\n\nNot all implementations support wildcards in all fields.  See *Note ->WILD\nas a Component Value:: and *Note Restrictions on Wildcard Pathnames::.\n\n"
+}

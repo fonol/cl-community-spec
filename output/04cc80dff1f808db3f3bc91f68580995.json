@@ -1,0 +1,81 @@
+{
+    "name": "pprint-logical-block",
+    "prev": "pprint-indent",
+    "next": "pprint-newline",
+    "up": "Printer Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "pprint-logical-block"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "pprint-logical-block",
+                    "text": " (stream-symbol object &key prefix per-line-prefixsuffix) {declaration}* {form}*\n=>  nil\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "stream-symbol",
+                    "desc": "a stream variable designator."
+                },
+                {
+                    "name": "object",
+                    "desc": "an object; evaluated."
+                },
+                {
+                    "name": ":prefix",
+                    "desc": "a string; evaluated.  Complicated defaulting behavior; see below."
+                },
+                {
+                    "name": ":per-line-prefix",
+                    "desc": "a string; evaluated.  Complicated defaulting behavior;"
+                },
+                {
+                    "name": ":per-line-prefix",
+                    "desc": "a string; evaluated.  Complicated defaulting behavior;see below.\n"
+                },
+                {
+                    "name": ":suffix",
+                    "desc": "a string; evaluated.  The default is the null string."
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Causes printing to be grouped into a logical block.\nThe logical block is printed to the stream that is the value of the\nvariable denoted by stream-symbol.  During the execution of the forms,\nthat variable is bound to a pretty printing stream that supports decisions\nabout the arrangement of output and then forwards the output to the\ndestination stream.\nAll the standard printing functions (e.g., write, princ, and terpri) can\nbe used to print output to the pretty printing stream.  All and only the\noutput sent to this pretty printing stream is treated as being in the\nlogical block.\nThe prefix specifies a prefix to be printed before the beginning of the\nlogical block.  The per-line-prefix specifies a prefix that is printed\nbefore the block and at the beginning of each new line in the block.  The\n:prefix and :pre-line-prefix arguments are mutually exclusive.  If neither\n:prefix nor :per-line-prefix is specified, a prefix of the null string is\nassumed.\nThe suffix specifies a suffix that is printed just after the logical block.\nThe object is normally a list that the body forms are responsible for\nprinting.  If object is not a list, it is printed using write.  (This\nmakes it easier to write printing functions that are robust in the face of\nmalformed arguments.) If *print-circle* is non-nil and object is a\ncircular (or shared) reference to a cons, then an appropriate \"#n#\" marker\nis printed.  (This makes it easy to write printing functions that provide\nfull support for circularity and sharing abbreviation.)  If *print-level*\nis not nil and the logical block is at a dynamic nesting depth of greater\nthan *print-level* in logical blocks, \"#\" is printed.  (This makes easy to\nwrite printing functions that provide full support for depth abbreviation.)\nIf either of the three conditions above occurs, the indicated output is\nprinted on stream-symbol and the body forms are skipped along with the\nprinting of the :prefix and :suffix.  (If the body forms are not to be\nresponsible for printing a list, then the first two tests above can be\nturned off by supplying nil for the object argument.)\nIn addition to the object argument of pprint-logical-block, the arguments\nof the standard printing functions (such as write, print, prin1, and\npprint, as well as the arguments of the standard format directives such as\n~A, ~S, (and ~W) are all checked (when necessary) for circularity and\nsharing.  However, such checking is not applied to the arguments of the\nfunctions write-line, write-string, and write-char or to the literal text\noutput by format.  A consequence of this is that you must use one of the\nlatter functions if you want to print some literal text in the output that\nis not supposed to be checked for circularity or sharing.\nThe body forms of a pprint-logical-block form must not perform any\nside-effects on the surrounding environment; for example, no variables\nmust be assigned which have not been bound within its scope.\nThe pprint-logical-block macro may be used regardless of the value of\n*print-pretty*.\n"
+        },
+        {
+            "type": "Affected By",
+            "text": "*print-circle*, *print-level*.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "An error of type type-error is signaled if any of the :suffix, :prefix, or\n:per-line-prefix is supplied but does not evaluate to a string.\nAn error is signaled if :prefix and :pre-line-prefix are both used.\npprint-logical-block and the pretty printing stream it creates have\ndynamic extent.  The consequences are undefined if, outside of this\nextent, output is attempted to the pretty printing stream it creates.\nIt is also unspecified what happens if, within this extent, any output is\nsent directly to the underlying destination stream.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note pprint-pop:: , *Note pprint-exit-if-list-exhausted:: , *Note Tilde\nLess-Than-Sign-> Logical Block::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "One reason for using the pprint-logical-block macro when the value of\n*print-pretty* is nil would be to allow it to perform checking for dotted\nlists, as well as (in conjunction with pprint-pop) checking for\n*print-level* or *print-length* being exceeded.\nDetection of circularity and sharing is supported by the pretty printer by\nin essence performing requested output twice.  On the first pass,\ncircularities and sharing are detected and the actual outputting of\ncharacters is suppressed.  On the second pass, the appropriate \"#n=\" and\n\"#n#\" markers are inserted and characters are output.  This is why the\nrestriction on side-effects is necessary.  Obeying this restriction is\nfacilitated by using pprint-pop, instead of an ordinary pop when\ntraversing a list being printed by the body forms of the\npprint-logical-block form.)\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: pprint-logical-block,  Next: pprint-newline,  Prev: pprint-indent,  Up: Printer Dictionary\n\npprint-logical-block                                                [Macro]\n---------------------------------------------------------------------------\n\n`pprint-logical-block'  (stream-symbol object &key prefix per-line-prefix\nsuffix) {declaration}* {form}*\n=>  nil\n\nArguments and Values::\n......................\n\nstream-symbol--a stream variable designator.\n\nobject--an object; evaluated.\n\n:prefix--a string; evaluated.  Complicated defaulting behavior; see below.\n\n:per-line-prefix--a string; evaluated.  Complicated defaulting behavior;\nsee below.\n\n:suffix--a string; evaluated.  The default is the null string.\n\ndeclaration--a declare expression; not evaluated.\n\nforms--an implicit progn.\n\nDescription::\n.............\n\nCauses printing to be grouped into a logical block.\n\nThe logical block is printed to the stream that is the value of the\nvariable denoted by stream-symbol.  During the execution of the forms,\nthat variable is bound to a pretty printing stream that supports decisions\nabout the arrangement of output and then forwards the output to the\ndestination stream.\n\nAll the standard printing functions (e.g., write, princ, and terpri) can\nbe used to print output to the pretty printing stream.  All and only the\noutput sent to this pretty printing stream is treated as being in the\nlogical block.\n\nThe prefix specifies a prefix to be printed before the beginning of the\nlogical block.  The per-line-prefix specifies a prefix that is printed\nbefore the block and at the beginning of each new line in the block.  The\n:prefix and :pre-line-prefix arguments are mutually exclusive.  If neither\n:prefix nor :per-line-prefix is specified, a prefix of the null string is\nassumed.\n\nThe suffix specifies a suffix that is printed just after the logical block.\n\nThe object is normally a list that the body forms are responsible for\nprinting.  If object is not a list, it is printed using write.  (This\nmakes it easier to write printing functions that are robust in the face of\nmalformed arguments.) If *print-circle* is non-nil and object is a\ncircular (or shared) reference to a cons, then an appropriate \"#n#\" marker\nis printed.  (This makes it easy to write printing functions that provide\nfull support for circularity and sharing abbreviation.)  If *print-level*\nis not nil and the logical block is at a dynamic nesting depth of greater\nthan *print-level* in logical blocks, \"#\" is printed.  (This makes easy to\nwrite printing functions that provide full support for depth abbreviation.)\n\nIf either of the three conditions above occurs, the indicated output is\nprinted on stream-symbol and the body forms are skipped along with the\nprinting of the :prefix and :suffix.  (If the body forms are not to be\nresponsible for printing a list, then the first two tests above can be\nturned off by supplying nil for the object argument.)\n\nIn addition to the object argument of pprint-logical-block, the arguments\nof the standard printing functions (such as write, print, prin1, and\npprint, as well as the arguments of the standard format directives such as\n~A, ~S, (and ~W) are all checked (when necessary) for circularity and\nsharing.  However, such checking is not applied to the arguments of the\nfunctions write-line, write-string, and write-char or to the literal text\noutput by format.  A consequence of this is that you must use one of the\nlatter functions if you want to print some literal text in the output that\nis not supposed to be checked for circularity or sharing.\n\nThe body forms of a pprint-logical-block form must not perform any\nside-effects on the surrounding environment; for example, no variables\nmust be assigned which have not been bound within its scope.\n\nThe pprint-logical-block macro may be used regardless of the value of\n*print-pretty*.\n\nAffected By::\n.............\n\n*print-circle*, *print-level*.\n\nExceptional Situations::\n........................\n\nAn error of type type-error is signaled if any of the :suffix, :prefix, or\n:per-line-prefix is supplied but does not evaluate to a string.\n\nAn error is signaled if :prefix and :pre-line-prefix are both used.\n\npprint-logical-block and the pretty printing stream it creates have\ndynamic extent.  The consequences are undefined if, outside of this\nextent, output is attempted to the pretty printing stream it creates.\n\nIt is also unspecified what happens if, within this extent, any output is\nsent directly to the underlying destination stream.\n\nSee Also::\n..........\n\n*Note pprint-pop:: , *Note pprint-exit-if-list-exhausted:: , *Note Tilde\nLess-Than-Sign-> Logical Block::\n\nNotes::\n.......\n\nOne reason for using the pprint-logical-block macro when the value of\n*print-pretty* is nil would be to allow it to perform checking for dotted\nlists, as well as (in conjunction with pprint-pop) checking for\n*print-level* or *print-length* being exceeded.\n\nDetection of circularity and sharing is supported by the pretty printer by\nin essence performing requested output twice.  On the first pass,\ncircularities and sharing are detected and the actual outputting of\ncharacters is suppressed.  On the second pass, the appropriate \"#n=\" and\n\"#n#\" markers are inserted and characters are output.  This is why the\nrestriction on side-effects is necessary.  Obeying this restriction is\nfacilitated by using pprint-pop, instead of an ordinary pop when\ntraversing a list being printed by the body forms of the\npprint-logical-block form.)\n\n"
+}

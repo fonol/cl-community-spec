@@ -1,0 +1,1503 @@
+This is Info file gcl.info, produced by Makeinfo-1.55 from the input file
+gcl.texi.
+
+This is a Texinfo GNU Common Lisp Manual based on the draft ANSI standard
+for Common Lisp.
+
+Copyright 1994 William F. Schelter
+
+
+File: gcl.info,  Node: method-combination-error,  Next: signal,  Prev: invalid-method-error,  Up: Conditions Dictionary
+
+method-combination-error                                         [Function]
+---------------------------------------------------------------------------
+
+`method-combination-error'  format-control &rest args =>
+implementation-dependent
+
+Arguments and Values::
+......................
+
+format-control--a format control.
+
+args--format arguments for format-control.
+
+Description::
+.............
+
+The function method-combination-error is used to signal an error in method
+combination.
+
+The error message is constructed by using a format-control suitable for
+format and any args to it.  Because an implementation may need to add
+additional contextual information to the error message,
+method-combination-error should be called only within the dynamic extent
+of a method combination function.
+
+Whether method-combination-error returns to its caller or exits via throw
+is implementation-dependent.
+
+Side Effects::
+..............
+
+The debugger might be entered.
+
+Affected By::
+.............
+
+*break-on-signals*
+
+See Also::
+..........
+
+*Note define-method-combination::
+
+
+File: gcl.info,  Node: signal,  Next: simple-condition,  Prev: method-combination-error,  Up: Conditions Dictionary
+
+signal                                                           [Function]
+---------------------------------------------------------------------------
+
+`signal'  datum &rest arguments =>  nil
+
+Arguments and Values::
+......................
+
+datum, arguments--designators for a condition of default type
+simple-condition.
+
+Description::
+.............
+
+Signals the condition denoted by the given datum and arguments.  If the
+condition is not handled, signal returns nil.
+
+Examples::
+..........
+
+      (defun handle-division-conditions (condition)
+        (format t "Considering condition for division condition handling~
+        (when (and (typep condition 'arithmetic-error)
+                   (eq '/ (arithmetic-error-operation condition)))
+          (invoke-debugger condition)))
+     HANDLE-DIVISION-CONDITIONS
+      (defun handle-other-arithmetic-errors (condition)
+        (format t "Considering condition for arithmetic condition handling~
+        (when (typep condition 'arithmetic-error)
+          (abort)))
+     HANDLE-OTHER-ARITHMETIC-ERRORS
+      (define-condition a-condition-with-no-handler (condition) ())
+     A-CONDITION-WITH-NO-HANDLER
+      (signal 'a-condition-with-no-handler)
+     NIL
+      (handler-bind ((condition #'handle-division-conditions)
+                       (condition #'handle-other-arithmetic-errors))
+        (signal 'a-condition-with-no-handler))
+     Considering condition for division condition handling
+     Considering condition for arithmetic condition handling
+     NIL
+      (handler-bind ((arithmetic-error #'handle-division-conditions)
+                       (arithmetic-error #'handle-other-arithmetic-errors))
+        (signal 'arithmetic-error :operation '* :operands '(1.2 b)))
+     Considering condition for division condition handling
+     Considering condition for arithmetic condition handling
+     Back to Lisp Toplevel
+
+Side Effects::
+..............
+
+The debugger might be entered due to *break-on-signals*.
+
+Handlers for the condition being signaled might transfer control.
+
+Affected By::
+.............
+
+Existing handler bindings.
+
+*break-on-signals*
+
+See Also::
+..........
+
+*break-on-signals*, *Note error:: , simple-condition, *Note Signaling and
+Handling Conditions::
+
+Notes::
+.......
+
+If (typep datum *break-on-signals*) yields true, the debugger is entered
+prior to beginning the signaling process.  The continue restart can be
+used to continue with the signaling process.  This is also true for all
+other functions and macros that should, might, or must signal conditions.
+
+
+File: gcl.info,  Node: simple-condition,  Next: simple-condition-format-control,  Prev: signal,  Up: Conditions Dictionary
+
+simple-condition                                           [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+simple-condition, condition, t
+
+Description::
+.............
+
+The type simple-condition represents conditions that are signaled by
+signal whenever a format-control is supplied as the function's first
+argument.
+
+The format control and format arguments are initialized with the
+initialization arguments named :format-control
+
+and :format-arguments to make-condition, and are accessed by the functions
+
+simple-condition-format-control
+
+and simple-condition-format-arguments.  If format arguments are not
+supplied to make-condition, nil is used as a default.
+
+See Also::
+..........
+
+*Note simple-condition-format-control; simple-condition-format-arguments::
+,
+
+simple-condition-format-arguments
+
+
+File: gcl.info,  Node: simple-condition-format-control,  Next: warn,  Prev: simple-condition,  Up: Conditions Dictionary
+
+simple-condition-format-control, simple-condition-format-arguments
+------------------------------------------------------------------
+
+                                                                [Function]
+
+`simple-condition-format-control'  condition =>  format-control
+
+`simple-condition-format-arguments'  condition =>  format-arguments
+
+Arguments and Values::
+......................
+
+condition--a condition of type simple-condition.
+
+format-control--a format control.
+
+format-arguments--a list.
+
+Description::
+.............
+
+simple-condition-format-control returns the format control needed to
+process the condition's format arguments.
+
+simple-condition-format-arguments returns a list of format arguments
+needed to process the condition's format control.
+
+Examples::
+..........
+
+      (setq foo (make-condition 'simple-condition
+                               :format-control "Hi ~S"
+                               :format-arguments '(ho)))
+     =>  #<SIMPLE-CONDITION 26223553>
+      (apply #'format nil (simple-condition-format-control foo)
+                          (simple-condition-format-arguments foo))
+     =>  "Hi HO"
+
+See Also::
+..........
+
+*Note simple-condition:: , *Note Condition System Concepts::
+
+
+File: gcl.info,  Node: warn,  Next: simple-warning,  Prev: simple-condition-format-control,  Up: Conditions Dictionary
+
+warn                                                             [Function]
+---------------------------------------------------------------------------
+
+`warn'  datum &rest arguments =>  nil
+
+Arguments and Values::
+......................
+
+datum, arguments--designators for a condition of default type
+simple-warning.
+
+Description::
+.............
+
+Signals a condition of type warning.  If the condition is not handled,
+reports the condition to error output.
+
+The precise mechanism for warning is as follows:
+
+The warning condition is signaled
+     While the warning condition is being signaled, the muffle-warning
+     restart is established for use by a handler.  If invoked, this
+     restart bypasses further action by warn, which in turn causes warn to
+     immediately return nil.
+
+If no handler for the warning condition is found
+     If no handlers for the warning condition are found, or if all such
+     handlers decline, then the condition is reported to error output by
+     warn in an implementation-dependent format.
+
+nil is returned
+     The value returned by warn if it returns is nil.
+
+Examples::
+..........
+
+       (defun foo (x)
+         (let ((result (* x 2)))
+           (if (not (typep result 'fixnum))
+               (warn "You're using very big numbers."))
+           result))
+     =>  FOO
+     
+       (foo 3)
+     =>  6
+     
+       (foo most-positive-fixnum)
+      |>  Warning: You're using very big numbers.
+     =>  4294967294
+     
+       (setq *break-on-signals* t)
+     =>  T
+     
+       (foo most-positive-fixnum)
+      |>  Break: Caveat emptor.
+      |>  To continue, type :CONTINUE followed by an option number.
+      |>   1: Return from Break.
+      |>   2: Abort to Lisp Toplevel.
+      |>  Debug> :continue 1
+      |>  Warning: You're using very big numbers.
+     =>  4294967294
+
+Side Effects::
+..............
+
+A warning is issued.  The debugger might be entered.
+
+Affected By::
+.............
+
+Existing handler bindings.
+
+*break-on-signals*, *error-output*.
+
+Exceptional Situations::
+........................
+
+If datum is a condition and if the condition is not of type warning, or
+arguments is non-nil, an error of type type-error is signaled.
+
+If datum is a condition type, the result of (apply #'make-condition datum
+arguments) must be of type warning or an error of type type-error is
+signaled.
+
+See Also::
+..........
+
+*break-on-signals*, *Note muffle-warning:: , *Note signal::
+
+
+File: gcl.info,  Node: simple-warning,  Next: invoke-debugger,  Prev: warn,  Up: Conditions Dictionary
+
+simple-warning                                             [Condition Type]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+simple-warning, simple-condition, warning, condition, t
+
+Description::
+.............
+
+The type simple-warning represents conditions that are signaled by warn
+whenever a
+
+format control
+
+is supplied as the function's first argument.
+
+
+File: gcl.info,  Node: invoke-debugger,  Next: break,  Prev: simple-warning,  Up: Conditions Dictionary
+
+invoke-debugger                                                  [Function]
+---------------------------------------------------------------------------
+
+`invoke-debugger'  condition =>  #<NoValue>
+
+Arguments and Values::
+......................
+
+condition--a condition object.
+
+Description::
+.............
+
+invoke-debugger attempts to enter the debugger with condition.
+
+If *debugger-hook* is not nil, it should be a function (or the name of a
+function) to be called prior to entry to the standard debugger.  The
+function is called with *debugger-hook* bound to nil, and the function
+must accept two arguments: the condition and the value of *debugger-hook*
+prior to binding it to nil.  If the function returns normally, the
+standard debugger is entered.
+
+The standard debugger never directly returns.  Return can occur only by a
+non-local transfer of control, such as the use of a restart function.
+
+Examples::
+..........
+
+      (ignore-errors ;Normally, this would suppress debugger entry
+        (handler-bind ((error #'invoke-debugger)) ;But this forces debugger entry
+          (error "Foo.")))
+     Debug: Foo.
+     To continue, type :CONTINUE followed by an option number:
+      1: Return to Lisp Toplevel.
+     Debug>
+
+Side Effects::
+..............
+
+*debugger-hook* is bound to nil, program execution is discontinued, and
+the debugger is entered.
+
+Affected By::
+.............
+
+*debug-io* and *debugger-hook*.
+
+See Also::
+..........
+
+*Note error:: , *Note break::
+
+
+File: gcl.info,  Node: break,  Next: *debugger-hook*,  Prev: invoke-debugger,  Up: Conditions Dictionary
+
+break                                                            [Function]
+---------------------------------------------------------------------------
+
+`break'  &optional format-control &rest format-arguments =>  nil
+
+Arguments and Values::
+......................
+
+format-control--a format control.
+
+The default is implementation-dependent.
+
+format-arguments--format arguments for the format-control.
+
+Description::
+.............
+
+break formats format-control and format-arguments and then goes directly
+into the debugger without allowing any possibility of interception by
+programmed error-handling facilities.
+
+If the continue restart is used while in the debugger, break immediately
+returns nil without taking any unusual recovery action.
+
+break binds *debugger-hook* to nil before attempting to enter the debugger.
+
+Examples::
+..........
+
+      (break "You got here with arguments: ~:S." '(FOO 37 A))
+      |>  BREAK: You got here with these arguments: FOO, 37, A.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Return from BREAK.
+      |>   2: Top level.
+      |>  Debug> :CONTINUE 1
+      |>  Return from BREAK.
+     =>  NIL
+
+Side Effects::
+..............
+
+The debugger is entered.
+
+Affected By::
+.............
+
+*debug-io*.
+
+See Also::
+..........
+
+*Note error:: , *Note invoke-debugger:: .
+
+Notes::
+.......
+
+break is used as a way of inserting temporary debugging "breakpoints" in a
+program, not as a way of signaling errors.  For this reason, break does
+not take the continue-format-control argument that cerror takes.  This and
+the lack of any possibility of interception by condition handling are the
+only program-visible differences between break and cerror.
+
+The user interface aspects of break and cerror are permitted to vary more
+widely, in order to accomodate the interface needs of the implementation.
+For example, it is permissible for a Lisp read-eval-print loop to be
+entered by break rather than the conventional debugger.
+
+break could be defined by:
+
+      (defun break (&optional (format-control "Break") &rest format-arguments)
+        (with-simple-restart (continue "Return from BREAK.")
+          (let ((*debugger-hook* nil))
+            (invoke-debugger
+                (make-condition 'simple-condition
+                                :format-control format-control
+                                :format-arguments format-arguments))))
+        nil)
+
+
+File: gcl.info,  Node: *debugger-hook*,  Next: *break-on-signals*,  Prev: break,  Up: Conditions Dictionary
+
+*debugger-hook*                                                  [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a designator for a function of two arguments (a condition and the value of
+*debugger-hook* at the time the debugger was entered), or nil.
+
+Initial Value::
+...............
+
+nil.
+
+Description::
+.............
+
+When the value of *debugger-hook* is non-nil, it is called prior to normal
+entry into the debugger, either due to a call to invoke-debugger or due to
+automatic entry into the debugger from a call to error or cerror with a
+condition that is not handled.  The function may either handle the
+condition (transfer control) or return normally (allowing the standard
+debugger to run).  To minimize recursive errors while debugging,
+*debugger-hook* is bound to nil by invoke-debugger prior to calling the
+function.
+
+Examples::
+..........
+
+      (defun one-of (choices &optional (prompt "Choice"))
+        (let ((n (length choices)) (i))
+          (do ((c choices (cdr c)) (i 1 (+ i 1)))
+              ((null c))
+            (format t "~&[~D] ~A~
+          (do () ((typep i `(integer 1 ,n)))
+            (format t "~&~A: " prompt)
+            (setq i (read))
+            (fresh-line))
+          (nth (- i 1) choices)))
+     
+      (defun my-debugger (condition me-or-my-encapsulation)
+        (format t "~&Fooey: ~A" condition)
+        (let ((restart (one-of (compute-restarts))))
+          (if (not restart) (error "My debugger got an error."))
+          (let ((*debugger-hook* me-or-my-encapsulation))
+            (invoke-restart-interactively restart))))
+     
+      (let ((*debugger-hook* #'my-debugger))
+        (+ 3 'a))
+      |>  Fooey: The argument to +, A, is not a number.
+      |>   [1] Supply a replacement for A.
+      |>   [2] Return to Cloe Toplevel.
+      |>  Choice: 1
+      |>   Form to evaluate and use: (+ 5 'b)
+      |>   Fooey: The argument to +, B, is not a number.
+      |>   [1] Supply a replacement for B.
+      |>   [2] Supply a replacement for A.
+      |>   [3] Return to Cloe Toplevel.
+      |>  Choice: 1
+      |>   Form to evaluate and use: 1
+     =>  9
+
+Affected By::
+.............
+
+invoke-debugger
+
+Notes::
+.......
+
+When evaluating code typed in by the user interactively, it is sometimes
+useful to have the hook function bind *debugger-hook* to the function that
+was its second argument so that recursive errors can be handled using the
+same interactive facility.
+
+
+File: gcl.info,  Node: *break-on-signals*,  Next: handler-bind,  Prev: *debugger-hook*,  Up: Conditions Dictionary
+
+*break-on-signals*                                               [Variable]
+---------------------------------------------------------------------------
+
+Value Type::
+............
+
+a type specifier.
+
+Initial Value::
+...............
+
+nil.
+
+Description::
+.............
+
+When (typep condition *break-on-signals*) returns true, calls to signal,
+and to other operators such as error that implicitly call signal, enter
+the debugger prior to signaling the condition.
+
+The continue restart can be used to continue with the normal signaling
+process when a break occurs process due to *break-on-signals*.
+
+Examples::
+..........
+
+      *break-on-signals* =>  NIL
+      (ignore-errors (error 'simple-error :format-control "Fooey!"))
+     =>  NIL, #<SIMPLE-ERROR 32207172>
+     
+      (let ((*break-on-signals* 'error))
+        (ignore-errors (error 'simple-error :format-control "Fooey!")))
+      |>  Break: Fooey!
+      |>  BREAK entered because of *BREAK-ON-SIGNALS*.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Continue to signal.
+      |>   2: Top level.
+      |>  Debug> |>>:CONTINUE 1<<|
+      |>  Continue to signal.
+     =>  NIL, #<SIMPLE-ERROR 32212257>
+     
+      (let ((*break-on-signals* 'error))
+        (error 'simple-error :format-control "Fooey!"))
+      |>  Break: Fooey!
+      |>  BREAK entered because of *BREAK-ON-SIGNALS*.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Continue to signal.
+      |>   2: Top level.
+      |>  Debug> |>>:CONTINUE 1<<|
+      |>  Continue to signal.
+      |>  Error: Fooey!
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Top level.
+      |>  Debug> |>>:CONTINUE 1<<|
+      |>  Top level.
+
+See Also::
+..........
+
+*Note break:: , *Note signal:: , *Note warn:: , *Note error:: , *Note
+typep:: , *Note Condition System Concepts::
+
+Notes::
+.......
+
+*break-on-signals* is intended primarily for use in debugging code that
+does signaling.   When setting *break-on-signals*, the user is encouraged
+to choose the most restrictive specification that suffices.  Setting
+*break-on-signals* effectively violates the modular handling of condition
+signaling.  In practice, the complete effect of setting *break-on-signals*
+might be unpredictable in some cases since the user might not be aware of
+the variety or number of calls to signal that are used in code called only
+incidentally.
+
+*break-on-signals* enables an early entry to the debugger but such an
+entry does not preclude an additional entry to the debugger in the case of
+operations such as error and cerror.
+
+
+File: gcl.info,  Node: handler-bind,  Next: handler-case,  Prev: *break-on-signals*,  Up: Conditions Dictionary
+
+handler-bind                                                        [Macro]
+---------------------------------------------------------------------------
+
+`handler-bind'  ({!binding}*) {form}* =>  {result}*
+
+binding ::=(type handler)
+
+Arguments and Values::
+......................
+
+type--a type specifier.
+
+handler--a form; evaluated to produce a handler-function.
+
+handler-function--a designator for a function of one argument.
+
+forms--an implicit progn.
+
+results--the values returned by the forms.
+
+Description::
+.............
+
+Executes forms in a dynamic environment where the indicated handler
+bindings are in effect.
+
+Each handler should evaluate to a handler-function, which is used to
+handle conditions of the given type during execution of the forms.  This
+function should take a single argument, the condition being signaled.
+
+If more than one handler binding is supplied, the handler bindings are
+searched sequentially from top to bottom in search of a match (by visual
+analogy with typecase).  If an appropriate type is found, the associated
+handler is run in a dynamic environment where none of these handler
+bindings are visible (to avoid recursive errors).  If the handler
+declines, the search continues for another handler.
+
+If no appropriate handler is found, other handlers are sought from
+dynamically enclosing contours.  If no handler is found outside, then
+signal returns or error enters the debugger.
+
+Examples::
+..........
+
+In the following code, if an unbound variable error is signaled in the
+body (and not handled by an intervening handler), the first function is
+called.
+
+      (handler-bind ((unbound-variable #'(lambda ...))
+                     (error #'(lambda ...)))
+        ...)
+
+If any other kind of error is signaled, the second function is called.  In
+either case, neither handler is active while executing the code in the
+associated function.
+
+      (defun trap-error-handler (condition)
+        (format *error-output* "~&~A~&" condition)
+        (throw 'trap-errors nil))
+     
+      (defmacro trap-errors (&rest forms)
+        `(catch 'trap-errors
+           (handler-bind ((error #'trap-error-handler))
+             ,@forms)))
+     
+      (list (trap-errors (signal "Foo.") 1)
+            (trap-errors (error  "Bar.") 2)
+            (+ 1 2))
+      |>  Bar.
+     =>  (1 NIL 3)
+
+Note that "Foo." is not printed because the condition made by signal is a
+simple condition, which is not of type error, so it doesn't trigger the
+handler for error set up by trap-errors.
+
+See Also::
+..........
+
+*Note handler-case::
+
+
+File: gcl.info,  Node: handler-case,  Next: ignore-errors,  Prev: handler-bind,  Up: Conditions Dictionary
+
+handler-case                                                        [Macro]
+---------------------------------------------------------------------------
+
+`handler-case'  expression [[{!error-clause}* | !no-error-clause]] =>
+{result}*
+
+clause ::=!error-clause | !no-error-clause
+
+error-clause ::=(typespec ([var]) {declaration}* {form}*)
+
+no-error-clause ::=(:no-error lambda-list {declaration}* {form}*)
+
+Arguments and Values::
+......................
+
+expression--a form.
+
+typespec--a type specifier.
+
+var--a variable name.
+
+lambda-list--an ordinary lambda list.
+
+declaration--a declare expression; not evaluated.
+
+form--a form.
+
+results--In the normal situation, the values returned are those that
+result from the evaluation of expression; in the exceptional situation
+when control is transferred to a clause, the value of the last form in
+that clause is returned.
+
+Description::
+.............
+
+handler-case executes expression in a dynamic environment where various
+handlers are active.  Each error-clause specifies how to handle a
+condition matching the indicated typespec.  A no-error-clause allows the
+specification of a particular action if control returns normally.
+
+If a condition is signaled for which there is an appropriate error-clause
+during the execution of expression (i.e., one for which (typep condition
+'typespec) returns true) and if there is no intervening handler for a
+condition of that type, then control is transferred to the body of the
+relevant error-clause.  In this case, the dynamic state is unwound
+appropriately (so that the handlers established around the expression are
+no longer active), and var is bound to the condition that had been
+signaled.  If more than one case is provided, those cases are made
+accessible in parallel.  That is, in
+
+       (handler-case form
+         (typespec1 (var1) form1)
+         (typespec2 (var2) form2))
+
+if the first clause (containing form1) has been selected, the handler for
+the second is no longer visible (or vice versa).
+
+The clauses are searched sequentially from top to bottom. If there is type
+overlap between typespecs, the earlier of the clauses is selected.
+
+If var is not needed, it can be omitted. That is, a clause such as:
+
+       (typespec (var) (declare (ignore var)) form)
+
+can be written (typespec () form).
+
+If there are no forms in a selected clause, the case, and therefore
+handler-case, returns nil.  If execution of expression returns normally
+and no no-error-clause exists, the values returned by expression are
+returned by handler-case.  If execution of expression returns normally and
+a no-error-clause does exist, the values returned are used as arguments to
+the function described by constructing (lambda lambda-list {form}*) from
+the no-error-clause, and the values of that function call are returned by
+handler-case.  The handlers which were established around the expression
+are no longer active at the time of this call.
+
+Examples::
+..........
+
+      (defun assess-condition (condition)
+        (handler-case (signal condition)
+          (warning () "Lots of smoke, but no fire.")
+          ((or arithmetic-error control-error cell-error stream-error)
+             (condition)
+            (format nil "~S looks especially bad." condition))
+          (serious-condition (condition)
+            (format nil "~S looks serious." condition))
+          (condition () "Hardly worth mentioning.")))
+     =>  ASSESS-CONDITION
+      (assess-condition (make-condition 'stream-error :stream *terminal-io*))
+     =>  "#<STREAM-ERROR 12352256> looks especially bad."
+      (define-condition random-condition (condition) ()
+        (:report (lambda (condition stream)
+                   (declare (ignore condition))
+                   (princ "Yow" stream))))
+     =>  RANDOM-CONDITION
+      (assess-condition (make-condition 'random-condition))
+     =>  "Hardly worth mentioning."
+
+See Also::
+..........
+
+*Note handler-bind:: , *Note ignore-errors:: , *Note Condition System
+Concepts::
+
+Notes::
+.......
+
+      (handler-case form
+        (type1 (var1) . body1)
+        (type2 (var2) . body2) ...)
+
+is approximately equivalent to:
+
+      (block #1=#:g0001
+        (let ((#2=#:g0002 nil))
+          (tagbody
+            (handler-bind ((type1 #'(lambda (temp)
+                                            (setq #1# temp)
+                                            (go #3=#:g0003)))
+                           (type2 #'(lambda (temp)
+                                            (setq #2# temp)
+                                            (go #4=#:g0004))) ...)
+            (return-from #1# form))
+              #3# (return-from #1# (let ((var1 #2#)) . body1))
+              #4# (return-from #1# (let ((var2 #2#)) . body2)) ...)))
+
+      (handler-case form
+        (type1 (var1) . body1)
+        ...
+        (:no-error (varN-1 varN-2 ...) . bodyN))
+
+is approximately equivalent to:
+
+
+      (block #1=#:error-return
+       (multiple-value-call #'(lambda (varN-1 varN-2 ...) . bodyN)
+          (block #2=#:normal-return
+            (return-from #1#
+              (handler-case (return-from #2# form)
+                (type1 (var1) . body1) ...)))))
+
+
+File: gcl.info,  Node: ignore-errors,  Next: define-condition,  Prev: handler-case,  Up: Conditions Dictionary
+
+ignore-errors                                                       [Macro]
+---------------------------------------------------------------------------
+
+`ignore-errors'  {form}* =>  {result}*
+
+Arguments and Values::
+......................
+
+forms--an implicit progn.
+
+results--In the normal situation, the values of the forms are returned; in
+the exceptional situation, two values are returned: nil and the condition.
+
+Description::
+.............
+
+ignore-errors is used to prevent conditions of type error from causing
+entry into the debugger.
+
+Specifically, ignore-errors executes forms in a dynamic environment where
+a handler for conditions of type error has been established; if invoked,
+it handles such conditions by returning two values, nil and the condition
+that was signaled, from the ignore-errors form.
+
+If a normal return from the forms occurs, any values returned are returned
+by ignore-errors.
+
+Examples::
+..........
+
+      (defun load-init-file (program)
+        (let ((win nil))
+          (ignore-errors ;if this fails, don't enter debugger
+            (load (merge-pathnames (make-pathname :name program :type :lisp)
+                                   (user-homedir-pathname)))
+            (setq win t))
+          (unless win (format t "~&Init file failed to load.~
+          win))
+     
+      (load-init-file "no-such-program")
+      |>  Init file failed to load.
+     NIL
+
+See Also::
+..........
+
+*Note handler-case:: , *Note Condition System Concepts::
+
+Notes::
+.......
+
+      (ignore-errors . forms)
+
+is equivalent to:
+
+      (handler-case (progn . forms)
+        (error (condition) (values nil condition)))
+
+Because the second return value is a condition in the exceptional case, it
+is common (but not required) to arrange for the second return value in the
+normal case to be missing or nil so that the two situations can be
+distinguished.
+
+
+File: gcl.info,  Node: define-condition,  Next: make-condition,  Prev: ignore-errors,  Up: Conditions Dictionary
+
+define-condition                                                    [Macro]
+---------------------------------------------------------------------------
+
+[Editorial Note by KMP: This syntax stuff is still very confused and needs
+lots of work.]
+
+`define-condition'  name ({parent-type}*) ({!slot-spec}*) {option}*
+=>  name
+
+slot-spec ::=slot-name | (slot-name !slot-option)
+
+slot-option ::=[[ {:reader symbol}* | 
+                {:writer !function-name}* | 
+                {:accessor symbol}* | 
+                {:allocation !allocation-type} | 
+                {:initarg symbol}* |                  {:initform form} | 
+                {:type type-specifier} ]]
+
+option ::=[[ (:default-initargs . initarg-list) | 
+           (:documentation string) |             (:report report-name) ]]
+
+function-name ::={symbol | (setf symbol)}
+
+allocation-type ::=:instance | :class
+
+report-name ::=string | symbol | lambda expression
+
+Arguments and Values::
+......................
+
+name--a symbol.
+
+parent-type--a symbol naming a condition type.  If no parent-types are
+supplied, the parent-types default to (condition).
+
+default-initargs--a list of keyword/value pairs.
+
+[Editorial Note by KMP: This is all mixed up as to which is a slot option
+and which is a main option.  I'll sort that out.  Also, some of this is
+implied by the bnf and needn't be stated explicitly.]
+
+Slot-spec - the name of a slot or a list consisting of the slot-name
+followed by zero or more slot-options.
+
+Slot-name - a slot name (a symbol), the list of a slot name, or the list
+of slot name/slot form pairs.
+
+Option - Any of the following:
+
+:reader
+     :reader can be supplied more than once for a given slot and cannot be
+     nil.
+
+:writer
+     :writer can be supplied more than once for a given slot and must name
+     a generic function.
+
+:accessor
+     :accessor can be supplied more than once for a given slot and cannot
+     be nil.
+
+:allocation
+     :allocation can be supplied once at most for a given slot.  The
+     default if :allocation is not supplied is :instance.
+
+:initarg
+     :initarg can be supplied more than once for a given slot.
+
+:initform
+     :initform can be supplied once at most for a given slot.
+
+:type
+     :type can be supplied once at most for a given slot.
+
+:documentation
+     :documentation can be supplied once at most for a given slot.
+
+:report
+     :report can be supplied once at most.
+
+Description::
+.............
+
+define-condition defines a new condition type called name, which is a
+subtype of
+
+the type or types named by parent-type.  Each parent-type argument
+specifies a direct supertype of the new condition. The new condition
+inherits slots and methods from each of its direct supertypes, and so on.
+
+If a slot name/slot form pair is supplied, the slot form is a form that
+can be evaluated by make-condition to produce a default value when an
+explicit value is not provided.  If no slot form is supplied, the contents
+of the slot is initialized in an implementation-dependent way.
+
+If the type being defined and some other type from which it inherits have
+a slot by the same name, only one slot is allocated in the condition, but
+the supplied slot form overrides any slot form that might otherwise have
+been inherited from a parent-type.  If no slot form is supplied, the
+inherited slot form (if any) is still visible.
+
+Accessors are created according to the same rules as used by defclass.
+
+A description of slot-options follows:
+
+:reader
+     The :reader slot option specifies that an unqualified method is to be
+     defined on the generic function named by the argument to :reader to
+     read the value of the given slot.
+
+*
+     The :initform slot option is used to provide a default initial value
+     form to be used in the initialization of the slot.  This form is
+     evaluated every time it is used to initialize the slot.  The lexical
+     environment in which this form is evaluated is the lexical
+     environment in which the define-condition form was evaluated.  Note
+     that the lexical environment refers both to variables and to
+     functions.  For local slots, the dynamic environment is the dynamic
+     environment in which make-condition was called; for shared slots, the
+     dynamic environment is the dynamic environment in which the
+     define-condition form was evaluated.
+
+     [Reviewer Note by Barmar: Issue CLOS-CONDITIONS doesn't say this.] No
+     implementation is permitted to extend the syntax of define-condition
+     to allow (slot-name form) as an abbreviation for (slot-name :initform
+     form).
+
+:initarg
+     The :initarg slot option declares an initialization argument named by
+     its symbol argument and specifies that this initialization argument
+     initializes the given slot.  If the initialization argument has a
+     value in the call to initialize-instance, the value is stored into
+     the given slot, and the slot's :initform slot option, if any, is not
+     evaluated.  If none of the initialization arguments specified for a
+     given slot has a value, the slot is initialized according to the
+     :initform slot option, if specified.
+
+:type
+     The :type slot option specifies that the contents of the slot is
+     always of the specified type.  It effectively declares the result
+     type of the reader generic function when applied to an object of this
+     condition type.  The consequences of attempting to store in a slot a
+     value that does not satisfy the type of the slot is undefined.
+
+:default-initargs
+     [Editorial Note by KMP: This is an option, not a slot option.]
+
+     This option is treated the same as it would be defclass.
+
+:documentation
+     [Editorial Note by KMP: This is both an option and a slot option.]
+
+     The :documentation slot option provides a documentation string for
+     the slot.
+
+:report
+     [Editorial Note by KMP: This is an option, not a slot option.]
+
+     Condition reporting is mediated through the print-object method for
+     the condition type in question, with *print-escape* always being nil.
+     Specifying (:report report-name) in the definition of a condition
+     type C is equivalent to:
+
+           (defmethod print-object ((x c) stream)
+             (if *print-escape* (call-next-method) (report-name x stream)))
+
+     If the value supplied by the argument to :report (report-name) is a
+     symbol or a lambda expression, it must be acceptable to function.
+     (function report-name) is evaluated in the current lexical
+     environment.  It should return a function of two arguments, a
+     condition and a stream, that prints on the stream a description of
+     the condition.  This function is called whenever the condition is
+     printed while *print-escape* is nil.
+
+     If report-name is a string, it is a shorthand for
+
+           (lambda (condition stream)
+             (declare (ignore condition))
+             (write-string report-name stream))
+
+     This option is processed after the new condition type has been
+     defined, so use of the slot accessors within the :report function is
+     permitted.  If this option is not supplied, information about how to
+     report this type of condition is inherited from the parent-type.
+
+The consequences are unspecifed if an attempt is made to read a slot that
+has not been explicitly initialized and that has not been given a default
+value.
+
+The consequences are unspecified if an attempt is made to assign the slots
+by using setf.
+
+If a define-condition form appears as a top level form, the compiler must
+make name recognizable as a valid type name, and it must be possible to
+reference the condition type as the parent-type of another condition type
+in a subsequent define-condition form in the file being compiled.
+
+Examples::
+..........
+
+The following form defines a condition of type peg/hole-mismatch which
+inherits from a condition type called blocks-world-error:
+
+     (define-condition peg/hole-mismatch
+                       (blocks-world-error)
+                       ((peg-shape  :initarg :peg-shape
+                                    :reader peg/hole-mismatch-peg-shape)
+                        (hole-shape :initarg :hole-shape
+                                    :reader peg/hole-mismatch-hole-shape))
+       (:report (lambda (condition stream)
+                  (format stream "A ~A peg cannot go in a ~A hole."
+                          (peg/hole-mismatch-peg-shape  condition)
+                          (peg/hole-mismatch-hole-shape condition)))))
+
+The new type has slots peg-shape and hole-shape, so make-condition accepts
+:peg-shape and :hole-shape keywords.  The readers
+peg/hole-mismatch-peg-shape and peg/hole-mismatch-hole-shape apply to
+objects of this type, as illustrated in the :report information.
+
+The following form defines a condition type named machine-error which
+inherits from error:
+
+     (define-condition machine-error
+                       (error)
+                       ((machine-name :initarg :machine-name
+                                      :reader machine-error-machine-name))
+       (:report (lambda (condition stream)
+                  (format stream "There is a problem with ~A."
+                          (machine-error-machine-name condition)))))
+
+Building on this definition, a new error condition can be defined which is
+a subtype of machine-error for use when machines are not available:
+
+     (define-condition machine-not-available-error (machine-error) ()
+       (:report (lambda (condition stream)
+                  (format stream "The machine ~A is not available."
+                          (machine-error-machine-name condition)))))
+
+This defines a still more specific condition, built upon
+machine-not-available-error, which provides a slot initialization form for
+machine-name but which does not provide any new slots or report
+information.  It just gives the machine-name slot a default initialization:
+
+     (define-condition my-favorite-machine-not-available-error
+                       (machine-not-available-error)
+       ((machine-name :initform "mc.lcs.mit.edu")))
+
+Note that since no :report clause was given, the information inherited
+from machine-not-available-error is used to report this type of condition.
+
+      (define-condition ate-too-much (error)
+          ((person :initarg :person :reader ate-too-much-person)
+           (weight :initarg :weight :reader ate-too-much-weight)
+           (kind-of-food :initarg :kind-of-food
+                         :reader :ate-too-much-kind-of-food)))
+     =>  ATE-TOO-MUCH
+      (define-condition ate-too-much-ice-cream (ate-too-much)
+        ((kind-of-food :initform 'ice-cream)
+         (flavor       :initarg :flavor
+                       :reader ate-too-much-ice-cream-flavor
+                       :initform 'vanilla ))
+        (:report (lambda (condition stream)
+                   (format stream "~A ate too much ~A ice-cream"
+                           (ate-too-much-person condition)
+                           (ate-too-much-ice-cream-flavor condition)))))
+     =>  ATE-TOO-MUCH-ICE-CREAM
+      (make-condition 'ate-too-much-ice-cream
+                      :person 'fred
+                      :weight 300
+                      :flavor 'chocolate)
+     =>  #<ATE-TOO-MUCH-ICE-CREAM 32236101>
+      (format t "~A" *)
+      |>  FRED ate too much CHOCOLATE ice-cream
+     =>  NIL
+
+See Also::
+..........
+
+*Note make-condition:: , *Note defclass:: , *Note Condition System
+Concepts::
+
+
+File: gcl.info,  Node: make-condition,  Next: restart,  Prev: define-condition,  Up: Conditions Dictionary
+
+make-condition                                                   [Function]
+---------------------------------------------------------------------------
+
+`make-condition'  type &rest slot-initializations =>  condition
+
+Arguments and Values::
+......................
+
+type--a type specifier (for a subtype of condition).
+
+slot-initializations--an initialization argument list.
+
+condition--a condition.
+
+Description::
+.............
+
+Constructs and returns a condition of type type using slot-initializations
+for the initial values of the slots.  The newly created condition is
+returned.
+
+Examples::
+..........
+
+      (defvar *oops-count* 0)
+     
+      (setq a (make-condition 'simple-error
+                              :format-control "This is your ~:R error."
+                              :format-arguments (list (incf *oops-count*))))
+     =>  #<SIMPLE-ERROR 32245104>
+     
+      (format t "~&~A~
+      |>  This is your first error.
+     =>  NIL
+     
+      (error a)
+      |>  Error: This is your first error.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Return to Lisp Toplevel.
+      |>  Debug>
+
+Affected By::
+.............
+
+The set of defined condition types.
+
+See Also::
+..........
+
+*Note define-condition:: , *Note Condition System Concepts::
+
+
+File: gcl.info,  Node: restart,  Next: compute-restarts,  Prev: make-condition,  Up: Conditions Dictionary
+
+restart                                                      [System Class]
+---------------------------------------------------------------------------
+
+Class Precedence List::
+.......................
+
+restart, t
+
+Description::
+.............
+
+An object of type restart represents a function that can be called to
+perform some form of recovery action, usually a transfer of control to an
+outer point in the running program.
+
+An implementation is free to implement a restart in whatever manner is
+most convenient; a restart has only dynamic extent relative to the scope
+of the binding form which establishes it.
+
+
+File: gcl.info,  Node: compute-restarts,  Next: find-restart,  Prev: restart,  Up: Conditions Dictionary
+
+compute-restarts                                                 [Function]
+---------------------------------------------------------------------------
+
+`compute-restarts'  &optional condition =>  restarts
+
+Arguments and Values::
+......................
+
+condition--a condition object, or nil.
+
+restarts--a list of restarts.
+
+Description::
+.............
+
+compute-restarts uses the dynamic state of the program to compute a list
+of the restarts which are currently active.
+
+The resulting list is ordered so that the innermost (more-recently
+established) restarts are nearer the head of the list.
+
+When condition is non-nil, only those restarts are considered that are
+either explicitly associated with that condition, or not associated with
+any condition; that is, the excluded restarts are those that are
+associated with a non-empty set of conditions of which the given condition
+is not an element.  If condition is nil, all restarts are considered.
+
+compute-restarts returns all applicable restarts, including anonymous
+ones, even if some of them have the same name as others and would
+therefore not be found by find-restart when given a symbol argument.
+
+Implementations are permitted, but not required, to return distinct lists
+from repeated calls to compute-restarts while in the same dynamic
+environment.  The consequences are undefined if the list returned by
+compute-restarts is every modified.
+
+Examples::
+..........
+
+      ;; One possible way in which an interactive debugger might present
+      ;; restarts to the user.
+      (defun invoke-a-restart ()
+        (let ((restarts (compute-restarts)))
+          (do ((i 0 (+ i 1)) (r restarts (cdr r))) ((null r))
+            (format t "~&~D: ~A~
+          (let ((n nil) (k (length restarts)))
+            (loop (when (and (typep n 'integer) (>= n 0) (< n k))
+                    (return t))
+                  (format t "~&Option: ")
+                  (setq n (read))
+                  (fresh-line))
+            (invoke-restart-interactively (nth n restarts)))))
+     
+      (restart-case (invoke-a-restart)
+        (one () 1)
+        (two () 2)
+        (nil () :report "Who knows?" 'anonymous)
+        (one () 'I)
+        (two () 'II))
+      |>  0: ONE
+      |>  1: TWO
+      |>  2: Who knows?
+      |>  3: ONE
+      |>  4: TWO
+      |>  5: Return to Lisp Toplevel.
+      |>  Option: |>>4<<|
+     =>  II
+     
+      ;; Note that in addition to user-defined restart points, COMPUTE-RESTARTS
+      ;; also returns information about any system-supplied restarts, such as
+      ;; the "Return to Lisp Toplevel" restart offered above.
+
+Affected By::
+.............
+
+Existing restarts.
+
+See Also::
+..........
+
+*Note find-restart:: , *Note invoke-restart:: , *Note restart-bind::
+
+
+File: gcl.info,  Node: find-restart,  Next: invoke-restart,  Prev: compute-restarts,  Up: Conditions Dictionary
+
+find-restart                                                     [Function]
+---------------------------------------------------------------------------
+
+`find-restart'  identifier &optional condition restart
+
+Arguments and Values::
+......................
+
+identifier--a non-nil symbol, or a restart.
+
+condition--a condition object, or nil.
+
+restart--a restart or nil.
+
+Description::
+.............
+
+find-restart searches for a particular restart in the current dynamic
+environment.
+
+When condition is non-nil, only those restarts are considered that are
+either explicitly associated with that condition, or not associated with
+any condition; that is, the excluded restarts are those that are
+associated with a non-empty set of conditions of which the given condition
+is not an element.  If condition is nil, all restarts are considered.
+
+If identifier is a symbol, then the innermost (most recently established)
+applicable restart with that name is returned.  nil is returned if no such
+restart is found.
+
+If identifier is a currently active restart, then it is returned.
+Otherwise, nil is returned.
+
+Examples::
+..........
+
+      (restart-case
+          (let ((r (find-restart 'my-restart)))
+            (format t "~S is named ~S" r (restart-name r)))
+        (my-restart () nil))
+      |>  #<RESTART 32307325> is named MY-RESTART
+     =>  NIL
+      (find-restart 'my-restart)
+     =>  NIL
+
+Affected By::
+.............
+
+Existing restarts.
+
+restart-case, restart-bind, with-condition-restarts.
+
+See Also::
+..........
+
+*Note compute-restarts::
+
+Notes::
+.......
+
+      (find-restart identifier)
+      == (find identifier (compute-restarts) :key :restart-name)
+
+Although anonymous restarts have a name of nil, the consequences are
+unspecified if nil is given as an identifier.  Occasionally, programmers
+lament that nil is not permissible as an identifier argument.  In most
+such cases, compute-restarts can probably be used to simulate the desired
+effect.
+
+
+File: gcl.info,  Node: invoke-restart,  Next: invoke-restart-interactively,  Prev: find-restart,  Up: Conditions Dictionary
+
+invoke-restart                                                   [Function]
+---------------------------------------------------------------------------
+
+`invoke-restart'  restart &rest arguments =>  {result}*
+
+Arguments and Values::
+......................
+
+restart--a restart designator.
+
+argument--an object.
+
+results--the values returned by the function associated with restart, if
+that function returns.
+
+Description::
+.............
+
+Calls the function associated with restart, passing arguments to it.
+Restart must be valid in the current dynamic environment.
+
+Examples::
+..........
+
+      (defun add3 (x) (check-type x number) (+ x 3))
+     
+      (foo 'seven)
+      |>  Error: The value SEVEN was not of type NUMBER.
+      |>  To continue, type :CONTINUE followed by an option number:
+      |>   1: Specify a different value to use.
+      |>   2: Return to Lisp Toplevel.
+      |>  Debug> |>>(invoke-restart 'store-value 7)<<|
+     =>  10
+
+Side Effects::
+..............
+
+A non-local transfer of control might be done by the restart.
+
+Affected By::
+.............
+
+Existing restarts.
+
+Exceptional Situations::
+........................
+
+If restart is not valid, an error of type control-error is signaled.
+
+See Also::
+..........
+
+*Note find-restart:: , *Note restart-bind:: , *Note restart-case:: , *Note
+invoke-restart-interactively::
+
+Notes::
+.......
+
+The most common use for invoke-restart is in a handler.  It might be used
+explicitly, or implicitly through invoke-restart-interactively or a
+restart function.
+
+Restart functions call invoke-restart, not vice versa.  That is,
+invoke-restart provides primitive functionality, and restart functions are
+non-essential "syntactic sugar."
+

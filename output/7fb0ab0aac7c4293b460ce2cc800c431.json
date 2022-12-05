@@ -1,0 +1,69 @@
+{
+    "name": "defun",
+    "prev": "apply",
+    "next": "fdefinition",
+    "up": "Data and Control Flow Dictionary",
+    "header": {
+        "type": "Macro",
+        "text": "defun"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "defun",
+                    "text": " function-name lambda-list [[{declaration}* | documentation]]{form}*\n=>  function-name\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "function-name",
+                    "desc": "a function name."
+                },
+                {
+                    "name": "lambda-list",
+                    "desc": "an ordinary lambda list."
+                },
+                {
+                    "name": "declaration",
+                    "desc": "a declare expression; not evaluated."
+                },
+                {
+                    "name": "documentation",
+                    "desc": "a string; not evaluated."
+                },
+                {
+                    "name": "forms",
+                    "desc": "an implicit progn."
+                },
+                {
+                    "name": "block-name",
+                    "desc": "the function block name of the function-name."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "Defines a new function named function-name in the global environment.  The\nbody of the function defined by defun consists of forms; they are executed\nas an implicit progn when the function is called.  defun can be used to\ndefine a new function, to install a corrected version of an incorrect\ndefinition, to redefine an already-defined function, or to redefine a\nmacro as a function.\ndefun implicitly puts a block named block-name around the body forms\n(but not the forms in the lambda-list)\nof the function defined.\nDocumentation is attached as a documentation string to name (as kind\nfunction) and to the function object.\nEvaluating defun causes function-name to be a global name for the function\nspecified by the lambda expression\n      (lambda lambda-list\n        [[{declaration}* | documentation]]\n        (block block-name {form}*))\nprocessed in the lexical environment in which defun was executed.\n(None of the arguments are evaluated at macro expansion time.)\ndefun is not required to perform any compile-time side effects.  In\nparticular, defun does not make the function definition available at\ncompile time.  An implementation may choose to store information about the\nfunction for the purposes of compile-time error-checking (such as checking\nthe number of arguments on calls), or to enable the function to be\nexpanded inline.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (defun recur (x)\n       (when (> x 0)\n         (recur (1- x)))) =>  RECUR\n      (defun ex (a b &optional c (d 66) &rest keys &key test (start 0))\n         (list a b c d keys test start)) =>  EX\n      (ex 1 2) =>  (1 2 NIL 66 NIL NIL 0)\n      (ex 1 2 3 4 :test 'equal :start 50)\n     =>  (1 2 3 4 (:TEST EQUAL :START 50) EQUAL 50)\n      (ex :test 1 :start 2) =>  (:TEST 1 :START 2 NIL NIL 0)\n      ;; This function assumes its callers have checked the types of the\n      ;; arguments, and authorizes the compiler to build in that assumption.\n      (defun discriminant (a b c)\n        (declare (number a b c))\n        \"Compute the discriminant for a quadratic equation.\"\n        (- (* b b) (* 4 a c))) =>  DISCRIMINANT\n      (discriminant 1 2/3 -2) =>  76/9\n      ;; This function assumes its callers have not checked the types of the\n      ;; arguments, and performs explicit type checks before making any assumptions.\n      (defun careful-discriminant (a b c)\n        \"Compute the discriminant for a quadratic equation.\"\n        (check-type a number)\n        (check-type b number)\n        (check-type c number)\n        (locally (declare (number a b c))\n          (- (* b b) (* 4 a c)))) =>  CAREFUL-DISCRIMINANT\n      (careful-discriminant 1 2/3 -2) =>  76/9\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note flet; labels; macrolet:: , labels, *Note block:: , *Note\nreturn-from:: , declare, *Note documentation; (setf documentation):: ,\n*Note Evaluation::, *Note Ordinary Lambda Lists::, *Note Syntactic\nInteraction of Documentation Strings and Declarations::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "return-from can be used to return prematurely from a function defined by\ndefun.\nAdditional side effects might take place when additional information\n(typically debugging information) about the function definition is\nrecorded.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: defun,  Next: fdefinition,  Prev: apply,  Up: Data and Control Flow Dictionary\n\ndefun                                                               [Macro]\n---------------------------------------------------------------------------\n\n`defun'  function-name lambda-list [[{declaration}* | documentation]]\n{form}*\n=>  function-name\n\nArguments and Values::\n......................\n\nfunction-name--a function name.\n\nlambda-list--an ordinary lambda list.\n\ndeclaration--a declare expression; not evaluated.\n\ndocumentation--a string; not evaluated.\n\nforms--an implicit progn.\n\nblock-name--the function block name of the function-name.\n\nDescription::\n.............\n\nDefines a new function named function-name in the global environment.  The\nbody of the function defined by defun consists of forms; they are executed\nas an implicit progn when the function is called.  defun can be used to\ndefine a new function, to install a corrected version of an incorrect\ndefinition, to redefine an already-defined function, or to redefine a\nmacro as a function.\n\ndefun implicitly puts a block named block-name around the body forms\n\n(but not the forms in the lambda-list)\n\nof the function defined.\n\nDocumentation is attached as a documentation string to name (as kind\nfunction) and to the function object.\n\nEvaluating defun causes function-name to be a global name for the function\nspecified by the lambda expression\n\n      (lambda lambda-list\n        [[{declaration}* | documentation]]\n        (block block-name {form}*))\n\nprocessed in the lexical environment in which defun was executed.\n\n(None of the arguments are evaluated at macro expansion time.)\n\ndefun is not required to perform any compile-time side effects.  In\nparticular, defun does not make the function definition available at\ncompile time.  An implementation may choose to store information about the\nfunction for the purposes of compile-time error-checking (such as checking\nthe number of arguments on calls), or to enable the function to be\nexpanded inline.\n\nExamples::\n..........\n\n      (defun recur (x)\n       (when (> x 0)\n         (recur (1- x)))) =>  RECUR\n      (defun ex (a b &optional c (d 66) &rest keys &key test (start 0))\n         (list a b c d keys test start)) =>  EX\n      (ex 1 2) =>  (1 2 NIL 66 NIL NIL 0)\n      (ex 1 2 3 4 :test 'equal :start 50)\n     =>  (1 2 3 4 (:TEST EQUAL :START 50) EQUAL 50)\n      (ex :test 1 :start 2) =>  (:TEST 1 :START 2 NIL NIL 0)\n     \n      ;; This function assumes its callers have checked the types of the\n      ;; arguments, and authorizes the compiler to build in that assumption.\n      (defun discriminant (a b c)\n        (declare (number a b c))\n        \"Compute the discriminant for a quadratic equation.\"\n        (- (* b b) (* 4 a c))) =>  DISCRIMINANT\n      (discriminant 1 2/3 -2) =>  76/9\n     \n      ;; This function assumes its callers have not checked the types of the\n      ;; arguments, and performs explicit type checks before making any assumptions.\n      (defun careful-discriminant (a b c)\n        \"Compute the discriminant for a quadratic equation.\"\n        (check-type a number)\n        (check-type b number)\n        (check-type c number)\n        (locally (declare (number a b c))\n          (- (* b b) (* 4 a c)))) =>  CAREFUL-DISCRIMINANT\n      (careful-discriminant 1 2/3 -2) =>  76/9\n\nSee Also::\n..........\n\n*Note flet; labels; macrolet:: , labels, *Note block:: , *Note\nreturn-from:: , declare, *Note documentation; (setf documentation):: ,\n*Note Evaluation::, *Note Ordinary Lambda Lists::, *Note Syntactic\nInteraction of Documentation Strings and Declarations::\n\nNotes::\n.......\n\nreturn-from can be used to return prematurely from a function defined by\ndefun.\n\nAdditional side effects might take place when additional information\n(typically debugging information) about the function definition is\nrecorded.\n\n"
+}

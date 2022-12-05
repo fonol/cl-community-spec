@@ -1,0 +1,97 @@
+{
+    "name": "remove-duplicates",
+    "prev": "remove",
+    "next": null,
+    "up": "Sequences Dictionary",
+    "header": {
+        "type": "Function",
+        "text": "remove-duplicates, delete-duplicates"
+    },
+    "sections": [
+        {
+            "type": "Syntax",
+            "defs": [
+                {
+                    "name": "remove-duplicates",
+                    "text": " sequence &key from-end test test-not start end key=>  result-sequence\n\n"
+                },
+                {
+                    "name": "delete-duplicates",
+                    "text": " sequence &key from-end test test-not start end key\n=>  result-sequence\n\n"
+                }
+            ],
+            "text": ""
+        },
+        {
+            "type": "Arguments and Values",
+            "text": "",
+            "values": [
+                {
+                    "name": "sequence",
+                    "desc": "a proper sequence."
+                },
+                {
+                    "name": "from-end",
+                    "desc": "a generalized boolean.  The default is false."
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns a"
+                },
+                {
+                    "name": "test-not",
+                    "desc": "a designator for a function of two arguments that returns ageneralized boolean.\n"
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of sequence.  The defaults for"
+                },
+                {
+                    "name": "start, end",
+                    "desc": "bounding index designators of sequence.  The defaults forstart and end are 0 and nil, respectively.\n"
+                },
+                {
+                    "name": "key",
+                    "desc": "a designator for a function of one argument, or nil."
+                },
+                {
+                    "name": "result-sequence",
+                    "desc": "a sequence."
+                }
+            ]
+        },
+        {
+            "type": "Description",
+            "text": "remove-duplicates returns a modified copy of sequence from which any\nelement that matches another element occurring in sequence has been\nremoved.\nIf sequence is a vector, the result is a vector that has the same actual\narray element type as sequence.  The result might or might not be simple,\nand might or might not be identical to sequence.  If sequence is a list,\nthe result is a list.\ndelete-duplicates is like remove-duplicates, but delete-duplicates may\nmodify sequence.\nThe elements of sequence are compared pairwise, and if any two match, then\nthe one occurring earlier in sequence is discarded, unless from-end is\ntrue, in which case the one later in sequence is discarded.\nremove-duplicates and delete-duplicates return a sequence of the same type\nas sequence with enough elements removed so that no two of the remaining\nelements match.  The order of the elements remaining in the result is the\nsame as the order in which they appear in sequence.\nremove-duplicates returns a sequence that may share with sequence or may\nbe identical to sequence if no elements need to be removed.\ndelete-duplicates, when sequence is a list, is permitted to setf any part,\ncar or cdr, of the top-level list structure in that sequence.  When\nsequence is a vector, delete-duplicates is permitted to change the\ndimensions of the vector and to slide its elements into new positions\nwithout permuting them to produce the resulting vector.\n"
+        },
+        {
+            "type": "Examples",
+            "text": "      (remove-duplicates \"aBcDAbCd\" :test #'char-equal :from-end t) =>  \"aBcD\"\n      (remove-duplicates '(a b c b d d e)) =>  (A C B D E)\n      (remove-duplicates '(a b c b d d e) :from-end t) =>  (A B C D E)\n      (remove-duplicates '((foo #\\a) (bar #\\%) (baz #\\A))\n          :test #'char-equal :key #'cadr) =>  ((BAR #\\%) (BAZ #\\A))\n      (remove-duplicates '((foo #\\a) (bar #\\%) (baz #\\A))\n          :test #'char-equal :key #'cadr :from-end t) =>  ((FOO #\\a) (BAR #\\%))\n      (setq tester (list 0 1 2 3 4 5 6))\n      (delete-duplicates tester :key #'oddp :start 1 :end 6) =>  (0 4 5 6)\n"
+        },
+        {
+            "type": "Side Effects",
+            "text": "delete-duplicates might destructively modify sequence.\n"
+        },
+        {
+            "type": "Exceptional Situations",
+            "text": "Should signal an error of type type-error if sequence is not a proper\nsequence.\n"
+        },
+        {
+            "type": "See Also",
+            "text": "*Note Compiler Terminology::,\n*Note Traversal Rules and Side Effects::\n"
+        },
+        {
+            "type": "Notes",
+            "text": "The :test-not argument is deprecated.\nThese functions are useful for converting sequence into a canonical form\nsuitable for representing a set.\n"
+        }
+    ],
+    "_otext": "File: gcl.info,  Node: remove-duplicates,  Prev: remove,  Up: Sequences Dictionary\n\nremove-duplicates, delete-duplicates                             [Function]\n---------------------------------------------------------------------------\n\n`remove-duplicates'  sequence &key from-end test test-not start end key\n=>  result-sequence\n\n`delete-duplicates'  sequence &key from-end test test-not start end key\n=>  result-sequence\n\nArguments and Values::\n......................\n\nsequence--a proper sequence.\n\nfrom-end--a generalized boolean.  The default is false.\n\ntest--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\ntest-not--a designator for a function of two arguments that returns a\ngeneralized boolean.\n\nstart, end--bounding index designators of sequence.  The defaults for\nstart and end are 0 and nil, respectively.\n\nkey--a designator for a function of one argument, or nil.\n\nresult-sequence--a sequence.\n\nDescription::\n.............\n\nremove-duplicates returns a modified copy of sequence from which any\nelement that matches another element occurring in sequence has been\nremoved.\n\nIf sequence is a vector, the result is a vector that has the same actual\narray element type as sequence.  The result might or might not be simple,\nand might or might not be identical to sequence.  If sequence is a list,\nthe result is a list.\n\ndelete-duplicates is like remove-duplicates, but delete-duplicates may\nmodify sequence.\n\nThe elements of sequence are compared pairwise, and if any two match, then\nthe one occurring earlier in sequence is discarded, unless from-end is\ntrue, in which case the one later in sequence is discarded.\n\nremove-duplicates and delete-duplicates return a sequence of the same type\nas sequence with enough elements removed so that no two of the remaining\nelements match.  The order of the elements remaining in the result is the\nsame as the order in which they appear in sequence.\n\nremove-duplicates returns a sequence that may share with sequence or may\nbe identical to sequence if no elements need to be removed.\n\ndelete-duplicates, when sequence is a list, is permitted to setf any part,\ncar or cdr, of the top-level list structure in that sequence.  When\nsequence is a vector, delete-duplicates is permitted to change the\ndimensions of the vector and to slide its elements into new positions\nwithout permuting them to produce the resulting vector.\n\nExamples::\n..........\n\n      (remove-duplicates \"aBcDAbCd\" :test #'char-equal :from-end t) =>  \"aBcD\"\n      (remove-duplicates '(a b c b d d e)) =>  (A C B D E)\n      (remove-duplicates '(a b c b d d e) :from-end t) =>  (A B C D E)\n      (remove-duplicates '((foo #\\a) (bar #\\%) (baz #\\A))\n          :test #'char-equal :key #'cadr) =>  ((BAR #\\%) (BAZ #\\A))\n      (remove-duplicates '((foo #\\a) (bar #\\%) (baz #\\A))\n          :test #'char-equal :key #'cadr :from-end t) =>  ((FOO #\\a) (BAR #\\%))\n      (setq tester (list 0 1 2 3 4 5 6))\n      (delete-duplicates tester :key #'oddp :start 1 :end 6) =>  (0 4 5 6)\n\nSide Effects::\n..............\n\ndelete-duplicates might destructively modify sequence.\n\nExceptional Situations::\n........................\n\nShould signal an error of type type-error if sequence is not a proper\nsequence.\n\nSee Also::\n..........\n\n*Note Compiler Terminology::,\n\n*Note Traversal Rules and Side Effects::\n\nNotes::\n.......\n\nThe :test-not argument is deprecated.\n\nThese functions are useful for converting sequence into a canonical form\nsuitable for representing a set.\n\n"
+}
