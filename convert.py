@@ -369,7 +369,7 @@ def to_html(node_dict, node_list):
                         section_html = f"""
                             {section_html}
                             <div class="syntax__def">
-                                <div class="syntax__def-header">{d["name"]}</div>
+                                <code class="syntax__def-header">{d["name"]}</code>
                                 <div class="syntax__def-body">{text}</div>
                             </div>
                         """
