@@ -1,6 +1,5 @@
 import os
 import re
-import hashlib
 import json
 
 nnames = {}
@@ -18,6 +17,7 @@ HTML_TEMPLATE = """
 
   <link rel="stylesheet" href="/styles.css">
   <script defer src="/scripts.js"></script>
+  <link rel="stylesheet" href="/highlight-lisp/themes/github.css">
 </head>
 <body>
     <main>
@@ -34,8 +34,13 @@ HTML_TEMPLATE = """
         {{body}}
     </main>
 </body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
 <script>
     window.nodes = [{{node_list}}];
+    for (let el of document.getElementsByTagName('code')) {
+        el.innerHTML = el.innerHTML.replace(/<br>/g, '\\n');
+        HighlightLisp.highlight_element(el);
+    }
 </script>
 </html>
 """
@@ -328,7 +333,6 @@ def to_html(node_dict, node_list):
                         in_pre = True
                     elif in_pre and indent - pre_sindent < -3:
                         pre_content = "\n".join(lines[pre_six:ix])
-
                         if pre_content.count("(") > 0 and pre_content.count(")") > 0:
                             min_indent = 100
                             for l in lines[pre_six:ix]:
@@ -338,8 +342,8 @@ def to_html(node_dict, node_list):
                             for lix in range(pre_six,ix):
                                 if len(lines[lix]) > 0:
                                     lines[lix] = lines[lix][min_indent:]
-                            lines[pre_six] = "<pre>"+ lines[pre_six]
-                            lines[ix-1] = lines[ix-1] + "</pre>"
+                            lines[pre_six] = "<pre><code>"+ lines[pre_six]
+                            lines[ix-1] = lines[ix-1] + "</code></pre>"
                         in_pre = False
                     last_indent = indent
 
