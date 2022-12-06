@@ -10,10 +10,11 @@ The files are in [.info](https://www.gnu.org/software/texinfo/manual/texinfo/htm
 a HTML file each.
 For the conversion, a python script (`convert.py`) is used to read in the .info files,
 extracting all contained nodes, and  writing each node into an intermediate .json file.
-Since the nodes are referenced by their names throughout the spec, the filenames are the MD5 hashes of the node names, this avoids any problems with non-allowed characters in URLs. 
 The JSON files are read in again and for each file, an HTML file is generated.
 The generated files can be found at `/output`.
 
 It should be emphasized that the conversion script is the product of a few busy mornings and quite messy.
 The aim would be to arrive at a HTML output that correctly formatted most of the specification's content, and the leave the rest for manual correction in the HTML files themselves.
 
+
+A more or less recent live version of the repository can be found at [cl-community-spec.github.io](https://cl-community-spec.github.io)
