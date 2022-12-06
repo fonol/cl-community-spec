@@ -3,7 +3,7 @@ import re
 import hashlib
 import json
 
-hashes = {}
+nnames = {}
 
 HTML_TEMPLATE = """
 <!doctype html>
@@ -16,8 +16,8 @@ HTML_TEMPLATE = """
   <meta property="og:title" content="{{title}}">
   <meta property="og:type" content="website">
 
-  <link rel="stylesheet" href="../styles.css">
-  <script defer src="../scripts.js"></script>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="/scripts.js"></script>
 </head>
 <body>
     <main>
@@ -183,7 +183,7 @@ def to_json(text, all_nodes):
                 for i in items:
                     sec["items"].append({
                         "name": i,
-                        "link": hashlib.md5(bytes(i, 'utf-8')).hexdigest() if i in all_nodes else None
+                        "link": nname(i) if i in all_nodes else None
                     })
             else:
                 sec["text"] += l + "\n"
@@ -237,12 +237,30 @@ def escape_html(text):
     text =  text.replace("<", "&lt;")
     return text
 
-def md5(text):
-    global hashes 
-    if text in hashes:
-        return hashes[text]
-    h = hashlib.md5(bytes(text, 'utf-8')).hexdigest()
-    hashes[text] = h
+def nname(text):
+    global nnames 
+    if text in nnames:
+        return nnames[text]
+    if text == "*":
+        return "asterisk"
+    if text == "+":
+        return "plus"
+    if text == "-":
+        return "minus"
+    if text == "/":
+        return "div"
+    if text == "=":
+        return "eq"
+    if text == "do; do*":
+        return "do"
+    if text == "let; let*":
+        return "let"
+    text    = text.replace("->", "-arr-")
+    text    = text.replace("*", "-ast-")
+    text    = text.replace("\"", "-dquot-")
+    text    = text.replace("\'", "-squot-")
+    h       = "".join([c for c in text if c.isalpha() or c.isdigit() or c==' ' or c=='-']).rstrip()
+    nnames[text] = h
     return h
 
     
@@ -257,9 +275,9 @@ def to_html(node_dict, node_list):
     n_next          = (nd.get("next", "-") or "-").strip()
     n_up            = (nd.get("up", "-") or "-").strip()
 
-    l_prev          = md5(n_prev)
-    l_next          = md5(n_next)
-    l_up            = md5(n_up)
+    l_prev          = nname(n_prev)
+    l_next          = nname(n_next)
+    l_up            = nname(n_up)
 
 
 
@@ -290,12 +308,9 @@ def to_html(node_dict, node_list):
             if stext is not None:
                 # * Menu: -> h3
                 stext = re.sub(r"^\s*\*\s+(.+?[^:\n]):(\r\n|\n|\r|$)", "<h3>\\1</h3>\n", stext, flags=re.MULTILINE)
-                stext = re.sub(r"(?:^|\r\n|\n|\r)\s*\*\s+([^ ].+?)::(\r\n|\n|\r|$)", "<a class=\"link-block\" href=\"\\1\">\\1</a>", stext, flags=re.MULTILINE)
+                stext = re.sub(r"(?:^|\r\n|\n|\r)\s*\*\s+([^ ].*?)::(\r\n|\n|\r|$)", "<a class=\"link-block\" href=\"\\1\">\\1</a>", stext, flags=re.MULTILINE)
                 # inline links 
-                stext = re.sub(r"\*Note (.+?)::", "<a href=\"\\1\">\\1</a>", stext)
-                # definitions
-
-
+                stext = re.sub(r"\*Note[ \n]((?:[^:]|\n){1,100})::", "<a href=\"\\1\">\\1</a>", stext, flags=re.MULTILINE)
 
                 # code
                 lines       = stext.split("\n")
@@ -331,8 +346,14 @@ def to_html(node_dict, node_list):
                 stext = "\n".join(lines)
 
 
+                stext = re.sub("<a href=\"([^\n\"]+)\n([^\n\"]+)\">", "<a href=\"\\1 \\2\">", stext)
                 for n in node_list:
-                    stext = stext.replace(f"href=\"{n}\"", f"href=\"{md5(n)}.html\"")
+                    stext = stext.replace(f"href=\"{n}\"", f"href=\"{nname(n)}.html\"")
+                stext = stext.replace(f"href=\"let; let*\"", "href=\"let.html\"")
+                stext = stext.replace(f"href=\"flet; labels; macrolet\"", "href=\"flet.html\"")
+                stext = stext.replace(f"href=\"do; do*\"", "href=\"let.html\"")
+                stext = stext.replace(f"href=\"documentation; (setf documentation)\"", "href=\"documentation.html\"")
+                stext = re.sub("\n\s+\n", "<br><br>", stext, re.MULTILINE)
                 stext = stext.replace("\n", "<br>")
 
             section_html = ""
@@ -390,12 +411,12 @@ def to_html(node_dict, node_list):
                     </div>
                 """
 
-    node_list =  ",".join(["['{}', '{}']".format(n.replace("'", "\\'").lower(), md5(n)) for n in node_list])
+    node_list =  ",".join(["['{}', '{}']".format(n.replace("'", "\\'").lower(), nname(n)) for n in node_list])
     return (HTML_TEMPLATE
                 .replace("{{body}}", body)
                 .replace("{{title}}", node_dict["name"])
                 .replace("{{node_list}}", node_list)
-                .replace("{{top}}", md5("Top"))
+                .replace("{{top}}", nname("Top"))
                 )
 
 def main():
@@ -434,19 +455,19 @@ def main():
     for s in all_sections:
         match               = re.match(r"^File: .+?\.info,\s+Node:\s+(.+?),\s+(Next|Prev):", s)
         node                = match.group(1).strip().replace("''", "\"").replace("``", "\"")
-        node_md5            = hashlib.md5(bytes(node, 'utf-8')).hexdigest()
+        node_nname            = nname(node)
         node_dict           = to_json(s, all_node_names)
         all_nodes_found[node] = node_dict
 
-        with open(os.path.join(out_folder_path(), f"{node_md5}.json"), "w",  encoding="UTF-8") as out:
+        with open(os.path.join(out_folder_path(), "json/", f"{node_nname}.json"), "w",  encoding="UTF-8") as out:
             pprint = json.dumps(node_dict, indent=4)
             out.write(pprint)
             
     print("Generating HTML...")
     for (node, node_dict) in all_nodes_found.items():
         html                = to_html(node_dict, all_node_names)
-        node_md5            = hashlib.md5(bytes(node, 'utf-8')).hexdigest()
-        with open(os.path.join(out_folder_path(), f"{node_md5}.html"), "w",  encoding="UTF-8") as out:
+        node_nname            = nname(node)
+        with open(os.path.join(out_folder_path(), f"{node_nname}.html"), "w",  encoding="UTF-8") as out:
             out.write(html)
             
     assert("*print-circle*" in all_node_names)
@@ -454,5 +475,6 @@ def main():
     assert("The \"Affected By\" Section of a Dictionary Entry" in all_node_names)
 
     print("Finished conversion.\nResults can be found in /output")
+# print(nname("Top"))
 main()
                 
