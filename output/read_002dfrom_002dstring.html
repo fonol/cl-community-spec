@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>read-from-string (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Reader-Dictionary.html#Reader-Dictionary" rel="up" title="Reader Dictionary">
+<link href="readtable_002dcase.html#readtable_002dcase" rel="next" title="readtable-case">
+<link href="read_002ddelimited_002dlist.html#read_002ddelimited_002dlist" rel="prev" title="read-delimited-list">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="read_002ddelimited_002dlist.html#read_002ddelimited_002dlist" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                read-delimited-list
+                            </a>
+                            <a href="Reader-Dictionary.html#Reader-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Reader Dictionary
+                            </a>
+                            <a href="readtable_002dcase.html#readtable_002dcase.html" class="nav-btn nav__next ">
+                                readtable-case
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="read_002dfrom_002dstring"></a>
+<a name="read_002dfrom_002dstring-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">read-from-string                                                 </h4>
+
+<p><code>read-from-string</code>  <i>string &amp;optional</i> eof-error-p eof-value
+                               &amp;key start end preserve-whitespace<br>
+   &rArr;  <i>object, position</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-475"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>string</i>&mdash;a <i>string</i>.
+</p>
+<p><i>eof-error-p</i>&mdash;a <i>generalized boolean</i>.
+ The default is <i>true</i>.
+</p>
+<p><i>eof-value</i>&mdash;an <i>object</i>.
+</p>
+<p>The default is <b>nil</b>.
+</p>
+<p><i>start</i>, <i>end</i>&mdash;<i>bounding index designators</i> of <i>string</i>.
+ The defaults for <i>start</i> and <i>end</i> are <tt>0</tt> and <b>nil</b>, respectively.
+</p>
+<p><i>preserve-whitespace</i>&mdash;a <i>generalized boolean</i>.
+ The default is <i>false</i>.
+</p>
+<p><i>object</i>&mdash;an <i>object</i> (parsed by the <i>Lisp reader</i>)
+		 or the <i>eof-value</i>.
+</p>
+<p><i>position</i>&mdash;an <i>integer</i> greater than or equal to zero,
+		   and less than or equal to 
+		   one more than the <i>length</i> of the <i>string</i>. 
+</p>
+<a name="Description_003a_003a-625"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Parses the printed representation of an <i>object</i>
+from the subsequence of <i>string</i> <i>bounded</i> by <i>start</i> and <i>end</i>,
+as if <b>read</b> had been called on an <i>input</i> <i>stream</i> 
+containing those same <i>characters</i>.
+</p>
+<p>If <i>preserve-whitespace</i> is <i>true</i>,
+the operation will preserve <i>whitespace</i>_2
+as <b>read-preserving-whitespace</b> would do.
+</p>
+<p>If an <i>object</i> is successfully parsed, the <i>primary value</i>, <i>object</i>,
+is the <i>object</i> that was parsed.
+If <i>eof-error-p</i> is <i>false</i> and if the end of the <i>substring</i> is reached,
+<i>eof-value</i> is returned.
+</p>
+<p>The <i>secondary value</i>, <i>position</i>, is the index of the first <i>character</i>
+in the <i>bounded</i> <i>string</i> that was not read.
+The <i>position</i> may depend upon the value of <i>preserve-whitespace</i>.
+If the entire <i>string</i> was read, 
+the <i>position</i> returned is either the <i>length</i> of the <i>string</i> 
+or one greater than the <i>length</i> of the <i>string</i>.
+</p>
+<a name="Examples_003a_003a-446"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (read-from-string &quot; 1 3 5&quot; t nil :start 2) &rArr;  3, 5
+ (read-from-string &quot;(a b c)&quot;) &rArr;  (A B C), 7
+</code>
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-230"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>If the end of the supplied substring
+occurs before an <i>object</i> can be read, an
+error is signaled if <i>eof-error-p</i> is <i>true</i>.
+An error is signaled if the end of the <i>substring</i> occurs
+in the middle of an incomplete <i>object</i>.
+</p>
+<a name="See-Also_003a_003a-508"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p>&lsquo;read; read-preserving-whitespace&rsquo;
+,
+<b>read-preserving-whitespace</b>
+</p>
+<a name="Notes_003a_003a-314"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The reason that <i>position</i> is allowed to be beyond the
+<i>length</i> of the <i>string</i> is to permit (but not require)
+the <i>implementation</i> to work by simulating the effect of a 
+trailing delimiter at the end of the <i>bounded</i> <i>string</i>.
+When <i>preserve-whitespace</i> is <i>true</i>,
+the <i>position</i> might count the simulated delimiter.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

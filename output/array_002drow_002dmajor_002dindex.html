@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>array-row-major-index (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Arrays-Dictionary.html#Arrays-Dictionary" rel="up" title="Arrays Dictionary">
+<link href="array_002dtotal_002dsize.html#array_002dtotal_002dsize" rel="next" title="array-total-size">
+<link href="array_002drank.html#array_002drank" rel="prev" title="array-rank">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="array_002drank.html#array_002drank" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                array-rank
+                            </a>
+                            <a href="Arrays-Dictionary.html#Arrays-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Arrays Dictionary
+                            </a>
+                            <a href="array_002dtotal_002dsize.html#array_002dtotal_002dsize.html" class="nav-btn nav__next ">
+                                array-total-size
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="array_002drow_002dmajor_002dindex"></a>
+<a name="array_002drow_002dmajor_002dindex-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">array-row-major-index                                            </h4>
+
+<p><code>array-row-major-index</code>  <i>array &amp;rest</i> subscripts &rArr;  <i>index</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-330"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>array</i>&mdash;an <i>array</i>.
+</p>
+<p><i>subscripts</i>&mdash;a <i>list</i> of <i>valid array indices</i> for the <i>array</i>.
+</p>
+<p><i>index</i>&mdash;a <i>valid array row-major index</i> for the <i>array</i>.
+</p>
+<a name="Description_003a_003a-437"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Computes the position according to the row-major ordering of <i>array</i>
+for the element that is specified by <i>subscripts</i>, and returns the
+offset of the element in the computed position from the beginning of <i>array</i>.
+</p>
+<p>For a one-dimensional <i>array</i>, 
+the result of <b>array-row-major-index</b>
+equals <i>subscript</i>.
+</p>
+<p><b>array-row-major-index</b> ignores <i>fill pointers</i>.
+</p>
+<a name="Examples_003a_003a-314"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (setq a (make-array '(4 7) :element-type '(unsigned-byte 8)))
+ (array-row-major-index a 1 2) &rArr;  9
+ (array-row-major-index 
+    (make-array '(2 3 4) 
+                :element-type '(unsigned-byte 8)
+                :displaced-to a
+                :displaced-index-offset 4)
+    0 2 1) &rArr;  9
+</code>
+</pre></div>
+
+<a name="Notes_003a_003a-237"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>A possible definition of <b>array-row-major-index</b>, 
+with no error-checking, is
+</p>
+<div class="example">
+<pre class="example"><code> (defun array-row-major-index (a &amp;rest subscripts)
+   (apply #'+ (maplist #'(lambda (x y)
+                            (* (car x) (apply #'* (cdr y))))
+                       subscripts
+                       (array-dimensions a))))
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

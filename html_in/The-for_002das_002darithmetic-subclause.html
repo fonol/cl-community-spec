@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>The for-as-arithmetic subclause (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="The for-as-arithmetic subclause (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="The for-as-arithmetic subclause (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" rel="up" title="Variable Initialization and Stepping Clauses">
+<link href="Examples-of-for_002das_002darithmetic-subclause.html#Examples-of-for_002das_002darithmetic-subclause" rel="next" title="Examples of for-as-arithmetic subclause">
+<link href="Iteration-Control.html#Iteration-Control" rel="prev" title="Iteration Control">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="The-for_002das_002darithmetic-subclause"></a>
+<div class="header">
+<p>
+Next: <a href="Examples-of-for_002das_002darithmetic-subclause.html#Examples-of-for_002das_002darithmetic-subclause" accesskey="n" rel="next">Examples of for-as-arithmetic subclause</a>, Previous: <a href="Iteration-Control.html#Iteration-Control" accesskey="p" rel="prev">Iteration Control</a>, Up: <a href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" accesskey="u" rel="up">Variable Initialization and Stepping Clauses</a> &nbsp; </p>
+</div>
+<hr>
+<a name="The-for_002das_002darithmetic-subclause-1"></a>
+<h4 class="subsubsection">6.1.2.2 The for-as-arithmetic subclause</h4>
+
+<p>In the <i>for-as-arithmetic</i> subclause, the <tt>for</tt> 
+or <tt>as</tt> construct iterates from the value supplied by
+<i>form1</i> to the value supplied by <i>form2</i> in increments or
+decrements denoted by <i>form3</i>. Each
+expression is evaluated only once and must evaluate to a <i>number</i>.  
+The variable <i>var</i> is bound to the value of 
+<i>form1</i> in the first iteration and is <i>stepped</i>_1
+by the value of <i>form3</i> in each succeeding iteration,
+or by 1 if <i>form3</i> is not provided.  
+The following <i>loop keywords</i> serve as valid prepositions within this 
+syntax.
+At least one of the 
+prepositions must be used; 
+and at most one from each line may be used in a single subclause.
+</p>
+<dl compact="compact">
+<dt>from | downfrom | upfrom</dt>
+<dt>to | downto | upto | below | above</dt>
+<dt>by</dt>
+</dl>
+
+<p>The prepositional phrases in each subclause may appear in any order.
+For example, either &ldquo;<tt>from x by y</tt>&rdquo; or &ldquo;<tt>by y from x</tt>&rdquo; is permitted.
+However, because left-to-right order of evaluation is preserved,
+the effects will be different in the case of side effects.
+</p>
+<a name="index-order-of-evaluation-6"></a>
+
+<a name="index-evaluation-order-6"></a>
+
+<p>Consider:
+</p>
+<div class="example">
+<pre class="example">(let ((x 1)) (loop for i from x by (incf x) to 10 collect i))
+&rArr;  (1 3 5 7 9)
+(let ((x 1)) (loop for i by (incf x) from x to 10 collect i))
+&rArr;  (2 4 6 8 10)
+</pre></div>
+
+<p>The descriptions of the prepositions follow:
+</p>
+<dl compact="compact">
+<dt>from</dt>
+<dd><p>The <i>loop keyword</i> <tt>from</tt> specifies the value from which
+<i>stepping</i>_1 begins, as supplied by <i>form1</i>.  
+<i>Stepping</i>_1 is incremental by default.  If 
+decremental <i>stepping</i>_1 is desired, 
+the preposition <tt>downto</tt> 
+or <tt>above</tt> must be used with <i>form2</i>.  For incremental
+<i>stepping</i>_1, the default <tt>from</tt> value is 0.
+</p>
+</dd>
+<dt>downfrom, upfrom</dt>
+<dd><p>The <i>loop keyword</i> <tt>downfrom</tt> 
+indicates that the variable <i>var</i> is decreased in decrements
+supplied by <i>form3</i>; the <i>loop keyword</i> <tt>upfrom</tt> indicates that 
+<i>var</i> is increased in increments supplied by <i>form3</i>.
+</p>
+</dd>
+<dt>to</dt>
+<dd><p>The <i>loop keyword</i> <tt>to</tt> marks the end value
+for <i>stepping</i>_1 supplied in <i>form2</i>.
+<i>Stepping</i>_1 is incremental by default.
+If decremental <i>stepping</i>_1 is desired, 
+the preposition <tt>downfrom</tt> must be used with <i>form1</i>,
+or else the preposition <tt>downto</tt> or <tt>above</tt> should be used instead
+   of <tt>to</tt> with <i>form2</i>.
+</p>
+</dd>
+<dt>downto, upto</dt>
+<dd><p>The <i>loop keyword</i> <tt>downto</tt> specifies decremental <i>stepping</i>;
+the <i>loop keyword</i> <tt>upto</tt> specifies incremental <i>stepping</i>.
+In both cases, the amount of change on each step is specified by <i>form3</i>,
+and the <b>loop</b> terminates when the variable <i>var</i> passes 
+the value of <i>form2</i>.
+Since there is no default for <i>form1</i> in decremental <i>stepping</i>_1,
+a <i>form1</i> value must be supplied (using <tt>from</tt> or <tt>downfrom</tt>)
+when <tt>downto</tt> is supplied.
+</p>
+</dd>
+<dt>below, above</dt>
+<dd><p>The <i>loop keywords</i> <tt>below</tt> and <tt>above</tt> are analogous to
+<tt>upto</tt> and <tt>downto</tt> respectively.  These keywords stop
+iteration just before the value of the variable <i>var</i> reaches the value 
+supplied by <i>form2</i>; the end value of <i>form2</i> is not included.
+Since there is no default for <i>form1</i> in decremental <i>stepping</i>_1,
+a <i>form1</i> value must be supplied (using <tt>from</tt> or <tt>downfrom</tt>)
+when <tt>above</tt> is supplied.
+</p>
+</dd>
+<dt>by</dt>
+<dd><p>The <i>loop keyword</i> <tt>by</tt> marks the increment or decrement supplied by
+<i>form3</i>.  The value of <i>form3</i> can be any 
+positive 
+<i>number</i>.
+The default value is 1.
+</p>
+</dd>
+</dl>
+
+<p>In an iteration control clause, the <tt>for</tt> or <tt>as</tt> construct
+causes termination when the supplied limit is reached.  That is,
+iteration continues until the value <i>var</i> is stepped to the
+exclusive or inclusive limit supplied by <i>form2</i>.  The range is
+exclusive if <i>form3</i> increases or decreases <i>var</i>
+to the value of <i>form2</i> without reaching that value; the loop
+keywords <tt>below</tt> and <tt>above</tt> provide exclusive limits.  An
+inclusive limit allows <i>var</i> to attain the value of
+<i>form2</i>; <tt>to</tt>, <tt>downto</tt>, and <tt>upto</tt> provide inclusive
+limits.  
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Examples-of-for_002das_002darithmetic-subclause.html#Examples-of-for_002das_002darithmetic-subclause" accesskey="n" rel="next">Examples of for-as-arithmetic subclause</a>, Previous: <a href="Iteration-Control.html#Iteration-Control" accesskey="p" rel="prev">Iteration Control</a>, Up: <a href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" accesskey="u" rel="up">Variable Initialization and Stepping Clauses</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

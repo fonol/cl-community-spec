@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>parse-integer (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Numbers-Dictionary.html#Numbers-Dictionary" rel="up" title="Numbers Dictionary">
+<link href="boole.html#boole" rel="next" title="boole">
+<link href="integerp.html#integerp" rel="prev" title="integerp">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="integerp.html#integerp" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                integerp
+                            </a>
+                            <a href="Numbers-Dictionary.html#Numbers-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Numbers Dictionary
+                            </a>
+                            <a href="boole.html#boole.html" class="nav-btn nav__next ">
+                                boole
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="parse_002dinteger"></a>
+<a name="parse_002dinteger-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">parse-integer                                                    </h4>
+
+<p><code>parse-integer</code>  <i>string &amp;key</i> start end radix junk-allowed &rArr;  <i>integer, pos</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-242"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>string</i>&mdash;a <i>string</i>.
+</p>
+<p><i>start</i>, <i>end</i>&mdash;<i>bounding index designators</i> of <i>string</i>.
+ The defaults for <i>start</i> and <i>end</i> are <tt>0</tt> and <b>nil</b>, respectively.
+</p>
+<p><i>radix</i>&mdash;a <i>radix</i>.
+ The default is <tt>10</tt>.
+</p>
+<p><i>junk-allowed</i>&mdash;a <i>generalized boolean</i>.
+ The default is <i>false</i>.
+</p>
+<p><i>integer</i>&mdash;an <i>integer</i> or <i>false</i>.
+</p>
+<p><i>pos</i>&mdash;a <i>bounding index</i> of <i>string</i>.
+</p>
+<a name="Description_003a_003a-324"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>parse-integer</b> parses an <i>integer</i> in the specified <i>radix</i>
+from the substring of <i>string</i> delimited by <i>start</i> and <i>end</i>.
+</p>
+<p><b>parse-integer</b> expects an optional sign (<tt>+</tt> or <tt>-</tt>) followed by
+a a non-empty sequence of digits to be interpreted in the specified <i>radix</i>.
+Optional leading and trailing <i>whitespace</i>_1 is ignored.
+</p>
+<p><b>parse-integer</b> does not recognize the syntactic radix-specifier
+prefixes <tt>#O</tt>, <tt>#B</tt>, <tt>#X</tt>, and <tt>#<i>n</i>R</tt>, 
+nor does it recognize a trailing decimal point.
+</p>
+<p>If <i>junk-allowed</i> is <i>false</i>, an error of <i>type</i> <b>parse-error</b> is 
+signaled if substring does not consist entirely of the representation of a 
+signed <i>integer</i>, possibly surrounded on either side by <i>whitespace</i>_1 
+<i>characters</i>.
+</p>
+<p>The first <i>value</i> returned is either
+    the <i>integer</i> that was parsed,
+ or else <b>nil</b> if no syntactically correct <i>integer</i> 
+    was seen but <i>junk-allowed</i> was <i>true</i>.
+</p>
+<p>The second <i>value</i> is either 
+    the index into the <i>string</i> of the delimiter that terminated the parse,
+ or the upper <i>bounding index</i> of the substring if the parse terminated at
+    the end of the substring (as is always the case if <i>junk-allowed</i> 
+    is <i>false</i>).
+</p>
+<a name="Examples_003a_003a-226"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+<div class="example">
+<pre class="example"><code> (parse-integer &quot;123&quot;) &rArr;  123, 3
+ (parse-integer &quot;123&quot; :start 1 :radix 5) &rArr;  13, 3
+ (parse-integer &quot;no-integer&quot; :junk-allowed t) &rArr;  NIL, 0
+</code>
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-100"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>If <i>junk-allowed</i> is <i>false</i>, 
+an error is signaled if substring does not consist entirely of
+the representation of an <i>integer</i>, 
+possibly surrounded on either side by
+<i>whitespace</i>_1 characters.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Condition Designators (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Condition Designators (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Condition Designators (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Creating-Conditions.html#Creating-Conditions" rel="up" title="Creating Conditions">
+<link href="Printing-Conditions.html#Printing-Conditions" rel="next" title="Printing Conditions">
+<link href="Creating-Conditions.html#Creating-Conditions" rel="prev" title="Creating Conditions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Condition-Designators"></a>
+<div class="header">
+<p>
+Previous: <a href="Creating-Conditions.html#Creating-Conditions" accesskey="p" rel="prev">Creating Conditions</a>, Up: <a href="Creating-Conditions.html#Creating-Conditions" accesskey="u" rel="up">Creating Conditions</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Condition-Designators-1"></a>
+<h4 class="subsubsection">9.1.2.1 Condition Designators</h4>
+
+<p>A number of the functions in the condition system take arguments which
+are identified as <i>condition designators</i>
+<a name="index-condition-designator"></a>
+.
+By convention, those arguments are notated as
+</p>
+<p><i>datum</i> &amp;rest <i>arguments</i>
+</p>
+<p>Taken together, the <i>datum</i> and the <i>arguments</i> are 
+&ldquo;<i>designators</i> for a <i>condition</i> of default type <i>default-type</i>.&rdquo;
+How the denoted <i>condition</i> is computed depends on the type of the <i>datum</i>:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt> If the <i>datum</i> is a <i>symbol</i></dt>
+<dd><p>naming a <i>condition</i> <i>type</i> ...  
+The denoted <i>condition</i> is the result of
+</p>
+<div class="example">
+<pre class="example"> (apply #'make-condition <i>datum</i> <i>arguments</i>)
+</pre></div>
+
+</dd>
+<dt><tt>*</tt> If the <i>datum</i> is a <i>format control</i> ...</dt>
+<dd>
+<p>The denoted <i>condition</i> is the result of 
+</p>
+<div class="example">
+<pre class="example"> (make-condition <i>defaulted-type</i> 
+                 :format-control <i>datum</i>
+                 :format-arguments <i>arguments</i>)
+</pre></div>
+
+<p>where the <i>defaulted-type</i> is a <i>subtype</i> of <i>default-type</i>.
+</p>
+</dd>
+<dt><tt>*</tt> If the <i>datum</i> is a <i>condition</i> ...</dt>
+<dd><p>The denoted <i>condition</i> is the <i>datum</i> itself.
+In this case, unless otherwise specified by the description of the
+<i>operator</i> in question, the <i>arguments</i> must be <i>null</i>;
+that is, the consequences are undefined if any <i>arguments</i> were supplied. 
+</p>
+</dd>
+</dl>
+
+<p>Note that the <i>default-type</i> gets used only in the case where
+the <i>datum</i> <i>string</i> is supplied.  In the other situations,
+the resulting condition is not necessarily of <i>type</i> <i>default-type</i>.
+</p>
+<p>Here are some illustrations of how different <i>condition designators</i>
+can denote equivalent <i>condition</i> <i>objects</i>:
+</p>
+<div class="example">
+<pre class="example">(let ((c (make-condition 'arithmetic-error :operator '/ :operands '(7 0))))
+  (error c))
+&equiv; (error 'arithmetic-error :operator '/ :operands '(7 0))
+
+(error &quot;Bad luck.&quot;)
+&equiv; (error 'simple-error :format-control &quot;Bad luck.&quot; :format-arguments '())
+</pre></div>
+
+
+
+
+</body>
+</html>

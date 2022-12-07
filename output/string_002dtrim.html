@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>string-trim (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Strings-Dictionary.html#Strings-Dictionary" rel="up" title="Strings Dictionary">
+<link href="string_003d.html#string_003d" rel="next" title="string=">
+<link href="string_002dupcase.html#string_002dupcase" rel="prev" title="string-upcase">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="string_002dupcase.html#string_002dupcase" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                string-upcase
+                            </a>
+                            <a href="Strings-Dictionary.html#Strings-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Strings Dictionary
+                            </a>
+                            <a href="string_003d.html#string_003d.html" class="nav-btn nav__next ">
+                                string=
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="string_002dtrim"></a>
+<a name="string_002dtrim_002c-string_002dleft_002dtrim_002c-string_002dright_002dtrim-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">string-trim, string-left-trim, string-right-trim                 </h4>
+
+<p><code>string-trim</code>  <i>character-bag string</i> &rArr;  <i>trimmed-string</i>
+</p>
+<p><code>string-left-trim</code>  <i>character-bag string</i> &rArr;  <i>trimmed-string</i>
+</p>
+<p><code>string-right-trim</code>  <i>character-bag string</i> &rArr;  <i>trimmed-string</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-350"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>character-bag</i>&mdash;a <i>sequence</i> containing <i>characters</i>.
+</p>
+<p><i>string</i>&mdash;a <i>string designator</i>.
+</p>
+<p><i>trimmed-string</i>&mdash;a <i>string</i>.
+</p>
+<a name="Description_003a_003a-464"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>string-trim</b> returns a substring of <i>string</i>, 
+with all characters in <i>character-bag</i> stripped off the beginning and end.
+<b>string-left-trim</b> is similar but strips characters off only the beginning; 
+<b>string-right-trim</b> strips off only the end.
+</p>
+<p>If no <i>characters</i> need to be trimmed from the <i>string</i>,
+then either <i>string</i> itself or a copy of it may be returned,
+at the discretion of the implementation.
+</p>
+<p>All of these <i>functions</i> observe the <i>fill pointer</i>.
+</p>
+<a name="Examples_003a_003a-332"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+<div class="example">
+<pre class="example"><code> (string-trim &quot;abc&quot; &quot;abcaakaaakabcaaa&quot;) &rArr;  &quot;kaaak&quot;
+ (string-trim '(#\Space #\Tab #\Newline) &quot; garbanzo beans
+        &quot;) &rArr;  &quot;garbanzo beans&quot;
+ (string-trim &quot; (*)&quot; &quot; ( *three (silly) words* ) &quot;)
+&rArr;  &quot;three (silly) words&quot;
+
+ (string-left-trim &quot;abc&quot; &quot;labcabcabc&quot;) &rArr;  &quot;labcabcabc&quot;
+ (string-left-trim &quot; (*)&quot; &quot; ( *three (silly) words* ) &quot;)
+&rArr;  &quot;three (silly) words* ) &quot;
+
+ (string-right-trim &quot; (*)&quot; &quot; ( *three (silly) words* ) &quot;) 
+&rArr;  &quot; ( *three (silly) words&quot;
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-67"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p>The <i>implementation</i>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

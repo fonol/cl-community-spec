@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>defun (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="defun (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="defun (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="fdefinition.html#fdefinition" rel="next" title="fdefinition">
+<link href="apply.html#apply" rel="prev" title="apply">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="defun"></a>
+<div class="header">
+<p>
+Next: <a href="fdefinition.html#fdefinition" accesskey="n" rel="next">fdefinition</a>, Previous: <a href="apply.html#apply" accesskey="p" rel="prev">apply</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="defun-_005bMacro_005d"></a>
+<h4 class="subsection">5.3.2 defun                                                               [Macro]</h4>
+
+<p><code>defun</code>  <i>function-name lambda-list [[{<i>declaration</i>}*</i> | <i>documentation</i>]] {<i>form</i>}*<br>
+   &rArr;  <i>function-name</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-26"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>function-name</i>&mdash;a <i>function name</i>.
+</p>
+<p><i>lambda-list</i>&mdash;an <i>ordinary lambda list</i>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>documentation</i>&mdash;a <i>string</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>block-name</i>&mdash;the <i>function block name</i> of the <i>function-name</i>.
+</p>
+<a name="Description_003a_003a-55"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Defines a new <i>function</i> named <i>function-name</i> in the <i>global environment</i>.
+The body of the <i>function</i> defined by <b>defun</b> consists 
+of <i>forms</i>; they are executed as an <i>implicit progn</i>
+when the <i>function</i> is called. 
+<b>defun</b> can be used
+     to define a new <i>function</i>,
+     to install a corrected version of an incorrect definition,
+     to redefine an already-defined <i>function</i>,
+  or to redefine a <i>macro</i> as a <i>function</i>.
+</p>
+<p><b>defun</b> implicitly puts a <b>block</b> named <i>block-name</i>
+around the body <i>forms</i> 
+</p>
+<p>(but not the <i>forms</i> in the <i>lambda-list</i>)
+</p>
+<p>of the <i>function</i> defined.
+</p>
+<p><i>Documentation</i> is attached as a <i>documentation string</i> 
+    to <i>name</i> (as kind <b>function</b>)
+and to the <i>function</i> <i>object</i>.
+</p>
+<p>Evaluating <b>defun</b> causes <i>function-name</i> to be a global name
+for the <i>function</i> specified by the <i>lambda expression</i>
+</p>
+<div class="example">
+<pre class="example"> (lambda <i>lambda-list</i>
+   [[{<i>declaration</i>}* | <i>documentation</i>]]
+   (block <i>block-name</i> {<i>form</i>}*))
+</pre></div>
+
+<p>processed in the <i>lexical environment</i> in which <b>defun</b> was executed.
+</p>
+<p>(None of the arguments are evaluated at macro expansion time.)
+</p>
+<p><b>defun</b> is not required to perform any compile-time side effects.
+In particular, <b>defun</b> does not make the <i>function</i> definition available
+at compile time.  An <i>implementation</i> may choose to store information
+about the <i>function</i> for the purposes of compile-time error-checking
+(such as checking the number of arguments on calls),
+or to enable the <i>function</i> to be expanded inline.
+</p>
+<a name="Examples_003a_003a-33"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defun recur (x)
+  (when (&gt; x 0)
+    (recur (1- x)))) &rArr;  RECUR 
+ (defun ex (a b &amp;optional c (d 66) &amp;rest keys &amp;key test (start 0))
+    (list a b c d keys test start)) &rArr;  EX 
+ (ex 1 2) &rArr;  (1 2 NIL 66 NIL NIL 0)
+ (ex 1 2 3 4 :test 'equal :start 50) 
+&rArr;  (1 2 3 4 (:TEST EQUAL :START 50) EQUAL 50)
+ (ex :test 1 :start 2) &rArr;  (:TEST 1 :START 2 NIL NIL 0)
+
+ ;; This function assumes its callers have checked the types of the
+ ;; arguments, and authorizes the compiler to build in that assumption.
+ (defun discriminant (a b c)
+   (declare (number a b c))
+   &quot;Compute the discriminant for a quadratic equation.&quot;
+   (- (* b b) (* 4 a c))) &rArr;  DISCRIMINANT
+ (discriminant 1 2/3 -2) &rArr;  76/9
+
+ ;; This function assumes its callers have not checked the types of the
+ ;; arguments, and performs explicit type checks before making any assumptions. 
+ (defun careful-discriminant (a b c)
+   &quot;Compute the discriminant for a quadratic equation.&quot;
+   (check-type a number)
+   (check-type b number)
+   (check-type c number)
+   (locally (declare (number a b c))
+     (- (* b b) (* 4 a c)))) &rArr;  CAREFUL-DISCRIMINANT
+ (careful-discriminant 1 2/3 -2) &rArr;  76/9
+</pre></div>
+
+<a name="See-Also_003a_003a-42"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;flet; labels; macrolet&rsquo;
+,
+<b>labels</b>, 
+<a href="block.html#block">block</a>
+,
+<a href="return_002dfrom.html#return_002dfrom">return-from</a>
+,
+<b>declare</b>, 
+&lsquo;documentation; (setf documentation)&rsquo;
+,
+<a href="Evaluation.html#Evaluation">Evaluation</a>,
+<a href="Ordinary-Lambda-Lists.html#Ordinary-Lambda-Lists">Ordinary Lambda Lists</a>,
+<a href="Syntactic-Interaction-of-Documentation-Strings-and-Declarations.html#Syntactic-Interaction-of-Documentation-Strings-and-Declarations">Syntactic Interaction of Documentation Strings and Declarations</a>
+</p>
+<a name="Notes_003a_003a-24"></a>
+<h4 class="subsubheading">Notes::</h4>
+<p><b>return-from</b> can be used to return
+prematurely from a <i>function</i> defined by <b>defun</b>.
+</p>
+<p>Additional side effects might take place when additional information
+(typically debugging information)
+about the function definition is recorded. 
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="fdefinition.html#fdefinition" accesskey="n" rel="next">fdefinition</a>, Previous: <a href="apply.html#apply" accesskey="p" rel="prev">apply</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

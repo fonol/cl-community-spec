@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>eval-when (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="load_002dtime_002dvalue.html#load_002dtime_002dvalue" rel="next" title="load-time-value">
+<link href="eval.html#eval" rel="prev" title="eval">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="eval.html#eval" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                eval
+                            </a>
+                            <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Evaluation and Compilation Dictionary
+                            </a>
+                            <a href="load_002dtime_002dvalue.html#load_002dtime_002dvalue.html" class="nav-btn nav__next ">
+                                load-time-value
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="eval_002dwhen"></a>
+<a name="eval_002dwhen-_005bSpecial-Operator_005d"></a>
+<div class="section top-most">
+<div class="node-type">Special Operator</div>
+<h4 class="subsection">eval-when                                                </h4>
+
+<p><code>eval-when</code>  <i><span class="roman">(</span>{<i>situation</i>}*</i><span class="roman">)</span> {<i>form</i>}* &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-3"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>situation</i>&mdash;One of the <i>symbols</i> 
+		    <tt>:compile-toplevel</tt>
+<a name="index-compile_002dtoplevel"></a>
+,
+		    <tt>:load-toplevel</tt>
+<a name="index-load_002dtoplevel"></a>
+,
+		    <tt>:execute</tt>
+<a name="index-execute-1"></a>
+,
+		    <b>compile</b>
+<a name="index-compile-2"></a>
+,
+		    <b>load</b>
+<a name="index-load-1"></a>
+, or
+		    <b>eval</b>
+<a name="index-eval"></a>
+.
+</p>
+<p>The use of <b>eval</b>, <b>compile</b>, and <b>load</b> is deprecated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> of the <i>forms</i> if they are executed,
+		  or <b>nil</b> if they are not. 
+</p>
+<a name="Description_003a_003a-4"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The body of an <b>eval-when</b> form is processed as an <i>implicit progn</i>, 
+but only in the <i>situations</i> listed.  
+</p>
+<p>The use of the <i>situations</i> <tt>:compile-toplevel</tt> (or <tt>compile</tt>) and
+<tt>:load-toplevel</tt> (or <tt>load</tt>) controls whether and when <i>evaluation</i>
+occurs when <b>eval-when</b> appears as a <i>top level form</i> in
+code processed by <b>compile-file</b>.  See <a href="File-Compilation.html#File-Compilation">File Compilation</a>.
+</p>
+<p>The use of the <i>situation</i> <tt>:execute</tt> (or <tt>eval</tt>) controls whether
+evaluation occurs for other <b>eval-when</b> <i>forms</i>; that is, 
+those that are not <i>top level forms</i>, or those in code processed by
+<b>eval</b> or <b>compile</b>.  If the <tt>:execute</tt> situation is
+specified in such a <i>form</i>, then the body <i>forms</i> are processed as 
+an <i>implicit progn</i>; otherwise, the <b>eval-when</b> <i>form</i>
+returns <b>nil</b>.
+</p>
+<p><b>eval-when</b> 
+normally appears as a <i>top level form</i>, but it is meaningful
+for it to appear as a <i>non-top-level form</i>.
+However, the compile-time side
+effects described in <a href="Compilation.html#Compilation">Compilation</a>
+only take place when <b>eval-when</b> appears as a  
+<i>top level form</i>.
+</p>
+<a name="Examples_003a_003a-3"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<p>One example of the use of <b>eval-when</b> is that for the 
+compiler to be able to read a file properly when it uses user-defined
+<i>reader macros</i>, it is necessary to write
+</p>
+<div class="example">
+<pre class="example"><code> (eval-when (:compile-toplevel :load-toplevel :execute)
+   (set-macro-character #\$ #'(lambda (stream char)
+                                (declare (ignore char))
+                                (list 'dollar (read stream))))) &rArr;  T
+</code>
+</pre></div>
+
+<p>This causes the call to <b>set-macro-character</b> to be executed
+in the compiler&rsquo;s execution environment, thereby modifying its
+reader syntax table.
+</p>
+<div class="example">
+<pre class="example"><code>;;;     The EVAL-WHEN in this case is not at toplevel, so only the :EXECUTE
+;;;     keyword is considered. At compile time, this has no effect.
+;;;     At load time (if the LET is at toplevel), or at execution time
+;;;     (if the LET is embedded in some other form which does not execute
+;;;     until later) this sets (SYMBOL-FUNCTION 'FOO1) to a function which
+;;;     returns 1.
+ (let ((x 1))
+   (eval-when (:execute :load-toplevel :compile-toplevel)
+     (setf (symbol-function 'foo1) #'(lambda () x))))
+
+;;;     If this expression occurs at the toplevel of a file to be compiled,
+;;;     it has BOTH a compile time AND a load-time effect of setting
+;;;     (SYMBOL-FUNCTION 'FOO2) to a function which returns 2.
+ (eval-when (:execute :load-toplevel :compile-toplevel)
+   (let ((x 2))
+     (eval-when (:execute :load-toplevel :compile-toplevel)
+       (setf (symbol-function 'foo2) #'(lambda () x)))))
+
+;;;     If this expression occurs at the toplevel of a file to be compiled,
+;;;     it has BOTH a compile time AND a load-time effect of setting the
+;;;     function cell of FOO3 to a function which returns 3.
+ (eval-when (:execute :load-toplevel :compile-toplevel)
+   (setf (symbol-function 'foo3) #'(lambda () 3)))
+
+;;; #4: This always does nothing. It simply returns NIL.
+ (eval-when (:compile-toplevel)
+   (eval-when (:compile-toplevel) 
+     (print 'foo4)))
+
+;;;     If this form occurs at toplevel of a file to be compiled, FOO5 is
+;;;     printed at compile time. If this form occurs in a non-top-level
+;;;     position, nothing is printed at compile time. Regardless of context,
+;;;     nothing is ever printed at load time or execution time.
+ (eval-when (:compile-toplevel) 
+   (eval-when (:execute)
+     (print 'foo5)))
+
+;;;     If this form occurs at toplevel of a file to be compiled, FOO6 is
+;;;     printed at compile time.  If this form occurs in a non-top-level
+;;;     position, nothing is printed at compile time. Regardless of context,
+;;;     nothing is ever printed at load time or execution time.
+ (eval-when (:execute :load-toplevel)
+   (eval-when (:compile-toplevel)
+     (print 'foo6)))
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-4"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="compile_002dfile.html#compile_002dfile">compile-file</a>
+, <a href="Compilation.html#Compilation">Compilation</a>
+</p>
+<a name="Notes_003a_003a-3"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The following effects are logical consequences of the definition of 
+<b>eval-when</b>:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>Execution of a single <b>eval-when</b>
+expression executes the body code at most once.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><i>Macros</i> intended for use in <i>top level forms</i> 
+should be written so that side-effects are done by the <i>forms</i>
+in the macro expansion.  The macro-expander itself should not do 
+the side-effects.
+</p>
+<p>For example:
+</p>
+<p>Wrong:  
+</p>
+<div class="example">
+<pre class="example"><code> (defmacro foo ()
+   (really-foo)
+   `(really-foo))
+</code>
+</pre></div>
+
+<p>Right:  
+</p>
+<div class="example">
+<pre class="example"><code> (defmacro foo ()
+   `(eval-when (:compile-toplevel :execute :load-toplevel) (really-foo)))
+</code>
+</pre></div>
+
+<p>Adherence to this convention means that such <i>macros</i> behave
+intuitively when appearing as <i>non-top-level forms</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Placing a variable binding around an <b>eval-when</b> reliably 
+captures the binding because the compile-time-too mode cannot occur 
+ (<i>i.e.</i>, introducing a variable binding means that the <b>eval-when</b>
+      is not a <i>top level form</i>).
+For example,
+</p>
+<div class="example">
+<pre class="example"><code> (let ((x 3))
+   (eval-when (:execute :load-toplevel :compile-toplevel) (print x)))
+</code>
+</pre></div>
+
+<p>prints <tt>3</tt> 
+at execution (<i>i.e.</i>, load) time, and does not print anything at
+compile time.  This is important so that expansions of 
+<b>defun</b> and 
+<b>defmacro</b> 
+can be done in terms of <b>eval-when</b> and can correctly capture
+the <i>lexical environment</i>.
+</p>
+<div class="example">
+<pre class="example"><code> (defun bar (x) (defun foo () (+ x 3)))
+</code>
+</pre></div>
+
+<p>might expand into
+</p>
+<div class="example">
+<pre class="example"><code> (defun bar (x) 
+   (progn (eval-when (:compile-toplevel) 
+            (compiler::notice-function-definition 'foo '(x)))
+          (eval-when (:execute :load-toplevel)
+            (setf (symbol-function 'foo) #'(lambda () (+ x 3))))))
+</code>
+</pre></div>
+
+<p>which would be treated by the above rules the same as
+</p>
+<div class="example">
+<pre class="example"><code> (defun bar (x) 
+   (setf (symbol-function 'foo) #'(lambda () (+ x 3))))
+</code>
+</pre></div>
+
+<p>when the definition of <tt>bar</tt> is not a <i>top level form</i>.
+</p></dd>
+</dl>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,358 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>make-load-form (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="make-load-form (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="make-load-form (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="make_002dload_002dform_002dsaving_002dslots.html#make_002dload_002dform_002dsaving_002dslots" rel="next" title="make-load-form-saving-slots">
+<link href="make_002dinstances_002dobsolete.html#make_002dinstances_002dobsolete" rel="prev" title="make-instances-obsolete">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="make_002dload_002dform"></a>
+<div class="header">
+<p>
+Next: <a href="make_002dload_002dform_002dsaving_002dslots.html#make_002dload_002dform_002dsaving_002dslots" accesskey="n" rel="next">make-load-form-saving-slots</a>, Previous: <a href="make_002dinstances_002dobsolete.html#make_002dinstances_002dobsolete" accesskey="p" rel="prev">make-instances-obsolete</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="make_002dload_002dform-_005bStandard-Generic-Function_005d"></a>
+<h4 class="subsection">7.7.21 make-load-form                                  [Standard Generic Function]</h4>
+
+<a name="Syntax_003a_003a-26"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><code>make-load-form</code>  <i>object &amp;optional</i> environment &rArr;  <i>creation-form<span class="roman">[</span>, initialization-form<span class="roman">]</span></i>
+</p>
+<a name="Method-Signatures_003a_003a-15"></a>
+<h4 class="subsubheading">Method Signatures::</h4>
+
+<p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <b>standard-object</b><span class="roman">)</span>  &amp;optional</i> environment
+</p>
+<p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <b>structure-object</b><span class="roman">)</span> &amp;optional</i> environment
+</p>
+<p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <b>condition</b><span class="roman">)</span>        &amp;optional</i> environment
+</p>
+<p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <b>class</b><span class="roman">)</span>            &amp;optional</i> environment
+</p>
+<a name="Arguments-and-Values_003a_003a-109"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>object</i>&mdash;an <i>object</i>.
+</p>
+<p><i>environment</i>&mdash;an <i>environment object</i>.
+</p>
+<p><i>creation-form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>initialization-form</i>&mdash;a <i>form</i>.
+</p>
+<a name="Description_003a_003a-148"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <i>generic function</i> <b>make-load-form</b> creates and returns 
+one or two <i>forms</i>,
+     a <i>creation-form</i>
+ and an <i>initialization-form</i>,
+that enable <b>load</b> to construct an <i>object</i>
+equivalent to <i>object</i>.
+<i>Environment</i> is an <i>environment object</i> 
+corresponding to the <i>lexical environment</i> 
+in which the <i>forms</i> will be processed.
+</p>
+<p>The <i>file compiler</i> calls <b>make-load-form</b> to process certain
+<i>classes</i> of <i>literal objects</i>; see <a href="Additional-Constraints-on-Externalizable-Objects.html#Additional-Constraints-on-Externalizable-Objects">Additional Constraints on Externalizable Objects</a>.
+</p>
+<p><i>Conforming programs</i> may call <b>make-load-form</b> directly,
+providing <i>object</i> is a <i>generalized instance</i> of
+<b>standard-object</b>, <b>structure-object</b>, 
+or <b>condition</b>.
+</p>
+<p>The creation form is a <i>form</i> that, when evaluated at
+<b>load</b> time, should return an <i>object</i> that 
+is equivalent to <i>object</i>.  The exact meaning of
+equivalent depends on the <i>type</i> of <i>object</i> 
+and is up to the programmer who defines a <i>method</i> for
+<b>make-load-form</b>;
+see <a href="Literal-Objects-in-Compiled-Files.html#Literal-Objects-in-Compiled-Files">Literal Objects in Compiled Files</a>.
+</p>
+<p>The initialization form is a <i>form</i> that, when evaluated at <b>load</b> time, 
+should perform further initialization of the <i>object</i>.  
+The value returned by the initialization form is ignored.
+If <b>make-load-form</b>
+returns only one value, 
+the initialization form is <b>nil</b>, which has no effect.
+If <i>object</i> appears as a constant in the initialization form,
+at <b>load</b> time it will be replaced by the equivalent <i>object</i> 
+constructed by the creation form;
+this is how the further initialization gains access to the <i>object</i>.
+</p>
+<p>Both the <i>creation-form</i> and the <i>initialization-form</i> may contain references
+to any <i>externalizable object</i>.
+However, there must not be any circular dependencies in creation forms.
+An example of a circular dependency is when the creation form for the
+object <tt>X</tt> contains a reference to the object <tt>Y</tt>,
+and the creation form for the object <tt>Y</tt> contains a reference to the object <tt>X</tt>.  
+Initialization forms are not subject to any restriction against circular dependencies, 
+which is the reason that initialization forms exist; 
+see the example of circular data structures below.
+</p>
+<p>The creation form for an <i>object</i> is always <i>evaluated</i> before the
+initialization form for that <i>object</i>.  When either the creation form or
+the initialization form references other <i>objects</i> that have not been
+referenced earlier in the <i>file</i> being <i>compiled</i>, the <i>compiler</i> ensures
+that all of the referenced <i>objects</i> have been created before <i>evaluating</i>
+the referencing <i>form</i>.  When the referenced <i>object</i> is of a <i>type</i> which
+the <i>file compiler</i> processes using <b>make-load-form</b>,
+this involves <i>evaluating</i>
+the creation form returned for it.  (This is the reason for the
+prohibition against circular references among creation forms).
+</p>
+<p>Each initialization form is <i>evaluated</i> as soon as possible after its
+associated creation form, as determined by data flow.  If the
+initialization form for an <i>object</i> does not reference any other <i>objects</i>
+not referenced earlier in the <i>file</i> and processed by 
+the <i>file compiler</i>
+using
+<b>make-load-form</b>, the initialization form is evaluated immediately after
+the creation form.  If a creation or initialization form F does contain
+references to such <i>objects</i>, the creation forms for those other objects
+are evaluated before F, and the initialization forms for those other
+<i>objects</i> are also evaluated before F whenever they do not depend on the
+<i>object</i> created or initialized by F.  Where these rules do not uniquely
+determine an order of <i>evaluation</i> between two creation/initialization
+forms, the order of <i>evaluation</i> is unspecified.
+</p>
+<p>While these creation and initialization forms are being evaluated, the
+  <i>objects</i> are possibly in an uninitialized state, 
+analogous to the state
+  of an <i>object</i> 
+between the time it has been created by <b>allocate-instance</b>
+  and it has been processed fully by 
+<b>initialize-instance</b>.  Programmers
+  writing <i>methods</i> for 
+<b>make-load-form</b> must take care in manipulating
+  <i>objects</i> not to depend on 
+<i>slots</i> that have not yet been initialized.
+</p>
+<p>It is <i>implementation-dependent</i>
+whether <b>load</b> calls <b>eval</b> on the 
+<i>forms</i> or does some
+  other operation that has an equivalent effect.  For example, the
+  <i>forms</i> might be translated into different but equivalent 
+<i>forms</i> and
+  then evaluated, they might be compiled and the resulting functions
+  called by <b>load</b>, 
+or they might be interpreted by a special-purpose
+function different from <b>eval</b>.  
+All that is required is that the
+  effect be equivalent to evaluating the <i>forms</i>.
+</p>
+<p>The <i>method</i> <i>specialized</i> on <b>class</b> returns a creation
+<i>form</i> using the <i>name</i> of the <i>class</i> if the <i>class</i> has
+a <i>proper name</i> in <i>environment</i>, signaling an error of <i>type</i> <b>error</b>
+if it does not have a <i>proper name</i>.  <i>Evaluation</i> of the creation
+<i>form</i> uses the <i>name</i> to find the <i>class</i> with that
+<i>name</i>, as if by <i>calling</i> <b>find-class</b>.  If a <i>class</i>
+with that <i>name</i> has not been defined, then a <i>class</i> may be
+computed in an <i>implementation-defined</i> manner.  If a <i>class</i>
+cannot be returned as the result of <i>evaluating</i> the creation
+<i>form</i>, then an error of <i>type</i> <b>error</b> is signaled.
+</p>
+<p>Both <i>conforming implementations</i> and <i>conforming programs</i> may
+further <i>specialize</i> <b>make-load-form</b>.
+</p>
+<a name="Examples_003a_003a-105"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defclass obj ()
+    ((x :initarg :x :reader obj-x)
+     (y :initarg :y :reader obj-y)
+     (dist :accessor obj-dist)))
+&rArr;  #&lt;STANDARD-CLASS OBJ 250020030&gt;
+ (defmethod shared-initialize :after ((self obj) slot-names &amp;rest keys)
+   (declare (ignore slot-names keys))
+   (unless (slot-boundp self 'dist)
+     (setf (obj-dist self)
+           (sqrt (+ (expt (obj-x self) 2) (expt (obj-y self) 2))))))
+&rArr;  #&lt;STANDARD-METHOD SHARED-INITIALIZE (:AFTER) (OBJ T) 26266714&gt;
+ (defmethod make-load-form ((self obj) &amp;optional environment)
+   (declare (ignore environment))
+   ;; Note that this definition only works because X and Y do not
+   ;; contain information which refers back to the object itself.
+   ;; For a more general solution to this problem, see revised example below.
+   `(make-instance ',(class-of self)
+                   :x ',(obj-x self) :y ',(obj-y self)))
+&rArr;  #&lt;STANDARD-METHOD MAKE-LOAD-FORM (OBJ) 26267532&gt;
+ (setq obj1 (make-instance 'obj :x 3.0 :y 4.0)) &rArr;  #&lt;OBJ 26274136&gt;
+ (obj-dist obj1) &rArr;  5.0
+ (make-load-form obj1) &rArr;  (MAKE-INSTANCE 'OBJ :X '3.0 :Y '4.0)
+</pre></div>
+
+<p>In the above example, an equivalent <i>instance</i> of <tt>obj</tt> is
+reconstructed by using the values of two of its <i>slots</i>.  
+The value of the third <i>slot</i> is derived from those two values.
+</p>
+<p>Another way to write the <b>make-load-form</b> <i>method</i>
+in that example is to use <b>make-load-form-saving-slots</b>.
+The code it generates might yield a slightly different result 
+from the <b>make-load-form</b> <i>method</i> shown above,
+but the operational effect will be the same.  For example:
+</p>
+<div class="example">
+<pre class="example"> ;; Redefine method defined above.
+ (defmethod make-load-form ((self obj) &amp;optional environment)
+    (make-load-form-saving-slots self
+                                 :slot-names '(x y)
+                                 :environment environment))
+&rArr;  #&lt;STANDARD-METHOD MAKE-LOAD-FORM (OBJ) 42755655&gt;
+ ;; Try MAKE-LOAD-FORM on object created above.
+ (make-load-form obj1)
+&rArr;  (ALLOCATE-INSTANCE '#&lt;STANDARD-CLASS OBJ 250020030&gt;),
+    (PROGN
+      (SETF (SLOT-VALUE '#&lt;OBJ 26274136&gt; 'X) '3.0)
+      (SETF (SLOT-VALUE '#&lt;OBJ 26274136&gt; 'Y) '4.0)
+      (INITIALIZE-INSTANCE '#&lt;OBJ 26274136&gt;))
+</pre></div>
+
+<p>In the following example, <i>instances</i> of <tt>my-frob</tt> are &ldquo;interned&rdquo; 
+in some way.  An equivalent <i>instance</i> is reconstructed by using the 
+value of the name slot as a key for searching existing <i>objects</i>.
+In this case the programmer has chosen to create a new <i>object</i> 
+if no existing <i>object</i> is found; alternatively an error could 
+have been signaled in that case.
+</p>
+<div class="example">
+<pre class="example"> (defclass my-frob ()
+    ((name :initarg :name :reader my-name)))
+ (defmethod make-load-form ((self my-frob) &amp;optional environment)
+   (declare (ignore environment))
+   `(find-my-frob ',(my-name self) :if-does-not-exist :create))
+</pre></div>
+
+<p>In the following example, the data structure to be dumped is circular, 
+because each parent has a list of its children and each child has a reference
+back to its parent.  If <b>make-load-form</b> is called on one   
+<i>object</i> in such a structure,  the creation form creates an equivalent 
+<i>object</i> and fills in the children slot, which forces creation of equivalent
+<i>objects</i> for all of its children, grandchildren, etc.  At this point
+none of the parent <i>slots</i> have been filled in.  
+The initialization form fills in the parent <i>slot</i>, which forces creation 
+of an equivalent <i>object</i> for the parent if it was not already created.
+Thus the entire tree is recreated at <b>load</b> time.  
+At compile time, <b>make-load-form</b> is called once for each <i>object</i> 
+in the tree.  
+All of the creation forms are evaluated,
+in <i>implementation-dependent</i> order,
+and then all of the initialization forms are evaluated, 
+also in <i>implementation-dependent</i> order.
+</p>
+<div class="example">
+<pre class="example"> (defclass tree-with-parent () ((parent :accessor tree-parent)
+                                (children :initarg :children)))
+ (defmethod make-load-form ((x tree-with-parent) &amp;optional environment)
+   (declare (ignore environment))
+   (values
+     ;; creation form
+     `(make-instance ',(class-of x) :children ',(slot-value x 'children))
+     ;; initialization form
+     `(setf (tree-parent ',x) ',(slot-value x 'parent))))
+</pre></div>
+
+<p>In the following example, the data structure to be dumped has no special
+properties and an equivalent structure can be reconstructed
+simply by reconstructing the <i>slots</i>&rsquo; contents.
+</p>
+<div class="example">
+<pre class="example"> (defstruct my-struct a b c)
+ (defmethod make-load-form ((s my-struct) &amp;optional environment)
+    (make-load-form-saving-slots s :environment environment))
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-34"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>The <i>methods</i> <i>specialized</i> on 
+     <b>standard-object</b>,
+     <b>structure-object</b>,
+ and <b>condition</b>
+all signal an error of <i>type</i> <b>error</b>.
+</p>
+<p>It is <i>implementation-dependent</i> whether <i>calling</i>
+<b>make-load-form</b> on a <i>generalized instance</i> of a
+<i>system class</i> signals an error or returns creation and
+initialization <i>forms</i>.
+</p>
+<a name="See-Also_003a_003a-130"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="compile_002dfile.html#compile_002dfile">compile-file</a>
+, 
+<a href="make_002dload_002dform_002dsaving_002dslots.html#make_002dload_002dform_002dsaving_002dslots">make-load-form-saving-slots</a>
+,
+<a href="Additional-Constraints-on-Externalizable-Objects.html#Additional-Constraints-on-Externalizable-Objects">Additional Constraints on Externalizable Objects</a>
+<a href="Evaluation.html#Evaluation">Evaluation</a>,
+<a href="Compilation.html#Compilation">Compilation</a>
+</p>
+<a name="Notes_003a_003a-86"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <i>file compiler</i>
+calls <b>make-load-form</b> in specific circumstances
+detailed in <a href="Additional-Constraints-on-Externalizable-Objects.html#Additional-Constraints-on-Externalizable-Objects">Additional Constraints on Externalizable Objects</a>.
+</p>
+<p>Some <i>implementations</i> may provide facilities for defining new
+<i>subclasses</i> of <i>classes</i> which are specified as
+<i>system classes</i>.  (Some likely candidates include
+<b>generic-function</b>, <b>method</b>, and <b>stream</b>).  Such
+<i>implementations</i> should document how the <i>file compiler</i> processes
+<i>instances</i> of such <i>classes</i> when encountered as
+<i>literal objects</i>, and should document any relevant <i>methods</i>
+for <b>make-load-form</b>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="make_002dload_002dform_002dsaving_002dslots.html#make_002dload_002dform_002dsaving_002dslots" accesskey="n" rel="next">make-load-form-saving-slots</a>, Previous: <a href="make_002dinstances_002dobsolete.html#make_002dinstances_002dobsolete" accesskey="p" rel="prev">make-instances-obsolete</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

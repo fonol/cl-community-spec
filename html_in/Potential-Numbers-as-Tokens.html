@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Potential Numbers as Tokens (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Potential Numbers as Tokens (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Potential Numbers as Tokens (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Numbers-as-Tokens.html#Numbers-as-Tokens" rel="up" title="Numbers as Tokens">
+<link href="Escape-Characters-and-Potential-Numbers.html#Escape-Characters-and-Potential-Numbers" rel="next" title="Escape Characters and Potential Numbers">
+<link href="Numbers-as-Tokens.html#Numbers-as-Tokens" rel="prev" title="Numbers as Tokens">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Potential-Numbers-as-Tokens"></a>
+<div class="header">
+<p>
+Next: <a href="Escape-Characters-and-Potential-Numbers.html#Escape-Characters-and-Potential-Numbers" accesskey="n" rel="next">Escape Characters and Potential Numbers</a>, Previous: <a href="Numbers-as-Tokens.html#Numbers-as-Tokens" accesskey="p" rel="prev">Numbers as Tokens</a>, Up: <a href="Numbers-as-Tokens.html#Numbers-as-Tokens" accesskey="u" rel="up">Numbers as Tokens</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Potential-Numbers-as-Tokens-1"></a>
+<h4 class="subsubsection">2.3.1.1 Potential Numbers as Tokens</h4>
+
+<p>To allow implementors and future <span class="roman">Common Lisp</span> standards
+to extend the syntax of numbers, a
+syntax for <i>potential numbers</i> is defined that is
+more general than the syntax for numbers.
+A <i>token</i> is a <i>potential number</i> if it satisfies all of the following
+requirements:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>The <i>token</i> consists entirely of 
+  <i>digits</i>,
+  <i>signs</i>,
+  <i>ratio markers</i>,
+  decimal points (<tt>.</tt>),
+  extension characters (<tt>^</tt> or <tt>_</tt>),
+  and number markers.
+A number marker is a letter. 
+Whether a letter may be treated as a number marker depends on context,
+but no letter that is adjacent to another letter may ever be treated as a number marker.
+<i>Exponent markers</i> are number markers.
+</p>
+</dd>
+<dt>2.</dt>
+<dd><p>The <i>token</i> contains at least one digit.  Letters may be considered to be
+digits, depending on the <i>current input base</i>, but only
+in <i>tokens</i> containing no decimal points.
+</p>
+</dd>
+<dt>3.</dt>
+<dd><p>The <i>token</i> begins with a <i>digit</i>, <i>sign</i>, decimal point, or extension character,
+</p>
+<p>[Reviewer Note by Barmar: This section is unnecessary because the first bullet already 
+		  omits discussion of a colon (<i>package marker</i>).]
+but not a 
+<i>package marker</i>.
+The syntax involving a leading 
+<i>package marker</i> followed by a <i>potential number</i> is
+not well-defined. The consequences of the use 
+of notation such as <tt>:1</tt>, <tt>:1/2</tt>, and <tt>:2<tt>^</tt></tt>3 in a
+position where an expression appropriate for <b>read</b> 
+is expected are unspecified.
+</p>
+</dd>
+<dt>4.</dt>
+<dd><p>The <i>token</i> does not end with a sign.
+</p></dd>
+</dl>
+
+<p>If a <i>potential number</i> has number syntax, 
+a <i>number</i> of the appropriate type is constructed and returned, 
+if the <i>number</i> is representable in an implementation.
+A <i>number</i> will not be representable in an implementation 
+if it is outside the boundaries set by the <i>implementation-dependent</i> 
+constants for <i>numbers</i>.
+For example, specifying too large or too small an exponent for a <i>float</i>
+may make the <i>number</i> impossible to represent in the implementation.
+A <i>ratio</i> with denominator zero (such as <tt>-35/000</tt>)
+is not represented in any implementation.
+When a <i>token</i> with the syntax of a number cannot be converted to an internal
+<i>number</i>, an error of <i>type</i> <b>reader-error</b> is signaled.  An error
+must not be signaled for specifying too many significant digits
+for a <i>float</i>; a truncated or rounded value should be produced.
+</p>
+<p>If there is an ambiguity as to whether
+a letter should be treated as a digit or as a number marker,
+the letter is treated as a digit.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Escape-Characters-and-Potential-Numbers.html#Escape-Characters-and-Potential-Numbers" accesskey="n" rel="next">Escape Characters and Potential Numbers</a>, Previous: <a href="Numbers-as-Tokens.html#Numbers-as-Tokens" accesskey="p" rel="prev">Numbers as Tokens</a>, Up: <a href="Numbers-as-Tokens.html#Numbers-as-Tokens" accesskey="u" rel="up">Numbers as Tokens</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

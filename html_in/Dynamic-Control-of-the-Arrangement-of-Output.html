@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Dynamic Control of the Arrangement of Output (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Dynamic Control of the Arrangement of Output (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Dynamic Control of the Arrangement of Output (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Pretty-Printer-Concepts.html#Pretty-Printer-Concepts" rel="up" title="Pretty Printer Concepts">
+<link href="Format-Directive-Interface.html#Format-Directive-Interface" rel="next" title="Format Directive Interface">
+<link href="Pretty-Printer-Concepts.html#Pretty-Printer-Concepts" rel="prev" title="Pretty Printer Concepts">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Dynamic-Control-of-the-Arrangement-of-Output"></a>
+<div class="header">
+<p>
+Next: <a href="Format-Directive-Interface.html#Format-Directive-Interface" accesskey="n" rel="next">Format Directive Interface</a>, Previous: <a href="Pretty-Printer-Concepts.html#Pretty-Printer-Concepts" accesskey="p" rel="prev">Pretty Printer Concepts</a>, Up: <a href="Pretty-Printer-Concepts.html#Pretty-Printer-Concepts" accesskey="u" rel="up">Pretty Printer Concepts</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Dynamic-Control-of-the-Arrangement-of-Output-1"></a>
+<h4 class="subsubsection">22.2.1.1 Dynamic Control of the Arrangement of Output</h4>
+
+<p>The actions of the <i>pretty printer</i> when a piece of output is too
+large to fit in the space available can be precisely controlled.
+Three concepts underlie 
+the way these operations work&mdash;<i>logical blocks</i>
+<a name="index-logical-blocks"></a>
+,
+			        <i>conditional newlines</i>
+<a name="index-conditional-newlines"></a>
+,
+			    and <i>sections</i>
+<a name="index-sections"></a>
+.
+Before proceeding further, it is important to define these terms.
+</p>
+<p>The first line of Figure 22&ndash;3 shows a schematic piece of output.  Each of
+the characters in the output is represented by &ldquo;<tt>-</tt>&rdquo;.  The positions of
+conditional newlines are indicated by digits.  The beginnings and ends of
+logical blocks are indicated by &ldquo;<tt>&lt;</tt>&rdquo; and &ldquo;<tt>&gt;</tt>&rdquo; respectively.
+</p>
+<p>The output as a whole is a logical block and the outermost section.  This
+section is indicated by the <tt>0</tt>&rsquo;s on the second line of Figure 1.  Logical
+blocks nested within the output are specified by the macro
+<b>pprint-logical-block</b>.  Conditional newline positions are specified 
+by calls to <b>pprint-newline</b>.  Each conditional newline defines 
+two sections (one before it and one after it) and is associated with a 
+third (the section immediately containing it).
+</p>
+<p>The section after a conditional newline consists of: all the output up to,
+but not including, (a) the next conditional newline immediately contained
+in the same logical block; or if (a) is not applicable, (b) the next
+newline that is at a lesser level of nesting in logical blocks; or if (b)
+is not applicable, (c) the end of the output.
+</p>
+<p>The section before a conditional newline consists of: all the output back
+to, but not including, (a) the previous conditional newline that is
+immediately contained in the same logical block; or if (a) is not
+applicable, (b) the beginning of the immediately containing logical block.
+The last four lines in Figure 1 indicate the sections before and after the
+four conditional newlines.
+</p>
+<p>The section immediately containing a conditional newline is the shortest
+section that contains the conditional newline in question.  In Figure 22&ndash;3,
+the first conditional newline is immediately contained in the section
+marked with <tt>0</tt>&rsquo;s, the second and third conditional newlines are immediately
+contained in the section before the fourth conditional newline, and the
+fourth conditional newline is immediately contained in the section after
+the first conditional newline.
+</p>
+<div class="example">
+<pre class="example"> &lt;-1---&lt;--&lt;--2---3-&gt;--4--&gt;-&gt;
+ 000000000000000000000000000
+ 11 111111111111111111111111
+           22 222
+              333 3333
+        44444444444444 44444
+</pre></div>
+
+<p>&nbsp;&nbsp;Figure&nbsp;22&ndash;2:&nbsp;Example&nbsp;of&nbsp;Logical&nbsp;Blocks,&nbsp;Conditional&nbsp;Newlines,&nbsp;and&nbsp;Sections<!-- /@w -->
+</p>
+<p>Whenever possible, the pretty printer displays the entire contents of a
+section on a single line.  However, if the section is too long to fit in
+the space available, line breaks are inserted at conditional newline
+positions within the section.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Format-Directive-Interface.html#Format-Directive-Interface" accesskey="n" rel="next">Format Directive Interface</a>, Previous: <a href="Pretty-Printer-Concepts.html#Pretty-Printer-Concepts" accesskey="p" rel="prev">Pretty Printer Concepts</a>, Up: <a href="Pretty-Printer-Concepts.html#Pretty-Printer-Concepts" accesskey="u" rel="up">Pretty Printer Concepts</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

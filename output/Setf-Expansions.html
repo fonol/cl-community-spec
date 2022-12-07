@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Setf Expansions (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Overview-of-Places-and-Generalized-Reference.html#Overview-of-Places-and-Generalized-Reference" rel="up" title="Overview of Places and Generalized Reference">
+<link href="Examples-of-Setf-Expansions.html#Examples-of-Setf-Expansions" rel="next" title="Examples of Setf Expansions">
+<link href="Examples-of-Evaluation-of-Subforms-to-Places.html#Examples-of-Evaluation-of-Subforms-to-Places" rel="prev" title="Examples of Evaluation of Subforms to Places">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Examples-of-Evaluation-of-Subforms-to-Places.html#Examples-of-Evaluation-of-Subforms-to-Places" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Examples of Evaluation of Subforms to Places
+                            </a>
+                            <a href="Overview-of-Places-and-Generalized-Reference.html#Overview-of-Places-and-Generalized-Reference.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Overview of Places and Generalized Reference
+                            </a>
+                            <a href="Examples-of-Setf-Expansions.html#Examples-of-Setf-Expansions.html" class="nav-btn nav__next ">
+                                Examples of Setf Expansions
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Setf-Expansions"></a>
+<a name="Setf-Expansions-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Setf Expansions</h4>
+
+<p>Sometimes it is possible to avoid evaluating <i>subforms</i> of a 
+<i>place</i> multiple times or in the wrong order.  A
+</p>
+<p><i>setf expansion</i>
+</p>
+<p>for a given access form can be expressed as an ordered collection of five <i>objects</i>:
+</p>
+<dl compact="compact">
+<dt><b>List of temporary variables</b></dt>
+<dd><p>a list of symbols naming temporary variables to be bound
+sequentially, as if by <b>let*</b>, to <i>values</i> 
+resulting from value forms.
+</p>
+</dd>
+<dt><b>List of value forms</b></dt>
+<dd><p>a list of forms (typically, <i>subforms</i> of the
+<i>place</i>) which when evaluated 
+yield the values to which the corresponding temporary 
+variables should be bound.
+</p>
+</dd>
+<dt><b>List of store variables</b></dt>
+<dd><p>a list of symbols naming temporary store variables which are
+to hold the new values that will be assigned to the
+<i>place</i>.
+</p>
+</dd>
+<dt><b>Storing form</b></dt>
+<dd><p>a form which can reference both the temporary and the store variables,
+and which changes the <i>value</i> of the <i>place</i>
+and guarantees to return as its values the values of the store variables,
+which are the correct values for <b>setf</b> to return.
+</p>
+</dd>
+<dt><b>Accessing form</b></dt>
+<dd><p>a <i>form</i> which can reference the temporary variables,
+and which returns the <i>value</i> of the <i>place</i>.
+</p></dd>
+</dl>
+
+<p>The value returned by the accessing form is
+affected by execution of the storing form, but either of these
+forms might be evaluated any number of times.
+</p>
+<p>It is possible
+to do more than one <b>setf</b> in parallel via
+<b>psetf</b>, <b>shiftf</b>, and <b>rotatef</b>.  
+Because of this, the 
+</p>
+<p><i>setf expander</i>
+</p>
+<p>must produce new temporary 
+and store variable names every time.  For examples of how to do this,
+see <b>gensym</b>.
+</p>
+<p>For each <i>standardized</i> accessor function <i>F</i>,
+unless it is explicitly documented otherwise,
+it is <i>implementation-dependent</i> whether the ability to 
+use an <i>F</i> <i>form</i> as a <b>setf</b> <i>place</i>
+is implemented by a <i>setf expander</i> or a <i>setf function</i>.
+Also, it follows from this that it is <i>implementation-dependent</i> 
+whether the name <tt>(setf <i>F</i>)</tt> is <i>fbound</i>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

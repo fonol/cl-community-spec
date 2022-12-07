@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Printing Other Arrays (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Default-Print_002dObject-Methods.html#Default-Print_002dObject-Methods" rel="up" title="Default Print-Object Methods">
+<link href="Examples-of-Printing-Arrays.html#Examples-of-Printing-Arrays" rel="next" title="Examples of Printing Arrays">
+<link href="Printing-Other-Vectors.html#Printing-Other-Vectors" rel="prev" title="Printing Other Vectors">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Printing-Other-Vectors.html#Printing-Other-Vectors" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Printing Other Vectors
+                            </a>
+                            <a href="Default-Print_002dObject-Methods.html#Default-Print_002dObject-Methods.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Default Print-Object Methods
+                            </a>
+                            <a href="Examples-of-Printing-Arrays.html#Examples-of-Printing-Arrays.html" class="nav-btn nav__next ">
+                                Examples of Printing Arrays
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Printing-Other-Arrays"></a>
+<a name="Printing-Other-Arrays-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Printing Other Arrays</h4>
+
+<p>If  <b>*print-array*</b> is <i>true</i> 
+and <b>*print-readably*</b> is <i>false</i>,
+any
+</p>
+<p><i>array</i> other than a <i>vector</i> is printed
+using <tt>#</tt><tt>n</tt><tt>A</tt> format.
+Let <tt>n</tt> be the <i>rank</i> of the <i>array</i>.
+Then <tt>#</tt> is printed, then <tt>n</tt> as a decimal integer,
+then <tt>A</tt>, then <tt>n</tt> open parentheses.  
+Next the <i>elements</i> are scanned in row-major order,
+using <b>write</b> on each <i>element</i>, 
+and separating <i>elements</i> from each other with <i>whitespace</i>_1.
+The array&rsquo;s dimensions are numbered 0 to <tt>n</tt>-1 from left to right,
+and are enumerated with the rightmost index changing fastest.
+Every time the index for dimension <tt>j</tt> is incremented,
+the following actions are taken:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>If <tt>j</tt> &lt; <tt>n</tt>-1, then a close parenthesis is printed.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>If incrementing the index for dimension <tt>j</tt> caused it to equal
+dimension <tt>j</tt>, that index is reset to zero and the
+index for dimension <tt>j</tt>-1 is incremented (thereby performing these three steps recursively),
+unless <tt>j</tt>=0, in which case the entire algorithm is terminated.
+If incrementing the index for dimension <tt>j</tt> did not cause it to
+equal dimension <tt>j</tt>, then a space is printed.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>If <tt>j</tt> &lt; <tt>n</tt>-1, then an open parenthesis is printed.
+</p></dd>
+</dl>
+
+<p>This causes the contents to be printed in a format suitable for
+<tt>:initial-contents</tt> to <b>make-array</b>.
+The lists effectively printed by this procedure are subject to
+truncation by <b>*print-level*</b> and <b>*print-length*</b>.
+</p>
+<p>If the <i>array</i> 
+is of a specialized <i>type</i>, containing bits or characters,
+then the innermost lists generated by the algorithm given above can instead
+be printed using bit-vector or string syntax, provided that these innermost
+lists would not be subject to truncation by <b>*print-length*</b>.  
+</p>
+<p>If both <b>*print-array*</b> and <b>*print-readably*</b> are <i>false</i>,
+</p>
+<p>then the <i>array</i> is printed
+in a format (using <tt>#&lt;</tt>) that is concise but not readable.
+</p>
+<p>If <b>*print-readably*</b> is <i>true</i>,
+the <i>array</i> prints in an <i>implementation-defined</i> manner; 
+see the <i>variable</i> <b>*print-readably*</b>.
+</p>
+<p>In particular,
+this may be important for arrays having some dimension <tt>0</tt>.
+</p>
+<p>For information on how the <i>Lisp reader</i> parses these &ldquo;other <i>arrays</i>,&rdquo;
+see <a href="Sharpsign-A.html#Sharpsign-A">Sharpsign A</a>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

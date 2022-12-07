@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>type-of (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Types-and-Classes-Dictionary.html#Types-and-Classes-Dictionary" rel="up" title="Types and Classes Dictionary">
+<link href="typep.html#typep" rel="next" title="typep">
+<link href="subtypep.html#subtypep" rel="prev" title="subtypep">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="subtypep.html#subtypep" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                subtypep
+                            </a>
+                            <a href="Types-and-Classes-Dictionary.html#Types-and-Classes-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Types and Classes Dictionary
+                            </a>
+                            <a href="typep.html#typep.html" class="nav-btn nav__next ">
+                                typep
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="type_002dof"></a>
+<a name="type_002dof-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">type-of                                                          </h4>
+
+<p><code>type-of</code>  <i>object</i> &rArr;  <i>typespec</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-22"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>object</i>&mdash;an <i>object</i>.
+</p>
+<p><i>typespec</i>&mdash;a <i>type specifier</i>.
+</p>
+<a name="Description_003a_003a-49"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Returns a <i>type specifier</i>, <i>typespec</i>, for a <i>type</i> 
+that has the <i>object</i> as an <i>element</i>.
+The <i>typespec</i> satisfies the following:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>For any <i>object</i> that is an <i>element</i> of some <i>built-in type</i>:
+</p>
+<dl compact="compact">
+<dt>a.</dt>
+<dd><p>the <i>type</i> returned is a <i>recognizable subtype</i> of that <i>built-in type</i>.
+</p>
+</dd>
+<dt>b.</dt>
+<dd><p>the <i>type</i> returned does not involve 
+     <tt>and</tt>,
+     <tt>eql</tt>,
+     <tt>member</tt>,
+     <tt>not</tt>,
+     <tt>or</tt>, 
+     <tt>satisfies</tt>,
+  or <tt>values</tt>.
+</p></dd>
+</dl>
+
+</dd>
+<dt>2.</dt>
+<dd><p>For all <i>objects</i>, <tt>(typep <i>object</i> (type-of <i>object</i>))</tt> 
+returns <i>true</i>.
+Implicit in this is that <i>type specifiers</i> which are
+not valid for use with <b>typep</b>, such as the <i>list</i> form of the
+<b>function</b> <i>type specifier</i>, are never returned by <b>type-of</b>.
+</p>
+</dd>
+<dt>3.</dt>
+<dd><p>The <i>type</i> returned by <b>type-of</b> is always a <i>recognizable subtype</i>
+of the <i>class</i> returned by <b>class-of</b>.  That is,
+</p>
+<div class="example">
+<pre class="example"><code> (subtypep (type-of <i>object</i>) (class-of <i>object</i>)) &rArr;  <i>true</i>, <i>true</i>
+</code>
+</pre></div>
+
+</dd>
+<dt>4.</dt>
+<dd><p>For <i>objects</i> of metaclass <b>structure-class</b> or <b>standard-class</b>,
+</p>
+<p>and for <i>conditions</i>,
+</p>
+<p><b>type-of</b> returns the <i>proper name</i> of the <i>class</i> returned 
+by <b>class-of</b> if it has a <i>proper name</i>,
+and otherwise returns the <i>class</i> itself.
+In particular, for <i>objects</i> created by the constructor function
+of a structure defined with <b>defstruct</b> without a <tt>:type</tt> option,
+<b>type-of</b> returns the structure name; and for <i>objects</i> created 
+by <b>make-condition</b>, the <i>typespec</i> is the <i>name</i> of the
+<i>condition</i> <i>type</i>.
+</p>
+</dd>
+<dt>5.</dt>
+<dd><p>For each of the <i>types</i>
+     <b>short-float</b>, 
+     <b>single-float</b>,
+     <b>double-float</b>,
+  or <b>long-float</b>
+of which the <i>object</i> is an <i>element</i>,
+the <i>typespec</i> is a <i>recognizable subtype</i> of that <i>type</i>.
+</p>
+</dd>
+</dl>
+
+<a name="Examples_003a_003a-29"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+
+<div class="example">
+<pre class="example"><code> (type-of 'a) &rArr;  SYMBOL          
+ (type-of '(1 . 2))
+&rArr;  CONS
+<i>OR</i>&rArr; (CONS FIXNUM FIXNUM)
+ (type-of #c(0 1))
+&rArr;  COMPLEX
+<i>OR</i>&rArr; (COMPLEX INTEGER)
+ (defstruct temp-struct x y z) &rArr;  TEMP-STRUCT
+ (type-of (make-temp-struct)) &rArr;  TEMP-STRUCT
+ (type-of &quot;abc&quot;)
+&rArr;  STRING
+<i>OR</i>&rArr; (STRING 3)
+ (subtypep (type-of &quot;abc&quot;) 'string) &rArr;  <i>true</i>, <i>true</i>
+ (type-of (expt 2 40))
+&rArr;  BIGNUM
+<i>OR</i>&rArr; INTEGER
+<i>OR</i>&rArr; (INTEGER 1099511627776 1099511627776)
+<i>OR</i>&rArr; SYSTEM::TWO-WORD-BIGNUM
+<i>OR</i>&rArr; FIXNUM
+ (subtypep (type-of 112312) 'integer) &rArr;  <i>true</i>, <i>true</i>
+ (defvar *foo* (make-array 5 :element-type t)) &rArr;  *FOO*
+ (class-name (class-of *foo*)) &rArr;  VECTOR
+ (type-of *foo*)
+&rArr;  VECTOR
+<i>OR</i>&rArr; (VECTOR T 5)
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-36"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="array_002delement_002dtype.html#array_002delement_002dtype">array-element-type</a>
+,
+<a href="class_002dof.html#class_002dof">class-of</a>
+,
+<a href="defstruct.html#defstruct">defstruct</a>
+,
+&lsquo;typecase; ctypecase; etypecase&rsquo;
+,
+<a href="typep.html#typep">typep</a>
+,
+<a href="Types.html#Types">Types</a>
+</p>
+<a name="Notes_003a_003a-22"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>Implementors are encouraged to arrange for <b>type-of</b> to return
+</p>
+<p>a portable value.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

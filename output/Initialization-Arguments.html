@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Initialization Arguments (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" rel="up" title="Object Creation and Initialization">
+<link href="Declaring-the-Validity-of-Initialization-Arguments.html#Declaring-the-Validity-of-Initialization-Arguments" rel="next" title="Declaring the Validity of Initialization Arguments">
+<link href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" rel="prev" title="Object Creation and Initialization">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Object Creation and Initialization
+                            </a>
+                            <a href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Object Creation and Initialization
+                            </a>
+                            <a href="Declaring-the-Validity-of-Initialization-Arguments.html#Declaring-the-Validity-of-Initialization-Arguments.html" class="nav-btn nav__next ">
+                                Declaring the Validity of Initialization Arguments
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Initialization-Arguments"></a>
+<a name="Initialization-Arguments-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Initialization Arguments</h4>
+
+<p>An initialization argument controls <i>object</i> creation and
+initialization.  It is often convenient to use keyword <i>symbols</i>
+to name initialization arguments, but the <i>name</i> of an
+initialization argument can be any <i>symbol</i>, including <b>nil</b>.  An
+initialization argument can be used in two ways: to fill a <i>slot</i>
+with a value or to provide an argument for an initialization
+<i>method</i>.  A single initialization argument can be used for both
+purposes.
+</p>
+<p>An <i>initialization argument list</i> is a
+<i>property list</i> of
+initialization argument names and values.
+Its structure is identical
+to a <i>property list</i> and also 
+to the portion of an argument list
+processed for <b>&amp;key</b> parameters.
+As in those lists,
+if an initialization
+argument name appears more than once in an initialization argument list,
+the leftmost occurrence supplies the value and the remaining occurrences
+are ignored.  The arguments to <b>make-instance</b> (after the first
+argument) form an <i>initialization argument list</i>.
+</p>
+<p>An initialization argument can be associated with a <i>slot</i>.  If
+the initialization argument has a value in the <i>initialization
+argument list</i>, the value is stored into the <i>slot</i> of the newly
+created <i>object</i>, overriding any <tt>:initform</tt> form associated
+with the <i>slot</i>.  A single initialization argument can initialize
+more than one <i>slot</i>.  An initialization argument that initializes
+a <i>shared slot</i> stores its value into the <i>shared slot</i>,
+replacing any previous value.
+</p>
+<p>An initialization argument can be associated with a <i>method</i>.  When
+an <i>object</i> is created and a particular initialization argument is
+supplied, the <i>generic functions</i> <b>initialize-instance</b>,
+<b>shared-initialize</b>, and <b>allocate-instance</b> are called
+with that initialization argument&rsquo;s name and value as a keyword argument
+pair.  If a value for the initialization argument is not supplied in the
+<i>initialization argument list</i>, the <i>method</i>&rsquo;s 
+<i>lambda list</i> supplies a default value.
+</p>
+<p>Initialization arguments are used in four situations: when making an
+<i>instance</i>, when re-initializing an <i>instance</i>, when updating
+an <i>instance</i> to conform to a redefined <i>class</i>, and when
+updating an <i>instance</i> to conform to the definition of a different
+<i>class</i>.
+</p>
+<p>Because initialization arguments are used to control the creation and
+initialization of an <i>instance</i> of some particular <i>class</i>,
+we say that an initialization argument is
+&ldquo;an initialization argument for&rdquo; that <i>class</i>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

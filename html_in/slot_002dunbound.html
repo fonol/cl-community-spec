@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>slot-unbound (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="slot-unbound (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="slot-unbound (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="slot_002dvalue.html#slot_002dvalue" rel="next" title="slot-value">
+<link href="slot_002dmissing.html#slot_002dmissing" rel="prev" title="slot-missing">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="slot_002dunbound"></a>
+<div class="header">
+<p>
+Next: <a href="slot_002dvalue.html#slot_002dvalue" accesskey="n" rel="next">slot-value</a>, Previous: <a href="slot_002dmissing.html#slot_002dmissing" accesskey="p" rel="prev">slot-missing</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="slot_002dunbound-_005bStandard-Generic-Function_005d"></a>
+<h4 class="subsection">7.7.13 slot-unbound                                    [Standard Generic Function]</h4>
+
+<a name="Syntax_003a_003a-19"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><code>slot-unbound</code>  <i>class instance slot-name</i> &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Method-Signatures_003a_003a-8"></a>
+<h4 class="subsubheading">Method Signatures::</h4>
+
+<p><code>slot-unbound</code>  <i><span class="roman">(</span><i>class</i> <b>t</b><span class="roman">)</span>
+		       instance slot-name</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-101"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>class</i>&mdash;the <i>class</i> of the <i>instance</i>.
+</p>
+<p><i>instance</i>&mdash;the <i>instance</i> in which an attempt
+		   was made to <i>read</i> the <i>unbound</i> <i>slot</i>.
+</p>
+<p><i>slot-name</i>&mdash;the <i>name</i> of the <i>unbound</i> <i>slot</i>.
+</p>
+<p><i>result</i>&mdash;an <i>object</i>.
+</p>
+<a name="Description_003a_003a-140"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The generic function <b>slot-unbound</b> is called when an
+unbound <i>slot</i> is read in
+an <i>instance</i> whose metaclass is <b>standard-class</b>.
+The default <i>method</i> signals an error 
+</p>
+<p>of <i>type</i> <b>unbound-slot</b>.
+The name slot of the 
+<b>unbound-slot</b> <i>condition</i> is initialized
+  to the name of the offending variable, and the instance slot
+  of the <b>unbound-slot</b> <i>condition</i> is initialized to the offending instance.
+</p>
+<p>The generic function <b>slot-unbound</b> is not intended to be called
+by programmers.  Programmers may write <i>methods</i> for it.
+The <i>function</i> <b>slot-unbound</b> is called only 
+indirectly by <b>slot-value</b>.
+</p>
+<p>If <b>slot-unbound</b> returns, 
+only the <i>primary value</i> will be used by the caller,
+and all other values will be ignored.
+</p>
+<a name="Exceptional-Situations_003a_003a-29"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>The default <i>method</i> on <b>slot-unbound</b>
+signals an error of <i>type</i> <b>unbound-slot</b>.
+</p>
+<a name="See-Also_003a_003a-122"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="slot_002dmakunbound.html#slot_002dmakunbound">slot-makunbound</a>
+</p>
+<a name="Notes_003a_003a-84"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>An unbound <i>slot</i> may occur if no <tt>:initform</tt> form was
+specified for the <i>slot</i> and the <i>slot</i> value has not been set,
+or if <b>slot-makunbound</b> has been called on the <i>slot</i>.
+</p>
+
+
+
+</body>
+</html>

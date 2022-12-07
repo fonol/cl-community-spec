@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Boa Lambda Lists (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Boa Lambda Lists (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Boa Lambda Lists (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Lambda-Lists.html#Lambda-Lists" rel="up" title="Lambda Lists">
+<link href="Defsetf-Lambda-Lists.html#Defsetf-Lambda-Lists" rel="next" title="Defsetf Lambda Lists">
+<link href="Destructuring-Lambda-Lists.html#Destructuring-Lambda-Lists" rel="prev" title="Destructuring Lambda Lists">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Boa-Lambda-Lists"></a>
+<div class="header">
+<p>
+Next: <a href="Defsetf-Lambda-Lists.html#Defsetf-Lambda-Lists" accesskey="n" rel="next">Defsetf Lambda Lists</a>, Previous: <a href="Destructuring-Lambda-Lists.html#Destructuring-Lambda-Lists" accesskey="p" rel="prev">Destructuring Lambda Lists</a>, Up: <a href="Lambda-Lists.html#Lambda-Lists" accesskey="u" rel="up">Lambda Lists</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Boa-Lambda-Lists-1"></a>
+<h4 class="subsection">3.4.6 Boa Lambda Lists</h4>
+
+<p>A <i>boa lambda list</i>
+<a name="index-boa-lambda-list"></a>
+ is a <i>lambda list</i> that is syntactically 
+like an <i>ordinary lambda list</i>, but that is processed in
+&ldquo;<b>b</b>y <b>o</b>rder of <b>a</b>rgument&rdquo; style.
+</p>
+<p>A <i>boa lambda list</i> is used only in a <b>defstruct</b> <i>form</i>,
+when explicitly specifying the <i>lambda list</i> 
+of a constructor <i>function</i> (sometimes called a &ldquo;boa constructor&rdquo;).
+</p>
+<p>The <b>&amp;optional</b>, <b>&amp;rest</b>, <b>&amp;aux</b>,
+</p>
+<p><b>&amp;key</b>, and <b>&amp;allow-other-keys</b>
+</p>
+<p><i>lambda list keywords</i> are recognized in a <i>boa lambda list</i>.
+The way these <i>lambda list keywords</i> differ from their
+use in an <i>ordinary lambda list</i> follows.
+</p>
+<p>Consider this example, which describes how <b>destruct</b> processes
+its <tt>:constructor</tt> option.
+</p>
+<div class="example">
+<pre class="example"> (:constructor create-foo
+         (a &amp;optional b (c 'sea) &amp;rest d &amp;aux e (f 'eff)))
+</pre></div>
+
+<p>This defines <tt>create-foo</tt> to be a constructor of one or more arguments.
+The first argument is used to initialize the <tt>a</tt> slot.  The second
+argument is used to initialize the <tt>b</tt> slot.  If there isn&rsquo;t any
+second argument, then the default value given in the body of the
+<b>defstruct</b> (if given) is used instead.  
+The third argument is used to
+initialize the <tt>c</tt> slot.  If there isn&rsquo;t any third argument, then the
+symbol <tt>sea</tt> is used instead.  Any arguments following the third
+argument are collected into a <i>list</i> 
+and used to initialize the <tt>d</tt>
+slot.  If there are three or fewer arguments, then <b>nil</b> is placed in
+the <tt>d</tt> slot.  The <tt>e</tt> slot is not initialized; 
+its initial value is <i>implementation-defined</i>.
+Finally, the <tt>f</tt> slot is initialized to contain the symbol <tt>eff</tt>.
+</p>
+<p><b>&amp;key</b> and <b>&amp;allow-other-keys</b> arguments default
+in a manner similar to that of <b>&amp;optional</b> arguments: if no default
+is supplied in the <i>lambda list</i> then the default value 
+given in the body of the <b>defstruct</b> (if given) is used instead.
+For example:
+</p>
+<div class="example">
+<pre class="example"> (defstruct (foo (:constructor CREATE-FOO (a &amp;optional b (c 'sea)
+                                             &amp;key (d 2)
+                                             &amp;aux e (f 'eff))))
+   (a 1) (b 2) (c 3) (d 4) (e 5) (f 6))
+
+ (create-foo 10) &rArr;  #S(FOO A 10 B 2 C SEA D 2 E <i>implemention-dependent</i> F EFF)
+ (create-foo 10 'bee 'see :d 'dee) 
+&rArr;  #S(FOO A 10 B BEE C SEE D DEE E <i>implemention-dependent</i> F EFF)
+</pre></div>
+
+<p>If keyword arguments of the form 
+<tt>((<i>key</i> <i>var</i>) <span class="roman">[</span><i>default</i> <span class="roman">[</span><i>svar</i><span class="roman">]</span><span class="roman">]</span>)</tt>
+are specified, the <i>slot</i> <i>name</i> is matched with <i>var</i> 
+(not <i>key</i>).
+</p>
+<p>The actions taken in the <tt>b</tt> and <tt>e</tt> cases were carefully
+chosen to allow the user to specify all possible behaviors. 
+The <b>&amp;aux</b> variables can be used to completely override the default
+initializations given in the body.
+</p>
+<p>If no default value is supplied for an <i>aux variable</i> variable,
+the consequences are undefined if an attempt is later made to read
+the corresponding <i>slot</i>&rsquo;s value before a value is explicitly assigned.
+If such a <i>slot</i> has a <tt>:type</tt> option specified,
+this suppressed initialization does not imply a type mismatch situation;
+the declared type is only required to apply when the <i>slot</i> is finally assigned.
+</p>
+<p>With this definition, the following can be written:
+</p>
+<div class="example">
+<pre class="example"> (create-foo 1 2)
+</pre></div>
+
+<p>instead of
+</p>
+<div class="example">
+<pre class="example"> (make-foo :a 1 :b 2)
+</pre></div>
+
+<p>and <tt>create-foo</tt> provides defaulting different
+from that of <tt>make-foo</tt>.
+</p>
+<p>Additional arguments that do not correspond to slot names but
+are merely present to supply values used in subsequent initialization 
+computations are allowed.
+For example, in the definition
+</p>
+<div class="example">
+<pre class="example"> (defstruct (frob (:constructor create-frob
+                  (a &amp;key (b 3 have-b) (c-token 'c) 
+                          (c (list c-token (if have-b 7 2))))))
+         a b c)
+</pre></div>
+
+<p>the <tt>c-token</tt> argument is used merely to supply a value used in the 
+initialization of the <tt>c</tt> slot. The <i>supplied-p parameters</i> 
+associated with <i>optional parameters</i> and <i>keyword parameters</i>
+might also be used this way.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Defsetf-Lambda-Lists.html#Defsetf-Lambda-Lists" accesskey="n" rel="next">Defsetf Lambda Lists</a>, Previous: <a href="Destructuring-Lambda-Lists.html#Destructuring-Lambda-Lists" accesskey="p" rel="prev">Destructuring Lambda Lists</a>, Up: <a href="Lambda-Lists.html#Lambda-Lists" accesskey="u" rel="up">Lambda Lists</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

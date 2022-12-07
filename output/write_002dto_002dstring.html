@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>write-to-string (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer-Dictionary.html#Printer-Dictionary" rel="up" title="Printer Dictionary">
+<link href="_002aprint_002darray_002a.html#g_t_002aprint_002darray_002a" rel="next" title="*print-array*">
+<link href="write.html#write" rel="prev" title="write">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="write.html#write" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                write
+                            </a>
+                            <a href="Printer-Dictionary.html#Printer-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Printer Dictionary
+                            </a>
+                            <a href="_002aprint_002darray_002a.html#g_t_002aprint_002darray_002a.html" class="nav-btn nav__next ">
+                                *print-array*
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="write_002dto_002dstring"></a>
+<a name="write_002dto_002dstring_002c-prin1_002dto_002dstring_002c-princ_002dto_002dstring-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">write-to-string, prin1-to-string, princ-to-string                </h4>
+
+<p><code>write-to-string</code>  <i>object &amp;key</i> \writekeys<br>
+   &rArr;  <i>string</i>
+</p>
+<p><code>prin</code>  <i>1</i> &rArr;  <i>-to-string</i>
+ object string
+</p>
+<p><code>princ-to-string</code>  <i>object</i> &rArr;  <i>string</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-468"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>object</i>&mdash;an <i>object</i>.
+</p>
+<p>\writekeydescriptions
+</p>
+<p><i>string</i>&mdash;a <i>string</i>.
+</p>
+<a name="Description_003a_003a-603"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>write-to-string</b>, <b>prin1-to-string</b>, and <b>princ-to-string</b>
+are used to create a <i>string</i> consisting of the printed representation 
+of <i>object</i>.
+<i>Object</i> is effectively printed as if by <b>write</b>,
+<b>prin1</b>, or <b>princ</b>, respectively,
+and the <i>characters</i> that would be output are made 
+into a <i>string</i>.
+</p>
+<p><b>write-to-string</b> is the general output function.
+It has the ability to specify all the parameters applicable 
+to the printing of <i>object</i>.
+</p>
+<p><b>prin1-to-string</b> acts like <b>write-to-string</b> with 
+<tt>:escape t</tt>, that is, escape characters are written where appropriate.
+</p>
+<p><b>princ-to-string</b> acts like <b>write-to-string</b> with 
+</p>
+<p><tt>:escape nil :readably nil</tt>.  
+</p>
+<p>Thus no <i>escape</i> <i>characters</i> are written.
+</p>
+<p>All other keywords that would be specified to <b>write-to-string</b> 
+are default values when <b>prin1-to-string</b>
+or <b>princ-to-string</b> is invoked.
+</p>
+<p>The meanings and defaults for the keyword arguments to <b>write-to-string</b>
+are the same as those for <b>write</b>.
+</p>
+<a name="Examples_003a_003a-432"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (prin1-to-string &quot;abc&quot;) &rArr;  &quot;\&quot;abc\&quot;&quot;
+ (princ-to-string &quot;abc&quot;) &rArr;  &quot;abc&quot;
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-103"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p><b>*print-escape*</b>,
+<b>*print-radix*</b>,
+<b>*print-base*</b>,
+<b>*print-circle*</b>,
+<b>*print-pretty*</b>,
+<b>*print-level*</b>,
+<b>*print-length*</b>,
+<b>*print-case*</b>,
+<b>*print-gensym*</b>,
+<b>*print-array*</b>,
+<b>*read-default-float-format*</b>.
+</p>
+<a name="See-Also_003a_003a-489"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p>&lsquo;write; prin1; print; pprint; princ&rsquo;
+</p>
+<a name="Notes_003a_003a-304"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<div class="example">
+<pre class="example"><code> (write-to-string <i>object</i> {<i>key</i> <i>argument</i>}*)
+&equiv; (with-output-to-string (#1=#:string-stream) 
+     (write object :stream #1# {<i>key</i> <i>argument</i>}*))
+
+ (princ-to-string <i>object</i>)
+&equiv; (with-output-to-string (string-stream)
+     (princ <i>object</i> string-stream))
+
+ (prin1-to-string <i>object</i>)
+&equiv; (with-output-to-string (string-stream)
+     (prin1 <i>object</i> string-stream))
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

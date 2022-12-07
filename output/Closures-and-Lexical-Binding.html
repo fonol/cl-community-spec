@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Closures and Lexical Binding (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation.html#Evaluation" rel="up" title="Evaluation">
+<link href="Shadowing.html#Shadowing" rel="next" title="Shadowing">
+<link href="Lambda-Expressions.html#Lambda-Expressions" rel="prev" title="Lambda Expressions">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Lambda-Expressions.html#Lambda-Expressions" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Lambda Expressions
+                            </a>
+                            <a href="Evaluation.html#Evaluation.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Evaluation
+                            </a>
+                            <a href="Shadowing.html#Shadowing.html" class="nav-btn nav__next ">
+                                Shadowing
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Closures-and-Lexical-Binding"></a>
+<a name="Closures-and-Lexical-Binding-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Closures and Lexical Binding</h4>
+
+<p>A <i>lexical closure</i> is a <i>function</i> that can refer to and alter
+the values of <i>lexical bindings</i> <i>established</i> by <i>binding</i> <i>forms</i>
+that textually include the function definition.
+</p>
+<p>Consider this code, where <tt>x</tt> is not declared <b>special</b>:
+</p>
+<div class="example">
+<pre class="example"><code> (defun two-funs (x)
+   (list (function (lambda () x))
+         (function (lambda (y) (setq x y)))))
+ (setq funs (two-funs 6))
+ (funcall (car funs)) &rArr;  6
+ (funcall (cadr funs) 43) &rArr;  43
+ (funcall (car funs)) &rArr;  43
+</code>
+</pre></div>
+
+<p>The <b>function</b> <i>special form</i> coerces a 
+<i>lambda expression</i> into a <i>closure</i> in which the 
+<i>lexical environment</i> in effect when the <i>special form</i> is
+evaluated is captured along with the <i>lambda expression</i>.
+</p>
+<p>The function <tt>two-funs</tt> returns a <i>list</i> of two 
+<i>functions</i>, each of which refers to the <i>binding</i> of the
+variable <tt>x</tt> created on entry to the function <tt>two-funs</tt> when it
+was called.
+This variable has the value <tt>6</tt>
+initially, but <b>setq</b> can alter this <i>binding</i>.
+The <i>lexical closure</i> created for the first 
+<i>lambda expression</i> does not &ldquo;snapshot&rdquo; the <i>value</i> <tt>6</tt> for <tt>x</tt>
+when the <i>closure</i> is created; rather it captures the <i>binding</i> of <tt>x</tt>.
+The second <i>function</i> can be used to alter the <i>value</i> in the same (captured)
+<i>binding</i> (to <tt>43</tt>, in the example), and
+this altered variable binding then affects the value returned by the first <i>function</i>.
+</p>
+<p>In situations where a <i>closure</i> of a 
+<i>lambda expression</i> over the same set of <i>bindings</i> may be
+produced more than once, the various resulting <i>closures</i> may
+or may not be <i>identical</i>, at the discretion of the <i>implementation</i>.
+That is, two <i>functions</i> that are behaviorally
+indistinguishable might or might not be <i>identical</i>.
+Two <i>functions</i> that are behaviorally distinguishable are <i>distinct</i>.
+For example:
+</p>
+<div class="example">
+<pre class="example"><code> (let ((x 5) (funs '()))
+   (dotimes (j 10)                          
+     (push #'(lambda (z)                        
+               (if (null z) (setq x 0) (+ x z)))
+           funs))
+   funs)
+</code>
+</pre></div>
+
+<p>The result of the above <i>form</i> is a <i>list</i> of ten <i>closures</i>.
+Each requires only the <i>binding</i> of <tt>x</tt>.
+It is the same <i>binding</i> in each case, 
+but the ten <i>closure</i> <i>objects</i> might or might not be <i>identical</i>.
+On the other hand, the result of the <i>form</i>
+</p>
+<div class="example">
+<pre class="example"><code> (let ((funs '()))     
+   (dotimes (j 10)
+     (let ((x 5))
+       (push (function (lambda (z)
+                        (if (null z) (setq x 0) (+ x z))))
+             funs)))
+  funs)
+</code>
+</pre></div>
+
+<p>is also a <i>list</i> of ten <i>closures</i>.
+However, in this case no two of the <i>closure</i> <i>objects</i> can
+be <i>identical</i> because each <i>closure</i> is closed over a distinct
+<i>binding</i> of <tt>x</tt>, and these <i>bindings</i> can be behaviorally
+distinguished because of the use of <b>setq</b>.
+</p>
+<p>The result of the <i>form</i>
+</p>
+<div class="example">
+<pre class="example"><code> (let ((funs '()))
+   (dotimes (j 10)
+     (let ((x 5))
+       (push (function (lambda (z) (+ x z)))
+            funs)))
+   funs)
+</code>
+</pre></div>
+
+<p>is a <i>list</i> of ten <i>closure</i> <i>objects</i> that
+might or might not be <i>identical</i>.
+A different <i>binding</i> of <tt>x</tt> is involved for
+each <i>closure</i>, but the <i>bindings</i> cannot be distinguished
+because their values are the <i>same</i> and immutable (there being no occurrence
+of <b>setq</b> on <tt>x</tt>).  A compiler could internally
+transform the <i>form</i> to
+</p>
+<div class="example">
+<pre class="example"><code> (let ((funs '()))
+   (dotimes (j 10)
+     (push (function (lambda (z) (+ 5 z)))
+           funs))
+  funs)
+</code>
+</pre></div>
+
+<p>where the <i>closures</i> may be <i>identical</i>.
+</p>
+<p>It is possible that a <i>closure</i> does not
+close over any variable bindings.
+In the code fragment
+</p>
+<div class="example">
+<pre class="example"><code> (mapcar (function (lambda (x) (+ x 2))) y)
+</code>
+</pre></div>
+
+<p>the function <tt>(lambda (x) (+ x 2))</tt> contains no references to any outside
+object. In this case, the same <i>closure</i> might be returned
+for all evaluations of the <b>function</b> <i>form</i>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

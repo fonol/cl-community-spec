@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Error Terminology (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Definitions.html#Definitions" rel="up" title="Definitions">
+<link href="Sections-Not-Formally-Part-Of-This-Standard.html#Sections-Not-Formally-Part-Of-This-Standard" rel="next" title="Sections Not Formally Part Of This Standard">
+<link href="Nonsense-Words.html#Nonsense-Words" rel="prev" title="Nonsense Words">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Nonsense-Words.html#Nonsense-Words" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Nonsense Words
+                            </a>
+                            <a href="Definitions.html#Definitions.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Definitions
+                            </a>
+                            <a href="Sections-Not-Formally-Part-Of-This-Standard.html#Sections-Not-Formally-Part-Of-This-Standard.html" class="nav-btn nav__next ">
+                                Sections Not Formally Part Of This Standard
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Error-Terminology"></a>
+<a name="Error-Terminology-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Error Terminology</h4>
+
+<a name="index-error-terminology"></a>
+
+<p>Situations in which errors might, should, or must be signaled are described
+in the standard.  The wording used to describe such situations is intended
+to have precise meaning. The following list is a glossary of those meanings.
+</p>
+<dl compact="compact">
+<dt><b>Safe code</b></dt>
+<dd>
+<a name="index-safe"></a>
+
+<p>This is <i>code</i> processed with the <b>safety</b> optimization 
+at its highest setting (<tt>3</tt>).  <b>safety</b> is a lexical property
+of code.  The phrase &ldquo;the function <tt>F</tt> should signal an error&rdquo; 
+means that if <tt>F</tt> is invoked from code processed with the highest
+<b>safety</b> optimization, an error is signaled.
+It is <i>implementation-dependent</i> whether <tt>F</tt> or the calling 
+code signals the error.
+</p>
+</dd>
+<dt><b>Unsafe code</b></dt>
+<dd>
+<a name="index-unsafe"></a>
+
+<p>This is code processed with lower safety levels.
+</p>
+<p>Unsafe code might do error checking.  Implementations are permitted to
+treat all code as safe code all the time.
+</p>
+</dd>
+<dt><b>An error is signaled</b></dt>
+<dd>
+<a name="index-signal"></a>
+
+<a name="index-is-signaled"></a>
+
+<a name="index-must-signal"></a>
+
+<p>This means that an error is signaled in both safe and unsafe code.
+<i>Conforming code</i> may rely on the fact that the error is signaled
+in both safe and unsafe code.  Every implementation is required to
+detect the error in both safe and unsafe code. For example, &ldquo;an error
+is signaled if <b>unexport</b> is given a <i>symbol</i>
+not <i>accessible</i> in the <i>current package</i>.&rdquo;
+</p>
+<p>If an explicit error type is not specified, the default is <b>error</b>.
+</p>
+</dd>
+<dt><b>An error should be signaled</b></dt>
+<dd>
+<a name="index-signal-1"></a>
+
+<a name="index-should-signal"></a>
+
+<p>This means that an error is signaled in safe code, and an error
+might be signaled in unsafe code.  <i>Conforming code</i> may rely on the
+fact that the error is signaled in safe code.  Every
+implementation is required to detect the error at least in safe code.
+When the error is not signaled, the &ldquo;consequences are undefined&rdquo;
+(see below).  For example, &ldquo;<b>+</b> should signal an error of <i>type</i> <b>type-error</b>
+if any argument is not of <i>type</i> <b>number</b>.&rdquo;
+</p>
+</dd>
+<dt><b>Should be prepared to signal an error</b></dt>
+<dd>
+<a name="index-signal-2"></a>
+
+<a name="index-prepared-to-signal"></a>
+
+<p>This is similar to &ldquo;should be signaled&rdquo; except that it does not
+imply that &lsquo;extra effort&rsquo; has to be taken on the part of an <i>operator</i>
+to discover an erroneous situation if the normal action of that <i>operator</i>
+can be performed successfully with only &lsquo;lazy&rsquo; checking.
+An <i>implementation</i> is always permitted to signal an error,
+but even in <i>safe</i> <i>code</i>, it is only required to signal the error
+when failing to signal it might lead to incorrect results.
+In <i>unsafe</i> <i>code</i>, the consequences are undefined.
+</p>
+<p>For example, defining that 
+ &ldquo;<b>find</b> should be prepared to signal an error of <i>type</i> <b>type-error</b>
+   if its second <i>argument</i> is not a <i>proper list</i>&rdquo;
+does not imply that an error is always signaled.  The <i>form</i>
+</p>
+<div class="example">
+<pre class="example"><code> (find 'a '(a b . c))
+</code>
+</pre></div>
+
+<p>must either signal an error of <i>type</i> <b>type-error</b> in <i>safe</i> <i>code</i>,
+else return <tt>A</tt>.
+In <i>unsafe</i> <i>code</i>, the consequences are undefined.
+By contrast,
+</p>
+<div class="example">
+<pre class="example"><code> (find 'd '(a b . c))
+</code>
+</pre></div>
+
+<p>must signal an error of <i>type</i> <b>type-error</b> in <i>safe</i> <i>code</i>.
+In <i>unsafe</i> <i>code</i>, the consequences are undefined.
+Also,
+</p>
+<div class="example">
+<pre class="example"><code> (find 'd '#1=(a b . #1#))
+</code>
+</pre></div>
+
+<p>in <i>safe code</i>
+   might return <b>nil</b> (as an <i>implementation-defined</i> extension),
+   might never return,
+or might signal an error of <i>type</i> <b>type-error</b>.
+In <i>unsafe</i> <i>code</i>, the consequences are undefined.
+</p>
+<p>Typically, the &ldquo;should be prepared to signal&rdquo; terminology is used in
+type checking situations where there are efficiency considerations that
+make it impractical to detect errors that are not relevant to the
+correct operation of the <i>operator</i>.
+</p>
+</dd>
+<dt><b>The consequences are unspecified</b></dt>
+<dd>
+<a name="index-consequences"></a>
+
+<a name="index-unspecified-consequences"></a>
+
+<p>This means that the consequences are unpredictable but harmless.
+Implementations are permitted to specify the consequences of this
+situation. No <i>conforming code</i> may depend on the results or effects of
+this situation, and all <i>conforming code</i> is required to treat the
+results and effects of this situation as unpredictable but harmless.
+For example, &ldquo;if the second argument to <b>shared-initialize</b>
+specifies a name that does not correspond to any <i>slots</i>
+<i>accessible</i> in the <i>object</i>, the results are unspecified.&rdquo;
+</p>
+</dd>
+<dt><b>The consequences are undefined</b></dt>
+<dd>
+<a name="index-consequences-1"></a>
+
+<a name="index-undefined-consequences"></a>
+
+<p>This means that the consequences are unpredictable. The consequences
+may range from harmless to fatal.  No <i>conforming code</i> may depend on
+the results or effects. <i>Conforming code</i> must treat the consequences as
+unpredictable.  In places where the words &ldquo;must,&rdquo; &ldquo;must not,&rdquo; or
+&ldquo;may not&rdquo; are used, then &ldquo;the consequences are undefined&rdquo; if the
+stated requirement is not met and no specific consequence is
+explicitly stated.  An implementation is permitted to signal an error
+in this case.
+</p>
+<p>For example: &ldquo;Once a name has been declared by <b>defconstant</b>
+to be constant, any further assignment or binding of that
+variable has undefined consequences.&rdquo;
+</p>
+</dd>
+<dt><b>An error might be signaled</b></dt>
+<dd>
+<a name="index-signal-3"></a>
+
+<a name="index-might-signal"></a>
+
+<p>This means that the situation has undefined consequences;
+however, if an error is signaled, it is of the specified <i>type</i>.
+For example, &ldquo;<b>open</b> might signal an error of <i>type</i> <b>file-error</b>.&rdquo;
+</p>
+</dd>
+<dt><b>The return values are unspecified</b></dt>
+<dd>
+<a name="index-unspecified-values"></a>
+
+<p>This means that only the number and nature of the return values of a
+<i>form</i> are not specified.  However, the issue of whether or not
+any side-effects or transfer of control occurs is still well-specified.
+</p>
+<p>A program can be well-specified even if it uses a function whose
+returns values are unspecified.  For example, even if the return
+values of some function <tt>F</tt> are unspecified, an expression such as
+<tt>(length (list (F)))</tt> is still well-specified because it does not
+rely on any particular aspect of the value or values returned by <tt>F</tt>.
+</p>
+</dd>
+<dt><b>Implementations may be extended to cover this situation</b></dt>
+<dd>
+<a name="index-extensions"></a>
+
+<p>This means that the <i>situation</i> has undefined consequences;
+however, a <i>conforming implementation</i> is free to treat
+the situation in a more specific way.  
+For example, an <i>implementation</i> might define 
+    that      an error is signaled,
+ or that      an error should be signaled,
+ or even that a certain well-defined non-error behavior occurs.
+</p>
+<p>No <i>conforming code</i> may depend on the consequences of such a <i>situation</i>;
+all <i>conforming code</i> must treat the consequences of the situation
+as undefined. <i>Implementations</i> are required to document how the
+situation is treated.
+</p>
+<p>For example, &ldquo;implementations may be extended to define other type
+specifiers to have a corresponding <i>class</i>.&rdquo;
+</p>
+</dd>
+<dt><b>Implementations are free to extend the syntax</b></dt>
+<dd>
+<a name="index-extensions-1"></a>
+
+<p>This means that in this situation implementations are permitted to
+define unambiguous extensions to the syntax of the <i>form</i> being
+described.  No <i>conforming code</i> may depend on this extension.
+Implementations are required to document each such extension. All
+<i>conforming code</i> is required to treat the syntax as meaningless. The
+standard might disallow certain extensions while allowing others. For
+example, &ldquo;no implementation is free to extend the syntax of
+<b>defclass</b>.&rdquo;
+</p>
+</dd>
+<dt><b>A warning might be issued</b></dt>
+<dd>
+<a name="index-warning"></a>
+
+<p>This means that <i>implementations</i> are encouraged to issue a warning
+if the context is appropriate (<i>e.g.</i>, when compiling).  However, a
+<i>conforming implementation</i> is not required to issue a warning.
+</p>
+</dd>
+</dl>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

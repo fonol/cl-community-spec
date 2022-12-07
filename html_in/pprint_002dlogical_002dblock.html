@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>pprint-logical-block (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="pprint-logical-block (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="pprint-logical-block (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer-Dictionary.html#Printer-Dictionary" rel="up" title="Printer Dictionary">
+<link href="pprint_002dnewline.html#pprint_002dnewline" rel="next" title="pprint-newline">
+<link href="pprint_002dindent.html#pprint_002dindent" rel="prev" title="pprint-indent">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="pprint_002dlogical_002dblock"></a>
+<div class="header">
+<p>
+Next: <a href="pprint_002dnewline.html#pprint_002dnewline" accesskey="n" rel="next">pprint-newline</a>, Previous: <a href="pprint_002dindent.html#pprint_002dindent" accesskey="p" rel="prev">pprint-indent</a>, Up: <a href="Printer-Dictionary.html#Printer-Dictionary" accesskey="u" rel="up">Printer Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="pprint_002dlogical_002dblock-_005bMacro_005d"></a>
+<h4 class="subsection">22.4.7 pprint-logical-block                                                [Macro]</h4>
+
+<p><code>pprint-logical-block</code>  <i><span class="roman">(</span>stream-symbol object 
+					     &amp;key</i> prefix per-line-prefix suffix<span class="roman">)</span>
+				{<i>declaration</i>}* {<i>form</i>}*<br>
+   &rArr;  <i><b>nil</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-460"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>stream-symbol</i>&mdash;a <i>stream variable designator</i>.
+</p>
+<p><i>object</i>&mdash;an <i>object</i>; evaluated.
+</p>
+<p><tt>:prefix</tt>&mdash;a <i>string</i>; evaluated.
+	       Complicated defaulting behavior; see below.
+</p>
+<p><tt>:per-line-prefix</tt>&mdash;a <i>string</i>; evaluated.
+		        Complicated defaulting behavior; see below.
+</p>
+<p><tt>:suffix</tt>&mdash;a <i>string</i>; evaluated.
+	       The default is the <i>null</i> <i>string</i>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<a name="Description_003a_003a-595"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Causes printing to be grouped into a logical block.
+</p>
+<p>The logical block is printed to the <i>stream</i> that is the <i>value</i>
+of the <i>variable</i> denoted by <i>stream-symbol</i>.
+During the execution of the <i>forms</i>,
+that <i>variable</i> is <i>bound</i> to a <i>pretty printing stream</i>
+that supports decisions about the arrangement of output
+and then forwards the output to the destination stream.
+</p>
+<p>All the standard printing functions 
+  (<i>e.g.</i>, <b>write</b>,
+       <b>princ</b>,
+   and <b>terpri</b>)
+can be used to print output to the <i>pretty printing stream</i>.
+All and only the output sent to this <i>pretty printing stream</i>
+is treated as being in the logical block.
+</p>
+<p>The <i>prefix</i> specifies a prefix to be printed before the beginning of
+the logical block.
+The <i>per-line-prefix</i> specifies a prefix that is printed before the block
+and at the beginning of each new line in the block.
+The <tt>:prefix</tt> and <tt>:pre-line-prefix</tt> <i>arguments</i> are mutually exclusive.
+If neither <tt>:prefix</tt> nor <tt>:per-line-prefix</tt> is specified,
+a <i>prefix</i> of the <i>null</i> <i>string</i> is assumed.
+</p>
+<p>The <i>suffix</i> specifies a suffix that is printed just after the logical block.
+</p>
+<p>The <i>object</i> is 
+normally 
+a <i>list</i> that the body <i>forms</i> are responsible for printing.
+If <i>object</i> is not a <i>list</i>,
+it is printed using <b>write</b>.
+(This makes it easier to write printing functions that are robust
+ in the face of malformed arguments.)
+If <b>*print-circle*</b>
+is <i>non-nil</i> and <i>object</i> is a circular (or shared) reference to a <i>cons</i>,
+then an appropriate &ldquo;<tt>#<i>n</i>#</tt>&rdquo; marker is printed.  (This
+makes it easy to write printing functions that provide full support
+for circularity and sharing abbreviation.)  If <b>*print-level*</b> is not
+<b>nil</b> and the logical block is at a dynamic nesting depth of greater
+than <b>*print-level*</b> in logical blocks, &ldquo;<tt>#</tt>&rdquo; is printed.
+(This makes easy to write printing functions that provide full support for depth
+abbreviation.)
+</p>
+<p>If either of the three conditions above occurs, the indicated output is
+printed on <i>stream-symbol</i> and the body <i>forms</i> are skipped 
+along with the printing of the <tt>:prefix</tt> and <tt>:suffix</tt>.
+(If the body <i>forms</i> are not to be responsible for printing a list,
+then the first two tests above can be turned off by supplying <b>nil</b> for
+the <i>object</i> argument.)
+</p>
+<p>In addition to the <i>object</i> argument of <b>pprint-logical-block</b>,
+the arguments of the standard printing functions (such as <b>write</b>, 
+<b>print</b>, <b>prin1</b>, and <b>pprint</b>, as well as the arguments
+of the standard <i>format directives</i> such as <tt>~A</tt>, <tt>~S</tt>,
+(and <tt>~W</tt>) are all checked (when necessary) for circularity and sharing.
+However, such checking is not applied to the arguments of the
+functions <b>write-line</b>, <b>write-string</b>, and <b>write-char</b>
+or to the literal text output by <b>format</b>.  A consequence of this is
+that you must use one of the latter functions if you want to print some 
+literal text in the output that is not supposed to be checked for circularity
+or sharing.
+</p>
+<p>The body <i>forms</i> of a <b>pprint-logical-block</b> <i>form</i>
+must not perform any side-effects on the surrounding environment; for 
+example, no <i>variables</i> must be assigned which have not been
+<i>bound</i> within its scope.  
+</p>
+<p>The <b>pprint-logical-block</b> <i>macro</i> may be used regardless of the <i>value</i> of <b>*print-pretty*</b>.
+</p>
+<a name="Affected-By_003a_003a-99"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*print-circle*</b>, <b>*print-level*</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-222"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>An error of <i>type</i> <b>type-error</b> is signaled if any of the <tt>:suffix</tt>, 
+<tt>:prefix</tt>, or <tt>:per-line-prefix</tt> is supplied but does not evaluate 
+to a <i>string</i>.
+</p>
+<p>An error is signaled if <tt>:prefix</tt> and <tt>:pre-line-prefix</tt> are both used.
+</p>
+<p><b>pprint-logical-block</b> and the <i>pretty printing stream</i> it creates 
+have <i>dynamic extent</i>.  The consequences are undefined if, outside
+of this extent, output is attempted to the <i>pretty printing stream</i> it creates.
+</p>
+<p>It is also unspecified what happens if, within this extent, any output is 
+sent directly to the underlying destination stream.
+</p>
+<a name="See-Also_003a_003a-483"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="pprint_002dpop.html#pprint_002dpop">pprint-pop</a>
+,
+<a href="pprint_002dexit_002dif_002dlist_002dexhausted.html#pprint_002dexit_002dif_002dlist_002dexhausted">pprint-exit-if-list-exhausted</a>
+,
+<a href="Tilde-Less_002dThan_002dSign_002d_003e-Logical-Block.html#Tilde-Less_002dThan_002dSign_002d_003e-Logical-Block">Tilde Less-Than-Sign-&gt; Logical Block</a>
+</p>
+<a name="Notes_003a_003a-300"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>One reason for using the <b>pprint-logical-block</b> <i>macro</i> when the <i>value</i> of <b>*print-pretty*</b>
+is <b>nil</b> would be to allow it to perform checking for <i>dotted lists</i>, 
+as well as (in conjunction with <b>pprint-pop</b>) 
+checking for <b>*print-level*</b> or <b>*print-length*</b> being exceeded.
+</p>
+<p>Detection of circularity and sharing is supported by the <i>pretty printer</i>
+by in essence performing requested output twice.  On the first pass,
+circularities and sharing are detected and the actual outputting of characters
+is suppressed.  On the second pass, the appropriate &ldquo;<tt>#<i>n</i>=</tt>&rdquo; 
+and &ldquo;<tt>#<i>n</i>#</tt>&rdquo; markers are inserted and characters are output.
+This is why the restriction on side-effects is necessary.
+Obeying this restriction is facilitated by using <b>pprint-pop</b>,
+instead of an ordinary <b>pop</b> when traversing a list being printed by 
+the body <i>forms</i> of the <b>pprint-logical-block</b> <i>form</i>.)
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="pprint_002dnewline.html#pprint_002dnewline" accesskey="n" rel="next">pprint-newline</a>, Previous: <a href="pprint_002dindent.html#pprint_002dindent" accesskey="p" rel="prev">pprint-indent</a>, Up: <a href="Printer-Dictionary.html#Printer-Dictionary" accesskey="u" rel="up">Printer Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>disassemble (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="disassemble (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="disassemble (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Environment-Dictionary.html#Environment-Dictionary" rel="up" title="Environment Dictionary">
+<link href="documentation.html#documentation" rel="next" title="documentation">
+<link href="get_002dinternal_002drun_002dtime.html#get_002dinternal_002drun_002dtime" rel="prev" title="get-internal-run-time">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="disassemble"></a>
+<div class="header">
+<p>
+Next: <a href="documentation.html#documentation" accesskey="n" rel="next">documentation</a>, Previous: <a href="get_002dinternal_002drun_002dtime.html#get_002dinternal_002drun_002dtime" accesskey="p" rel="prev">get-internal-run-time</a>, Up: <a href="Environment-Dictionary.html#Environment-Dictionary" accesskey="u" rel="up">Environment Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="disassemble-_005bFunction_005d"></a>
+<h4 class="subsection">25.2.14 disassemble                                                      [Function]</h4>
+
+<p><code>disassemble</code>  <i>fn</i> &rArr;  <i><b>nil</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-499"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>fn</i>&mdash;an <i>extended function designator</i>
+	  or a <i>lambda expression</i>.
+</p>
+<a name="Description_003a_003a-662"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <i>function</i> <b>disassemble</b> is a debugging aid that composes symbolic 
+instructions or expressions in some <i>implementation-dependent</i> 
+language which represent the code used to produce the <i>function</i>
+which is or is named by the argument <i>fn</i>.  The result is displayed
+to <i>standard output</i> in an <i>implementation-dependent</i> format.
+</p>
+<p>If <i>fn</i> is a <i>lambda expression</i> or <i>interpreted function</i>,
+it is compiled first and the result is disassembled.
+</p>
+<p>If the <i>fn</i> <i>designator</i> is a <i>function name</i>,
+the <i>function</i> that it <i>names</i> is disassembled.
+</p>
+<p>(If that <i>function</i> is an <i>interpreted function</i>,
+it is first compiled but the result of this implicit compilation is not installed.)
+</p>
+<a name="Examples_003a_003a-467"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defun f (a) (1+ a)) &rArr;  F
+ (eq (symbol-function 'f)
+     (progn (disassemble 'f)
+            (symbol-function 'f))) &rArr;  <i>true</i>
+</pre></div>
+
+<a name="Affected-By_003a_003a-128"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*standard-output*</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-240"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>fn</i> is not an <i>extended function designator</i>
+		  or a <i>lambda expression</i>.
+</p>
+
+
+
+</body>
+</html>

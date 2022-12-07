@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>terpri (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="terpri (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="terpri (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="unread_002dchar.html#unread_002dchar" rel="next" title="unread-char">
+<link href="read_002dchar_002dno_002dhang.html#read_002dchar_002dno_002dhang" rel="prev" title="read-char-no-hang">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="terpri"></a>
+<div class="header">
+<p>
+Next: <a href="unread_002dchar.html#unread_002dchar" accesskey="n" rel="next">unread-char</a>, Previous: <a href="read_002dchar_002dno_002dhang.html#read_002dchar_002dno_002dhang" accesskey="p" rel="prev">read-char-no-hang</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="terpri_002c-fresh_002dline-_005bFunction_005d"></a>
+<h4 class="subsection">21.2.19 terpri, fresh-line                                               [Function]</h4>
+
+<p><code>terpri</code>  <i>&amp;optional</i> output-stream &rArr;  <i><b>nil</b></i>
+</p>
+<p><code>fresh-line</code>  <i>&amp;optional</i> output-stream &rArr;  <i>generalized-boolean</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-422"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>output-stream</i> &ndash; an <i>output</i> <i>stream designator</i>.
+ The default is <i>standard output</i>.
+</p>
+<p><i>generalized-boolean</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-550"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>terpri</b> outputs a <i>newline</i> to <i>output-stream</i>.
+</p>
+<p><b>fresh-line</b> is similar to <b>terpri</b> but outputs a <i>newline</i>
+only if the <i>output-stream</i> is not already at the start of a line.
+If for some reason this cannot be determined, then a <i>newline</i> is output anyway.
+<b>fresh-line</b> returns <i>true</i> if it outputs a <i>newline</i>;
+otherwise it returns <i>false</i>.
+</p>
+<a name="Examples_003a_003a-397"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (with-output-to-string (s)
+    (write-string &quot;some text&quot; s)
+    (terpri s)
+    (terpri s)
+    (write-string &quot;more text&quot; s))
+&rArr;  &quot;some text
+
+more text&quot;
+ (with-output-to-string (s)
+    (write-string &quot;some text&quot; s)
+    (fresh-line s)
+    (fresh-line s)
+    (write-string &quot;more text&quot; s))
+&rArr;  &quot;some text
+more text&quot;
+</pre></div>
+
+<a name="Side-Effects_003a_003a-62"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>The <i>output-stream</i> is modified.
+</p>
+<a name="Affected-By_003a_003a-85"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*standard-output*</b>,
+<b>*terminal-io*</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-201"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>None.
+</p>
+<p>[Reviewer Note by Barmar: What if stream is closed?]
+</p>
+<a name="Notes_003a_003a-287"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>terpri</b> is identical in effect to
+</p>
+<div class="example">
+<pre class="example"> (write-char #\Newline output-stream)
+</pre></div>
+
+
+
+
+</body>
+</html>

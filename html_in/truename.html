@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>truename (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="truename (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="truename (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Files-Dictionary.html#Files-Dictionary" rel="up" title="Files Dictionary">
+<link href="file_002dauthor.html#file_002dauthor" rel="next" title="file-author">
+<link href="ensure_002ddirectories_002dexist.html#ensure_002ddirectories_002dexist" rel="prev" title="ensure-directories-exist">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="truename"></a>
+<div class="header">
+<p>
+Next: <a href="file_002dauthor.html#file_002dauthor" accesskey="n" rel="next">file-author</a>, Previous: <a href="ensure_002ddirectories_002dexist.html#ensure_002ddirectories_002dexist" accesskey="p" rel="prev">ensure-directories-exist</a>, Up: <a href="Files-Dictionary.html#Files-Dictionary" accesskey="u" rel="up">Files Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="truename-_005bFunction_005d"></a>
+<h4 class="subsection">20.2.4 truename                                                         [Function]</h4>
+
+<p><code>truename</code>  <i>filespec</i> &rArr;  <i>truename</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-406"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>filespec</i>&mdash;a <i>pathname designator</i>.
+</p>
+<p><i>truename</i>&mdash;a <i>physical pathname</i>.
+</p>
+<a name="Description_003a_003a-525"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>truename</b> tries to find the <i>file</i> indicated by 
+<i>filespec</i> and returns its <i>truename</i>.
+If the <i>filespec</i> <i>designator</i> is an open <i>stream</i>,
+its associated <i>file</i> is used.
+</p>
+<p>If <i>filespec</i> is a <i>stream</i>,
+<b>truename</b> can be used whether the <i>stream</i>
+is open or closed. It is permissible for <b>truename</b> 
+to return more specific information after the <i>stream</i>
+is closed than when the <i>stream</i> was open.
+</p>
+<p>If <i>filespec</i> is a <i>pathname</i> 
+it represents the name used to open the file. This may be, but is
+not required to be, the actual name of the file. 
+</p>
+<a name="Examples_003a_003a-382"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">;; An example involving version numbers.  Note that the precise nature of
+;; the truename is implementation-dependent while the file is still open.
+ (with-open-file (stream &quot;&gt;vistor&gt;test.text.newest&quot;)
+   (values (pathname stream)
+           (truename stream)))
+&rArr;  #P&quot;S:&gt;vistor&gt;test.text.newest&quot;, #P&quot;S:&gt;vistor&gt;test.text.1&quot;
+<i>OR</i>&rArr; #P&quot;S:&gt;vistor&gt;test.text.newest&quot;, #P&quot;S:&gt;vistor&gt;test.text.newest&quot;
+<i>OR</i>&rArr; #P&quot;S:&gt;vistor&gt;test.text.newest&quot;, #P&quot;S:&gt;vistor&gt;_temp_._temp_.1&quot;
+
+;; In this case, the file is closed when the truename is tried, so the
+;; truename information is reliable.
+ (with-open-file (stream &quot;&gt;vistor&gt;test.text.newest&quot;)
+   (close stream)
+   (values (pathname stream)
+           (truename stream)))
+&rArr;  #P&quot;S:&gt;vistor&gt;test.text.newest&quot;, #P&quot;S:&gt;vistor&gt;test.text.1&quot;
+
+;; An example involving TOP-20's implementation-dependent concept 
+;; of logical devices -- in this case, &quot;DOC:&quot; is shorthand for
+;; &quot;PS:&lt;DOCUMENTATION&gt;&quot; ...
+ (with-open-file (stream &quot;CMUC::DOC:DUMPER.HLP&quot;)
+   (values (pathname stream)
+           (truename stream)))
+&rArr;  #P&quot;CMUC::DOC:DUMPER.HLP&quot;, #P&quot;CMUC::PS:&lt;DOCUMENTATION&gt;DUMPER.HLP.13&quot;
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-186"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>An error of <i>type</i> <b>file-error</b> is signaled if an appropriate <i>file</i>
+cannot be located within the <i>file system</i> for the given <i>filespec</i>,
+</p>
+<p>or if the <i>file system</i> cannot perform the requested operation.
+</p>
+<p>An error of <i>type</i> <b>file-error</b> is signaled if <i>pathname</i> is <i>wild</i>.
+</p>
+<a name="See-Also_003a_003a-428"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>pathname</b>,
+<b>logical-pathname</b>,
+<a href="File-System-Concepts.html#File-System-Concepts">File System Concepts</a>,
+</p>
+<p><a href="Pathnames-as-Filenames.html#Pathnames-as-Filenames">Pathnames as Filenames</a>
+</p>
+<a name="Notes_003a_003a-283"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>truename</b> may be used to account for any <i>filename</i> translations 
+performed by the <i>file system</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="file_002dauthor.html#file_002dauthor" accesskey="n" rel="next">file-author</a>, Previous: <a href="ensure_002ddirectories_002dexist.html#ensure_002ddirectories_002dexist" accesskey="p" rel="prev">ensure-directories-exist</a>, Up: <a href="Files-Dictionary.html#Files-Dictionary" accesskey="u" rel="up">Files Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

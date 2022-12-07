@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>lambda (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="lambda (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="lambda (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="compile.html#compile" rel="next" title="compile">
+<link href="lambda-_0028Symbol_0029.html#lambda-_0028Symbol_0029" rel="prev" title="lambda (Symbol)">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="lambda"></a>
+<div class="header">
+<p>
+Next: <a href="compile.html#compile" accesskey="n" rel="next">compile</a>, Previous: <a href="lambda-_0028Symbol_0029.html#lambda-_0028Symbol_0029" accesskey="p" rel="prev">lambda (Symbol)</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="lambda-_005bMacro_005d"></a>
+<h4 class="subsection">3.8.2 lambda                                                              [Macro]</h4>
+
+<p><code>lambda</code>  <i>lambda-list [[{<i>declaration</i>}*</i> | <i>documentation</i>]] {<i>form</i>}* &rArr;  <i><i>function</i></i>
+</p>
+<a name="Arguments-and-Values_003a_003a"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>lambda-list</i>&mdash;an <i>ordinary lambda list</i>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>documentation</i>&mdash;a <i>string</i>; not evaluated.
+</p>
+<p><i>form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>function</i>&mdash;a <i>function</i>.
+</p>
+<a name="Description_003a_003a-1"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Provides a shorthand notation for a <b>function</b> <i>special form</i>
+involving a <i>lambda expression</i> such that:
+</p>
+<div class="example">
+<pre class="example">    (lambda <i>lambda-list</i> [[{<i>declaration</i>}* | <i>documentation</i>]] {<i>form</i>}*)
+ &equiv; (function (lambda <i>lambda-list</i> [[{<i>declaration</i>}* | <i>documentation</i>]] {<i>form</i>}*))
+ &equiv; #'(lambda <i>lambda-list</i> [[{<i>declaration</i>}* | <i>documentation</i>]] {<i>form</i>}*)
+</pre></div>
+
+<a name="Examples_003a_003a"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (funcall (lambda (x) (+ x 3)) 4) &rArr;  7
+</pre></div>
+
+<a name="See-Also_003a_003a-1"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>lambda</b> (symbol)
+</p>
+<a name="Notes_003a_003a-1"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>This macro could be implemented by:
+</p>
+<div class="example">
+<pre class="example">(defmacro lambda (&amp;whole form &amp;rest bvl-decls-and-body)
+  (declare (ignore bvl-decls-and-body))
+  `#',form)
+</pre></div>
+
+
+
+
+</body>
+</html>

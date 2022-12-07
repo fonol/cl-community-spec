@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Semantic Constraints (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Semantic Constraints (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Semantic Constraints (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Compilation-Semantics.html#Compilation-Semantics" rel="up" title="Compilation Semantics">
+<link href="File-Compilation.html#File-Compilation" rel="next" title="File Compilation">
+<link href="Minimal-Compilation.html#Minimal-Compilation" rel="prev" title="Minimal Compilation">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Semantic-Constraints"></a>
+<div class="header">
+<p>
+Previous: <a href="Minimal-Compilation.html#Minimal-Compilation" accesskey="p" rel="prev">Minimal Compilation</a>, Up: <a href="Compilation-Semantics.html#Compilation-Semantics" accesskey="u" rel="up">Compilation Semantics</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Semantic-Constraints-1"></a>
+<h4 class="subsubsection">3.2.2.7 Semantic Constraints</h4>
+
+<p>All <i>conforming programs</i> must obey the following constraints,
+which are designed to minimize the observable differences 
+between compiled and interpreted programs:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>Definitions of any referenced <i>macros</i>
+must be present in the <i>compilation environment</i>.  
+Any <i>form</i> that is a <i>list</i>
+beginning with a <i>symbol</i> that does not name a
+<i>special operator</i> or a <i>macro</i> defined in the 
+<i>compilation environment</i> is treated by the compiler as a 
+function call.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><b>Special</b> proclamations for <i>dynamic variables</i>
+must be made in the <i>compilation environment</i>.  Any <i>binding</i>
+for which there is no <b>special</b> declaration or proclamation in
+the <i>compilation environment</i> is treated by the compiler as
+a <i>lexical binding</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The definition of a function that is defined and
+declared <b>inline</b> in the <i>compilation environment</i> must be
+the same at run time.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Within a <i>function</i> named F, the compiler may
+(but is not required to)
+assume that an apparent recursive call to a <i>function</i> named F 
+refers to the same definition of F,
+unless that function has been declared <b>notinline</b>.
+The consequences of redefining such a recursively defined <i>function</i> F 
+while it is executing are undefined.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>A call within a file to a named function that is
+defined in the same file refers to that function, unless that function
+has been declared <b>notinline</b>.  The consequences are unspecified
+if functions are redefined individually at run time or multiply
+defined in the same file.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The argument syntax and number of return values for
+all functions whose <b>ftype</b> is declared at compile time must
+remain the same at run time.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><i>Constant variables</i> defined in
+the <i>compilation environment</i> must have a <i>similar</i> value at
+run time.  A reference to 
+a <i>constant variable</i> 
+in <i>source code</i> is equivalent to a reference to 
+a <i>literal</i> <i>object</i> that is the <i>value</i> of the <i>constant variable</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Type definitions made with <b>deftype</b> or
+<b>defstruct</b> in the <i>compilation environment</i> must
+retain the same definition at run time.  Classes defined by <b>defclass</b>
+in the <i>compilation environment</i> must be defined
+at run time to have the same <i>superclasses</i> and same 
+<i>metaclass</i>.
+</p>
+<p>This implies that <i>subtype</i>/<i>supertype</i> relationships of 
+<i>type specifiers</i> must not change between <i>compile time</i> and <i>run time</i>.  
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Type declarations present in the compilation 
+<i>environment</i> must accurately describe the corresponding values at run time;
+otherwise, the consequences are undefined.  It is permissible
+for an unknown <i>type</i> to appear in a declaration at 
+compile time, though a warning might be signaled in such a case.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Except in the situations explicitly listed above, a
+<i>function</i> defined in the <i>evaluation environment</i>
+is permitted to have a different definition or a different <i>signature</i>
+at run time, and the run-time definition prevails.
+</p>
+</dd>
+</dl>
+
+<p><i>Conforming programs</i> should not be written using any additional
+assumptions about consistency between the run-time 
+<i>environment</i> and the startup, evaluation, and compilation 
+<i>environments</i>.
+</p>
+<p>Except where noted, when a compile-time and a run-time definition are
+different, one of the following occurs at run time:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>an error of <i>type</i> <b>error</b> is signaled
+</p></dd>
+<dt><tt>*</tt></dt>
+<dd><p>the compile-time definition prevails
+</p></dd>
+<dt><tt>*</tt></dt>
+<dd><p>the run-time definition prevails
+</p>
+</dd>
+</dl>
+
+<p>If the <i>compiler</i> processes a <i>function form</i> whose <i>operator</i> 
+is not defined at compile time, no error is signaled at compile time.
+</p>
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Minimal-Compilation.html#Minimal-Compilation" accesskey="p" rel="prev">Minimal Compilation</a>, Up: <a href="Compilation-Semantics.html#Compilation-Semantics" accesskey="u" rel="up">Compilation Semantics</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

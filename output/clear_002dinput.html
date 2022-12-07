@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>clear-input (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="finish_002doutput.html#finish_002doutput" rel="next" title="finish-output">
+<link href="listen.html#listen" rel="prev" title="listen">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="listen.html#listen" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                listen
+                            </a>
+                            <a href="Streams-Dictionary.html#Streams-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Streams Dictionary
+                            </a>
+                            <a href="finish_002doutput.html#finish_002doutput.html" class="nav-btn nav__next ">
+                                finish-output
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="clear_002dinput"></a>
+<a name="clear_002dinput-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">clear-input                                                      </h4>
+
+<p><code>clear-input</code>  <i>&amp;optional</i> input-stream &rArr;  <i><b>nil</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-436"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>input-stream</i>&mdash;an <i>input</i> <i>stream designator</i>.
+  The default is <i>standard input</i>.
+</p>
+<a name="Description_003a_003a-566"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Clears any available input from <i>input-stream</i>.
+</p>
+<p>If <b>clear-input</b> does not make sense for <i>input-stream</i>, 
+then <b>clear-input</b> does nothing. 
+</p>
+<a name="Examples_003a_003a-412"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+<div class="example">
+<pre class="example"><code>;; The exact I/O behavior of this example might vary from implementation
+;; to implementation depending on the kind of interactive buffering that
+;; occurs.  (The call to SLEEP here is intended to help even out the 
+;; differences in implementations which do not do line-at-a-time buffering.)
+
+(defun read-sleepily (&amp;optional (clear-p nil) (zzz 0))
+  (list (progn (print '&gt;) (read))
+        ;; Note that input typed within the first ZZZ seconds 
+        ;; will be discarded.
+        (progn (print '&gt;) 
+               (if zzz (sleep zzz))
+               (print '&gt;&gt;)
+               (if clear-p (clear-input))
+               (read))))
+
+(read-sleepily)
+<tt> |&gt; </tt> &gt; <b>|&gt;&gt;</b><tt>10</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> &gt;
+<tt> |&gt; </tt> &gt;&gt; <b>|&gt;&gt;</b><tt>20</tt><b>&lt;&lt;|</b>
+&rArr;  (10 20)
+
+(read-sleepily t)
+<tt> |&gt; </tt> &gt; <b>|&gt;&gt;</b><tt>10</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> &gt;
+<tt> |&gt; </tt> &gt;&gt; <b>|&gt;&gt;</b><tt>20</tt><b>&lt;&lt;|</b>
+&rArr;  (10 20)
+
+(read-sleepily t 10)
+<tt> |&gt; </tt> &gt; <b>|&gt;&gt;</b><tt>10</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> &gt; <b>|&gt;&gt;</b><tt>20</tt><b>&lt;&lt;|</b>  ; Some implementations won't echo typeahead here.
+<tt> |&gt; </tt> &gt;&gt; <b>|&gt;&gt;</b><tt>30</tt><b>&lt;&lt;|</b>
+&rArr;  (10 30)
+</code>
+</pre></div>
+
+<a name="Side-Effects_003a_003a-70"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Side Effects</h4>
+
+<p>The <i>input-stream</i> is modified.
+</p>
+<a name="Affected-By_003a_003a-94"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p><b>*standard-input*</b>
+</p>
+<a name="Exceptional-Situations_003a_003a-209"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>input-stream</i> is not a <i>stream designator</i>.
+</p>
+<a name="See-Also_003a_003a-462"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><b>clear-output</b>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>package-shadowing-symbols (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="package-shadowing-symbols (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="package-shadowing-symbols (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Packages-Dictionary.html#Packages-Dictionary" rel="up" title="Packages Dictionary">
+<link href="package_002duse_002dlist.html#package_002duse_002dlist" rel="next" title="package-use-list">
+<link href="package_002dnicknames.html#package_002dnicknames" rel="prev" title="package-nicknames">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="package_002dshadowing_002dsymbols"></a>
+<div class="header">
+<p>
+Next: <a href="package_002duse_002dlist.html#package_002duse_002dlist" accesskey="n" rel="next">package-use-list</a>, Previous: <a href="package_002dnicknames.html#package_002dnicknames" accesskey="p" rel="prev">package-nicknames</a>, Up: <a href="Packages-Dictionary.html#Packages-Dictionary" accesskey="u" rel="up">Packages Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="package_002dshadowing_002dsymbols-_005bFunction_005d"></a>
+<h4 class="subsection">11.2.24 package-shadowing-symbols                                        [Function]</h4>
+
+<p><code>package-shadowing-symbols</code>  <i>package</i> &rArr;  <i>symbols</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-196"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>package</i>&mdash;a <i>package designator</i>.
+</p>
+<p><i>symbols</i>&mdash;a <i>list</i> of <i>symbols</i>.
+</p>
+<a name="Description_003a_003a-260"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns a <i>list</i> of <i>symbols</i> that have been declared 
+as <i>shadowing symbols</i> in <i>package</i> by <b>shadow</b> 
+or <b>shadowing-import</b> (or the equivalent <b>defpackage</b> options).
+All <i>symbols</i> on this <i>list</i> are <i>present</i> in <i>package</i>.
+</p>
+<a name="Examples_003a_003a-178"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (package-shadowing-symbols (make-package 'temp)) &rArr;  ()
+ (shadow 'cdr 'temp) &rArr;  T
+ (package-shadowing-symbols 'temp) &rArr;  (TEMP::CDR)
+ (intern &quot;PILL&quot; 'temp) &rArr;  TEMP::PILL, NIL
+ (shadowing-import 'pill 'temp) &rArr;  T
+ (package-shadowing-symbols 'temp) &rArr;  (PILL TEMP::CDR)
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-74"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>package</i> is not a <i>package designator</i>.
+</p>
+<a name="See-Also_003a_003a-230"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="shadow.html#shadow">shadow</a>
+,
+<a href="shadowing_002dimport.html#shadowing_002dimport">shadowing-import</a>
+</p>
+<a name="Notes_003a_003a-134"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>Whether the list of <i>symbols</i> is <i>fresh</i> is <i>implementation-dependent</i>.
+</p>
+
+
+
+</body>
+</html>

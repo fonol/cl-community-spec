@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>aref (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="aref (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="aref (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Arrays-Dictionary.html#Arrays-Dictionary" rel="up" title="Arrays Dictionary">
+<link href="array_002ddimension.html#array_002ddimension" rel="next" title="array-dimension">
+<link href="adjustable_002darray_002dp.html#adjustable_002darray_002dp" rel="prev" title="adjustable-array-p">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="aref"></a>
+<div class="header">
+<p>
+Next: <a href="array_002ddimension.html#array_002ddimension" accesskey="n" rel="next">array-dimension</a>, Previous: <a href="adjustable_002darray_002dp.html#adjustable_002darray_002dp" accesskey="p" rel="prev">adjustable-array-p</a>, Up: <a href="Arrays-Dictionary.html#Arrays-Dictionary" accesskey="u" rel="up">Arrays Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="aref-_005bAccessor_005d"></a>
+<h4 class="subsection">15.2.10 aref                                                             [Accessor]</h4>
+
+<p><code>aref</code>  <i>array &amp;rest</i> subscripts &rArr;  <i>element</i>
+</p>
+<p>(setf (<code>         aref</code> <i>array &amp;rest</i> subscripts) new-element)<br>
+</p>
+<a name="Arguments-and-Values_003a_003a-322"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>array</i>&mdash;an <i>array</i>.
+</p>
+<p><i>subscripts</i>&mdash;a <i>list</i> of <i>valid array indices</i> for the <i>array</i>.
+</p>
+<p><i>element</i>, <i>new-element</i>&mdash;an <i>object</i>.
+</p>
+<a name="Description_003a_003a-429"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><i>Accesses</i> the <i>array</i> <i>element</i> specified by the <i>subscripts</i>.
+If no <i>subscripts</i> are supplied and <i>array</i> is zero rank,
+<b>aref</b> <i>accesses</i> the sole element of <i>array</i>.
+</p>
+<p><b>aref</b> ignores <i>fill pointers</i>.
+It is permissible to use <b>aref</b> 
+to <i>access</i> any <i>array</i> <i>element</i>,
+whether <i>active</i> or not.
+</p>
+<a name="Examples_003a_003a-306"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<p>If the variable <tt>foo</tt> names a 3-by-5 array,
+then the first index could be 0, 1, or 2, and then second index
+could be 0, 1, 2, 3, or 4.  The array elements can be referred to by using
+the <i>function</i> <b>aref</b>; for example, <tt>(aref foo 2 1)</tt>
+refers to element (2, 1) of the array.  
+</p>
+<div class="example">
+<pre class="example"> (aref (setq alpha (make-array 4)) 3) &rArr;  <i>implementation-dependent</i>
+ (setf (aref alpha 3) 'sirens) &rArr;  SIRENS
+ (aref alpha 3) &rArr;  SIRENS
+ (aref (setq beta (make-array '(2 4) 
+                    :element-type '(unsigned-byte 2)
+                    :initial-contents '((0 1 2 3) (3 2 1 0))))
+        1 2) &rArr;  1
+ (setq gamma '(0 2))
+ (apply #'aref beta gamma) &rArr;  2
+ (setf (apply #'aref beta gamma) 3) &rArr;  3
+ (apply #'aref beta gamma) &rArr;  3
+ (aref beta 0 2) &rArr;  3
+</pre></div>
+
+<a name="See-Also_003a_003a-350"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="bit.html#bit">bit</a>
+,
+&lsquo;char; schar&rsquo;
+,
+<a href="elt.html#elt">elt</a>
+,
+<a href="row_002dmajor_002daref.html#row_002dmajor_002daref">row-major-aref</a>
+,
+<a href="svref.html#svref">svref</a>
+,
+</p>
+<p><a href="Compiler-Terminology.html#Compiler-Terminology">Compiler Terminology</a>
+</p>
+
+
+
+</body>
+</html>

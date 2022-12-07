@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Declaring the Validity of Initialization Arguments (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Declaring the Validity of Initialization Arguments (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Declaring the Validity of Initialization Arguments (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" rel="up" title="Object Creation and Initialization">
+<link href="Defaulting-of-Initialization-Arguments.html#Defaulting-of-Initialization-Arguments" rel="next" title="Defaulting of Initialization Arguments">
+<link href="Initialization-Arguments.html#Initialization-Arguments" rel="prev" title="Initialization Arguments">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Declaring-the-Validity-of-Initialization-Arguments"></a>
+<div class="header">
+<p>
+Next: <a href="Defaulting-of-Initialization-Arguments.html#Defaulting-of-Initialization-Arguments" accesskey="n" rel="next">Defaulting of Initialization Arguments</a>, Previous: <a href="Initialization-Arguments.html#Initialization-Arguments" accesskey="p" rel="prev">Initialization Arguments</a>, Up: <a href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" accesskey="u" rel="up">Object Creation and Initialization</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Declaring-the-Validity-of-Initialization-Arguments-1"></a>
+<h4 class="subsection">7.1.2 Declaring the Validity of Initialization Arguments</h4>
+
+<p>Initialization arguments are checked for validity in each of the four
+situations that use them.  An initialization argument may be valid in
+one situation and not another. For example, the system-supplied     
+primary <i>method</i> for <b>make-instance</b> defined for 
+the <i>class</i> <b>standard-class</b> checks the validity of its initialization arguments
+and signals an error if an initialization argument is supplied that is
+not declared as valid in that situation.
+</p>
+<p>There are two means for declaring initialization arguments valid.
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>Initialization arguments that fill <i>slots</i> are declared as valid
+by the <tt>:initarg</tt> slot option to <b>defclass</b>.  The
+<tt>:initarg</tt> slot option is inherited from <i>superclasses</i>.  Thus
+the set of valid initialization arguments that fill <i>slots</i> for a
+<i>class</i> is the union of the initialization arguments that fill
+<i>slots</i> declared as valid by that <i>class</i> and its
+<i>superclasses</i>.  Initialization arguments that fill <i>slots</i>
+are valid in all four contexts.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Initialization arguments that supply arguments to <i>methods</i> are
+declared as valid by defining those <i>methods</i>.  The keyword name of
+each keyword parameter specified in the <i>method</i>&rsquo;s 
+<i>lambda list</i> becomes an initialization argument for all <i>classes</i> 
+for which the <i>method</i> is applicable.
+</p>
+<p>The presence of &amp;allow-other-keys in the
+<i>lambda list</i> of an applicable method disables validity checking of 
+initialization arguments.
+</p>
+<p>Thus <i>method</i> inheritance
+controls the set of valid initialization arguments that supply arguments
+to <i>methods</i>.  The <i>generic functions</i> for which <i>method</i>
+definitions serve to declare initialization arguments valid are as
+follows:
+</p><dl compact="compact">
+<dt>&ndash;</dt>
+<dd><p>Making an <i>instance</i> of a <i>class</i>:
+<b>allocate-instance</b>, <b>initialize-instance</b>, and
+<b>shared-initialize</b>.  Initialization arguments declared as valid
+by these <i>methods</i> are valid when making 
+an <i>instance</i> of a <i>class</i>.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>Re-initializing an <i>instance</i>:
+<b>reinitialize-instance</b> and <b>shared-initialize</b>.
+Initialization arguments declared as valid by these <i>methods</i> are
+valid when re-initializing an <i>instance</i>.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>Updating an <i>instance</i> to conform to a redefined <i>class</i>:
+<b>update-instance-for-redefined-class</b> and <b>shared-initialize</b>.
+Initialization arguments declared as valid by these <i>methods</i> are
+valid when updating an <i>instance</i> to conform to a redefined <i>class</i>.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>Updating an <i>instance</i> to conform to the definition of a
+different <i>class</i>:
+<b>update-instance-for-different-class</b> and <b>shared-initialize</b>.
+Initialization arguments declared as valid by these <i>methods</i> are
+valid when updating an <i>instance</i> to conform to the definition
+of a different <i>class</i>.
+</p>
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+<p>The set of valid initialization arguments for a <i>class</i> is the set of
+valid initialization arguments that either fill <i>slots</i> or supply
+arguments to <i>methods</i>, along with the predefined initialization
+argument <tt>:allow-other-keys</tt>.  The default value for 
+<tt>:allow-other-keys</tt> is <b>nil</b>.
+</p>
+<p>Validity checking of initialization arguments is disabled if the value of
+the initialization argument <tt>:allow-other-keys</tt> is <i>true</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Defaulting-of-Initialization-Arguments.html#Defaulting-of-Initialization-Arguments" accesskey="n" rel="next">Defaulting of Initialization Arguments</a>, Previous: <a href="Initialization-Arguments.html#Initialization-Arguments" accesskey="p" rel="prev">Initialization Arguments</a>, Up: <a href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" accesskey="u" rel="up">Object Creation and Initialization</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

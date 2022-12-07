@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Tilde Left-Bracket-&gt; Conditional Expression (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Control_002dFlow-Operations.html#FORMAT-Control_002dFlow-Operations" rel="up" title="FORMAT Control-Flow Operations">
+<link href="Tilde-Right_002dBracket_002d_003e-End-of-Conditional-Expression.html#Tilde-Right_002dBracket_002d_003e-End-of-Conditional-Expression" rel="next" title="Tilde Right-Bracket-&gt; End of Conditional Expression">
+<link href="Tilde-Asterisk_002d_003e-Go_002dTo.html#Tilde-Asterisk_002d_003e-Go_002dTo" rel="prev" title="Tilde Asterisk-&gt; Go-To">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Tilde-Asterisk_002d_003e-Go_002dTo.html#Tilde-Asterisk_002d_003e-Go_002dTo" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Tilde Asterisk-&gt; Go-To
+                            </a>
+                            <a href="FORMAT-Control_002dFlow-Operations.html#FORMAT-Control_002dFlow-Operations.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                FORMAT Control-Flow Operations
+                            </a>
+                            <a href="Tilde-Right_002dBracket_002d_003e-End-of-Conditional-Expression.html#Tilde-Right_002dBracket_002d_003e-End-of-Conditional-Expression.html" class="nav-btn nav__next ">
+                                Tilde Right-Bracket-&gt; End of Conditional Expression
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Tilde-Left_002dBracket_002d_003e-Conditional-Expression"></a>
+<a name="Tilde-Left_002dBracket_003a-Conditional-Expression"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Tilde Left-Bracket: Conditional Expression</h4>
+
+<p><tt>~[<i>str0</i>~;<i>str1</i>~;<i>...</i>~;<i>strn</i>~]</tt>
+</p>
+<p>This is a set of control strings, called <i>clauses</i>, one of which is
+chosen and used.  The clauses are separated by <tt>~;</tt>
+and the construct is terminated by <tt>~]</tt>.  For example,
+</p>
+<p><tt>&quot;~[Siamese~;Manx~;Persian~] Cat&quot;</tt>
+</p>
+<p>The <i>arg</i>th
+clause is selected, where the first clause is number 0.
+If a prefix parameter is given (as <tt>~<i>n</i>[</tt>),
+then the parameter is used instead of an argument.    
+If <i>arg</i> is out of range then no clause is selected
+and no error is signaled.
+After the selected alternative has been processed, the control string
+continues after the <tt>~]</tt>.
+</p>
+<p><tt>~[<i>str0</i>~;<i>str1</i>~;<i>...</i>~;<i>strn</i>~:;<i>default</i>~]</tt>
+has a default case.
+If the <i>last</i> <tt>~;</tt> used to separate clauses
+is <tt>~:;</tt> instead, then the last clause is an else clause
+that is performed if no other clause is selected.
+For example:
+</p>
+<p><tt>&quot;~[Siamese~;Manx~;Persian~:;Alley~] Cat&quot;</tt>
+</p>
+<p><tt>~:[<i>alternative</i>~;<i>consequent</i>~]</tt> 
+selects the <i>alternative</i> control string if <i>arg</i> is <i>false</i>,
+and selects the <i>consequent</i> control string otherwise.
+</p>
+<p><tt>~@[<i>consequent</i>~]</tt> 
+tests the argument.  If it is <i>true</i>,           
+then the argument is not used up by the <tt>~[</tt> command
+but remains as the next one to be processed,
+and the one clause <i>consequent</i> is processed.
+If the <i>arg</i> is <i>false</i>, then the argument is used up,
+and the clause is not processed.
+The clause therefore should normally use exactly one argument,
+and may expect it to be <i>non-nil</i>.
+For example:
+</p>
+<div class="example">
+<pre class="example"><code> (setq *print-level* nil *print-length* 5)
+ (format nil
+        &quot;~@[ print level = ~D~]~@[ print length = ~D~]&quot;
+        *print-level* *print-length*)
+&rArr;   &quot; print length = 5&quot;
+</code>
+</pre></div>
+
+<p>Note also that
+</p>
+<div class="example">
+<pre class="example"><code> (format <i>stream</i> &quot;...~@[<i>str</i>~]...&quot; ...)
+&equiv; (format <i>stream</i> &quot;...~:[~;~:*<i>str</i>~]...&quot; ...)
+</code>
+</pre></div>
+
+<p>The combination of <tt>~[</tt> and <tt>#</tt> is useful, for
+example, for dealing with English conventions for printing lists:
+</p>
+<div class="example">
+<pre class="example"><code> (setq foo &quot;Items:~#[ none~; ~S~; ~S and ~S~
+           ~:;~@{~#[~; and~] ~S~<tt>^</tt> ,~}~].&quot;)
+ (format nil foo) &rArr;   &quot;Items: none.&quot;
+ (format nil foo 'foo) &rArr;   &quot;Items: FOO.&quot;
+ (format nil foo 'foo 'bar) &rArr;   &quot;Items: FOO and BAR.&quot;
+ (format nil foo 'foo 'bar 'baz) &rArr;   &quot;Items: FOO, BAR, and BAZ.&quot;
+ (format nil foo 'foo 'bar 'baz 'quux) &rArr;   &quot;Items: FOO, BAR, BAZ, and QUUX.&quot;
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

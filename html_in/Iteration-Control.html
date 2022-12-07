@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Iteration Control (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Iteration Control (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Iteration Control (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" rel="up" title="Variable Initialization and Stepping Clauses">
+<link href="The-for_002das_002darithmetic-subclause.html#The-for_002das_002darithmetic-subclause" rel="next" title="The for-as-arithmetic subclause">
+<link href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" rel="prev" title="Variable Initialization and Stepping Clauses">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Iteration-Control"></a>
+<div class="header">
+<p>
+Next: <a href="The-for_002das_002darithmetic-subclause.html#The-for_002das_002darithmetic-subclause" accesskey="n" rel="next">The for-as-arithmetic subclause</a>, Previous: <a href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" accesskey="p" rel="prev">Variable Initialization and Stepping Clauses</a>, Up: <a href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" accesskey="u" rel="up">Variable Initialization and Stepping Clauses</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Iteration-Control-1"></a>
+<h4 class="subsubsection">6.1.2.1 Iteration Control</h4>
+
+<p>Iteration control clauses allow direction of <b>loop</b> iteration.
+The <i>loop keywords</i> <tt>for</tt> and <tt>as</tt>
+designate iteration control clauses.
+Iteration control clauses differ with respect to the specification of
+termination tests and to the initialization and <i>stepping</i>_1
+of loop variables.  Iteration clauses by themselves
+do not cause the Loop Facility to return values, but they
+can be used in conjunction with value-accumulation clauses to
+return values.  
+</p>
+<p>All variables are initialized in the loop prologue.  
+A <i>variable</i> <i>binding</i> has <i>lexical scope</i>
+unless it is proclaimed <b>special</b>;
+thus, by default, the variable can be <i>accessed</i> only by <i>forms</i> 
+that lie textually within the <b>loop</b>.
+Stepping assignments are made in the loop body before any other <i>forms</i>
+are evaluated in the body.  
+</p>
+<p>The variable argument in iteration control clauses can be a 
+destructuring list.  A destructuring list
+is a <i>tree</i> whose <i>non-nil</i> <i>atoms</i> are <i>variable</i> <i>names</i>.
+See <a href="Destructuring.html#Destructuring">Destructuring</a>.
+</p>
+<p>The iteration control clauses <tt>for</tt>, <tt>as</tt>,  and <tt>repeat</tt> 
+must precede any other loop clauses, except
+  <tt>initially</tt>, <tt>with</tt>, and <tt>named</tt>,
+since they establish variable <i>bindings</i>.  
+When iteration control clauses are
+used in a <b>loop</b>,
+the corresponding
+termination tests in the loop body are evaluated
+before any other loop body code is executed.
+</p>
+<p>If multiple iteration clauses are used to control iteration, variable
+initialization and <i>stepping</i>_1 occur <i>sequentially</i> by default.  
+The <tt>and</tt> construct can be used to connect two or more
+iteration clauses when <i>sequential</i> <i>binding</i> and 
+<i>stepping</i>_1 are not necessary.
+The iteration behavior of clauses joined by <tt>and</tt>
+is analogous to the behavior of the macro <b>do</b> with
+respect to <b>do*</b>.
+</p>
+<p>The <tt>for</tt> and <tt>as</tt> clauses iterate by using one or more local 
+loop  variables that are initialized to some value and that 
+can be modified or <i>stepped</i>_1 after each iteration.  
+For these clauses, iteration terminates when a local
+variable reaches some supplied value or when some other loop clause
+terminates iteration.
+At each iteration, variables can be 
+   <i>stepped</i>_1 by an increment or a decrement
+or can be assigned a new value by the evaluation of a <i>form</i>).
+Destructuring can be used to assign 
+values to variables during iteration. 
+</p>
+<p>The <tt>for</tt> and <tt>as</tt> keywords are synonyms; they can be used
+interchangeably.  There are seven syntactic formats for these constructs.
+In each syntactic format, the <i>type</i> of
+<i>var</i> can be supplied by the optional <i>type-spec</i>
+argument.  If <i>var</i> is a destructuring list, the <i>type</i>
+supplied by the <i>type-spec</i> argument must appropriately match
+the elements of the list.  
+By convention, <tt>for</tt> introduces new iterations and <tt>as</tt>
+introduces iterations that depend on a previous iteration specification.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="The-for_002das_002darithmetic-subclause.html#The-for_002das_002darithmetic-subclause" accesskey="n" rel="next">The for-as-arithmetic subclause</a>, Previous: <a href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" accesskey="p" rel="prev">Variable Initialization and Stepping Clauses</a>, Up: <a href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" accesskey="u" rel="up">Variable Initialization and Stepping Clauses</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

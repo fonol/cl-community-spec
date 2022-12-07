@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Conses as Trees (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Conses as Trees (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Conses as Trees (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Cons-Concepts.html#Cons-Concepts" rel="up" title="Cons Concepts">
+<link href="General-Restrictions-on-Parameters-that-must-be-Trees.html#General-Restrictions-on-Parameters-that-must-be-Trees" rel="next" title="General Restrictions on Parameters that must be Trees">
+<link href="Cons-Concepts.html#Cons-Concepts" rel="prev" title="Cons Concepts">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Conses-as-Trees"></a>
+<div class="header">
+<p>
+Next: <a href="Conses-as-Lists.html#Conses-as-Lists" accesskey="n" rel="next">Conses as Lists</a>, Previous: <a href="Cons-Concepts.html#Cons-Concepts" accesskey="p" rel="prev">Cons Concepts</a>, Up: <a href="Cons-Concepts.html#Cons-Concepts" accesskey="u" rel="up">Cons Concepts</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Conses-as-Trees-1"></a>
+<h4 class="subsection">14.1.1 Conses as Trees</h4>
+
+<p>A <i>tree</i>
+<a name="index-tree"></a>
+ is a binary recursive data structure made up of
+<i>conses</i> and <i>atoms</i>:
+the <i>conses</i> are themselves also <i>trees</i>
+(sometimes called &ldquo;subtrees&rdquo; or &ldquo;branches&rdquo;), and the <i>atoms</i>
+are terminal nodes (sometimes called <i>leaves</i>
+<a name="index-leaves"></a>
+). 
+Typically, the <i>leaves</i> represent data while the branches 
+establish some relationship among that data.
+</p>
+<p>&nbsp;&nbsp;caaaar&nbsp;&nbsp;caddar&nbsp;&nbsp;cdar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nsubst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caaadr&nbsp;&nbsp;cadddr&nbsp;&nbsp;cddaar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">nsubst-if</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caaar&nbsp;&nbsp;&nbsp;caddr&nbsp;&nbsp;&nbsp;cddadr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">nsubst-if-not</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caadar&nbsp;&nbsp;cadr&nbsp;&nbsp;&nbsp;&nbsp;cddar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nthcdr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caaddr&nbsp;&nbsp;cdaaar&nbsp;&nbsp;cdddar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sublis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caadr&nbsp;&nbsp;&nbsp;cdaadr&nbsp;&nbsp;cddddr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caar&nbsp;&nbsp;&nbsp;&nbsp;cdaar&nbsp;&nbsp;&nbsp;cdddr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">subst-if</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cadaar&nbsp;&nbsp;cdadar&nbsp;&nbsp;cddr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">subst-if-not</span>&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cadadr&nbsp;&nbsp;cdaddr&nbsp;&nbsp;<span class="nolinebreak">copy-tree</span>&nbsp;&nbsp;<span class="nolinebreak">tree-equal</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cadar&nbsp;&nbsp;&nbsp;cdadr&nbsp;&nbsp;&nbsp;nsublis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;14&ndash;2:&nbsp;Some&nbsp;defined&nbsp;names&nbsp;relating&nbsp;to&nbsp;trees.<!-- /@w -->
+</p>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="General-Restrictions-on-Parameters-that-must-be-Trees.html#General-Restrictions-on-Parameters-that-must-be-Trees" accesskey="1">General Restrictions on Parameters that must be Trees</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Standard Method Combination (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Standard Method Combination (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Standard Method Combination (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" rel="up" title="Method Selection and Combination">
+<link href="Declarative-Method-Combination.html#Declarative-Method-Combination" rel="next" title="Declarative Method Combination">
+<link href="Applying-method-combination-to-the-sorted-list-of-applicable-methods.html#Applying-method-combination-to-the-sorted-list-of-applicable-methods" rel="prev" title="Applying method combination to the sorted list of applicable methods">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Standard-Method-Combination"></a>
+<div class="header">
+<p>
+Next: <a href="Declarative-Method-Combination.html#Declarative-Method-Combination" accesskey="n" rel="next">Declarative Method Combination</a>, Previous: <a href="Applying-method-combination-to-the-sorted-list-of-applicable-methods.html#Applying-method-combination-to-the-sorted-list-of-applicable-methods" accesskey="p" rel="prev">Applying method combination to the sorted list of applicable methods</a>, Up: <a href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" accesskey="u" rel="up">Method Selection and Combination</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Standard-Method-Combination-1"></a>
+<h4 class="subsubsection">7.6.6.5 Standard Method Combination</h4>
+
+<a name="index-standard"></a>
+
+<p>Standard method combination is supported by the <i>class</i> <b>standard-generic-function</b>.
+It is used if no other type of method
+combination is specified or if the built-in method combination type
+<b>standard</b> is specified. 
+</p>
+<p>Primary methods define the main action of the effective method,  
+while auxiliary methods modify that action in one of three ways.
+A primary method has no method <i>qualifiers</i>.
+</p>
+<p>An auxiliary method is a method whose 
+<i>qualifier</i> is <tt>:before</tt>, <tt>:after</tt>, or <tt>:around</tt>.
+Standard method combination
+allows no more than one <i>qualifier</i> per method; if a method definition
+specifies more than one <i>qualifier</i> per method, an error is signaled.
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>A <i>before method</i> has the keyword <tt>:before</tt> as its only <i>qualifier</i>.
+A <i>before method</i> specifies <i>code</i> that is to be run before any 
+<i>primary methods</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>An <i>after method</i> has the keyword <tt>:after</tt> as its only <i>qualifier</i>.
+An <i>after method</i> specifies <i>code</i> that is to be run after
+<i>primary methods</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>An <i>around method</i> has the keyword <tt>:around</tt> as its only <i>qualifier</i>.
+An <i>around method</i> specifies <i>code</i> that is to be run instead of other
+<i>applicable methods</i>,
+but which might contain explicit <i>code</i>
+which calls some of those <i>shadowed</i> <i>methods</i>
+(via <b>call-next-method</b>).
+</p>
+</dd>
+</dl>
+
+<p>The semantics of standard method combination is as follows:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>If there are any <i>around methods</i>, the most specific
+<i>around method</i> is called.  It supplies the value or values of the
+generic function.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Inside the body of an <i>around method</i>, 
+<b>call-next-method</b> can be used to call the <i>next method</i>.  When the next
+method returns, the <i>around method</i> can execute more code,
+perhaps based on the returned value or values.
+The <i>generic function</i> <b>no-next-method</b> is invoked if <b>call-next-method</b> is used and
+there is no <i>applicable method</i> to call.  The <i>function</i> <b>next-method-p</b>
+may be used to determine whether a <i>next method</i> exists.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>If an <i>around method</i> invokes <b>call-next-method</b>,
+the next most specific <i>around method</i>
+is called, if one is applicable.  If there are no <i>around methods</i> 
+or if <b>call-next-method</b> is called by the least
+specific <i>around method</i>, the other methods are called as
+follows:
+</p><dl compact="compact">
+<dt>&ndash;</dt>
+<dd><p>All the <i>before methods</i> are called, in
+most-specific-first order.  Their values are ignored.
+An error is signaled if <b>call-next-method</b> is used in a
+<i>before method</i>.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>The most specific primary method is called.  Inside the
+body of a primary method, <b>call-next-method</b> may be used to call
+the next most specific primary method.  When that method returns, the
+previous primary method can execute more code, perhaps based on the
+returned value or values.  The generic function <b>no-next-method</b>
+is invoked if <b>call-next-method</b> is used and there are no more
+applicable primary methods.  The <i>function</i> <b>next-method-p</b> may be
+used to determine whether a <i>next method</i> exists.  If <b>call-next-method</b>
+is not used, only the most specific <i>primary method</i> is called.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>All the <i>after methods</i> are called in
+most-specific-last order.  Their values are ignored.
+An error is signaled if <b>call-next-method</b> is used in an
+<i>after method</i>.
+</p></dd>
+</dl>
+
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>If no <i>around methods</i> were invoked, the most
+specific primary method supplies the value or values returned by the
+generic function.  The value or values returned by the invocation of
+<b>call-next-method</b> in the least specific <i>around method</i> are
+those returned by the most specific primary method.
+</p>
+</dd>
+</dl>
+
+<p>In standard method combination, if there is an applicable method
+but no applicable primary method, an error is signaled.
+</p>
+<p>The <i>before methods</i> are run in most-specific-first order while
+the <i>after methods</i> are run in least-specific-first order.  The
+design rationale for this difference can be illustrated with an
+example.  Suppose class C_1 modifies the behavior of its
+superclass, C_2, by adding <i>before methods</i> and <i>after methods</i>.
+Whether the behavior of the class C_2 is defined
+directly by methods on C_2 or is inherited from its superclasses
+does not affect the relative order of invocation of methods on
+instances of the class C_1.  Class C_1&rsquo;s 
+<i>before method</i> runs before all of class C_2&rsquo;s methods.  
+Class C_1&rsquo;s <i>after method</i> runs after all of class C_2&rsquo;s methods.
+</p>
+<p>By contrast, all <i>around methods</i> run before any other methods
+run.  Thus a less specific <i>around method</i> runs before a more
+specific primary method.
+</p>
+<p>If only primary methods are used and if <b>call-next-method</b> is not
+used, only the most specific method is invoked; that is, more specific
+methods shadow more general ones. 
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Declarative-Method-Combination.html#Declarative-Method-Combination" accesskey="n" rel="next">Declarative Method Combination</a>, Previous: <a href="Applying-method-combination-to-the-sorted-list-of-applicable-methods.html#Applying-method-combination-to-the-sorted-list-of-applicable-methods" accesskey="p" rel="prev">Applying method combination to the sorted list of applicable methods</a>, Up: <a href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" accesskey="u" rel="up">Method Selection and Combination</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

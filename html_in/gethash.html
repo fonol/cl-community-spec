@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>gethash (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="gethash (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="gethash (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Hash-Tables-Dictionary.html#Hash-Tables-Dictionary" rel="up" title="Hash Tables Dictionary">
+<link href="remhash.html#remhash" rel="next" title="remhash">
+<link href="hash_002dtable_002dtest.html#hash_002dtable_002dtest" rel="prev" title="hash-table-test">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="gethash"></a>
+<div class="header">
+<p>
+Next: <a href="remhash.html#remhash" accesskey="n" rel="next">remhash</a>, Previous: <a href="hash_002dtable_002dtest.html#hash_002dtable_002dtest" accesskey="p" rel="prev">hash-table-test</a>, Up: <a href="Hash-Tables-Dictionary.html#Hash-Tables-Dictionary" accesskey="u" rel="up">Hash Tables Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="gethash-_005bAccessor_005d"></a>
+<h4 class="subsection">18.2.9 gethash                                                          [Accessor]</h4>
+
+<p><code>gethash</code>  <i>key hash-table &amp;optional</i> default &rArr;  <i>value, present-p</i>
+</p>
+<p>(setf (<code>         gethash</code> <i>key hash-table &amp;optional</i> default) new-value)<br>
+</p>
+<a name="Arguments-and-Values_003a_003a-383"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>key</i>&mdash;an <i>object</i>.
+</p>
+<p><i>hash-table</i>&mdash;a <i>hash table</i>.
+</p>
+<p><i>default</i>&mdash;an <i>object</i>.
+ The default is <b>nil</b>.
+</p>
+<p><i>value</i>&mdash;an <i>object</i>.
+</p>
+<p><i>present-p</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-499"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><i>Value</i> is the <i>object</i> in <i>hash-table</i> whose <i>key</i> 
+is the <i>same</i> as <i>key</i> under the <i>hash-table</i>&rsquo;s equivalence test.
+If there is no such entry, <i>value</i> is the <i>default</i>.
+</p>
+<p><i>Present-p</i> is <i>true</i> if an entry is found; otherwise, it is <i>false</i>.
+</p>
+<p><b>setf</b> may be used with <b>gethash</b> to modify the <i>value</i>
+associated with a given <i>key</i>, or to add a new entry.
+</p>
+<p>When a <b>gethash</b> <i>form</i> is used as a <b>setf</b> <i>place</i>,
+any <i>default</i> which is supplied is evaluated according to normal
+left-to-right evaluation rules, but its <i>value</i> is ignored.
+</p>
+<a name="Examples_003a_003a-363"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq table (make-hash-table)) &rArr;  #&lt;HASH-TABLE EQL 0/120 32206334&gt;
+ (gethash 1 table) &rArr;  NIL, <i>false</i>
+ (gethash 1 table 2) &rArr;  2, <i>false</i>
+ (setf (gethash 1 table) &quot;one&quot;) &rArr;  &quot;one&quot;
+ (setf (gethash 2 table &quot;two&quot;) &quot;two&quot;) &rArr;  &quot;two&quot;
+ (gethash 1 table) &rArr;  &quot;one&quot;, <i>true</i>
+ (gethash 2 table) &rArr;  &quot;two&quot;, <i>true</i>
+ (gethash nil table) &rArr;  NIL, <i>false</i>
+ (setf (gethash nil table) nil) &rArr;  NIL 
+ (gethash nil table) &rArr;  NIL, <i>true</i>
+ (defvar *counters* (make-hash-table)) &rArr;  *COUNTERS*
+ (gethash 'foo *counters*) &rArr;  NIL, <i>false</i>
+ (gethash 'foo *counters* 0) &rArr;  0, <i>false</i>
+ (defmacro how-many (obj) `(values (gethash ,obj *counters* 0))) &rArr;  HOW-MANY
+ (defun count-it (obj) (incf (how-many obj))) &rArr;  COUNT-IT
+ (dolist (x '(bar foo foo bar bar baz)) (count-it x))
+ (how-many 'foo) &rArr;  2
+ (how-many 'bar) &rArr;  3
+ (how-many 'quux) &rArr;  0
+</pre></div>
+
+<a name="See-Also_003a_003a-408"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="remhash.html#remhash">remhash</a>
+</p>
+<a name="Notes_003a_003a-273"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <i>secondary value</i>, <i>present-p</i>,
+can be used to distinguish the absence of an entry
+from the presence of an entry that has a value of <i>default</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="remhash.html#remhash" accesskey="n" rel="next">remhash</a>, Previous: <a href="hash_002dtable_002dtest.html#hash_002dtable_002dtest" accesskey="p" rel="prev">hash-table-test</a>, Up: <a href="Hash-Tables-Dictionary.html#Hash-Tables-Dictionary" accesskey="u" rel="up">Hash Tables Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

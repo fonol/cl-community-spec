@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>map (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="map (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="map (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Sequences-Dictionary.html#Sequences-Dictionary" rel="up" title="Sequences Dictionary">
+<link href="map_002dinto.html#map_002dinto" rel="next" title="map-into">
+<link href="subseq.html#subseq" rel="prev" title="subseq">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="map"></a>
+<div class="header">
+<p>
+Next: <a href="map_002dinto.html#map_002dinto" accesskey="n" rel="next">map-into</a>, Previous: <a href="subseq.html#subseq" accesskey="p" rel="prev">subseq</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="map-_005bFunction_005d"></a>
+<h4 class="subsection">17.3.7 map                                                              [Function]</h4>
+
+<p><code>map</code>  <i>result-type function &amp;rest</i> sequences^+ &rArr;  <i>result</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-359"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>result-type</i> &ndash; a <b>sequence</b> <i>type specifier</i>, or <b>nil</b>.
+</p>
+<p><i>function</i>&mdash;a <i>function designator</i>.
+  <i>function</i> must take as many arguments as 
+  there are <i>sequences</i>.
+</p>
+<p><i>sequence</i>&mdash;a <i>proper sequence</i>.
+</p>
+<p><i>result</i>&mdash;if <i>result-type</i> is a <i>type specifier</i> other than <b>nil</b>, 
+		 then a <i>sequence</i> of the <i>type</i> it denotes;
+		 otherwise (if the <i>result-type</i> is <b>nil</b>), <b>nil</b>.
+</p>
+<a name="Description_003a_003a-474"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Applies <i>function</i> to successive sets of arguments in which
+one argument is obtained from each <i>sequence</i>.
+The <i>function</i> is called first on all the elements with index <tt>0</tt>,
+then on all those with index <tt>1</tt>, and so on.
+The <i>result-type</i> specifies the <i>type</i> of the resulting <i>sequence</i>.
+</p>
+<p><b>map</b> returns <b>nil</b> if <i>result-type</i> is <b>nil</b>.      
+Otherwise, <b>map</b> returns
+a <i>sequence</i> such that element <tt>j</tt> is the result
+of applying <i>function</i> to element <tt>j</tt> of each of the 
+<i>sequences</i>.  The result <i>sequence</i> 
+is as long as the shortest of the
+<i>sequences</i>.
+The consequences are undefined if the result of applying <i>function</i> 
+to the successive elements of the <i>sequences</i> cannot
+be contained in a <i>sequence</i> of the <i>type</i> given by <i>result-type</i>.
+</p>
+<p>If the <i>result-type</i> is a <i>subtype</i> of <b>list</b>,
+the result will be a <i>list</i>.
+</p>
+<p>If the <i>result-type</i> is a <i>subtype</i> of <b>vector</b>,
+then if the implementation can determine the element type specified
+for the <i>result-type</i>, the element type of the resulting array 
+is the result of <i>upgrading</i> that element type; or, if the
+implementation can determine that the element type is unspecified (or <tt>*</tt>),
+the element type of the resulting array is <b>t</b>;
+otherwise, an error is signaled.
+</p>
+<a name="Examples_003a_003a-341"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (map 'string #'(lambda (x y)
+                  (char &quot;01234567890ABCDEF&quot; (mod (+ x y) 16)))
+       '(1 2 3 4)
+       '(10 9 8 7)) &rArr;  &quot;AAAA&quot;
+ (setq seq '(&quot;lower&quot; &quot;UPPER&quot; &quot;&quot; &quot;123&quot;)) &rArr;  (&quot;lower&quot; &quot;UPPER&quot; &quot;&quot; &quot;123&quot;)
+ (map nil #'nstring-upcase seq) &rArr;  NIL
+ seq &rArr;  (&quot;LOWER&quot; &quot;UPPER&quot; &quot;&quot; &quot;123&quot;)
+ (map 'list #'- '(1 2 3 4)) &rArr;  (-1 -2 -3 -4)
+ (map 'string
+      #'(lambda (x) (if (oddp x) #\1 #\0))
+      '(1 2 3 4)) &rArr;  &quot;1010&quot;
+</pre></div>
+
+<div class="example">
+<pre class="example"> (map '(vector * 4) #'cons &quot;abc&quot; &quot;de&quot;) should signal an error
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-155"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>An error of <i>type</i> <b>type-error</b> must be signaled if the <i>result-type</i> is 
+     not a <i>recognizable subtype</i> of <b>list</b>,
+     not a <i>recognizable subtype</i> of <b>vector</b>,
+ and not <b>nil</b>.
+</p>
+<p>Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			    if any <i>sequence</i> is not a <i>proper sequence</i>.
+</p>
+<p>An error of <i>type</i> <b>type-error</b> should be signaled
+if <i>result-type</i> specifies the
+number of elements and the minimum length of the <i>sequences</i> 
+is different from that number.
+</p>
+<a name="See-Also_003a_003a-386"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="map_002dinto.html#map_002dinto" accesskey="n" rel="next">map-into</a>, Previous: <a href="subseq.html#subseq" accesskey="p" rel="prev">subseq</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

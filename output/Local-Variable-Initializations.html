@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Local Variable Initializations (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" rel="up" title="Variable Initialization and Stepping Clauses">
+<link href="Examples-of-WITH-clause.html#Examples-of-WITH-clause" rel="next" title="Examples of WITH clause">
+<link href="Examples-of-for_002das_002dpackage-subclause.html#Examples-of-for_002das_002dpackage-subclause" rel="prev" title="Examples of for-as-package subclause">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Examples-of-for_002das_002dpackage-subclause.html#Examples-of-for_002das_002dpackage-subclause" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Examples of for-as-package subclause
+                            </a>
+                            <a href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Variable Initialization and Stepping Clauses
+                            </a>
+                            <a href="Examples-of-WITH-clause.html#Examples-of-WITH-clause.html" class="nav-btn nav__next ">
+                                Examples of WITH clause
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Local-Variable-Initializations"></a>
+<a name="Local-Variable-Initializations-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Local Variable Initializations</h4>
+
+<p>When a <b>loop</b> <i>form</i> is executed, the local variables are bound and are
+initialized to some value.  These local variables exist until <b>loop</b>
+iteration terminates, at which point they cease to exist.  
+Implicit variables are also established by iteration control clauses and the
+<tt>into</tt> preposition of accumulation clauses.
+</p>
+<p>The <tt>with</tt> construct initializes variables that are local to 
+a loop.  The variables are initialized one time only.
+If the optional <i>type-spec</i> argument is supplied for the variable 
+<i>var</i>, but there is no related expression to be evaluated, <i>var</i>
+is initialized to an appropriate default value for its <i>type</i>.
+For example, for the types <b>t</b>, <b>number</b>, 
+and <b>float</b>,
+the default values are <b>nil</b>, <tt>0</tt>, and <tt>0.0</tt> respectively.
+The consequences are undefined if a 
+<i>type-spec</i> argument is supplied for <i>var</i> if
+the related expression returns a value that is not of the supplied 
+<i>type</i>.
+By default, the <tt>with</tt> construct initializes variables
+<i>sequentially</i>; that is, one variable is assigned a value before the
+next expression is evaluated.  However, by using the <i>loop keyword</i> <tt>and</tt>
+to join several <tt>with</tt> clauses, 
+initializations can be forced to occur in <i>parallel</i>; that 
+is, all of the supplied
+<i>forms</i> are evaluated, and the results are bound to the respective
+variables simultaneously.
+</p>
+<p><i>Sequential</i> <i>binding</i> is used when it is desireable for the initialization of
+some variables to depend on the values of previously bound variables.
+For example, suppose the variables <tt>a</tt>, <tt>b</tt>, and <tt>c</tt> are to be bound in sequence:
+</p>
+<div class="example">
+<pre class="example"><code> (loop with a = 1 
+       with b = (+ a 2) 
+       with c = (+ b 3)
+       return (list a b c))
+&rArr;  (1 3 6)
+</code>
+</pre></div>
+
+<p>The execution of the above <b>loop</b> is equivalent to the execution of
+the following code:
+</p>
+<div class="example">
+<pre class="example"><code> (block nil
+   (let* ((a 1)
+          (b (+ a 2))
+          (c (+ b 3)))
+     (tagbody
+         (next-loop (return (list a b c))
+                    (go next-loop)
+                    end-loop))))
+</code>
+</pre></div>
+
+<p>If the values of previously bound variables are not needed
+for the initialization of other local variables, an 
+<tt>and</tt> clause can be used to 
+specify that the bindings are to occur in <i>parallel</i>:
+</p>
+<div class="example">
+<pre class="example"><code> (loop with a = 1 
+       and b = 2 
+       and c = 3
+       return (list a b c))
+&rArr;  (1 2 3)
+</code>
+</pre></div>
+
+<p>The execution of the above loop is equivalent to the execution of
+the following code:
+</p>
+<div class="example">
+<pre class="example"><code> (block nil
+   (let ((a 1)
+         (b 2)
+         (c 3))
+     (tagbody
+         (next-loop (return (list a b c))
+                    (go next-loop)
+                    end-loop))))
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

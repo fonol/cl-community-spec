@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Examples of Sharpsign Vertical-Bar (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Sharpsign.html#Sharpsign" rel="up" title="Sharpsign">
+<link href="Notes-about-Style-for-Sharpsign-Vertical_002dBar.html#Notes-about-Style-for-Sharpsign-Vertical_002dBar" rel="next" title="Notes about Style for Sharpsign Vertical-Bar">
+<link href="Sharpsign-Vertical_002dBar.html#Sharpsign-Vertical_002dBar" rel="prev" title="Sharpsign Vertical-Bar">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Sharpsign-Vertical_002dBar.html#Sharpsign-Vertical_002dBar" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Sharpsign Vertical-Bar
+                            </a>
+                            <a href="Sharpsign.html#Sharpsign.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Sharpsign
+                            </a>
+                            <a href="Notes-about-Style-for-Sharpsign-Vertical_002dBar.html#Notes-about-Style-for-Sharpsign-Vertical_002dBar.html" class="nav-btn nav__next ">
+                                Notes about Style for Sharpsign Vertical-Bar
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Examples-of-Sharpsign-Vertical_002dBar"></a>
+<a name="Examples-of-Sharpsign-Vertical_002dBar-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Examples of Sharpsign Vertical-Bar</h4>
+
+<p>The following are some examples that exploit the <tt>#|...|#</tt> notation:
+</p>
+<div class="example">
+<pre class="example"><code>;;; In this example, some debugging code is commented out with #|...|#
+;;; Note that this kind of comment can occur in the middle of a line
+;;; (because a delimiter marks where the end of the comment occurs)
+;;; where a semicolon comment can only occur at the end of a line 
+;;; (because it comments out the rest of the line).
+ (defun add3 (n) #|(format t &quot;~&amp;Adding 3 to ~D.&quot; n)|# (+ n 3))
+
+;;; The examples that follow show issues related to #| ... |# nesting.
+
+;;; In this first example, #| and |# always occur properly paired,
+;;; so nesting works naturally.
+ (defun mention-fun-fact-1a ()
+   (format t &quot;CL uses ; and #|...|# in comments.&quot;))
+&rArr;  MENTION-FUN-FACT-1A
+ (mention-fun-fact-1a)
+<tt> |&gt; </tt> CL uses ; and #|...|# in comments.
+&rArr;  NIL
+ #| (defun mention-fun-fact-1b ()
+      (format t &quot;CL uses ; and #|...|# in comments.&quot;)) |#
+ (fboundp 'mention-fun-fact-1b) &rArr;  NIL
+
+;;; In this example, vertical-bar followed by sharpsign needed to appear
+;;; in a string without any matching sharpsign followed by vertical-bar
+;;; having preceded this.  To compensate, the programmer has included a
+;;; slash separating the two characters.  In case 2a, the slash is 
+;;; unnecessary but harmless, but in case 2b, the slash is critical to
+;;; allowing the outer #| ... |# pair match.  If the slash were not present,
+;;; the outer comment would terminate prematurely.
+ (defun mention-fun-fact-2a ()
+   (format t &quot;Don't use |\# unmatched or you'll get in trouble!&quot;))
+&rArr;  MENTION-FUN-FACT-2A
+ (mention-fun-fact-2a)
+<tt> |&gt; </tt> Don't use |# unmatched or you'll get in trouble!
+&rArr;  NIL
+ #| (defun mention-fun-fact-2b ()
+      (format t &quot;Don't use |\# unmatched or you'll get in trouble!&quot;) |#
+ (fboundp 'mention-fun-fact-2b) &rArr;  NIL
+
+;;; In this example, the programmer attacks the mismatch problem in a
+;;; different way.  The sharpsign vertical bar in the comment is not needed
+;;; for the correct parsing of the program normally (as in case 3a), but 
+;;; becomes important to avoid premature termination of a comment when such 
+;;; a program is commented out (as in case 3b).
+ (defun mention-fun-fact-3a () ; #|
+   (format t &quot;Don't use |# unmatched or you'll get in trouble!&quot;))
+&rArr;  MENTION-FUN-FACT-3A
+ (mention-fun-fact-3a)
+<tt> |&gt; </tt> Don't use |# unmatched or you'll get in trouble!
+&rArr;  NIL
+ #|
+ (defun mention-fun-fact-3b () ; #|
+   (format t &quot;Don't use |# unmatched or you'll get in trouble!&quot;))
+ |#
+ (fboundp 'mention-fun-fact-3b) &rArr;  NIL
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

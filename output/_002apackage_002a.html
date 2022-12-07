@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>*package* (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Packages-Dictionary.html#Packages-Dictionary" rel="up" title="Packages Dictionary">
+<link href="package_002derror.html#package_002derror" rel="next" title="package-error">
+<link href="packagep.html#packagep" rel="prev" title="packagep">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="packagep.html#packagep" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                packagep
+                            </a>
+                            <a href="Packages-Dictionary.html#Packages-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Packages Dictionary
+                            </a>
+                            <a href="package_002derror.html#package_002derror.html" class="nav-btn nav__next ">
+                                package-error
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="g_t_002apackage_002a"></a>
+<a name="g_t_002apackage_002a-_005bVariable_005d"></a>
+<div class="section top-most">
+<div class="node-type">Variable</div>
+<h4 class="subsection">*package*                                                        </h4>
+
+<a name="Value-Type_003a_003a-4"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Value Type</h4>
+
+<p>a <i>package</i> <i>object</i>.
+</p>
+<a name="Initial-Value_003a_003a-4"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Initial Value</h4>
+
+<p>the <tt>COMMON-LISP-USER</tt> <i>package</i>.
+</p>
+<a name="Description_003a_003a-264"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Whatever <i>package</i> <i>object</i> is currently 
+the <i>value</i> of <b>*package*</b> is referred to as the <i>current package</i>.
+</p>
+<a name="Examples_003a_003a-182"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (in-package &quot;COMMON-LISP-USER&quot;) &rArr;  #&lt;PACKAGE &quot;COMMON-LISP-USER&quot;&gt;
+ *package* &rArr;  #&lt;PACKAGE &quot;COMMON-LISP-USER&quot;&gt;
+ (make-package &quot;SAMPLE-PACKAGE&quot; :use '(&quot;COMMON-LISP&quot;))
+&rArr;  #&lt;PACKAGE &quot;SAMPLE-PACKAGE&quot;&gt;
+ (list 
+   (symbol-package
+     (let ((*package* (find-package 'sample-package)))
+       (setq *some-symbol* (read-from-string &quot;just-testing&quot;))))
+   *package*)
+&rArr;  (#&lt;PACKAGE &quot;SAMPLE-PACKAGE&quot;&gt; #&lt;PACKAGE &quot;COMMON-LISP-USER&quot;&gt;)
+ (list (symbol-package (read-from-string &quot;just-testing&quot;))
+       *package*)
+&rArr;  (#&lt;PACKAGE &quot;COMMON-LISP-USER&quot;&gt; #&lt;PACKAGE &quot;COMMON-LISP-USER&quot;&gt;)
+ (eq 'foo (intern &quot;FOO&quot;)) &rArr;  <i>true</i>
+ (eq 'foo (let ((*package* (find-package 'sample-package)))
+            (intern &quot;FOO&quot;)))
+&rArr;  <i>false</i>
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-54"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p><b>load</b>,
+<b>compile-file</b>,
+<b>in-package</b>
+</p>
+<a name="See-Also_003a_003a-233"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="compile_002dfile.html#compile_002dfile">compile-file</a>
+,
+<a href="in_002dpackage.html#in_002dpackage">in-package</a>
+,
+<a href="load.html#load">load</a>
+,
+<a href="package.html#package">package</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

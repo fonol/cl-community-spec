@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>parse-integer (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="parse-integer (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="parse-integer (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Numbers-Dictionary.html#Numbers-Dictionary" rel="up" title="Numbers Dictionary">
+<link href="boole.html#boole" rel="next" title="boole">
+<link href="integerp.html#integerp" rel="prev" title="integerp">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="parse_002dinteger"></a>
+<div class="header">
+<p>
+Next: <a href="boole.html#boole" accesskey="n" rel="next">boole</a>, Previous: <a href="integerp.html#integerp" accesskey="p" rel="prev">integerp</a>, Up: <a href="Numbers-Dictionary.html#Numbers-Dictionary" accesskey="u" rel="up">Numbers Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="parse_002dinteger-_005bFunction_005d"></a>
+<h4 class="subsection">12.2.59 parse-integer                                                    [Function]</h4>
+
+<p><code>parse-integer</code>  <i>string &amp;key</i> start end radix junk-allowed &rArr;  <i>integer, pos</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-242"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>string</i>&mdash;a <i>string</i>.
+</p>
+<p><i>start</i>, <i>end</i>&mdash;<i>bounding index designators</i> of <i>string</i>.
+ The defaults for <i>start</i> and <i>end</i> are <tt>0</tt> and <b>nil</b>, respectively.
+</p>
+<p><i>radix</i>&mdash;a <i>radix</i>.
+ The default is <tt>10</tt>.
+</p>
+<p><i>junk-allowed</i>&mdash;a <i>generalized boolean</i>.
+ The default is <i>false</i>.
+</p>
+<p><i>integer</i>&mdash;an <i>integer</i> or <i>false</i>.
+</p>
+<p><i>pos</i>&mdash;a <i>bounding index</i> of <i>string</i>.
+</p>
+<a name="Description_003a_003a-324"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>parse-integer</b> parses an <i>integer</i> in the specified <i>radix</i>
+from the substring of <i>string</i> delimited by <i>start</i> and <i>end</i>.
+</p>
+<p><b>parse-integer</b> expects an optional sign (<tt>+</tt> or <tt>-</tt>) followed by
+a a non-empty sequence of digits to be interpreted in the specified <i>radix</i>.
+Optional leading and trailing <i>whitespace</i>_1 is ignored.
+</p>
+<p><b>parse-integer</b> does not recognize the syntactic radix-specifier
+prefixes <tt>#O</tt>, <tt>#B</tt>, <tt>#X</tt>, and <tt>#<i>n</i>R</tt>, 
+nor does it recognize a trailing decimal point.
+</p>
+<p>If <i>junk-allowed</i> is <i>false</i>, an error of <i>type</i> <b>parse-error</b> is 
+signaled if substring does not consist entirely of the representation of a 
+signed <i>integer</i>, possibly surrounded on either side by <i>whitespace</i>_1 
+<i>characters</i>.
+</p>
+<p>The first <i>value</i> returned is either
+    the <i>integer</i> that was parsed,
+ or else <b>nil</b> if no syntactically correct <i>integer</i> 
+    was seen but <i>junk-allowed</i> was <i>true</i>.
+</p>
+<p>The second <i>value</i> is either 
+    the index into the <i>string</i> of the delimiter that terminated the parse,
+ or the upper <i>bounding index</i> of the substring if the parse terminated at
+    the end of the substring (as is always the case if <i>junk-allowed</i> 
+    is <i>false</i>).
+</p>
+<a name="Examples_003a_003a-226"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (parse-integer &quot;123&quot;) &rArr;  123, 3
+ (parse-integer &quot;123&quot; :start 1 :radix 5) &rArr;  13, 3
+ (parse-integer &quot;no-integer&quot; :junk-allowed t) &rArr;  NIL, 0
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-100"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If <i>junk-allowed</i> is <i>false</i>, 
+an error is signaled if substring does not consist entirely of
+the representation of an <i>integer</i>, 
+possibly surrounded on either side by
+<i>whitespace</i>_1 characters.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="boole.html#boole" accesskey="n" rel="next">boole</a>, Previous: <a href="integerp.html#integerp" accesskey="p" rel="prev">integerp</a>, Up: <a href="Numbers-Dictionary.html#Numbers-Dictionary" accesskey="u" rel="up">Numbers Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

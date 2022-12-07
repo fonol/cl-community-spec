@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>check-type (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="check-type (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="check-type (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="simple_002derror.html#simple_002derror" rel="next" title="simple-error">
+<link href="cerror.html#cerror" rel="prev" title="cerror">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="check_002dtype"></a>
+<div class="header">
+<p>
+Next: <a href="simple_002derror.html#simple_002derror" accesskey="n" rel="next">simple-error</a>, Previous: <a href="cerror.html#cerror" accesskey="p" rel="prev">cerror</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="check_002dtype-_005bMacro_005d"></a>
+<h4 class="subsection">9.2.13 check-type                                                          [Macro]</h4>
+
+<p><code>check-type</code>  <i>place typespec <span class="roman">[</span><i>string</i><span class="roman">]</span></i> &rArr;  <i><b>nil</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-135"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>place</i>&mdash;a <i>place</i>.
+</p>
+<p><i>typespec</i>&mdash;a <i>type specifier</i>.
+</p>
+<p><i>string</i>&mdash;a <i>string</i>; evaluated. 
+</p>
+<a name="Description_003a_003a-183"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>check-type</b> signals a <i>correctable</i> <i>error</i> 
+of <i>type</i> <b>type-error</b> if the contents of <i>place</i> are not 
+of the type <i>typespec</i>.
+</p>
+<p><b>check-type</b> can return only if the <b>store-value</b> <i>restart</i> is invoked,
+either explicitly from a handler 
+    or implicitly as one of the options offered by the debugger.
+If the <b>store-value</b> <i>restart</i> is invoked,
+<b>check-type</b> stores the new value 
+that is the argument to the <i>restart</i> invocation 
+(or that is prompted for interactively by the debugger)
+in <i>place</i> and starts over, 
+checking the type of the new value
+and signaling another error if it is still not of the desired <i>type</i>.
+</p>
+<p>The first time <i>place</i> is <i>evaluated</i>, 
+it is <i>evaluated</i> by normal evaluation rules.
+It is later <i>evaluated</i> as a <i>place</i> 
+if the type check fails and the <b>store-value</b> <i>restart</i> is used;
+see <a href="Evaluation-of-Subforms-to-Places.html#Evaluation-of-Subforms-to-Places">Evaluation of Subforms to Places</a>.
+</p>
+<p><i>string</i> should be an English description of the type, 
+starting with an indefinite article (&ldquo;a&rdquo; or &ldquo;an&rdquo;).
+If <i>string</i> is not supplied,
+it is computed automatically from <i>typespec</i>.
+The automatically generated message mentions
+      <i>place</i>,
+      its contents,
+  and the desired type.
+An implementation may choose to generate 
+a somewhat differently worded error message 
+if it recognizes that <i>place</i> is of a particular form, 
+such as one of the arguments to the function that called <b>check-type</b>.
+<i>string</i> is allowed because some applications of <b>check-type</b> 
+may require a more specific description of what is wanted
+than can be generated automatically from <i>typespec</i>.
+</p>
+<a name="Examples_003a_003a-117"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq aardvarks '(sam harry fred))
+&rArr;  (SAM HARRY FRED)
+ (check-type aardvarks (array * (3)))
+<tt> |&gt; </tt> Error: The value of AARDVARKS, (SAM HARRY FRED),
+<tt> |&gt; </tt>        is not a 3-long array.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Specify a value to use instead.
+<tt> |&gt; </tt>  2: Return to Lisp Toplevel.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:CONTINUE 1</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Use Value: <b>|&gt;&gt;</b><tt>#(SAM FRED HARRY)</tt><b>&lt;&lt;|</b>
+&rArr;  NIL
+ aardvarks
+&rArr;  #&lt;ARRAY-T-3 13571&gt;
+ (map 'list #'identity aardvarks)
+&rArr;  (SAM FRED HARRY)
+ (setq aardvark-count 'foo)
+&rArr;  FOO
+ (check-type aardvark-count (integer 0 *) &quot;A positive integer&quot;)
+<tt> |&gt; </tt> Error: The value of AARDVARK-COUNT, FOO, is not a positive integer.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Specify a value to use instead.
+<tt> |&gt; </tt>  2: Top level.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:CONTINUE 2</tt><b>&lt;&lt;|</b>
+</pre></div>
+
+<div class="example">
+<pre class="example"> (defmacro define-adder (name amount)
+   (check-type name (and symbol (not null)) &quot;a name for an adder function&quot;)
+   (check-type amount integer)
+   `(defun ,name (x) (+ x ,amount)))
+
+ (macroexpand '(define-adder add3 3))
+&rArr;  (defun add3 (x) (+ x 3))
+
+ (macroexpand '(define-adder 7 7))
+<tt> |&gt; </tt> Error: The value of NAME, 7, is not a name for an adder function.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Specify a value to use instead.
+<tt> |&gt; </tt>  2: Top level.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:Continue 1</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Specify a value to use instead.
+<tt> |&gt; </tt> Type a form to be evaluated and used instead: <b>|&gt;&gt;</b><tt>'ADD7</tt><b>&lt;&lt;|</b>
+&rArr;  (defun add7 (x) (+ x 7))
+
+ (macroexpand '(define-adder add5 something))
+<tt> |&gt; </tt> Error: The value of AMOUNT, SOMETHING, is not an integer.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Specify a value to use instead.
+<tt> |&gt; </tt>  2: Top level.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:Continue 1</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Type a form to be evaluated and used instead: <b>|&gt;&gt;</b><tt>5</tt><b>&lt;&lt;|</b>
+&rArr;  (defun add5 (x) (+ x 5))
+
+</pre></div>
+
+<p>Control is transferred to a handler.
+</p>
+<a name="Side-Effects_003a_003a-9"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>The debugger might be entered.
+</p>
+<a name="Affected-By_003a_003a-21"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*break-on-signals*</b>
+</p>
+<p>The implementation.
+</p>
+<a name="See-Also_003a_003a-161"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Condition-System-Concepts.html#Condition-System-Concepts">Condition System Concepts</a>
+</p>
+<a name="Notes_003a_003a-100"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<div class="example">
+<pre class="example"> (check-type <i>place</i> <i>typespec</i>)
+ &equiv; (assert (typep <i>place</i> '<i>typespec</i>) (<i>place</i>)
+            'type-error :datum <i>place</i> :expected-type '<i>typespec</i>)
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="simple_002derror.html#simple_002derror" accesskey="n" rel="next">simple-error</a>, Previous: <a href="cerror.html#cerror" accesskey="p" rel="prev">cerror</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

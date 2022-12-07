@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Modification of Literal Objects (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Modification of Literal Objects (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Modification of Literal Objects (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Destructive-Operations.html#Destructive-Operations" rel="up" title="Destructive Operations">
+<link href="Transfer-of-Control-during-a-Destructive-Operation.html#Transfer-of-Control-during-a-Destructive-Operation" rel="next" title="Transfer of Control during a Destructive Operation">
+<link href="Destructive-Operations.html#Destructive-Operations" rel="prev" title="Destructive Operations">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Modification-of-Literal-Objects"></a>
+<div class="header">
+<p>
+Next: <a href="Transfer-of-Control-during-a-Destructive-Operation.html#Transfer-of-Control-during-a-Destructive-Operation" accesskey="n" rel="next">Transfer of Control during a Destructive Operation</a>, Previous: <a href="Destructive-Operations.html#Destructive-Operations" accesskey="p" rel="prev">Destructive Operations</a>, Up: <a href="Destructive-Operations.html#Destructive-Operations" accesskey="u" rel="up">Destructive Operations</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Modification-of-Literal-Objects-1"></a>
+<h4 class="subsection">3.7.1 Modification of Literal Objects</h4>
+
+<p>The consequences are undefined if <i>literal</i> <i>objects</i> 
+are destructively modified.  For this purpose, the following operations 
+are considered <i>destructive</i>:
+</p>
+<dl compact="compact">
+<dt><b>random-state</b></dt>
+<dd><p>Using it as an <i>argument</i> to the <i>function</i> <b>random</b>.
+</p>
+</dd>
+<dt><b>cons</b></dt>
+<dd><p>Changing the <i>car</i>_1 or <i>cdr</i>_1 of the <i>cons</i>,
+or performing a <i>destructive</i> operation on an <i>object</i> which is either
+the <i>car</i>_2 or the <i>cdr</i>_2 of the <i>cons</i>.
+</p>
+</dd>
+<dt><b>array</b></dt>
+<dd><p>Storing a new value into some element of the <i>array</i>,
+or performing a <i>destructive</i> operation 
+on an <i>object</i> that is already such an <i>element</i>.
+</p>
+<p>Changing the <i>fill pointer</i>, <i>dimensions</i>, or displacement of
+the <i>array</i> (regardless of whether the <i>array</i> is <i>actually adjustable</i>).
+</p>
+<p>Performing a <i>destructive</i> operation on another <i>array</i> 
+that is displaced to the <i>array</i> or that otherwise shares its contents
+with the <i>array</i>.
+</p>
+</dd>
+<dt><b>hash-table</b></dt>
+<dd><p>Performing a <i>destructive</i> operation on any <i>key</i>.
+</p>
+<p>Storing a new <i>value</i>_4 for any <i>key</i>,
+or performing a <i>destructive</i> operation 
+on any <i>object</i> that is such a <i>value</i>.
+</p>
+<p>Adding or removing entries from the <i>hash table</i>.
+</p>
+</dd>
+<dt><b>structure-object</b></dt>
+<dd><p>Storing a new value into any slot,
+or performing a <i>destructive</i> operation on an <i>object</i> 
+that is the value of some slot.
+</p>
+</dd>
+<dt><b>standard-object</b></dt>
+<dd><p>Storing a new value into any slot,
+or performing a <i>destructive</i> operation on an <i>object</i> 
+that is the value of some slot.
+</p>
+<p>Changing the class of the <i>object</i> (<i>e.g.</i>, using the <i>function</i> <b>change-class</b>).
+</p>
+</dd>
+<dt><b>readtable</b></dt>
+<dd><p>Altering the <i>readtable case</i>.
+</p>
+<p>Altering the syntax type of any character in this readtable.
+</p>
+<p>Altering the <i>reader macro function</i> associated with any <i>character</i>
+in the <i>readtable</i>, or altering the <i>reader macro functions</i>
+associated with <i>characters</i> defined as <i>dispatching macro characters</i>
+in the <i>readtable</i>.
+</p>
+</dd>
+<dt><b>stream</b></dt>
+<dd><p>Performing I/O operations on the <i>stream</i>,
+or <i>closing</i> the <i>stream</i>.
+</p>
+</dd>
+<dt>All other standardized types</dt>
+<dd><p>[This category includes, for example, <b>character</b>,
+                                      <b>condition</b>,
+                                      <b>function</b>,
+                                      <b>method-combination</b>,
+                                      <b>method</b>,
+                                      <b>number</b>,
+                                      <b>package</b>,
+                                      <b>pathname</b>,
+                                      <b>restart</b>,
+                                  and <b>symbol</b>.]
+</p>
+<p>There are no <i>standardized</i> <i>destructive</i> operations
+defined on <i>objects</i> of these <i>types</i>.
+</p>
+</dd>
+</dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Transfer-of-Control-during-a-Destructive-Operation.html#Transfer-of-Control-during-a-Destructive-Operation" accesskey="n" rel="next">Transfer of Control during a Destructive Operation</a>, Previous: <a href="Destructive-Operations.html#Destructive-Operations" accesskey="p" rel="prev">Destructive Operations</a>, Up: <a href="Destructive-Operations.html#Destructive-Operations" accesskey="u" rel="up">Destructive Operations</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

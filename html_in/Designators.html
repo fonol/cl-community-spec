@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Designators (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Designators (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Designators (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Notational-Conventions.html#Notational-Conventions" rel="up" title="Notational Conventions">
+<link href="Nonsense-Words.html#Nonsense-Words" rel="next" title="Nonsense Words">
+<link href="NIL.html#NIL" rel="prev" title="NIL">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Designators"></a>
+<div class="header">
+<p>
+Next: <a href="Nonsense-Words.html#Nonsense-Words" accesskey="n" rel="next">Nonsense Words</a>, Previous: <a href="NIL.html#NIL" accesskey="p" rel="prev">NIL</a>, Up: <a href="Notational-Conventions.html#Notational-Conventions" accesskey="u" rel="up">Notational Conventions</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Designators-1"></a>
+<h4 class="subsubsection">1.4.1.12 Designators</h4>
+
+<p>A <i>designator</i>
+<a name="index-designator"></a>
+ is an <i>object</i> that denotes another <i>object</i>.
+</p>
+<p>Where a <i>parameter</i> of an <i>operator</i> is described as a <i>designator</i>,
+the description of the <i>operator</i> is written in a way that assumes that
+the value of the <i>parameter</i> is the denoted <i>object</i>;
+that is, that the <i>parameter</i> is already of the denoted <i>type</i>.
+(The specific nature of the <i>object</i> denoted by
+   a &ldquo;&lt;&lt;<i>type</i>&gt;&gt; <i>designator</i>&rdquo;
+or a &ldquo;<i>designator</i> for a &lt;&lt;<i>type</i>&gt;&gt;&rdquo; 
+can be found in the Glossary entry for &ldquo;&lt;&lt;<i>type</i>&gt;&gt; <i>designator</i>.&rdquo;)
+</p>
+<p>For example, &ldquo;<b>nil</b>&rdquo; and &ldquo;the <i>value</i> of <b>*standard-output*</b>&rdquo; are operationally
+indistinguishable as <i>stream designators</i>.  Similarly, 
+the <i>symbol</i> <tt>foo</tt> and the <i>string</i> <tt>&quot;FOO&quot;</tt> 
+are operationally indistinguishable as <i>string designators</i>.  
+</p>
+<p>Except as otherwise noted, in a situation where the denoted <i>object</i> 
+might be used multiple times, it is <i>implementation-dependent</i>
+whether the <i>object</i> is coerced only once or whether the coercion occurs
+each time the <i>object</i> must be used.
+</p>
+<p>For example, <b>mapcar</b> receives a <i>function designator</i> as an argument,
+and its description is written as if this were simply a function.  In fact, it
+is <i>implementation-dependent</i> whether the <i>function designator</i> is 
+coerced right away or whether it is carried around internally in the form that
+it was given as an <i>argument</i> and re-coerced each time it is needed.  In most
+cases, <i>conforming programs</i> cannot detect the distinction, but there are some 
+pathological situations (particularly those involving self-redefining or 
+mutually-redefining functions) which do conform and which can detect this difference.
+The following program is a <i>conforming program</i>, but might or might not have
+portably correct results, depending on whether its correctness depends on one or
+the other of the results:
+</p>
+<div class="example">
+<pre class="example"> (defun add-some (x) 
+   (defun add-some (x) (+ x 2))
+   (+ x 1)) &rArr;  ADD-SOME
+ (mapcar 'add-some '(1 2 3 4))
+&rArr;  (2 3 4 5)
+<i>OR</i>&rArr; (2 4 5 6)
+</pre></div>
+
+<p>In a few rare situations, there may be a need in a dictionary entry
+to refer to the <i>object</i> that was the original <i>designator</i>
+for a <i>parameter</i>.
+Since naming the <i>parameter</i> would refer to the denoted <i>object</i>,
+the phrase &ldquo;the &lt;&lt;<i>parameter-name</i>&gt;&gt; <i>designator</i>&rdquo; 
+can be used to refer to the <i>designator</i> which was the <i>argument</i>
+from which the <i>value</i> of &lt;&lt;<i>parameter-name</i>&gt;&gt; was computed.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Nonsense-Words.html#Nonsense-Words" accesskey="n" rel="next">Nonsense Words</a>, Previous: <a href="NIL.html#NIL" accesskey="p" rel="prev">NIL</a>, Up: <a href="Notational-Conventions.html#Notational-Conventions" accesskey="u" rel="up">Notational Conventions</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

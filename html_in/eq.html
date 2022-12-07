@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>eq (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="eq (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="eq (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="eql.html#eql" rel="next" title="eql">
+<link href="t.html#t" rel="prev" title="t">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="eq"></a>
+<div class="header">
+<p>
+Next: <a href="eql.html#eql" accesskey="n" rel="next">eql</a>, Previous: <a href="t.html#t" accesskey="p" rel="prev">t</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="eq-_005bFunction_005d"></a>
+<h4 class="subsection">5.3.33 eq                                                               [Function]</h4>
+
+<p><code>eq</code>  <i>x y</i> &rArr;  <i>generalized-boolean</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-52"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>x</i>&mdash;an <i>object</i>.
+</p>
+<p><i>y</i>&mdash;an <i>object</i>.
+</p>
+<p><i>generalized-boolean</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-86"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns <i>true</i> if its <i>arguments</i> are the same, identical <i>object</i>;
+otherwise, returns <i>false</i>.
+</p>
+<a name="Examples_003a_003a-60"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (eq 'a 'b) &rArr;  <i>false</i>
+ (eq 'a 'a) &rArr;  <i>true</i>
+ (eq 3 3)
+&rArr;  <i>true</i>
+<i>OR</i>&rArr; <i>false</i>
+ (eq 3 3.0) &rArr;  <i>false</i>
+ (eq 3.0 3.0)
+&rArr;  <i>true</i>
+<i>OR</i>&rArr; <i>false</i>
+ (eq #c(3 -4) #c(3 -4))
+&rArr;  <i>true</i>
+<i>OR</i>&rArr; <i>false</i>
+ (eq #c(3 -4.0) #c(3 -4)) &rArr;  <i>false</i>
+ (eq (cons 'a 'b) (cons 'a 'c)) &rArr;  <i>false</i>
+ (eq (cons 'a 'b) (cons 'a 'b)) &rArr;  <i>false</i>
+ (eq '(a . b) '(a . b))
+&rArr;  <i>true</i>
+<i>OR</i>&rArr; <i>false</i>
+ (progn (setq x (cons 'a 'b)) (eq x x)) &rArr;  <i>true</i>
+ (progn (setq x '(a . b)) (eq x x)) &rArr;  <i>true</i>
+ (eq #\A #\A)
+&rArr;  <i>true</i>
+<i>OR</i>&rArr; <i>false</i>
+ (let ((x &quot;Foo&quot;)) (eq x x)) &rArr;  <i>true</i>
+ (eq &quot;Foo&quot; &quot;Foo&quot;)
+&rArr;  <i>true</i>
+<i>OR</i>&rArr; <i>false</i>
+ (eq &quot;Foo&quot; (copy-seq &quot;Foo&quot;)) &rArr;  <i>false</i>
+ (eq &quot;FOO&quot; &quot;foo&quot;) &rArr;  <i>false</i>
+ (eq &quot;string-seq&quot; (copy-seq &quot;string-seq&quot;)) &rArr;  <i>false</i>
+ (let ((x 5)) (eq x x))
+&rArr;  <i>true</i>
+<i>OR</i>&rArr; <i>false</i>
+</pre></div>
+
+<a name="See-Also_003a_003a-71"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="eql.html#eql">eql</a>
+,
+<a href="equal.html#equal">equal</a>
+,
+<a href="equalp.html#equalp">equalp</a>
+,
+&lsquo;=; /=; &lt;; &gt;; &lt;=; &gt;=&rsquo;
+,
+<a href="Compilation.html#Compilation">Compilation</a>
+</p>
+<a name="Notes_003a_003a-42"></a>
+<h4 class="subsubheading">Notes::</h4>
+<p><i>Objects</i> that appear the same when printed are not necessarily
+<b>eq</b> to each other.  <i>Symbols</i> that print the same 
+usually are <b>eq</b> to each other because of the use of the
+<b>intern</b> function.  However, <i>numbers</i> with the 
+same value need not be <b>eq</b>, and two similar
+<i>lists</i> are usually not <i>identical</i>.
+</p>
+<p>An implementation is permitted to make &ldquo;copies&rdquo; of 
+<i>characters</i> and <i>numbers</i> at any time.  
+The effect is that <span class="roman">Common Lisp</span> makes no guarantee that <b>eq</b> 
+is true even when both its arguments are &ldquo;the same thing&rdquo; if 
+that thing is a <i>character</i> or <i>number</i>.
+</p>
+<p>Most <span class="roman">Common Lisp</span> <i>operators</i> use <b>eql</b> rather than
+<b>eq</b> to compare objects, or else they default to <b>eql</b>
+and only use <b>eq</b> if specifically requested to do so.
+However, the following <i>operators</i> are defined to use <b>eq</b>
+rather than <b>eql</b> in a way that cannot be overridden by the
+<i>code</i> which employs them:
+</p>
+<p>&nbsp;&nbsp;catch&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;get&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">get-properties</span>&nbsp;&nbsp;remprop&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;5&ndash;11:&nbsp;Operators&nbsp;that&nbsp;always&nbsp;prefer&nbsp;EQ&nbsp;over&nbsp;EQL<!-- /@w -->
+</p>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="eql.html#eql" accesskey="n" rel="next">eql</a>, Previous: <a href="t.html#t" accesskey="p" rel="prev">t</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

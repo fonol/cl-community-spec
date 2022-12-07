@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>parse-namestring (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Filenames-Dictionary.html#Filenames-Dictionary" rel="up" title="Filenames Dictionary">
+<link href="wild_002dpathname_002dp.html#wild_002dpathname_002dp" rel="next" title="wild-pathname-p">
+<link href="namestring.html#namestring" rel="prev" title="namestring">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="namestring.html#namestring" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                namestring
+                            </a>
+                            <a href="Filenames-Dictionary.html#Filenames-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Filenames Dictionary
+                            </a>
+                            <a href="wild_002dpathname_002dp.html#wild_002dpathname_002dp.html" class="nav-btn nav__next ">
+                                wild-pathname-p
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="parse_002dnamestring"></a>
+<a name="parse_002dnamestring-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">parse-namestring                                                 </h4>
+
+<p><code>parse-namestring</code>  <i>thing &amp;optional</i> host default-pathname &amp;key start end junk-allowed<br>
+   &rArr;  <i>pathname, position</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-397"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>thing</i>&mdash;a <i>string</i>,
+	        a <i>pathname</i>,
+	     or a <i>stream associated with a file</i>.
+</p>
+<p><i>host</i>&mdash;a <i>valid pathname host</i>, a <i>logical host</i>, or <b>nil</b>.
+</p>
+<p><i>default-pathname</i>&mdash;a <i>pathname designator</i>.
+ The default is the <i>value</i> of <b>*default-pathname-defaults*</b>.
+</p>
+<p><i>start</i>, <i>end</i>&mdash;<i>bounding index designators</i> of <i>thing</i>.
+ The defaults for <i>start</i> and <i>end</i> are <tt>0</tt> and <b>nil</b>, respectively.
+</p>
+<p><i>junk-allowed</i>&mdash;a <i>generalized boolean</i>.
+  The default is <i>false</i>.
+</p>
+<p><i>pathname</i>&mdash;a <i>pathname</i>, or <b>nil</b>.
+</p>
+<p><i>position</i>&mdash;a <i>bounding index designator</i> for <i>thing</i>.
+</p>
+<a name="Description_003a_003a-516"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Converts <i>thing</i> into a <i>pathname</i>.
+</p>
+<p>The <i>host</i> supplies a host name with respect to which the parsing occurs.
+</p>
+<p>If <i>thing</i> is a <i>stream associated with a file</i>,
+processing proceeds as if the <i>pathname</i> used to open that <i>file</i>
+had been supplied instead.
+</p>
+<p>If <i>thing</i> is a <i>pathname</i>,
+the <i>host</i> and the host component of <i>thing</i> are compared.
+If they match, 
+two values are immediately returned: <i>thing</i> and <i>start</i>;
+otherwise (if they do not match), an error is signaled.
+</p>
+<p>Otherwise (if <i>thing</i> is a <i>string</i>),
+<b>parse-namestring</b> parses the name of a <i>file</i> within
+the substring of <i>thing</i> bounded by <i>start</i> and <i>end</i>.
+</p>
+<p>If <i>thing</i> is a <i>string</i> then 
+the substring of <i>thing</i> <i>bounded</i> by <i>start</i> and <i>end</i>
+is parsed into a <i>pathname</i> 
+as follows:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>If <i>host</i> is a <i>logical host</i> then <i>thing</i> is parsed
+  as a <i>logical pathname</i> <i>namestring</i> 
+  on the <i>host</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>If <i>host</i> is <b>nil</b> and <i>thing</i> is a syntactically valid 
+  <i>logical pathname</i> <i>namestring</i> containing an explicit host,
+  then it is parsed as a <i>logical pathname</i> <i>namestring</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>If  <i>host</i> is <b>nil</b>,
+      <i>default-pathname</i> is a <i>logical pathname</i>,
+  and <i>thing</i> is a syntactically valid <i>logical pathname</i> <i>namestring</i>
+       without an explicit host,
+  then it is parsed as a <i>logical pathname</i> <i>namestring</i>
+        on the host that is the host component of <i>default-pathname</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Otherwise, the parsing of <i>thing</i> is <i>implementation-defined</i>.
+</p>
+</dd>
+</dl>
+
+<p>In the first 
+of these
+cases,
+the host portion of the <i>logical pathname</i> namestring
+and its following <i>colon</i> are optional.
+</p>
+<p>If the host portion of the namestring and <i>host</i> 
+are both present and do not match,
+an error is signaled.               
+</p>
+<p>If <i>junk-allowed</i> is <i>true</i>,
+then the <i>primary value</i> is the <i>pathname</i> parsed 
+or, if no syntactically correct <i>pathname</i> was seen, <b>nil</b>.
+If <i>junk-allowed</i> is <i>false</i>,
+then the entire substring is scanned, 
+and the <i>primary value</i> is the <i>pathname</i> parsed.
+</p>
+<p>In either case, the <i>secondary value</i>
+is the index into <i>thing</i> of the delimiter that terminated the parse,
+or the index beyond the substring if the parse terminated at the end of the substring
+  (as will always be the case if <i>junk-allowed</i> is <i>false</i>).
+</p>
+<p>Parsing a <i>null</i> <i>string</i> always succeeds,
+producing a <i>pathname</i> with all components (except the host) equal to <b>nil</b>.
+</p>
+<p>If <i>thing</i> contains an explicit host name and no explicit device name,
+then it is <i>implementation-defined</i> whether <b>parse-namestring</b>
+will supply the standard default device for that host as the device component
+of the resulting <i>pathname</i>.
+</p>
+<a name="Examples_003a_003a-377"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (setq q (parse-namestring &quot;test&quot;))  
+&rArr;  #S(PATHNAME :HOST NIL :DEVICE NIL :DIRECTORY NIL :NAME &quot;test&quot; 
+       :TYPE NIL :VERSION NIL)
+ (pathnamep q) &rArr;  <i>true</i>
+ (parse-namestring &quot;test&quot;) 
+&rArr;  #S(PATHNAME :HOST NIL :DEVICE NIL :DIRECTORY NIL :NAME &quot;test&quot;
+       :TYPE NIL :VERSION NIL), 4
+ (setq s (open <i>xxx</i>)) &rArr;  #&lt;Input File Stream...&gt;
+ (parse-namestring s) 
+&rArr;  #S(PATHNAME :HOST NIL :DEVICE NIL :DIRECTORY NIL :NAME <i>xxx</i> 
+       :TYPE NIL :VERSION NIL), 0
+ (parse-namestring &quot;test&quot; nil nil :start 2 :end 4 )
+ &rArr;  #S(PATHNAME ...), 15
+ (parse-namestring &quot;foo.lisp&quot;)
+&rArr;  #P&quot;foo.lisp&quot;
+</code>
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-178"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>If <i>junk-allowed</i> is <i>false</i>,
+an error of <i>type</i> <b>parse-error</b> is signaled if <i>thing</i> 
+does not consist entirely of the representation of a <i>pathname</i>, 
+possibly surrounded on either side by <i>whitespace</i>_1 characters if that is
+appropriate to the cultural conventions of the implementation.
+</p>
+<p>If <i>host</i> is supplied and not <b>nil</b>,
+and <i>thing</i> contains a manifest host name, 
+an error of <i>type</i> <b>error</b> is signaled if the hosts do not match.
+</p>
+<p>If <i>thing</i> is a <i>logical pathname</i> namestring
+and if the host portion of the namestring and <i>host</i> 
+are both present and do not match,
+an error of <i>type</i> <b>error</b> is signaled.               
+</p>
+<a name="See-Also_003a_003a-419"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><b>pathname</b>,
+<b>logical-pathname</b>,
+<a href="File-System-Concepts.html#File-System-Concepts">File System Concepts</a>,
+</p>
+<p><a href="_002d_003eUNSPECIFIC-as-a-Component-Value.html#g_t_002d_003eUNSPECIFIC-as-a-Component-Value">-&gt;UNSPECIFIC as a Component Value</a>,
+</p>
+<p><a href="Pathnames-as-Filenames.html#Pathnames-as-Filenames">Pathnames as Filenames</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

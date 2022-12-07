@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Boa Lambda Lists (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Lambda-Lists.html#Lambda-Lists" rel="up" title="Lambda Lists">
+<link href="Defsetf-Lambda-Lists.html#Defsetf-Lambda-Lists" rel="next" title="Defsetf Lambda Lists">
+<link href="Destructuring-Lambda-Lists.html#Destructuring-Lambda-Lists" rel="prev" title="Destructuring Lambda Lists">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Destructuring-Lambda-Lists.html#Destructuring-Lambda-Lists" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Destructuring Lambda Lists
+                            </a>
+                            <a href="Lambda-Lists.html#Lambda-Lists.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Lambda Lists
+                            </a>
+                            <a href="Defsetf-Lambda-Lists.html#Defsetf-Lambda-Lists.html" class="nav-btn nav__next ">
+                                Defsetf Lambda Lists
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Boa-Lambda-Lists"></a>
+<a name="Boa-Lambda-Lists-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Boa Lambda Lists</h4>
+
+<p>A <i>boa lambda list</i>
+<a name="index-boa-lambda-list"></a>
+ is a <i>lambda list</i> that is syntactically 
+like an <i>ordinary lambda list</i>, but that is processed in
+&ldquo;<b>b</b>y <b>o</b>rder of <b>a</b>rgument&rdquo; style.
+</p>
+<p>A <i>boa lambda list</i> is used only in a <b>defstruct</b> <i>form</i>,
+when explicitly specifying the <i>lambda list</i> 
+of a constructor <i>function</i> (sometimes called a &ldquo;boa constructor&rdquo;).
+</p>
+<p>The <b>&amp;optional</b>, <b>&amp;rest</b>, <b>&amp;aux</b>,
+</p>
+<p><b>&amp;key</b>, and <b>&amp;allow-other-keys</b>
+</p>
+<p><i>lambda list keywords</i> are recognized in a <i>boa lambda list</i>.
+The way these <i>lambda list keywords</i> differ from their
+use in an <i>ordinary lambda list</i> follows.
+</p>
+<p>Consider this example, which describes how <b>destruct</b> processes
+its <tt>:constructor</tt> option.
+</p>
+<div class="example">
+<pre class="example"><code> (:constructor create-foo
+         (a &amp;optional b (c 'sea) &amp;rest d &amp;aux e (f 'eff)))
+</code>
+</pre></div>
+
+<p>This defines <tt>create-foo</tt> to be a constructor of one or more arguments.
+The first argument is used to initialize the <tt>a</tt> slot.  The second
+argument is used to initialize the <tt>b</tt> slot.  If there isn&rsquo;t any
+second argument, then the default value given in the body of the
+<b>defstruct</b> (if given) is used instead.  
+The third argument is used to
+initialize the <tt>c</tt> slot.  If there isn&rsquo;t any third argument, then the
+symbol <tt>sea</tt> is used instead.  Any arguments following the third
+argument are collected into a <i>list</i> 
+and used to initialize the <tt>d</tt>
+slot.  If there are three or fewer arguments, then <b>nil</b> is placed in
+the <tt>d</tt> slot.  The <tt>e</tt> slot is not initialized; 
+its initial value is <i>implementation-defined</i>.
+Finally, the <tt>f</tt> slot is initialized to contain the symbol <tt>eff</tt>.
+</p>
+<p><b>&amp;key</b> and <b>&amp;allow-other-keys</b> arguments default
+in a manner similar to that of <b>&amp;optional</b> arguments: if no default
+is supplied in the <i>lambda list</i> then the default value 
+given in the body of the <b>defstruct</b> (if given) is used instead.
+For example:
+</p>
+<div class="example">
+<pre class="example"><code> (defstruct (foo (:constructor CREATE-FOO (a &amp;optional b (c 'sea)
+                                             &amp;key (d 2)
+                                             &amp;aux e (f 'eff))))
+   (a 1) (b 2) (c 3) (d 4) (e 5) (f 6))
+
+ (create-foo 10) &rArr;  #S(FOO A 10 B 2 C SEA D 2 E <i>implemention-dependent</i> F EFF)
+ (create-foo 10 'bee 'see :d 'dee) 
+&rArr;  #S(FOO A 10 B BEE C SEE D DEE E <i>implemention-dependent</i> F EFF)
+</code>
+</pre></div>
+
+<p>If keyword arguments of the form 
+<tt>((<i>key</i> <i>var</i>) <span class="roman">[</span><i>default</i> <span class="roman">[</span><i>svar</i><span class="roman">]</span><span class="roman">]</span>)</tt>
+are specified, the <i>slot</i> <i>name</i> is matched with <i>var</i> 
+(not <i>key</i>).
+</p>
+<p>The actions taken in the <tt>b</tt> and <tt>e</tt> cases were carefully
+chosen to allow the user to specify all possible behaviors. 
+The <b>&amp;aux</b> variables can be used to completely override the default
+initializations given in the body.
+</p>
+<p>If no default value is supplied for an <i>aux variable</i> variable,
+the consequences are undefined if an attempt is later made to read
+the corresponding <i>slot</i>&rsquo;s value before a value is explicitly assigned.
+If such a <i>slot</i> has a <tt>:type</tt> option specified,
+this suppressed initialization does not imply a type mismatch situation;
+the declared type is only required to apply when the <i>slot</i> is finally assigned.
+</p>
+<p>With this definition, the following can be written:
+</p>
+<div class="example">
+<pre class="example"><code> (create-foo 1 2)
+</code>
+</pre></div>
+
+<p>instead of
+</p>
+<div class="example">
+<pre class="example"><code> (make-foo :a 1 :b 2)
+</code>
+</pre></div>
+
+<p>and <tt>create-foo</tt> provides defaulting different
+from that of <tt>make-foo</tt>.
+</p>
+<p>Additional arguments that do not correspond to slot names but
+are merely present to supply values used in subsequent initialization 
+computations are allowed.
+For example, in the definition
+</p>
+<div class="example">
+<pre class="example"><code> (defstruct (frob (:constructor create-frob
+                  (a &amp;key (b 3 have-b) (c-token 'c) 
+                          (c (list c-token (if have-b 7 2))))))
+         a b c)
+</code>
+</pre></div>
+
+<p>the <tt>c-token</tt> argument is used merely to supply a value used in the 
+initialization of the <tt>c</tt> slot. The <i>supplied-p parameters</i> 
+associated with <i>optional parameters</i> and <i>keyword parameters</i>
+might also be used this way.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

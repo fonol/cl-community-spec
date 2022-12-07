@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Introduction to Classes (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Introduction to Classes (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Introduction to Classes (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Classes.html#Classes" rel="up" title="Classes">
+<link href="Standard-Metaclasses.html#Standard-Metaclasses" rel="next" title="Standard Metaclasses">
+<link href="Classes.html#Classes" rel="prev" title="Classes">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Introduction-to-Classes"></a>
+<div class="header">
+<p>
+Next: <a href="Defining-Classes.html#Defining-Classes" accesskey="n" rel="next">Defining Classes</a>, Previous: <a href="Classes.html#Classes" accesskey="p" rel="prev">Classes</a>, Up: <a href="Classes.html#Classes" accesskey="u" rel="up">Classes</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Introduction-to-Classes-1"></a>
+<h4 class="subsection">4.3.1 Introduction to Classes</h4>
+
+<p>A <i>class</i>
+<a name="index-class"></a>
+ is an <i>object</i> that determines the structure and behavior 
+of a set of other <i>objects</i>, which are called its <i>instances</i>
+<a name="index-instance"></a>
+.   
+</p>
+<p>A <i>class</i> can inherit structure and behavior from other <i>classes</i>.
+A <i>class</i> whose definition refers to other <i>classes</i> for the purpose 
+of inheriting from them is said to be a <i>subclass</i> of each of
+those <i>classes</i>. The <i>classes</i> that are designated for purposes of
+inheritance are said to be <i>superclasses</i> of the inheriting <i>class</i>.
+</p>
+<p>A <i>class</i> can have a <i>name</i>. The <i>function</i> <b>class-name</b> 
+takes a <i>class</i> <i>object</i> and returns its <i>name</i>. 
+The <i>name</i> of an anonymous <i>class</i> is <b>nil</b>.  A <i>symbol</i> 
+can <i>name</i> a <i>class</i>. The <i>function</i> <b>find-class</b> takes a
+<i>symbol</i> and returns the <i>class</i> that the <i>symbol</i> names.
+A <i>class</i> has a <i>proper name</i> if the <i>name</i> is a <i>symbol</i>
+and if the <i>name</i> of the <i>class</i> names that <i>class</i>.
+That is, a <i>class</i>~C has the <i>proper name</i>~S if S=
+<tt>(class-name C)</tt> and C= <tt>(find-class S)</tt>.
+Notice that it is possible for 
+<tt>(find-class S_1)</tt> = <tt>(find-class S_2)</tt>
+and S_1!= S_2.
+If C= <tt>(find-class S)</tt>, we say that C is the <i>class</i> <i>named</i> S.
+</p>
+<p>A <i>class</i> C_1 is 
+a <i>direct superclass</i>
+<a name="index-direct-superclass"></a>
+ of a <i>class</i> C_2
+if C_2 explicitly designates C_1 
+as a <i>superclass</i> in its definition.
+In this case C_2 is a <i>direct subclass</i>
+<a name="index-direct-subclass"></a>
+ of C_1.
+A <i>class</i> C_n is a <i>superclass</i>
+<a name="index-superclass"></a>
+ of 
+a <i>class</i> C_1 if there exists a series of
+<i>classes</i> C_2,...,C_{n-1} such that 
+C_{i+1} is a <i>direct superclass</i> of C_i for 1 &lt;= i&lt;n.
+In this case, C_1 is a <i>subclass</i>
+<a name="index-subclass"></a>
+ of C_n.
+A <i>class</i> is considered neither a <i>superclass</i> nor a <i>subclass</i> of itself.
+That is, if C_1 is a <i>superclass</i> of C_2, 
+then C_1 != C_2.
+The set of <i>classes</i> consisting of some given <i>class</i> C 
+along with all of its <i>superclasses</i> is called &ldquo;C and its superclasses.&rdquo;
+</p>
+<p>Each <i>class</i> has a <i>class precedence list</i>
+<a name="index-class-precedence-list"></a>
+,
+which is a total ordering on the set of the given <i>class</i> and its <i>superclasses</i>.
+The total ordering is expressed as a list ordered from most specific to least specific.
+The <i>class precedence list</i> is used in several ways.  In general, more
+specific <i>classes</i> can <i>shadow</i>
+<a name="index-shadow-1"></a>
+_1 features that would
+otherwise be inherited from less specific <i>classes</i>.
+The <i>method</i> selection and combination process uses 
+the <i>class precedence list</i> to order <i>methods</i> 
+from most specific to least specific. 
+</p>
+<p>When a <i>class</i> is defined, the order in which its direct <i>superclasses</i>
+are mentioned in the defining form is important.  Each <i>class</i> has a
+<i>local precedence order</i>
+<a name="index-local-precedence-order"></a>
+, which is a <i>list</i> consisting of the
+<i>class</i> followed by its <i>direct superclasses</i> in the order mentioned
+in the defining <i>form</i>.
+</p>
+<p>A <i>class precedence list</i> is always consistent with the
+<i>local precedence order</i> of each <i>class</i> in the list.  
+The <i>classes</i> in each <i>local precedence order</i> appear
+within the <i>class precedence list</i> in the same order.  
+If the <i>local precedence orders</i> are inconsistent with each other, 
+no <i>class precedence list</i> can be constructed, and an error is signaled.
+The <i>class precedence list</i> and its computation is discussed
+in <a href="Determining-the-Class-Precedence-List.html#Determining-the-Class-Precedence-List">Determining the Class Precedence List</a>.
+</p>
+<p><i>classes</i> are organized into a directed acyclic graph.
+There are two distinguished <i>classes</i>, named <b>t</b> and <b>standard-object</b>.
+The <i>class</i> named <b>t</b> has no <i>superclasses</i>. 
+It is a <i>superclass</i> of every <i>class</i> except itself.  
+The <i>class</i> named <b>standard-object</b> is an <i>instance</i> of 
+the <i>class</i> <b>standard-class</b> and is a <i>superclass</i> of
+every <i>class</i> that is an <i>instance</i> of the <i>class</i> <b>standard-class</b> except itself.
+</p>
+<p>[Reviewer Note by Barmar: This or something like it needs to be said in the introduction.]
+There is a mapping from the object system <i>class</i> space into
+the <i>type</i> space.  Many of the standard <i>types</i> specified 
+in this document have a corresponding <i>class</i> that has the same 
+<i>name</i> as the <i>type</i>. Some <i>types</i> do not have a
+corresponding <i>class</i>. The integration of the <i>type</i> and <i>class</i>
+systems is discussed in <a href="Integrating-Types-and-Classes.html#Integrating-Types-and-Classes">Integrating Types and Classes</a>.
+</p>
+<p><i>Classes</i> are represented by <i>objects</i> that are themselves
+<i>instances</i> of <i>classes</i>. 
+The <i>class</i> of the <i>class</i> of an <i>object</i> is termed
+the <i>metaclass</i>
+<a name="index-metaclass-1"></a>
+ of that <i>object</i>. When no misinterpretation is
+possible, the term <i>metaclass</i> is used to refer to a <i>class</i>
+that has <i>instances</i> that are themselves <i>classes</i>. The <i>metaclass</i>
+determines the form of inheritance used by the <i>classes</i> that are its
+<i>instances</i> and the representation of the <i>instances</i> of those <i>classes</i>.
+The object system provides a default <i>metaclass</i>, <b>standard-class</b>, that is
+appropriate for most programs.
+</p>
+<p>Except where otherwise specified, all <i>classes</i> mentioned in this
+standard are <i>instances</i> of the <i>class</i> <b>standard-class</b>,
+all <i>generic functions</i> are <i>instances</i> 
+of the <i>class</i> <b>standard-generic-function</b>,
+and all <i>methods</i> are <i>instances</i> of the <i>class</i> <b>standard-method</b>.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Standard-Metaclasses.html#Standard-Metaclasses" accesskey="1">Standard Metaclasses</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Defining-Classes.html#Defining-Classes" accesskey="n" rel="next">Defining Classes</a>, Previous: <a href="Classes.html#Classes" accesskey="p" rel="prev">Classes</a>, Up: <a href="Classes.html#Classes" accesskey="u" rel="up">Classes</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

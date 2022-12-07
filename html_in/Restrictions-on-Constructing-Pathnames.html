@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Restrictions on Constructing Pathnames (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Restrictions on Constructing Pathnames (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Restrictions on Constructing Pathnames (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Interpreting-Pathname-Component-Values.html#Interpreting-Pathname-Component-Values" rel="up" title="Interpreting Pathname Component Values">
+<link href="Merging-Pathnames.html#Merging-Pathnames" rel="next" title="Merging Pathnames">
+<link href="Notes-about-the-Pathname-Version-Component.html#Notes-about-the-Pathname-Version-Component" rel="prev" title="Notes about the Pathname Version Component">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Restrictions-on-Constructing-Pathnames"></a>
+<div class="header">
+<p>
+Previous: <a href="Notes-about-the-Pathname-Version-Component.html#Notes-about-the-Pathname-Version-Component" accesskey="p" rel="prev">Notes about the Pathname Version Component</a>, Up: <a href="Interpreting-Pathname-Component-Values.html#Interpreting-Pathname-Component-Values" accesskey="u" rel="up">Interpreting Pathname Component Values</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Restrictions-on-Constructing-Pathnames-1"></a>
+<h4 class="subsubsection">19.2.2.21 Restrictions on Constructing Pathnames</h4>
+
+<p>When constructing a <i>pathname</i> from components, conforming programs
+  must follow these rules:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>Any component can be <b>nil</b>.
+  <b>nil</b> in the host might mean a default host 
+  rather than an actual <b>nil</b> in some implementations.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The host, device, directory, name, and type can be <i>strings</i>.  There
+  are <i>implementation-dependent</i> limits on the number and type of
+  <i>characters</i> in these <i>strings</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The directory can be a <i>list</i> of <i>strings</i> and <i>symbols</i>.
+  There are <i>implementation-dependent</i> limits on the <i>list</i>&rsquo;s
+  length and contents.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The version can be <tt>:newest</tt>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Any component can be taken 
+  from the corresponding component of another <i>pathname</i>.
+  When the two <i>pathnames</i> are for different file systems
+    (in implementations that support multiple file systems),
+  an appropriate translation occurs.
+  If no meaningful translation is possible,
+  an error is signaled.
+  The definitions of &ldquo;appropriate&rdquo; and &ldquo;meaningful&rdquo; 
+  are <i>implementation-dependent</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>An implementation might support other values for some components,
+  but a portable program cannot use those values.
+  A conforming program can use <i>implementation-dependent</i> values
+  but this can make it non-portable;
+  for example, it might work only with <span class="roman">Unix</span> file systems.
+</p></dd>
+</dl>
+
+
+
+
+</body>
+</html>

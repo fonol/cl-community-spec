@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>call-method (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="call_002dnext_002dmethod.html#call_002dnext_002dmethod" rel="next" title="call-next-method">
+<link href="next_002dmethod_002dp.html#next_002dmethod_002dp" rel="prev" title="next-method-p">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="next_002dmethod_002dp.html#next_002dmethod_002dp" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                next-method-p
+                            </a>
+                            <a href="Objects-Dictionary.html#Objects-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Objects Dictionary
+                            </a>
+                            <a href="call_002dnext_002dmethod.html#call_002dnext_002dmethod.html" class="nav-btn nav__next ">
+                                call-next-method
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="call_002dmethod"></a>
+<a name="call_002dmethod_002c-make_002dmethod-_005bLocal-Macro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Local Macro</div>
+<h4 class="subsection">call-method, make-method                                      </h4>
+
+<a name="Syntax_003a_003a-28"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Syntax</h4>
+
+<p><code>call-method</code>  <i>method &amp;optional</i> next-method-list &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<p><code>make-method</code>  <i>form</i> &rArr;  <i>method-object</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-118"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>method</i>&mdash;a <i>method</i> <i>object</i>,
+	      or a <i>list</i> (see below); not evaluated.
+</p>
+<p><i>method-object</i>&mdash;a <i>method</i> <i>object</i>.
+</p>
+<p><i>next-method-list</i>&mdash;a <i>list</i> of <i>method</i> <i>objects</i>; not evaluated.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by the <i>method</i> invocation.
+</p>
+<a name="Description_003a_003a-157"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The macro <b>call-method</b> is used in method combination.  It hides
+the <i>implementation-dependent</i> details of how 
+<i>methods</i> are called. The
+macro <b>call-method</b> has <i>lexical scope</i> and 
+can only be used within
+an <i>effective method</i> <i>form</i>.
+</p>
+<p>[Editorial Note by KMP: This next paragraph still needs some work.]
+</p>
+<p>Whether or not <b>call-method</b> is <i>fbound</i> in the
+<i>global environment</i> is <i>implementation-dependent</i>;
+however, the restrictions on redefinition and <i>shadowing</i> of
+<b>call-method</b> are the same as for <i>symbols</i> in the <tt>COMMON-LISP</tt> <i>package</i>
+which are <i>fbound</i> in the <i>global environment</i>.
+The consequences of attempting to use <b>call-method</b> outside
+of an <i>effective method</i> <i>form</i> are undefined.
+</p>
+<p>The macro <b>call-method</b> invokes the specified <i>method</i>,
+supplying it with arguments and with definitions for
+<b>call-next-method</b> and for <b>next-method-p</b>.
+If the invocation of <b>call-method</b> is lexically inside
+of a <b>make-method</b>, the arguments are those that
+were supplied to that method.  Otherwise the arguments are
+those that were supplied to the generic function.
+The definitions
+of <b>call-next-method</b> and <b>next-method-p</b> rely on
+the specified <i>next-method-list</i>.
+</p>
+<p>If <i>method</i> is a <i>list</i>, the first element of the <i>list</i>
+must be the symbol <b>make-method</b> and the second element must be
+a <i>form</i>.  Such a <i>list</i> specifies a <i>method</i> <i>object</i>
+whose <i>method</i> function has a body that is the given <i>form</i>.
+</p>
+<p><i>Next-method-list</i> can contain <i>method</i> <i>objects</i> or <i>lists</i>,
+the first element of which must be the symbol <b>make-method</b> and the
+second element of which must be a <i>form</i>.
+</p>
+<p>Those are the only two places where <b>make-method</b> can be used.
+The <i>form</i> used with <b>make-method</b> is evaluated in
+the <i>null lexical environment</i> augmented with a local macro definition
+for <b>call-method</b> and with bindings named by
+symbols not <i>accessible</i> from the <tt>COMMON-LISP-USER</tt> <i>package</i>.
+</p>
+<p>The <b>call-next-method</b> function available to <i>method</i> 
+will call the first <i>method</i> in <i>next-method-list</i>.
+The <b>call-next-method</b> function
+available in that <i>method</i>, in turn, will call the second
+<i>method</i> in <i>next-method-list</i>, and so on, until
+the list of next <i>methods</i> is exhausted.
+</p>
+<p>If <i>next-method-list</i> is not supplied, the
+<b>call-next-method</b> function available to
+<i>method</i> signals an error of <i>type</i> <b>control-error</b>
+and the <b>next-method-p</b> function
+available to <i>method</i> returns <b>nil</b>.
+</p>
+<a name="Examples_003a_003a-109"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<a name="See-Also_003a_003a-139"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="call_002dnext_002dmethod.html#call_002dnext_002dmethod">call-next-method</a>
+,
+<a href="define_002dmethod_002dcombination.html#define_002dmethod_002dcombination">define-method-combination</a>
+,
+<a href="next_002dmethod_002dp.html#next_002dmethod_002dp">next-method-p</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

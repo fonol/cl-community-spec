@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Expanding Loop Forms (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Overview-of-the-Loop-Facility.html#Overview-of-the-Loop-Facility" rel="up" title="Overview of the Loop Facility">
+<link href="Summary-of-Loop-Clauses.html#Summary-of-Loop-Clauses" rel="next" title="Summary of Loop Clauses">
+<link href="Parsing-Loop-Clauses.html#Parsing-Loop-Clauses" rel="prev" title="Parsing Loop Clauses">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Parsing-Loop-Clauses.html#Parsing-Loop-Clauses" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Parsing Loop Clauses
+                            </a>
+                            <a href="Overview-of-the-Loop-Facility.html#Overview-of-the-Loop-Facility.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Overview of the Loop Facility
+                            </a>
+                            <a href="Summary-of-Loop-Clauses.html#Summary-of-Loop-Clauses.html" class="nav-btn nav__next ">
+                                Summary of Loop Clauses
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Expanding-Loop-Forms"></a>
+<a name="Expanding-Loop-Forms-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Expanding Loop Forms</h4>
+
+<p>A <b>loop</b> <i>macro form</i> expands into a <i>form</i> containing
+one or more binding forms (that <i>establish</i> <i>bindings</i> of loop variables)
+and a <b>block</b> and a <b>tagbody</b> (that express a looping control 
+structure). The variables established in <b>loop</b> are bound as
+if by <b>let</b> or <b>lambda</b>.  
+</p>
+<p>Implementations can interleave the setting of initial values with the <i>bindings</i>.  
+However, the assignment of the initial values is always calculated in the order
+specified by the user.  A variable is thus sometimes bound to a meaningless value 
+of the correct <i>type</i>, and then later in the prologue it is set to the true
+initial value by using <b>setq</b>.
+</p>
+<p>One implication of this interleaving is that it is <i>implementation-dependent</i>
+whether the <i>lexical environment</i> in which the initial value <i>forms</i>
+(variously called the <i>form1</i>, <i>form2</i>, <i>form3</i>, <i>step-fun</i>,
+ <i>vector</i>, <i>hash-table</i>, and <i>package</i>) in any <i>for-as-subclause</i>,
+except <i>for-as-equals-then</i>,
+are <i>evaluated</i> includes only the loop variables preceding that <i>form</i>
+or includes more or all of the loop variables;
+the <i>form1</i> and <i>form2</i> in a <i>for-as-equals-then</i> form
+includes the <i>lexical environment</i> of all the loop variables.
+</p>
+<p>After the <i>form</i> is expanded, it consists of three basic parts in the 
+<b>tagbody</b>: 
+      the loop prologue,
+      the loop body,
+  and the loop epilogue.
+</p>
+<dl compact="compact">
+<dt><b>Loop prologue</b></dt>
+<dd><p>The loop prologue contains <i>forms</i> 
+that are executed before iteration begins, such as
+any automatic variable initializations prescribed 
+by the <i>variable</i> clauses, along with any <tt>initially</tt> clauses
+in the order they appear in the source.
+</p>
+</dd>
+<dt><b>Loop body</b></dt>
+<dd><p>The loop body contains those <i>forms</i> that are executed during iteration, 
+including application-specific calculations, termination tests,
+and variable <i>stepping</i>_1.
+</p>
+</dd>
+<dt><b>Loop epilogue</b></dt>
+<dd><p>The loop epilogue contains <i>forms</i> that are executed after iteration 
+terminates, such as <tt>finally</tt> clauses, if any, along
+with any implicit return value from an <i>accumulation</i> clause or
+an <i>termination-test</i> clause.
+</p>
+</dd>
+</dl>
+
+<p>Some clauses from the source <i>form</i>
+contribute code only to the loop prologue; these clauses must
+  come before other clauses that are in the main body of the <b>loop</b> form.            
+  Others contribute code only to the loop epilogue.
+  All other clauses contribute to the final 
+translated <i>form</i> in the same 
+  order given in the original source <i>form</i> of the <b>loop</b>.
+</p>
+<p>Expansion of the <b>loop</b> macro produces an <i>implicit block</i> named <b>nil</b> 
+</p>
+<p>unless <tt>named</tt> is supplied.
+</p>
+<p>Thus, <b>return-from</b> (and sometimes <b>return</b>)
+can be used to return values from <b>loop</b> or to exit <b>loop</b>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

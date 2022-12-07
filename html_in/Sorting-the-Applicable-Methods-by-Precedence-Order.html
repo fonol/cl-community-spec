@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Sorting the Applicable Methods by Precedence Order (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Sorting the Applicable Methods by Precedence Order (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Sorting the Applicable Methods by Precedence Order (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" rel="up" title="Method Selection and Combination">
+<link href="Applying-method-combination-to-the-sorted-list-of-applicable-methods.html#Applying-method-combination-to-the-sorted-list-of-applicable-methods" rel="next" title="Applying method combination to the sorted list of applicable methods">
+<link href="Selecting-the-Applicable-Methods.html#Selecting-the-Applicable-Methods" rel="prev" title="Selecting the Applicable Methods">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Sorting-the-Applicable-Methods-by-Precedence-Order"></a>
+<div class="header">
+<p>
+Next: <a href="Applying-method-combination-to-the-sorted-list-of-applicable-methods.html#Applying-method-combination-to-the-sorted-list-of-applicable-methods" accesskey="n" rel="next">Applying method combination to the sorted list of applicable methods</a>, Previous: <a href="Selecting-the-Applicable-Methods.html#Selecting-the-Applicable-Methods" accesskey="p" rel="prev">Selecting the Applicable Methods</a>, Up: <a href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" accesskey="u" rel="up">Method Selection and Combination</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Sorting-the-Applicable-Methods-by-Precedence-Order-1"></a>
+<h4 class="subsubsection">7.6.6.3 Sorting the Applicable Methods by Precedence Order</h4>
+
+<p>To compare the precedence of two methods, their <i>parameter specializers</i>
+are examined in order.  The default examination order is from left to
+right, but an alternative order may be specified by the 
+<tt>:argument-precedence-order</tt> option to <b>defgeneric</b> or to any of
+the other operators that specify generic function options.
+</p>
+<p>The corresponding <i>parameter specializers</i> from each method are
+compared.  When a pair of <i>parameter specializers</i> agree, the next
+pair are compared for agreement.  If all corresponding parameter
+specializers agree, the two methods must have different
+<i>qualifiers</i>; in this case, either method can be selected to precede the
+other.  For information about agreement, see <a href="Agreement-on-Parameter-Specializers-and-Qualifiers.html#Agreement-on-Parameter-Specializers-and-Qualifiers">Agreement on Parameter Specializers and Qualifiers</a>.
+</p>
+<p>If some corresponding <i>parameter specializers</i> do not agree, the first
+pair of <i>parameter specializers</i> that do not agree determines the
+precedence.  If both <i>parameter specializers</i> are classes, the more
+specific of the two methods is the method whose <i>parameter specializer</i>
+appears earlier in the <i>class precedence list</i> of the corresponding
+argument.  Because of the way in which the set of applicable methods
+is chosen, the <i>parameter specializers</i> are guaranteed to be present in
+the class precedence list of the class of the argument.
+</p>
+<p>If just one of a pair of corresponding <i>parameter specializers</i> is <tt>(eql <i>object</i>)</tt>,
+the <i>method</i> with that <i>parameter specializer</i> precedes the
+other <i>method</i>.  If both <i>parameter specializers</i> are <b>eql</b>
+<i>expressions</i>, the
+specializers must agree (otherwise the two <i>methods</i> would
+not both have been applicable to this argument).
+</p>
+<p>The resulting list of <i>applicable methods</i> has the most specific
+<i>method</i> first and the least specific <i>method</i> last.    
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Applying-method-combination-to-the-sorted-list-of-applicable-methods.html#Applying-method-combination-to-the-sorted-list-of-applicable-methods" accesskey="n" rel="next">Applying method combination to the sorted list of applicable methods</a>, Previous: <a href="Selecting-the-Applicable-Methods.html#Selecting-the-Applicable-Methods" accesskey="p" rel="prev">Selecting the Applicable Methods</a>, Up: <a href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" accesskey="u" rel="up">Method Selection and Combination</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

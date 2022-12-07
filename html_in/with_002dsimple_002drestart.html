@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>with-simple-restart (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="with-simple-restart (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="with-simple-restart (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="abort.html#abort" rel="next" title="abort">
+<link href="with_002dcondition_002drestarts.html#with_002dcondition_002drestarts" rel="prev" title="with-condition-restarts">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="with_002dsimple_002drestart"></a>
+<div class="header">
+<p>
+Next: <a href="abort.html#abort" accesskey="n" rel="next">abort</a>, Previous: <a href="with_002dcondition_002drestarts.html#with_002dcondition_002drestarts" accesskey="p" rel="prev">with-condition-restarts</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="with_002dsimple_002drestart-_005bMacro_005d"></a>
+<h4 class="subsection">9.2.40 with-simple-restart                                                 [Macro]</h4>
+
+<p><code>with-simple-restart</code>  <i><span class="roman">(</span>name format-control {<i>format-argument</i>}*</i><span class="roman">)</span>
+		   {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-156"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>name</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>format-control</i>&mdash;a <i>format control</i>.
+</p>
+<p><i>format-argument</i>&mdash;an <i>object</i> (<i>i.e.</i>, a <i>format argument</i>).
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;in the normal situation,
+   the <i>values</i> returned by the <i>forms</i>;
+   in the exceptional situation where the <i>restart</i> named <i>name</i> is invoked,
+   two values&mdash;<b>nil</b> and <b>t</b>.
+</p>
+<a name="Description_003a_003a-210"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>with-simple-restart</b> establishes a restart.  
+</p>
+<p>If the restart designated by <i>name</i> is not invoked while executing <i>forms</i>,
+all values returned by the last of <i>forms</i> are returned. 
+If the restart designated by <i>name</i> is invoked,
+control is transferred to <b>with-simple-restart</b>,
+which returns two values, <b>nil</b> and <b>t</b>.
+</p>
+<p>If <i>name</i> is <b>nil</b>, an anonymous restart is established.
+</p>
+<p>The <i>format-control</i> and <i>format-arguments</i> are used 
+report the <i>restart</i>.
+</p>
+<a name="Examples_003a_003a-136"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defun read-eval-print-loop (level)
+   (with-simple-restart (abort &quot;Exit command level ~D.&quot; level)
+     (loop
+       (with-simple-restart (abort &quot;Return to command level ~D.&quot; level)
+         (let ((form (prog2 (fresh-line) (read) (fresh-line))))
+           (prin1 (eval form)))))))
+&rArr;  READ-EVAL-PRINT-LOOP
+ (read-eval-print-loop 1)
+ (+ 'a 3)
+<tt> |&gt; </tt> Error: The argument, A, to the function + was of the wrong type.
+<tt> |&gt; </tt>        The function expected a number.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Specify a value to use this time.
+<tt> |&gt; </tt>  2: Return to command level 1.
+<tt> |&gt; </tt>  3: Exit command level 1.
+<tt> |&gt; </tt>  4: Return to Lisp Toplevel.
+</pre></div>
+
+<div class="example">
+<pre class="example"> (defun compute-fixnum-power-of-2 (x)
+   (with-simple-restart (nil &quot;Give up on computing 2<tt>^</tt>~D.&quot; x)
+     (let ((result 1))
+       (dotimes (i x result)
+         (setq result (* 2 result))
+         (unless (fixnump result)
+           (error &quot;Power of 2 is too large.&quot;))))))
+COMPUTE-FIXNUM-POWER-OF-2
+ (defun compute-power-of-2 (x)
+   (or (compute-fixnum-power-of-2 x) 'something big))
+COMPUTE-POWER-OF-2
+ (compute-power-of-2 10)
+1024
+ (compute-power-of-2 10000)
+<tt> |&gt; </tt> Error: Power of 2 is too large.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number.
+<tt> |&gt; </tt>  1: Give up on computing 2<tt>^</tt>10000.
+<tt> |&gt; </tt>  2: Return to Lisp Toplevel
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:continue 1</tt><b>&lt;&lt;|</b>
+&rArr;  SOMETHING-BIG
+</pre></div>
+
+<a name="See-Also_003a_003a-184"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="restart_002dcase.html#restart_002dcase">restart-case</a>
+</p>
+<a name="Notes_003a_003a-113"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>with-simple-restart</b> is shorthand for one of the most
+common uses of <b>restart-case</b>.
+</p>
+<p><b>with-simple-restart</b> could be defined by:
+</p>
+<div class="example">
+<pre class="example"> (defmacro with-simple-restart ((restart-name format-control
+                                              &amp;rest format-arguments)
+                                &amp;body forms)
+   `(restart-case (progn ,@forms)
+      (,restart-name ()
+          :report (lambda (stream)
+                    (format stream ,format-control ,@format-arguments))
+         (values nil t))))
+</pre></div>
+
+<p>Because the second return value is <b>t</b> in the exceptional case,
+it is common (but not required) to arrange for the second return value
+in the normal case to be missing or <b>nil</b> so that the two situations
+can be distinguished.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="abort.html#abort" accesskey="n" rel="next">abort</a>, Previous: <a href="with_002dcondition_002drestarts.html#with_002dcondition_002drestarts" accesskey="p" rel="prev">with-condition-restarts</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

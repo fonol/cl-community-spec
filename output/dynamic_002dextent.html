@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>dynamic-extent (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="type.html#type" rel="next" title="type">
+<link href="ignore.html#ignore" rel="prev" title="ignore">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="ignore.html#ignore" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                ignore
+                            </a>
+                            <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Evaluation and Compilation Dictionary
+                            </a>
+                            <a href="type.html#type.html" class="nav-btn nav__next ">
+                                type
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="dynamic_002dextent"></a>
+<a name="dynamic_002dextent-_005bDeclaration_005d"></a>
+<div class="section top-most">
+<div class="node-type">Declaration</div>
+<h4 class="subsection">dynamic-extent                                                </h4>
+
+<a name="Syntax_003a_003a-3"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Syntax</h4>
+
+<p><tt>(dynamic-extent [[{<i>var</i>}*</tt> |
+		               <span class="roman">(</span><b>function</b> <i>fn</i><span class="roman">)</span><span class="roman">*</span>]])
+</p>
+<a name="Arguments_003a_003a-3"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments</h4>
+
+<p><i>var</i>&mdash;a <i>variable</i> <i>name</i>.
+</p>
+<p><i>fn</i>&mdash;a <i>function</i> <i>name</i>.
+</p>
+<a name="Valid-Context_003a_003a-1"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Valid Context</h4>
+
+<p><i>declaration</i>
+</p>
+<a name="Binding-Types-Affected_003a_003a-1"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Binding Types Affected</h4>
+
+<p><i>variable</i>, <i>function</i>
+</p>
+<a name="Description_003a_003a-19"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>In some containing <i>form</i>, <i>F</i>, this declaration
+asserts for each <i>var_i</i> (which need not be bound by <i>F</i>),
+and for each <i>value</i> <i>v_{ij}</i> that <i>var_i</i> takes on,
+and for each <i>object</i> <i>x_{ijk}</i> that 
+is
+an <i>otherwise inaccessible part</i> of <i>v_{ij}</i> at any time when
+<i>v_{ij}</i>
+becomes the value of <i>var_i</i>,
+that just after the execution of <i>F</i> terminates, 
+<i>x_{ijk}</i> is either <i>inaccessible</i>
+(if <i>F</i> established a <i>binding</i> for <i>var_i</i>)
+or still an <i>otherwise inaccessible part</i> of the current value of 
+<i>var_i</i> (if <i>F</i> did not establish a <i>binding</i> 
+for <i>var_i</i>).
+</p>
+<p>The same relation holds for each <i>fn_i</i>, 
+except that the <i>bindings</i> are in the <i>function</i> <i>namespace</i>.
+</p>
+<p>The compiler is permitted to use
+this information in any way that is appropriate to the <i>implementation</i>
+and that does not conflict with the semantics of <span class="roman">Common Lisp</span>.
+</p>
+<p><b>dynamic-extent</b> declarations can be <i>free declarations</i>
+or <i>bound declarations</i>.
+</p>
+<p>The <i>vars</i> and <i>fns</i> named in a <b>dynamic-extent</b> 
+declaration must not refer to <i>symbol macro</i> or <i>macro</i> bindings.
+</p>
+<a name="Examples_003a_003a-16"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<p>Since stack allocation of the initial value entails knowing at the
+<i>object</i>&rsquo;s creation time that the <i>object</i> can be 
+<i>stack-allocated</i>,  it is not generally useful to make a 
+<b>dynamic-extent</b> <i>declaration</i> for <i>variables</i>
+which have no lexically apparent initial value. 
+For example, it is probably useful to write:
+</p>
+<div class="example">
+<pre class="example"><code> (defun f ()
+   (let ((x (list 1 2 3)))
+     (declare (dynamic-extent x))
+         ...))
+</code>
+</pre></div>
+
+<p>This would permit those compilers that wish to do so to <i>stack allocate</i>
+the list held by the local variable <tt>x</tt>.  It is permissible,
+but in practice probably not as useful, to write:
+</p>
+<div class="example">
+<pre class="example"><code> (defun g (x) (declare (dynamic-extent x)) ...)
+ (defun f () (g (list 1 2 3)))
+</code>
+</pre></div>
+
+<p>Most compilers would probably not <i>stack allocate</i> the <i>argument</i>
+to <tt>g</tt> in <tt>f</tt> because it would be a modularity violation for the compiler
+to assume facts about <tt>g</tt> from within <tt>f</tt>.   Only an implementation that 
+was willing to be responsible for recompiling <tt>f</tt> if the definition of <tt>g</tt> 
+changed incompatibly could legitimately <i>stack allocate</i> the <i>list</i> 
+argument to <tt>g</tt> in <tt>f</tt>.
+</p>
+<p>Here is another example:
+</p>
+<div class="example">
+<pre class="example"><code> (declaim (inline g))
+ (defun g (x) (declare (dynamic-extent x)) ...)
+ (defun f () (g (list 1 2 3)))
+
+ (defun f ()
+   (flet ((g (x) (declare (dynamic-extent x)) ...))
+     (g (list 1 2 3))))
+
+</code>
+</pre></div>
+
+<p>In the previous example, some compilers might determine that optimization was 
+possible and others might not.
+</p>
+<p>A variant of this is the so-called &ldquo;stack allocated rest list&rdquo;
+that can be achieved (in implementations supporting the optimization) by:
+</p>
+<div class="example">
+<pre class="example"><code> (defun f (&amp;rest x)
+   (declare (dynamic-extent x))
+   ...)
+</code>
+</pre></div>
+
+<p>Note that although the initial value of <tt>x</tt> is not explicit, the <tt>f</tt>
+function is responsible for assembling the list <tt>x</tt> from the passed arguments,
+so the <tt>f</tt> function can be optimized by the compiler to construct a 
+<i>stack-allocated</i> list instead of a heap-allocated list in implementations
+that support such.
+</p>
+<p>In the following example,
+</p>
+<div class="example">
+<pre class="example"><code> (let ((x (list 'a1 'b1 'c1))
+       (y (cons 'a2 (cons 'b2 (cons 'c2 nil)))))
+   (declare (dynamic-extent x y))
+   ...)
+</code>
+</pre></div>
+
+<p>The <i>otherwise inaccessible parts</i> of <tt>x</tt> are three 
+<i>conses</i>,  and the <i>otherwise inaccessible parts</i>
+of <tt>y</tt> are three other <i>conses</i>.  
+None of the symbols <tt>a1</tt>,  <tt>b1</tt>,  <tt>c1</tt>,  <tt>a2</tt>,
+<tt>b2</tt>,  <tt>c2</tt>,  or <b>nil</b> is an
+<i>otherwise inaccessible part</i> of <tt>x</tt> or <tt>y</tt> because each
+is <i>interned</i> and hence <i>accessible</i> by the <i>package</i>
+(or <i>packages</i>) in which it is <i>interned</i>.
+However, if a freshly allocated <i>uninterned</i> <i>symbol</i> had
+been used, it would have been an <i>otherwise inaccessible part</i> of
+the <i>list</i> which contained it.
+</p>
+<div class="example">
+<pre class="example"><code>;; In this example, the implementation is permitted to <i>stack allocate</i>
+;; the list that is bound to X.
+ (let ((x (list 1 2 3)))
+   (declare (dynamic-extent x))
+   (print x)
+   :done)
+<tt> |&gt; </tt> (1 2 3)
+&rArr;  :DONE
+
+;; In this example, the list to be bound to L can be <i>stack-allocated</i>.
+ (defun zap (x y z)
+   (do ((l (list x y z) (cdr l)))
+       ((null l))
+     (declare (dynamic-extent l))
+     (prin1 (car l)))) &rArr;  ZAP
+ (zap 1 2 3)
+<tt> |&gt; </tt> 123
+&rArr;  NIL
+
+;; Some implementations might open-code LIST-ALL-PACKAGES in a way
+;; that permits using <i>stack allocation</i> of the list to be bound to L.
+ (do ((l (list-all-packages) (cdr l)))
+     ((null l))
+   (declare (dynamic-extent l))
+   (let ((name (package-name (car l))))
+     (when (string-search &quot;COMMON-LISP&quot; name) (print name))))
+<tt> |&gt; </tt> &quot;COMMON-LISP&quot;
+<tt> |&gt; </tt> &quot;COMMON-LISP-USER&quot;
+&rArr;  NIL
+
+;; Some implementations might have the ability to <i>stack allocate</i> 
+;; rest lists.  A declaration such as the following should be a cue
+;; to such implementations that stack-allocation of the rest list
+;; would be desirable.
+ (defun add (&amp;rest x)
+   (declare (dynamic-extent x))
+   (apply #'+ x)) &rArr;  ADD
+ (add 1 2 3) &rArr;  6
+
+ (defun zap (n m)
+   ;; Computes (RANDOM (+ M 1)) at relative speed of roughly O(N).
+   ;; It may be slow, but with a good compiler at least it
+   ;; doesn't waste much heap storage.  :-}
+   (let ((a (make-array n)))
+     (declare (dynamic-extent a))
+     (dotimes (i n) 
+       (declare (dynamic-extent i))
+       (setf (aref a i) (random (+ i 1))))
+     (aref a m))) &rArr;  ZAP
+ (&lt; (zap 5 3) 3) &rArr;  <i>true</i>
+</code>
+</pre></div>
+
+<p>The following are in error, since the value of <tt>x</tt> is used outside of its
+<i>extent</i>:
+</p>
+<div class="example">
+<pre class="example"><code> (length (list (let ((x (list 1 2 3)))  ; Invalid
+                (declare (dynamic-extent x))
+                x)))
+
+ (progn (let ((x (list 1 2 3)))  ; Invalid
+          (declare (dynamic-extent x))
+          x)
+        nil)
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-19"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><b>declare</b>
+</p>
+<a name="Notes_003a_003a-12"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The most common optimization is to <i>stack allocate</i> the 
+initial value of the <i>objects</i> named by the <i>vars</i>. 
+</p>
+<p>It is permissible for an implementation to simply ignore this declaration.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

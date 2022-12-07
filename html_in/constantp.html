@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>constantp (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="constantp (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="constantp (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="Types-and-Classes.html#Types-and-Classes" rel="next" title="Types and Classes">
+<link href="special_002doperator_002dp.html#special_002doperator_002dp" rel="prev" title="special-operator-p">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="constantp"></a>
+<div class="header">
+<p>
+Previous: <a href="special_002doperator_002dp.html#special_002doperator_002dp" accesskey="p" rel="prev">special-operator-p</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="constantp-_005bFunction_005d"></a>
+<h4 class="subsection">3.8.30 constantp                                                        [Function]</h4>
+
+<p><code>constantp</code>  <i>form &amp;optional</i> environment &rArr;  <i>generalized-boolean</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-18"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>environment</i>&mdash;an <i>environment</i> <i>object</i>.
+ The default is <b>nil</b>.
+</p>
+<p><i>generalized-boolean</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-29"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns <i>true</i> if <i>form</i> can be determined
+by the <i>implementation</i> to be a <i>constant form</i> 
+in the indicated <i>environment</i>; 
+otherwise, it returns <i>false</i> indicating either 
+    that the <i>form</i> is not a <i>constant form</i>
+ or that it cannot be determined whether or not <i>form</i> is a <i>constant form</i>.
+</p>
+<p>The following kinds of <i>forms</i> are considered <i>constant forms</i>:
+</p><dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p><i>Self-evaluating objects</i> 
+  (such as <i>numbers</i>, 
+           <i>characters</i>,
+       and the various kinds of <i>arrays</i>)
+  are always considered <i>constant forms</i> 
+  and must be recognized as such by <b>constantp</b>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><i>Constant variables</i>, such as <i>keywords</i>,
+  symbols defined by <span class="roman">Common Lisp</span> as constant (such as <b>nil</b>, <b>t</b>, and <b>pi</b>),
+  and symbols declared as constant by the user in the indicated <i>environment</i>
+   using <b>defconstant</b>
+  are always considered <i>constant forms</i>
+  and must be recognized as such by <b>constantp</b>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><b>quote</b> <i>forms</i> are always considered <i>constant forms</i>
+  and must be recognized as such by <b>constantp</b>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>An <i>implementation</i> is permitted, but not required, to detect
+  additional <i>constant forms</i>.  If it does, it is also permitted,
+  but not required, to make use of information in the <i>environment</i>.
+  Examples of <i>constant forms</i> for which <b>constantp</b> might
+  or might not return <i>true</i> are:
+    <tt>(sqrt pi)</tt>,
+    <tt>(+ 3 2)</tt>,
+    <tt>(length '(a b c))</tt>,
+  and
+    <tt>(let ((x 7)) (zerop x))</tt>.
+</p></dd>
+</dl>
+
+<p>If an <i>implementation</i> chooses to make use of the <i>environment</i>
+information, such actions as expanding <i>macros</i> or performing function
+inlining are permitted to be used, but not required; 
+however, expanding <i>compiler macros</i> is not permitted.
+</p>
+<a name="Examples_003a_003a-25"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (constantp 1) &rArr;  <i>true</i>
+ (constantp 'temp) &rArr;  <i>false</i>
+ (constantp ''temp)) &rArr;  <i>true</i>
+ (defconstant this-is-a-constant 'never-changing) &rArr;  THIS-IS-A-CONSTANT 
+ (constantp 'this-is-a-constant) &rArr;  <i>true</i>
+ (constantp &quot;temp&quot;) &rArr;  <i>true</i>
+ (setq a 6) &rArr;  6 
+ (constantp a) &rArr;  <i>true</i>
+ (constantp '(sin pi)) &rArr;  <i>implementation-dependent</i>
+ (constantp '(car '(x))) &rArr;  <i>implementation-dependent</i>
+ (constantp '(eql x x)) &rArr;  <i>implementation-dependent</i>
+ (constantp '(typep x 'nil)) &rArr;  <i>implementation-dependent</i>
+ (constantp '(typep x 't)) &rArr;  <i>implementation-dependent</i>
+ (constantp '(values this-is-a-constant)) &rArr;  <i>implementation-dependent</i>
+ (constantp '(values 'x 'y)) &rArr;  <i>implementation-dependent</i>
+ (constantp '(let ((a '(a b c))) (+ (length a) 6))) &rArr;  <i>implementation-dependent</i>
+</pre></div>
+
+<a name="Affected-By_003a_003a-3"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>The state of the global environment (<i>e.g.</i>, which <i>symbols</i> have been
+declared to be the <i>names</i> of <i>constant variables</i>).
+</p>
+<a name="See-Also_003a_003a-28"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="defconstant.html#defconstant">defconstant</a>
+</p>
+
+
+
+
+
+<hr>
+<div class="header">
+<p>
+Previous: <a href="special_002doperator_002dp.html#special_002doperator_002dp" accesskey="p" rel="prev">special-operator-p</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

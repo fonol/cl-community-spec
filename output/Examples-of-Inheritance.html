@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Examples of Inheritance (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Inheritance.html#Inheritance" rel="up" title="Inheritance">
+<link href="Inheritance-of-Class-Options.html#Inheritance-of-Class-Options" rel="next" title="Inheritance of Class Options">
+<link href="Inheritance.html#Inheritance" rel="prev" title="Inheritance">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Inheritance.html#Inheritance" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Inheritance
+                            </a>
+                            <a href="Inheritance.html#Inheritance.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Inheritance
+                            </a>
+                            <a href="Inheritance-of-Class-Options.html#Inheritance-of-Class-Options.html" class="nav-btn nav__next ">
+                                Inheritance of Class Options
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Examples-of-Inheritance"></a>
+<a name="Examples-of-Inheritance-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Examples of Inheritance</h4>
+
+<div class="example">
+<pre class="example"><code> (defclass C1 () 
+     ((S1 :initform 5.4 :type number) 
+      (S2 :allocation :class)))
+
+ (defclass C2 (C1) 
+     ((S1 :initform 5 :type integer)
+      (S2 :allocation :instance)
+      (S3 :accessor C2-S3)))
+</code>
+</pre></div>
+
+<p><i>Instances</i> of the class <tt>C1</tt> have a <i>local slot</i> named <tt>S1</tt>,
+whose default initial value is 5.4 and
+whose <i>value</i> should always be a <i>number</i>.
+The class <tt>C1</tt> also has a <i>shared slot</i> named <tt>S2</tt>.
+</p>
+<p>There is a <i>local slot</i> named <tt>S1</tt> in <i>instances</i> of <tt>C2</tt>.
+The default initial value of <tt>S1</tt> is 5.
+The value of <tt>S1</tt> should always be of type <tt>(and integer number)</tt>.
+There are also <i>local slots</i> named <tt>S2</tt> and <tt>S3</tt> in <i>instances</i> of <tt>C2</tt>.
+The class <tt>C2</tt> has a <i>method</i> for <tt>C2-S3</tt> for reading the value of slot <tt>S3</tt>;
+there is also a <i>method</i> for <tt>(setf C2-S3)</tt> that writes the value of <tt>S3</tt>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

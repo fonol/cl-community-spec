@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>*break-on-signals* (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="*break-on-signals* (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="*break-on-signals* (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="handler_002dbind.html#handler_002dbind" rel="next" title="handler-bind">
+<link href="_002adebugger_002dhook_002a.html#g_t_002adebugger_002dhook_002a" rel="prev" title="*debugger-hook*">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="g_t_002abreak_002don_002dsignals_002a"></a>
+<div class="header">
+<p>
+Next: <a href="handler_002dbind.html#handler_002dbind" accesskey="n" rel="next">handler-bind</a>, Previous: <a href="_002adebugger_002dhook_002a.html#g_t_002adebugger_002dhook_002a" accesskey="p" rel="prev">*debugger-hook*</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="g_t_002abreak_002don_002dsignals_002a-_005bVariable_005d"></a>
+<h4 class="subsection">9.2.25 *break-on-signals*                                               [Variable]</h4>
+
+<a name="Value-Type_003a_003a-2"></a>
+<h4 class="subsubheading">Value Type::</h4>
+
+<p>a <i>type specifier</i>.
+</p>
+<a name="Initial-Value_003a_003a-2"></a>
+<h4 class="subsubheading">Initial Value::</h4>
+
+<p><b>nil</b>.
+</p>
+<a name="Description_003a_003a-195"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>When <tt>(typep <i>condition</i> *break-on-signals*)</tt> returns <i>true</i>,
+calls to <b>signal</b>, and to other <i>operators</i> such as <b>error</b>
+that implicitly call <b>signal</b>, enter the debugger prior to
+<i>signaling</i> the <i>condition</i>.
+</p>
+<p>The <b>continue</b> <i>restart</i> can be used to continue with the normal
+<i>signaling</i> process when a break occurs process due to
+<b>*break-on-signals*</b>.
+</p>
+<a name="Examples_003a_003a-124"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> *break-on-signals* &rArr;  NIL
+ (ignore-errors (error 'simple-error :format-control &quot;Fooey!&quot;))
+&rArr;  NIL, #&lt;SIMPLE-ERROR 32207172&gt;
+
+ (let ((*break-on-signals* 'error))
+   (ignore-errors (error 'simple-error :format-control &quot;Fooey!&quot;)))
+<tt> |&gt; </tt> Break: Fooey!
+<tt> |&gt; </tt> BREAK entered because of *BREAK-ON-SIGNALS*.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Continue to signal.
+<tt> |&gt; </tt>  2: Top level.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:CONTINUE 1</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Continue to signal.
+&rArr;  NIL, #&lt;SIMPLE-ERROR 32212257&gt;
+
+ (let ((*break-on-signals* 'error))
+   (error 'simple-error :format-control &quot;Fooey!&quot;))
+<tt> |&gt; </tt> Break: Fooey!
+<tt> |&gt; </tt> BREAK entered because of *BREAK-ON-SIGNALS*.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Continue to signal.
+<tt> |&gt; </tt>  2: Top level.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:CONTINUE 1</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Continue to signal.
+<tt> |&gt; </tt> Error: Fooey!
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Top level.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:CONTINUE 1</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Top level.
+</pre></div>
+
+<a name="See-Also_003a_003a-170"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="break.html#break">break</a>
+,
+<a href="signal.html#signal">signal</a>
+, 
+<a href="warn.html#warn">warn</a>
+, 
+<a href="error.html#error">error</a>
+, 
+<a href="typep.html#typep">typep</a>
+, 
+<a href="Condition-System-Concepts.html#Condition-System-Concepts">Condition System Concepts</a>
+</p>
+<a name="Notes_003a_003a-104"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>*break-on-signals*</b> is intended primarily for use in debugging code that
+does signaling.   When setting <b>*break-on-signals*</b>, the user is
+encouraged to choose the most restrictive specification that suffices.
+Setting <b>*break-on-signals*</b> effectively violates the modular handling of 
+<i>condition</i> signaling.  In practice, the complete effect of setting
+<b>*break-on-signals*</b> might be unpredictable in some cases since the user
+might not be aware of the variety or number of calls to <b>signal</b> 
+that are used in code called only incidentally.
+</p>
+<p><b>*break-on-signals*</b> enables an early entry to the debugger but such an
+entry does not preclude an additional entry to the debugger in the case of
+operations such as <b>error</b> and <b>cerror</b>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="handler_002dbind.html#handler_002dbind" accesskey="n" rel="next">handler-bind</a>, Previous: <a href="_002adebugger_002dhook_002a.html#g_t_002adebugger_002dhook_002a" accesskey="p" rel="prev">*debugger-hook*</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

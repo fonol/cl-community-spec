@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>assoc (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="assoc (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="assoc (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conses-Dictionary.html#Conses-Dictionary" rel="up" title="Conses Dictionary">
+<link href="copy_002dalist.html#copy_002dalist" rel="next" title="copy-alist">
+<link href="acons.html#acons" rel="prev" title="acons">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="assoc"></a>
+<div class="header">
+<p>
+Next: <a href="copy_002dalist.html#copy_002dalist" accesskey="n" rel="next">copy-alist</a>, Previous: <a href="acons.html#acons" accesskey="p" rel="prev">acons</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="assoc_002c-assoc_002dif_002c-assoc_002dif_002dnot-_005bFunction_005d"></a>
+<h4 class="subsection">14.2.36 assoc, assoc-if, assoc-if-not                                    [Function]</h4>
+
+<p><code>assoc</code>  <i>item      alist &amp;key</i> key test test-not &rArr;  <i>entry</i>
+</p>
+<p><code>assoc-if</code>  <i>predicate alist &amp;key</i> key &rArr;  <i>entry</i>
+</p>
+<p><code>assoc-if-not</code>  <i>predicate alist &amp;key</i> key &rArr;  <i>entry</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-305"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>item</i>&mdash;an <i>object</i>.
+</p>
+<p><i>alist</i>&mdash;an <i>association list</i>.
+</p>
+<p><i>predicate</i>&mdash;a <i>designator</i> for 
+		    a <i>function</i> of one <i>argument</i>
+		    that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test</i>&mdash;a <i>designator</i> for a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test-not</i>&mdash;a <i>designator</i> for 
+  a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>key</i>&mdash;a <i>designator</i> for a <i>function</i> of one argument,
+  or <b>nil</b>.
+</p>
+<p><i>entry</i>&mdash;a <i>cons</i> that is an <i>element</i> of <i>alist</i>,
+	        or <b>nil</b>.
+</p>
+<a name="Description_003a_003a-406"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>assoc</b>, <b>assoc-if</b>, and <b>assoc-if-not</b>
+return the first <i>cons</i> in <i>alist</i> whose <i>car</i> <i>satisfies the test</i>,
+or <b>nil</b> if no such <i>cons</i> is found.
+</p>
+<p>For <b>assoc</b>, <b>assoc-if</b>, and <b>assoc-if-not</b>, if <b>nil</b> appears
+in <i>alist</i> in place of a pair, it is ignored.
+</p>
+<a name="Examples_003a_003a-289"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq values '((x . 100) (y . 200) (z . 50))) &rArr;  ((X . 100) (Y . 200) (Z . 50))
+ (assoc 'y values) &rArr;  (Y . 200)
+ (rplacd (assoc 'y values) 201) &rArr;  (Y . 201)
+ (assoc 'y values) &rArr;  (Y . 201)
+ (setq alist '((1 . &quot;one&quot;)(2 . &quot;two&quot;)(3 . &quot;three&quot;))) 
+&rArr;  ((1 . &quot;one&quot;) (2 . &quot;two&quot;) (3 . &quot;three&quot;))
+ (assoc 2 alist) &rArr;  (2 . &quot;two&quot;)
+ (assoc-if #'evenp alist) &rArr;  (2 . &quot;two&quot;)
+ (assoc-if-not #'(lambda(x) (&lt; x 3)) alist) &rArr;  (3 . &quot;three&quot;)
+ (setq alist '((&quot;one&quot; . 1)(&quot;two&quot; . 2))) &rArr;  ((&quot;one&quot; . 1) (&quot;two&quot; . 2))
+ (assoc &quot;one&quot; alist) &rArr;  NIL
+ (assoc &quot;one&quot; alist :test #'equalp) &rArr;  (&quot;one&quot; . 1)
+ (assoc &quot;two&quot; alist :key #'(lambda(x) (char x 2))) &rArr;  NIL 
+ (assoc #\o alist :key #'(lambda(x) (char x 2))) &rArr;  (&quot;two&quot; . 2)
+ (assoc 'r '((a . b) (c . d) (r . x) (s . y) (r . z))) &rArr;   (R . X)
+ (assoc 'goo '((foo . bar) (zoo . goo))) &rArr;  NIL
+ (assoc '2 '((1 a b c) (2 b c d) (-7 x y z))) &rArr;  (2 B C D)
+ (setq alist '((&quot;one&quot; . 1) (&quot;2&quot; . 2) (&quot;three&quot; . 3)))
+&rArr;  ((&quot;one&quot; . 1) (&quot;2&quot; . 2) (&quot;three&quot; . 3))
+ (assoc-if-not #'alpha-char-p alist
+               :key #'(lambda (x) (char x 0))) &rArr;  (&quot;2&quot; . 2)
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-130"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>alist</i> is not an <i>association list</i>.
+</p>
+<a name="See-Also_003a_003a-330"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;rassoc; rassoc-if; rassoc-if-not&rsquo;
+,
+&lsquo;find; find-if; find-if-not&rsquo;
+,
+&lsquo;member; member-if; member-if-not&rsquo;
+,
+&lsquo;position; position-if; position-if-not&rsquo;
+,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<a name="Notes_003a_003a-220"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <tt>:test-not</tt> parameter is deprecated.
+</p>
+<p>The <i>function</i> <b>assoc-if-not</b> is deprecated.
+</p>
+<p>It is possible to <b>rplacd</b> the result of <b>assoc</b>, provided
+that it is not <b>nil</b>,
+in order to &ldquo;update&rdquo; <i>alist</i>. 
+</p>
+<p>The two expressions
+</p>
+<div class="example">
+<pre class="example"> (assoc item list :test fn)
+</pre></div>
+
+<p>and
+</p>
+<div class="example">
+<pre class="example"> (find item list :test fn :key #'car)
+</pre></div>
+
+<p>are equivalent in meaning with one exception:
+if <b>nil</b> appears in <i>alist</i> in place of a pair,
+and <i>item</i> is <b>nil</b>,
+<b>find</b> will compute the <i>car</i> of the <b>nil</b> in <i>alist</i>,
+find that it is equal to <i>item</i>, and return <b>nil</b>,
+whereas <b>assoc</b> will ignore the <b>nil</b> in <i>alist</i> and continue
+to search for an actual <i>cons</i> whose <i>car</i> is <b>nil</b>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="copy_002dalist.html#copy_002dalist" accesskey="n" rel="next">copy-alist</a>, Previous: <a href="acons.html#acons" accesskey="p" rel="prev">acons</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

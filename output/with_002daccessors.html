@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>with-accessors (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="with_002dslots.html#with_002dslots" rel="next" title="with-slots">
+<link href="make_002dload_002dform_002dsaving_002dslots.html#make_002dload_002dform_002dsaving_002dslots" rel="prev" title="make-load-form-saving-slots">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="make_002dload_002dform_002dsaving_002dslots.html#make_002dload_002dform_002dsaving_002dslots" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                make-load-form-saving-slots
+                            </a>
+                            <a href="Objects-Dictionary.html#Objects-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Objects Dictionary
+                            </a>
+                            <a href="with_002dslots.html#with_002dslots.html" class="nav-btn nav__next ">
+                                with-slots
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="with_002daccessors"></a>
+<a name="with_002daccessors-_005bMacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Macro</div>
+<h4 class="subsection">with-accessors                                                      </h4>
+
+<p><code>with-accessors</code>  <i><span class="roman">(</span>{<i>slot-entry</i>}*</i><span class="roman">)</span> 
+		   instance-form
+ 		   {<i>declaration</i>}* {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<p><i><span class="nolinebreak">slot-entry</span></i>&nbsp;::=<span class="roman">(</span><span class="nolinebreak">variable-name</span>&nbsp;<span class="nolinebreak">accessor-name</span><span class="roman">)</span><!-- /@w -->
+</p>
+<a name="Arguments-and-Values_003a_003a-111"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>variable-name</i>&mdash;a <i>variable name</i>; not evaluated.
+</p>
+<p><i>accessor-name</i>&mdash;a <i>function name</i>; not evaluated.
+</p>
+<p><i>instance-form</i>&mdash;a <i>form</i>; evaluated.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-150"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Creates a lexical environment in which
+the slots specified by
+<i>slot-entry</i> are lexically available through their accessors as if
+they were variables.  The macro <b>with-accessors</b> invokes the
+appropriate accessors to <i>access</i> the <i>slots</i> specified
+by <i>slot-entry</i>.  Both <b>setf</b>
+and <b>setq</b> can be used to set the value of the <i>slot</i>.
+</p>
+<a name="Examples_003a_003a-106"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (defclass thing ()
+           ((x :initarg :x :accessor thing-x)
+            (y :initarg :y :accessor thing-y)))
+&rArr;  #&lt;STANDARD-CLASS THING 250020173&gt;
+ (defmethod (setf thing-x) :before (new-x (thing thing))
+   (format t &quot;~&amp;Changing X from ~D to ~D in ~S.~
+           (thing-x thing) new-x thing))
+ (setq thing1 (make-instance 'thing :x 1 :y 2)) &rArr;  #&lt;THING 43135676&gt;
+ (setq thing2 (make-instance 'thing :x 7 :y 8)) &rArr;  #&lt;THING 43147374&gt;
+ (with-accessors ((x1 thing-x) (y1 thing-y))
+                 thing1
+   (with-accessors ((x2 thing-x) (y2 thing-y))
+                   thing2
+     (list (list x1 (thing-x thing1) y1 (thing-y thing1)
+                 x2 (thing-x thing2) y2 (thing-y thing2))
+           (setq x1 (+ y1 x2))
+           (list x1 (thing-x thing1) y1 (thing-y thing1)
+                 x2 (thing-x thing2) y2 (thing-y thing2))
+           (setf (thing-x thing2) (list x1))
+           (list x1 (thing-x thing1) y1 (thing-y thing1)
+                 x2 (thing-x thing2) y2 (thing-y thing2)))))
+<tt> |&gt; </tt> Changing X from 1 to 9 in #&lt;THING 43135676&gt;.
+<tt> |&gt; </tt> Changing X from 7 to (9) in #&lt;THING 43147374&gt;.
+&rArr;  ((1 1 2 2 7 7 8 8)
+     9
+     (9 9 2 2 7 7 8 8) 
+     (9)
+     (9 9 2 2 (9) (9) 8 8))
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-12"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p><b>defclass</b>
+</p>
+<a name="Exceptional-Situations_003a_003a-35"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>The consequences are undefined if any <i>accessor-name</i> is not the name
+of an accessor for the <i>instance</i>.
+</p>
+<a name="See-Also_003a_003a-132"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="with_002dslots.html#with_002dslots">with-slots</a>
+,
+<a href="symbol_002dmacrolet.html#symbol_002dmacrolet">symbol-macrolet</a>
+</p>
+<a name="Notes_003a_003a-88"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>A <b>with-accessors</b> expression of the form:
+</p>
+<div class="example">
+<pre class="example"><code>
+
+<tt>(with-accessors</tt> (slot-entry<!-- /@w -->_1 ...slot-entry_n) <i>instance-form</i> form_1 ...form_k)
+
+</code>
+</pre></div>
+
+<p>expands into the equivalent of
+</p>
+<div class="example">
+<pre class="example"><code>
+
+<tt>(</tt><tt>let ((</tt>in <i>instance-form</i><tt>))</tt><!-- /@w -->
+
+ <tt>(symbol-macrolet (</tt>Q<!-- /@w -->_1... Q_n<tt>)</tt> form_1 ...form_k<tt>))</tt>
+
+</code>
+</pre></div>
+
+<p>where Q_i is 
+</p>
+<div class="example">
+<pre class="example"><code><tt>(</tt>variable-name_i () 
+<tt>(accessor-name</tt>_i in))
+</code>
+</pre></div>
+
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Package Prefixes for Symbols (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Default-Print_002dObject-Methods.html#Default-Print_002dObject-Methods" rel="up" title="Default Print-Object Methods">
+<link href="Effect-of-Readtable-Case-on-the-Lisp-Printer.html#Effect-of-Readtable-Case-on-the-Lisp-Printer" rel="next" title="Effect of Readtable Case on the Lisp Printer">
+<link href="Printing-Symbols.html#Printing-Symbols" rel="prev" title="Printing Symbols">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Printing-Symbols.html#Printing-Symbols" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Printing Symbols
+                            </a>
+                            <a href="Default-Print_002dObject-Methods.html#Default-Print_002dObject-Methods.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Default Print-Object Methods
+                            </a>
+                            <a href="Effect-of-Readtable-Case-on-the-Lisp-Printer.html#Effect-of-Readtable-Case-on-the-Lisp-Printer.html" class="nav-btn nav__next ">
+                                Effect of Readtable Case on the Lisp Printer
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Package-Prefixes-for-Symbols"></a>
+<a name="Package-Prefixes-for-Symbols-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Package Prefixes for Symbols</h4>
+
+<p><i>Package prefixes</i> are printed if necessary.
+The rules for <i>package prefixes</i> are as follows.
+When the <i>symbol</i> is printed, if it is in the <tt>KEYWORD</tt> <i>package</i>, 
+then it is printed with a preceding <i>colon</i>; otherwise, if
+it is <i>accessible</i> in the <i>current package</i>, it is printed without any
+<i>package prefix</i>; otherwise, it is printed with a <i>package prefix</i>.
+</p>
+<p>A <i>symbol</i> that is <i>apparently uninterned</i> is printed
+preceded by &ldquo;<tt>#:</tt>&rdquo; 
+</p>
+<p>if <b>*print-gensym*</b> is <i>true</i> and <i>printer escaping</i> is enabled;
+if <b>*print-gensym*</b> is <i>false</i> or <i>printer escaping</i> is disabled,
+</p>
+<p>then the <i>symbol</i> is printed without a prefix,
+as if it were in the <i>current package</i>.
+</p>
+<p>Because the <tt>#:</tt> syntax does not intern the
+following symbol, it is necessary to use circular-list syntax
+if <b>*print-circle*</b> is <i>true</i> and
+the same uninterned symbol appears several times in an expression
+to be printed.  For example, the result of
+</p>
+<div class="example">
+<pre class="example"><code> (let ((x (make-symbol &quot;FOO&quot;))) (list x x))
+</code>
+</pre></div>
+
+<p>would be printed as <tt>(#:foo #:foo)</tt> if <b>*print-circle*</b>
+were <i>false</i>, but as <tt>(#1=#:foo #1#)</tt> if <b>*print-circle*</b>
+were <i>true</i>.
+</p>
+<p>A summary of the preceding package prefix rules follows:
+</p>
+<dl compact="compact">
+<dt><tt>foo:bar</tt></dt>
+<dd><p><tt>foo:bar</tt> is printed when <i>symbol</i> <tt>bar</tt> 
+is external in its <i>home package</i> <tt>foo</tt> 
+and is not <i>accessible</i> in the <i>current package</i>.
+</p>
+</dd>
+<dt><tt>foo::bar</tt></dt>
+<dd><p><tt>foo::bar</tt> is printed when <tt>bar</tt> is internal in its <i>home package</i>
+<tt>foo</tt> and is not <i>accessible</i> in the <i>current package</i>.
+</p>
+</dd>
+<dt><tt>:bar</tt></dt>
+<dd><p><tt>:bar</tt> is printed when the home package of <tt>bar</tt> is the <tt>KEYWORD</tt> <i>package</i>.
+</p>
+</dd>
+<dt>#:bar</dt>
+<dd><p><tt>#:bar</tt> is printed when <tt>bar</tt> is <i>apparently uninterned</i>,
+even in the pathological case that <tt>bar</tt> 
+has no <i>home package</i> but is nevertheless somehow <i>accessible</i> 
+in the <i>current package</i>.
+</p></dd>
+</dl>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

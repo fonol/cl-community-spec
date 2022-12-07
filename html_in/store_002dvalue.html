@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>store-value (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="store-value (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="store-value (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="use_002dvalue.html#use_002dvalue" rel="next" title="use-value">
+<link href="muffle_002dwarning.html#muffle_002dwarning" rel="prev" title="muffle-warning">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="store_002dvalue"></a>
+<div class="header">
+<p>
+Next: <a href="use_002dvalue.html#use_002dvalue" accesskey="n" rel="next">use-value</a>, Previous: <a href="muffle_002dwarning.html#muffle_002dwarning" accesskey="p" rel="prev">muffle-warning</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="store_002dvalue-_005bRestart_005d"></a>
+<h4 class="subsection">9.2.44 store-value                                                       [Restart]</h4>
+
+<a name="Data-Arguments-Required_003a_003a-3"></a>
+<h4 class="subsubheading">Data Arguments Required::</h4>
+
+<p>a value to use instead (on an ongoing basis).
+</p>
+<a name="Description_003a_003a-214"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <b>store-value</b> <i>restart</i> is generally used by <i>handlers</i>
+trying to recover from errors of <i>types</i> such as <b>cell-error</b> 
+or <b>type-error</b>, which may wish to supply a replacement datum to
+be stored permanently.
+</p>
+<a name="Examples_003a_003a-139"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defun type-error-auto-coerce (c)
+   (when (typep c 'type-error)
+     (let ((r (find-restart 'store-value c)))
+       (handler-case (let ((v (coerce (type-error-datum c)
+                                      (type-error-expected-type c))))
+                       (invoke-restart r v))
+         (error ()))))) &rArr;  TYPE-ERROR-AUTO-COERCE
+ (let ((x 3))
+   (handler-bind ((type-error #'type-error-auto-coerce))
+     (check-type x float)
+     x)) &rArr;  3.0
+</pre></div>
+
+<a name="See-Also_003a_003a-188"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Restarts.html#Restarts">Restarts</a>,
+<a href="Interfaces-to-Restarts.html#Interfaces-to-Restarts">Interfaces to Restarts</a>,
+<a href="invoke_002drestart.html#invoke_002drestart">invoke-restart</a>
+,
+<a href="#store_002dvalue">store-value</a>
+ (<i>function</i>),
+<b>ccase</b>,
+<a href="check_002dtype.html#check_002dtype">check-type</a>
+,
+<b>ctypecase</b>,
+<a href="use_002dvalue.html#use_002dvalue">use-value</a>
+ (<i>function</i> and <i>restart</i>)
+</p>
+
+
+
+</body>
+</html>

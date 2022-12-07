@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Satisfying a Two-Argument Test (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Satisfying a Two-Argument Test (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Satisfying a Two-Argument Test (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Rules-about-Test-Functions.html#Rules-about-Test-Functions" rel="up" title="Rules about Test Functions">
+<link href="Examples-of-Satisfying-a-Two_002dArgument-Test.html#Examples-of-Satisfying-a-Two_002dArgument-Test" rel="next" title="Examples of Satisfying a Two-Argument Test">
+<link href="Rules-about-Test-Functions.html#Rules-about-Test-Functions" rel="prev" title="Rules about Test Functions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Satisfying-a-Two_002dArgument-Test"></a>
+<div class="header">
+<p>
+Next: <a href="Satisfying-a-One_002dArgument-Test.html#Satisfying-a-One_002dArgument-Test" accesskey="n" rel="next">Satisfying a One-Argument Test</a>, Previous: <a href="Rules-about-Test-Functions.html#Rules-about-Test-Functions" accesskey="p" rel="prev">Rules about Test Functions</a>, Up: <a href="Rules-about-Test-Functions.html#Rules-about-Test-Functions" accesskey="u" rel="up">Rules about Test Functions</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Satisfying-a-Two_002dArgument-Test-1"></a>
+<h4 class="subsection">17.2.1 Satisfying a Two-Argument Test</h4>
+
+<p>When an <i>object</i> O is being considered iteratively 
+against each <i>element</i> E_i
+of a <i>sequence</i> S
+by an <i>operator</i> F listed in Figure 17&ndash;2,
+it is sometimes useful to control the way in which the presence of O 
+is tested in S is tested by F.
+This control is offered on the basis of a <i>function</i> designated with 
+either a <tt>:test</tt> or <tt>:test-not</tt> <i>argument</i>.
+</p>
+<p>&nbsp;&nbsp;adjoin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">nset-exclusive-or</span>&nbsp;&nbsp;search&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;assoc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nsublis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">set-difference</span>&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;count&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nsubst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">set-exclusive-or</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;delete&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nsubstitute&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sublis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;find&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nunion&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subsetp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;intersection&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;position&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;member&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pushnew&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;substitute&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;mismatch&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rassoc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">tree-equal</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;nintersection&nbsp;&nbsp;&nbsp;&nbsp;remove&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;union&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">nset-difference</span>&nbsp;&nbsp;<span class="nolinebreak">remove-duplicates</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;17&ndash;2:&nbsp;Operators&nbsp;that&nbsp;have&nbsp;<span class="nolinebreak">Two-Argument</span>&nbsp;Tests&nbsp;to&nbsp;be&nbsp;Satisfied<!-- /@w -->
+</p>
+
+<p>The object O might not be compared directly to E_i.
+If a <tt>:key</tt> <i>argument</i> is provided,
+it is a <i>designator</i> for a <i>function</i> of one <i>argument</i> 
+to be called with each E_i as an <i>argument</i>, 
+and <i>yielding</i> an <i>object</i> Z_i to be used for comparison.
+(If there is no <tt>:key</tt> <i>argument</i>, Z_i is E_i.)
+</p>
+<p>The <i>function</i> designated by the <tt>:key</tt> <i>argument</i> is never called on O itself.
+However, if the function operates on multiple sequences
+(<i>e.g.</i>, as happens in <b>set-difference</b>), O
+will be the result of calling the <tt>:key</tt> function on an
+<i>element</i> of the other sequence.  
+</p>
+<p>A <tt>:test</tt> <i>argument</i>, if supplied to F,
+is a <i>designator</i> for a  <i>function</i>
+of two <i>arguments</i>, O and Z_i.
+An E_i is said (or, sometimes, an O and an E_i are said)
+to <i>satisfy the test</i>
+<a name="index-satisfy-the-test"></a>
+</p>
+<p>if this <tt>:test</tt> <i>function</i> returns a <i>generalized boolean</i> representing 
+<i>true</i>.
+</p>
+<p>A <tt>:test-not</tt> <i>argument</i>, if supplied to F, 
+is <i>designator</i> for a <i>function</i> 
+of two <i>arguments</i>, O and Z_i.
+An E_i is said (or, sometimes, an O and an E_i are said)
+to <i>satisfy the test</i>
+<a name="index-satisfy-the-test-1"></a>
+</p>
+<p>if this <tt>:test-not</tt> <i>function</i>
+returns a <i>generalized boolean</i> representing <i>false</i>.
+</p>
+<p>If neither a <tt>:test</tt> nor a <tt>:test-not</tt> <i>argument</i> is supplied, 
+it is as if a <tt>:test</tt> argument of <tt>#'eql</tt> was supplied.
+</p>
+<p>The consequences are unspecified if both a <tt>:test</tt> and a <tt>:test-not</tt> <i>argument</i>
+are supplied in the same <i>call</i> to F.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Examples-of-Satisfying-a-Two_002dArgument-Test.html#Examples-of-Satisfying-a-Two_002dArgument-Test" accesskey="1">Examples of Satisfying a Two-Argument Test</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Satisfying-a-One_002dArgument-Test.html#Satisfying-a-One_002dArgument-Test" accesskey="n" rel="next">Satisfying a One-Argument Test</a>, Previous: <a href="Rules-about-Test-Functions.html#Rules-about-Test-Functions" accesskey="p" rel="prev">Rules about Test Functions</a>, Up: <a href="Rules-about-Test-Functions.html#Rules-about-Test-Functions" accesskey="u" rel="up">Rules about Test Functions</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

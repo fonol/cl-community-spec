@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Introduction to Streams (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Stream-Concepts.html#Stream-Concepts" rel="up" title="Stream Concepts">
+<link href="Abstract-Classifications-of-Streams-_0028Introduction-to-Streams_0029.html#Abstract-Classifications-of-Streams-_0028Introduction-to-Streams_0029" rel="next" title="Abstract Classifications of Streams (Introduction to Streams)">
+<link href="Stream-Concepts.html#Stream-Concepts" rel="prev" title="Stream Concepts">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Stream-Concepts.html#Stream-Concepts" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Stream Concepts
+                            </a>
+                            <a href="Stream-Concepts.html#Stream-Concepts.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Stream Concepts
+                            </a>
+                            <a href="Abstract-Classifications-of-Streams-_0028Introduction-to-Streams_0029.html#Abstract-Classifications-of-Streams-_0028Introduction-to-Streams_0029.html" class="nav-btn nav__next ">
+                                Abstract Classifications of Streams (Introduction to Streams)
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Introduction-to-Streams"></a>
+<a name="Introduction-to-Streams-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Introduction to Streams</h4>
+
+<p>A <i>stream</i>
+<a name="index-stream-1"></a>
+ is an <i>object</i> that can be used with an input or output
+function to identify an appropriate source or sink of <i>characters</i> or 
+<i>bytes</i> for that operation.
+A <i>character</i>
+<a name="index-character-1"></a>
+ <i>stream</i>
+<a name="index-stream-2"></a>
+ is a source or sink of <i>characters</i>.
+A <i>binary</i>
+<a name="index-binary"></a>
+ <i>stream</i>
+<a name="index-stream-3"></a>
+ is a source or sink of <i>bytes</i>.
+</p>
+<p>Some operations may be performed on any kind of <i>stream</i>;
+Figure 21&ndash;1 provides a list of <i>standardized</i> operations
+that are potentially useful with any kind of <i>stream</i>.
+</p>
+<p>&nbsp;&nbsp;close&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">stream-element-type</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">input-stream-p</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;streamp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">interactive-stream-p</span>&nbsp;&nbsp;<span class="nolinebreak">with-open-stream</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">output-stream-p</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;21&ndash;1:&nbsp;Some&nbsp;<span class="nolinebreak">General-Purpose</span>&nbsp;Stream&nbsp;Operations<!-- /@w -->
+</p>
+
+<p>Other operations are only meaningful on certain <i>stream</i> <i>types</i>.
+For example, <b>read-char</b> is only defined for <i>character</i> <i>streams</i>
+and <b>read-byte</b> is only defined for <i>binary</i> <i>streams</i>.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Abstract-Classifications-of-Streams-_0028Introduction-to-Streams_0029.html#Abstract-Classifications-of-Streams-_0028Introduction-to-Streams_0029" accesskey="1">Abstract Classifications of Streams (Introduction to Streams)</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Input.html#Input" accesskey="2">Input</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Open-and-Closed-Streams.html#Open-and-Closed-Streams" accesskey="3">Open and Closed Streams</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Interactive-Streams.html#Interactive-Streams" accesskey="4">Interactive Streams</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Abstract-Classifications-of-Streams.html#Abstract-Classifications-of-Streams" accesskey="5">Abstract Classifications of Streams</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="File-Streams.html#File-Streams" accesskey="6">File Streams</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Other-Subclasses-of-Stream.html#Other-Subclasses-of-Stream" accesskey="7">Other Subclasses of Stream</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

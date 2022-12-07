@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>update-instance-for-different-class (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="update_002dinstance_002dfor_002dredefined_002dclass.html#update_002dinstance_002dfor_002dredefined_002dclass" rel="next" title="update-instance-for-redefined-class">
+<link href="shared_002dinitialize.html#shared_002dinitialize" rel="prev" title="shared-initialize">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="shared_002dinitialize.html#shared_002dinitialize" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                shared-initialize
+                            </a>
+                            <a href="Objects-Dictionary.html#Objects-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Objects Dictionary
+                            </a>
+                            <a href="update_002dinstance_002dfor_002dredefined_002dclass.html#update_002dinstance_002dfor_002dredefined_002dclass.html" class="nav-btn nav__next ">
+                                update-instance-for-redefined-class
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="update_002dinstance_002dfor_002ddifferent_002dclass"></a>
+<a name="update_002dinstance_002dfor_002ddifferent_002dclass-_005bStandard-Generic-Function_005d"></a>
+<div class="section top-most">
+<div class="node-type">Standard Generic Function</div>
+<h4 class="subsection">update-instance-for-different-class             </h4>
+
+<a name="Syntax_003a_003a-15"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Syntax</h4>
+
+<p><code>update-instance-for-different-class</code>  <i>previous current 
+		   &amp;rest</i> initargs
+		   &amp;key &amp;allow-other-keys &rArr;  <i><i>implementation-dependent</i></i>
+</p>
+<a name="Method-Signatures_003a_003a-4"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Method Signatures</h4>
+
+<p><code>update-instance-for-different-class</code>  <i><span class="roman">(</span><i>previous</i> <b>standard-object</b><span class="roman">)</span>
+	        <span class="roman">(</span><i>current</i> <b>standard-object</b><span class="roman">)</span>
+	        &amp;rest</i> initargs
+</p>
+<a name="Arguments-and-Values_003a_003a-94"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>previous</i>&mdash;a copy of the original <i>instance</i>.
+</p>
+<p><i>current</i>&mdash;the original <i>instance</i> (altered).
+</p>
+<p><i>initargs</i>&mdash;an <i>initialization argument list</i>.
+</p>
+<a name="Description_003a_003a-133"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The generic function <b>update-instance-for-different-class</b> is not
+intended to be called by programmers.  Programmers may write
+<i>methods</i> for it.  The <i>function</i> <b>update-instance-for-different-class</b>
+is called only by the <i>function</i> <b>change-class</b>.
+</p>
+<p>The system-supplied primary <i>method</i> on 
+<b>update-instance-for-different-class</b> checks the validity of
+<i>initargs</i> and signals an error if an <i>initarg</i>
+is supplied that is not declared as valid.  This <i>method</i> then
+initializes <i>slots</i> with values according to the <i>initargs</i>,
+and initializes the newly added <i>slots</i> with values according
+to their <tt>:initform</tt> forms.  It does this by calling the generic
+function <b>shared-initialize</b> with the following arguments: the 
+instance (<i>current</i>),
+a list of <i>names</i> of the newly added <i>slots</i>, and the <i>initargs</i>
+it received.  Newly added <i>slots</i> are those <i>local slots</i> for which
+no <i>slot</i> of the same name exists in the <i>previous</i> class.
+</p>
+<p><i>Methods</i> for <b>update-instance-for-different-class</b> can be defined to
+specify actions to be taken when an <i>instance</i> is updated.  If only 
+<i>after methods</i> for <b>update-instance-for-different-class</b> are
+defined, they will be run after the system-supplied primary <i>method</i> for
+initialization and therefore will not interfere with the default
+behavior of <b>update-instance-for-different-class</b>.
+</p>
+<p><i>Methods</i> on <b>update-instance-for-different-class</b> can be defined to
+initialize <i>slots</i> differently from <b>change-class</b>.  The default
+behavior of <b>change-class</b> is described in 
+<a href="Changing-the-Class-of-an-Instance.html#Changing-the-Class-of-an-Instance">Changing the Class of an Instance</a>.
+</p>
+<p>The arguments to <b>update-instance-for-different-class</b> are
+computed by <b>change-class</b>.  When <b>change-class</b> is invoked on
+an <i>instance</i>, a copy of that <i>instance</i> is made; <b>change-class</b> then
+destructively alters the original <i>instance</i>. The first argument to
+<b>update-instance-for-different-class</b>, <i>previous</i>, is that
+copy; it holds the old <i>slot</i> values temporarily.  This argument has
+dynamic extent within <b>change-class</b>; if it is referenced in any
+way once <b>update-instance-for-different-class</b> returns, the
+results are undefined.  The second argument to
+<b>update-instance-for-different-class</b>, <i>current</i>, is the altered
+original <i>instance</i>.
+The intended use of <i>previous</i> is to extract old <i>slot</i> values by using
+<b>slot-value</b> or <b>with-slots</b> or by invoking 
+a reader generic function, or to run other <i>methods</i> that were applicable to 
+<i>instances</i> of
+the original <i>class</i>.
+</p>
+<a name="Examples_003a_003a-99"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<p>See the example for the <i>function</i> <b>change-class</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-24"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+<p>The system-supplied primary <i>method</i> on
+<b>update-instance-for-different-class</b> signals an error if an
+initialization argument is supplied that is not declared as valid.
+</p>
+<a name="See-Also_003a_003a-115"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="change_002dclass.html#change_002dclass">change-class</a>
+,
+<a href="Shared_002dInitialize.html#Shared_002dInitialize">Shared-Initialize</a>
+,
+<a href="Changing-the-Class-of-an-Instance.html#Changing-the-Class-of-an-Instance">Changing the Class of an Instance</a>,
+<a href="Rules-for-Initialization-Arguments.html#Rules-for-Initialization-Arguments">Rules for Initialization Arguments</a>,
+<a href="Declaring-the-Validity-of-Initialization-Arguments.html#Declaring-the-Validity-of-Initialization-Arguments">Declaring the Validity of Initialization Arguments</a>
+</p>
+<a name="Notes_003a_003a-77"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p><i>Initargs</i> are declared as valid by using the <tt>:initarg</tt>
+option to <b>defclass</b>, or by defining <i>methods</i>
+for <b>update-instance-for-different-class</b> or <b>shared-initialize</b>.
+The keyword name of each keyword parameter specifier in the <i>lambda list</i> of
+any <i>method</i> defined on <b>update-instance-for-different-class</b>
+or <b>shared-initialize</b> is declared as a valid <i>initarg</i> name
+for all <i>classes</i> for which that <i>method</i> is applicable.
+</p>
+<p>The value returned by <b>update-instance-for-different-class</b> is
+ignored by <b>change-class</b>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>intern (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="intern (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="intern (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Packages-Dictionary.html#Packages-Dictionary" rel="up" title="Packages Dictionary">
+<link href="package_002dname.html#package_002dname" rel="next" title="package-name">
+<link href="do_002dsymbols.html#do_002dsymbols" rel="prev" title="do-symbols">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="intern"></a>
+<div class="header">
+<p>
+Next: <a href="package_002dname.html#package_002dname" accesskey="n" rel="next">package-name</a>, Previous: <a href="do_002dsymbols.html#do_002dsymbols" accesskey="p" rel="prev">do-symbols</a>, Up: <a href="Packages-Dictionary.html#Packages-Dictionary" accesskey="u" rel="up">Packages Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="intern-_005bFunction_005d"></a>
+<h4 class="subsection">11.2.21 intern                                                           [Function]</h4>
+
+<p><code>intern</code>  <i>string &amp;optional</i> package &rArr;  <i>symbol, status</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-193"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>string</i>&mdash;a <i>string</i>.
+</p>
+<p><i>package</i>&mdash;a <i>package designator</i>.
+</p>
+<p>The default is the <i>current package</i>.
+</p>
+<p><i>symbol</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>status</i>&mdash;one of <tt>:inherited</tt>, <tt>:external</tt>, <tt>:internal</tt>, or <b>nil</b>.
+</p>
+<a name="Description_003a_003a-257"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>intern</b> enters a <i>symbol</i> named <i>string</i> into <i>package</i>.
+If a <i>symbol</i> whose name is the same as <i>string</i> 
+is already <i>accessible</i> in <i>package</i>, it is returned.
+If no such <i>symbol</i> is <i>accessible</i> in <i>package</i>, 
+a new <i>symbol</i> with the given name is created 
+and entered into <i>package</i> as an <i>internal symbol</i>,
+or as an <i>external symbol</i> if the <i>package</i> is the <tt>KEYWORD</tt> <i>package</i>; 
+<i>package</i> becomes the <i>home package</i> of the created <i>symbol</i>.
+</p>
+<p>The first value returned by <b>intern</b>, <i>symbol</i>,
+is the <i>symbol</i> that was found or
+created.  
+The meaning of the <i>secondary value</i>, <i>status</i>, is as follows:
+</p><dl compact="compact">
+<dt><tt>:internal</tt></dt>
+<dd><p>The <i>symbol</i> was found 
+and is
+<i>present</i> in <i>package</i> as an <i>internal symbol</i>.
+</p>
+</dd>
+<dt><tt>:external</tt></dt>
+<dd><p>The <i>symbol</i> was found
+and is
+<i>present</i> as an <i>external symbol</i>.
+</p>
+</dd>
+<dt><tt>:inherited</tt></dt>
+<dd><p>The <i>symbol</i> was found
+and is inherited via <b>use-package</b> 
+(which implies that the <i>symbol</i> is internal).
+</p>
+</dd>
+<dt><b>nil</b></dt>
+<dd><p>No pre-existing <i>symbol</i> was found,
+so one was created.
+</p>
+<p>It is <i>implementation-dependent</i> whether the <i>string</i> 
+that becomes the new <i>symbol</i>&rsquo;s <i>name</i> is the given
+<i>string</i> or a copy of it.  Once a <i>string</i>
+has been given as the <i>string</i> <i>argument</i> to
+<i>intern</i> in this situation where a new <i>symbol</i> is created,
+the consequences are undefined if a
+subsequent attempt is made to alter that <i>string</i>.
+</p>
+</dd>
+</dl>
+
+<a name="Examples_003a_003a-175"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (in-package &quot;COMMON-LISP-USER&quot;) &rArr;  #&lt;PACKAGE &quot;COMMON-LISP-USER&quot;&gt;
+ (intern &quot;Never-Before&quot;) &rArr;  |Never-Before|, NIL
+ (intern &quot;Never-Before&quot;) &rArr;  |Never-Before|, :INTERNAL 
+ (intern &quot;NEVER-BEFORE&quot; &quot;KEYWORD&quot;) &rArr;  :NEVER-BEFORE, NIL
+ (intern &quot;NEVER-BEFORE&quot; &quot;KEYWORD&quot;) &rArr;  :NEVER-BEFORE, :EXTERNAL
+</pre></div>
+
+<a name="See-Also_003a_003a-229"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="find_002dsymbol.html#find_002dsymbol">find-symbol</a>
+,
+&lsquo;read; read-preserving-whitespace&rsquo;
+,
+<b>symbol</b>,
+<a href="unintern.html#unintern">unintern</a>
+,
+<a href="Symbols-as-Tokens.html#Symbols-as-Tokens">Symbols as Tokens</a>
+</p>
+<a name="Notes_003a_003a-133"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>intern</b> does not need to do any name conflict checking 
+because it never creates a new <i>symbol</i> 
+if there is already an <i>accessible</i> <i>symbol</i> with the name given.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="package_002dname.html#package_002dname" accesskey="n" rel="next">package-name</a>, Previous: <a href="do_002dsymbols.html#do_002dsymbols" accesskey="p" rel="prev">do-symbols</a>, Up: <a href="Packages-Dictionary.html#Packages-Dictionary" accesskey="u" rel="up">Packages Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

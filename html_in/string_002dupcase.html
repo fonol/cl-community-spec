@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>string-upcase (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="string-upcase (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="string-upcase (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Strings-Dictionary.html#Strings-Dictionary" rel="up" title="Strings Dictionary">
+<link href="string_002dtrim.html#string_002dtrim" rel="next" title="string-trim">
+<link href="string.html#string" rel="prev" title="string">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="string_002dupcase"></a>
+<div class="header">
+<p>
+Next: <a href="string_002dtrim.html#string_002dtrim" accesskey="n" rel="next">string-trim</a>, Previous: <a href="string.html#string" accesskey="p" rel="prev">string</a>, Up: <a href="Strings-Dictionary.html#Strings-Dictionary" accesskey="u" rel="up">Strings Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="string_002dupcase_002c-string_002ddowncase_002c-string_002dcapitalize_002c"></a>
+<h4 class="subsection">16.2.8 string-upcase, string-downcase, string-capitalize,</h4>
+<a name="nstring_002dupcase_002c-nstring_002ddowncase_002c-nstring_002dcapitalize"></a>
+<h4 class="subheading">nstring-upcase, nstring-downcase, nstring-capitalize</h4>
+<p align="right"><i>[Function]</i>
+</p>
+<p><code>string-upcase</code>  <i>string &amp;key</i> start end &rArr;  <i>cased-string</i>
+</p>
+<p><code>string-downcase</code>  <i>string &amp;key</i> start end &rArr;  <i>cased-string</i>
+</p>
+<p><code>string-capitalize</code>  <i>string &amp;key</i> start end &rArr;  <i>cased-string</i>
+</p>
+<p><code>nstring-upcase</code>  <i>string &amp;key</i> start end &rArr;  <i>string</i>
+</p>
+<p><code>nstring-downcase</code>  <i>string &amp;key</i> start end &rArr;  <i>string</i>
+</p>
+<p><code>nstring-capitalize</code>  <i>string &amp;key</i> start end &rArr;  <i>string</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-349"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>string</i>&mdash;a <i>string designator</i>.
+  For <b>nstring-upcase</b>,
+      <b>nstring-downcase</b>,
+  and <b>nstring-capitalize</b>,
+  the <i>string</i> <i>designator</i> must be a <i>string</i>.
+</p>
+<p><i>start</i>, <i>end</i>&mdash;<i>bounding index designators</i> of <i>string</i>.
+ The defaults for <i>start</i> and <i>end</i> are <tt>0</tt> and <b>nil</b>, respectively.
+</p>
+<p><i>cased-string</i>&mdash;a <i>string</i>.
+</p>
+<a name="Description_003a_003a-463"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>string-upcase</b>,  <b>string-downcase</b>,  <b>string-capitalize</b>,
+<b>nstring-upcase</b>, <b>nstring-downcase</b>, <b>nstring-capitalize</b>
+change the case of the subsequence of <i>string</i> 
+<i>bounded</i> by <i>start</i> and <i>end</i> 
+as follows:
+</p>
+<dl compact="compact">
+<dt>string-upcase</dt>
+<dd><p><b>string-upcase</b> returns a <i>string</i> just like <i>string</i> 
+with all lowercase characters replaced by the corresponding uppercase 
+characters.  More precisely, each character of the result <i>string</i> 
+is produced by applying the <i>function</i> <b>char-upcase</b> to the corresponding
+character of <i>string</i>.
+</p>
+</dd>
+<dt>string-downcase</dt>
+<dd><p><b>string-downcase</b> is like <b>string-upcase</b> 
+except that all uppercase characters are replaced by the corresponding 
+lowercase characters (using <b>char-downcase</b>).
+</p>
+</dd>
+<dt>string-capitalize</dt>
+<dd><p><b>string-capitalize</b> produces a copy of <i>string</i> such that,
+for every word in the copy, the first <i>character</i> of the &ldquo;word,&rdquo;
+if it has <i>case</i>, is <i>uppercase</i> and
+any other <i>characters</i> with <i>case</i> in the word are <i>lowercase</i>.
+For the purposes of <b>string-capitalize</b>,
+a &ldquo;word&rdquo; is defined to be a
+consecutive subsequence consisting of <i>alphanumeric</i> <i>characters</i>,
+delimited at each end either by a non-<i>alphanumeric</i> <i>character</i>
+or by an end of the <i>string</i>.
+</p>
+</dd>
+<dt>nstring-upcase, nstring-downcase, nstring-capitalize</dt>
+<dd><p><b>nstring-upcase</b>, <b>nstring-downcase</b>,
+and <b>nstring-capitalize</b> are identical to <b>string-upcase</b>, 
+<b>string-downcase</b>, and <b>string-capitalize</b>
+respectively except that they  modify <i>string</i>.
+</p></dd>
+</dl>
+
+<p>For <b>string-upcase</b>, <b>string-downcase</b>, and <b>string-capitalize</b>,
+<i>string</i> is not modified.  However, if no characters in <i>string</i> 
+require conversion, the result may be either <i>string</i> or a copy of it,
+at the implementation&rsquo;s discretion.
+</p>
+<a name="Examples_003a_003a-331"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (string-upcase &quot;abcde&quot;) &rArr;  &quot;ABCDE&quot;
+ (string-upcase &quot;Dr. Livingston, I presume?&quot;)
+&rArr;  &quot;DR. LIVINGSTON, I PRESUME?&quot;
+ (string-upcase &quot;Dr. Livingston, I presume?&quot; :start 6 :end 10)
+&rArr;  &quot;Dr. LiVINGston, I presume?&quot;
+ (string-downcase &quot;Dr. Livingston, I presume?&quot;)
+&rArr;  &quot;dr. livingston, i presume?&quot;
+
+ (string-capitalize &quot;elm 13c arthur;fig don't&quot;) &rArr;  &quot;Elm 13c Arthur;Fig Don'T&quot;
+ (string-capitalize &quot; hello &quot;) &rArr;  &quot; Hello &quot;
+ (string-capitalize &quot;occlUDeD cASEmenTs FOreSTAll iNADVertent DEFenestraTION&quot;)
+&rArr;   &quot;Occluded Casements Forestall Inadvertent Defenestration&quot;
+ (string-capitalize 'kludgy-hash-search) &rArr;  &quot;Kludgy-Hash-Search&quot;
+ (string-capitalize &quot;DON'T!&quot;) &rArr;  &quot;Don'T!&quot;    ;not &quot;Don't!&quot;
+ (string-capitalize &quot;pipe 13a, foo16c&quot;) &rArr;  &quot;Pipe 13a, Foo16c&quot;
+
+ (setq str (copy-seq &quot;0123ABCD890a&quot;)) &rArr;  &quot;0123ABCD890a&quot;
+ (nstring-downcase str :start 5 :end 7) &rArr;  &quot;0123AbcD890a&quot;
+ str &rArr;  &quot;0123AbcD890a&quot;
+</pre></div>
+
+<a name="Side-Effects_003a_003a-50"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p><b>nstring-upcase</b>,
+    <b>nstring-downcase</b>, 
+and <b>nstring-capitalize</b> modify <i>string</i> as appropriate
+rather than constructing a new <i>string</i>.
+</p>
+<a name="See-Also_003a_003a-378"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;char-upcase; char-downcase&rsquo;
+, <b>char-downcase</b>
+</p>
+<a name="Notes_003a_003a-253"></a>
+<h4 class="subsubheading">Notes::</h4>
+<p>The result is always of the same length
+as <i>string</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="string_002dtrim.html#string_002dtrim" accesskey="n" rel="next">string-trim</a>, Previous: <a href="string.html#string" accesskey="p" rel="prev">string</a>, Up: <a href="Strings-Dictionary.html#Strings-Dictionary" accesskey="u" rel="up">Strings Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

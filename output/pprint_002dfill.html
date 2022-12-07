@@ -1,0 +1,183 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>pprint-fill (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer-Dictionary.html#Printer-Dictionary" rel="up" title="Printer Dictionary">
+<link href="pprint_002dindent.html#pprint_002dindent" rel="next" title="pprint-indent">
+<link href="pprint_002dexit_002dif_002dlist_002dexhausted.html#pprint_002dexit_002dif_002dlist_002dexhausted" rel="prev" title="pprint-exit-if-list-exhausted">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="pprint_002dexit_002dif_002dlist_002dexhausted.html#pprint_002dexit_002dif_002dlist_002dexhausted" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                pprint-exit-if-list-exhausted
+                            </a>
+                            <a href="Printer-Dictionary.html#Printer-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Printer Dictionary
+                            </a>
+                            <a href="pprint_002dindent.html#pprint_002dindent.html" class="nav-btn nav__next ">
+                                pprint-indent
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="pprint_002dfill"></a>
+<a name="pprint_002dfill_002c-pprint_002dlinear_002c-pprint_002dtabular-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">pprint-fill, pprint-linear, pprint-tabular                       </h4>
+
+<p><code>pprint-fill</code>  <i>stream object &amp;optional</i> colon-p at-sign-p &rArr;  <i><b>nil</b></i>
+</p>
+<p><code>pprint-linear</code>  <i>stream object &amp;optional</i> colon-p at-sign-p &rArr;  <i><b>nil</b></i>
+</p>
+<p><code>pprint-tabular</code>  <i>stream object &amp;optional</i> colon-p at-sign-p tabsize &rArr;  <i><b>nil</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-458"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>stream</i>&mdash;an <i>output</i> <i>stream designator</i>.
+</p>
+<p><i>object</i>&mdash;an <i>object</i>.
+</p>
+<p><i>colon-p</i>&mdash;a <i>generalized boolean</i>.
+  The default is <i>true</i>.
+</p>
+<p><i>at-sign-p</i>&mdash;a <i>generalized boolean</i>.
+  The default is <i>implementation-dependent</i>.
+</p>
+<p><i>tabsize</i>&mdash;a non-negative <i>integer</i>.
+  The default is <tt>16</tt>.
+</p>
+<a name="Description_003a_003a-593"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The functions <b>pprint-fill</b>, <b>pprint-linear</b>, and
+<b>pprint-tabular</b> specify particular ways of <i>pretty printing</i>
+a <i>list</i> to <i>stream</i>. 
+Each function prints parentheses around the output if and only
+if <i>colon-p</i> is <i>true</i>.
+Each function ignores its <i>at-sign-p</i> argument.
+(Both arguments are included even though only one is needed
+so that these functions can be used via <tt>~/.../</tt>
+and as <b>set-pprint-dispatch</b> functions, as well as directly.)
+Each function handles abbreviation and the detection of circularity
+and sharing correctly, and uses <b>write</b> to print <i>object</i>
+when it is a <i>non-list</i>.
+</p>
+<p>If <i>object</i> is a <i>list</i> and 
+if the <i>value</i> of <b>*print-pretty*</b> is <i>false</i>,
+each of these functions prints <i>object</i>
+using a minimum of <i>whitespace</i>,
+as described in <a href="Printing-Lists-and-Conses.html#Printing-Lists-and-Conses">Printing Lists and Conses</a>.
+Otherwise (if <i>object</i> is a <i>list</i> and 
+	   if the <i>value</i> of <b>*print-pretty*</b> is <i>true</i>):
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>The <i>function</i> <b>pprint-linear</b> prints a <i>list</i> either all on one line, 
+or with each <i>element</i> on a separate line.  
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The <i>function</i> <b>pprint-fill</b> prints a <i>list</i> with as many <i>elements</i>
+as possible on each line.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The <i>function</i> <b>pprint-tabular</b> is the same as <b>pprint-fill</b>
+except that it prints the <i>elements</i> so that they line up in columns.
+The <i>tabsize</i> specifies the column spacing in <i>ems</i>,
+which is the total spacing from the leading edge of one column to
+the leading edge of the next.
+</p></dd>
+</dl>
+
+<a name="Examples_003a_003a-429"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<p>Evaluating the following with a line length of <tt>25</tt> produces the output shown.
+</p>
+<div class="example">
+<pre class="example"><code>(progn (princ &quot;Roads &quot;) 
+       (pprint-tabular *standard-output* '(elm main maple center) nil nil 8))
+Roads ELM     MAIN
+      MAPLE   CENTER
+</code>
+</pre></div>
+
+<a name="Side-Effects_003a_003a-75"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Side Effects</h4>
+
+<p>Performs output to the indicated <i>stream</i>.
+</p>
+<a name="Affected-By_003a_003a-98"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p>The cursor position on the indicated <i>stream</i>, if it can be determined.
+</p>
+<a name="Notes_003a_003a-299"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The <i>function</i> <b>pprint-tabular</b> could be defined as follows:
+</p>
+<div class="example">
+<pre class="example"><code>(defun pprint-tabular (s list &amp;optional (colon-p t) at-sign-p (tabsize nil))
+  (declare (ignore at-sign-p))
+  (when (null tabsize) (setq tabsize 16))
+  (pprint-logical-block (s list :prefix (if colon-p &quot;(&quot; &quot;&quot;)
+                                :suffix (if colon-p &quot;)&quot; &quot;&quot;))
+    (pprint-exit-if-list-exhausted)
+    (loop (write (pprint-pop) :stream s)
+          (pprint-exit-if-list-exhausted)
+          (write-char #\Space s)
+          (pprint-tab :section-relative 0 tabsize s)
+          (pprint-newline :fill s))))
+</code>
+</pre></div>
+
+<p>Note that it would have been inconvenient to specify this function
+using <b>format</b>, because of the need to pass its <i>tabsize</i> argument
+through to a <tt>~:T</tt> format directive nested within an iteration over a list.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

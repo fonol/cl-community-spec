@@ -1,0 +1,374 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>open (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="open (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="open (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="stream_002dexternal_002dformat.html#stream_002dexternal_002dformat" rel="next" title="stream-external-format">
+<link href="file_002dstring_002dlength.html#file_002dstring_002dlength" rel="prev" title="file-string-length">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="open"></a>
+<div class="header">
+<p>
+Next: <a href="stream_002dexternal_002dformat.html#stream_002dexternal_002dformat" accesskey="n" rel="next">stream-external-format</a>, Previous: <a href="file_002dstring_002dlength.html#file_002dstring_002dlength" accesskey="p" rel="prev">file-string-length</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="open-_005bFunction_005d"></a>
+<h4 class="subsection">21.2.29 open                                                             [Function]</h4>
+
+<p><code>open</code>  <i>filespec &amp;key</i> direction element-type
+				               if-exists if-does-not-exist
+						     external-format<br>
+   &rArr;  <i>stream</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-430"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>filespec</i>&mdash;a <i>pathname designator</i>.
+</p>
+<p><i>direction</i>&mdash;one of <tt>:input</tt>, <tt>:output</tt>, <tt>:io</tt>, or <tt>:probe</tt>.
+ The default is <tt>:input</tt>.
+</p>
+<p><i>element-type</i>&mdash;a <i>type specifier</i> 
+		       for <i>recognizable subtype</i> of <b>character</b>;
+		    or a <i>type specifier</i> 
+		       for a <i>finite</i> <i>recognizable subtype</i> of <i>integer</i>;
+		    or one of the <i>symbols</i> 
+                          <b>signed-byte</b>,
+                          <b>unsigned-byte</b>,
+		       or <tt>:default</tt>.
+ The default is <b>character</b>.
+</p>
+<p><i>if-exists</i>&mdash;one of <tt>:error</tt>, <tt>:new-version</tt>, <tt>:rename</tt>,
+		  <tt>:rename-and-delete</tt>, <tt>:overwrite</tt>, <tt>:append</tt>,
+		  <tt>:supersede</tt>, or <b>nil</b>.
+ The default is <tt>:new-version</tt> if the version component of <i>filespec</i> is <tt>:newest</tt>,
+          or <tt>:error</tt> otherwise.
+</p>
+<p><i>if-does-not-exist</i>&mdash;one of <tt>:error</tt>, <tt>:create</tt>, or <b>nil</b>.
+ The default is <tt>:error</tt> if <i>direction</i> is <tt>:input</tt> 
+		      or <i>if-exists</i> is <tt>:overwrite</tt> or <tt>:append</tt>;
+	  <tt>:create</tt> if <i>direction</i> is <tt>:output</tt> or <tt>:io</tt>,
+		      and <i>if-exists</i> is neither <tt>:overwrite</tt> nor <tt>:append</tt>;
+       or <b>nil</b> when <i>direction</i> is <tt>:probe</tt>.
+</p>
+<p><i>external-format</i>&mdash;an <i>external file format designator</i>.
+  The default is <tt>:default</tt>.
+</p>
+<p><i>stream</i>&mdash;a <i>file stream</i> or <b>nil</b>.
+</p>
+<a name="Description_003a_003a-560"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>open</b> creates, opens, and returns a <i>file stream</i> 
+that is connected to the file specified by <i>filespec</i>.
+<i>Filespec</i> is the name of the file to be opened.  
+If the <i>filespec</i> <i>designator</i> is a <i>stream</i>,
+that <i>stream</i> is not closed first or otherwise affected.
+</p>
+<p>The keyword arguments to <b>open</b> specify the characteristics 
+of the <i>file stream</i> that is returned, and how to handle errors.
+</p>
+<p>If <i>direction</i> is <tt>:input</tt>
+or <tt>:probe</tt>,
+or if <i>if-exists</i> is not <tt>:new-version</tt>
+and the version component of the <i>filespec</i> is <tt>:newest</tt>,
+then the file opened is that file already existing in the file system
+that has a version greater than that of any other file in the file system
+whose other pathname components are the same as those of <i>filespec</i>.
+</p>
+<p>An implementation is required to recognize all of 
+the <b>open</b> keyword options 
+and to do something reasonable in the context of the host operating
+system.  
+For example, if a file system does not support distinct file
+versions and does not distinguish the notions of deletion and expunging,
+<tt>:new-version</tt> might be treated the same as
+<tt>:rename</tt> or <tt>:supersede</tt>, and <tt>:rename-and-delete</tt> might
+be treated the same as <tt>:supersede</tt>.
+</p>
+<dl compact="compact">
+<dt><tt>:direction</tt></dt>
+<dd><p>These are the possible values for <i>direction</i>, 
+and how they affect the nature of the <i>stream</i> that is created:
+</p>
+<dl compact="compact">
+<dt><tt>:input</tt></dt>
+<dd><p>Causes the creation of an <i>input</i> <i>file stream</i>.
+</p>
+</dd>
+<dt><tt>:output</tt></dt>
+<dd><p>Causes the creation of an <i>output</i> <i>file stream</i>.
+</p>
+</dd>
+<dt><tt>:io</tt></dt>
+<dd><p>Causes the creation of a <i>bidirectional</i> <i>file stream</i>.
+</p>
+</dd>
+<dt><tt>:probe</tt></dt>
+<dd><p>Causes the creation of a &ldquo;no-directional&rdquo; <i>file stream</i>; 
+in effect, the <i>file stream</i> is created 
+and then closed prior to being returned by <b>open</b>.
+</p>
+</dd>
+</dl>
+
+</dd>
+<dt><tt>:element-type</tt></dt>
+<dd><p>The <i>element-type</i> specifies the unit of transaction for the <i>file stream</i>.
+If it is <tt>:default</tt>,
+the unit is determined by <i>file system</i>,
+possibly based on the <i>file</i>.
+</p>
+</dd>
+<dt><tt>:if-exists</tt></dt>
+<dd><p><i>if-exists</i> specifies the action to be taken if <i>direction</i> is
+<tt>:output</tt> or <tt>:io</tt> and a file of the name <i>filespec</i> 
+already exists.
+If <i>direction</i> is <tt>:input</tt>, not supplied, or <tt>:probe</tt>, 
+<i>if-exists</i> is ignored.
+These are the results of <b>open</b> as modified by <i>if-exists</i>:
+</p>
+<dl compact="compact">
+<dt><tt>:error</tt></dt>
+<dd><p>An error of <i>type</i> <b>file-error</b> is signaled.
+</p>
+</dd>
+<dt><tt>:new-version</tt></dt>
+<dd><p>A new file is created with a larger version number.
+</p>
+</dd>
+<dt><tt>:rename</tt></dt>
+<dd><p>The existing file is renamed to some other name and then a new file is created.
+</p>
+</dd>
+<dt><tt>:rename-and-delete</tt></dt>
+<dd><p>The existing file is renamed to some other name,
+then it is deleted but not expunged, and then a new file is created.
+</p>
+</dd>
+<dt><tt>:overwrite</tt></dt>
+<dd><p>Output operations on the <i>stream</i> destructively modify the existing file.
+If <i>direction</i> is <tt>:io</tt> the file is opened in a bidirectional mode
+that allows both reading and writing.  The file pointer is initially 
+positioned at the beginning of the file; however, the file is not truncated
+back to length zero when it is opened.
+</p>
+</dd>
+<dt><tt>:append</tt></dt>
+<dd><p>Output operations on the <i>stream</i> destructively modify the existing file.
+The file pointer is initially positioned at the end of the file.
+</p>
+<p>If <i>direction</i> is <tt>:io</tt>,
+the file is opened in a bidirectional mode that allows both reading and writing.
+</p>
+</dd>
+<dt><tt>:supersede</tt></dt>
+<dd><p>The existing file is superseded;
+that is, a new file with the same name as the old one is created.
+If possible, the implementation should not destroy the old file until the new
+<i>stream</i> is closed.
+</p>
+</dd>
+<dt><b>nil</b></dt>
+<dd><p>No file or <i>stream</i> is created;
+instead, <b>nil</b> is returned to indicate failure.
+</p>
+</dd>
+</dl>
+
+</dd>
+<dt><tt>:if-does-not-exist</tt></dt>
+<dd><p><i>if-does-not-exist</i>
+specifies the action to be taken if
+a file of name <i>filespec</i> does not already exist.
+These are the results of <b>open</b> as modified by <i>if-does-not-exist</i>:
+</p>
+<dl compact="compact">
+<dt><tt>:error</tt></dt>
+<dd><p>An error of <i>type</i> <b>file-error</b> is signaled.
+</p>
+</dd>
+<dt><tt>:create</tt></dt>
+<dd><p>An empty file is created.
+Processing continues  as if the file 
+had already existed but no processing as 
+directed by <i>if-exists</i> is performed.
+</p>
+</dd>
+<dt><b>nil</b></dt>
+<dd><p>No file or <i>stream</i> is created;
+instead, <b>nil</b> is returned to indicate failure.
+</p>
+</dd>
+</dl>
+
+</dd>
+<dt><tt>:external-format</tt></dt>
+<dd><p>This option selects an <i>external file format</i> for the <i>file</i>:
+The only <i>standardized</i> value for this option is <tt>:default</tt>,
+although <i>implementations</i> are permitted to define additional 
+<i>external file formats</i> and <i>implementation-dependent</i> values 
+returned by <b>stream-external-format</b> can also be used by <i>conforming programs</i>.
+</p>
+<p>The <i>external-format</i> is meaningful for
+any kind of <i>file stream</i> whose <i>element type</i>
+is a <i>subtype</i> of <i>character</i>.
+This option is ignored for <i>streams</i> for which it is not meaningful;
+however, <i>implementations</i> may define other <i>element types</i> 
+for which it is meaningful.
+The consequences are unspecified if a <i>character</i> is written 
+that cannot be represented by the given <i>external file format</i>.
+</p>
+</dd>
+</dl>
+
+<p>When a file is opened, a <i>file stream</i> is constructed to serve
+as the file system&rsquo;s ambassador to the <span class="roman">Lisp</span> environment;
+operations on the <i>file stream</i> are reflected by operations on the file
+in the file system.  
+</p>
+<p>A file can be deleted, renamed, or destructively modified by <b>open</b>.
+</p>
+<p>For information about opening relative pathnames,
+see <a href="Merging-Pathnames.html#Merging-Pathnames">Merging Pathnames</a>.
+</p>
+<a name="Examples_003a_003a-406"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (open <i>filespec</i> :direction :probe)  &rArr;  #&lt;Closed Probe File Stream...&gt;
+ (setq q (merge-pathnames (user-homedir-pathname) &quot;test&quot;))
+&rArr;  #&lt;PATHNAME :HOST NIL :DEVICE <i>device-name</i> :DIRECTORY <i>directory-name</i>
+    :NAME &quot;test&quot; :TYPE NIL :VERSION :NEWEST&gt;
+ (open <i>filespec</i> :if-does-not-exist :create) &rArr;  #&lt;Input File Stream...&gt;
+ (setq s (open <i>filespec</i> :direction :probe)) &rArr;  #&lt;Closed Probe File Stream...&gt;
+ (truename s) &rArr;  #&lt;PATHNAME :HOST NIL :DEVICE <i>device-name</i> :DIRECTORY
+    <i>directory-name</i> :NAME <i>filespec</i> :TYPE <i>extension</i> :VERSION 1&gt;
+ (open s :direction :output :if-exists nil) &rArr;  NIL 
+</pre></div>
+
+<a name="Affected-By_003a_003a-91"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>The nature and state of the host computer&rsquo;s <i>file system</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-207"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If <i>if-exists</i> is <tt>:error</tt>, (subject to the
+constraints on the meaning of <i>if-exists</i> listed above),
+an error of <i>type</i> <b>file-error</b> is signaled.                        
+</p>
+<p>If <i>if-does-not-exist</i> is <tt>:error</tt> (subject to the
+constraints on the meaning of <i>if-does-not-exist</i> listed above),
+an error of <i>type</i> <b>file-error</b> is signaled.
+</p>
+<p>If it is impossible for an implementation to handle some option
+in a manner close to what is specified here,
+an error of <i>type</i> <b>error</b> might be signaled.
+</p>
+<p>An error of <i>type</i> <b>file-error</b> is signaled if
+<tt>(wild-pathname-p <i>filespec</i>)</tt> returns true.
+</p>
+<p>An error of <i>type</i> <b>error</b> is signaled if the <i>external-format</i> 
+is not understood by the <i>implementation</i>.
+</p>
+<p>The various <i>file systems</i> in existence today have widely differing capabilities,
+and some aspects of the <i>file system</i> are beyond the scope of this specification
+to define.  A given <i>implementation</i> might not be able to support all of these options 
+in exactly the manner stated.  An <i>implementation</i> is required to recognize all of 
+these option keywords and to try to do something &ldquo;reasonable&rdquo; in the context of the 
+host <i>file system</i>.  Where necessary to accomodate the <i>file system</i>,
+an <i>implementation</i> deviate slightly from the semantics specified here without 
+being disqualified for consideration as a <i>conforming implementation</i>.
+If it is utterly impossible for an <i>implementation</i> to handle some option
+in a manner similar to what is specified here, it may simply signal an error.
+</p>
+<p>With regard to the <tt>:element-type</tt> option, if a <i>type</i> is
+requested that is not supported by the <i>file system</i>, a substitution of types 
+such as that which goes on in <i>upgrading</i> is permissible.  As a minimum 
+requirement, it should be the case that opening an <i>output</i> <i>stream</i>
+to a <i>file</i> in a given <i>element type</i> and later opening 
+an <i>input</i> <i>stream</i> to the same <i>file</i> in the same <i>element type</i>
+should work compatibly.
+</p>
+<a name="See-Also_003a_003a-456"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="with_002dopen_002dfile.html#with_002dopen_002dfile">with-open-file</a>
+,
+<a href="close.html#close">close</a>
+,
+<b>pathname</b>,
+<b>logical-pathname</b>,
+</p>
+<p><a href="Merging-Pathnames.html#Merging-Pathnames">Merging Pathnames</a>,
+</p>
+<p><a href="Pathnames-as-Filenames.html#Pathnames-as-Filenames">Pathnames as Filenames</a>
+</p>
+<a name="Notes_003a_003a-294"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>open</b> does not automatically close the file when an abnormal
+exit occurs.
+</p>
+<p>When <i>element-type</i> is a <i>subtype</i> of <b>character</b>,
+<b>read-char</b> and/or <b>write-char</b> can be
+used on the resulting <i>file stream</i>. 
+</p>
+<p>When <i>element-type</i> is a <i>subtype</i> of <i>integer</i>,
+<b>read-byte</b> and/or <b>write-byte</b> can be used on the resulting <i>file stream</i>.
+</p>
+<p>When <i>element-type</i> is <tt>:default</tt>,
+the <i>type</i> can be determined by using <b>stream-element-type</b>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="stream_002dexternal_002dformat.html#stream_002dexternal_002dformat" accesskey="n" rel="next">stream-external-format</a>, Previous: <a href="file_002dstring_002dlength.html#file_002dstring_002dlength" accesskey="p" rel="prev">file-string-length</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

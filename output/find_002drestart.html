@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>find-restart (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="invoke_002drestart.html#invoke_002drestart" rel="next" title="invoke-restart">
+<link href="compute_002drestarts.html#compute_002drestarts" rel="prev" title="compute-restarts">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="compute_002drestarts.html#compute_002drestarts" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                compute-restarts
+                            </a>
+                            <a href="Conditions-Dictionary.html#Conditions-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Conditions Dictionary
+                            </a>
+                            <a href="invoke_002drestart.html#invoke_002drestart.html" class="nav-btn nav__next ">
+                                invoke-restart
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="find_002drestart"></a>
+<a name="find_002drestart-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">find-restart                                                     </h4>
+
+<p><code>find-restart</code>  <i>identifier &amp;optional</i> condition
+ restart
+</p>
+<a name="Arguments-and-Values_003a_003a-149"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>identifier</i>&mdash;a <i>non-nil</i> <i>symbol</i>, or a <i>restart</i>.
+</p>
+<p><i>condition</i>&mdash;a <i>condition</i> <i>object</i>, or <b>nil</b>.
+</p>
+<p><i>restart</i>&mdash;a <i>restart</i> or <b>nil</b>.
+</p>
+<a name="Description_003a_003a-203"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>find-restart</b> searches for a particular <i>restart</i> in the 
+current <i>dynamic environment</i>.
+</p>
+<p>When <i>condition</i> is <i>non-nil</i>, only those <i>restarts</i>
+are considered that are either explicitly associated with that <i>condition</i>,
+or not associated with any <i>condition</i>; that is, the excluded <i>restarts</i> 
+are those that are associated with a non-empty set of <i>conditions</i> of 
+which the given <i>condition</i> is not an <i>element</i>.
+If <i>condition</i> is <b>nil</b>, all <i>restarts</i> are considered.
+</p>
+<p>If <i>identifier</i> is a <i>symbol</i>, then the innermost 
+(most recently established) <i>applicable restart</i> with that <i>name</i> is returned.
+<b>nil</b> is returned if no such restart is found.
+</p>
+<p>If <i>identifier</i> is a currently active restart, then it is returned.
+Otherwise, <b>nil</b> is returned.
+</p>
+<a name="Examples_003a_003a-131"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (restart-case
+     (let ((r (find-restart 'my-restart)))
+       (format t &quot;~S is named ~S&quot; r (restart-name r)))
+   (my-restart () nil))
+<tt> |&gt; </tt> #&lt;RESTART 32307325&gt; is named MY-RESTART
+&rArr;  NIL
+ (find-restart 'my-restart)
+&rArr;  NIL
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-31"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p>Existing restarts.
+</p>
+<p><b>restart-case</b>, <b>restart-bind</b>, <b>with-condition-restarts</b>.
+</p>
+<a name="See-Also_003a_003a-177"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="compute_002drestarts.html#compute_002drestarts">compute-restarts</a>
+</p>
+<a name="Notes_003a_003a-107"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<div class="example">
+<pre class="example"><code> (find-restart <i>identifier</i>)
+ &equiv; (find <i>identifier</i> (compute-restarts) :key :restart-name)
+</code>
+</pre></div>
+
+<p>Although anonymous restarts have a name of <b>nil</b>,
+the consequences are unspecified if <b>nil</b> is given as an <i>identifier</i>.  
+Occasionally, programmers lament that <b>nil</b> is not permissible as an
+<i>identifier</i> argument.  In most such cases, <b>compute-restarts</b>
+can probably be used to simulate the desired effect.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

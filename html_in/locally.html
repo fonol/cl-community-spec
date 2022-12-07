@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>locally (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="locally (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="locally (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="the.html#the" rel="next" title="the">
+<link href="special.html#special" rel="prev" title="special">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="locally"></a>
+<div class="header">
+<p>
+Next: <a href="the.html#the" accesskey="n" rel="next">the</a>, Previous: <a href="special.html#special" accesskey="p" rel="prev">special</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="locally-_005bSpecial-Operator_005d"></a>
+<h4 class="subsection">3.8.27 locally                                                  [Special Operator]</h4>
+
+<p><code>locally</code>  <i>{<i>declaration</i>}*</i> {<i>form</i>}* &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-15"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>Declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> of the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-26"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Sequentially evaluates a body of <i>forms</i>
+in a <i>lexical environment</i> where the given <i>declarations</i> have effect.
+</p>
+<a name="Examples_003a_003a-22"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defun sample-function (y)  ;this y is regarded as special
+   (declare (special y))                                
+   (let ((y t))              ;this y is regarded as lexical
+     (list y
+           (locally (declare (special y))
+             ;; this next y is regarded as special
+             y))))
+&rArr;  SAMPLE-FUNCTION
+ (sample-function nil) &rArr;  (T NIL) 
+ (setq x '(1 2 3) y '(4 . 5)) &rArr;  (4 . 5)
+
+;;; The following declarations are not notably useful in specific.
+;;; They just offer a sample of valid declaration syntax using LOCALLY.
+ (locally (declare (inline floor) (notinline car cdr))
+          (declare (optimize space))
+    (floor (car x) (cdr y))) &rArr;  0, 1
+</pre></div>
+
+<div class="example">
+<pre class="example">;;; This example shows a definition of a function that has a particular set
+;;; of OPTIMIZE settings made locally to that definition.
+ (locally (declare (optimize (safety 3) (space 3) (speed 0)))
+   (defun frob (w x y &amp;optional (z (foo x y)))
+     (mumble x y z w)))
+&rArr;  FROB
+
+;;; This is like the previous example, except that the optimize settings
+;;; remain in effect for subsequent definitions in the same compilation unit.
+ (declaim (optimize (safety 3) (space 3) (speed 0)))
+ (defun frob (w x y &amp;optional (z (foo x y)))
+   (mumble x y z w))
+&rArr;  FROB
+</pre></div>
+
+<a name="See-Also_003a_003a-26"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>declare</b>
+</p>
+<a name="Notes_003a_003a-15"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <b>special</b> declaration may be used with <b>locally</b>
+to affect references to, rather than <i>bindings</i> of, <i>variables</i>.
+</p>
+<p>If a <b>locally</b> <i>form</i> is a <i>top level form</i>, the body <i>forms</i>
+are also processed as <i>top level forms</i>.  See <a href="File-Compilation.html#File-Compilation">File Compilation</a>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="the.html#the" accesskey="n" rel="next">the</a>, Previous: <a href="special.html#special" accesskey="p" rel="prev">special</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>pop (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="pop (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="pop (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conses-Dictionary.html#Conses-Dictionary" rel="up" title="Conses Dictionary">
+<link href="first.html#first" rel="next" title="first">
+<link href="push.html#push" rel="prev" title="push">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="pop"></a>
+<div class="header">
+<p>
+Next: <a href="first.html#first" accesskey="n" rel="next">first</a>, Previous: <a href="push.html#push" accesskey="p" rel="prev">push</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="pop-_005bMacro_005d"></a>
+<h4 class="subsection">14.2.20 pop                                                                 [Macro]</h4>
+
+<p><code>pop</code>  <i>place</i> &rArr;  <i>element</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-289"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>place</i>&mdash;a <i>place</i>, the <i>value</i> of which is a <i>list</i>
+   (possibly, but necessarily, a <i>dotted list</i> or <i>circular list</i>).
+</p>
+<p><i>element</i>&mdash;an <i>object</i> (the <i>car</i> of the contents of <i>place</i>).
+</p>
+<a name="Description_003a_003a-390"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>pop</b> <i>reads</i> the <i>value</i> of <i>place</i>,
+remembers the <i>car</i> of the <i>list</i> which was retrieved,
+<i>writes</i> the <i>cdr</i> of the <i>list</i> back into the <i>place</i>,
+and finally <i>yields</i> the <i>car</i> of the originally retrieved <i>list</i>.
+</p>
+<p>For information about the <i>evaluation</i> of <i>subforms</i> of <i>place</i>,
+see <a href="Evaluation-of-Subforms-to-Places.html#Evaluation-of-Subforms-to-Places">Evaluation of Subforms to Places</a>.
+</p>
+<a name="Examples_003a_003a-273"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq stack '(a b c)) &rArr;  (A B C)
+ (pop stack) &rArr;  A  
+ stack &rArr;  (B C)
+ (setq llst '((1 2 3 4))) &rArr;  ((1 2 3 4))
+ (pop (car llst)) &rArr;  1
+ llst &rArr;  ((2 3 4))
+</pre></div>
+
+<a name="Side-Effects_003a_003a-39"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>The contents of <i>place</i> are modified.
+</p>
+<a name="See-Also_003a_003a-316"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="push.html#push">push</a>
+,
+<a href="pushnew.html#pushnew">pushnew</a>
+,
+<a href="Generalized-Reference.html#Generalized-Reference">Generalized Reference</a>
+</p>
+<a name="Notes_003a_003a-209"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The effect of <tt>(pop <i>place</i>)</tt> is roughly equivalent to
+</p>
+<div class="example">
+<pre class="example"> (prog1 (car <i>place</i>) (setf <i>place</i> (cdr <i>place</i>)))
+</pre></div>
+
+<p>except that the latter would evaluate any <i>subforms</i> of <i>place</i>
+three times, while <b>pop</b> evaluates them only once.
+</p>
+
+
+
+</body>
+</html>

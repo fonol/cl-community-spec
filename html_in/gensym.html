@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>gensym (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="gensym (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="gensym (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Symbols-Dictionary.html#Symbols-Dictionary" rel="up" title="Symbols Dictionary">
+<link href="_002agensym_002dcounter_002a.html#g_t_002agensym_002dcounter_002a" rel="next" title="*gensym-counter*">
+<link href="copy_002dsymbol.html#copy_002dsymbol" rel="prev" title="copy-symbol">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="gensym"></a>
+<div class="header">
+<p>
+Next: <a href="_002agensym_002dcounter_002a.html#g_t_002agensym_002dcounter_002a" accesskey="n" rel="next">*gensym-counter*</a>, Previous: <a href="copy_002dsymbol.html#copy_002dsymbol" accesskey="p" rel="prev">copy-symbol</a>, Up: <a href="Symbols-Dictionary.html#Symbols-Dictionary" accesskey="u" rel="up">Symbols Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="gensym-_005bFunction_005d"></a>
+<h4 class="subsection">10.2.7 gensym                                                           [Function]</h4>
+
+<p><code>gensym</code>  <i>&amp;optional</i> x &rArr;  <i>new-symbol</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-162"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>x</i>&mdash;a <i>string</i> or a non-negative <i>integer</i>.
+	    Complicated defaulting behavior; see below.
+</p>
+<p><i>new-symbol</i>&mdash;a <i>fresh</i>, <i>uninterned</i> <i>symbol</i>.
+</p>
+<a name="Description_003a_003a-223"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Creates and returns a <i>fresh</i>, <i>uninterned</i> <i>symbol</i>,
+as if by calling <b>make-symbol</b>.  (The only difference between
+<b>gensym</b> and <b>make-symbol</b> is in how the <i>new-symbol</i>&rsquo;s 
+<i>name</i> is determined.)
+</p>
+<p>The <i>name</i> of the <i>new-symbol</i> is the concatenation 
+of a prefix, which defaults to <tt>&quot;G&quot;</tt>, and
+</p>
+<p>a suffix, which is the decimal representation of a number that
+defaults to the <i>value</i> of <b>*gensym-counter*</b>.
+</p>
+<p>If <i>x</i> is supplied, and is a <i>string</i>, then that <i>string</i> 
+is used as a prefix instead of <tt>&quot;G&quot;</tt> for this call to <b>gensym</b> only.
+</p>
+<p>If <i>x</i> is supplied, and is an <i>integer</i>, then that <i>integer</i>,
+instead of the <i>value</i> of <b>*gensym-counter*</b>, is used as the suffix
+for this call to <b>gensym</b> only.
+</p>
+<p>If and only if no explicit suffix is supplied,
+<b>*gensym-counter*</b> is incremented after it is used.
+</p>
+<a name="Examples_003a_003a-145"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq sym1 (gensym)) &rArr;  #:G3142
+ (symbol-package sym1) &rArr;  NIL
+ (setq sym2 (gensym 100)) &rArr;  #:G100
+ (setq sym3 (gensym 100)) &rArr;  #:G100
+ (eq sym2 sym3) &rArr;  <i>false</i>
+ (find-symbol &quot;G100&quot;) &rArr;  NIL, NIL
+ (gensym &quot;T&quot;) &rArr;  #:T3143
+ (gensym) &rArr;  #:G3144
+</pre></div>
+
+<a name="Side-Effects_003a_003a-19"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>Might increment <b>*gensym-counter*</b>.
+</p>
+<a name="Affected-By_003a_003a-36"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*gensym-counter*</b>
+</p>
+<a name="Exceptional-Situations_003a_003a-52"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>x</i> is not a <i>string</i> or a non-negative <i>integer</i>.
+</p>
+<a name="See-Also_003a_003a-197"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="gentemp.html#gentemp">gentemp</a>
+,
+<b>*gensym-counter*</b>
+</p>
+<a name="Notes_003a_003a-118"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The ability to pass a numeric argument to <b>gensym</b> has been deprecated;
+explicitly <i>binding</i> <b>*gensym-counter*</b> is now stylistically preferred.
+(The somewhat baroque conventions for the optional argument are historical
+in nature, and supported primarily for compatibility with older dialects
+of <span class="roman">Lisp</span>.   In modern code, it is recommended that the only kind of argument
+used be a string prefix.  In general, though, to obtain more flexible control
+of the <i>new-symbol</i>&rsquo;s <i>name</i>, consider using <b>make-symbol</b> instead.)
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="_002agensym_002dcounter_002a.html#g_t_002agensym_002dcounter_002a" accesskey="n" rel="next">*gensym-counter*</a>, Previous: <a href="copy_002dsymbol.html#copy_002dsymbol" accesskey="p" rel="prev">copy-symbol</a>, Up: <a href="Symbols-Dictionary.html#Symbols-Dictionary" accesskey="u" rel="up">Symbols Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

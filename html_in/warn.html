@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>warn (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="warn (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="warn (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="simple_002dwarning.html#simple_002dwarning" rel="next" title="simple-warning">
+<link href="simple_002dcondition_002dformat_002dcontrol.html#simple_002dcondition_002dformat_002dcontrol" rel="prev" title="simple-condition-format-control">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="warn"></a>
+<div class="header">
+<p>
+Next: <a href="simple_002dwarning.html#simple_002dwarning" accesskey="n" rel="next">simple-warning</a>, Previous: <a href="simple_002dcondition_002dformat_002dcontrol.html#simple_002dcondition_002dformat_002dcontrol" accesskey="p" rel="prev">simple-condition-format-control</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="warn-_005bFunction_005d"></a>
+<h4 class="subsection">9.2.20 warn                                                             [Function]</h4>
+
+<p><code>warn</code>  <i>datum &amp;rest</i> arguments &rArr;  <i><b>nil</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-140"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>datum</i>, <i>arguments</i>&mdash;<i>designators</i> for a <i>condition</i> 
+ of default type <b>simple-warning</b>.
+</p>
+<a name="Description_003a_003a-190"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><i>Signals</i> a <i>condition</i> of <i>type</i> <b>warning</b>.
+If the <i>condition</i> is not <i>handled</i>,
+reports the <i>condition</i> to <i>error output</i>.
+</p>
+<p>The precise mechanism for warning is as follows:
+</p>
+<dl compact="compact">
+<dt><b>The warning condition is signaled</b></dt>
+<dd><p>While the <b>warning</b> <i>condition</i> is being signaled,
+the <b>muffle-warning</b> <i>restart</i> is established for use by a <i>handler</i>.
+If invoked, this <i>restart</i> bypasses further action by <b>warn</b>,
+which in turn causes <b>warn</b> to immediately return <b>nil</b>.
+</p>
+</dd>
+<dt><b>If no handler for the warning condition is found</b></dt>
+<dd><p>If no handlers for the warning condition are found,
+or if all such handlers decline,
+then the <i>condition</i> is reported to <i>error output</i>
+by <b>warn</b> in an <i>implementation-dependent</i> format.
+</p>
+</dd>
+<dt><b><b>nil</b> is returned</b></dt>
+<dd><p>The value returned by <b>warn</b> if it returns is <b>nil</b>.
+</p></dd>
+</dl>
+
+<a name="Examples_003a_003a-120"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">  (defun foo (x)
+    (let ((result (* x 2)))
+      (if (not (typep result 'fixnum))
+          (warn &quot;You're using very big numbers.&quot;))
+      result))
+&rArr;  FOO
+
+  (foo 3)
+&rArr;  6
+
+  (foo most-positive-fixnum)
+<tt> |&gt; </tt> Warning: You're using very big numbers.
+&rArr;  4294967294
+
+  (setq *break-on-signals* t)
+&rArr;  T
+
+  (foo most-positive-fixnum)
+<tt> |&gt; </tt> Break: Caveat emptor.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number.
+<tt> |&gt; </tt>  1: Return from Break.
+<tt> |&gt; </tt>  2: Abort to Lisp Toplevel.
+<tt> |&gt; </tt> Debug&gt; :continue 1
+<tt> |&gt; </tt> Warning: You're using very big numbers.
+&rArr;  4294967294
+</pre></div>
+
+<a name="Side-Effects_003a_003a-13"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>A warning is issued.  The debugger might be entered.
+</p>
+<a name="Affected-By_003a_003a-25"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>Existing handler bindings.
+</p>
+<p><b>*break-on-signals*</b>,
+<b>*error-output*</b>.         
+</p>
+<a name="Exceptional-Situations_003a_003a-46"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If <i>datum</i> is a <i>condition</i>
+and if the <i>condition</i> is not of <i>type</i> <b>warning</b>,
+or <i>arguments</i> is <i>non-nil</i>, an error of <i>type</i> <b>type-error</b> is signaled.
+</p>
+<p>If <i>datum</i> is a condition type, 
+the result of <tt>(apply #'make-condition datum arguments)</tt> 
+must be of <i>type</i> <b>warning</b> or an error of <i>type</i> <b>type-error</b> is signaled.
+</p>
+<a name="See-Also_003a_003a-167"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>*break-on-signals*</b>,
+<a href="muffle_002dwarning.html#muffle_002dwarning">muffle-warning</a>
+,
+<a href="signal.html#signal">signal</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="simple_002dwarning.html#simple_002dwarning" accesskey="n" rel="next">simple-warning</a>, Previous: <a href="simple_002dcondition_002dformat_002dcontrol.html#simple_002dcondition_002dformat_002dcontrol" accesskey="p" rel="prev">simple-condition-format-control</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

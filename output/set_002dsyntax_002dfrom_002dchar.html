@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>set-syntax-from-char (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Reader-Dictionary.html#Reader-Dictionary" rel="up" title="Reader Dictionary">
+<link href="with_002dstandard_002dio_002dsyntax.html#with_002dstandard_002dio_002dsyntax" rel="next" title="with-standard-io-syntax">
+<link href="set_002dmacro_002dcharacter.html#set_002dmacro_002dcharacter" rel="prev" title="set-macro-character">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="set_002dmacro_002dcharacter.html#set_002dmacro_002dcharacter" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                set-macro-character
+                            </a>
+                            <a href="Reader-Dictionary.html#Reader-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Reader Dictionary
+                            </a>
+                            <a href="with_002dstandard_002dio_002dsyntax.html#with_002dstandard_002dio_002dsyntax.html" class="nav-btn nav__next ">
+                                with-standard-io-syntax
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="set_002dsyntax_002dfrom_002dchar"></a>
+<a name="set_002dsyntax_002dfrom_002dchar-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">set-syntax-from-char                                             </h4>
+
+<p><code>set-syntax-from-char</code>  <i>to-char from-char &amp;optional</i> to-readtable from-readtable &rArr;  <i><b>t</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-480"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>to-char</i>&mdash;a <i>character</i>.
+</p>
+<p><i>from-char</i>&mdash;a <i>character</i>.
+</p>
+<p><i>to-readtable</i>&mdash;a <i>readtable</i>. 
+ The default is the <i>current readtable</i>.
+</p>
+<p><i>from-readtable</i>&mdash;a <i>readtable designator</i>.
+ The default is the <i>standard readtable</i>.
+</p>
+<a name="Description_003a_003a-630"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>set-syntax-from-char</b> makes
+the syntax of <i>to-char</i>   in <i>to-readtable</i>    be the same as
+the syntax of <i>from-char</i> in <i>from-readtable</i>.
+</p>
+<p><b>set-syntax-from-char</b> copies the <i>syntax types</i> of <i>from-char</i>.
+If <i>from-char</i> is a <i>macro character</i>,
+its <i>reader macro function</i> is copied also.
+If the character is a <i>dispatching macro character</i>, 
+its entire dispatch table of <i>reader macro functions</i> is copied.  
+The <i>constituent traits</i> of <i>from-char</i> are not copied.
+</p>
+<p>A macro definition from a character such as
+<tt>&quot;</tt> can be copied to another character; the standard definition for <tt>&quot;</tt>
+looks for another character that is the same as the character that
+invoked it.  The definition of <tt>(</tt> can not be meaningfully copied
+to <tt>{</tt>, on the other hand. 
+The result is that <i>lists</i> are of the form
+<tt>{a b c)</tt>, not <tt>{a b c}</tt>,
+because the definition
+always looks for a closing parenthesis, not a closing brace.  
+</p>
+<a name="Examples_003a_003a-451"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+<div class="example">
+<pre class="example"><code> (set-syntax-from-char #\7 #\;) &rArr;  T
+ 123579 &rArr;  1235
+</code>
+</pre></div>
+
+<a name="Side-Effects_003a_003a-80"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Side Effects</h4>
+
+<p>The <i>to-readtable</i> is modified.
+</p>
+<a name="Affected-By_003a_003a-111"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p>The existing values in the <i>from-readtable</i>.
+</p>
+<a name="See-Also_003a_003a-513"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p>&lsquo;set-macro-character; get-macro-character&rsquo;
+,
+<a href="make_002ddispatch_002dmacro_002dcharacter.html#make_002ddispatch_002dmacro_002dcharacter">make-dispatch-macro-character</a>
+,
+<a href="Character-Syntax-Types.html#Character-Syntax-Types">Character Syntax Types</a>
+</p>
+<a name="Notes_003a_003a-318"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The <i>constituent traits</i> of a <i>character</i> are &ldquo;hard wired&rdquo; 
+into the parser for extended <i>tokens</i>.  For example, if the definition
+of <tt>S</tt> is copied to <tt>*</tt>, then <tt>*</tt> will become a <i>constituent</i> 
+that is <i>alphabetic</i>_2 but that cannot be used as a
+<i>short float</i> <i>exponent marker</i>.
+For further information, see <a href="Constituent-Traits.html#Constituent-Traits">Constituent Traits</a>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

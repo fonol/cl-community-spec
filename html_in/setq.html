@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>setq (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="setq (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="setq (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="psetq.html#psetq" rel="next" title="psetq">
+<link href="progv.html#progv" rel="prev" title="progv">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="setq"></a>
+<div class="header">
+<p>
+Next: <a href="psetq.html#psetq" accesskey="n" rel="next">psetq</a>, Previous: <a href="progv.html#progv" accesskey="p" rel="prev">progv</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="setq-_005bSpecial-Form_005d"></a>
+<h4 class="subsection">5.3.20 setq                                                         [Special Form]</h4>
+
+<p><code>setq</code>  <i>{!<i>pair</i>}*</i> &rArr;  <i>result</i>
+</p>
+<p><i>pair</i>&nbsp;::=var&nbsp;form<!-- /@w -->
+</p>
+<a name="Pronunciation_003a_003a-2"></a>
+<h4 class="subsubheading">Pronunciation::</h4>
+
+<p>pronounced &rsquo;set ,ky\&quot;u 
+</p>
+<a name="Arguments-and-Values_003a_003a-41"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>var</i>&mdash;a <i>symbol</i> naming a <i>variable</i> other than a <i>constant variable</i>.
+</p>
+<p><i>form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>result</i>&mdash;the <i>primary value</i> of the last <i>form</i>,
+		 or <b>nil</b> if no <i>pairs</i> were supplied.
+</p>
+<a name="Description_003a_003a-73"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Assigns values to <i>variables</i>.
+</p>
+<p><tt>(setq <i>var1</i> <i>form1</i> <i>var2</i> <i>form2</i> ...)</tt>
+is the simple variable assignment statement of <span class="roman">Lisp</span>.
+First <i>form1</i> is evaluated
+and the result is stored in the variable <i>var1</i>, then <i>form2</i>
+is evaluated and the result stored in <i>var2</i>, and so forth.
+<b>setq</b> may be used for assignment of both lexical
+and dynamic variables.
+</p>
+<p>If any <i>var</i> refers to a <i>binding</i> 
+made by <b>symbol-macrolet</b>,
+then that <i>var</i> is treated as if <b>setf</b>
+(not <b>setq</b>) had been used.
+</p>
+<a name="Examples_003a_003a-47"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> ;; A simple use of SETQ to establish values for variables.
+ (setq a 1 b 2 c 3) &rArr;  3
+ a &rArr;  1
+ b &rArr;  2
+ c &rArr;  3
+
+ ;; Use of SETQ to update values by sequential assignment.
+ (setq a (1+ b) b (1+ a) c (+ a b)) &rArr;  7
+ a &rArr;  3
+ b &rArr;  4
+ c &rArr;  7
+
+ ;; This illustrates the use of SETQ on a symbol macro.
+ (let ((x (list 10 20 30)))
+   (symbol-macrolet ((y (car x)) (z (cadr x)))
+     (setq y (1+ z) z (1+ y))
+     (list x y z)))
+&rArr;  ((21 22 30) 21 22)
+</pre></div>
+
+<a name="Side-Effects_003a_003a-1"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>The <i>primary value</i> of each <i>form</i> is assigned to the corresponding <i>var</i>.
+</p>
+<a name="See-Also_003a_003a-58"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="psetq.html#psetq">psetq</a>
+,
+<a href="set.html#set">set</a>
+,
+&lsquo;setf; psetf&rsquo;
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="psetq.html#psetq" accesskey="n" rel="next">psetq</a>, Previous: <a href="progv.html#progv" accesskey="p" rel="prev">progv</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

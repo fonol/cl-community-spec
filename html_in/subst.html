@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>subst (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="subst (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="subst (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conses-Dictionary.html#Conses-Dictionary" rel="up" title="Conses Dictionary">
+<link href="tree_002dequal.html#tree_002dequal" rel="next" title="tree-equal">
+<link href="sublis.html#sublis" rel="prev" title="sublis">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="subst"></a>
+<div class="header">
+<p>
+Next: <a href="tree_002dequal.html#tree_002dequal" accesskey="n" rel="next">tree-equal</a>, Previous: <a href="sublis.html#sublis" accesskey="p" rel="prev">sublis</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="subst_002c-subst_002dif_002c-subst_002dif_002dnot_002c-nsubst_002c-nsubst_002dif_002c-nsubst_002dif_002dnot"></a>
+<h4 class="subsection">14.2.12 subst, subst-if, subst-if-not, nsubst, nsubst-if, nsubst-if-not</h4>
+<p align="right"><i>[Function]</i>
+</p>
+<p><code>subst</code>  <i>new old  tree &amp;key</i> key test test-not &rArr;  <i>new-tree</i>
+</p>
+<p><code>subst-if</code>  <i>new predicate tree &amp;key</i> key &rArr;  <i>new-tree</i>
+</p>
+<p><code>subst-if-not</code>  <i>new predicate tree &amp;key</i> key &rArr;  <i>new-tree</i>
+</p>
+<p><code>nsubst</code>  <i>new old  tree &amp;key</i> key test test-not &rArr;  <i>new-tree</i>
+</p>
+<p><code>nsubst-if</code>  <i>new predicate tree &amp;key</i> key &rArr;  <i>new-tree</i>
+</p>
+<p><code>nsubst-if-not</code>  <i>new predicate tree &amp;key</i> key &rArr;  <i>new-tree</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-281"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>new</i>&mdash;an <i>object</i>.
+</p>
+<p><i>old</i>&mdash;an <i>object</i>.
+</p>
+<p><i>predicate</i>&mdash;a <i>symbol</i> that names a <i>function</i>,
+   or a <i>function</i> of one argument 
+      that returns a <i>generalized boolean</i> value.
+</p>
+<p><i>tree</i>&mdash;a <i>tree</i>.
+</p>
+<p><i>test</i>&mdash;a <i>designator</i> for a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test-not</i>&mdash;a <i>designator</i> for 
+  a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>key</i>&mdash;a <i>designator</i> for a <i>function</i> of one argument,
+  or <b>nil</b>.
+</p>
+<p><i>new-tree</i>&mdash;a <i>tree</i>.
+</p>
+<a name="Description_003a_003a-382"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>subst</b>, <b>subst-if</b>, and <b>subst-if-not</b> perform
+substitution operations on <i>tree</i>.  
+Each function searches <i>tree</i> for occurrences of a 
+particular <i>old</i> item of an element or subexpression that 
+<i>satisfies the test</i>.
+</p>
+<p><b>nsubst</b>, <b>nsubst-if</b>, and <b>nsubst-if-not</b> are 
+like <b>subst</b>,
+<b>subst-if</b>, and <b>subst-if-not</b> respectively, except that the 
+original <i>tree</i> is  modified.
+</p>
+<p><b>subst</b> makes a copy of <i>tree</i>,
+substituting <i>new</i> for every subtree or leaf of <i>tree</i>
+(whether the subtree or leaf is a <i>car</i> or a <i>cdr</i> of its parent)
+such that <i>old</i> and the subtree or leaf <i>satisfy the test</i>.  
+</p>
+<p><b>nsubst</b> is a destructive version of <b>subst</b>.  
+The list structure of
+<i>tree</i> is altered by destructively replacing with <i>new</i>
+each leaf of the <i>tree</i> such that <i>old</i> and the leaf
+<i>satisfy the test</i>.
+</p>
+<p>For <b>subst</b>, <b>subst-if</b>, 
+and <b>subst-if-not</b>,
+if the functions succeed, a new
+copy of the tree is returned in which each  occurrence of such an
+element is replaced by the
+<i>new</i> element or subexpression.  If no changes are made, the original 
+<i>tree</i> may be returned.
+The original <i>tree</i> is left unchanged, but the result tree 
+may share storage with it.           
+</p>
+<p>For <b>nsubst</b>, <b>nsubst-if</b>, 
+and <b>nsubst-if-not</b>
+the original <i>tree</i> is  modified and returned as the function result,
+but the result may not be <b>eq</b> to <i>tree</i>.
+</p>
+<a name="Examples_003a_003a-265"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq tree1 '(1 (1 2) (1 2 3) (1 2 3 4))) &rArr;  (1 (1 2) (1 2 3) (1 2 3 4))
+ (subst &quot;two&quot; 2 tree1) &rArr;  (1 (1 &quot;two&quot;) (1 &quot;two&quot; 3) (1 &quot;two&quot; 3 4))
+ (subst &quot;five&quot; 5 tree1) &rArr;  (1 (1 2) (1 2 3) (1 2 3 4))
+ (eq tree1 (subst &quot;five&quot; 5 tree1)) &rArr;  <i>implementation-dependent</i>
+ (subst 'tempest 'hurricane
+        '(shakespeare wrote (the hurricane)))
+&rArr;  (SHAKESPEARE WROTE (THE TEMPEST))
+ (subst 'foo 'nil '(shakespeare wrote (twelfth night)))
+&rArr;  (SHAKESPEARE WROTE (TWELFTH NIGHT . FOO) . FOO)
+ (subst '(a . cons) '(old . pair)
+        '((old . spice) ((old . shoes) old . pair) (old . pair))
+        :test #'equal)
+&rArr;  ((OLD . SPICE) ((OLD . SHOES) A . CONS) (A . CONS))
+
+ (subst-if 5 #'listp tree1) &rArr;  5
+ (subst-if-not '(x) #'consp tree1) 
+&rArr;  (1 X)
+
+ tree1 &rArr;  (1 (1 2) (1 2 3) (1 2 3 4))
+ (nsubst 'x 3 tree1 :key #'(lambda (y) (and (listp y) (third y)))) 
+&rArr;  (1 (1 2) X X)
+ tree1 &rArr;  (1 (1 2) X X)
+</pre></div>
+
+<a name="Side-Effects_003a_003a-37"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p><b>nsubst</b>, <b>nsubst-if</b>, and <b>nsubst-if-not</b> 
+might alter the <i>tree structure</i> of <i>tree</i>.
+</p>
+<a name="See-Also_003a_003a-308"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;substitute; substitute-if; substitute-if-not; nsubstitute; nsubstitute-if; nsubstitute-if-not&rsquo;
+,
+<b>nsubstitute</b>,
+</p>
+<p><a href="Compiler-Terminology.html#Compiler-Terminology">Compiler Terminology</a>,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<a name="Notes_003a_003a-202"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <tt>:test-not</tt> parameter is deprecated.
+</p>
+<p>The functions <b>subst-if-not</b> and <b>nsubst-if-not</b> are deprecated.
+</p>
+<p>One possible definition of <b>subst</b>:
+</p>
+<div class="example">
+<pre class="example"> (defun subst (old new tree &amp;rest x &amp;key test test-not key)
+   (cond ((satisfies-the-test old tree :test test
+                                 :test-not test-not :key key)
+         new)
+        ((atom tree) tree)
+        (t (let ((a (apply #'subst old new (car tree) x))
+                 (d (apply #'subst old new (cdr tree) x)))
+             (if (and (eql a (car tree))
+                      (eql d (cdr tree)))
+                 tree
+                 (cons a d))))))
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="tree_002dequal.html#tree_002dequal" accesskey="n" rel="next">tree-equal</a>, Previous: <a href="sublis.html#sublis" accesskey="p" rel="prev">sublis</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

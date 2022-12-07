@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Condition Designators (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Creating-Conditions.html#Creating-Conditions" rel="up" title="Creating Conditions">
+<link href="Printing-Conditions.html#Printing-Conditions" rel="next" title="Printing Conditions">
+<link href="Creating-Conditions.html#Creating-Conditions" rel="prev" title="Creating Conditions">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Creating-Conditions.html#Creating-Conditions" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Creating Conditions
+                            </a>
+                            <a href="Creating-Conditions.html#Creating-Conditions.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Creating Conditions
+                            </a>
+                            <a href="Printing-Conditions.html#Printing-Conditions.html" class="nav-btn nav__next ">
+                                Printing Conditions
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Condition-Designators"></a>
+<a name="Condition-Designators-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Condition Designators</h4>
+
+<p>A number of the functions in the condition system take arguments which
+are identified as <i>condition designators</i>
+<a name="index-condition-designator"></a>
+.
+By convention, those arguments are notated as
+</p>
+<p><i>datum</i> &amp;rest <i>arguments</i>
+</p>
+<p>Taken together, the <i>datum</i> and the <i>arguments</i> are 
+&ldquo;<i>designators</i> for a <i>condition</i> of default type <i>default-type</i>.&rdquo;
+How the denoted <i>condition</i> is computed depends on the type of the <i>datum</i>:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt> If the <i>datum</i> is a <i>symbol</i></dt>
+<dd><p>naming a <i>condition</i> <i>type</i> ...  
+The denoted <i>condition</i> is the result of
+</p>
+<div class="example">
+<pre class="example"><code> (apply #'make-condition <i>datum</i> <i>arguments</i>)
+</code>
+</pre></div>
+
+</dd>
+<dt><tt>*</tt> If the <i>datum</i> is a <i>format control</i> ...</dt>
+<dd>
+<p>The denoted <i>condition</i> is the result of 
+</p>
+<div class="example">
+<pre class="example"><code> (make-condition <i>defaulted-type</i> 
+                 :format-control <i>datum</i>
+                 :format-arguments <i>arguments</i>)
+</code>
+</pre></div>
+
+<p>where the <i>defaulted-type</i> is a <i>subtype</i> of <i>default-type</i>.
+</p>
+</dd>
+<dt><tt>*</tt> If the <i>datum</i> is a <i>condition</i> ...</dt>
+<dd><p>The denoted <i>condition</i> is the <i>datum</i> itself.
+In this case, unless otherwise specified by the description of the
+<i>operator</i> in question, the <i>arguments</i> must be <i>null</i>;
+that is, the consequences are undefined if any <i>arguments</i> were supplied. 
+</p>
+</dd>
+</dl>
+
+<p>Note that the <i>default-type</i> gets used only in the case where
+the <i>datum</i> <i>string</i> is supplied.  In the other situations,
+the resulting condition is not necessarily of <i>type</i> <i>default-type</i>.
+</p>
+<p>Here are some illustrations of how different <i>condition designators</i>
+can denote equivalent <i>condition</i> <i>objects</i>:
+</p>
+<div class="example">
+<pre class="example"><code>(let ((c (make-condition 'arithmetic-error :operator '/ :operands '(7 0))))
+  (error c))
+&equiv; (error 'arithmetic-error :operator '/ :operands '(7 0))
+
+(error &quot;Bad luck.&quot;)
+&equiv; (error 'simple-error :format-control &quot;Bad luck.&quot; :format-arguments '())
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

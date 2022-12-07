@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>delete-file (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Files-Dictionary.html#Files-Dictionary" rel="up" title="Files Dictionary">
+<link href="file_002derror.html#file_002derror" rel="next" title="file-error">
+<link href="rename_002dfile.html#rename_002dfile" rel="prev" title="rename-file">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="rename_002dfile.html#rename_002dfile" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                rename-file
+                            </a>
+                            <a href="Files-Dictionary.html#Files-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Files Dictionary
+                            </a>
+                            <a href="file_002derror.html#file_002derror.html" class="nav-btn nav__next ">
+                                file-error
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="delete_002dfile"></a>
+<a name="delete_002dfile-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">delete-file                                                      </h4>
+
+<p><code>delete-file</code>  <i>filespec</i> &rArr;  <i><b>t</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-410"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>filespec</i>&mdash;a <i>pathname designator</i>.
+</p>
+<a name="Description_003a_003a-529"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Deletes the <i>file</i> specified by <i>filespec</i>.
+</p>
+<p>If the <i>filespec</i> <i>designator</i> is an open <i>stream</i>,
+then <i>filespec</i> and the file associated with it are affected 
+(if the file system permits),
+in which case <i>filespec</i> might be closed immediately,
+and the deletion might be immediate or delayed until <i>filespec</i> is explicitly closed,
+depending on the requirements of the file system.
+</p>
+<p>It is <i>implementation-dependent</i> whether an attempt
+to delete a nonexistent file is considered to be successful.
+</p>
+<p><b>delete-file</b> returns <i>true</i> if it succeeds,
+or signals an error of <i>type</i> <b>file-error</b> if it does not.
+</p>
+<p>The consequences are undefined 
+    if <i>filespec</i> has a <i>wild</i> component,
+ or if <i>filespec</i> has a <b>nil</b> component 
+     and the file system does not permit a <b>nil</b> component.
+</p>
+<a name="Examples_003a_003a-386"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (with-open-file (s &quot;delete-me.text&quot; :direction :output :if-exists :error))
+&rArr;  NIL
+ (setq p (probe-file &quot;delete-me.text&quot;)) &rArr;  #P&quot;R:&gt;fred&gt;delete-me.text.1&quot;
+ (delete-file p) &rArr;  T
+ (probe-file &quot;delete-me.text&quot;) &rArr;  <i>false</i>
+ (with-open-file (s &quot;delete-me.text&quot; :direction :output :if-exists :error)
+   (delete-file s))
+&rArr;  T
+ (probe-file &quot;delete-me.text&quot;) &rArr;  <i>false</i>
+</code>
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-190"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>If the deletion operation is not successful, an error of <i>type</i> <b>file-error</b> is signaled.
+</p>
+<p>An error of <i>type</i> <b>file-error</b> might be signaled if <i>filespec</i> is <i>wild</i>.
+</p>
+<a name="See-Also_003a_003a-432"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><b>pathname</b>,
+<b>logical-pathname</b>,
+<a href="File-System-Concepts.html#File-System-Concepts">File System Concepts</a>,
+</p>
+<p><a href="Pathnames-as-Filenames.html#Pathnames-as-Filenames">Pathnames as Filenames</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

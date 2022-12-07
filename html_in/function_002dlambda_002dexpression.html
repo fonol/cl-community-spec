@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>function-lambda-expression (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="function-lambda-expression (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="function-lambda-expression (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="functionp.html#functionp" rel="next" title="functionp">
+<link href="function-_0028Special-Operator_0029.html#function-_0028Special-Operator_0029" rel="prev" title="function (Special Operator)">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="function_002dlambda_002dexpression"></a>
+<div class="header">
+<p>
+Next: <a href="functionp.html#functionp" accesskey="n" rel="next">functionp</a>, Previous: <a href="function-_0028Special-Operator_0029.html#function-_0028Special-Operator_0029" accesskey="p" rel="prev">function (Special Operator)</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="function_002dlambda_002dexpression-_005bFunction_005d"></a>
+<h4 class="subsection">5.3.9 function-lambda-expression                                       [Function]</h4>
+
+<p><code>function-lambda-expression</code>  <i>function</i><br>
+   &rArr;  <i>lambda-expression, closure-p, name</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-33"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>function</i>&mdash;a <i>function</i>.
+</p>
+<p><i>lambda-expression</i>&mdash;a <i>lambda expression</i> or <b>nil</b>.
+</p>
+<p><i>closure-p</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<p><i>name</i>&mdash;an <i>object</i>.
+</p>
+<a name="Description_003a_003a-62"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns information about <i>function</i> as follows:
+</p>
+<p>The <i>primary value</i>, <i>lambda-expression</i>,
+is <i>function</i>&rsquo;s defining <i>lambda expression</i>, 
+or <b>nil</b> if the information is not available.  The <i>lambda expression</i>
+may have been pre-processed in some ways, but it should remain a suitable 
+argument to <b>compile</b> or <b>function</b>.
+Any <i>implementation</i> may legitimately return <b>nil</b> 
+as the <i>lambda-expression</i> of any <i>function</i>.
+</p>
+<p>The <i>secondary value</i>, <i>closure-p</i>,
+is <b>nil</b> if <i>function</i>&rsquo;s definition was enclosed
+in the <i>null lexical environment</i> or something <i>non-nil</i> if
+<i>function</i>&rsquo;s definition might have been enclosed in some 
+<i>non-null lexical environment</i>.
+Any <i>implementation</i> may legitimately return <i>true</i>
+as the <i>closure-p</i> of any <i>function</i>.
+</p>
+<p>The <i>tertiary value</i>, <i>name</i>,
+is the &ldquo;name&rdquo; of <i>function</i>. 
+The name is intended for debugging only and is not necessarily one that would
+be valid for use as a name in <b>defun</b> or <b>function</b>, for example.
+By convention, <b>nil</b> is used to mean that <i>function</i> has no name.
+Any <i>implementation</i> may legitimately return <b>nil</b> 
+as the <i>name</i> of any <i>function</i>.
+</p>
+<a name="Examples_003a_003a-39"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<p>The following examples illustrate some possible return values, but
+are not intended to be exhaustive:
+</p>
+<div class="example">
+<pre class="example"> (function-lambda-expression #'(lambda (x) x))
+&rArr;  NIL, <i>false</i>, NIL
+<i>OR</i>&rArr; NIL, <i>true</i>, NIL
+<i>OR</i>&rArr; (LAMBDA (X) X), <i>true</i>, NIL
+<i>OR</i>&rArr; (LAMBDA (X) X), <i>false</i>, NIL
+
+ (function-lambda-expression
+    (funcall #'(lambda () #'(lambda (x) x))))
+&rArr;  NIL, <i>false</i>, NIL
+<i>OR</i>&rArr; NIL, <i>true</i>, NIL
+<i>OR</i>&rArr; (LAMBDA (X) X), <i>true</i>, NIL
+<i>OR</i>&rArr; (LAMBDA (X) X), <i>false</i>, NIL
+
+ (function-lambda-expression 
+    (funcall #'(lambda (x) #'(lambda () x)) nil))
+&rArr;  NIL, <i>true</i>, NIL
+<i>OR</i>&rArr; (LAMBDA () X), <i>true</i>, NIL
+<i>NOT</i>&rArr; NIL, <i>false</i>, NIL
+<i>NOT</i>&rArr; (LAMBDA () X), <i>false</i>, NIL
+
+ (flet ((foo (x) x))
+   (setf (symbol-function 'bar) #'foo)
+   (function-lambda-expression #'bar))
+&rArr;  NIL, <i>false</i>, NIL
+<i>OR</i>&rArr; NIL, <i>true</i>, NIL
+<i>OR</i>&rArr; (LAMBDA (X) (BLOCK FOO X)), <i>true</i>, NIL
+<i>OR</i>&rArr; (LAMBDA (X) (BLOCK FOO X)), <i>false</i>, FOO
+<i>OR</i>&rArr; (SI::BLOCK-LAMBDA FOO (X) X), <i>false</i>, FOO
+
+ (defun foo ()
+   (flet ((bar (x) x))
+     #'bar))
+ (function-lambda-expression (foo))
+&rArr;  NIL, <i>false</i>, NIL
+<i>OR</i>&rArr; NIL, <i>true</i>, NIL
+<i>OR</i>&rArr; (LAMBDA (X) (BLOCK BAR X)), <i>true</i>, NIL
+<i>OR</i>&rArr; (LAMBDA (X) (BLOCK BAR X)), <i>true</i>, (:INTERNAL FOO 0 BAR)
+<i>OR</i>&rArr; (LAMBDA (X) (BLOCK BAR X)), <i>false</i>, &quot;BAR in FOO&quot;
+</pre></div>
+
+<a name="Notes_003a_003a-30"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>Although <i>implementations</i> are free to return &ldquo;<b>nil</b>, <i>true</i>, <b>nil</b>&rdquo; in all cases, 
+they are encouraged to return a <i>lambda expression</i> as the <i>primary value</i>
+in the case where the argument was created by a call to <b>compile</b> 
+or <b>eval</b> (as opposed to being created by <i>loading</i> a <i>compiled file</i>).
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="functionp.html#functionp" accesskey="n" rel="next">functionp</a>, Previous: <a href="function-_0028Special-Operator_0029.html#function-_0028Special-Operator_0029" accesskey="p" rel="prev">function (Special Operator)</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

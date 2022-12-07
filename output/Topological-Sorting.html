@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Topological Sorting (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Determining-the-Class-Precedence-List.html#Determining-the-Class-Precedence-List" rel="up" title="Determining the Class Precedence List">
+<link href="Examples-of-Class-Precedence-List-Determination.html#Examples-of-Class-Precedence-List-Determination" rel="next" title="Examples of Class Precedence List Determination">
+<link href="Determining-the-Class-Precedence-List.html#Determining-the-Class-Precedence-List" rel="prev" title="Determining the Class Precedence List">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Determining-the-Class-Precedence-List.html#Determining-the-Class-Precedence-List" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Determining the Class Precedence List
+                            </a>
+                            <a href="Determining-the-Class-Precedence-List.html#Determining-the-Class-Precedence-List.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Determining the Class Precedence List
+                            </a>
+                            <a href="Examples-of-Class-Precedence-List-Determination.html#Examples-of-Class-Precedence-List-Determination.html" class="nav-btn nav__next ">
+                                Examples of Class Precedence List Determination
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Topological-Sorting"></a>
+<a name="Topological-Sorting-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Topological Sorting</h4>
+
+<p>Topological sorting proceeds by finding a class C in~S_C such
+that no other <i>class</i> precedes that element according to the elements
+in~R.  The class C is placed first in the result.
+Remove C from S_C, and remove all pairs of the form (C,D),
+D\in S_C, from R. Repeat the process, adding
+<i>classes</i> with no predecessors to the end of the result.  Stop when no
+element can be found that has no predecessor.
+</p>
+<p>If S_C is not empty and the process has stopped, the set R is
+inconsistent. If every <i>class</i> in the finite set of 
+<i>classes</i> is preceded
+by another, then R contains a loop. That is, there is a chain of
+classes C_1,...,C_n such that C_i precedes
+C_{i+1}, 1&lt;= i&lt;n, and C_n precedes C_1.
+</p>
+<p>Sometimes there are several <i>classes</i> from S_C with no
+predecessors.  In this case select the one that has a direct
+<i>subclass</i> rightmost in the <i>class precedence list</i> computed so far.
+(If there is no such candidate <i>class</i>, R does not generate 
+a partial ordering&mdash;the R_c, c\in S_C, are inconsistent.)
+</p>
+<p>In more precise terms, let {N_1,...,N_m}, m&gt;= 2, be
+the <i>classes</i> from S_C with no predecessors.  Let (C_1... C_n), n&gt;= 1, be the <i>class precedence list</i>
+constructed so far.  C_1 is the most specific <i>class</i>, and C_n is the least specific.  Let 1&lt;= j&lt;= n be the largest number
+such that there exists an i where 1&lt;= i&lt;= m and N_i
+is a direct <i>superclass</i> of C_j; N_i is placed next.
+</p>
+<p>The effect of this rule for selecting from a set of <i>classes</i> with no
+predecessors is that the <i>classes</i> in a simple <i>superclass</i> chain are
+adjacent in the <i>class precedence list</i> and that <i>classes</i> in each
+relatively separated subgraph are adjacent in the <i>class precedence list</i>.
+For example, let T_1 and T_2 be subgraphs whose only
+element in common is the class J.
+Suppose that no superclass of J appears in either T_1 or T_2,
+and that J is in the superclass chain of every class in both T_1 and T_2.
+    Let C_1 be the bottom of T_1; 
+and let C_2 be the bottom of T_2.
+Suppose C is a <i>class</i> whose direct <i>superclasses</i>
+are C_1 and C_2 in that order, then the <i>class precedence list</i>
+for C starts with C and is followed by
+all <i>classes</i> in T_1 except J. 
+All the <i>classes</i> of T_2 are next.
+The <i>class</i> J and its <i>superclasses</i> appear last.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

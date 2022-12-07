@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>clear-input (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="clear-input (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="clear-input (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="finish_002doutput.html#finish_002doutput" rel="next" title="finish-output">
+<link href="listen.html#listen" rel="prev" title="listen">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="clear_002dinput"></a>
+<div class="header">
+<p>
+Next: <a href="finish_002doutput.html#finish_002doutput" accesskey="n" rel="next">finish-output</a>, Previous: <a href="listen.html#listen" accesskey="p" rel="prev">listen</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="clear_002dinput-_005bFunction_005d"></a>
+<h4 class="subsection">21.2.35 clear-input                                                      [Function]</h4>
+
+<p><code>clear-input</code>  <i>&amp;optional</i> input-stream &rArr;  <i><b>nil</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-436"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>input-stream</i>&mdash;an <i>input</i> <i>stream designator</i>.
+  The default is <i>standard input</i>.
+</p>
+<a name="Description_003a_003a-566"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Clears any available input from <i>input-stream</i>.
+</p>
+<p>If <b>clear-input</b> does not make sense for <i>input-stream</i>, 
+then <b>clear-input</b> does nothing. 
+</p>
+<a name="Examples_003a_003a-412"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example">;; The exact I/O behavior of this example might vary from implementation
+;; to implementation depending on the kind of interactive buffering that
+;; occurs.  (The call to SLEEP here is intended to help even out the 
+;; differences in implementations which do not do line-at-a-time buffering.)
+
+(defun read-sleepily (&amp;optional (clear-p nil) (zzz 0))
+  (list (progn (print '&gt;) (read))
+        ;; Note that input typed within the first ZZZ seconds 
+        ;; will be discarded.
+        (progn (print '&gt;) 
+               (if zzz (sleep zzz))
+               (print '&gt;&gt;)
+               (if clear-p (clear-input))
+               (read))))
+
+(read-sleepily)
+<tt> |&gt; </tt> &gt; <b>|&gt;&gt;</b><tt>10</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> &gt;
+<tt> |&gt; </tt> &gt;&gt; <b>|&gt;&gt;</b><tt>20</tt><b>&lt;&lt;|</b>
+&rArr;  (10 20)
+
+(read-sleepily t)
+<tt> |&gt; </tt> &gt; <b>|&gt;&gt;</b><tt>10</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> &gt;
+<tt> |&gt; </tt> &gt;&gt; <b>|&gt;&gt;</b><tt>20</tt><b>&lt;&lt;|</b>
+&rArr;  (10 20)
+
+(read-sleepily t 10)
+<tt> |&gt; </tt> &gt; <b>|&gt;&gt;</b><tt>10</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> &gt; <b>|&gt;&gt;</b><tt>20</tt><b>&lt;&lt;|</b>  ; Some implementations won't echo typeahead here.
+<tt> |&gt; </tt> &gt;&gt; <b>|&gt;&gt;</b><tt>30</tt><b>&lt;&lt;|</b>
+&rArr;  (10 30)
+</pre></div>
+
+<a name="Side-Effects_003a_003a-70"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>The <i>input-stream</i> is modified.
+</p>
+<a name="Affected-By_003a_003a-94"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*standard-input*</b>
+</p>
+<a name="Exceptional-Situations_003a_003a-209"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>input-stream</i> is not a <i>stream designator</i>.
+</p>
+<a name="See-Also_003a_003a-462"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>clear-output</b>
+</p>
+
+
+
+</body>
+</html>

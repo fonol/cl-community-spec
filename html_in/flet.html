@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>flet (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="flet (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="flet (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="funcall.html#funcall" rel="next" title="funcall">
+<link href="fmakunbound.html#fmakunbound" rel="prev" title="fmakunbound">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="flet"></a>
+<div class="header">
+<p>
+Next: <a href="funcall.html#funcall" accesskey="n" rel="next">funcall</a>, Previous: <a href="fmakunbound.html#fmakunbound" accesskey="p" rel="prev">fmakunbound</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="flet_002c-labels_002c-macrolet-_005bSpecial-Operator_005d"></a>
+<h4 class="subsection">5.3.6 flet, labels, macrolet                                   [Special Operator]</h4>
+
+<p><code>flet</code>  <i><span class="roman">(</span>{(</i><i>function-name</i> 
+				                  <i>lambda-list</i>
+				      		  [[{<i>local-declaration</i>}* 
+				  | <i>local-documentation</i>]]
+				      		  {<i>local-form</i>}*<span class="roman">)</span>}*<span class="roman">)</span>
+			  {<i>declaration</i>}* {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<p><code>labels</code>  <i><span class="roman">(</span>{(</i><i>function-name</i> 
+				                  <i>lambda-list</i>
+				      		  [[{<i>local-declaration</i>}* 
+				  | <i>local-documentation</i>]]
+				      		  {<i>local-form</i>}*<span class="roman">)</span>}*<span class="roman">)</span>
+			  {<i>declaration</i>}* {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<p><code>macrolet</code>  <i><span class="roman">(</span>{(</i><i>name</i> 
+				                  <i>lambda-list</i>
+				      		  [[{<i>local-declaration</i>}* 
+				  | <i>local-documentation</i>]]
+				      		  {<i>local-form</i>}*<span class="roman">)</span>}*<span class="roman">)</span>
+			  {<i>declaration</i>}* {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-30"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>function-name</i>&mdash;a <i>function name</i>.
+</p>
+<p><i>name</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>lambda-list</i>&mdash;a <i>lambda list</i>; 
+		      for <b>flet</b> and <b>labels</b>,
+			 it is an <i>ordinary lambda list</i>;
+		      for <b>macrolet</b>,
+			 it is a <i>macro lambda list</i>.
+</p>
+<p><i>local-declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>local-documentation</i>&mdash;a <i>string</i>; not evaluated.
+</p>
+<p><i>local-forms</i>, <i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> of the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-59"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>flet</b>, <b>labels</b>, and <b>macrolet</b>
+define local <i>functions</i> and <i>macros</i>, and execute
+<i>forms</i> using the local definitions.
+<i>Forms</i> are executed  in order of occurrence.
+</p>
+<p>The body forms (but not the <i>lambda list</i>)
+</p>
+<p>of each <i>function</i> created by <b>flet</b> and <b>labels</b> 
+and each <i>macro</i> created by <b>macrolet</b>
+are enclosed in an <i>implicit block</i> whose name 
+is the <i>function block name</i> of the <i>function-name</i> or <i>name</i>, 
+as appropriate.
+</p>
+<p>The scope of the <i>declarations</i>
+between
+the list of local function/macro definitions and the body <i>forms</i>
+in <b>flet</b> and <b>labels</b> 
+does not include the bodies of the
+locally defined <i>functions</i>, except that for <b>labels</b>,
+any <b>inline</b>, <b>notinline</b>, or <b>ftype</b> declarations
+that refer to the locally defined functions do apply to the local function
+bodies. That is, their <i>scope</i> 
+is the same as the function name that they
+affect.  
+</p>
+<p>The scope of these <i>declarations</i> 
+does not include the bodies of the macro expander
+functions defined by <b>macrolet</b>.  
+</p>
+<dl compact="compact">
+<dt>flet</dt>
+<dd><p><b>flet</b> defines locally named <i>functions</i> and executes a series of
+<i>forms</i> with these definition <i>bindings</i>.  Any number of
+such local <i>functions</i> can be defined.  
+</p>
+<p>The <i>scope</i> of the name <i>binding</i> encompasses only the body.
+Within the
+body of <b>flet</b>, 
+<i>function-names</i> matching those defined
+by <b>flet</b> 
+refer to the locally defined <i>functions</i> 
+rather than to
+the global function definitions of the same name.
+</p>
+<p>Also, within the scope of <b>flet</b>, 
+global <i>setf expander</i> definitions of the <i>function-name</i>
+defined by <b>flet</b> do not apply. 
+Note that this applies to 
+<tt>(defsetf <i>f</i> ...)</tt>, not
+<tt>(defmethod (setf <i>f</i>) ...)</tt>.
+</p>
+<p>The names of <i>functions</i> defined by <b>flet</b> 
+are in the <i>lexical environment</i>; they retain
+their local definitions only within the body of <b>flet</b>.
+The function definition bindings are visible only in
+the body of <b>flet</b>, not the definitions themselves.  Within the
+function definitions, local function names
+that match those being
+defined refer to <i>functions</i> or 
+<i>macros</i> defined outside the <b>flet</b>.
+<b>flet</b> can locally <i>shadow</i> a global function name,
+and the new definition can refer to the global definition.
+</p>
+<p>Any <i>local-documentation</i> is attached to the corresponding local <i>function</i>
+(if one is actually created) as a <i>documentation string</i>.
+</p>
+</dd>
+<dt>labels</dt>
+<dd><p><b>labels</b> is equivalent to <b>flet</b> except that
+the scope of the defined function names for <b>labels</b> 
+encompasses the function definitions themselves as well as the body.
+</p>
+</dd>
+<dt>macrolet</dt>
+<dd><p><b>macrolet</b> 
+establishes local <i>macro</i> definitions,
+using the same format used by <b>defmacro</b>.
+</p>
+<p>Within the body of <b>macrolet</b>, 
+global <i>setf expander</i> definitions of the <i>names</i> defined by the 
+<b>macrolet</b> do not apply; rather, <b>setf</b> expands the
+<i>macro form</i> and recursively process the resulting <i>form</i>.
+</p>
+<p>The macro-expansion functions defined by <b>macrolet</b> 
+are defined in the 
+</p>
+<p><i>lexical environment</i> in which the <b>macrolet</b> form appears.
+Declarations and <b>macrolet</b> and 
+<b>symbol-macrolet</b> definitions
+affect the local macro definitions in a <b>macrolet</b>, but the
+consequences are undefined if the local macro definitions reference
+any local <i>variable</i> or <i>function</i> <i>bindings</i> that are visible in that
+<i>lexical environment</i>.
+</p>
+<p>Any <i>local-documentation</i> is attached to the corresponding local <i>macro function</i>
+as a <i>documentation string</i>.
+</p>
+</dd>
+</dl>
+
+<a name="Examples_003a_003a-36"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defun foo (x flag)
+   (macrolet ((fudge (z)
+                 ;The parameters x and flag are not accessible
+                 ; at this point; a reference to flag would be to
+                 ; the global variable of that name.
+                 ` (if flag (* ,z ,z) ,z)))
+    ;The parameters x and flag are accessible here.
+     (+ x
+        (fudge x)
+        (fudge (+ x 1)))))
+ &equiv;
+ (defun foo (x flag)
+   (+ x
+      (if flag (* x x) x)
+      (if flag (* (+ x 1) (+ x 1)) (+ x 1))))
+</pre></div>
+
+<p>after macro expansion.  The occurrences of <tt>x</tt> and <tt>flag</tt> legitimately
+refer to the parameters of the function <tt>foo</tt> because those parameters are
+visible at the site of the macro call which produced the expansion.
+</p>
+<div class="example">
+<pre class="example"> (flet ((flet1 (n) (+ n n)))
+    (flet ((flet1 (n) (+ 2 (flet1 n))))
+      (flet1 2))) &rArr;  6
+
+ (defun dummy-function () 'top-level) &rArr;  DUMMY-FUNCTION 
+ (funcall #'dummy-function) &rArr;  TOP-LEVEL 
+ (flet ((dummy-function () 'shadow)) 
+      (funcall #'dummy-function)) &rArr;  SHADOW 
+ (eq (funcall #'dummy-function) (funcall 'dummy-function))
+&rArr;  <i>true</i> 
+ (flet ((dummy-function () 'shadow))
+   (eq (funcall #'dummy-function)
+       (funcall 'dummy-function)))
+&rArr;  <i>false</i> 
+
+ (defun recursive-times (k n)
+   (labels ((temp (n) 
+              (if (zerop n) 0 (+ k (temp (1- n))))))
+     (temp n))) &rArr;  RECURSIVE-TIMES
+ (recursive-times 2 3) &rArr;  6
+
+ (defmacro mlets (x &amp;environment env) 
+    (let ((form `(babbit ,x)))
+      (macroexpand form env))) &rArr;  MLETS
+ (macrolet ((babbit (z) `(+ ,z ,z))) (mlets 5)) &rArr;  10
+</pre></div>
+
+<div class="example">
+<pre class="example"> (flet ((safesqrt (x) (sqrt (abs x))))
+  ;; The safesqrt function is used in two places.
+   (safesqrt (apply #'+ (map 'list #'safesqrt '(1 2 3 4 5 6)))))
+&rArr;  3.291173
+</pre></div>
+
+<div class="example">
+<pre class="example"> (defun integer-power (n k)     
+   (declare (integer n))         
+   (declare (type (integer 0 *) k))
+   (labels ((expt0 (x k a)
+              (declare (integer x a) (type (integer 0 *) k))
+              (cond ((zerop k) a)
+                    ((evenp k) (expt1 (* x x) (floor k 2) a))
+                    (t (expt0 (* x x) (floor k 2) (* x a)))))
+            (expt1 (x k a)
+              (declare (integer x a) (type (integer 0 *) k))
+              (cond ((evenp k) (expt1 (* x x) (floor k 2) a))
+                    (t (expt0 (* x x) (floor k 2) (* x a))))))
+    (expt0 n k 1))) &rArr;  INTEGER-POWER
+</pre></div>
+
+<div class="example">
+<pre class="example"> (defun example (y l)
+   (flet ((attach (x)
+            (setq l (append l (list x)))))
+     (declare (inline attach))
+     (dolist (x y)
+       (unless (null (cdr x))
+         (attach x)))
+     l))
+
+ (example '((a apple apricot) (b banana) (c cherry) (d) (e))
+          '((1) (2) (3) (4 2) (5) (6 3 2)))
+&rArr;  ((1) (2) (3) (4 2) (5) (6 3 2) (A APPLE APRICOT) (B BANANA) (C CHERRY))
+</pre></div>
+
+<a name="See-Also_003a_003a-46"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>declare</b>,
+<a href="defmacro.html#defmacro">defmacro</a>
+,
+<a href="defun.html#defun">defun</a>
+,
+&lsquo;documentation; (setf documentation)&rsquo;
+,
+&lsquo;let; let*&rsquo;
+,
+<a href="Evaluation.html#Evaluation">Evaluation</a>,
+<a href="Syntactic-Interaction-of-Documentation-Strings-and-Declarations.html#Syntactic-Interaction-of-Documentation-Strings-and-Declarations">Syntactic Interaction of Documentation Strings and Declarations</a>
+</p>
+<a name="Notes_003a_003a-27"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>It is not possible to define recursive <i>functions</i> with <b>flet</b>.
+<b>labels</b> can be used to define mutually recursive <i>functions</i>.
+</p>
+<p>If a <b>macrolet</b> <i>form</i> is a <i>top level form</i>,
+the body <i>forms</i> are also processed as <i>top level forms</i>.
+See <a href="File-Compilation.html#File-Compilation">File Compilation</a>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="funcall.html#funcall" accesskey="n" rel="next">funcall</a>, Previous: <a href="fmakunbound.html#fmakunbound" accesskey="p" rel="prev">fmakunbound</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

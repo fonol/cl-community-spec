@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>translate-logical-pathname (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="translate-logical-pathname (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="translate-logical-pathname (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Filenames-Dictionary.html#Filenames-Dictionary" rel="up" title="Filenames Dictionary">
+<link href="translate_002dpathname.html#translate_002dpathname" rel="next" title="translate-pathname">
+<link href="pathname_002dmatch_002dp.html#pathname_002dmatch_002dp" rel="prev" title="pathname-match-p">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="translate_002dlogical_002dpathname"></a>
+<div class="header">
+<p>
+Next: <a href="translate_002dpathname.html#translate_002dpathname" accesskey="n" rel="next">translate-pathname</a>, Previous: <a href="pathname_002dmatch_002dp.html#pathname_002dmatch_002dp" accesskey="p" rel="prev">pathname-match-p</a>, Up: <a href="Filenames-Dictionary.html#Filenames-Dictionary" accesskey="u" rel="up">Filenames Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="translate_002dlogical_002dpathname-_005bFunction_005d"></a>
+<h4 class="subsection">19.4.15 translate-logical-pathname                                       [Function]</h4>
+
+<p><code>translate-logical-pathname</code>  <i>pathname &amp;key</i> &rArr;  <i>physical-pathname</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-400"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>pathname</i>&mdash;a <i>pathname designator</i>,
+		or a <i>logical pathname</i> <i>namestring</i>.
+</p>
+<p><i>physical-pathname</i>&mdash;a <i>physical pathname</i>.
+</p>
+<a name="Description_003a_003a-519"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Translates <i>pathname</i> to a <i>physical pathname</i>, which it returns.
+</p>
+<p>If <i>pathname</i> is a <i>stream</i>, the
+<i>stream</i> can be either open or closed.
+<b>translate-logical-pathname</b> returns the same 
+physical pathname after a
+    file is closed as it did when the file was open.
+</p>
+<p>It is an error if <i>pathname</i> is a <i>stream</i> that is 
+created with <b>make-two-way-stream</b>, 
+<b>make-echo-stream</b>,             
+<b>make-broadcast-stream</b>, 
+<b>make-concatenated-stream</b>, <b>make-string-input-stream</b>,
+<b>make-string-output-stream</b>.
+</p>
+<p>If <i>pathname</i> is a <i>logical pathname</i> namestring,
+the host portion of the 
+<i>logical pathname</i> namestring and its following <i>colon</i> are required.
+</p>
+<p><i>Pathname</i> is first coerced to a <i>pathname</i>.
+If the coerced <i>pathname</i> is a physical pathname, it is returned.
+If the coerced <i>pathname</i> is a <i>logical pathname</i>,
+the first matching translation (according to <b>pathname-match-p</b>)
+of the <i>logical pathname</i> host is applied, as if by calling 
+<b>translate-pathname</b>.  If the result is
+    a <i>logical pathname</i>, this process is repeated.  
+When the result is
+    finally a physical pathname, it is returned.
+    If no translation matches, an error 
+is signaled.
+</p>
+<p><b>translate-logical-pathname</b> might perform additional translations,
+    typically to provide translation of file types to local naming
+    conventions, to accomodate physical file systems with limited length
+    names, or to deal with special character requirements such as
+    translating hyphens to underscores or uppercase letters to lowercase.
+    Any such additional translations are <i>implementation-defined</i>.  Some
+    implementations do no additional translations.
+</p>
+<p>There are no specified keyword arguments for
+<b>translate-logical-pathname</b>, 
+but implementations are permitted to extend
+    it by adding keyword arguments.  
+</p>
+<a name="Examples_003a_003a-379"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<p>See <b>logical-pathname-translations</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-181"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If <i>pathname</i> is incorrectly supplied, an error of <i>type</i> <b>type-error</b> is signaled.
+</p>
+<p>If no translation matches, an error of <i>type</i> <b>file-error</b> is signaled.
+</p>
+<p>[Editorial Note by KMP: Is file-error really right, or should it be pathname-error?]
+</p>
+<a name="See-Also_003a_003a-422"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="logical_002dpathname.html#logical_002dpathname">logical-pathname</a>
+,
+<a href="logical_002dpathname_002dtranslations.html#logical_002dpathname_002dtranslations">logical-pathname-translations</a>
+, 
+<b>logical-pathname</b>,
+<a href="File-System-Concepts.html#File-System-Concepts">File System Concepts</a>,
+</p>
+<p><a href="Pathnames-as-Filenames.html#Pathnames-as-Filenames">Pathnames as Filenames</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="translate_002dpathname.html#translate_002dpathname" accesskey="n" rel="next">translate-pathname</a>, Previous: <a href="pathname_002dmatch_002dp.html#pathname_002dmatch_002dp" accesskey="p" rel="prev">pathname-match-p</a>, Up: <a href="Filenames-Dictionary.html#Filenames-Dictionary" accesskey="u" rel="up">Filenames Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

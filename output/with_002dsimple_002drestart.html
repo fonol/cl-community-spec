@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>with-simple-restart (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="abort.html#abort" rel="next" title="abort">
+<link href="with_002dcondition_002drestarts.html#with_002dcondition_002drestarts" rel="prev" title="with-condition-restarts">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="with_002dcondition_002drestarts.html#with_002dcondition_002drestarts" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                with-condition-restarts
+                            </a>
+                            <a href="Conditions-Dictionary.html#Conditions-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Conditions Dictionary
+                            </a>
+                            <a href="abort.html#abort.html" class="nav-btn nav__next ">
+                                abort
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="with_002dsimple_002drestart"></a>
+<a name="with_002dsimple_002drestart-_005bMacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Macro</div>
+<h4 class="subsection">with-simple-restart                                                 </h4>
+
+<p><code>with-simple-restart</code>  <i><span class="roman">(</span>name format-control {<i>format-argument</i>}*</i><span class="roman">)</span>
+		   {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-156"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>name</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>format-control</i>&mdash;a <i>format control</i>.
+</p>
+<p><i>format-argument</i>&mdash;an <i>object</i> (<i>i.e.</i>, a <i>format argument</i>).
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;in the normal situation,
+   the <i>values</i> returned by the <i>forms</i>;
+   in the exceptional situation where the <i>restart</i> named <i>name</i> is invoked,
+   two values&mdash;<b>nil</b> and <b>t</b>.
+</p>
+<a name="Description_003a_003a-210"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>with-simple-restart</b> establishes a restart.  
+</p>
+<p>If the restart designated by <i>name</i> is not invoked while executing <i>forms</i>,
+all values returned by the last of <i>forms</i> are returned. 
+If the restart designated by <i>name</i> is invoked,
+control is transferred to <b>with-simple-restart</b>,
+which returns two values, <b>nil</b> and <b>t</b>.
+</p>
+<p>If <i>name</i> is <b>nil</b>, an anonymous restart is established.
+</p>
+<p>The <i>format-control</i> and <i>format-arguments</i> are used 
+report the <i>restart</i>.
+</p>
+<a name="Examples_003a_003a-136"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (defun read-eval-print-loop (level)
+   (with-simple-restart (abort &quot;Exit command level ~D.&quot; level)
+     (loop
+       (with-simple-restart (abort &quot;Return to command level ~D.&quot; level)
+         (let ((form (prog2 (fresh-line) (read) (fresh-line))))
+           (prin1 (eval form)))))))
+&rArr;  READ-EVAL-PRINT-LOOP
+ (read-eval-print-loop 1)
+ (+ 'a 3)
+<tt> |&gt; </tt> Error: The argument, A, to the function + was of the wrong type.
+<tt> |&gt; </tt>        The function expected a number.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Specify a value to use this time.
+<tt> |&gt; </tt>  2: Return to command level 1.
+<tt> |&gt; </tt>  3: Exit command level 1.
+<tt> |&gt; </tt>  4: Return to Lisp Toplevel.
+</code>
+</pre></div>
+
+<div class="example">
+<pre class="example"><code> (defun compute-fixnum-power-of-2 (x)
+   (with-simple-restart (nil &quot;Give up on computing 2<tt>^</tt>~D.&quot; x)
+     (let ((result 1))
+       (dotimes (i x result)
+         (setq result (* 2 result))
+         (unless (fixnump result)
+           (error &quot;Power of 2 is too large.&quot;))))))
+COMPUTE-FIXNUM-POWER-OF-2
+ (defun compute-power-of-2 (x)
+   (or (compute-fixnum-power-of-2 x) 'something big))
+COMPUTE-POWER-OF-2
+ (compute-power-of-2 10)
+1024
+ (compute-power-of-2 10000)
+<tt> |&gt; </tt> Error: Power of 2 is too large.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number.
+<tt> |&gt; </tt>  1: Give up on computing 2<tt>^</tt>10000.
+<tt> |&gt; </tt>  2: Return to Lisp Toplevel
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:continue 1</tt><b>&lt;&lt;|</b>
+&rArr;  SOMETHING-BIG
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-184"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="restart_002dcase.html#restart_002dcase">restart-case</a>
+</p>
+<a name="Notes_003a_003a-113"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p><b>with-simple-restart</b> is shorthand for one of the most
+common uses of <b>restart-case</b>.
+</p>
+<p><b>with-simple-restart</b> could be defined by:
+</p>
+<div class="example">
+<pre class="example"><code> (defmacro with-simple-restart ((restart-name format-control
+                                              &amp;rest format-arguments)
+                                &amp;body forms)
+   `(restart-case (progn ,@forms)
+      (,restart-name ()
+          :report (lambda (stream)
+                    (format stream ,format-control ,@format-arguments))
+         (values nil t))))
+</code>
+</pre></div>
+
+<p>Because the second return value is <b>t</b> in the exceptional case,
+it is common (but not required) to arrange for the second return value
+in the normal case to be missing or <b>nil</b> so that the two situations
+can be distinguished.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

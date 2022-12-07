@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>with-slots (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="defclass.html#defclass" rel="next" title="defclass">
+<link href="with_002daccessors.html#with_002daccessors" rel="prev" title="with-accessors">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="with_002daccessors.html#with_002daccessors" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                with-accessors
+                            </a>
+                            <a href="Objects-Dictionary.html#Objects-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Objects Dictionary
+                            </a>
+                            <a href="defclass.html#defclass.html" class="nav-btn nav__next ">
+                                defclass
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="with_002dslots"></a>
+<a name="with_002dslots-_005bMacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Macro</div>
+<h4 class="subsection">with-slots                                                          </h4>
+
+<p><code>with-slots</code>  <i><span class="roman">(</span>{<i>slot-entry</i>}*</i><span class="roman">)</span>
+		          instance-form 
+                          {<i>declaration</i>}* {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<p><i><span class="nolinebreak">slot-entry</span></i>&nbsp;<span class="nolinebreak">::=slot-name</span>&nbsp;|&nbsp;<span class="roman">(</span><span class="nolinebreak">variable-name</span>&nbsp;<span class="nolinebreak">slot-name</span><span class="roman">)</span><!-- /@w -->
+</p>
+<a name="Arguments-and-Values_003a_003a-112"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>slot-name</i>&mdash;a <i>slot</i> <i>name</i>; not evaluated.
+</p>
+<p><i>variable-name</i>&mdash;a <i>variable name</i>; not evaluated.
+</p>
+<p><i>instance-form</i>&mdash;a <i>form</i>; evaluted to produce <i>instance</i>.
+</p>
+<p><i>instance</i>&mdash;an <i>object</i>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-151"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The macro <b>with-slots</b> <i>establishes</i> a
+<i>lexical environment</i>
+for referring to the <i>slots</i> in the <i>instance</i> 
+named by the given <i>slot-names</i> 
+as though they were <i>variables</i>.  Within such a context
+the value of the <i>slot</i> can be specified by using its slot name, as if
+it were a lexically bound variable.  Both <b>setf</b> and <b>setq</b>
+can be used to set the value of the <i>slot</i>.
+</p>
+<p>The macro <b>with-slots</b> translates an appearance of the slot 
+name as a <i>variable</i> into a call to <b>slot-value</b>.
+</p>
+<a name="Examples_003a_003a-107"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (defclass thing ()
+           ((x :initarg :x :accessor thing-x)
+            (y :initarg :y :accessor thing-y)))
+&rArr;  #&lt;STANDARD-CLASS THING 250020173&gt;
+ (defmethod (setf thing-x) :before (new-x (thing thing))
+   (format t &quot;~&amp;Changing X from ~D to ~D in ~S.~
+           (thing-x thing) new-x thing))
+ (setq thing (make-instance 'thing :x 0 :y 1)) &rArr;  #&lt;THING 62310540&gt;
+ (with-slots (x y) thing (incf x) (incf y)) &rArr;  2
+ (values (thing-x thing) (thing-y thing)) &rArr;  1, 2
+ (setq thing1 (make-instance 'thing :x 1 :y 2)) &rArr;  #&lt;THING 43135676&gt;
+ (setq thing2 (make-instance 'thing :x 7 :y 8)) &rArr;  #&lt;THING 43147374&gt;
+ (with-slots ((x1 x) (y1 y))
+             thing1
+   (with-slots ((x2 x) (y2 y))
+               thing2
+     (list (list x1 (thing-x thing1) y1 (thing-y thing1)
+                 x2 (thing-x thing2) y2 (thing-y thing2))
+           (setq x1 (+ y1 x2))
+           (list x1 (thing-x thing1) y1 (thing-y thing1)
+                 x2 (thing-x thing2) y2 (thing-y thing2))
+           (setf (thing-x thing2) (list x1))
+           (list x1 (thing-x thing1) y1 (thing-y thing1)
+                 x2 (thing-x thing2) y2 (thing-y thing2)))))
+<tt> |&gt; </tt> Changing X from 7 to (9) in #&lt;THING 43147374&gt;.
+&rArr;  ((1 1 2 2 7 7 8 8)
+     9
+     (9 9 2 2 7 7 8 8) 
+     (9)
+     (9 9 2 2 (9) (9) 8 8))
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-13"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p><b>defclass</b>
+</p>
+<a name="Exceptional-Situations_003a_003a-36"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>The consequences are undefined if any <i>slot-name</i> is not the name
+of a <i>slot</i> in the <i>instance</i>.
+</p>
+<a name="See-Also_003a_003a-133"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="with_002daccessors.html#with_002daccessors">with-accessors</a>
+,
+<a href="slot_002dvalue.html#slot_002dvalue">slot-value</a>
+,
+<a href="symbol_002dmacrolet.html#symbol_002dmacrolet">symbol-macrolet</a>
+</p>
+<a name="Notes_003a_003a-89"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>A <b>with-slots</b> expression of the form:
+</p>
+<div class="example">
+<pre class="example"><code>
+
+<tt>(with-slots</tt> (slot-entry<!-- /@w -->_1 ...slot-entry_n) <i>instance-form</i> form_1 ...form_k)
+
+</code>
+</pre></div>
+
+<p>expands into the equivalent of
+</p>
+<div class="example">
+<pre class="example"><code>
+
+<tt>(</tt><tt>let ((</tt>in <i>instance-form</i><tt>))</tt><!-- /@w -->
+
+ <tt>(symbol-macrolet (</tt>Q<!-- /@w -->_1... Q_n<tt>)</tt> form_1 ...form_k<tt>))</tt>
+
+</code>
+</pre></div>
+
+<p>where Q_i is 
+</p>
+<div class="example">
+<pre class="example"><code><tt>(</tt>slot-entry_i () 
+<tt>(slot-value </tt>in 'slot-entry_i<tt>))</tt>
+</code>
+</pre></div>
+
+<p>if slot-entry_i is a <i>symbol</i>
+and is
+</p>
+<div class="example">
+<pre class="example"><code><tt>(</tt>variable-name_i () 
+<tt>(slot-value </tt>in 'slot-name_i<tt>))</tt>
+</code>
+</pre></div>
+
+
+<p>if slot-entry_i
+is of the form 
+</p>
+<div class="example">
+<pre class="example"><code><tt>(</tt>variable-name_i 
+slot-name_i<tt>)</tt>
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

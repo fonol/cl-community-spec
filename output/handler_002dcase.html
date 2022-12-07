@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>handler-case (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="ignore_002derrors.html#ignore_002derrors" rel="next" title="ignore-errors">
+<link href="handler_002dbind.html#handler_002dbind" rel="prev" title="handler-bind">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="handler_002dbind.html#handler_002dbind" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                handler-bind
+                            </a>
+                            <a href="Conditions-Dictionary.html#Conditions-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Conditions Dictionary
+                            </a>
+                            <a href="ignore_002derrors.html#ignore_002derrors.html" class="nav-btn nav__next ">
+                                ignore-errors
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="handler_002dcase"></a>
+<a name="handler_002dcase-_005bMacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Macro</div>
+<h4 class="subsection">handler-case                                                        </h4>
+
+<p><code>handler-case</code>  <i><i>expression</i>
+		   [[{!<i>error-clause</i>}*</i> | !<i>no-error-clause</i>]] &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<p><i>clause</i>&nbsp;::=!<i><span class="nolinebreak">error-clause</span></i>&nbsp;|&nbsp;!<i><span class="nolinebreak">no-error-clause</span></i><!-- /@w -->
+</p>
+<p><i><span class="nolinebreak">error-clause</span></i>&nbsp;::=<span class="roman">(</span>typespec&nbsp;<span class="roman">(</span><tt>[</tt>var<tt>]</tt><span class="roman">)</span>&nbsp;{<i>declaration</i>}*<!-- /@w --> {<i>form</i>}*<span class="roman">)</span>
+</p>
+<p><i><span class="nolinebreak">no-error-clause</span></i>&nbsp;::=<span class="roman">(</span><tt><span class="nolinebreak">:no-error</span></tt>&nbsp;<i><span class="nolinebreak">lambda-list</span></i>&nbsp;{<i>declaration</i>}*<!-- /@w --> {<i>form</i>}*<span class="roman">)</span>
+</p>
+<a name="Arguments-and-Values_003a_003a-144"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>expression</i>&mdash;a <i>form</i>.
+</p>
+<p><i>typespec</i>&mdash;a <i>type specifier</i>.
+</p>
+<p><i>var</i>&mdash;a <i>variable</i> <i>name</i>. 
+</p>
+<p><i>lambda-list</i>&mdash;an <i>ordinary lambda list</i>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>results</i>&mdash;In the normal situation, the values returned are those that result from
+   the evaluation of <i>expression</i>;
+   in the exceptional situation when control is transferred to a <i>clause</i>,
+   the value of the last <i>form</i> in that <i>clause</i> is returned.
+</p>
+<a name="Description_003a_003a-197"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>handler-case</b> executes <i>expression</i> in a <i>dynamic environment</i> where
+various handlers are active.  Each <i>error-clause</i> specifies how to 
+handle a <i>condition</i> matching the indicated <i>typespec</i>. 
+A <i>no-error-clause</i> allows the specification of a particular action
+if control returns normally.
+</p>
+<p>If a <i>condition</i> is signaled for which there is an appropriate
+<i>error-clause</i> during the execution of <i>expression</i>
+(<i>i.e.</i>, one for which <tt>(typep <i>condition</i> '<i>typespec</i>)</tt>
+returns <i>true</i>) and if there is no intervening handler for a 
+<i>condition</i> of that <i>type</i>, then control is transferred to
+the body of the relevant <i>error-clause</i>.  In this case, the 
+dynamic state is unwound appropriately (so that the handlers established
+around the <i>expression</i> are no longer active), and <i>var</i> is bound to
+the <i>condition</i> that had been signaled.
+If more than one case is provided, those cases are made accessible
+in parallel.  That is, in
+</p>
+<div class="example">
+<pre class="example"><code>  (handler-case <i>form</i>
+    (<i>typespec1</i> (<i>var1</i>) <i>form1</i>)
+    (<i>typespec2</i> (<i>var2</i>) <i>form2</i>))
+</code>
+</pre></div>
+
+<p>if the first <i>clause</i> (containing <i>form1</i>) has been selected, 
+the handler for the second is no longer visible (or vice versa).
+</p>
+<p>The <i>clauses</i>
+are searched sequentially from top to bottom. If there is <i>type</i>
+   overlap between <i>typespecs</i>, 
+the earlier of the <i>clauses</i> is selected.
+</p>
+<p>If <i>var</i> 
+is not needed, it can be omitted. That is, a <i>clause</i> such as:
+</p>
+<div class="example">
+<pre class="example"><code>  (<i>typespec</i> (<i>var</i>) (declare (ignore <i>var</i>)) <i>form</i>)
+</code>
+</pre></div>
+
+<p>can be written
+ <tt>(<i>typespec</i> () <i>form</i>)</tt>.
+</p>
+<p>If there are no <i>forms</i> in a selected <i>clause</i>, the case, and therefore
+   <b>handler-case</b>, returns <b>nil</b>.
+    If execution of <i>expression</i> 
+returns normally and no <i>no-error-clause</i>
+   exists, the values returned by 
+<i>expression</i> are returned by <b>handler-case</b>.
+   If execution of 
+<i>expression</i> returns normally and a <i>no-error-clause</i>
+   does exist, the values returned are used as arguments to the function
+   described by constructing
+ <tt>(lambda <i>lambda-list</i> {<i>form</i>}*</tt>)
+   from the <i>no-error-clause</i>, and the <i>values</i> of that function call are
+   returned by <b>handler-case</b>.
+The handlers which were established around the <i>expression</i> are no longer active at the time of this call.
+</p>
+<a name="Examples_003a_003a-126"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (defun assess-condition (condition)
+   (handler-case (signal condition)
+     (warning () &quot;Lots of smoke, but no fire.&quot;)
+     ((or arithmetic-error control-error cell-error stream-error)
+        (condition)
+       (format nil &quot;~S looks especially bad.&quot; condition))
+     (serious-condition (condition)
+       (format nil &quot;~S looks serious.&quot; condition))
+     (condition () &quot;Hardly worth mentioning.&quot;)))
+&rArr;  ASSESS-CONDITION
+ (assess-condition (make-condition 'stream-error :stream *terminal-io*))
+&rArr;  &quot;#&lt;STREAM-ERROR 12352256&gt; looks especially bad.&quot;
+ (define-condition random-condition (condition) () 
+   (:report (lambda (condition stream)
+              (declare (ignore condition))
+              (princ &quot;Yow&quot; stream))))
+&rArr;  RANDOM-CONDITION
+ (assess-condition (make-condition 'random-condition))
+&rArr;  &quot;Hardly worth mentioning.&quot;
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-172"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="handler_002dbind.html#handler_002dbind">handler-bind</a>
+,
+<a href="ignore_002derrors.html#ignore_002derrors">ignore-errors</a>
+,
+<a href="Condition-System-Concepts.html#Condition-System-Concepts">Condition System Concepts</a>
+</p>
+<a name="Notes_003a_003a-105"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<div class="example">
+<pre class="example"><code> (handler-case form
+   (<i>type1</i> (<i>var1</i>) . <i>body1</i>)
+   (<i>type2</i> (<i>var2</i>) . <i>body2</i>) ...)
+</code>
+</pre></div>
+
+<p>is approximately equivalent to:
+</p>
+<div class="example">
+<pre class="example"><code> (block #1=#:g0001
+   (let ((#2=#:g0002 nil))
+     (tagbody
+       (handler-bind ((<i>type1</i> #'(lambda (temp)
+                                       (setq #1# temp)
+                                       (go #3=#:g0003)))
+                      (<i>type2</i> #'(lambda (temp)
+                                       (setq #2# temp)
+                                       (go #4=#:g0004))) ...)
+       (return-from #1# form))
+         #3# (return-from #1# (let ((<i>var1</i> #2#)) . <i>body1</i>))
+         #4# (return-from #1# (let ((<i>var2</i> #2#)) . <i>body2</i>)) ...)))
+</code>
+</pre></div>
+
+<div class="example">
+<pre class="example"><code> (handler-case form
+   (<i>type1</i> <i>(var1)</i> . <i>body1</i>)
+   ...
+   (:no-error (<i>varN-1</i> <i>varN-2</i> ...) . <i>bodyN</i>))
+</code>
+</pre></div>
+
+<p>is approximately equivalent to:
+</p>
+<div class="example">
+<pre class="example"><code>
+
+ (block #1=#:error-return
+  (multiple-value-call #'(lambda (<i>varN-1</i> <i>varN-2</i> ...) . <i>bodyN</i>)
+     (block #2=#:normal-return
+       (return-from #1#
+         (handler-case (return-from #2# form)
+           (<i>type1</i> (<i>var1</i>) . <i>body1</i>) ...)))))
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

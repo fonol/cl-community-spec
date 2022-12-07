@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>count (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="count (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="count (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Sequences-Dictionary.html#Sequences-Dictionary" rel="up" title="Sequences Dictionary">
+<link href="length.html#length" rel="next" title="length">
+<link href="reduce.html#reduce" rel="prev" title="reduce">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="count"></a>
+<div class="header">
+<p>
+Next: <a href="length.html#length" accesskey="n" rel="next">length</a>, Previous: <a href="reduce.html#reduce" accesskey="p" rel="prev">reduce</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="count_002c-count_002dif_002c-count_002dif_002dnot-_005bFunction_005d"></a>
+<h4 class="subsection">17.3.10 count, count-if, count-if-not                                    [Function]</h4>
+
+<p><code>count</code>  <i>item sequence &amp;key</i> from-end start end key test test-not &rArr;  <i>n</i>
+</p>
+<p><code>count-if</code>  <i>predicate sequence &amp;key</i> from-end start end key &rArr;  <i>n</i>
+</p>
+<p><code>count-if-not</code>  <i>predicate sequence &amp;key</i> from-end start end key &rArr;  <i>n</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-362"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>item</i>&mdash;an <i>object</i>.
+</p>
+<p><i>sequence</i>&mdash;a <i>proper sequence</i>.
+</p>
+<p><i>predicate</i>&mdash;a <i>designator</i> for a <i>function</i> of one <i>argument</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>from-end</i>&mdash;a <i>generalized boolean</i>.
+  The default is <i>false</i>.
+</p>
+<p><i>test</i>&mdash;a <i>designator</i> for a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test-not</i>&mdash;a <i>designator</i> for 
+  a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>start</i>, <i>end</i>&mdash;<i>bounding index designators</i> of <i>sequence</i>.
+ The defaults for <i>start</i> and <i>end</i> are <tt>0</tt> and <b>nil</b>, respectively.
+</p>
+<p><i>key</i>&mdash;a <i>designator</i> for a <i>function</i> of one argument,
+  or <b>nil</b>.
+</p>
+<p><i>n</i>&mdash;a non-negative <i>integer</i> 
+	    less than or equal to the <i>length</i> of <i>sequence</i>.
+</p>
+<a name="Description_003a_003a-477"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>count</b>, <b>count-if</b>, and <b>count-if-not</b> 
+count and return the number of <i>elements</i> in 
+the <i>sequence</i> <i>bounded</i> by <i>start</i> and <i>end</i>
+that <i>satisfy the test</i>.
+</p>
+<p>The <i>from-end</i> has no direct effect on the result.
+However, if <i>from-end</i> is <i>true</i>,
+the <i>elements</i> of <i>sequence</i> will be supplied as <i>arguments</i> to
+      the <i>test</i>,
+      <i>test-not</i>,
+  and <i>key</i> in reverse order,
+which may change the side-effects, if any, of those functions.
+</p>
+<a name="Examples_003a_003a-344"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (count #\a &quot;how many A's are there in here?&quot;) &rArr;  2
+ (count-if-not #'oddp '((1) (2) (3) (4)) :key #'car) &rArr;  2
+ (count-if #'upper-case-p &quot;The Crying of Lot 49&quot; :start 4) &rArr;  2 
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-158"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>sequence</i> is not a <i>proper sequence</i>.
+</p>
+<a name="See-Also_003a_003a-388"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Rules-about-Test-Functions.html#Rules-about-Test-Functions">Rules about Test Functions</a>,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<a name="Notes_003a_003a-261"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <tt>:test-not</tt> <i>argument</i> is deprecated.
+</p>
+<p>The <i>function</i> <b>count-if-not</b> is deprecated.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="length.html#length" accesskey="n" rel="next">length</a>, Previous: <a href="reduce.html#reduce" accesskey="p" rel="prev">reduce</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>define-compiler-macro (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="defmacro.html#defmacro" rel="next" title="defmacro">
+<link href="compiler_002dmacro_002dfunction.html#compiler_002dmacro_002dfunction" rel="prev" title="compiler-macro-function">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="compiler_002dmacro_002dfunction.html#compiler_002dmacro_002dfunction" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                compiler-macro-function
+                            </a>
+                            <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Evaluation and Compilation Dictionary
+                            </a>
+                            <a href="defmacro.html#defmacro.html" class="nav-btn nav__next ">
+                                defmacro
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="define_002dcompiler_002dmacro"></a>
+<a name="define_002dcompiler_002dmacro-_005bMacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Macro</div>
+<h4 class="subsection">define-compiler-macro                                               </h4>
+
+<p><code>define-compiler-macro</code>  <i>name lambda-list [[{<i>declaration</i>}*</i> | <i>documentation</i>]] {<i>form</i>}*<br>
+   &rArr;  <i>name</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-7"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>name</i>&mdash;a <i>function name</i>.
+</p>
+<p><i>lambda-list</i>&mdash;a <i>macro lambda list</i>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>documentation</i>&mdash;a <i>string</i>; not evaluated.
+</p>
+<p><i>form</i>&mdash;a <i>form</i>.
+</p>
+<a name="Description_003a_003a-8"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>[Editorial Note by KMP: This definition probably needs to be fully expanded to not
+	 	 refer through the definition of defmacro, but should suffice for now.]
+</p>
+<p>This is the normal mechanism for defining a <i>compiler macro function</i>.
+Its manner of definition is the same as for <b>defmacro</b>; the only
+differences are:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>The <i>name</i> can be a <i>function name</i> naming
+ any <i>function</i> or <i>macro</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The expander function is installed as a <i>compiler macro function</i>
+ for the <i>name</i>, rather than as a <i>macro function</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The <b>&amp;whole</b> argument is bound to the form argument that 
+ is passed to the <i>compiler macro function</i>.  The remaining lambda-list 
+ parameters are specified as if this form contained the function name in the
+ <i>car</i> and the actual arguments in the <i>cdr</i>, but if the <i>car</i> 
+ of the actual form is the symbol <b>funcall</b>, then the destructuring of 
+ the arguments is actually performed using its <i>cddr</i> instead.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd>
+<p><i>Documentation</i> is attached as a <i>documentation string</i> 
+    to <i>name</i> (as kind <b>compiler-macro</b>)
+and to the <i>compiler macro function</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Unlike an ordinary <i>macro</i>, a <i>compiler macro</i>
+ can decline to provide an expansion merely by returning a form that is
+ the <i>same</i> as the original (which can be obtained by using
+ <b>&amp;whole</b>).
+</p></dd>
+</dl>
+
+<a name="Examples_003a_003a-6"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (defun square (x) (expt x 2)) &rArr;  SQUARE
+ (define-compiler-macro square (&amp;whole form arg)
+   (if (atom arg)
+       `(expt ,arg 2)
+       (case (car arg)
+         (square (if (= (length arg) 2)
+                     `(expt ,(nth 1 arg) 4)
+                     form))
+         (expt   (if (= (length arg) 3)
+                     (if (numberp (nth 2 arg))
+                         `(expt ,(nth 1 arg) ,(* 2 (nth 2 arg)))
+                         `(expt ,(nth 1 arg) (* 2 ,(nth 2 arg))))
+                     form))
+         (otherwise `(expt ,arg 2))))) &rArr;  SQUARE
+ (square (square 3)) &rArr;  81
+ (macroexpand '(square x)) &rArr;  (SQUARE X), <i>false</i>
+ (funcall (compiler-macro-function 'square) '(square x) nil)
+&rArr;  (EXPT X 2)
+ (funcall (compiler-macro-function 'square) '(square (square x)) nil)
+&rArr;  (EXPT X 4)
+ (funcall (compiler-macro-function 'square) '(funcall #'square x) nil)
+&rArr;  (EXPT X 2)
+
+ (defun distance-positional (x1 y1 x2 y2)
+   (sqrt (+ (expt (- x2 x1) 2) (expt (- y2 y1) 2))))
+&rArr;  DISTANCE-POSITIONAL
+ (defun distance (&amp;key (x1 0) (y1 0) (x2 x1) (y2 y1))
+   (distance-positional x1 y1 x2 y2))
+&rArr;  DISTANCE
+ (define-compiler-macro distance (&amp;whole form
+                                  &amp;rest key-value-pairs
+                                  &amp;key (x1 0  x1-p)
+                                       (y1 0  y1-p)
+                                       (x2 x1 x2-p)
+                                       (y2 y1 y2-p)
+                                  &amp;allow-other-keys
+                                  &amp;environment env)
+   (flet ((key (n) (nth (* n 2) key-value-pairs))
+          (arg (n) (nth (1+ (* n 2)) key-value-pairs))
+          (simplep (x)
+            (let ((expanded-x (macroexpand x env)))
+              (or (constantp expanded-x env)
+                  (symbolp expanded-x)))))
+     (let ((n (/ (length key-value-pairs) 2)))
+       (multiple-value-bind (x1s y1s x2s y2s others)
+           (loop for (key) on key-value-pairs by #'cddr
+                 count (eq key ':x1) into x1s
+                 count (eq key ':y1) into y1s
+                 count (eq key ':x2) into x2s
+                 count (eq key ':y1) into y2s
+                 count (not (member key '(:x1 :x2 :y1 :y2)))
+                   into others
+                 finally (return (values x1s y1s x2s y2s others)))
+         (cond ((and (= n 4)
+                     (eq (key 0) :x1)
+                     (eq (key 1) :y1)
+                     (eq (key 2) :x2)
+                     (eq (key 3) :y2))
+                `(distance-positional ,x1 ,y1 ,x2 ,y2))
+               ((and (if x1-p (and (= x1s 1) (simplep x1)) t)
+                     (if y1-p (and (= y1s 1) (simplep y1)) t)
+                     (if x2-p (and (= x2s 1) (simplep x2)) t)
+                     (if y2-p (and (= y2s 1) (simplep y2)) t)
+                     (zerop others))
+                `(distance-positional ,x1 ,y1 ,x2 ,y2))
+               ((and (&lt; x1s 2) (&lt; y1s 2) (&lt; x2s 2) (&lt; y2s 2)
+                     (zerop others))
+                (let ((temps (loop repeat n collect (gensym))))
+                  `(let ,(loop for i below n
+                               collect (list (nth i temps) (arg i)))
+                     (distance
+                       ,@(loop for i below n
+                               append (list (key i) (nth i temps)))))))
+               (t form))))))
+&rArr;  DISTANCE
+ (dolist (form
+           '((distance :x1 (setq x 7) :x2 (decf x) :y1 (decf x) :y2 (decf x))
+             (distance :x1 (setq x 7) :y1 (decf x) :x2 (decf x) :y2 (decf x))
+             (distance :x1 (setq x 7) :y1 (incf x))
+             (distance :x1 (setq x 7) :y1 (incf x) :x1 (incf x))
+             (distance :x1 a1 :y1 b1 :x2 a2 :y2 b2)
+             (distance :x1 a1 :x2 a2 :y1 b1 :y2 b2)
+             (distance :x1 a1 :y1 b1 :z1 c1 :x2 a2 :y2 b2 :z2 c2)))
+   (print (funcall (compiler-macro-function 'distance) form nil)))
+<tt> |&gt; </tt> (LET ((#:G6558 (SETQ X 7))
+<tt> |&gt; </tt>       (#:G6559 (DECF X))
+<tt> |&gt; </tt>       (#:G6560 (DECF X))
+<tt> |&gt; </tt>       (#:G6561 (DECF X)))
+<tt> |&gt; </tt>   (DISTANCE :X1 #:G6558 :X2 #:G6559 :Y1 #:G6560 :Y2 #:G6561)) 
+<tt> |&gt; </tt> (DISTANCE-POSITIONAL (SETQ X 7) (DECF X) (DECF X) (DECF X)) 
+<tt> |&gt; </tt> (LET ((#:G6567 (SETQ X 7))
+<tt> |&gt; </tt>       (#:G6568 (INCF X)))
+<tt> |&gt; </tt>   (DISTANCE :X1 #:G6567 :Y1 #:G6568)) 
+<tt> |&gt; </tt> (DISTANCE :X1 (SETQ X 7) :Y1 (INCF X) :X1 (INCF X)) 
+<tt> |&gt; </tt> (DISTANCE-POSITIONAL A1 B1 A2 B2) 
+<tt> |&gt; </tt> (DISTANCE-POSITIONAL A1 B1 A2 B2) 
+<tt> |&gt; </tt> (DISTANCE :X1 A1 :Y1 B1 :Z1 C1 :X2 A2 :Y2 B2 :Z2 C2) 
+&rArr;  NIL
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-8"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="compiler_002dmacro_002dfunction.html#compiler_002dmacro_002dfunction">compiler-macro-function</a>
+,
+<a href="defmacro.html#defmacro">defmacro</a>
+,
+&lsquo;documentation; (setf documentation)&rsquo;
+,
+<a href="Syntactic-Interaction-of-Documentation-Strings-and-Declarations.html#Syntactic-Interaction-of-Documentation-Strings-and-Declarations">Syntactic Interaction of Documentation Strings and Declarations</a>
+</p>
+<a name="Notes_003a_003a-6"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The consequences of writing a <i>compiler macro</i> definition for a function
+in the <tt>COMMON-LISP</tt> <i>package</i> are undefined; it is quite possible that in some
+<i>implementations</i> such an attempt would override an equivalent or equally
+important definition.  In general, it is recommended that a programmer only
+write <i>compiler macro</i> definitions for <i>functions</i> he or she personally 
+maintains&ndash;writing a <i>compiler macro</i> definition for a function maintained
+elsewhere is normally considered a violation of traditional rules of modularity
+and data abstraction.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

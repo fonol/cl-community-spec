@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Restrictions on Examining a Pathname Directory Component (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Interpreting-Pathname-Component-Values.html#Interpreting-Pathname-Component-Values" rel="up" title="Interpreting Pathname Component Values">
+<link href="Directory-Components-in-Non_002dHierarchical-File-Systems.html#Directory-Components-in-Non_002dHierarchical-File-Systems" rel="next" title="Directory Components in Non-Hierarchical File Systems">
+<link href="Restrictions-on-Examining-a-Pathname-Device-Component.html#Restrictions-on-Examining-a-Pathname-Device-Component" rel="prev" title="Restrictions on Examining a Pathname Device Component">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Restrictions-on-Examining-a-Pathname-Device-Component.html#Restrictions-on-Examining-a-Pathname-Device-Component" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Restrictions on Examining a Pathname Device Component
+                            </a>
+                            <a href="Interpreting-Pathname-Component-Values.html#Interpreting-Pathname-Component-Values.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Interpreting Pathname Component Values
+                            </a>
+                            <a href="Directory-Components-in-Non_002dHierarchical-File-Systems.html#Directory-Components-in-Non_002dHierarchical-File-Systems.html" class="nav-btn nav__next ">
+                                Directory Components in Non-Hierarchical File Systems
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Restrictions-on-Examining-a-Pathname-Directory-Component"></a>
+<a name="Restrictions-on-Examining-a-Pathname-Directory-Component-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Restrictions on Examining a Pathname Directory Component</h4>
+
+<p>The directory might be a <i>string</i>,
+<tt>:wild</tt>, <tt>:unspecific</tt>, or <b>nil</b>.
+</p>
+<p>The directory can be a <i>list</i> of <i>strings</i> and <i>symbols</i>. 
+</p>
+<p>The <i>car</i> of the <i>list</i> is one of the symbols <tt>:absolute</tt>
+<a name="index-absolute-1"></a>
+ or 
+<tt>:relative</tt>
+<a name="index-relative-1"></a>
+, meaning:
+</p>
+<dl compact="compact">
+<dt><tt>:absolute</tt></dt>
+<dd><p>A <i>list</i> whose <i>car</i> is the symbol <tt>:absolute</tt> represents 
+  a directory path starting from the root directory.  The list 
+  <tt>(:absolute)</tt> represents the root directory.  The list 
+  <tt>(:absolute &quot;foo&quot; &quot;bar&quot; &quot;baz&quot;)</tt> represents the directory called
+  <tt>&quot;/foo/bar/baz&quot;</tt> in Unix (except possibly for <i>case</i>).
+</p>
+</dd>
+<dt><tt>:relative</tt></dt>
+<dd><p>A <i>list</i> whose <i>car</i> is the symbol <tt>:relative</tt> represents 
+  a directory path starting from a default directory.  
+  The list <tt>(:relative)</tt> has the same meaning as <b>nil</b> and hence is not used.
+  The list <tt>(:relative &quot;foo&quot; &quot;bar&quot;)</tt> represents the directory named <tt>&quot;bar&quot;</tt> 
+  in the directory named <tt>&quot;foo&quot;</tt> in the default directory.
+</p>
+</dd>
+</dl>
+
+<p>Each remaining element of the <i>list</i> is a <i>string</i> or a <i>symbol</i>.
+</p>
+<p>Each <i>string</i> names a single level of directory structure.
+The <i>strings</i> should contain only the directory names 
+themselves&mdash;no punctuation characters.
+</p>
+<p>In place of a <i>string</i>, at any point in the <i>list</i>, <i>symbols</i> 
+can occur to indicate special file notations.
+Figure 19&ndash;3 lists the <i>symbols</i> that have standard meanings.
+Implementations are permitted to add additional <i>objects</i> 
+of any <i>type</i> that is disjoint from <b>string</b>
+if necessary to represent features of their file systems that cannot be
+represented with the standard <i>strings</i> and <i>symbols</i>.
+</p>
+<p>Supplying any non-<i>string</i>, including any of the <i>symbols</i> listed below, 
+to a file system for which it does not make sense
+signals an error of <i>type</i> <b>file-error</b>.
+For example, Unix does not support <tt>:wild-inferiors</tt> in most implementations.
+</p>
+<a name="index-wild-2"></a>
+
+<a name="index-wild_002dinferiors-1"></a>
+
+<a name="index-up"></a>
+
+<a name="index-back"></a>
+
+<p>&nbsp;&nbsp;Symbol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meaning&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>:wild</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Wildcard&nbsp;match&nbsp;of&nbsp;one&nbsp;level&nbsp;of&nbsp;directory&nbsp;structure&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt><span class="nolinebreak">:wild-inferiors</span></tt>&nbsp;&nbsp;Wildcard&nbsp;match&nbsp;of&nbsp;any&nbsp;number&nbsp;of&nbsp;directory&nbsp;levels&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>:up</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Go&nbsp;upward&nbsp;in&nbsp;directory&nbsp;structure&nbsp;(semantic)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>:back</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Go&nbsp;upward&nbsp;in&nbsp;directory&nbsp;structure&nbsp;(syntactic)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;19&ndash;3:&nbsp;Special&nbsp;Markers&nbsp;In&nbsp;Directory&nbsp;Component&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<p>The following notes apply to the previous figure:
+</p>
+<dl compact="compact">
+<dt>Invalid Combinations</dt>
+<dd><p>Using <tt>:absolute</tt> or <tt>:wild-inferiors</tt> 
+immediately followed by <tt>:up</tt> or <tt>:back</tt>
+signals an error of <i>type</i> <b>file-error</b>.
+</p>
+</dd>
+<dt>Syntactic vs Semantic</dt>
+<dd><p>&ldquo;Syntactic&rdquo; means that the action of <tt>:back</tt> 
+depends only on the <i>pathname</i>
+and not on the contents of the file system.  
+</p>
+<p>&ldquo;Semantic&rdquo; means that the action of <tt>:up</tt> 
+depends on the contents of the file system; 
+to resolve a <i>pathname</i> containing 
+<tt>:up</tt> to a <i>pathname</i> whose directory component
+contains only <tt>:absolute</tt> and 
+<i>strings</i> requires probing the file system.
+</p>
+<p><tt>:up</tt> differs from 
+<tt>:back</tt> only in file systems that support multiple
+  names for directories, perhaps via symbolic links.  For example,
+  suppose that there is a directory
+<tt>(:absolute &quot;X&quot; &quot;Y&quot; &quot;Z&quot;)</tt>
+  linked to 
+<tt>(:absolute &quot;A&quot; &quot;B&quot; &quot;C&quot;)</tt>
+  and there also exist directories
+<tt>(:absolute &quot;A&quot; &quot;B&quot; &quot;Q&quot;)</tt> and 
+<tt>(:absolute &quot;X&quot; &quot;Y&quot; &quot;Q&quot;)</tt>.
+Then
+<tt>(:absolute &quot;X&quot; &quot;Y&quot; &quot;Z&quot; :up &quot;Q&quot;)</tt>
+  designates
+<tt>(:absolute &quot;A&quot; &quot;B&quot; &quot;Q&quot;)</tt>
+  while
+<tt>(:absolute &quot;X&quot; &quot;Y&quot; &quot;Z&quot; :back &quot;Q&quot;)</tt>
+  designates
+<tt>(:absolute &quot;X&quot; &quot;Y&quot; &quot;Q&quot;)</tt>
+</p></dd>
+</dl>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

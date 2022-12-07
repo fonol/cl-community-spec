@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>get-setf-expansion (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="setf.html#setf" rel="next" title="setf">
+<link href="define_002dsetf_002dexpander.html#define_002dsetf_002dexpander" rel="prev" title="define-setf-expander">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="define_002dsetf_002dexpander.html#define_002dsetf_002dexpander" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                define-setf-expander
+                            </a>
+                            <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Data and Control Flow Dictionary
+                            </a>
+                            <a href="setf.html#setf.html" class="nav-btn nav__next ">
+                                setf
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="get_002dsetf_002dexpansion"></a>
+<a name="get_002dsetf_002dexpansion-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">get-setf-expansion                                               </h4>
+
+<p><code>get-setf-expansion</code>  <i>place &amp;optional</i> environment<br>
+   &rArr;  <i>vars, vals, store-vars, writer-form, reader-form</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-81"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>place</i>&mdash;a <i>place</i>.
+</p>
+<p><i>environment</i>&mdash;an <i>environment</i> <i>object</i>.
+</p>
+<p><i>vars, vals, store-vars, writer-form, reader-form</i>&mdash;a <i>setf expansion</i>.
+</p>
+<a name="Description_003a_003a-116"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Determines
+five values constituting the <i>setf expansion</i> for <i>place</i>
+in <i>environment</i>; see <a href="Setf-Expansions.html#Setf-Expansions">Setf Expansions</a>.
+</p>
+<p>If <i>environment</i> is not supplied or <b>nil</b>,
+the environment is the <i>null lexical environment</i>. 
+</p>
+<a name="Examples_003a_003a-89"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (get-setf-expansion 'x)
+&rArr;  NIL, NIL, (#:G0001), (SETQ X #:G0001), X 
+</code>
+</pre></div>
+
+<div class="example">
+<pre class="example"><code>;;; This macro is like POP 
+
+ (defmacro xpop (place &amp;environment env)
+   (multiple-value-bind (dummies vals new setter getter)
+                        (get-setf-expansion place env)
+      `(let* (,@(mapcar #'list dummies vals) (,(car new) ,getter))
+         (if (cdr new) (error &quot;Can't expand this.&quot;))
+         (prog1 (car ,(car new))
+                (setq ,(car new) (cdr ,(car new)))
+                ,setter))))
+
+ (defsetf frob (x) (value) 
+     `(setf (car ,x) ,value)) &rArr;  FROB
+;;; The following is an error; an error might be signaled at macro expansion time
+ (flet ((frob (x) (cdr x)))  ;Invalid
+   (xpop (frob z)))
+
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-100"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="defsetf.html#defsetf">defsetf</a>
+,
+<a href="define_002dsetf_002dexpander.html#define_002dsetf_002dexpander">define-setf-expander</a>
+,
+&lsquo;setf; psetf&rsquo;
+</p>
+<a name="Notes_003a_003a-66"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>Any <i>compound form</i> is a valid <i>place</i>,
+since any <i>compound form</i> whose <i>operator</i> <i>f</i> has no <i>setf expander</i>
+are expanded into a call to <tt>(setf <i>f</i>)</tt>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

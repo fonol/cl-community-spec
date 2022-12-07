@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>decode-float (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Numbers-Dictionary.html#Numbers-Dictionary" rel="up" title="Numbers Dictionary">
+<link href="float.html#float" rel="next" title="float">
+<link href="most_002dpositive_002dfixnum.html#most_002dpositive_002dfixnum" rel="prev" title="most-positive-fixnum">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="most_002dpositive_002dfixnum.html#most_002dpositive_002dfixnum" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                most-positive-fixnum
+                            </a>
+                            <a href="Numbers-Dictionary.html#Numbers-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Numbers Dictionary
+                            </a>
+                            <a href="float.html#float.html" class="nav-btn nav__next ">
+                                float
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="decode_002dfloat"></a>
+<a name="decode_002dfloat_002c-scale_002dfloat_002c-float_002dradix_002c-float_002dsign_002c"></a>
+<div class="section top-most">
+<h4 class="subsection">decode-float, scale-float, float-radix, float-sign,</h4>
+<a name="float_002ddigits_002c-float_002dprecision_002c-integer_002ddecode_002dfloat"></a>
+</div>
+<div class="section">
+<h4 class="subheading">float-digits, float-precision, integer-decode-float</h4>
+<p align="right"><i>[Function]</i>
+</p>
+<p><code>decode-float</code>  <i>float</i> &rArr;  <i>significand, exponent, sign</i>
+</p>
+<p><code>scale-float</code>  <i>float integer</i> &rArr;  <i>scaled-float</i>
+</p>
+<p><code>float-radix</code>  <i>float</i> &rArr;  <i>float-radix</i>
+</p>
+<p><code>float-sign</code>  <i>float-1 &amp;optional</i> float-2 &rArr;  <i>signed-float</i>
+</p>
+<p><code>float-digits</code>  <i>float</i> &rArr;  <i>digits1</i>
+</p>
+<p><code>float-precision</code>  <i>float</i> &rArr;  <i>digits2</i>
+</p>
+<p><code>integer-decode-float</code>  <i>float</i> &rArr;  <i>significand, exponent, integer-sign</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-254"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>digits1</i>&mdash;a non-negative <i>integer</i>.
+</p>
+<p><i>digits2</i>&mdash;a non-negative <i>integer</i>.
+</p>
+<p><i>exponent</i>&mdash;an <i>integer</i>.
+</p>
+<p><i>float</i>&mdash;a <i>float</i>.
+</p>
+<p><i>float-1</i>&mdash;a <i>float</i>.
+</p>
+<p><i>float-2</i>&mdash;a <i>float</i>.
+</p>
+<p><i>float-radix</i>&mdash;an <i>integer</i>.
+</p>
+<p><i>integer</i>&mdash;a non-negative <i>integer</i>.
+</p>
+<p><i>integer-sign</i>&mdash;the <i>integer</i> <tt>-1</tt>,
+		    or the <i>integer</i> <tt>1</tt>.
+</p>
+<p><i>scaled-float</i>&mdash;a <i>float</i>.
+</p>
+<p><i>sign</i>&mdash;A <i>float</i> of the same <i>type</i> as <i>float</i>
+	       but numerically equal to <tt>1.0</tt> or <tt>-1.0</tt>.
+</p>
+<p><i>signed-float</i>&mdash;a <i>float</i>.
+</p>
+<p><i>significand</i>&mdash;a <i>float</i>.
+</p>
+<a name="Description_003a_003a-338"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>decode-float</b> computes three values that characterize
+<i>float</i>.
+The first value is of the same <i>type</i>
+as <i>float</i> and 
+represents the significand.
+The second value represents the exponent
+to which the radix (notated in this description by <i>b</i>) must
+be raised to obtain the value that, when multiplied with the first
+result, produces the absolute value of <i>float</i>.
+If <i>float</i> is zero, any <i>integer</i> value may be returned, 
+provided that the identity shown for <b>scale-float</b> holds.
+The third value
+is of the same <i>type</i> as <i>float</i>
+and is 1.0 if <i>float</i> is greater
+than or equal to zero or -1.0 otherwise.
+</p>
+<p><b>decode-float</b> 
+divides <i>float</i> by an integral power of <i>b</i>
+so as to bring its value between 1/<i>b</i> (inclusive) and~1 (exclusive),
+and returns the quotient as the first value.
+If <i>float</i> is zero, however, the result
+equals the absolute value of <i>float</i> (that is, if there is a negative
+zero, its significand is considered to be a positive zero).
+</p>
+<p><b>scale-float</b> returns
+<tt>(* <i>float</i> (expt (float <i>b</i> <i>float</i>) 
+<i>integer</i>))\/</tt>, where <i>b</i> is the radix of the floating-point
+representation. <i>float</i> is not necessarily between 1/<i>b</i> and~1.
+</p>
+<p><b>float-radix</b> returns 
+the radix of <i>float</i>.
+</p>
+<p><b>float-sign</b> returns a number <tt>z</tt> such
+that <tt>z</tt> and <i>float-1</i> have the same sign and also such that
+<tt>z</tt> and <i>float-2</i> have the same absolute value.
+If <i>float-2</i> is not supplied, its value is <tt>(float 1 <i>float-1</i>)</tt>.
+If an implementation
+has distinct representations for negative zero and positive zero,
+then <tt>(float-sign -0.0)</tt> &rArr;  <tt>-1.0</tt>.
+</p>
+<p><b>float-digits</b> returns
+the number of radix <i>b</i> digits
+used in the representation of <i>float</i> (including any implicit
+digits, such as a &ldquo;hidden bit&rdquo;).
+</p>
+<p><b>float-precision</b>
+returns
+the number of significant radix <i>b</i> digits present in <i>float</i>;
+if <i>float</i> is a <i>float</i>
+zero, then the result is an <i>integer</i> zero.
+</p>
+<p>For <i>normalized</i> <i>floats</i>,
+the results of <b>float-digits</b> and <b>float-precision</b> are the same,
+but the precision is less than the number of representation digits 
+for a <i>denormalized</i> or zero number.
+</p>
+<p><b>integer-decode-float</b> computes three values that characterize
+<i>float</i> - 
+the significand scaled so as to be an <i>integer</i>,
+and the same last two
+values that are returned by <b>decode-float</b>.
+If <i>float</i> is zero, <b>integer-decode-float</b> returns 
+zero as the first value.
+The second value bears the same relationship to the first value
+as for <b>decode-float</b>:
+</p>
+<div class="example">
+<pre class="example"><code> (multiple-value-bind (signif expon sign)
+                      (integer-decode-float f)
+   (scale-float (float signif f) expon)) &equiv; (abs f)
+</code>
+</pre></div>
+
+<a name="Examples_003a_003a-239"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> ;; Note that since the purpose of this functionality is to expose
+ ;; details of the implementation, all of these examples are necessarily
+ ;; very implementation-dependent.  Results may vary widely.
+ ;; Values shown here are chosen consistently from one particular implementation.
+ (decode-float .5) &rArr;  0.5, 0, 1.0
+ (decode-float 1.0) &rArr;  0.5, 1, 1.0
+ (scale-float 1.0 1) &rArr;  2.0
+ (scale-float 10.01 -2) &rArr;  2.5025
+ (scale-float 23.0 0) &rArr;  23.0
+ (float-radix 1.0) &rArr;  2
+ (float-sign 5.0) &rArr;  1.0
+ (float-sign -5.0) &rArr;  -1.0
+ (float-sign 0.0) &rArr;  1.0
+ (float-sign 1.0 0.0) &rArr;  0.0
+ (float-sign 1.0 -10.0) &rArr;  10.0
+ (float-sign -1.0 10.0) &rArr;  -10.0
+ (float-digits 1.0) &rArr;  24
+ (float-precision 1.0) &rArr;  24
+ (float-precision least-positive-single-float) &rArr;  1
+ (integer-decode-float 1.0) &rArr;  8388608, -23, 1
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-58"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p>The implementation&rsquo;s representation for <i>floats</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-106"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>The functions <b>decode-float</b>, <b>float-radix</b>, <b>float-digits</b>,
+<b>float-precision</b>, and <b>integer-decode-float</b> should signal an error
+if their only argument is not a <i>float</i>.
+</p>
+<p>The <i>function</i> <b>scale-float</b> should signal an error if its first argument
+is not a <i>float</i> or if its second argument is not an <i>integer</i>.
+</p>
+<p>The <i>function</i> <b>float-sign</b> should signal an error if its first argument
+is not a <i>float</i> or if its second argument is supplied but is 
+not a <i>float</i>.
+</p>
+<a name="Notes_003a_003a-182"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The product of the first result of <b>decode-float</b> or <b>integer-decode-float</b>,
+of the radix raised to the power of the second result, and of the third result
+is exactly equal to the value of <i>float</i>.
+</p>
+<div class="example">
+<pre class="example"><code> (multiple-value-bind (signif expon sign)
+                      (decode-float f)
+   (scale-float signif expon))
+&equiv; (abs f)
+</code>
+</pre></div>
+
+<p>and
+</p>
+<div class="example">
+<pre class="example"><code> (multiple-value-bind (signif expon sign)
+                      (decode-float f)
+   (* (scale-float signif expon) sign))
+&equiv; f
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

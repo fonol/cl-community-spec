@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>inline (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="inline (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="inline (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="ftype.html#ftype" rel="next" title="ftype">
+<link href="type.html#type" rel="prev" title="type">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="inline"></a>
+<div class="header">
+<p>
+Next: <a href="ftype.html#ftype" accesskey="n" rel="next">ftype</a>, Previous: <a href="type.html#type" accesskey="p" rel="prev">type</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="inline_002c-notinline-_005bDeclaration_005d"></a>
+<h4 class="subsection">3.8.22 inline, notinline                                             [Declaration]</h4>
+
+<a name="Syntax_003a_003a-5"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><tt>(inline {<i>function-name</i>}*</tt>)
+</p>
+<p><tt>(notinline {<i>function-name</i>}*</tt>)
+</p>
+<a name="Arguments_003a_003a-5"></a>
+<h4 class="subsubheading">Arguments::</h4>
+
+<p><i>function-name</i>&mdash;a <i>function name</i>.
+</p>
+<a name="Valid-Context_003a_003a-3"></a>
+<h4 class="subsubheading">Valid Context::</h4>
+
+<p><i>declaration</i> or <i>proclamation</i>
+</p>
+<a name="Binding-Types-Affected_003a_003a-3"></a>
+<h4 class="subsubheading">Binding Types Affected::</h4>
+
+<p><i>function</i>
+</p>
+<a name="Description_003a_003a-21"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>inline</b> specifies that
+it is desirable for the compiler to produce inline calls
+to the <i>functions</i> named by <i>function-names</i>; 
+that is, the code for a specified <i>function-name</i>
+</p>
+<p>should be integrated into the calling routine, appearing &ldquo;in line&rdquo;
+in place of a procedure call.  
+A compiler is free to ignore this declaration.
+<b>inline</b> declarations never apply to variable <i>bindings</i>. 
+</p>
+<p>If one of the <i>functions</i> mentioned has a lexically apparent local definition
+(as made by <b>flet</b> or <b>labels</b>), then the declaration
+applies to that local definition and not to the global function definition.
+</p>
+<p>While no <i>conforming implementation</i> is required to perform inline expansion
+of user-defined functions, those <i>implementations</i> that do attempt
+to recognize the following paradigm:
+</p>
+<p>To define a <i>function</i> <tt>f</tt> that is not <b>inline</b> by default
+but for which <tt>(declare (inline f))</tt> will make <i>f</i> be locally inlined,
+the proper definition sequence is:
+</p>
+<div class="example">
+<pre class="example"> (declaim (inline f))
+ (defun f ...)
+ (declaim (notinline f))
+</pre></div>
+
+<p>The <b>inline</b> proclamation preceding the <b>defun</b> <i>form</i>
+ensures that the <i>compiler</i> has the opportunity save the information
+necessary for inline expansion, and the <b>notinline</b> proclamation 
+following the <b>defun</b> <i>form</i> prevents <tt>f</tt> from being expanded
+inline everywhere.  
+</p>
+<p><b>notinline</b> specifies that it is
+</p>
+<p>undesirable to compile the <i>functions</i>
+named by <i>function-names</i> in-line.
+A compiler is not free to ignore this declaration;
+calls to the specified functions must be implemented as out-of-line subroutine calls.
+</p>
+<p>If one of the <i>functions</i>
+mentioned has a lexically apparent local definition
+(as made by <b>flet</b> or <b>labels</b>), then the declaration
+applies to that local definition and not to the global function definition.
+</p>
+<p>In the presence of a <i>compiler macro</i> definition for 
+<i>function-name</i>, a <b>notinline</b> declaration prevents that
+</p>
+<p><i>compiler macro</i> from being used.
+</p>
+<p>An <b>inline</b> declaration may be used to encourage use of 
+<i>compiler macro</i> definitions.  <b>inline</b> and <b>notinline</b>
+declarations otherwise have no effect when the lexically visible definition
+of <i>function-name</i> is a <i>macro</i> definition.
+</p>
+<p><b>inline</b> and <b>notinline</b> declarations can be <i>free declarations</i> or
+<i>bound declarations</i>.                  
+<b>inline</b> and <b>notinline</b> declarations of functions that
+appear before the body of a 
+      <b>flet</b>
+ or  <b>labels</b>
+</p>
+<p><i>form</i> that defines that function are <i>bound declarations</i>.  
+Such declarations in other contexts are <i>free declarations</i>.
+</p>
+<a name="Examples_003a_003a-18"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> ;; The globally defined function DISPATCH should be open-coded,
+ ;; if the implementation supports inlining, unless a NOTINLINE 
+ ;; declaration overrides this effect.
+ (declaim (inline dispatch))
+ (defun dispatch (x) (funcall (get (car x) 'dispatch) x))
+ ;; Here is an example where inlining would be encouraged.
+ (defun top-level-1 () (dispatch (read-command)))
+ ;; Here is an example where inlining would be prohibited.
+ (defun top-level-2 ()
+   (declare (notinline dispatch))
+   (dispatch (read-command)))
+ ;; Here is an example where inlining would be prohibited.
+ (declaim (notinline dispatch))
+ (defun top-level-3 () (dispatch (read-command)))
+ ;; Here is an example where inlining would be encouraged.
+ (defun top-level-4 () 
+   (declare (inline dispatch))
+   (dispatch (read-command)))
+</pre></div>
+
+<a name="See-Also_003a_003a-21"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>declare</b>,
+<a href="declaim.html#declaim">declaim</a>
+,
+<a href="proclaim.html#proclaim">proclaim</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="ftype.html#ftype" accesskey="n" rel="next">ftype</a>, Previous: <a href="type.html#type" accesskey="p" rel="prev">type</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

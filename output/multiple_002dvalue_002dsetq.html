@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>multiple-value-setq (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="values.html#values" rel="next" title="values">
+<link href="multiple_002dvalue_002dprog1.html#multiple_002dvalue_002dprog1" rel="prev" title="multiple-value-prog1">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="multiple_002dvalue_002dprog1.html#multiple_002dvalue_002dprog1" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                multiple-value-prog1
+                            </a>
+                            <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Data and Control Flow Dictionary
+                            </a>
+                            <a href="values.html#values.html" class="nav-btn nav__next ">
+                                values
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="multiple_002dvalue_002dsetq"></a>
+<a name="multiple_002dvalue_002dsetq-_005bMacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Macro</div>
+<h4 class="subsection">multiple-value-setq                                                 </h4>
+
+<p><code>multiple-value-setq</code>  <i>vars form</i> &rArr;  <i>result</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-71"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>vars</i>&mdash;a <i>list</i> of <i>symbols</i>
+	       that are either <i>variable</i> <i>names</i>
+	       or <i>names</i> of <i>symbol macros</i>.
+</p>
+<p><i>form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>result</i>&mdash;The <i>primary value</i> returned by the <i>form</i>.
+</p>
+<a name="Description_003a_003a-105"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>multiple-value-setq</b> assigns values to <i>vars</i>.
+</p>
+<p>The <i>form</i> is evaluated,
+and each <i>var</i> is <i>assigned</i> 
+to the corresponding <i>value</i> returned by that <i>form</i>. 
+If there are more <i>vars</i> than <i>values</i> returned,
+<b>nil</b> is <i>assigned</i> to the extra <i>vars</i>.
+If there are more <i>values</i> than <i>vars</i>,
+the extra <i>values</i> are discarded.
+</p>
+<p>If any <i>var</i> is the <i>name</i> of a <i>symbol macro</i>,
+then it is <i>assigned</i> as if by <b>setf</b>.  Specifically,
+</p>
+<div class="example">
+<pre class="example"><code> (multiple-value-setq (<i>symbol</i>_1 ... <i>symbol</i>_n) <i>value-producing-form</i>)
+</code>
+</pre></div>
+
+<p>is defined to always behave in the same way as
+</p>
+<div class="example">
+<pre class="example"><code> (values (setf (values <i>symbol</i>_1 ... <i>symbol</i>_n) <i>value-producing-form</i>))
+</code>
+</pre></div>
+
+<p>in order that the rules for order of evaluation and side-effects be consistent
+with those used by <b>setf</b>.
+<a name="index-order-of-evaluation-4"></a>
+</p>
+<a name="index-evaluation-order-4"></a>
+
+<p>See <a href="VALUES-Forms-as-Places.html#VALUES-Forms-as-Places">VALUES Forms as Places</a>.
+</p>
+<a name="Examples_003a_003a-79"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (multiple-value-setq (quotient remainder) (truncate 3.2 2)) &rArr;  1
+ quotient &rArr;  1
+ remainder &rArr;  1.2
+ (multiple-value-setq (a b c) (values 1 2)) &rArr;  1
+ a &rArr;  1
+ b &rArr;  2
+ c &rArr;  NIL
+ (multiple-value-setq (a b) (values 4 5 6)) &rArr;  4
+ a &rArr;  4
+ b &rArr;  5
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-89"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="setq.html#setq">setq</a>
+,
+<a href="symbol_002dmacrolet.html#symbol_002dmacrolet">symbol-macrolet</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

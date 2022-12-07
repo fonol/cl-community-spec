@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>float (System Class) (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Numbers-Dictionary.html#Numbers-Dictionary" rel="up" title="Numbers Dictionary">
+<link href="short_002dfloat.html#short_002dfloat" rel="next" title="short-float">
+<link href="real.html#real" rel="prev" title="real">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="real.html#real" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                real
+                            </a>
+                            <a href="Numbers-Dictionary.html#Numbers-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Numbers Dictionary
+                            </a>
+                            <a href="short_002dfloat.html#short_002dfloat.html" class="nav-btn nav__next ">
+                                short-float
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="float-_0028System-Class_0029"></a>
+<a name="float-_005bSystem-Class_005d"></a>
+<div class="section top-most">
+<div class="node-type">System Class</div>
+<h4 class="subsection">float                                                        </h4>
+
+<a name="Class-Precedence-List_003a_003a-38"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Class Precedence List</h4>
+<p><b>float</b>,
+</p>
+<p><b>real</b>,
+</p>
+<p><b>number</b>,
+<b>t</b>
+</p>
+<a name="Description_003a_003a-270"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>A <i>float</i>
+is a mathematical rational (but <i>not</i> a <span class="roman">Common Lisp</span> <i>rational</i>)
+of the form
+s\cdot f\cdot b^e-p,
+where s is +1 or -1, the <i>sign</i>;
+b is an <i>integer</i> 
+greater than~1, the <i>base</i> or <i>radix</i> of the representation;
+p is a positive <i>integer</i>, 
+the <i>precision</i> (in base-b digits) of the <i>float</i>;
+f is a positive <i>integer</i> 
+between b^p-1 and
+b^p-1 (inclusive), the significand;
+and e is an <i>integer</i>, the exponent.
+The value of p and the range of~e
+depends on the implementation and on the type of <i>float</i> 
+within that implementation. In addition, there is a floating-point zero;
+depending on the implementation, there can also be a &ldquo;minus zero&rdquo;. If there
+is no minus zero, then 0.0 and~-0.0 are both interpreted as simply a
+floating-point zero.
+<tt>(= 0.0 -0.0)</tt> is always true.  
+If there is a minus zero, <tt>(eql -0.0 0.0)</tt> is <i>false</i>,
+otherwise it is <i>true</i>.
+</p>
+<p>[Reviewer Note by Barmar: What about IEEE NaNs and infinities?]
+</p>
+<p>[Reviewer Note by RWK: In the following, what is the &ldquo;ordering&rdquo;?  precision? range?
+	  Can there be additional subtypes of float or does &ldquo;others&rdquo; in the
+	  list of four?]
+</p>
+<p>The <i>types</i> <b>short-float</b>, <b>single-float</b>, <b>double-float</b>, 
+and <b>long-float</b> are <i>subtypes</i> of <i>type</i> <b>float</b>.  Any two of them must be
+either <i>disjoint</i> <i>types</i> or the <i>same</i> <i>type</i>;
+if the <i>same</i> <i>type</i>, then any other <i>types</i> between them in the
+above ordering must also be the <i>same</i> <i>type</i>.  For example, 
+if the <i>type</i> <b>single-float</b> and the <i>type</i> <b>long-float</b> are the <i>same</i> <i>type</i>,
+then the <i>type</i> <b>double-float</b> must be the <i>same</i> <i>type</i> also.
+</p>
+<a name="Compound-Type-Specifier-Kind_003a_003a-10"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Compound Type Specifier Kind</h4>
+
+<p>Abbreviating.
+</p>
+<a name="Compound-Type-Specifier-Syntax_003a_003a-10"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Compound Type Specifier Syntax</h4>
+
+<p>(<code>float</code>{<i><tt>[</tt>lower-limit <span class="roman">[</span>upper-limit<span class="roman">]</span><tt>]</tt></i>})
+</p>
+<a name="Compound-Type-Specifier-Arguments_003a_003a-10"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Compound Type Specifier Arguments</h4>
+
+<p><i>lower-limit</i>, <i>upper-limit</i>&mdash;<i>interval designators</i> 
+					   for <i>type</i> <b>float</b>.
+ The defaults for each of <i>lower-limit</i> and <i>upper-limit</i> is the <i>symbol</i> <b>*</b>.
+</p>
+<a name="Compound-Type-Specifier-Description_003a_003a-10"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Compound Type Specifier Description</h4>
+
+<p>This denotes the <i>floats</i> on the interval described by
+<i>lower-limit</i> and <i>upper-limit</i>.
+</p>
+<a name="See-Also_003a_003a-237"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+<p><i>Figure~2&ndash;9</i>,
+<a href="Constructing-Numbers-from-Tokens.html#Constructing-Numbers-from-Tokens">Constructing Numbers from Tokens</a>,
+<a href="Printing-Floats.html#Printing-Floats">Printing Floats</a>
+</p>
+<a name="Notes_003a_003a-138"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>Note that all mathematical integers are representable not only as
+<span class="roman">Common Lisp</span> <i>reals</i>, but also as <i>complex floats</i>.  For example,
+possible representations of the mathematical number 1 
+include the <i>integer</i> <tt>1</tt>,
+        the <i>float</i> <tt>1.0</tt>,
+     or the <i>complex</i> <tt>#C(1.0 0.0)</tt>.  
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

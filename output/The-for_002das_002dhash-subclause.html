@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>The for-as-hash subclause (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" rel="up" title="Variable Initialization and Stepping Clauses">
+<link href="The-for_002das_002dpackage-subclause.html#The-for_002das_002dpackage-subclause" rel="next" title="The for-as-package subclause">
+<link href="Examples-of-for_002das_002dacross-subclause.html#Examples-of-for_002das_002dacross-subclause" rel="prev" title="Examples of for-as-across subclause">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Examples-of-for_002das_002dacross-subclause.html#Examples-of-for_002das_002dacross-subclause" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Examples of for-as-across subclause
+                            </a>
+                            <a href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Variable Initialization and Stepping Clauses
+                            </a>
+                            <a href="The-for_002das_002dpackage-subclause.html#The-for_002das_002dpackage-subclause.html" class="nav-btn nav__next ">
+                                The for-as-package subclause
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="The-for_002das_002dhash-subclause"></a>
+<a name="The-for_002das_002dhash-subclause-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">The for-as-hash subclause</h4>
+
+<p>In the <i>for-as-hash</i> subclause
+  the <tt>for</tt> 
+  or <tt>as</tt> construct 
+  iterates over the elements, keys, and values of a <i>hash-table</i>.
+  In this syntax, a compound preposition is used to designate access to a
+  <i>hash table</i>.
+  The variable <i>var</i> takes on the value of each hash key
+  or hash value in the supplied <i>hash-table</i>. 
+  The following <i>loop keywords</i> serve as valid prepositions within this syntax:
+</p>
+<dl compact="compact">
+<dt><tt>being</tt></dt>
+<dd><p>The keyword <tt>being</tt> introduces either the Loop schema 
+<tt>hash-key</tt> or <tt>hash-value</tt>.
+</p>
+</dd>
+<dt><tt>each</tt>, <tt>the</tt></dt>
+<dd><p>The <i>loop keyword</i> <tt>each</tt>
+follows the <i>loop keyword</i> <tt>being</tt> when <tt>hash-key</tt> or
+<tt>hash-value</tt> is used.  The <i>loop keyword</i> <tt>the</tt> is used with
+<tt>hash-keys</tt> and <tt>hash-values</tt> only for ease of reading.
+This agreement isn&rsquo;t required.
+</p>
+</dd>
+<dt><tt>hash-key</tt>, <tt>hash-keys</tt></dt>
+<dd><p>These <i>loop keywords</i> access each key entry of the <i>hash table</i>.  If 
+the name <tt>hash-value</tt> is supplied in a <tt>using</tt> construct with one
+of these Loop schemas, the iteration can optionally access the keyed
+value. The order in which the keys are accessed is undefined; empty
+slots in the <i>hash table</i> are ignored.  
+</p>
+</dd>
+<dt><tt>hash-value</tt>, <tt>hash-values</tt></dt>
+<dd><p>These <i>loop keywords</i> access each value entry of a 
+<i>hash table</i>.  If 
+the name <tt>hash-key</tt> is supplied in a <tt>using</tt> construct with one of
+these Loop schemas, the iteration can optionally access the key that
+corresponds to the value.  The order in which the keys are accessed is
+undefined; empty slots in the <i>hash table</i> are ignored. 
+</p>
+</dd>
+<dt><tt>using</tt></dt>
+<dd><p>The <i>loop keyword</i> <tt>using</tt> introduces 
+the optional key or the keyed value to
+be accessed.  It allows access to the hash key if iteration is over
+the hash values, and the hash value if 
+iteration is over the hash keys.
+</p>
+</dd>
+<dt><tt>in</tt>, <tt>of</tt></dt>
+<dd><p>These loop prepositions introduce <i>hash-table</i>.
+</p>
+</dd>
+</dl>
+
+<p>In effect 
+</p>
+<p><tt>being</tt>
+{each | <tt>the</tt>}
+{hash-value  |
+       <tt>hash-values</tt> |
+       <tt>hash-key</tt>    |
+       <tt>hash-keys</tt>}
+{in | <tt>of</tt>}
+</p>
+<p>is a compound preposition.
+</p>
+<p>Iteration stops when there are no more hash keys or hash values to be
+referenced in the supplied <i>hash-table</i>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

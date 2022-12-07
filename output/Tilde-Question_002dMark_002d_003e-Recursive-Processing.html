@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Tilde Question-Mark-&gt; Recursive Processing (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Control_002dFlow-Operations.html#FORMAT-Control_002dFlow-Operations" rel="up" title="FORMAT Control-Flow Operations">
+<link href="FORMAT-Miscellaneous-Operations.html#FORMAT-Miscellaneous-Operations" rel="next" title="FORMAT Miscellaneous Operations">
+<link href="Tilde-Right_002dBrace_002d_003e-End-of-Iteration.html#Tilde-Right_002dBrace_002d_003e-End-of-Iteration" rel="prev" title="Tilde Right-Brace-&gt; End of Iteration">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Tilde-Right_002dBrace_002d_003e-End-of-Iteration.html#Tilde-Right_002dBrace_002d_003e-End-of-Iteration" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Tilde Right-Brace-&gt; End of Iteration
+                            </a>
+                            <a href="FORMAT-Control_002dFlow-Operations.html#FORMAT-Control_002dFlow-Operations.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                FORMAT Control-Flow Operations
+                            </a>
+                            <a href="FORMAT-Miscellaneous-Operations.html#FORMAT-Miscellaneous-Operations.html" class="nav-btn nav__next ">
+                                FORMAT Miscellaneous Operations
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Tilde-Question_002dMark_002d_003e-Recursive-Processing"></a>
+<a name="Tilde-Question_002dMark_003a-Recursive-Processing"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Tilde Question-Mark: Recursive Processing</h4>
+
+<p>The next <i>arg</i> must be a <i>format control</i>, and the one after it a <i>list</i>;
+both are consumed by the <tt>~?</tt> directive.
+The two are processed as a <i>control-string</i>, with the elements of the <i>list</i> 
+as the arguments.  Once the recursive processing
+has been finished, the processing of the control
+string containing the <tt>~?</tt> directive is resumed.
+Example:
+</p>
+<div class="example">
+<pre class="example"><code> (format nil &quot;~? ~D&quot; &quot;&lt;~A ~D&gt;&quot; '(&quot;Foo&quot; 5) 7) &rArr;  &quot;&lt;Foo 5&gt; 7&quot;
+ (format nil &quot;~? ~D&quot; &quot;&lt;~A ~D&gt;&quot; '(&quot;Foo&quot; 5 14) 7) &rArr;  &quot;&lt;Foo 5&gt; 7&quot;
+</code>
+</pre></div>
+
+<p>Note that in the second example three arguments are supplied
+to the <i>format string</i> <tt>&quot;&lt;~A ~D&gt;&quot;</tt>, but only two are processed
+and the third is therefore ignored.
+</p>
+<p>With the <tt>@</tt>
+modifier, only one <i>arg</i> is directly consumed.
+The <i>arg</i> must be a <i>string</i>; 
+it is processed as part of the control
+string as if it had appeared in place of the <tt>~@?</tt> construct,
+and any directives in the recursively processed control string may      
+consume arguments of the control string containing the <tt>~@?</tt>
+directive.
+Example:
+</p>
+<div class="example">
+<pre class="example"><code> (format nil &quot;~@? ~D&quot; &quot;&lt;~A ~D&gt;&quot; &quot;Foo&quot; 5 7) &rArr;  &quot;&lt;Foo 5&gt; 7&quot;
+ (format nil &quot;~@? ~D&quot; &quot;&lt;~A ~D&gt;&quot; &quot;Foo&quot; 5 14 7) &rArr;  &quot;&lt;Foo 5&gt; 14&quot;
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

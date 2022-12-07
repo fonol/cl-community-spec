@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Examples of FORMAT (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Examples of FORMAT (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Examples of FORMAT (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Formatted-Output.html#Formatted-Output" rel="up" title="Formatted Output">
+<link href="Notes-about-FORMAT.html#Notes-about-FORMAT" rel="next" title="Notes about FORMAT">
+<link href="Undefined-FORMAT-Modifier-Combinations.html#Undefined-FORMAT-Modifier-Combinations" rel="prev" title="Undefined FORMAT Modifier Combinations">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Examples-of-FORMAT"></a>
+<div class="header">
+<p>
+Next: <a href="Notes-about-FORMAT.html#Notes-about-FORMAT" accesskey="n" rel="next">Notes about FORMAT</a>, Previous: <a href="Additional-Information-about-FORMAT-Operations.html#Additional-Information-about-FORMAT-Operations" accesskey="p" rel="prev">Additional Information about FORMAT Operations</a>, Up: <a href="Formatted-Output.html#Formatted-Output" accesskey="u" rel="up">Formatted Output</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Examples-of-FORMAT-1"></a>
+<h4 class="subsection">22.3.11 Examples of FORMAT</h4>
+
+<div class="example">
+<pre class="example"> (format nil &quot;foo&quot;) &rArr;  &quot;foo&quot;
+ (setq x 5) &rArr;  5
+ (format nil &quot;The answer is ~D.&quot; x) &rArr;  &quot;The answer is 5.&quot;
+ (format nil &quot;The answer is ~3D.&quot; x) &rArr;  &quot;The answer is   5.&quot;
+ (format nil &quot;The answer is ~3,'0D.&quot; x) &rArr;  &quot;The answer is 005.&quot;
+ (format nil &quot;The answer is ~:D.&quot; (expt 47 x))
+&rArr;  &quot;The answer is 229,345,007.&quot;
+ (setq y &quot;elephant&quot;) &rArr;  &quot;elephant&quot;
+ (format nil &quot;Look at the ~A!&quot; y) &rArr;  &quot;Look at the elephant!&quot;
+ (setq n 3) &rArr;  3
+ (format nil &quot;~D item~:P found.&quot; n) &rArr;  &quot;3 items found.&quot;
+ (format nil &quot;~R dog~:[s are~; is~] here.&quot; n (= n 1))
+&rArr;  &quot;three dogs are here.&quot;
+ (format nil &quot;~R dog~:*~[s are~; is~:;s are~] here.&quot; n)
+&rArr;  &quot;three dogs are here.&quot;
+ (format nil &quot;Here ~[are~;is~:;are~] ~:*~R pupp~:@P.&quot; n)
+&rArr;  &quot;Here are three puppies.&quot;
+</pre></div>
+
+<div class="example">
+<pre class="example"> (defun foo (x)
+   (format nil &quot;~6,2F|~6,2,1,'*F|~6,2,,'?F|~6F|~,2F|~F&quot;
+           x x x x x x)) &rArr;  FOO
+ (foo 3.14159)  &rArr;  &quot;  3.14| 31.42|  3.14|3.1416|3.14|3.14159&quot;
+ (foo -3.14159) &rArr;  &quot; -3.14|-31.42| -3.14|-3.142|-3.14|-3.14159&quot;
+ (foo 100.0)    &rArr;  &quot;100.00|******|100.00| 100.0|100.00|100.0&quot;
+ (foo 1234.0)   &rArr;  &quot;1234.00|******|??????|1234.0|1234.00|1234.0&quot;
+ (foo 0.006)    &rArr;  &quot;  0.01|  0.06|  0.01| 0.006|0.01|0.006&quot;
+</pre></div>
+
+<div class="example">
+<pre class="example"> (defun foo (x)  
+    (format nil
+           &quot;~9,2,1,,'*E|~10,3,2,2,'?,,'$E|~
+            ~9,3,2,-2,'
+           x x x x))
+ (foo 3.14159)  &rArr;  &quot;  3.14E+0| 31.42$-01|+.003E+03|  3.14E+0&quot;
+ (foo -3.14159) &rArr;  &quot; -3.14E+0|-31.42$-01|-.003E+03| -3.14E+0&quot;
+ (foo 1100.0)   &rArr;  &quot;  1.10E+3| 11.00$+02|+.001E+06|  1.10E+3&quot;
+ (foo 1100.0L0) &rArr;  &quot;  1.10L+3| 11.00$+02|+.001L+06|  1.10L+3&quot;
+ (foo 1.1E13)   &rArr;  &quot;*********| 11.00$+12|+.001E+16| 1.10E+13&quot;
+ (foo 1.1L120)  &rArr;  &quot;*********|??????????|
+ (foo 1.1L1200) &rArr;  &quot;*********|??????????|
+</pre></div>
+
+<p>As an example of the effects of varying the scale factor, the code
+</p>
+<div class="example">
+<pre class="example"> (dotimes (k 13)
+   (format t &quot;~
+           (- k 5) (- k 5) 3.14159))
+</pre></div>
+
+<p>produces the following output:
+</p>
+<div class="example">
+<pre class="example">Scale factor -5: | 0.000003E+06|
+Scale factor -4: | 0.000031E+05|
+Scale factor -3: | 0.000314E+04|
+Scale factor -2: | 0.003142E+03|
+Scale factor -1: | 0.031416E+02|
+Scale factor  0: | 0.314159E+01|
+Scale factor  1: | 3.141590E+00|
+Scale factor  2: | 31.41590E-01|
+Scale factor  3: | 314.1590E-02|
+Scale factor  4: | 3141.590E-03|
+Scale factor  5: | 31415.90E-04|
+Scale factor  6: | 314159.0E-05|
+Scale factor  7: | 3141590.E-06|
+</pre></div>
+
+<div class="example">
+<pre class="example"> (defun foo (x)
+   (format nil &quot;~9,2,1,,'*G|~9,3,2,3,'?,,'$G|~9,3,2,0,'
+          x x x x))                                     
+ (foo 0.0314159) &rArr;  &quot;  3.14E-2|314.2$-04|0.314E-01|  3.14E-2&quot;
+ (foo 0.314159)  &rArr;  &quot;  0.31   |0.314    |0.314    | 0.31    &quot;
+ (foo 3.14159)   &rArr;  &quot;   3.1   | 3.14    | 3.14    |  3.1    &quot;
+ (foo 31.4159)   &rArr;  &quot;   31.   | 31.4    | 31.4    |  31.    &quot;
+ (foo 314.159)   &rArr;  &quot;  3.14E+2| 314.    | 314.    |  3.14E+2&quot;
+ (foo 3141.59)   &rArr;  &quot;  3.14E+3|314.2$+01|0.314E+04|  3.14E+3&quot;
+ (foo 3141.59L0) &rArr;  &quot;  3.14L+3|314.2$+01|0.314L+04|  3.14L+3&quot;
+ (foo 3.14E12)   &rArr;  &quot;*********|314.0$+10|0.314E+13| 3.14E+12&quot;
+ (foo 3.14L120)  &rArr;  &quot;*********|?????????|
+ (foo 3.14L1200) &rArr;  &quot;*********|?????????|
+</pre></div>
+
+<div class="example">
+<pre class="example"> (format nil &quot;~10&lt;foo~;bar~&gt;&quot;)   &rArr;  &quot;foo    bar&quot;
+ (format nil &quot;~10:&lt;foo~;bar~&gt;&quot;)  &rArr;  &quot;  foo  bar&quot;
+ (format nil &quot;~10&lt;foobar~&gt;&quot;)     &rArr;  &quot;    foobar&quot;
+ (format nil &quot;~10:&lt;foobar~&gt;&quot;)    &rArr;  &quot;    foobar&quot;
+ (format nil &quot;~10:@&lt;foo~;bar~&gt;&quot;) &rArr;  &quot;  foo bar &quot;
+ (format nil &quot;~10@&lt;foobar~&gt;&quot;)    &rArr;  &quot;foobar    &quot;
+ (format nil &quot;~10:@&lt;foobar~&gt;&quot;)   &rArr;  &quot;  foobar  &quot;
+</pre></div>
+
+<div class="example">
+<pre class="example">  (FORMAT NIL &quot;Written to ~A.&quot; #P&quot;foo.bin&quot;)
+  &rArr;  &quot;Written to foo.bin.&quot;
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Notes-about-FORMAT.html#Notes-about-FORMAT" accesskey="n" rel="next">Notes about FORMAT</a>, Previous: <a href="Additional-Information-about-FORMAT-Operations.html#Additional-Information-about-FORMAT-Operations" accesskey="p" rel="prev">Additional Information about FORMAT Operations</a>, Up: <a href="Formatted-Output.html#Formatted-Output" accesskey="u" rel="up">Formatted Output</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

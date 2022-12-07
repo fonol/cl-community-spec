@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>pairlis (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="pairlis (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="pairlis (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conses-Dictionary.html#Conses-Dictionary" rel="up" title="Conses Dictionary">
+<link href="rassoc.html#rassoc" rel="next" title="rassoc">
+<link href="copy_002dalist.html#copy_002dalist" rel="prev" title="copy-alist">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="pairlis"></a>
+<div class="header">
+<p>
+Next: <a href="rassoc.html#rassoc" accesskey="n" rel="next">rassoc</a>, Previous: <a href="copy_002dalist.html#copy_002dalist" accesskey="p" rel="prev">copy-alist</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="pairlis-_005bFunction_005d"></a>
+<h4 class="subsection">14.2.38 pairlis                                                          [Function]</h4>
+
+<p><code>pairlis</code>  <i>keys data &amp;optional</i> alist &rArr;  <i>new-alist</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-307"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>keys</i>&mdash;a <i>proper list</i>.
+</p>
+<p><i>data</i>&mdash;a <i>proper list</i>.
+</p>
+<p><i>alist</i>&mdash;an <i>association list</i>.
+  The default is the <i>empty list</i>.
+</p>
+<p><i>new-alist</i>&mdash;an <i>association list</i>.
+</p>
+<a name="Description_003a_003a-408"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns an <i>association list</i> that associates
+elements of <i>keys</i> to corresponding elements of <i>data</i>.
+The consequences are undefined if <i>keys</i> and <i>data</i> are 
+not of the same <i>length</i>.  
+</p>
+<p>If <i>alist</i> is supplied, <b>pairlis</b> returns
+a modified <i>alist</i> with the
+new pairs prepended to it.
+The new pairs may appear in the resulting <i>association list</i> in 
+either forward or backward order.
+The result of 
+</p>
+<div class="example">
+<pre class="example"> (pairlis '(one two) '(1 2) '((three . 3) (four . 19)))
+</pre></div>
+
+<p>might be
+</p>
+<div class="example">
+<pre class="example"> ((one . 1) (two . 2) (three . 3) (four . 19))
+</pre></div>
+
+<p>or
+</p>
+<div class="example">
+<pre class="example"> ((two . 2) (one . 1) (three . 3) (four . 19))
+</pre></div>
+
+<a name="Examples_003a_003a-291"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (setq keys '(1 2 3)
+        data '(&quot;one&quot; &quot;two&quot; &quot;three&quot;)
+        alist '((4 . &quot;four&quot;))) &rArr;  ((4 . &quot;four&quot;))
+ (pairlis keys data) &rArr;  ((3 . &quot;three&quot;) (2 . &quot;two&quot;) (1 . &quot;one&quot;))
+ (pairlis keys data alist)
+&rArr;  ((3 . &quot;three&quot;) (2 . &quot;two&quot;) (1 . &quot;one&quot;) (4 . &quot;four&quot;))
+ alist &rArr;  ((4 . &quot;four&quot;))
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-131"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>keys</i> and <i>data</i> are not <i>proper lists</i>.
+</p>
+<a name="See-Also_003a_003a-332"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="acons.html#acons">acons</a>
+</p>
+
+
+
+</body>
+</html>

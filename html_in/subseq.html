@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>subseq (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="subseq (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="subseq (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Sequences-Dictionary.html#Sequences-Dictionary" rel="up" title="Sequences Dictionary">
+<link href="map.html#map" rel="next" title="map">
+<link href="make_002dsequence.html#make_002dsequence" rel="prev" title="make-sequence">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="subseq"></a>
+<div class="header">
+<p>
+Next: <a href="map.html#map" accesskey="n" rel="next">map</a>, Previous: <a href="make_002dsequence.html#make_002dsequence" accesskey="p" rel="prev">make-sequence</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="subseq-_005bAccessor_005d"></a>
+<h4 class="subsection">17.3.6 subseq                                                           [Accessor]</h4>
+
+<p><code>subseq</code>  <i>sequence start &amp;optional</i> end &rArr;  <i>subsequence</i>
+</p>
+<p>(setf (<code>         subseq</code> <i>sequence start &amp;optional</i> end) new-subsequence)<br>
+</p>
+<a name="Arguments-and-Values_003a_003a-358"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>sequence</i>&mdash;a <i>proper sequence</i>.
+</p>
+<p><i>start</i>, <i>end</i>&mdash;<i>bounding index designators</i> of <i>sequence</i>.
+ The default for <i>end</i> is <b>nil</b>.
+</p>
+<p><i>subsequence</i>&mdash;a <i>proper sequence</i>.
+</p>
+<p><i>new-subsequence</i>&mdash;a <i>proper sequence</i>.
+</p>
+<a name="Description_003a_003a-473"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>subseq</b> creates a <i>sequence</i> 
+that is a copy of the subsequence of <i>sequence</i>
+<i>bounded</i> by <i>start</i> and <i>end</i>.
+</p>
+<p><i>Start</i> specifies an offset into the original <i>sequence</i> and
+marks the beginning position of the subsequence.
+<i>end</i> marks the position following the last element of the subsequence.
+</p>
+<p><b>subseq</b> always allocates a new <i>sequence</i> for a result;
+it never shares storage with an old <i>sequence</i>. 
+The result subsequence is always of the same <i>type</i> as <i>sequence</i>.
+</p>
+<p>If <i>sequence</i> is a <i>vector</i>,
+the result is a <i>fresh</i> <i>simple array</i>
+of <i>rank</i> one
+that has the same <i>actual array element type</i> as <i>sequence</i>.
+If <i>sequence</i> is a <i>list</i>, 
+the result is a <i>fresh</i> <i>list</i>. 
+</p>
+<p><b>setf</b> may be used with <b>subseq</b> to destructively replace
+<i>elements</i> of a subsequence with <i>elements</i> 
+taken from a <i>sequence</i> of new values.
+If the subsequence and the new sequence are not of equal length,
+the shorter length determines the number of elements that are
+replaced.  The remaining <i>elements</i> at the end of the longer sequence 
+are not modified in the operation.
+</p>
+<a name="Examples_003a_003a-340"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq str &quot;012345&quot;) &rArr;  &quot;012345&quot;
+ (subseq str 2) &rArr;  &quot;2345&quot;
+ (subseq str 3 5) &rArr;  &quot;34&quot;
+ (setf (subseq str 4) &quot;abc&quot;) &rArr;  &quot;abc&quot;
+ str &rArr;  &quot;0123ab&quot;
+ (setf (subseq str 0 2) &quot;A&quot;) &rArr;  &quot;A&quot;
+ str &rArr;  &quot;A123ab&quot;
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-154"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>sequence</i> is not a <i>proper sequence</i>.
+Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>new-subsequence</i> is not a <i>proper sequence</i>.
+</p>
+<a name="See-Also_003a_003a-385"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="replace.html#replace">replace</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="map.html#map" accesskey="n" rel="next">map</a>, Previous: <a href="make_002dsequence.html#make_002dsequence" accesskey="p" rel="prev">make-sequence</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

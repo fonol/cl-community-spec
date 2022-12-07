@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Examples of WHEN clause (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditional-Execution-Clauses.html#Conditional-Execution-Clauses" rel="up" title="Conditional Execution Clauses">
+<link href="Miscellaneous-Clauses.html#Miscellaneous-Clauses" rel="next" title="Miscellaneous Clauses">
+<link href="Conditional-Execution-Clauses.html#Conditional-Execution-Clauses" rel="prev" title="Conditional Execution Clauses">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Conditional-Execution-Clauses.html#Conditional-Execution-Clauses" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Conditional Execution Clauses
+                            </a>
+                            <a href="Conditional-Execution-Clauses.html#Conditional-Execution-Clauses.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Conditional Execution Clauses
+                            </a>
+                            <a href="Miscellaneous-Clauses.html#Miscellaneous-Clauses.html" class="nav-btn nav__next ">
+                                Miscellaneous Clauses
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Examples-of-WHEN-clause"></a>
+<a name="Examples-of-WHEN-clause-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Examples of WHEN clause</h4>
+
+<div class="example">
+<pre class="example"><code>;; Signal an exceptional condition.
+ (loop for item in '(1 2 3 a 4 5)
+       when (not (numberp item))
+        return (cerror &quot;enter new value&quot; &quot;non-numeric value: ~s&quot; item))
+Error: non-numeric value: A
+
+;; The previous example is equivalent to the following one.
+ (loop for item in '(1 2 3 a 4 5)
+       when (not (numberp item))
+        do (return 
+            (cerror &quot;Enter new value&quot; &quot;non-numeric value: ~s&quot; item)))
+Error: non-numeric value: A
+</code>
+</pre></div>
+
+<div class="example">
+<pre class="example"><code>;; This example parses a simple printed string representation from 
+;; BUFFER (which is itself a string) and returns the index of the
+;; closing double-quote character.
+ (let ((buffer &quot;\&quot;a\&quot; \&quot;b\&quot;&quot;))
+   (loop initially (unless (char= (char buffer 0) #\&quot;)
+                     (loop-finish))
+         for i of-type fixnum from 1 below (length (the string buffer))
+         when (char= (char buffer i) #\&quot;)
+          return i))
+&rArr;  2
+
+;; The collected value is returned.
+ (loop for i from 1 to 10
+       when (&gt; i 5)
+         collect i
+       finally (prin1 'got-here))
+<tt> |&gt; </tt> GOT-HERE
+&rArr;  (6 7 8 9 10) 
+
+;; Return both the count of collected numbers and the numbers.
+ (loop for i from 1 to 10
+       when (&gt; i 5)
+         collect i into number-list
+         and count i into number-count
+       finally (return (values number-count number-list)))
+&rArr;  5, (6 7 8 9 10)
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

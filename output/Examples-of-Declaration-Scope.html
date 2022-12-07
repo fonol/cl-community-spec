@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Examples of Declaration Scope (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Declaration-Scope.html#Declaration-Scope" rel="up" title="Declaration Scope">
+<link href="Lambda-Lists.html#Lambda-Lists" rel="next" title="Lambda Lists">
+<link href="Declaration-Scope.html#Declaration-Scope" rel="prev" title="Declaration Scope">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Declaration-Scope.html#Declaration-Scope" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Declaration Scope
+                            </a>
+                            <a href="Declaration-Scope.html#Declaration-Scope.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Declaration Scope
+                            </a>
+                            <a href="Lambda-Lists.html#Lambda-Lists.html" class="nav-btn nav__next ">
+                                Lambda Lists
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Examples-of-Declaration-Scope"></a>
+<a name="Examples-of-Declaration-Scope-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Examples of Declaration Scope</h4>
+
+<p>Here is an example illustrating the <i>scope</i> of <i>bound declarations</i>.
+</p>
+<div class="example">
+<pre class="example"><code> (let ((x 1))                ;[1] 1st occurrence of x
+   (declare (special x))     ;[2] 2nd occurrence of x
+   (let ((x 2))              ;[3] 3rd occurrence of x
+     (let ((old-x x)         ;[4] 4th occurrence of x
+           (x 3))            ;[5] 5th occurrence of x
+       (declare (special x)) ;[6] 6th occurrence of x
+       (list old-x x))))     ;[7] 7th occurrence of x
+&rArr;  (2 3)
+</code>
+</pre></div>
+
+<p>The first occurrence of <tt>x</tt> <i>establishes</i> a <i>dynamic binding</i>
+of <tt>x</tt> because of the <b>special</b> <i>declaration</i> for <tt>x</tt>
+in the second line.  The third occurrence of <tt>x</tt> <i>establishes</i> a
+<i>lexical binding</i> of <tt>x</tt> (because there is no <b>special</b>
+<i>declaration</i> in the corresponding <b>let</b> <i>form</i>).
+The fourth occurrence of <tt>x</tt> <i>x</i> is a reference to the
+<i>lexical binding</i> of <tt>x</tt> established in the third line.
+The fifth occurrence of <tt>x</tt> <i>establishes</i> a <i>dynamic binding</i>
+of <i>x</i> for the body of the <b>let</b> <i>form</i> that begins on
+that line because of the <b>special</b> <i>declaration</i> for <tt>x</tt>
+in the sixth line. The reference to <tt>x</tt> in the fourth line is not
+affected by the <b>special</b> <i>declaration</i> in the sixth line 
+because that reference is not within the &ldquo;would-be <i>lexical scope</i>&rdquo;
+of the <i>variable</i> <tt>x</tt> in the fifth line.  The reference to <tt>x</tt>
+in the seventh line is a reference to the <i>dynamic binding</i> of <i>x</i>
+<i>established</i> in the fifth line.
+</p>
+<p>Here is another example, to illustrate the <i>scope</i> of a
+<i>free declaration</i>.  In the following:
+</p>
+<div class="example">
+<pre class="example"><code> (lambda (&amp;optional (x (foo 1))) ;[1]
+   (declare (notinline foo))     ;[2]
+   (foo x))                      ;[3]
+</code>
+</pre></div>
+
+<p>the <i>call</i> to <tt>foo</tt> in the first line might be 
+compiled inline even though the <i>call</i> to <tt>foo</tt> in
+the third line must not be.  This is because
+the <b>notinline</b> <i>declaration</i>
+for <tt>foo</tt> in the second line applies only to the body on the
+third line.  In order to suppress inlining for both <i>calls</i>, 
+one might write:
+</p>
+<div class="example">
+<pre class="example"><code> (locally (declare (notinline foo)) ;[1]
+   (lambda (&amp;optional (x (foo 1)))  ;[2]
+     (foo x)))                      ;[3]
+</code>
+</pre></div>
+
+<p>or, alternatively:
+</p>
+<div class="example">
+<pre class="example"><code> (lambda (&amp;optional                               ;[1]
+            (x (locally (declare (notinline foo)) ;[2]
+                 (foo 1))))                       ;[3]
+   (declare (notinline foo))                      ;[4]
+   (foo x))                                       ;[5]
+</code>
+</pre></div>
+
+<p>Finally, here is an example that shows the <i>scope</i> of
+<i>declarations</i> in an <i>iteration form</i>.
+</p>
+<div class="example">
+<pre class="example"><code> (let ((x  1))                     ;[1]
+   (declare (special x))           ;[2]
+     (let ((x 2))                  ;[3]
+       (dotimes (i x x)            ;[4]
+         (declare (special x)))))  ;[5]
+&rArr;  1
+</code>
+</pre></div>
+
+<p>In this example, the first reference to <tt>x</tt> on the fourth line is to
+the <i>lexical binding</i> of <tt>x</tt> established on the third line.
+However, the second occurrence of <tt>x</tt> on the fourth line lies within
+the <i>scope</i> of the <i>free declaration</i> on the fifth line
+(because this is the <i>result-form</i> of the <b>dotimes</b>)
+and therefore refers to the <i>dynamic binding</i> of <tt>x</tt>.
+</p>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

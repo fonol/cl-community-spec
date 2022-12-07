@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Determining the Class Precedence List (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Classes.html#Classes" rel="up" title="Classes">
+<link href="Topological-Sorting.html#Topological-Sorting" rel="next" title="Topological Sorting">
+<link href="Inheritance-of-Class-Options.html#Inheritance-of-Class-Options" rel="prev" title="Inheritance of Class Options">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Inheritance-of-Class-Options.html#Inheritance-of-Class-Options" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Inheritance of Class Options
+                            </a>
+                            <a href="Classes.html#Classes.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Classes
+                            </a>
+                            <a href="Topological-Sorting.html#Topological-Sorting.html" class="nav-btn nav__next ">
+                                Topological Sorting
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Determining-the-Class-Precedence-List"></a>
+<a name="Determining-the-Class-Precedence-List-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Determining the Class Precedence List</h4>
+
+<p>The <b>defclass</b> form for a <i>class</i> provides a total ordering
+on that <i>class</i> and its direct <i>superclasses</i>.  This ordering is
+called the <i>local precedence order</i>
+<a name="index-local-precedence-order-1"></a>
+.  It is an ordered list of the
+<i>class</i> and its direct <i>superclasses</i>. The
+<i>class precedence list</i>
+<a name="index-class-precedence-list-1"></a>
+ for a class C is a total ordering on
+C and its <i>superclasses</i> that is consistent with the
+<i>local precedence orders</i> for each of C and its <i>superclasses</i>.
+</p>
+<p>A <i>class</i> precedes its direct <i>superclasses</i>, 
+and a direct <i>superclass</i> precedes all other 
+direct <i>superclasses</i> specified to its right 
+in the <i>superclasses</i> list of the <b>defclass</b> form.  
+For every class C, define 
+</p><div align="center">R_C={(C,C_1),(C_1,C_2),...,(C_{n-1},C_n)}
+</div><p>where C_1,...,C_n are
+the direct <i>superclasses</i> of C in the order in which
+they are mentioned in the <b>defclass</b> form. These ordered pairs
+generate the total ordering on the class C and its direct
+<i>superclasses</i>.
+</p>
+<p>Let S_C be the set of C and its <i>superclasses</i>. Let R be
+</p>
+<div align="center">R=\bigcup_{c\in S_C}R_c
+</div><p>.
+</p>
+<p>[Reviewer Note by Barmar: &ldquo;Consistent&rdquo; needs to be defined, or maybe we should say
+&ldquo;logically consistent&rdquo;?]
+</p>
+<p>The set R might or might not generate a partial ordering, depending on
+whether the R_c, c\in S_C, are 
+consistent; it is assumed
+that they are consistent and that R generates a partial ordering.
+When the R_c are not consistent, it is said that R is inconsistent.
+</p>
+<p>To compute the <i>class precedence list</i> for~C,
+topologically sort the elements of S_C with respect to the
+partial ordering generated by R.  When the topological
+sort must select a <i>class</i> from a set of two or more 
+<i>classes</i>, none of
+which are preceded by other <i>classes</i> with respect to~R,
+the <i>class</i> selected is chosen deterministically, as described below.
+</p>
+<p>If R is inconsistent, an error is signaled.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Topological-Sorting.html#Topological-Sorting" accesskey="1">Topological Sorting</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Examples-of-Class-Precedence-List-Determination.html#Examples-of-Class-Precedence-List-Determination" accesskey="2">Examples of Class Precedence List Determination</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>make-sequence (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Sequences-Dictionary.html#Sequences-Dictionary" rel="up" title="Sequences Dictionary">
+<link href="subseq.html#subseq" rel="next" title="subseq">
+<link href="fill.html#fill" rel="prev" title="fill">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="fill.html#fill" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                fill
+                            </a>
+                            <a href="Sequences-Dictionary.html#Sequences-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Sequences Dictionary
+                            </a>
+                            <a href="subseq.html#subseq.html" class="nav-btn nav__next ">
+                                subseq
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="make_002dsequence"></a>
+<a name="make_002dsequence-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">make-sequence                                                    </h4>
+
+<p><code>make-sequence</code>  <i>result-type size &amp;key</i> initial-element &rArr;  <i>sequence</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-357"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>result-type</i>&mdash;a <b>sequence</b> <i>type specifier</i>.
+</p>
+<p><i>size</i>&mdash;a non-negative <i>integer</i>.
+</p>
+<p><i>initial-element</i>&mdash;an <i>object</i>.
+ The default is <i>implementation-dependent</i>.
+</p>
+<p><i>sequence</i>&mdash;a <i>proper sequence</i>.
+</p>
+<a name="Description_003a_003a-472"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Returns a <i>sequence</i> of the type <i>result-type</i> and of length <i>size</i>,
+each of the <i>elements</i> of which has been initialized to <i>initial-element</i>.
+</p>
+<p>If the <i>result-type</i> is a <i>subtype</i> of <b>list</b>,
+the result will be a <i>list</i>.
+</p>
+<p>If the <i>result-type</i> is a <i>subtype</i> of <b>vector</b>,
+then if the implementation can determine the element type specified
+for the <i>result-type</i>, the element type of the resulting array 
+is the result of <i>upgrading</i> that element type; or, if the
+implementation can determine that the element type is unspecified (or <tt>*</tt>),
+the element type of the resulting array is <b>t</b>;
+otherwise, an error is signaled.
+</p>
+<a name="Examples_003a_003a-339"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (make-sequence 'list 0) &rArr;  ()
+ (make-sequence 'string 26 :initial-element #\.) 
+&rArr;  &quot;..........................&quot;
+ (make-sequence '(vector double-float) 2
+                :initial-element 1d0)
+&rArr;  #(1.0d0 1.0d0)
+</code>
+</pre></div>
+
+<div class="example">
+<pre class="example"><code> (make-sequence '(vector * 2) 3) should signal an error
+ (make-sequence '(vector * 4) 3) should signal an error
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-69"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p>The <i>implementation</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-153"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>The consequences are unspecified if <i>initial-element</i> 
+is not an <i>object</i> which can be stored in the resulting <i>sequence</i>.
+</p>
+<p>An error of <i>type</i> <b>type-error</b> must be signaled if the <i>result-type</i> is neither
+     a <i>recognizable subtype</i> of <b>list</b>,
+ nor a <i>recognizable subtype</i> of <b>vector</b>.
+</p>
+<p>An error of <i>type</i> <b>type-error</b> should be signaled if <i>result-type</i> specifies 
+the number of elements and <i>size</i> is different from that number.
+</p>
+<a name="See-Also_003a_003a-384"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="make_002darray.html#make_002darray">make-array</a>
+, 
+<a href="make_002dlist.html#make_002dlist">make-list</a>
+</p>
+<a name="Notes_003a_003a-259"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<div class="example">
+<pre class="example"><code> (make-sequence 'string 5) &equiv; (make-string 5)               
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

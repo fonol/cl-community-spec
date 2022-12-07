@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Tilde Left-Brace-&gt; Iteration (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Control_002dFlow-Operations.html#FORMAT-Control_002dFlow-Operations" rel="up" title="FORMAT Control-Flow Operations">
+<link href="Tilde-Right_002dBrace_002d_003e-End-of-Iteration.html#Tilde-Right_002dBrace_002d_003e-End-of-Iteration" rel="next" title="Tilde Right-Brace-&gt; End of Iteration">
+<link href="Tilde-Right_002dBracket_002d_003e-End-of-Conditional-Expression.html#Tilde-Right_002dBracket_002d_003e-End-of-Conditional-Expression" rel="prev" title="Tilde Right-Bracket-&gt; End of Conditional Expression">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Tilde-Right_002dBracket_002d_003e-End-of-Conditional-Expression.html#Tilde-Right_002dBracket_002d_003e-End-of-Conditional-Expression" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Tilde Right-Bracket-&gt; End of Conditional Expression
+                            </a>
+                            <a href="FORMAT-Control_002dFlow-Operations.html#FORMAT-Control_002dFlow-Operations.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                FORMAT Control-Flow Operations
+                            </a>
+                            <a href="Tilde-Right_002dBrace_002d_003e-End-of-Iteration.html#Tilde-Right_002dBrace_002d_003e-End-of-Iteration.html" class="nav-btn nav__next ">
+                                Tilde Right-Brace-&gt; End of Iteration
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Tilde-Left_002dBrace_002d_003e-Iteration"></a>
+<a name="Tilde-Left_002dBrace_003a-Iteration"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Tilde Left-Brace: Iteration</h4>
+
+<p><tt>~{<i>str</i></tt>~}
+</p>
+<p>This is an iteration construct.  The argument should be a <i>list</i>,
+which is used as a set of arguments 
+as if for a recursive call to <b>format</b>.
+The <i>string</i> <i>str</i> is used repeatedly as the control string.
+Each iteration can absorb as many elements of the <i>list</i> as it likes
+as arguments;
+if <i>str</i> uses up two arguments by itself, then two elements of the
+<i>list</i> will get used up each time around the loop.
+If before any iteration step the <i>list</i> 
+is empty, then the iteration is terminated.
+Also, if a prefix parameter <i>n</i> is given, then there will be at most <i>n</i>
+repetitions of processing of <i>str</i>.  
+Finally, the <tt>~<tt>^</tt> </tt> directive can be
+used to terminate the iteration prematurely.
+</p>
+<p>For example:
+</p>
+<div class="example">
+<pre class="example"><code> (format nil &quot;The winners are:~{ ~S~}.&quot; 
+         '(fred harry jill)) 
+&rArr;  &quot;The winners are: FRED HARRY JILL.&quot;                           
+ (format nil &quot;Pairs:~{ &lt;~S,~S&gt;~}.&quot; 
+         '(a 1 b 2 c 3))
+&rArr;  &quot;Pairs: &lt;A,1&gt; &lt;B,2&gt; &lt;C,3&gt;.&quot;
+</code>
+</pre></div>
+
+<p><tt>~:{ <i>str</i>~}  </tt> is similar, 
+but the argument should be a <i>list</i> of sublists.
+At each repetition step, one sublist 
+is used as the set of arguments for
+processing <i>str</i>; on the next repetition, a new sublist 
+is used, whether
+or not all of the last sublist had been processed.  
+For example:
+</p>
+<div class="example">
+<pre class="example"><code> (format nil &quot;Pairs:~:{ &lt;~S,~S&gt;~} .&quot; 
+                 '((a 1) (b 2) (c 3)))
+&rArr;  &quot;Pairs: &lt;A,1&gt; &lt;B,2&gt; &lt;C,3&gt;.&quot;
+</code>
+</pre></div>
+
+<p><tt>~@{ <i>str</i>~} </tt>
+is similar to <tt>~{ <i>str</i>~}  </tt>, but instead of
+using one argument that is a list, all the remaining arguments
+are used as the list of arguments for the iteration.
+Example:
+</p>
+<div class="example">
+<pre class="example"><code> (format nil &quot;Pairs:~@{ &lt;~S,~S&gt;~} .&quot; 'a 1 'b 2 'c 3)
+&rArr;  &quot;Pairs: &lt;A,1&gt; &lt;B,2&gt; &lt;C,3&gt;.&quot;
+</code>
+</pre></div>
+
+<p>If the iteration is terminated before all the remaining arguments are
+consumed, then any arguments not processed by the iteration remain to be
+processed by any directives following the iteration construct.
+</p>
+<p><tt>~:@{ <i>str</i>~}  </tt> 
+combines the features                              
+of <tt>~:{ <i>str</i>~}  </tt>
+and <tt>~@{ <i>str</i>~}  </tt>.
+All the remaining arguments
+are used, and each one must be a <i>list</i>.
+On each iteration, the next argument is 
+used as a <i>list</i> of arguments to <i>str</i>.
+Example:
+</p>
+<div class="example">
+<pre class="example"><code> (format nil &quot;Pairs:~:@{ &lt;~S,~S&gt;~} .&quot; 
+              '(a 1) '(b 2) '(c 3)) 
+&rArr;  &quot;Pairs: &lt;A,1&gt; &lt;B,2&gt; &lt;C,3&gt;.&quot;
+</code>
+</pre></div>
+
+<p>Terminating the repetition construct with <tt>~:} </tt> 
+instead of <tt>~}  </tt>
+forces <i>str</i> to be processed at least once, even if the initial
+list of arguments is null. However, this will not override an explicit
+prefix parameter of zero.
+</p>
+<p>If <i>str</i> is empty, then an argument is used as <i>str</i>.  
+It must be a <i>format control</i>
+and precede any arguments processed by the iteration.  As an example,
+the following are equivalent:
+</p>
+<div class="example">
+<pre class="example"><code>    (apply #'format stream string arguments)
+ &equiv; (format stream &quot;~1{~:}&quot; string arguments)
+</code>
+</pre></div>
+
+<p>This will use <tt>string</tt> as a formatting string.  
+The <tt>~1{ </tt> says it will                 
+be processed at most once, and the <tt>~:} </tt> 
+says it will be processed at least once.
+Therefore it is processed exactly once, using <tt>arguments</tt> as the arguments.
+This case may be handled more clearly by the <tt>~?</tt> directive,
+but this general feature of <tt>~{  </tt>
+is more powerful than <tt>~?</tt>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

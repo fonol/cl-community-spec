@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>with-open-file (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="close.html#close" rel="next" title="close">
+<link href="stream_002dexternal_002dformat.html#stream_002dexternal_002dformat" rel="prev" title="stream-external-format">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="stream_002dexternal_002dformat.html#stream_002dexternal_002dformat" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                stream-external-format
+                            </a>
+                            <a href="Streams-Dictionary.html#Streams-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Streams Dictionary
+                            </a>
+                            <a href="close.html#close.html" class="nav-btn nav__next ">
+                                close
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="with_002dopen_002dfile"></a>
+<a name="with_002dopen_002dfile-_005bmacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">macro</div>
+<h4 class="subsection">with-open-file                                                      </h4>
+
+<a name="Syntax_003a_003a-36"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Syntax</h4>
+
+<p><code>with-open-file</code>  <i><span class="roman">(</span>stream filespec {<i>options</i>}*</i><span class="roman">)</span>
+		   {<i>declaration</i>}*
+		   {<i>form</i>}*<br>
+   &rArr;  <i>results</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-432"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>stream</i> &ndash; a variable.
+</p>
+<p><i>filespec</i>&mdash;a <i>pathname designator</i>.
+</p>
+<p><i>options</i> &ndash; <i>forms</i>; evaluated.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-562"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>with-open-file</b> uses <b>open</b> to create a <i>file stream</i>
+</p>
+<p>to <i>file</i> named by <i>filespec</i>. 
+<i>Filespec</i> is the name of the file to be opened.
+<i>Options</i> are used as keyword arguments to <b>open</b>.
+</p>
+<p>The <i>stream</i> <i>object</i> to which the <i>stream</i> <i>variable</i> 
+is <i>bound</i> has <i>dynamic extent</i>;
+its <i>extent</i> ends when the <i>form</i> is exited.
+</p>
+<p><b>with-open-file</b> evaluates the <i>forms</i> as an <i>implicit progn</i> 
+with <i>stream</i> bound to 
+</p>
+<p>the value returned by <b>open</b>.
+</p>
+<p>When control leaves the body, either normally or abnormally (such as by
+use of <b>throw</b>), the file is automatically closed.  If a new
+output file is being written, and control leaves abnormally, the file is
+aborted and the file system is left, so far as possible, as if the file
+had never been opened.  
+</p>
+<p>It is possible by the use of <tt>:if-exists nil</tt> 
+or <tt>:if-does-not-exist nil</tt> for
+<i>stream</i> to be bound to <b>nil</b>.
+</p>
+<p>Users of <tt>:if-does-not-exist nil</tt> should check for a valid <i>stream</i>.
+</p>
+<p>The consequences are undefined if an attempt is made to <i>assign</i> the 
+<i>stream</i> <i>variable</i>.  The compiler may choose to issue a
+warning if such an attempt is detected.
+</p>
+<a name="Examples_003a_003a-408"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (setq p (merge-pathnames &quot;test&quot;))
+&rArr;  #&lt;PATHNAME :HOST NIL :DEVICE <i>device-name</i> :DIRECTORY <i>directory-name</i>
+    :NAME &quot;test&quot; :TYPE NIL :VERSION :NEWEST&gt;
+ (with-open-file (s p :direction :output :if-exists :supersede)
+    (format s &quot;Here are a couple~
+ (with-open-file (s p)
+    (do ((l (read-line s) (read-line s nil 'eof)))
+        ((eq l 'eof) &quot;Reached end of file.&quot;)
+     (format t &quot;~&amp;*** ~A~
+<tt> |&gt; </tt> *** Here are a couple
+<tt> |&gt; </tt> *** of test data lines
+&rArr;  &quot;Reached end of file.&quot;
+</code>
+</pre></div>
+
+<div class="example">
+<pre class="example"><code>;; Normally one would not do this intentionally because it is
+;; not perspicuous, but beware when using :IF-DOES-NOT-EXIST NIL
+;; that this doesn't happen to you accidentally...
+ (with-open-file (foo &quot;no-such-file&quot; :if-does-not-exist nil)
+   (read foo))
+<tt> |&gt; </tt> <b>|&gt;&gt;</b><tt>hello?</tt><b>&lt;&lt;|</b>
+&rArr;  HELLO? ;This value was read from the terminal, not a file!
+
+;; Here's another bug to avoid...
+ (with-open-file (foo &quot;no-such-file&quot; :direction :output :if-does-not-exist nil)
+   (format foo &quot;Hello&quot;))
+&rArr;  &quot;Hello&quot; ;FORMAT got an argument of NIL!
+</code>
+</pre></div>
+
+<a name="Side-Effects_003a_003a-67"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Side Effects</h4>
+
+<p>Creates a <i>stream</i> to the <i>file</i> named by <i>filename</i> (upon entry),
+and closes the <i>stream</i> (upon exit).
+In some <i>implementations</i>,
+the <i>file</i> might be locked in some way while it is open.
+If the <i>stream</i> is an <i>output</i> <i>stream</i>,
+a <i>file</i> might be created.
+</p>
+<a name="Affected-By_003a_003a-92"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p>The host computer&rsquo;s file system.
+</p>
+<a name="Exceptional-Situations_003a_003a-208"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>See the <i>function</i> <b>open</b>.
+</p>
+<a name="See-Also_003a_003a-458"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="open.html#open">open</a>
+,
+<a href="close.html#close">close</a>
+,
+<b>pathname</b>,
+<b>logical-pathname</b>,
+</p>
+<p><a href="Pathnames-as-Filenames.html#Pathnames-as-Filenames">Pathnames as Filenames</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>*print-circle* (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer-Dictionary.html#Printer-Dictionary" rel="up" title="Printer Dictionary">
+<link href="_002aprint_002descape_002a.html#g_t_002aprint_002descape_002a" rel="next" title="*print-escape*">
+<link href="_002aprint_002dcase_002a.html#g_t_002aprint_002dcase_002a" rel="prev" title="*print-case*">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="_002aprint_002dcase_002a.html#g_t_002aprint_002dcase_002a" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                *print-case*
+                            </a>
+                            <a href="Printer-Dictionary.html#Printer-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Printer Dictionary
+                            </a>
+                            <a href="_002aprint_002descape_002a.html#g_t_002aprint_002descape_002a.html" class="nav-btn nav__next ">
+                                *print-escape*
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="g_t_002aprint_002dcircle_002a"></a>
+<a name="g_t_002aprint_002dcircle_002a-_005bVariable_005d"></a>
+<div class="section top-most">
+<div class="node-type">Variable</div>
+<h4 class="subsection">*print-circle*                                                   </h4>
+
+<a name="Value-Type_003a_003a-12"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Value Type</h4>
+
+<p>a <i>generalized boolean</i>.
+</p>
+<a name="Initial-Value_003a_003a-12"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Initial Value</h4>
+
+<p><i>false</i>.
+</p>
+<a name="Description_003a_003a-607"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Controls the attempt to detect circularity and sharing in an <i>object</i> 
+being printed.
+</p>
+<p>If <i>false</i>,
+the printing process merely proceeds by recursive descent without attempting 
+to detect circularity and sharing.
+</p>
+<p>If <i>true</i>,
+the printer will endeavor to detect cycles and sharing
+in the structure to be printed, 
+and to use <tt>#<i>n</i>=</tt> and <tt>#<i>n</i>#</tt>
+syntax to indicate the circularities or shared components.
+</p>
+<p>If <i>true</i>, a user-defined 
+</p>
+<p><b>print-object</b> <i>method</i>
+</p>
+<p>can print
+<i>objects</i> to the supplied <i>stream</i> using <b>write</b>, <b>prin1</b>, 
+<b>princ</b>, or <b>format</b> and expect circularities and sharing
+to be detected and printed using the <tt>#<i>n</i>#</tt> syntax.
+</p>
+<p>If a user-defined 
+</p>
+<p><b>print-object</b> <i>method</i>
+</p>
+<p>prints to a <i>stream</i> other than the one
+that was supplied, then circularity detection starts over for that <i>stream</i>. 
+</p>
+<p>Note that implementations should not use <tt>#<i>n</i>#</tt> notation 
+when the <i>Lisp reader</i> would automatically assure sharing without it
+(<i>e.g.</i>, as happens with <i>interned</i> <i>symbols</i>).
+</p>
+<a name="Examples_003a_003a-435"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (let ((a (list 1 2 3)))
+   (setf (cdddr a) a)
+   (let ((*print-circle* t))
+     (write a)
+     :done))
+<tt> |&gt; </tt> #1=(1 2 3 . #1#)
+&rArr;  :DONE
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-493"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p>&lsquo;write; prin1; print; pprint; princ&rsquo;
+</p>
+<a name="Notes_003a_003a-306"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>An attempt to print a circular structure with <b>*print-circle*</b> 
+set to <b>nil</b> may lead to looping behavior and failure to terminate.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

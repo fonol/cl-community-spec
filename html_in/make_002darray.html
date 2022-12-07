@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>make-array (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="make-array (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="make-array (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Arrays-Dictionary.html#Arrays-Dictionary" rel="up" title="Arrays Dictionary">
+<link href="adjust_002darray.html#adjust_002darray" rel="next" title="adjust-array">
+<link href="simple_002dbit_002dvector.html#simple_002dbit_002dvector" rel="prev" title="simple-bit-vector">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="make_002darray"></a>
+<div class="header">
+<p>
+Next: <a href="adjust_002darray.html#adjust_002darray" accesskey="n" rel="next">adjust-array</a>, Previous: <a href="simple_002dbit_002dvector.html#simple_002dbit_002dvector" accesskey="p" rel="prev">simple-bit-vector</a>, Up: <a href="Arrays-Dictionary.html#Arrays-Dictionary" accesskey="u" rel="up">Arrays Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="make_002darray-_005bFunction_005d"></a>
+<h4 class="subsection">15.2.7 make-array                                                       [Function]</h4>
+
+<p><code>make-array</code>  <i>dimensions &amp;key</i> element-type
+                                                 initial-element
+                                                 initial-contents
+                                                 adjustable
+                                                 fill-pointer
+                                                 displaced-to
+                                                 displaced-index-offset<br>
+   &rArr;  <i>new-array</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-319"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>dimensions</i>&mdash;a <i>designator</i> for a <i>list</i> of <i>valid array dimensions</i>.
+</p>
+<p><i>element-type</i>&mdash;a <i>type specifier</i>. 
+ The default is <b>t</b>.
+</p>
+<p><i>initial-element</i>&mdash;an <i>object</i>.
+</p>
+<p><i>initial-contents</i>&mdash;an <i>object</i>.
+</p>
+<p><i>adjustable</i>&mdash;a <i>generalized boolean</i>.
+ The default is <b>nil</b>.
+</p>
+<p><i>fill-pointer</i>&mdash;a <i>valid fill pointer</i> for the <i>array</i> to be created,
+		       or <b>t</b> or <b>nil</b>.
+ The default is <b>nil</b>.
+</p>
+<p><i>displaced-to</i>&mdash;an <i>array</i> or <b>nil</b>.
+ The default is <b>nil</b>.
+ This option must not be supplied if either <i>initial-element</i>
+ or <i>initial-contents</i> is supplied.
+</p>
+<p><i>displaced-index-offset</i>&mdash;a <i>valid array row-major index</i> 
+ for <i>displaced-to</i>. The default is <tt>0</tt>.
+ This option must not be supplied unless a <i>non-nil</i> <i>displaced-to</i> is supplied.
+</p>
+<p><i>new-array</i>&mdash;an <i>array</i>.
+</p>
+<a name="Description_003a_003a-426"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Creates and returns an <i>array</i> constructed of the most <i>specialized</i>
+<i>type</i> that can accommodate elements of <i>type</i> given by <i>element-type</i>.
+If <i>dimensions</i> is <b>nil</b> then a zero-dimensional <i>array</i> is created.
+</p>
+<p><i>Dimensions</i> represents the dimensionality of the new <i>array</i>.
+</p>
+<p><i>element-type</i> indicates the <i>type</i> of the elements intended to be stored
+in the <i>new-array</i>.  The <i>new-array</i> can actually store any <i>objects</i>
+of the <i>type</i> which results from <i>upgrading</i> <i>element-type</i>;
+see <a href="Array-Upgrading.html#Array-Upgrading">Array Upgrading</a>.
+</p>
+<p>If <i>initial-element</i> is supplied, 
+it is used to initialize each <i>element</i> of <i>new-array</i>. 
+If <i>initial-element</i> is supplied,
+it must be of the <i>type</i> given by <i>element-type</i>.
+<i>initial-element</i> cannot be supplied if either the <tt>:initial-contents</tt> option
+is supplied or <i>displaced-to</i> is <i>non-nil</i>.
+If <i>initial-element</i> is not supplied,
+</p>
+<p>the consequences of later reading an uninitialized <i>element</i> of <i>new-array</i>
+are undefined
+</p>
+<p>unless either <i>initial-contents</i> is supplied 
+or <i>displaced-to</i> is <i>non-nil</i>.
+</p>
+<p><i>initial-contents</i> is used to initialize the contents of <i>array</i>.
+For example:
+</p>
+<div class="example">
+<pre class="example"> (make-array '(4 2 3) :initial-contents
+             '(((a b c) (1 2 3))
+              ((d e f) (3 1 2))
+              ((g h i) (2 3 1))
+              ((j k l) (0 0 0))))
+</pre></div>
+
+<p><i>initial-contents</i> is composed of a nested structure of <i>sequences</i>. 
+The numbers of levels in the structure must equal the rank of <i>array</i>.
+Each leaf of the nested structure must be of the <i>type</i> given by <i>element-type</i>. 
+If <i>array</i> is zero-dimensional, then <i>initial-contents</i> specifies the single
+<i>element</i>.  Otherwise, <i>initial-contents</i> must be a <i>sequence</i>
+whose length is equal to the first dimension; each element must be a nested 
+structure for an <i>array</i> whose dimensions are the remaining dimensions, 
+and so on.
+<i>Initial-contents</i> cannot be supplied if either 
+<i>initial-element</i> is supplied
+or <i>displaced-to</i> is <i>non-nil</i>.
+If <i>initial-contents</i> is not supplied,
+</p>
+<p>the consequences of later reading an uninitialized <i>element</i> of <i>new-array</i>
+are undefined
+</p>
+<p>unless either <i>initial-element</i> is supplied
+or <i>displaced-to</i> is <i>non-nil</i>.
+</p>
+<p>If <i>adjustable</i> is <i>non-nil</i>,
+the array is <i>expressly adjustable</i> 
+	      (and so <i>actually adjustable</i>);
+otherwise, the array is not <i>expressly adjustable</i> 
+       (and it is <i>implementation-dependent</i> whether 
+	    the array is <i>actually adjustable</i>).
+</p>
+<p>If <i>fill-pointer</i> is <i>non-nil</i>,
+the <i>array</i> must be one-dimensional;
+that is, the <i>array</i> must be a <i>vector</i>.
+If <i>fill-pointer</i> is <b>t</b>,
+the length of the <i>vector</i> is used to initialize the <i>fill pointer</i>.
+If <i>fill-pointer</i> is an <i>integer</i>,
+it becomes the initial <i>fill pointer</i> for the <i>vector</i>.
+</p>
+<p>If <i>displaced-to</i> is <i>non-nil</i>,
+<b>make-array</b> will create a <i>displaced array</i> 
+and <i>displaced-to</i> is the <i>target</i> of that <i>displaced array</i>. 
+In that case, the consequences are undefined if the <i>actual array element type</i> of 
+<i>displaced-to</i> is not <i>type equivalent</i> to the <i>actual array element type</i>
+of the <i>array</i> being created.
+If <i>displaced-to</i> is <b>nil</b>, the <i>array</i> is not a <i>displaced array</i>.
+</p>
+<p>The <i>displaced-index-offset</i> is made to be the index offset of the <i>array</i>.
+When an array A is given as
+the <tt>:displaced-to</tt> <i>argument</i> to <b>make-array</b> 
+when creating array B,
+then array B is said to be displaced to array A.  The
+total number of elements in an <i>array</i>, 
+called the total size of the <i>array</i>,
+is calculated as the product of all the dimensions.
+It is required that the total size of A be no smaller than the sum
+of the total size of B plus the offset <tt>n</tt> supplied by
+the <i>displaced-index-offset</i>.
+The effect of displacing is that array B does not have any
+elements of its own, but instead maps <i>accesses</i> to itself into
+<i>accesses</i> to array A.  The mapping treats both <i>arrays</i> as if they
+were one-dimensional by taking the elements in row-major order,
+and then maps an <i>access</i> to element <tt>k</tt> of array B to an <i>access</i> to element
+<tt>k</tt>+<tt>n</tt> of array A.
+</p>
+<p>If <b>make-array</b> is called with <i>adjustable</i>, <i>fill-pointer</i>,
+and <i>displaced-to</i> each <b>nil</b>, 
+then the result is a <i>simple array</i>.
+</p>
+<p>If <b>make-array</b> is called with one or more of <i>adjustable</i>,
+<i>fill-pointer</i>, or <i>displaced-to</i> being <i>true</i>, whether the
+resulting <i>array</i> is a <i>simple array</i> is <i>implementation-dependent</i>.
+</p>
+<p>When an array A is given as the <tt>:displaced-to</tt> <i>argument</i> to
+  <b>make-array</b> when creating array B, then array B is said to
+  be displaced to array A.  The total number of elements in an <i>array</i>, 
+  called the total size of the <i>array</i>, is calculated as the product
+  of all the dimensions.
+The consequences are unspecified if
+the total size of A is smaller than the sum
+of the total size of B plus the offset <tt>n</tt> supplied by
+the <i>displaced-index-offset</i>.
+The effect of displacing is that array B does not have any
+elements of its own, but instead maps <i>accesses</i> to itself into
+<i>accesses</i> to array A.  The mapping treats both <i>arrays</i> as if they
+were one-dimensional by taking the elements in row-major order,
+and then maps an <i>access</i> to element <tt>k</tt> of array B to an <i>access</i> 
+to <i>element</i> <tt>k</tt>+<tt>n</tt> of array A.
+</p>
+<a name="Examples_003a_003a-303"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example">
+
+ (make-array 5) ;; Creates a one-dimensional array of five elements.
+ (make-array '(3 4) :element-type '(mod 16)) ;; Creates a 
+                ;;two-dimensional array, 3 by 4, with four-bit elements.
+ (make-array 5 :element-type 'single-float) ;; Creates an array of single-floats.
+</pre></div>
+
+<div class="example">
+<pre class="example"> (make-array nil :initial-element nil) &rArr;  #0ANIL
+ (make-array 4 :initial-element nil) &rArr;  #(NIL NIL NIL NIL)
+ (make-array '(2 4) 
+              :element-type '(unsigned-byte 2) 
+              :initial-contents '((0 1 2 3) (3 2 1 0)))
+&rArr;  #2A((0 1 2 3) (3 2 1 0))
+ (make-array 6
+              :element-type 'character 
+              :initial-element #\a 
+              :fill-pointer 3) &rArr;  &quot;aaa&quot;
+</pre></div>
+
+<p>The following is an example of making a <i>displaced array</i>.
+</p>
+<div class="example">
+<pre class="example"> (setq a (make-array '(4 3))) 
+&rArr;  #&lt;ARRAY 4x3 simple 32546632&gt;
+ (dotimes (i 4)
+   (dotimes (j 3)
+     (setf (aref a i j) (list i 'x j '= (* i j)))))
+&rArr;  NIL
+ (setq b (make-array 8 :displaced-to a
+                       :displaced-index-offset 2))
+&rArr;  #&lt;ARRAY 8 indirect 32550757&gt;
+ (dotimes (i 8)
+   (print (list i (aref b i))))
+<tt> |&gt; </tt> (0 (0 X 2 = 0)) 
+<tt> |&gt; </tt> (1 (1 X 0 = 0)) 
+<tt> |&gt; </tt> (2 (1 X 1 = 1)) 
+<tt> |&gt; </tt> (3 (1 X 2 = 2)) 
+<tt> |&gt; </tt> (4 (2 X 0 = 0)) 
+<tt> |&gt; </tt> (5 (2 X 1 = 2)) 
+<tt> |&gt; </tt> (6 (2 X 2 = 4)) 
+<tt> |&gt; </tt> (7 (3 X 0 = 0)) 
+&rArr;  NIL
+</pre></div>
+
+<p>The last example depends on the fact that <i>arrays</i> are, in effect,
+stored in row-major order. 
+</p>
+<div class="example">
+<pre class="example"> (setq a1 (make-array 50))
+&rArr;  #&lt;ARRAY 50 simple 32562043&gt;
+ (setq b1 (make-array 20 :displaced-to a1 :displaced-index-offset 10))
+&rArr;  #&lt;ARRAY 20 indirect 32563346&gt;
+ (length b1) &rArr;  20
+
+ (setq a2 (make-array 50 :fill-pointer 10))
+&rArr;  #&lt;ARRAY 50 fill-pointer 10 46100216&gt;
+ (setq b2 (make-array 20 :displaced-to a2 :displaced-index-offset 10))
+&rArr;  #&lt;ARRAY 20 indirect 46104010&gt;
+ (length a2) &rArr;  10
+ (length b2) &rArr;  20
+
+ (setq a3 (make-array 50 :fill-pointer 10))
+&rArr;  #&lt;ARRAY 50 fill-pointer 10 46105663&gt;
+ (setq b3 (make-array 20 :displaced-to a3 :displaced-index-offset 10
+                         :fill-pointer 5))
+&rArr;  #&lt;ARRAY 20 indirect, fill-pointer 5 46107432&gt;
+ (length a3) &rArr;  10
+ (length b3) &rArr;  5
+</pre></div>
+
+<a name="See-Also_003a_003a-347"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="adjustable_002darray_002dp.html#adjustable_002darray_002dp">adjustable-array-p</a>
+,
+<a href="aref.html#aref">aref</a>
+,
+<a href="arrayp.html#arrayp">arrayp</a>
+,
+<a href="array_002delement_002dtype.html#array_002delement_002dtype">array-element-type</a>
+,
+<a href="array_002drank_002dlimit.html#array_002drank_002dlimit">array-rank-limit</a>
+,
+<a href="array_002ddimension_002dlimit.html#array_002ddimension_002dlimit">array-dimension-limit</a>
+,
+<a href="fill_002dpointer.html#fill_002dpointer">fill-pointer</a>
+,
+<a href="upgraded_002darray_002delement_002dtype.html#upgraded_002darray_002delement_002dtype">upgraded-array-element-type</a>
+</p>
+<a name="Notes_003a_003a-233"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>There is no specified way to create an <i>array</i> 
+for which <b>adjustable-array-p</b> definitely
+returns <i>false</i>.
+There is no specified way to create an <i>array</i> 
+that is not a <i>simple array</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="adjust_002darray.html#adjust_002darray" accesskey="n" rel="next">adjust-array</a>, Previous: <a href="simple_002dbit_002dvector.html#simple_002dbit_002dvector" accesskey="p" rel="prev">simple-bit-vector</a>, Up: <a href="Arrays-Dictionary.html#Arrays-Dictionary" accesskey="u" rel="up">Arrays Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

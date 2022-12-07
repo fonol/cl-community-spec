@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>restart-bind (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="restart-bind (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="restart-bind (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="restart_002dcase.html#restart_002dcase" rel="next" title="restart-case">
+<link href="invoke_002drestart_002dinteractively.html#invoke_002drestart_002dinteractively" rel="prev" title="invoke-restart-interactively">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="restart_002dbind"></a>
+<div class="header">
+<p>
+Next: <a href="restart_002dcase.html#restart_002dcase" accesskey="n" rel="next">restart-case</a>, Previous: <a href="invoke_002drestart_002dinteractively.html#invoke_002drestart_002dinteractively" accesskey="p" rel="prev">invoke-restart-interactively</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="restart_002dbind-_005bMacro_005d"></a>
+<h4 class="subsection">9.2.36 restart-bind                                                        [Macro]</h4>
+
+<p><code>restart-bind</code>  <i><span class="roman">(</span>{(</i>name function
+				        {!<i>key-val-pair</i>}*<span class="roman">)</span>})
+		   {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<p><i><span class="nolinebreak">key-val-pair</span></i>&nbsp;::=<tt><span class="nolinebreak">:interactive-function</span></tt>&nbsp;<span class="nolinebreak">interactive-function</span><!-- /@w --> | 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt><span class="nolinebreak">:report-function</span></tt>&nbsp;<span class="nolinebreak">report-function</span><!-- /@w --> | 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt><span class="nolinebreak">:test-function</span></tt>&nbsp;<span class="nolinebreak">test-function</span><!-- /@w -->
+</p>
+<a name="Arguments-and-Values_003a_003a-152"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>name</i>&mdash;a <i>symbol</i>; not evaluated.
+</p>
+<p><i>function</i>&mdash;a <i>form</i>; evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>interactive-function</i>&mdash;a <i>form</i>; evaluated.
+</p>
+<p><i>report-function</i>&mdash;a <i>form</i>; evaluated.
+</p>
+<p><i>test-function</i>&mdash;a <i>form</i>; evaluated.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-206"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>restart-bind</b> executes the body of <i>forms</i> 
+in a <i>dynamic environment</i> where <i>restarts</i> with the given <i>names</i> are in effect.
+</p>
+<p>If a <i>name</i> is <b>nil</b>, it indicates an anonymous restart;
+if a <i>name</i> is a <i>non-nil</i> <i>symbol</i>, it indicates a named restart.
+</p>
+<p>The <i>function</i>, <i>interactive-function</i>, and <i>report-function</i>
+are unconditionally evaluated in the current lexical and dynamic environment
+prior to evaluation of the body. Each of these <i>forms</i> must evaluate to
+a <i>function</i>.
+</p>
+<p>If <b>invoke-restart</b> is done on that restart,
+the <i>function</i> which resulted from evaluating <i>function</i> 
+is called, in the <i>dynamic environment</i> of the <b>invoke-restart</b>,
+with the <i>arguments</i> given to <b>invoke-restart</b>. 
+The <i>function</i> may either perform a non-local transfer of control or may return normally.
+</p>
+<p>If the restart is invoked interactively from the debugger 
+(using <b>invoke-restart-interactively</b>), 
+the arguments are defaulted by calling the <i>function</i> 
+which resulted from evaluating <i>interactive-function</i>.
+That <i>function</i> may optionally prompt interactively on <i>query I/O</i>, 
+and should return a <i>list</i> of arguments to be used by
+<b>invoke-restart-interactively</b> when invoking the restart. 
+</p>
+<p>If a restart is invoked interactively but no <i>interactive-function</i> is used,
+then an argument list of <b>nil</b> is used. In that case, the <i>function</i>
+must be compatible with an empty argument list.
+</p>
+<p>If the restart is presented interactively (<i>e.g.</i>, by the debugger),
+the presentation is done by calling the <i>function</i> which resulted
+from evaluating <i>report-function</i>.
+This <i>function</i> must be a <i>function</i> of one argument, a <i>stream</i>. 
+It is expected to print a description of the action that the restart takes
+to that <i>stream</i>. 
+This <i>function</i> is called any time the restart is printed 
+while <b>*print-escape*</b> is <b>nil</b>.
+</p>
+<p>In the case of interactive invocation, 
+the result is dependent on the value of <tt>:interactive-function</tt>
+as follows.
+</p>
+<dl compact="compact">
+<dt><tt>:interactive-function</tt></dt>
+<dd><p><i>Value</i> is evaluated in the current lexical environment and
+  should return a <i>function</i> of no arguments which constructs a 
+  <i>list</i> of arguments to be used by <b>invoke-restart-interactively</b> 
+  when invoking this restart.  The <i>function</i> may prompt interactively
+  using <i>query I/O</i> if necessary.
+</p>
+</dd>
+<dt><tt>:report-function</tt></dt>
+<dd><p><i>Value</i> is evaluated in the current lexical environment and
+  should return a <i>function</i> of one argument, a <i>stream</i>, which
+  prints on the <i>stream</i> a summary of the action that this restart
+  takes.  This <i>function</i> is called whenever the restart is
+  reported (printed while <b>*print-escape*</b> is <b>nil</b>).
+  If no <tt>:report-function</tt> option is provided, the manner in which the
+  <i>restart</i> is reported is <i>implementation-dependent</i>.
+</p>
+</dd>
+<dt><tt>:test-function</tt></dt>
+<dd><p><i>Value</i> is evaluated in the current lexical environment and
+  should return a <i>function</i> of one argument, a <i>condition</i>, which
+  returns <i>true</i> if the restart is to be considered visible.
+</p>
+</dd>
+</dl>
+
+<a name="Affected-By_003a_003a-34"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*query-io*</b>.
+</p>
+<a name="See-Also_003a_003a-180"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="restart_002dcase.html#restart_002dcase">restart-case</a>
+, 
+<a href="with_002dsimple_002drestart.html#with_002dsimple_002drestart">with-simple-restart</a>
+</p>
+<a name="Notes_003a_003a-110"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>restart-bind</b> is primarily intended to be used to implement
+<b>restart-case</b> and  might be useful in implementing other
+macros. Programmers who are uncertain about whether to use <b>restart-case</b>
+or <b>restart-bind</b> should prefer <b>restart-case</b> for the cases where
+it is powerful enough, using <b>restart-bind</b> only in cases where its full
+generality is really needed.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="restart_002dcase.html#restart_002dcase" accesskey="n" rel="next">restart-case</a>, Previous: <a href="invoke_002drestart_002dinteractively.html#invoke_002drestart_002dinteractively" accesskey="p" rel="prev">invoke-restart-interactively</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

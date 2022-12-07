@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>substitute (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="substitute (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="substitute (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Sequences-Dictionary.html#Sequences-Dictionary" rel="up" title="Sequences Dictionary">
+<link href="concatenate.html#concatenate" rel="next" title="concatenate">
+<link href="replace.html#replace" rel="prev" title="replace">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="substitute"></a>
+<div class="header">
+<p>
+Next: <a href="concatenate.html#concatenate" accesskey="n" rel="next">concatenate</a>, Previous: <a href="replace.html#replace" accesskey="p" rel="prev">replace</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="substitute_002c-substitute_002dif_002c-substitute_002dif_002dnot_002c"></a>
+<h4 class="subsection">17.3.19 substitute, substitute-if, substitute-if-not,</h4>
+<a name="nsubstitute_002c-nsubstitute_002dif_002c-nsubstitute_002dif_002dnot"></a>
+<h4 class="subheading">nsubstitute, nsubstitute-if, nsubstitute-if-not</h4>
+<p align="right"><i>[Function]</i>
+</p>
+<p><code>substitute</code>  <i>newitem  olditem  sequence 
+		   	  &amp;key</i> from-end test
+				       test-not start
+                                       end count key<br>
+   &rArr;  <i>result-sequence</i>
+</p>
+<p><code>substitute-if</code>  <i>newitem predicate sequence &amp;key</i> from-end start end count key<br>
+   &rArr;  <i>result-sequence</i>
+</p>
+<p><code>substitute-if-not</code>  <i>newitem predicate sequence &amp;key</i> from-end start end count key<br>
+   &rArr;  <i>result-sequence</i>
+</p>
+<p><code>nsubstitute</code>  <i>newitem  olditem  sequence
+                          &amp;key</i> from-end test test-not start end count key<br>
+   &rArr;  <i>sequence</i>
+</p>
+<p><code>nsubstitute-if</code>  <i>newitem predicate sequence &amp;key</i> from-end start end count key<br>
+   &rArr;  <i>sequence</i>
+</p>
+<p><code>nsubstitute-if-not</code>  <i>newitem predicate sequence &amp;key</i> from-end start end count key<br>
+   &rArr;  <i>sequence</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-371"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>newitem</i>&mdash;an <i>object</i>.
+</p>
+<p><i>olditem</i>&mdash;an <i>object</i>.
+</p>
+<p><i>sequence</i>&mdash;a <i>proper sequence</i>.
+</p>
+<p><i>predicate</i>&mdash;a <i>designator</i> for a <i>function</i> of one <i>argument</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>from-end</i>&mdash;a <i>generalized boolean</i>.
+  The default is <i>false</i>.
+</p>
+<p><i>test</i>&mdash;a <i>designator</i> for a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test-not</i>&mdash;a <i>designator</i> for 
+  a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>start</i>, <i>end</i>&mdash;<i>bounding index designators</i> of <i>sequence</i>.
+ The defaults for <i>start</i> and <i>end</i> are <tt>0</tt> and <b>nil</b>, respectively.
+</p>
+<p><i>count</i>&mdash;an <i>integer</i> or <b>nil</b>.
+</p>
+<p>The default is <b>nil</b>.
+</p>
+<p><i>key</i>&mdash;a <i>designator</i> for a <i>function</i> of one argument,
+  or <b>nil</b>.
+</p>
+<p><i>result-sequence</i>&mdash;a <i>sequence</i>.
+</p>
+<a name="Description_003a_003a-486"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>substitute</b>, <b>substitute-if</b>, and <b>substitute-if-not</b>
+return a 
+copy of <i>sequence</i> in which each <i>element</i>
+that <i>satisfies the test</i> has been replaced with <i>newitem</i>.
+</p>
+<p><b>nsubstitute</b>, <b>nsubstitute-if</b>, and <b>nsubstitute-if-not</b>
+are like <b>substitute</b>, <b>substitute-if</b>, and
+<b>substitute-if-not</b> respectively, but they may modify 
+<i>sequence</i>.
+</p>
+<p>If 
+<i>sequence</i> is a <i>vector</i>, the result is a
+<i>vector</i> that has the same
+<i>actual array element type</i> as <i>sequence</i>.
+The result might or might not be simple, and 
+might or might not be <i>identical</i>
+to <i>sequence</i>.
+If <i>sequence</i> is a <i>list</i>, the result is a 
+<i>list</i>. 
+</p>
+<p><i>Count</i>, if supplied, limits the number of elements
+altered; if more than <i>count</i> <i>elements</i> <i>satisfy the test</i>,
+then of these <i>elements</i> only the leftmost or rightmost, depending
+on <i>from-end</i>, are replaced,
+as many as specified by <i>count</i>.
+</p>
+<p>If <i>count</i> is supplied and negative, 
+the behavior is as if zero had been supplied instead.
+</p>
+<p>If <i>count</i> is <b>nil</b>, all matching items are affected.
+</p>
+<p>Supplying a <i>from-end</i> of <i>true</i> matters only when the
+<i>count</i> is provided (and <i>non-nil</i>);
+in that case,
+only the rightmost <i>count</i> <i>elements</i> <i>satisfying the test</i> are removed
+(instead of the leftmost).
+</p>
+<p><i>predicate</i>, <i>test</i>, and <i>test-not</i> 
+might be called more than once for each <i>sequence</i> <i>element</i>,
+and their side effects can happen in any order.         
+</p>
+<p>The result of all these functions is a <i>sequence</i>
+of the same <i>type</i> as <i>sequence</i>
+that has the same elements except that those in the subsequence
+<i>bounded</i> by <i>start</i> and <i>end</i> and <i>satisfying the test</i> 
+have been replaced by <i>newitem</i>.  
+</p>
+<p><b>substitute</b>, <b>substitute-if</b>, and <b>substitute-if-not</b>
+return a <i>sequence</i> which can share with <i>sequence</i> 
+or may be <i>identical</i> to the input <i>sequence</i>
+if no elements need to be changed.
+</p>
+<p><b>nsubstitute</b> and  <b>nsubstitute-if</b> are required to 
+<b>setf</b> any <b>car</b> (if <i>sequence</i> is a <i>list</i>) 
+or <b>aref</b> (if <i>sequence</i> is a <i>vector</i>)
+of <i>sequence</i> that is required to be replaced with <i>newitem</i>.
+If <i>sequence</i> is a <i>list</i>,
+none of the <i>cdrs</i> of the top-level <i>list</i> can be modified.  
+</p>
+<a name="Examples_003a_003a-353"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (substitute #\. #\SPACE &quot;0 2 4 6&quot;) &rArr;  &quot;0.2.4.6&quot;
+ (substitute 9 4 '(1 2 4 1 3 4 5)) &rArr;  (1 2 9 1 3 9 5)
+ (substitute 9 4 '(1 2 4 1 3 4 5) :count 1) &rArr;  (1 2 9 1 3 4 5)
+ (substitute 9 4 '(1 2 4 1 3 4 5) :count 1 :from-end t)
+&rArr;  (1 2 4 1 3 9 5)
+ (substitute 9 3 '(1 2 4 1 3 4 5) :test #'&gt;) &rArr;  (9 9 4 9 3 4 5)
+
+ (substitute-if 0 #'evenp '((1) (2) (3) (4)) :start 2 :key #'car)
+&rArr;  ((1) (2) (3) 0)
+ (substitute-if 9 #'oddp '(1 2 4 1 3 4 5)) &rArr;  (9 2 4 9 9 4 9)
+ (substitute-if 9 #'evenp '(1 2 4 1 3 4 5) :count 1 :from-end t)
+&rArr;  (1 2 4 1 3 9 5)
+
+ (setq some-things (list 'a 'car 'b 'cdr 'c)) &rArr;  (A CAR B CDR C)
+ (nsubstitute-if &quot;function was here&quot; #'fboundp some-things
+                 :count 1 :from-end t) &rArr;  (A CAR B &quot;function was here&quot; C)
+ some-things &rArr;  (A CAR B &quot;function was here&quot; C)
+ (setq alpha-tester (copy-seq &quot;ab &quot;)) &rArr;  &quot;ab &quot;
+ (nsubstitute-if-not #\z #'alpha-char-p alpha-tester) &rArr;  &quot;abz&quot;
+ alpha-tester &rArr;  &quot;abz&quot;
+</pre></div>
+
+<a name="Side-Effects_003a_003a-54"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p><b>nsubstitute</b>, <b>nsubstitute-if</b>, and <b>nsubstitute-if-not</b>
+modify <i>sequence</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-164"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>sequence</i> is not a <i>proper sequence</i>.
+</p>
+<a name="See-Also_003a_003a-396"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;subst; subst-if; subst-if-not; nsubst; nsubst-if; nsubst-if-not&rsquo;
+,
+<b>nsubst</b>,
+</p>
+<p><a href="Compiler-Terminology.html#Compiler-Terminology">Compiler Terminology</a>,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<a name="Notes_003a_003a-266"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <tt>:test-not</tt> <i>argument</i> is deprecated.
+</p>
+<p>The functions <b>substitute-if-not</b> and <b>nsubstitute-if-not</b> are deprecated.
+</p>
+<p><b>nsubstitute</b> and <b>nsubstitute-if</b> can be used 
+in for-effect-only positions in code.
+</p>
+<p>Because the side-effecting variants (<i>e.g.</i>, <b>nsubstitute</b>)
+potentially change the path that is being traversed, their effects in
+the presence of shared or circular structure may vary in surprising ways when
+compared to their non-side-effecting alternatives.  To see this,
+consider the following side-effect behavior, which might be exhibited by
+some implementations:
+</p>
+<div class="example">
+<pre class="example"> (defun test-it (fn)
+   (let ((x (cons 'b nil)))
+     (rplacd x x)
+     (funcall fn 'a 'b x :count 1)))
+ (test-it #'substitute) &rArr;  (A . #1=(B . #1#))
+ (test-it #'nsubstitute) &rArr;  (A . #1#)
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="concatenate.html#concatenate" accesskey="n" rel="next">concatenate</a>, Previous: <a href="replace.html#replace" accesskey="p" rel="prev">replace</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

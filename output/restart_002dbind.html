@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>restart-bind (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="restart_002dcase.html#restart_002dcase" rel="next" title="restart-case">
+<link href="invoke_002drestart_002dinteractively.html#invoke_002drestart_002dinteractively" rel="prev" title="invoke-restart-interactively">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="invoke_002drestart_002dinteractively.html#invoke_002drestart_002dinteractively" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                invoke-restart-interactively
+                            </a>
+                            <a href="Conditions-Dictionary.html#Conditions-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Conditions Dictionary
+                            </a>
+                            <a href="restart_002dcase.html#restart_002dcase.html" class="nav-btn nav__next ">
+                                restart-case
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="restart_002dbind"></a>
+<a name="restart_002dbind-_005bMacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Macro</div>
+<h4 class="subsection">restart-bind                                                        </h4>
+
+<p><code>restart-bind</code>  <i><span class="roman">(</span>{(</i>name function
+				        {!<i>key-val-pair</i>}*<span class="roman">)</span>})
+		   {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<p><i><span class="nolinebreak">key-val-pair</span></i>&nbsp;::=<tt><span class="nolinebreak">:interactive-function</span></tt>&nbsp;<span class="nolinebreak">interactive-function</span><!-- /@w --> | 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt><span class="nolinebreak">:report-function</span></tt>&nbsp;<span class="nolinebreak">report-function</span><!-- /@w --> | 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt><span class="nolinebreak">:test-function</span></tt>&nbsp;<span class="nolinebreak">test-function</span><!-- /@w -->
+</p>
+<a name="Arguments-and-Values_003a_003a-152"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>name</i>&mdash;a <i>symbol</i>; not evaluated.
+</p>
+<p><i>function</i>&mdash;a <i>form</i>; evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>interactive-function</i>&mdash;a <i>form</i>; evaluated.
+</p>
+<p><i>report-function</i>&mdash;a <i>form</i>; evaluated.
+</p>
+<p><i>test-function</i>&mdash;a <i>form</i>; evaluated.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-206"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>restart-bind</b> executes the body of <i>forms</i> 
+in a <i>dynamic environment</i> where <i>restarts</i> with the given <i>names</i> are in effect.
+</p>
+<p>If a <i>name</i> is <b>nil</b>, it indicates an anonymous restart;
+if a <i>name</i> is a <i>non-nil</i> <i>symbol</i>, it indicates a named restart.
+</p>
+<p>The <i>function</i>, <i>interactive-function</i>, and <i>report-function</i>
+are unconditionally evaluated in the current lexical and dynamic environment
+prior to evaluation of the body. Each of these <i>forms</i> must evaluate to
+a <i>function</i>.
+</p>
+<p>If <b>invoke-restart</b> is done on that restart,
+the <i>function</i> which resulted from evaluating <i>function</i> 
+is called, in the <i>dynamic environment</i> of the <b>invoke-restart</b>,
+with the <i>arguments</i> given to <b>invoke-restart</b>. 
+The <i>function</i> may either perform a non-local transfer of control or may return normally.
+</p>
+<p>If the restart is invoked interactively from the debugger 
+(using <b>invoke-restart-interactively</b>), 
+the arguments are defaulted by calling the <i>function</i> 
+which resulted from evaluating <i>interactive-function</i>.
+That <i>function</i> may optionally prompt interactively on <i>query I/O</i>, 
+and should return a <i>list</i> of arguments to be used by
+<b>invoke-restart-interactively</b> when invoking the restart. 
+</p>
+<p>If a restart is invoked interactively but no <i>interactive-function</i> is used,
+then an argument list of <b>nil</b> is used. In that case, the <i>function</i>
+must be compatible with an empty argument list.
+</p>
+<p>If the restart is presented interactively (<i>e.g.</i>, by the debugger),
+the presentation is done by calling the <i>function</i> which resulted
+from evaluating <i>report-function</i>.
+This <i>function</i> must be a <i>function</i> of one argument, a <i>stream</i>. 
+It is expected to print a description of the action that the restart takes
+to that <i>stream</i>. 
+This <i>function</i> is called any time the restart is printed 
+while <b>*print-escape*</b> is <b>nil</b>.
+</p>
+<p>In the case of interactive invocation, 
+the result is dependent on the value of <tt>:interactive-function</tt>
+as follows.
+</p>
+<dl compact="compact">
+<dt><tt>:interactive-function</tt></dt>
+<dd><p><i>Value</i> is evaluated in the current lexical environment and
+  should return a <i>function</i> of no arguments which constructs a 
+  <i>list</i> of arguments to be used by <b>invoke-restart-interactively</b> 
+  when invoking this restart.  The <i>function</i> may prompt interactively
+  using <i>query I/O</i> if necessary.
+</p>
+</dd>
+<dt><tt>:report-function</tt></dt>
+<dd><p><i>Value</i> is evaluated in the current lexical environment and
+  should return a <i>function</i> of one argument, a <i>stream</i>, which
+  prints on the <i>stream</i> a summary of the action that this restart
+  takes.  This <i>function</i> is called whenever the restart is
+  reported (printed while <b>*print-escape*</b> is <b>nil</b>).
+  If no <tt>:report-function</tt> option is provided, the manner in which the
+  <i>restart</i> is reported is <i>implementation-dependent</i>.
+</p>
+</dd>
+<dt><tt>:test-function</tt></dt>
+<dd><p><i>Value</i> is evaluated in the current lexical environment and
+  should return a <i>function</i> of one argument, a <i>condition</i>, which
+  returns <i>true</i> if the restart is to be considered visible.
+</p>
+</dd>
+</dl>
+
+<a name="Affected-By_003a_003a-34"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p><b>*query-io*</b>.
+</p>
+<a name="See-Also_003a_003a-180"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="restart_002dcase.html#restart_002dcase">restart-case</a>
+, 
+<a href="with_002dsimple_002drestart.html#with_002dsimple_002drestart">with-simple-restart</a>
+</p>
+<a name="Notes_003a_003a-110"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p><b>restart-bind</b> is primarily intended to be used to implement
+<b>restart-case</b> and  might be useful in implementing other
+macros. Programmers who are uncertain about whether to use <b>restart-case</b>
+or <b>restart-bind</b> should prefer <b>restart-case</b> for the cases where
+it is powerful enough, using <b>restart-bind</b> only in cases where its full
+generality is really needed.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

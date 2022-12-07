@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>initialize-instance (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="initialize-instance (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="initialize-instance (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="class_002dname.html#class_002dname" rel="next" title="class-name">
+<link href="add_002dmethod.html#add_002dmethod" rel="prev" title="add-method">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="initialize_002dinstance"></a>
+<div class="header">
+<p>
+Next: <a href="class_002dname.html#class_002dname" accesskey="n" rel="next">class-name</a>, Previous: <a href="add_002dmethod.html#add_002dmethod" accesskey="p" rel="prev">add-method</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="initialize_002dinstance-_005bStandard-Generic-Function_005d"></a>
+<h4 class="subsection">7.7.36 initialize-instance                             [Standard Generic Function]</h4>
+
+<a name="Syntax_003a_003a-33"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><code>initialize-instance</code>  <i>instance &amp;rest</i> initargs &amp;key &amp;allow-other-keys &rArr;  <i>instance</i>
+</p>
+<a name="Method-Signatures_003a_003a-19"></a>
+<h4 class="subsubheading">Method Signatures::</h4>
+
+<p><code>initialize-instance</code>  <i><span class="roman">(</span><i>instance</i> <b>standard-object</b><span class="roman">)</span> &amp;rest</i> initargs
+</p>
+<a name="Arguments-and-Values_003a_003a-124"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>instance</i>&mdash;an <i>object</i>.
+</p>
+<p><i>initargs</i>&mdash;a <i>defaulted initialization argument list</i>.
+</p>
+<a name="Description_003a_003a-163"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Called by <b>make-instance</b> to initialize a newly created <i>instance</i>.
+The generic function is called with the new <i>instance</i> 
+and the <i>defaulted initialization argument list</i>.
+</p>
+<p>The system-supplied primary <i>method</i> on <b>initialize-instance</b>
+initializes the <i>slots</i> of the <i>instance</i> with values according 
+to the <i>initargs</i> and the <tt>:initform</tt> forms of the <i>slots</i>.
+It does this by calling the generic function <b>shared-initialize</b>
+with the following arguments: the <i>instance</i>, <b>t</b> (this indicates
+that all <i>slots</i> for which no initialization arguments are provided
+should be initialized according to their <tt>:initform</tt> forms), and
+the <i>initargs</i>.
+</p>
+<p>Programmers can define <i>methods</i> for <b>initialize-instance</b> to
+specify actions to be taken when an instance is initialized.  If only
+<i>after methods</i> are defined, they will be run after the
+system-supplied primary <i>method</i> for initialization and therefore will
+not interfere with the default behavior of <b>initialize-instance</b>.
+</p>
+<a name="See-Also_003a_003a-145"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Shared_002dInitialize.html#Shared_002dInitialize">Shared-Initialize</a>
+,
+<a href="make_002dinstance.html#make_002dinstance">make-instance</a>
+,
+<a href="slot_002dboundp.html#slot_002dboundp">slot-boundp</a>
+,
+<a href="slot_002dmakunbound.html#slot_002dmakunbound">slot-makunbound</a>
+,
+<a href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization">Object Creation and Initialization</a>,
+<a href="Rules-for-Initialization-Arguments.html#Rules-for-Initialization-Arguments">Rules for Initialization Arguments</a>,
+<a href="Declaring-the-Validity-of-Initialization-Arguments.html#Declaring-the-Validity-of-Initialization-Arguments">Declaring the Validity of Initialization Arguments</a>
+</p>
+
+
+
+</body>
+</html>

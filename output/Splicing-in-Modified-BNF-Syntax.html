@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Splicing in Modified BNF Syntax (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Notational-Conventions.html#Notational-Conventions" rel="up" title="Notational Conventions">
+<link href="Indirection-in-Modified-BNF-Syntax.html#Indirection-in-Modified-BNF-Syntax" rel="next" title="Indirection in Modified BNF Syntax">
+<link href="Modified-BNF-Syntax.html#Modified-BNF-Syntax" rel="prev" title="Modified BNF Syntax">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Modified-BNF-Syntax.html#Modified-BNF-Syntax" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Modified BNF Syntax
+                            </a>
+                            <a href="Notational-Conventions.html#Notational-Conventions.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Notational Conventions
+                            </a>
+                            <a href="Indirection-in-Modified-BNF-Syntax.html#Indirection-in-Modified-BNF-Syntax.html" class="nav-btn nav__next ">
+                                Indirection in Modified BNF Syntax
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Splicing-in-Modified-BNF-Syntax"></a>
+<a name="Splicing-in-Modified-BNF-Syntax-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Splicing in Modified BNF Syntax</h4>
+
+<p>The primary extension used is the following:
+</p>
+<div align="center">[[O]]
+</div>
+<p>An expression of this form appears whenever a list of elements is
+to be spliced into a larger structure and the elements can appear in
+any order. The symbol O represents a description of the syntax of
+some number of syntactic elements to be spliced; that description must
+be of the form
+</p>
+<div align="center">O_1 | ... | O_l
+</div>
+<p>where each O_i can be of the form S or of
+the form S<span class="roman">*</span> or of the form S^1.
+</p>
+<p>The expression [[O]] means that a list of the form
+</p>
+<div align="center">(O_{i_1}... O_{i_j})  1&lt;= j
+</div>
+<p>is spliced into the enclosing expression,
+such that if n != m and 1&lt;= n,m&lt;= j,
+then either O_{i_n}!= O_{i_m}
+         or O_{i_n} = O_{i_m} = Q_k, 
+where for some 1&lt;= k &lt;= n, O_k is of the form Q_k<span class="roman">*</span>.
+</p>
+<p>Furthermore, for each O_{i_n} that is of the form Q_k^1,
+that element is required to appear somewhere in the list to be spliced.
+</p>
+<p>For example, the expression
+</p>
+<p><tt>(x [[A | B<span class="roman">*</span> | C]] y)</tt>
+</p>
+<p>means that at most one <tt>A</tt>, any number of <tt>B</tt>&rsquo;s, and
+at most one <tt>C</tt> can occur in any order.
+It is a description of any of these:
+</p>
+<div class="example">
+<pre class="example"><code> (x y)
+ (x B A C y)
+ (x A B B B B B C y)
+ (x C B A B B B y)
+</code>
+</pre></div>
+
+<p>but not any of these:
+</p>
+<div class="example">
+<pre class="example"><code> (x B B A A C C y)
+ (x C B C y)
+</code>
+</pre></div>
+
+<p>In the first case, both <tt>A</tt> and <tt>C</tt> appear too often,
+and in the second case <tt>C</tt> appears too often.
+</p>
+<p>The notation [[O_1 | O_2 | ...]]^+ 
+adds the additional restriction that at least one item from among the possible
+choices must be used.  For example:
+</p>
+<p><tt>(x [[A | B<span class="roman">*</span> | C]]^+ y)</tt>
+</p>
+<p>means that at most one <tt>A</tt>, any number of <tt>B</tt>&rsquo;s, and
+at most one <tt>C</tt> can occur in any order, but that in any case at least
+one of these options must be selected.
+It is a description of any of these:
+</p>
+<div class="example">
+<pre class="example"><code> (x B y)
+ (x B A C y)
+ (x A B B B B B C y)
+ (x C B A B B B y)
+</code>
+</pre></div>
+
+<p>but not any of these:
+</p>
+<div class="example">
+<pre class="example"><code> (x y)
+ (x B B A A C C y)
+ (x C B C y)
+</code>
+</pre></div>
+
+<p>In the first case, no item was used;
+in the second case, both <tt>A</tt> and <tt>C</tt> appear too often;
+and in the third case <tt>C</tt> appears too often.
+</p>
+<p>Also, the expression:
+</p>
+<p><tt>(x [[A^1 | B^1 | C]] y)</tt>
+</p>
+<p>can generate exactly these and no others:
+</p>
+<div class="example">
+<pre class="example"><code> (x A B C y)
+ (x A C B y)
+ (x A B y)
+ (x B A C y)
+ (x B C A y)
+ (x B A y)
+ (x C A B y)
+ (x C B A y)
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

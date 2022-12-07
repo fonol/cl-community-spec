@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Hash-Table Operations (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Hash-Table Operations (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Hash-Table Operations (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Hash-Table-Concepts.html#Hash-Table-Concepts" rel="up" title="Hash Table Concepts">
+<link href="Modifying-Hash-Table-Keys.html#Modifying-Hash-Table-Keys" rel="next" title="Modifying Hash Table Keys">
+<link href="Hash-Table-Concepts.html#Hash-Table-Concepts" rel="prev" title="Hash Table Concepts">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Hash_002dTable-Operations"></a>
+<div class="header">
+<p>
+Next: <a href="Modifying-Hash-Table-Keys.html#Modifying-Hash-Table-Keys" accesskey="n" rel="next">Modifying Hash Table Keys</a>, Previous: <a href="Hash-Table-Concepts.html#Hash-Table-Concepts" accesskey="p" rel="prev">Hash Table Concepts</a>, Up: <a href="Hash-Table-Concepts.html#Hash-Table-Concepts" accesskey="u" rel="up">Hash Table Concepts</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Hash_002dTable-Operations-1"></a>
+<h4 class="subsection">18.1.1 Hash-Table Operations</h4>
+
+<p>Figure 18&ndash;1 lists some <i>defined names</i> that are applicable 
+to <i>hash tables</i>.  The following rules apply to <i>hash tables</i>.
+</p>
+<dl compact="compact">
+<dt>&ndash;</dt>
+<dd><p>A <i>hash table</i> can only associate one value with a given
+key. If an attempt is made to add a second value for a given key,
+the second value will replace the first.
+Thus, adding a value to a <i>hash table</i> is a destructive operation;
+the <i>hash table</i> is modified.  
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>There are four kinds of <i>hash tables</i>:
+  those whose keys are compared with <b>eq</b>,
+  those whose keys are compared with <b>eql</b>,
+  those whose keys are compared with <b>equal</b>, and
+</p>
+<p>those whose keys are compared with <b>equalp</b>.  
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p><i>Hash tables</i> are created by <b>make-hash-table</b>. 
+<b>gethash</b> is used to look up a key and find the associated value.
+New entries are added to <i>hash tables</i> using <b>setf</b> with <b>gethash</b>.
+<b>remhash</b> is used to remove an entry.
+For example:
+</p>
+<div class="example">
+<pre class="example"> (setq a (make-hash-table)) &rArr;  #&lt;HASH-TABLE EQL 0/120 32536573&gt;
+ (setf (gethash 'color a) 'brown) &rArr;  BROWN
+ (setf (gethash 'name a) 'fred) &rArr;  FRED
+ (gethash 'color a) &rArr;  BROWN, <i>true</i>
+ (gethash 'name a) &rArr;  FRED, <i>true</i>
+ (gethash 'pointy a) &rArr;  NIL, <i>false</i>
+</pre></div>
+
+<p>In this example, the symbols <tt>color</tt> and <tt>name</tt> are being used as
+keys, and the symbols <tt>brown</tt> and <tt>fred</tt> are being used as the
+associated values.  The <i>hash table</i> 
+has two items in it, one of which                              
+associates from <tt>color</tt> to <tt>brown</tt>, and the other of which
+associates from <tt>name</tt> to <tt>fred</tt>.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>A key or a value may be any <i>object</i>.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>The existence of an entry in the <i>hash table</i> can be determined
+from the <i>secondary value</i> returned by <b>gethash</b>.
+</p></dd>
+</dl>
+
+<p>&nbsp;&nbsp;clrhash&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">hash-table-p</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remhash&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;gethash&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">make-hash-table</span>&nbsp;&nbsp;sxhash&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">hash-table-count</span>&nbsp;&nbsp;maphash&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;18&ndash;1:&nbsp;<span class="nolinebreak">Hash-table</span>&nbsp;defined&nbsp;names&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Modifying-Hash-Table-Keys.html#Modifying-Hash-Table-Keys" accesskey="n" rel="next">Modifying Hash Table Keys</a>, Previous: <a href="Hash-Table-Concepts.html#Hash-Table-Concepts" accesskey="p" rel="prev">Hash Table Concepts</a>, Up: <a href="Hash-Table-Concepts.html#Hash-Table-Concepts" accesskey="u" rel="up">Hash Table Concepts</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

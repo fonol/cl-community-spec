@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Interpreting Pathname Component Values (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Pathnames.html#Pathnames" rel="up" title="Pathnames">
+<link href="Strings-in-Component-Values.html#Strings-in-Component-Values" rel="next" title="Strings in Component Values">
+<link href="The-Pathname-Version-Component.html#The-Pathname-Version-Component" rel="prev" title="The Pathname Version Component">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="The-Pathname-Version-Component.html#The-Pathname-Version-Component" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                The Pathname Version Component
+                            </a>
+                            <a href="Pathnames.html#Pathnames.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Pathnames
+                            </a>
+                            <a href="Strings-in-Component-Values.html#Strings-in-Component-Values.html" class="nav-btn nav__next ">
+                                Strings in Component Values
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Interpreting-Pathname-Component-Values"></a>
+<a name="Interpreting-Pathname-Component-Values-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Interpreting Pathname Component Values</h4>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Strings-in-Component-Values.html#Strings-in-Component-Values" accesskey="1">Strings in Component Values</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Special-Characters-in-Pathname-Components.html#Special-Characters-in-Pathname-Components" accesskey="2">Special Characters in Pathname Components</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Case-in-Pathname-Components.html#Case-in-Pathname-Components" accesskey="3">Case in Pathname Components</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Local-Case-in-Pathname-Components.html#Local-Case-in-Pathname-Components" accesskey="4">Local Case in Pathname Components</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Common-Case-in-Pathname-Components.html#Common-Case-in-Pathname-Components" accesskey="5">Common Case in Pathname Components</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Special-Pathname-Component-Values.html#Special-Pathname-Component-Values" accesskey="6">Special Pathname Component Values</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="NIL-as-a-Component-Value.html#NIL-as-a-Component-Value" accesskey="7">NIL as a Component Value</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="_002d_003eWILD-as-a-Component-Value.html#g_t_002d_003eWILD-as-a-Component-Value" accesskey="8">-&gt;WILD as a Component Value</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="_002d_003eUNSPECIFIC-as-a-Component-Value.html#g_t_002d_003eUNSPECIFIC-as-a-Component-Value" accesskey="9">-&gt;UNSPECIFIC as a Component Value</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Relation-between-component-values-NIL-and-_002d_003eUNSPECIFIC.html#Relation-between-component-values-NIL-and-_002d_003eUNSPECIFIC">Relation between component values NIL and -&gt;UNSPECIFIC</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Restrictions-on-Wildcard-Pathnames.html#Restrictions-on-Wildcard-Pathnames">Restrictions on Wildcard Pathnames</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Restrictions-on-Examining-Pathname-Components.html#Restrictions-on-Examining-Pathname-Components">Restrictions on Examining Pathname Components</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Restrictions-on-Examining-a-Pathname-Host-Component.html#Restrictions-on-Examining-a-Pathname-Host-Component">Restrictions on Examining a Pathname Host Component</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Restrictions-on-Examining-a-Pathname-Device-Component.html#Restrictions-on-Examining-a-Pathname-Device-Component">Restrictions on Examining a Pathname Device Component</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Restrictions-on-Examining-a-Pathname-Directory-Component.html#Restrictions-on-Examining-a-Pathname-Directory-Component">Restrictions on Examining a Pathname Directory Component</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Directory-Components-in-Non_002dHierarchical-File-Systems.html#Directory-Components-in-Non_002dHierarchical-File-Systems">Directory Components in Non-Hierarchical File Systems</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Restrictions-on-Examining-a-Pathname-Name-Component.html#Restrictions-on-Examining-a-Pathname-Name-Component">Restrictions on Examining a Pathname Name Component</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Restrictions-on-Examining-a-Pathname-Type-Component.html#Restrictions-on-Examining-a-Pathname-Type-Component">Restrictions on Examining a Pathname Type Component</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Restrictions-on-Examining-a-Pathname-Version-Component.html#Restrictions-on-Examining-a-Pathname-Version-Component">Restrictions on Examining a Pathname Version Component</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Notes-about-the-Pathname-Version-Component.html#Notes-about-the-Pathname-Version-Component">Notes about the Pathname Version Component</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Restrictions-on-Constructing-Pathnames.html#Restrictions-on-Constructing-Pathnames">Restrictions on Constructing Pathnames</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

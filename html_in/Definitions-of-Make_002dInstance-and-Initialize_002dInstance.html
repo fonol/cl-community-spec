@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Definitions of Make-Instance and Initialize-Instance (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Definitions of Make-Instance and Initialize-Instance (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Definitions of Make-Instance and Initialize-Instance (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" rel="up" title="Object Creation and Initialization">
+<link href="Changing-the-Class-of-an-Instance.html#Changing-the-Class-of-an-Instance" rel="next" title="Changing the Class of an Instance">
+<link href="Initialize_002dInstance.html#Initialize_002dInstance" rel="prev" title="Initialize-Instance">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Definitions-of-Make_002dInstance-and-Initialize_002dInstance"></a>
+<div class="header">
+<p>
+Previous: <a href="Initialize_002dInstance.html#Initialize_002dInstance" accesskey="p" rel="prev">Initialize-Instance</a>, Up: <a href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" accesskey="u" rel="up">Object Creation and Initialization</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Definitions-of-Make_002dInstance-and-Initialize_002dInstance-1"></a>
+<h4 class="subsection">7.1.7 Definitions of Make-Instance and Initialize-Instance</h4>
+
+<p>The generic function <b>make-instance</b> behaves as if it were defined as
+follows, except that certain optimizations are permitted:
+</p>
+<div class="example">
+<pre class="example"> (defmethod make-instance ((class standard-class) &amp;rest initargs)
+   ...
+   (let ((instance (apply #'allocate-instance class initargs)))
+     (apply #'initialize-instance instance initargs)
+     instance))
+
+ (defmethod make-instance ((class-name symbol) &amp;rest initargs)
+   (apply #'make-instance (find-class class-name) initargs))
+</pre></div>
+
+<p>The elided code in the definition of <b>make-instance</b> 
+augments the <tt>initargs</tt> with any <i>defaulted initialization arguments</i> and
+checks the
+resulting
+initialization arguments to determine whether an initialization
+argument was supplied that neither filled a <i>slot</i> nor supplied an argument
+to an applicable <i>method</i>. 
+</p>
+<p>The generic function <b>initialize-instance</b> behaves as if it were
+defined as follows, except that certain optimizations are permitted:
+</p>
+<div class="example">
+<pre class="example"> (defmethod initialize-instance ((instance standard-object) &amp;rest initargs)
+   (apply #'shared-initialize instance t initargs)))
+</pre></div>
+
+<p>These procedures can be customized.
+</p>
+<p>Customizing at the Programmer Interface level includes using the 
+<tt>:initform</tt>, <tt>:initarg</tt>, and <tt>:default-initargs</tt> options to
+<b>defclass</b>, as well as defining <i>methods</i>
+for <b>make-instance</b>, 
+<b>allocate-instance</b>,
+and <b>initialize-instance</b>.  It is also possible to define
+<i>methods</i> for <b>shared-initialize</b>, which would be invoked by the
+generic functions <b>reinitialize-instance</b>, 
+<b>update-instance-for-redefined-class</b>, 
+<b>update-instance-for-different-class</b>, and 
+<b>initialize-instance</b>.  
+The meta-object level supports additional
+customization.
+</p>
+<p>Implementations are permitted to make certain optimizations to 
+<b>initialize-instance</b> and <b>shared-initialize</b>.  
+The description of <b>shared-initialize</b> in Chapter~7 mentions the
+possible optimizations.
+</p>
+
+
+
+
+</body>
+</html>

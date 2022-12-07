@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>find-class (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="find-class (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="find-class (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="next_002dmethod_002dp.html#next_002dmethod_002dp" rel="next" title="next-method-p">
+<link href="defmethod.html#defmethod" rel="prev" title="defmethod">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="find_002dclass"></a>
+<div class="header">
+<p>
+Next: <a href="next_002dmethod_002dp.html#next_002dmethod_002dp" accesskey="n" rel="next">next-method-p</a>, Previous: <a href="defmethod.html#defmethod" accesskey="p" rel="prev">defmethod</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="find_002dclass-_005bAccessor_005d"></a>
+<h4 class="subsection">7.7.28 find-class                                                       [Accessor]</h4>
+
+<p><code>find-class</code>  <i>symbol &amp;optional</i> errorp environment &rArr;  <i>class</i>
+</p>
+<p>(setf (<code>         find-class</code> <i>symbol &amp;optional</i> errorp environment) new-class)<br>
+</p>
+<a name="Arguments-and-Values_003a_003a-116"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>symbol</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>errorp</i>&mdash;a <i>generalized boolean</i>.
+ The default is <i>true</i>.
+</p>
+<p><i>environment</i> &ndash; same as the <b>&amp;environment</b> argument to
+  macro expansion functions and is used to distinguish between 
+  compile-time and run-time environments.
+</p>
+<p>The <b>&amp;environment</b> argument has 
+  <i>dynamic extent</i>; the consequences are undefined if 
+  the <b>&amp;environment</b> argument is 
+  referred to outside the <i>dynamic extent</i> 
+  of the macro expansion function.
+</p>
+<p><i>class</i>&mdash;a <i>class</i> <i>object</i>, or <b>nil</b>.
+</p>
+<a name="Description_003a_003a-155"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns the <i>class</i> <i>object</i> named by the <i>symbol</i>
+in the <i>environment</i>.  If there is no such <i>class</i>,
+<b>nil</b> is returned if <i>errorp</i> is <i>false</i>; otherwise,
+if <i>errorp</i> is <i>true</i>, an error is signaled.
+</p>
+<p>The <i>class</i> associated with a particular <i>symbol</i> can be changed by using
+<b>setf</b> with <b>find-class</b>;
+</p>
+<p>or, if the new <i>class</i> given to <b>setf</b> is <b>nil</b>,
+the <i>class</i> association is removed 
+(but the <i>class</i> <i>object</i> itself is not affected).
+</p>
+<p>The results are undefined if the user attempts to change
+</p>
+<p>or remove
+</p>
+<p>the <i>class</i> associated with a 
+<i>symbol</i> that is defined as a <i>type specifier</i> in this standard.
+See <a href="Integrating-Types-and-Classes.html#Integrating-Types-and-Classes">Integrating Types and Classes</a>.
+</p>
+<p>When using <b>setf</b> of <b>find-class</b>, any <i>errorp</i> argument is <i>evaluated</i>
+for effect, but any <i>values</i> it returns are ignored; the <i>errorp</i>
+<i>parameter</i> is permitted primarily so that the <i>environment</i> <i>parameter</i>
+can be used.
+</p>
+<p>The <i>environment</i> might be used to distinguish between a compile-time and a
+run-time environment.
+</p>
+<a name="Exceptional-Situations_003a_003a-40"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If there is no such <i>class</i> and <i>errorp</i> is <i>true</i>,
+<b>find-class</b> signals an error of <i>type</i> <b>error</b>.
+</p>
+<a name="See-Also_003a_003a-137"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="defmacro.html#defmacro">defmacro</a>
+,
+<a href="Integrating-Types-and-Classes.html#Integrating-Types-and-Classes">Integrating Types and Classes</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="next_002dmethod_002dp.html#next_002dmethod_002dp" accesskey="n" rel="next">next-method-p</a>, Previous: <a href="defmethod.html#defmethod" accesskey="p" rel="prev">defmethod</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

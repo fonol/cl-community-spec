@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Specifiers for keyword parameters (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Specifiers for keyword parameters (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Specifiers for keyword parameters (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Ordinary-Lambda-Lists.html#Ordinary-Lambda-Lists" rel="up" title="Ordinary Lambda Lists">
+<link href="Suppressing-Keyword-Argument-Checking.html#Suppressing-Keyword-Argument-Checking" rel="next" title="Suppressing Keyword Argument Checking">
+<link href="A-specifier-for-a-rest-parameter.html#A-specifier-for-a-rest-parameter" rel="prev" title="A specifier for a rest parameter">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Specifiers-for-keyword-parameters"></a>
+<div class="header">
+<p>
+Next: <a href="Suppressing-Keyword-Argument-Checking.html#Suppressing-Keyword-Argument-Checking" accesskey="n" rel="next">Suppressing Keyword Argument Checking</a>, Previous: <a href="A-specifier-for-a-rest-parameter.html#A-specifier-for-a-rest-parameter" accesskey="p" rel="prev">A specifier for a rest parameter</a>, Up: <a href="Ordinary-Lambda-Lists.html#Ordinary-Lambda-Lists" accesskey="u" rel="up">Ordinary Lambda Lists</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Specifiers-for-keyword-parameters-1"></a>
+<h4 class="subsubsection">3.4.1.4 Specifiers for keyword parameters</h4>
+
+<p>If <b>&amp;key</b> 
+is present, all specifiers up to the next <i>lambda list keyword</i>
+or the end of the <i>list</i> are keyword parameter specifiers.
+When keyword parameters are processed,
+the same arguments are processed that
+would be made into a <i>list</i> for a <i>rest parameter</i>.
+It is permitted to specify both <b>&amp;rest</b> and <b>&amp;key</b>.
+In this case the remaining arguments are used for both purposes;
+that is, all remaining arguments are made into a <i>list</i> for the
+<i>rest parameter</i>, and are also processed for the <b>&amp;key</b> parameters.
+</p>
+<p>If <b>&amp;key</b> is specified, there must remain
+an even number of arguments; see <a href="Odd-Number-of-Keyword-Arguments.html#Odd-Number-of-Keyword-Arguments">Odd Number of Keyword Arguments</a>.
+</p>
+<p>These arguments are considered as pairs,
+the first argument in each pair being interpreted as a name
+and the second as the corresponding value.
+The first <i>object</i> of each pair must be a <i>symbol</i>;
+see <a href="Invalid-Keyword-Arguments.html#Invalid-Keyword-Arguments">Invalid Keyword Arguments</a>.
+The keyword parameter specifiers may optionally be followed by the
+<i>lambda list keyword</i> <b>&amp;allow-other-keys</b>.
+</p>
+<p>In each keyword parameter specifier must be a name <i>var</i> for
+the parameter variable.
+</p>
+<p>If the <i>var</i> appears alone or in a <tt>(<i>var</i> <i>init-form</i>)</tt>
+combination, the keyword name used when matching <i>arguments</i> to <i>parameters</i>
+is a <i>symbol</i> in the <tt>KEYWORD</tt> <i>package</i> whose <i>name</i> is the
+<i>same</i> (under <b>string=</b>) as <i>var</i>&rsquo;s.
+If the notation <tt>((<i>keyword-name</i> <i>var</i>) <i>init-form</i>)</tt> is used,
+then the keyword name used to match <i>arguments</i> to <i>parameters</i> is
+<i>keyword-name</i>, which may be a <i>symbol</i> in any <i>package</i>.
+(Of course, if it is not a <i>symbol</i> in the <tt>KEYWORD</tt> <i>package</i>,
+it does not necessarily self-evaluate, so care must be taken when calling the function
+to make sure that normal evaluation still yields the keyword name.)
+</p>
+<p>Thus
+</p>
+<div class="example">
+<pre class="example"> (defun foo (&amp;key radix (type 'integer)) ...)
+</pre></div>
+
+<p>means exactly the same as
+</p>
+<div class="example">
+<pre class="example"> (defun foo (&amp;key ((:radix radix)) ((:type type) 'integer)) ...)
+</pre></div>
+
+<p>The keyword parameter specifiers are, like all parameter specifiers,
+effectively processed from left to right.  For each keyword parameter
+specifier, if there is an argument pair whose name matches that
+specifier&rsquo;s name (that is, the names are <b>eq</b>), then the
+parameter variable for that specifier is bound to the second item (the
+value) of that argument pair.  If more than one such argument pair
+matches, the leftmost argument pair is used.  If no such argument pair
+exists, then the <i>init-form</i> for that specifier is evaluated and
+the parameter variable is bound to that value (or to <b>nil</b> if no
+<i>init-form</i> was specified).  <i>supplied-p-parameter</i> is
+treated as for <b>&amp;optional</b> parameters: it is bound to <i>true</i> if there
+was a matching argument pair, and to <i>false</i> otherwise.
+</p>
+<p>Unless keyword argument checking is suppressed,
+an argument pair must a name matched by a parameter specifier;
+see <a href="Unrecognized-Keyword-Arguments.html#Unrecognized-Keyword-Arguments">Unrecognized Keyword Arguments</a>.
+</p>
+<p>If keyword argument checking is suppressed, 
+then it is permitted for an argument pair
+to match no parameter specifier, and the argument pair is ignored, but
+such an argument pair is accessible through the <i>rest parameter</i> if
+one was supplied.  The purpose of these mechanisms is to allow sharing
+of argument lists among several <i>lambda expressions</i> and to
+allow either the caller or the called <i>lambda expression</i> to
+specify that such sharing may be taking place.
+</p>
+<p>Note that if <b>&amp;key</b> is present, a keyword argument of <tt>:allow-other-keys</tt>
+is always permitted&mdash;regardless of whether the associated value is <i>true</i>
+or <i>false</i>.  However, if the value is <i>false</i>, other non-matching
+keywords are not tolerated (unless <b>&amp;allow-other-keys</b> was used).
+</p>
+<p>Furthermore, if the receiving argument list specifies a regular argument which
+would be flagged by <tt>:allow-other-keys</tt>, then <tt>:allow-other-keys</tt> has both
+its special-cased meaning (identifying whether additional keywords are permitted)
+and its normal meaning (data flow into the function in question).
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Suppressing-Keyword-Argument-Checking.html#Suppressing-Keyword-Argument-Checking" accesskey="n" rel="next">Suppressing Keyword Argument Checking</a>, Previous: <a href="A-specifier-for-a-rest-parameter.html#A-specifier-for-a-rest-parameter" accesskey="p" rel="prev">A specifier for a rest parameter</a>, Up: <a href="Ordinary-Lambda-Lists.html#Ordinary-Lambda-Lists" accesskey="u" rel="up">Ordinary Lambda Lists</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

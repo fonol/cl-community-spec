@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Examples of FORMAT (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Formatted-Output.html#Formatted-Output" rel="up" title="Formatted Output">
+<link href="Notes-about-FORMAT.html#Notes-about-FORMAT" rel="next" title="Notes about FORMAT">
+<link href="Undefined-FORMAT-Modifier-Combinations.html#Undefined-FORMAT-Modifier-Combinations" rel="prev" title="Undefined FORMAT Modifier Combinations">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Undefined-FORMAT-Modifier-Combinations.html#Undefined-FORMAT-Modifier-Combinations" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Undefined FORMAT Modifier Combinations
+                            </a>
+                            <a href="Formatted-Output.html#Formatted-Output.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Formatted Output
+                            </a>
+                            <a href="Notes-about-FORMAT.html#Notes-about-FORMAT.html" class="nav-btn nav__next ">
+                                Notes about FORMAT
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Examples-of-FORMAT"></a>
+<a name="Examples-of-FORMAT-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Examples of FORMAT</h4>
+
+<div class="example">
+<pre class="example"><code> (format nil &quot;foo&quot;) &rArr;  &quot;foo&quot;
+ (setq x 5) &rArr;  5
+ (format nil &quot;The answer is ~D.&quot; x) &rArr;  &quot;The answer is 5.&quot;
+ (format nil &quot;The answer is ~3D.&quot; x) &rArr;  &quot;The answer is   5.&quot;
+ (format nil &quot;The answer is ~3,'0D.&quot; x) &rArr;  &quot;The answer is 005.&quot;
+ (format nil &quot;The answer is ~:D.&quot; (expt 47 x))
+&rArr;  &quot;The answer is 229,345,007.&quot;
+ (setq y &quot;elephant&quot;) &rArr;  &quot;elephant&quot;
+ (format nil &quot;Look at the ~A!&quot; y) &rArr;  &quot;Look at the elephant!&quot;
+ (setq n 3) &rArr;  3
+ (format nil &quot;~D item~:P found.&quot; n) &rArr;  &quot;3 items found.&quot;
+ (format nil &quot;~R dog~:[s are~; is~] here.&quot; n (= n 1))
+&rArr;  &quot;three dogs are here.&quot;
+ (format nil &quot;~R dog~:*~[s are~; is~:;s are~] here.&quot; n)
+&rArr;  &quot;three dogs are here.&quot;
+ (format nil &quot;Here ~[are~;is~:;are~] ~:*~R pupp~:@P.&quot; n)
+&rArr;  &quot;Here are three puppies.&quot;
+</code>
+</pre></div>
+
+<div class="example">
+<pre class="example"><code> (defun foo (x)
+   (format nil &quot;~6,2F|~6,2,1,'*F|~6,2,,'?F|~6F|~,2F|~F&quot;
+           x x x x x x)) &rArr;  FOO
+ (foo 3.14159)  &rArr;  &quot;  3.14| 31.42|  3.14|3.1416|3.14|3.14159&quot;
+ (foo -3.14159) &rArr;  &quot; -3.14|-31.42| -3.14|-3.142|-3.14|-3.14159&quot;
+ (foo 100.0)    &rArr;  &quot;100.00|******|100.00| 100.0|100.00|100.0&quot;
+ (foo 1234.0)   &rArr;  &quot;1234.00|******|??????|1234.0|1234.00|1234.0&quot;
+ (foo 0.006)    &rArr;  &quot;  0.01|  0.06|  0.01| 0.006|0.01|0.006&quot;
+</code>
+</pre></div>
+
+<div class="example">
+<pre class="example"><code> (defun foo (x)  
+    (format nil
+           &quot;~9,2,1,,'*E|~10,3,2,2,'?,,'$E|~
+            ~9,3,2,-2,'
+           x x x x))
+ (foo 3.14159)  &rArr;  &quot;  3.14E+0| 31.42$-01|+.003E+03|  3.14E+0&quot;
+ (foo -3.14159) &rArr;  &quot; -3.14E+0|-31.42$-01|-.003E+03| -3.14E+0&quot;
+ (foo 1100.0)   &rArr;  &quot;  1.10E+3| 11.00$+02|+.001E+06|  1.10E+3&quot;
+ (foo 1100.0L0) &rArr;  &quot;  1.10L+3| 11.00$+02|+.001L+06|  1.10L+3&quot;
+ (foo 1.1E13)   &rArr;  &quot;*********| 11.00$+12|+.001E+16| 1.10E+13&quot;
+ (foo 1.1L120)  &rArr;  &quot;*********|??????????|
+ (foo 1.1L1200) &rArr;  &quot;*********|??????????|
+</code>
+</pre></div>
+
+<p>As an example of the effects of varying the scale factor, the code
+</p>
+<div class="example">
+<pre class="example"><code> (dotimes (k 13)
+   (format t &quot;~
+           (- k 5) (- k 5) 3.14159))
+</code>
+</pre></div>
+
+<p>produces the following output:
+</p>
+<div class="example">
+<pre class="example"><code>Scale factor -5: | 0.000003E+06|
+Scale factor -4: | 0.000031E+05|
+Scale factor -3: | 0.000314E+04|
+Scale factor -2: | 0.003142E+03|
+Scale factor -1: | 0.031416E+02|
+Scale factor  0: | 0.314159E+01|
+Scale factor  1: | 3.141590E+00|
+Scale factor  2: | 31.41590E-01|
+Scale factor  3: | 314.1590E-02|
+Scale factor  4: | 3141.590E-03|
+Scale factor  5: | 31415.90E-04|
+Scale factor  6: | 314159.0E-05|
+Scale factor  7: | 3141590.E-06|
+</code>
+</pre></div>
+
+<div class="example">
+<pre class="example"><code> (defun foo (x)
+   (format nil &quot;~9,2,1,,'*G|~9,3,2,3,'?,,'$G|~9,3,2,0,'
+          x x x x))                                     
+ (foo 0.0314159) &rArr;  &quot;  3.14E-2|314.2$-04|0.314E-01|  3.14E-2&quot;
+ (foo 0.314159)  &rArr;  &quot;  0.31   |0.314    |0.314    | 0.31    &quot;
+ (foo 3.14159)   &rArr;  &quot;   3.1   | 3.14    | 3.14    |  3.1    &quot;
+ (foo 31.4159)   &rArr;  &quot;   31.   | 31.4    | 31.4    |  31.    &quot;
+ (foo 314.159)   &rArr;  &quot;  3.14E+2| 314.    | 314.    |  3.14E+2&quot;
+ (foo 3141.59)   &rArr;  &quot;  3.14E+3|314.2$+01|0.314E+04|  3.14E+3&quot;
+ (foo 3141.59L0) &rArr;  &quot;  3.14L+3|314.2$+01|0.314L+04|  3.14L+3&quot;
+ (foo 3.14E12)   &rArr;  &quot;*********|314.0$+10|0.314E+13| 3.14E+12&quot;
+ (foo 3.14L120)  &rArr;  &quot;*********|?????????|
+ (foo 3.14L1200) &rArr;  &quot;*********|?????????|
+</code>
+</pre></div>
+
+<div class="example">
+<pre class="example"><code> (format nil &quot;~10&lt;foo~;bar~&gt;&quot;)   &rArr;  &quot;foo    bar&quot;
+ (format nil &quot;~10:&lt;foo~;bar~&gt;&quot;)  &rArr;  &quot;  foo  bar&quot;
+ (format nil &quot;~10&lt;foobar~&gt;&quot;)     &rArr;  &quot;    foobar&quot;
+ (format nil &quot;~10:&lt;foobar~&gt;&quot;)    &rArr;  &quot;    foobar&quot;
+ (format nil &quot;~10:@&lt;foo~;bar~&gt;&quot;) &rArr;  &quot;  foo bar &quot;
+ (format nil &quot;~10@&lt;foobar~&gt;&quot;)    &rArr;  &quot;foobar    &quot;
+ (format nil &quot;~10:@&lt;foobar~&gt;&quot;)   &rArr;  &quot;  foobar  &quot;
+</code>
+</pre></div>
+
+<div class="example">
+<pre class="example"><code>  (FORMAT NIL &quot;Written to ~A.&quot; #P&quot;foo.bin&quot;)
+  &rArr;  &quot;Written to foo.bin.&quot;
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

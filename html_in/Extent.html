@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Extent (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Extent (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Extent (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation.html#Evaluation" rel="up" title="Evaluation">
+<link href="Return-Values.html#Return-Values" rel="next" title="Return Values">
+<link href="Shadowing.html#Shadowing" rel="prev" title="Shadowing">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Extent"></a>
+<div class="header">
+<p>
+Next: <a href="Return-Values.html#Return-Values" accesskey="n" rel="next">Return Values</a>, Previous: <a href="Shadowing.html#Shadowing" accesskey="p" rel="prev">Shadowing</a>, Up: <a href="Evaluation.html#Evaluation" accesskey="u" rel="up">Evaluation</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Extent-1"></a>
+<h4 class="subsection">3.1.6 Extent</h4>
+
+<p><tt>Contorted-example</tt> works only because the
+<i>function</i> named by <tt>f</tt> is invoked during the <i>extent</i> of the 
+<i>exit point</i>.
+Once the flow of execution has left the block,
+the <i>exit point</i> is <i>disestablished</i>.  For example:
+</p>
+<div class="example">
+<pre class="example"> (defun invalid-example ()
+   (let ((y (block here #'(lambda (z) (return-from here z)))))
+     (if (numberp y) y (funcall y 5))))
+</pre></div>
+
+<p>One might expect the call <tt>(invalid-example)</tt> to produce <tt>5</tt>
+by the following incorrect reasoning:
+<b>let</b> binds <tt>y</tt> to the
+value of <b>block</b>; this value is a <i>function</i> resulting
+from the <i>lambda expression</i>.  Because <tt>y</tt> is not a number, it is
+invoked on the value <tt>5</tt>.  The <b>return-from</b> should then
+return this value from the                      
+<i>exit point</i> named <tt>here</tt>, thereby
+exiting from the block again and giving <tt>y</tt> the value <tt>5</tt>
+which, being a number, is then returned as the value of the call
+to <tt>invalid-example</tt>.
+</p>
+<p>The argument fails only because <i>exit points</i> have 
+<i>dynamic extent</i>.  The argument is correct up to the execution of
+<b>return-from</b>.  The execution of <b>return-from</b>
+should signal an error of <i>type</i> <b>control-error</b>, however, not
+because it cannot refer to the <i>exit point</i>, but because it
+does correctly refer to an <i>exit point</i> and that 
+<i>exit point</i> has been <i>disestablished</i>.
+</p>
+<p>A reference by name to a dynamic <i>exit point</i> binding such as
+a <i>catch tag</i> refers to the most recently 
+<i>established</i> <i>binding</i> of that name that has not been 
+<i>disestablished</i>.  For example:
+</p>
+<div class="example">
+<pre class="example"> (defun fun1 (x)
+   (catch 'trap (+ 3 (fun2 x))))
+ (defun fun2 (y)
+   (catch 'trap (* 5 (fun3 y))))
+ (defun fun3 (z)
+   (throw 'trap z))
+</pre></div>
+
+<p>Consider the call <tt>(fun1 7)</tt>.  The result is <tt>10</tt>.  At the time
+the <b>throw</b> is executed, there are two outstanding catchers with the
+name <tt>trap</tt>: one established within procedure <tt>fun1</tt>, and the other
+within procedure <tt>fun2</tt>.  The latter is the more recent, and so the
+value <tt>7</tt> is returned from <b>catch</b> in <tt>fun2</tt>.
+Viewed from within <tt>fun3</tt>, the <b>catch</b> 
+in <tt>fun2</tt> shadows the one in <tt>fun1</tt>.
+Had <tt>fun2</tt> been defined as
+</p>
+<div class="example">
+<pre class="example"> (defun fun2 (y)
+   (catch 'snare (* 5 (fun3 y))))
+</pre></div>
+
+<p>then the two <i>exit points</i> 
+would have different <i>names</i>, and therefore the one
+in <tt>fun1</tt> would not be shadowed.  The result would then have been <tt>7</tt>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Return-Values.html#Return-Values" accesskey="n" rel="next">Return Values</a>, Previous: <a href="Shadowing.html#Shadowing" accesskey="p" rel="prev">Shadowing</a>, Up: <a href="Evaluation.html#Evaluation" accesskey="u" rel="up">Evaluation</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

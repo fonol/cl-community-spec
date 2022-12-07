@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>handler-bind (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="handler_002dcase.html#handler_002dcase" rel="next" title="handler-case">
+<link href="_002abreak_002don_002dsignals_002a.html#g_t_002abreak_002don_002dsignals_002a" rel="prev" title="*break-on-signals*">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="_002abreak_002don_002dsignals_002a.html#g_t_002abreak_002don_002dsignals_002a" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                *break-on-signals*
+                            </a>
+                            <a href="Conditions-Dictionary.html#Conditions-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Conditions Dictionary
+                            </a>
+                            <a href="handler_002dcase.html#handler_002dcase.html" class="nav-btn nav__next ">
+                                handler-case
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="handler_002dbind"></a>
+<a name="handler_002dbind-_005bMacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Macro</div>
+<h4 class="subsection">handler-bind                                                        </h4>
+
+<p><code>handler-bind</code>  <i><span class="roman">(</span>{!<i>binding</i>}*</i><span class="roman">)</span> 
+		   {<i>form</i>}* &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<p><i>binding</i>&nbsp;::=<span class="roman">(</span>type&nbsp;handler<span class="roman">)</span><!-- /@w -->
+</p>
+<a name="Arguments-and-Values_003a_003a-143"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>type</i>&mdash;a <i>type specifier</i>.
+</p>
+<p><i>handler</i>&mdash;a <i>form</i>; evaluated to produce a <i>handler-function</i>.
+</p>
+<p><i>handler-function</i>&mdash;a <i>designator</i> for a <i>function</i> of one <i>argument</i>.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-196"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Executes <i>forms</i> in a <i>dynamic environment</i> where the indicated
+<i>handler</i> <i>bindings</i> are in effect.
+</p>
+<p>Each <i>handler</i> should evaluate to a <i>handler-function</i>,
+which is used to handle <i>conditions</i> of the given <i>type</i>
+during execution of the <i>forms</i>.  This <i>function</i> should
+take a single argument, the <i>condition</i> being signaled.
+</p>
+<p>If more than one <i>handler</i> <i>binding</i> is supplied, 
+the <i>handler</i> <i>bindings</i> are searched sequentially from 
+top to bottom in search of a match (by visual analogy with <b>typecase</b>).  
+If an appropriate <i>type</i> is found, 
+the associated handler is run in a <i>dynamic environment</i> where none of these
+<i>handler</i> bindings are visible (to avoid recursive errors).  
+If the <i>handler</i> <i>declines</i>, the search continues for another <i>handler</i>.
+</p>
+<p>If no appropriate <i>handler</i> is found, other <i>handlers</i> are sought
+from dynamically enclosing contours.  If no <i>handler</i> is found outside, 
+then <b>signal</b> returns or <b>error</b> enters the debugger. 
+</p>
+<a name="Examples_003a_003a-125"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<p>In the following code, if an unbound variable error is
+signaled in the body (and not handled by an intervening handler), 
+the first function is called.  
+</p>
+<div class="example">
+<pre class="example"><code> (handler-bind ((unbound-variable #'(lambda ...))
+                (error #'(lambda ...)))
+   ...)
+</code>
+</pre></div>
+
+<p>If any other kind of error is signaled, the second function is called.
+In either case, neither handler is active while executing the code
+in the associated function.
+</p>
+<div class="example">
+<pre class="example"><code> (defun trap-error-handler (condition)
+   (format *error-output* &quot;~&amp;~A~&amp;&quot; condition)
+   (throw 'trap-errors nil))
+
+ (defmacro trap-errors (&amp;rest forms)
+   `(catch 'trap-errors
+      (handler-bind ((error #'trap-error-handler))
+        ,@forms)))
+
+ (list (trap-errors (signal &quot;Foo.&quot;) 1)
+       (trap-errors (error  &quot;Bar.&quot;) 2)
+       (+ 1 2))
+<tt> |&gt; </tt> Bar.
+&rArr;  (1 NIL 3)
+</code>
+</pre></div>
+
+<p>Note that &ldquo;Foo.&rdquo; is not printed because the condition made
+by <b>signal</b> is a <i>simple condition</i>, which is not of <i>type</i> <b>error</b>, 
+so it doesn&rsquo;t trigger the handler for <b>error</b> set up by <tt>trap-errors</tt>.
+</p>
+<a name="See-Also_003a_003a-171"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="handler_002dcase.html#handler_002dcase">handler-case</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Special Forms (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="The-Evaluation-Model.html#The-Evaluation-Model" rel="up" title="The Evaluation Model">
+<link href="Macro-Forms.html#Macro-Forms" rel="next" title="Macro Forms">
+<link href="Conses-as-Forms.html#Conses-as-Forms" rel="prev" title="Conses as Forms">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Conses-as-Forms.html#Conses-as-Forms" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Conses as Forms
+                            </a>
+                            <a href="The-Evaluation-Model.html#The-Evaluation-Model.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                The Evaluation Model
+                            </a>
+                            <a href="Macro-Forms.html#Macro-Forms.html" class="nav-btn nav__next ">
+                                Macro Forms
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Special-Forms"></a>
+<a name="Special-Forms-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Special Forms</h4>
+
+<p>A <i>special form</i> is a <i>form</i> with special syntax,
+special evaluation rules, or both, possibly manipulating the
+evaluation environment, control flow, or both.
+A <i>special operator</i> has access to
+    the current <i>lexical environment</i> 
+and the current <i>dynamic environment</i>.
+Each <i>special operator</i> defines the manner in which its <i>subexpressions</i>
+are treated&mdash;which are <i>forms</i>, which are special syntax, <i>etc.</i>
+</p>
+<p>Some <i>special operators</i> create new 
+lexical or dynamic <i>environments</i> for use during the 
+<i>evaluation</i> of <i>subforms</i>
+of the <i>special form</i>.  For example, <b>block</b> creates a
+new <i>lexical environment</i> that is the same as the one in force
+at the point of evaluation of the <b>block</b> <i>form</i>
+with the addition of a <i>binding</i> of the <b>block</b> name
+to an <i>exit point</i> from the <b>block</b>.
+</p>
+<p>The set of <i>special operator</i> <i>names</i> is fixed in <span class="roman">Common Lisp</span>; 
+no way is provided for the user to define a <i>special operator</i>.
+Figure 3&ndash;2 lists all of the <span class="roman">Common Lisp</span> <i>symbols</i>
+that have definitions as <i>special operators</i>.
+</p>
+<p>&nbsp;&nbsp;block&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">return-from</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;catch&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">load-time-value</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setq&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">eval-when</span>&nbsp;&nbsp;locally&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">symbol-macrolet</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;flet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;macrolet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tagbody&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;function&nbsp;&nbsp;&nbsp;<span class="nolinebreak">multiple-value-call</span>&nbsp;&nbsp;&nbsp;the&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;go&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">multiple-value-prog1</span>&nbsp;&nbsp;throw&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;if&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;progn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">unwind-protect</span>&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;labels&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;progv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;let&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;quote&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;3&ndash;2:&nbsp;Common&nbsp;Lisp&nbsp;Special&nbsp;Operators&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

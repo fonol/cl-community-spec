@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Iteration Control (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" rel="up" title="Variable Initialization and Stepping Clauses">
+<link href="The-for_002das_002darithmetic-subclause.html#The-for_002das_002darithmetic-subclause" rel="next" title="The for-as-arithmetic subclause">
+<link href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" rel="prev" title="Variable Initialization and Stepping Clauses">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Variable Initialization and Stepping Clauses
+                            </a>
+                            <a href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Variable Initialization and Stepping Clauses
+                            </a>
+                            <a href="The-for_002das_002darithmetic-subclause.html#The-for_002das_002darithmetic-subclause.html" class="nav-btn nav__next ">
+                                The for-as-arithmetic subclause
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Iteration-Control"></a>
+<a name="Iteration-Control-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Iteration Control</h4>
+
+<p>Iteration control clauses allow direction of <b>loop</b> iteration.
+The <i>loop keywords</i> <tt>for</tt> and <tt>as</tt>
+designate iteration control clauses.
+Iteration control clauses differ with respect to the specification of
+termination tests and to the initialization and <i>stepping</i>_1
+of loop variables.  Iteration clauses by themselves
+do not cause the Loop Facility to return values, but they
+can be used in conjunction with value-accumulation clauses to
+return values.  
+</p>
+<p>All variables are initialized in the loop prologue.  
+A <i>variable</i> <i>binding</i> has <i>lexical scope</i>
+unless it is proclaimed <b>special</b>;
+thus, by default, the variable can be <i>accessed</i> only by <i>forms</i> 
+that lie textually within the <b>loop</b>.
+Stepping assignments are made in the loop body before any other <i>forms</i>
+are evaluated in the body.  
+</p>
+<p>The variable argument in iteration control clauses can be a 
+destructuring list.  A destructuring list
+is a <i>tree</i> whose <i>non-nil</i> <i>atoms</i> are <i>variable</i> <i>names</i>.
+See <a href="Destructuring.html#Destructuring">Destructuring</a>.
+</p>
+<p>The iteration control clauses <tt>for</tt>, <tt>as</tt>,  and <tt>repeat</tt> 
+must precede any other loop clauses, except
+  <tt>initially</tt>, <tt>with</tt>, and <tt>named</tt>,
+since they establish variable <i>bindings</i>.  
+When iteration control clauses are
+used in a <b>loop</b>,
+the corresponding
+termination tests in the loop body are evaluated
+before any other loop body code is executed.
+</p>
+<p>If multiple iteration clauses are used to control iteration, variable
+initialization and <i>stepping</i>_1 occur <i>sequentially</i> by default.  
+The <tt>and</tt> construct can be used to connect two or more
+iteration clauses when <i>sequential</i> <i>binding</i> and 
+<i>stepping</i>_1 are not necessary.
+The iteration behavior of clauses joined by <tt>and</tt>
+is analogous to the behavior of the macro <b>do</b> with
+respect to <b>do*</b>.
+</p>
+<p>The <tt>for</tt> and <tt>as</tt> clauses iterate by using one or more local 
+loop  variables that are initialized to some value and that 
+can be modified or <i>stepped</i>_1 after each iteration.  
+For these clauses, iteration terminates when a local
+variable reaches some supplied value or when some other loop clause
+terminates iteration.
+At each iteration, variables can be 
+   <i>stepped</i>_1 by an increment or a decrement
+or can be assigned a new value by the evaluation of a <i>form</i>).
+Destructuring can be used to assign 
+values to variables during iteration. 
+</p>
+<p>The <tt>for</tt> and <tt>as</tt> keywords are synonyms; they can be used
+interchangeably.  There are seven syntactic formats for these constructs.
+In each syntactic format, the <i>type</i> of
+<i>var</i> can be supplied by the optional <i>type-spec</i>
+argument.  If <i>var</i> is a destructuring list, the <i>type</i>
+supplied by the <i>type-spec</i> argument must appropriately match
+the elements of the list.  
+By convention, <tt>for</tt> introduces new iterations and <tt>as</tt>
+introduces iterations that depend on a previous iteration specification.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

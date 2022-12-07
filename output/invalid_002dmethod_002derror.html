@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>invalid-method-error (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="method_002dcombination_002derror.html#method_002dcombination_002derror" rel="next" title="method-combination-error">
+<link href="simple_002derror.html#simple_002derror" rel="prev" title="simple-error">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="simple_002derror.html#simple_002derror" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                simple-error
+                            </a>
+                            <a href="Conditions-Dictionary.html#Conditions-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Conditions Dictionary
+                            </a>
+                            <a href="method_002dcombination_002derror.html#method_002dcombination_002derror.html" class="nav-btn nav__next ">
+                                method-combination-error
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="invalid_002dmethod_002derror"></a>
+<a name="invalid_002dmethod_002derror-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">invalid-method-error                                             </h4>
+
+<p><code>invalid-method-error</code>  <i>method format-control &amp;rest</i> args &rArr;  <i><i>implementation-dependent</i></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-136"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>method</i>&mdash;a <i>method</i>.
+</p>
+<p><i>format-control</i>&mdash;a <i>format control</i>.
+</p>
+<p><i>args</i>&mdash;<i>format arguments</i> for the <i>format-control</i>.
+</p>
+<a name="Description_003a_003a-185"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The <i>function</i> <b>invalid-method-error</b> is used to signal an error of <i>type</i> <b>error</b>
+when there is an applicable <i>method</i> whose <i>qualifiers</i> are not valid for
+the method combination type.  The error message is constructed by
+using the <i>format-control</i> suitable for <b>format</b>
+and any <i>args</i> to it.  Because an
+implementation may need to add additional contextual information to
+the error message, <b>invalid-method-error</b> should be called only
+within the dynamic extent of a method combination function.
+</p>
+<p>The <i>function</i> <b>invalid-method-error</b> is called automatically when a
+<i>method</i> fails to satisfy every <i>qualifier</i> pattern and predicate in a
+<b>define-method-combination</b> <i>form</i>.  A method combination function
+that imposes additional restrictions should call 
+<b>invalid-method-error</b> explicitly if it encounters a <i>method</i> 
+it cannot accept.
+</p>
+<p>Whether <b>invalid-method-error</b> returns to its caller or exits via
+<b>throw</b> is <i>implementation-dependent</i>.
+</p>
+<a name="Side-Effects_003a_003a-10"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Side Effects</h4>
+
+<p>The debugger might be entered.
+</p>
+<a name="Affected-By_003a_003a-22"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p><b>*break-on-signals*</b>
+</p>
+<a name="See-Also_003a_003a-162"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="define_002dmethod_002dcombination.html#define_002dmethod_002dcombination">define-method-combination</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Overview of Places and Generalized Reference (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Generalized-Reference.html#Generalized-Reference" rel="up" title="Generalized Reference">
+<link href="Evaluation-of-Subforms-to-Places.html#Evaluation-of-Subforms-to-Places" rel="next" title="Evaluation of Subforms to Places">
+<link href="Generalized-Reference.html#Generalized-Reference" rel="prev" title="Generalized Reference">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Generalized-Reference.html#Generalized-Reference" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Generalized Reference
+                            </a>
+                            <a href="Generalized-Reference.html#Generalized-Reference.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Generalized Reference
+                            </a>
+                            <a href="Evaluation-of-Subforms-to-Places.html#Evaluation-of-Subforms-to-Places.html" class="nav-btn nav__next ">
+                                Evaluation of Subforms to Places
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Overview-of-Places-and-Generalized-Reference"></a>
+<a name="Overview-of-Places-and-Generalized-Reference-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Overview of Places and Generalized Reference</h4>
+
+<p>A <i>generalized reference</i>
+<a name="index-generalized-reference"></a>
+ is the use of a <i>form</i>,
+sometimes called a <i>place</i>
+<a name="index-place"></a>
+,
+as if it were a <i>variable</i> that could be read and written.
+The <i>value</i> of a <i>place</i> is 
+the <i>object</i> to which the <i>place</i> <i>form</i> evaluates.
+The <i>value</i> of a <i>place</i> can be changed by using <b>setf</b>.
+The concept of binding a <i>place</i> is not defined in <span class="roman">Common Lisp</span>,
+but an <i>implementation</i> is permitted to extend the language by defining this concept.
+</p>
+<p>Figure 5&ndash;1 contains examples of the use of <b>setf</b>.
+Note that the values returned by evaluating the <i>forms</i> in column two 
+are not necessarily the same as those obtained by evaluating the 
+<i>forms</i> in column three.
+In general, the exact <i>macro expansion</i> of a <b>setf</b> <i>form</i> is not guaranteed 
+and can even be <i>implementation-dependent</i>;
+all that is guaranteed is 
+ that the expansion is an update form that works
+   for that particular <i>implementation</i>,
+ that the left-to-right evaluation of <i>subforms</i> is preserved, 
+and
+ that the ultimate result of evaluating <b>setf</b> is the value
+  or values being stored.
+</p>
+<p>&nbsp;&nbsp;Access&nbsp;function&nbsp;&nbsp;&nbsp;Update&nbsp;Function&nbsp;&nbsp;&nbsp;Update&nbsp;using&nbsp;<b>setf</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>x</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(setq&nbsp;x&nbsp;datum)</tt>&nbsp;&nbsp;&nbsp;&nbsp;<tt>(setf&nbsp;x&nbsp;datum)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>(car&nbsp;x)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(rplaca&nbsp;x&nbsp;datum)</tt>&nbsp;&nbsp;<tt>(setf&nbsp;(car&nbsp;x)&nbsp;datum)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt><span class="nolinebreak">(symbol-value</span>&nbsp;x)</tt>&nbsp;&nbsp;<tt>(set&nbsp;x&nbsp;datum)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(setf&nbsp;<span class="nolinebreak">(symbol-value</span>&nbsp;x)&nbsp;datum)</tt>&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;5&ndash;1:&nbsp;Examples&nbsp;of&nbsp;setf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<p>Figure 5&ndash;2 shows <i>operators</i> relating to
+<i>places</i> and <i>generalized reference</i>.
+</p>
+<p>&nbsp;&nbsp;assert&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;defsetf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;push&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;ccase&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">get-setf-expansion</span>&nbsp;&nbsp;remf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;ctypecase&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;getf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rotatef&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;decf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;incf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">define-modify-macro</span>&nbsp;&nbsp;&nbsp;pop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shiftf&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">define-setf-expander</span>&nbsp;&nbsp;psetf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;5&ndash;2:&nbsp;Operators&nbsp;relating&nbsp;to&nbsp;places&nbsp;and&nbsp;generalized&nbsp;reference.<!-- /@w -->
+</p>
+
+<p>Some of the <i>operators</i> above manipulate <i>places</i>
+and some manipulate <i>setf expanders</i>.
+A <i>setf expansion</i> can be derived from any <i>place</i>.
+</p>
+<p>New <i>setf expanders</i> can be defined by using <b>defsetf</b> 
+and <b>define-setf-expander</b>.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Evaluation-of-Subforms-to-Places.html#Evaluation-of-Subforms-to-Places" accesskey="1">Evaluation of Subforms to Places</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Examples-of-Evaluation-of-Subforms-to-Places.html#Examples-of-Evaluation-of-Subforms-to-Places" accesskey="2">Examples of Evaluation of Subforms to Places</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Setf-Expansions.html#Setf-Expansions" accesskey="3">Setf Expansions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Examples-of-Setf-Expansions.html#Examples-of-Setf-Expansions" accesskey="4">Examples of Setf Expansions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

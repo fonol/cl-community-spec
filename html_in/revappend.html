@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>revappend (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="revappend (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="revappend (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conses-Dictionary.html#Conses-Dictionary" rel="up" title="Conses Dictionary">
+<link href="butlast.html#butlast" rel="next" title="butlast">
+<link href="append.html#append" rel="prev" title="append">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="revappend"></a>
+<div class="header">
+<p>
+Next: <a href="butlast.html#butlast" accesskey="n" rel="next">butlast</a>, Previous: <a href="append.html#append" accesskey="p" rel="prev">append</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="revappend_002c-nreconc-_005bFunction_005d"></a>
+<h4 class="subsection">14.2.27 revappend, nreconc                                               [Function]</h4>
+
+<p><code>revappend</code>  <i>list tail</i> &rArr;  <i>result-list</i>
+</p>
+<p><code>nreconc</code>  <i>list tail</i> &rArr;  <i>result-list</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-296"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>list</i>&mdash;a <i>proper list</i>.
+</p>
+<p><i>tail</i>&mdash;an <i>object</i>. 
+</p>
+<p><i>result-list</i>&mdash;an <i>object</i>.
+</p>
+<a name="Description_003a_003a-397"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>revappend</b> constructs a <i>copy</i>_2 of <i>list</i>,
+but with the <i>elements</i> in reverse order.  It then appends (as if
+by <b>nconc</b>) the <i>tail</i> to that reversed list and returns the result.
+</p>
+<p><b>nreconc</b> reverses the order of <i>elements</i> in <i>list</i>
+(as if by <b>nreverse</b>).  It then appends (as if by <b>nconc</b>)
+the <i>tail</i> to that reversed list and returns the result.
+</p>
+<p>The resulting <i>list</i> shares <i>list structure</i> with <i>tail</i>.
+</p>
+<a name="Examples_003a_003a-280"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (let ((list-1 (list 1 2 3))
+       (list-2 (list 'a 'b 'c)))
+   (print (revappend list-1 list-2))
+   (print (equal list-1 '(1 2 3)))
+   (print (equal list-2 '(a b c))))
+<tt> |&gt; </tt> (3 2 1 A B C) 
+<tt> |&gt; </tt> T
+<tt> |&gt; </tt> T
+&rArr;  T
+
+ (revappend '(1 2 3) '()) &rArr;  (3 2 1)
+ (revappend '(1 2 3) '(a . b)) &rArr;  (3 2 1 A . B)
+ (revappend '() '(a b c)) &rArr;  (A B C)
+ (revappend '(1 2 3) 'a) &rArr;  (3 2 1 . A)
+ (revappend '() 'a) &rArr;  A   ;degenerate case
+
+ (let ((list-1 '(1 2 3))
+       (list-2 '(a b c)))
+   (print (nreconc list-1 list-2))
+   (print (equal list-1 '(1 2 3)))
+   (print (equal list-2 '(a b c))))
+<tt> |&gt; </tt> (3 2 1 A B C) 
+<tt> |&gt; </tt> NIL
+<tt> |&gt; </tt> T
+&rArr;  T
+
+</pre></div>
+
+<a name="Side-Effects_003a_003a-41"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p><b>revappend</b> does not modify either of its <i>arguments</i>.
+<b>nreconc</b> is permitted to modify <i>list</i> but not <i>tail</i>.
+</p>
+<p>Although it might be implemented differently,
+<b>nreconc</b> is constrained to have side-effect behavior equivalent to:
+</p>
+<div class="example">
+<pre class="example"> (nconc (nreverse <i>list</i>) <i>tail</i>)
+</pre></div>
+
+<a name="See-Also_003a_003a-322"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;reverse; nreverse&rsquo;
+,
+<b>nreverse</b>,
+<a href="nconc.html#nconc">nconc</a>
+</p>
+<a name="Notes_003a_003a-213"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The following functional equivalences are true, 
+although good <i>implementations</i> will typically use a faster algorithm for
+achieving the same effect:
+</p>
+<div class="example">
+<pre class="example"> (revappend <i>list</i> <i>tail</i>) &equiv; (nconc (reverse <i>list</i>) <i>tail</i>)
+ (nreconc <i>list</i> <i>tail</i>) &equiv; (nconc (nreverse <i>list</i>) <i>tail</i>)
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="butlast.html#butlast" accesskey="n" rel="next">butlast</a>, Previous: <a href="append.html#append" accesskey="p" rel="prev">append</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

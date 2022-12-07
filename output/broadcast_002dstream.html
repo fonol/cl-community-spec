@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>broadcast-stream (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="concatenated_002dstream.html#concatenated_002dstream" rel="next" title="concatenated-stream">
+<link href="stream.html#stream" rel="prev" title="stream">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="stream.html#stream" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                stream
+                            </a>
+                            <a href="Streams-Dictionary.html#Streams-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Streams Dictionary
+                            </a>
+                            <a href="concatenated_002dstream.html#concatenated_002dstream.html" class="nav-btn nav__next ">
+                                concatenated-stream
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="broadcast_002dstream"></a>
+<a name="broadcast_002dstream-_005bSystem-Class_005d"></a>
+<div class="section top-most">
+<div class="node-type">System Class</div>
+<h4 class="subsection">broadcast-stream                                             </h4>
+
+<a name="Class-Precedence-List_003a_003a-63"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Class Precedence List</h4>
+
+<p><b>broadcast-stream</b>,
+<b>stream</b>,
+<b>t</b>
+</p>
+<a name="Description_003a_003a-533"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>A <i>broadcast stream</i> is an <i>output</i> <i>stream</i> which 
+has associated with it a set of zero or more <i>output</i> <i>streams</i> 
+such that any output sent to the <i>broadcast stream</i> gets passed on
+as output to each of the associated <i>output</i> <i>streams</i>.
+(If a <i>broadcast stream</i> has no <i>component streams</i>,
+then all output to the <i>broadcast stream</i> is discarded.)
+</p>
+<p>The set of operations that may be performed on a <i>broadcast stream</i> 
+is the intersection of those for its associated <i>output</i> <i>streams</i>.
+</p>
+<p>Some output operations (<i>e.g.</i>, <b>fresh-line</b>) return <i>values</i> based on the
+state of the <i>stream</i> at the time of the operation.
+</p>
+<p>Since these <i>values</i> might differ for each of the <i>component streams</i>,
+it is necessary to describe their return value specifically:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p><b>stream-element-type</b> returns
+    the value from the last component stream, 
+    or <b>t</b> if there are no component streams.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><b>fresh-line</b> returns
+     the value from the last component stream, 
+     or <b>nil</b> if there are no component streams.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The functions
+          <b>file-length</b>,
+          <b>file-position</b>,
+          <b>file-string-length</b>,
+      and <b>stream-external-format</b>
+   return the value from the last component stream;
+   if there are no component streams,
+       <b>file-length</b> and <b>file-position</b> return <tt>0</tt>,
+       <b>file-string-length</b> returns <tt>1</tt>,
+   and <b>stream-external-format</b> returns <tt>:default</tt>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The functions <b>streamp</b> and <b>output-stream-p</b> 
+  always return <i>true</i> for <i>broadcast streams</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The functions <b>open-stream-p</b> tests whether the <i>broadcast stream</i>
+  is <i>open</i>_2, not whether its component streams are <i>open</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The functions <b>input-stream-p</b> and <i>interactive-stream-p</i> 
+  return an <i>implementation-defined</i>, <i>generalized boolean</i> value.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>For the input operations
+        <b>clear-input</b>
+        <b>listen</b>,
+        <b>peek-char</b>,
+        <b>read-byte</b>,
+        <b>read-char-no-hang</b>,
+        <b>read-char</b>,
+        <b>read-line</b>,
+    and <b>unread-char</b>,
+  the consequences are undefined if the indicated operation is performed.
+  However, an <i>implementation</i> is permitted 
+  to define such a behavior as an <i>implementation-dependent</i> extension.
+</p></dd>
+</dl>
+
+<p>For any output operations not having their return values explicitly specified above
+or elsewhere in this document, it is defined that
+the <i>values</i> returned by such an operation are 
+the <i>values</i> resulting from performing the operation 
+on the last of its <i>component streams</i>;
+the <i>values</i> resulting from performing the operation
+on all preceding <i>streams</i> are discarded.                    
+If there are no <i>component streams</i>, 
+the value is <i>implementation-dependent</i>.
+</p>
+<a name="See-Also_003a_003a-436"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="broadcast_002dstream_002dstreams.html#broadcast_002dstream_002dstreams">broadcast-stream-streams</a>
+,
+<a href="make_002dbroadcast_002dstream.html#make_002dbroadcast_002dstream">make-broadcast-stream</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

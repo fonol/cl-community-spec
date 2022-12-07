@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>with-output-to-string (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="with-output-to-string (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="with-output-to-string (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="_002adebug_002dio_002a.html#g_t_002adebug_002dio_002a" rel="next" title="*debug-io*">
+<link href="with_002dinput_002dfrom_002dstring.html#with_002dinput_002dfrom_002dstring" rel="prev" title="with-input-from-string">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="with_002doutput_002dto_002dstring"></a>
+<div class="header">
+<p>
+Next: <a href="_002adebug_002dio_002a.html#g_t_002adebug_002dio_002a" accesskey="n" rel="next">*debug-io*</a>, Previous: <a href="with_002dinput_002dfrom_002dstring.html#with_002dinput_002dfrom_002dstring" accesskey="p" rel="prev">with-input-from-string</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="with_002doutput_002dto_002dstring-_005bMacro_005d"></a>
+<h4 class="subsection">21.2.52 with-output-to-string                                               [Macro]</h4>
+
+<p><code>with-output-to-string</code>  <i><span class="roman">(</span>var &amp;optional</i> string-form &amp;key element-type<span class="roman">)</span>
+ 			  {<i>declaration</i>}*
+ 			  {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-453"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>var</i>&mdash;a <i>variable</i> <i>name</i>.
+</p>
+<p><i>string-form</i>&mdash;a <i>form</i> or <b>nil</b>;
+		      if <i>non-nil</i>, evaluated to produce <i>string</i>.
+</p>
+<p><i>string</i>&mdash;a <i>string</i> that has a <i>fill pointer</i>.
+</p>
+<p><i>element-type</i>&mdash;a <i>type specifier</i>; evaluated.
+</p>
+<p>The default is <b>character</b>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;If a <i>string-form</i> is not supplied or <b>nil</b>,
+		  a <i>string</i>; otherwise, 
+		  the <i>values</i> returned by the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-583"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>with-output-to-string</b> creates a
+</p>
+<p>character <i>output</i> <i>stream</i>, performs a series of operations
+that may send results to this <i>stream</i>, and then closes the <i>stream</i>. 
+</p>
+<p>The <i>element-type</i> names the <i>type</i> of the elements
+of the <i>stream</i>; a <i>stream</i> is constructed of the most specialized
+<i>type</i> that can accommodate elements of the given <i>type</i>.  
+</p>
+<p>The body is executed as an <i>implicit progn</i> with <i>var</i>
+bound to an <i>output</i> <i>string stream</i>.  
+All output to that <i>string stream</i> is saved in a <i>string</i>.  
+</p>
+<p>If <i>string</i> is supplied, <i>element-type</i> is ignored, 
+and the output is incrementally appended to <i>string</i> as
+if by use of <b>vector-push-extend</b>.
+</p>
+<p>The <i>output</i> <i>stream</i> 
+is automatically closed on exit from <b>with-output-from-string</b>,
+no matter whether the exit is normal or abnormal.
+</p>
+<p>The <i>output</i> <i>string stream</i> to which the <i>variable</i> <i>var</i>
+is <i>bound</i> has <i>dynamic extent</i>;
+its <i>extent</i> ends when the <i>form</i> is exited.
+</p>
+<p>If no <i>string</i> is provided, then <b>with-output-from-string</b> 
+</p>
+<p>produces a <i>stream</i> that accepts characters and returns a <i>string</i> 
+of the indicated <i>element-type</i>.
+</p>
+<p>If <i>string</i> is provided,
+<b>with-output-to-string</b> returns the results of evaluating the last <i>form</i>.
+</p>
+<p>The consequences are undefined if an attempt is made to <i>assign</i>
+the <i>variable</i> <i>var</i>.
+</p>
+<a name="Examples_003a_003a-424"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (setq fstr (make-array '(0) :element-type 'base-char
+                             :fill-pointer 0 :adjustable t)) &rArr;  &quot;&quot;
+ (with-output-to-string (s fstr)
+    (format s &quot;here's some output&quot;)
+    (input-stream-p s)) &rArr;  <i>false</i>
+ fstr &rArr;  &quot;here's some output&quot;
+</pre></div>
+
+<a name="Side-Effects_003a_003a-74"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>The <i>string</i> is modified.
+</p>
+<a name="Exceptional-Situations_003a_003a-216"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>The consequences are undefined if destructive modifications are performed
+directly on the <i>string</i> during the <i>dynamic extent</i> of the call.
+</p>
+<a name="See-Also_003a_003a-474"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="make_002dstring_002doutput_002dstream.html#make_002dstring_002doutput_002dstream">make-string-output-stream</a>
+,
+<b>vector-push-extend</b>,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="_002adebug_002dio_002a.html#g_t_002adebug_002dio_002a" accesskey="n" rel="next">*debug-io*</a>, Previous: <a href="with_002dinput_002dfrom_002dstring.html#with_002dinput_002dfrom_002dstring" accesskey="p" rel="prev">with-input-from-string</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Built-in Method Combination Types (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Built-in Method Combination Types (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Built-in Method Combination Types (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" rel="up" title="Method Selection and Combination">
+<link href="Inheritance-of-Methods.html#Inheritance-of-Methods" rel="next" title="Inheritance of Methods">
+<link href="Declarative-Method-Combination.html#Declarative-Method-Combination" rel="prev" title="Declarative Method Combination">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Built_002din-Method-Combination-Types"></a>
+<div class="header">
+<p>
+Previous: <a href="Declarative-Method-Combination.html#Declarative-Method-Combination" accesskey="p" rel="prev">Declarative Method Combination</a>, Up: <a href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" accesskey="u" rel="up">Method Selection and Combination</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Built_002din-Method-Combination-Types-1"></a>
+<h4 class="subsubsection">7.6.6.7 Built-in Method Combination Types</h4>
+
+<p>The object system provides a set of built-in method combination types.  To
+specify that a generic function is to use one of these method
+combination types, the name of the method combination type is given as
+the argument to the <tt>:method-combination</tt> option to 
+<b>defgeneric</b> or to the <tt>:method-combination</tt> option to any of the
+other operators that specify generic function options.
+</p>
+<p>The names of the built-in  method combination types are listed in Figure 7&ndash;3.
+</p>
+<a name="index-_002b"></a>
+
+<a name="index-and"></a>
+
+<a name="index-append"></a>
+
+<a name="index-list-3"></a>
+
+<a name="index-max"></a>
+
+<a name="index-min"></a>
+
+<a name="index-nconc"></a>
+
+<a name="index-or"></a>
+
+<a name="index-progn"></a>
+
+<a name="index-standard-1"></a>
+
+<p>&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;&nbsp;append&nbsp;&nbsp;max&nbsp;&nbsp;nconc&nbsp;&nbsp;progn&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;and&nbsp;&nbsp;list&nbsp;&nbsp;&nbsp;&nbsp;min&nbsp;&nbsp;or&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;standard&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;7&ndash;3:&nbsp;<span class="nolinebreak">Built-in</span>&nbsp;Method&nbsp;Combination&nbsp;Types<!-- /@w -->
+</p>
+
+<p>The semantics of the <b>standard</b> built-in method combination type is
+described in <a href="Standard-Method-Combination.html#Standard-Method-Combination">Standard Method Combination</a>.  The other
+built-in method combination types are called simple built-in method
+combination types.
+</p>
+<p>The simple built-in method combination types act as though they were
+defined by the short form of <b>define-method-combination</b>.  
+They recognize two roles for <i>methods</i>:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>An <i>around method</i> has the keyword symbol 
+<tt>:around</tt> as its sole <i>qualifier</i>.  The meaning of 
+<tt>:around</tt> <i>methods</i> is the same as in standard method combination.
+Use of the functions <b>call-next-method</b> and <b>next-method-p</b>
+is supported in <i>around methods</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>A primary method has the name of the method combination
+type as its sole <i>qualifier</i>.  For example, the built-in method
+combination type <tt>and</tt> recognizes methods whose sole <i>qualifier</i> is
+<tt>and</tt>; these are primary methods. Use of the functions 
+<b>call-next-method</b> and <b>next-method-p</b> is not supported 
+in <i>primary methods</i>.
+</p>
+</dd>
+</dl>
+
+<p>The semantics of the simple built-in method combination types is as
+follows:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>If there are any <i>around methods</i>, the most specific <i>around method</i>
+is called.   It supplies the value or values of the <i>generic function</i>. 
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Inside the body of an <i>around method</i>, the function
+<b>call-next-method</b> can be used to call the <i>next method</i>.
+The <i>generic function</i> <b>no-next-method</b> is invoked if 
+<b>call-next-method</b> is used and there is no applicable method to call.
+The <i>function</i> <b>next-method-p</b> may be used to determine whether a
+<i>next method</i> exists. When the <i>next method</i> returns, 
+the <i>around method</i> can execute more code,
+perhaps based on the returned value or values.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>If an <i>around method</i> invokes <b>call-next-method</b>,
+the next most specific <i>around method</i> is
+called, if one is applicable.  If there are no <i>around methods</i>
+or if <b>call-next-method</b> is called by the least specific
+<i>around method</i>, a Lisp form derived from the name of the built-in
+method combination type and from the list of applicable primary
+methods is evaluated to produce the value of the generic function.
+Suppose the name of the method combination type is <i>operator</i>
+and the call to the generic function is of the form
+</p>
+<div align="center">(<i>generic-function</i> a_1... a_n)
+</div>
+</dd>
+<dt><tt></tt></dt>
+<dd><p>Let M_1,...,M_k be the applicable primary methods
+in order; then the derived Lisp form is
+</p>
+<div align="center">(<i>operator</i> &lt; M_1
+</div><p>a_1... a_n&gt;...&lt;
+M_k a_1... a_n&gt;)
+</p>
+</dd>
+<dt><tt></tt></dt>
+<dd><p>If the expression &lt; M_i  a_1... a_n&gt; is
+evaluated, the method M_i will be applied to the arguments
+a_1... a_n.  
+For example,
+if <i>operator</i> is <tt>or</tt>,
+the expression &lt; M_i  a_1... a_n&gt; is
+evaluated only if &lt; M_j  a_1... a_n&gt;,
+1&lt;= j&lt;i, returned <tt>nil</tt>.
+</p>
+</dd>
+<dt><tt></tt></dt>
+<dd><p>The default order for the primary methods is 
+<tt>:most-specific-first</tt>.  However, the order can be reversed by supplying
+<tt>:most-specific-last</tt> as the second argument to the <tt>:method-combination</tt> option.
+</p></dd>
+</dl>
+
+<p>The simple built-in method combination types require exactly one
+<i>qualifier</i> per method.  An error is signaled if there are applicable
+methods with no <i>qualifiers</i> or with <i>qualifiers</i> that are not supported
+by the method combination type. An error is signaled if there are
+applicable <i>around methods</i> and no applicable primary
+methods.
+</p>
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Declarative-Method-Combination.html#Declarative-Method-Combination" accesskey="p" rel="prev">Declarative Method Combination</a>, Up: <a href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" accesskey="u" rel="up">Method Selection and Combination</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

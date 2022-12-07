@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>symbol-value (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Symbols-Dictionary.html#Symbols-Dictionary" rel="up" title="Symbols Dictionary">
+<link href="get.html#get" rel="next" title="get">
+<link href="symbol_002dplist.html#symbol_002dplist" rel="prev" title="symbol-plist">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="symbol_002dplist.html#symbol_002dplist" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                symbol-plist
+                            </a>
+                            <a href="Symbols-Dictionary.html#Symbols-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Symbols Dictionary
+                            </a>
+                            <a href="get.html#get.html" class="nav-btn nav__next ">
+                                get
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="symbol_002dvalue"></a>
+<a name="symbol_002dvalue-_005bAccessor_005d"></a>
+<div class="section top-most">
+<div class="node-type">Accessor</div>
+<h4 class="subsection">symbol-value                                                     </h4>
+
+<p><code>symbol-value</code>  <i>symbol</i> &rArr;  <i>value</i>
+</p>
+<p>(setf (<code>         symbol-value</code> <i>symbol</i>) new-value)<br>
+</p>
+<a name="Arguments-and-Values_003a_003a-168"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>symbol</i>&mdash;a <i>symbol</i> that must have a <i>value</i>.
+</p>
+<p><i>value</i>, <i>new-value</i>&mdash;an <i>object</i>.
+</p>
+<a name="Description_003a_003a-230"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><i>Accesses</i> the <i>symbol</i>&rsquo;s <i>value cell</i>.
+</p>
+<a name="Examples_003a_003a-151"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (setf (symbol-value 'a) 1) &rArr;  1
+ (symbol-value 'a) &rArr;  1
+ ;; SYMBOL-VALUE cannot see lexical variables.
+ (let ((a 2)) (symbol-value 'a)) &rArr;  1
+ (let ((a 2)) (setq a 3) (symbol-value 'a)) &rArr;  1
+ ;; SYMBOL-VALUE can see dynamic variables.
+ (let ((a 2)) 
+   (declare (special a)) 
+   (symbol-value 'a)) &rArr;  2
+ (let ((a 2)) 
+   (declare (special a)) 
+   (setq a 3)
+   (symbol-value 'a)) &rArr;  3
+ (let ((a 2))
+   (setf (symbol-value 'a) 3)
+   a) &rArr;  2
+ a &rArr;  3
+ (symbol-value 'a) &rArr;  3
+ (let ((a 4))
+   (declare (special a))
+   (let ((b (symbol-value 'a)))
+     (setf (symbol-value 'a) 5)
+     (values a b))) &rArr;  5, 4
+ a &rArr;  3
+ (symbol-value :any-keyword) &rArr;  :ANY-KEYWORD
+ (symbol-value 'nil) &rArr;  NIL
+ (symbol-value '()) &rArr;  NIL
+ ;; The precision of this next one is <i>implementation-dependent</i>.
+ (symbol-value 'pi) &rArr;  3.141592653589793d0  
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-41"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p><b>makunbound</b>,
+<b>set</b>,
+<b>setq</b>
+</p>
+<a name="Exceptional-Situations_003a_003a-58"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>symbol</i> is not a <i>symbol</i>.
+</p>
+<p>Should signal <b>unbound-variable</b> if <i>symbol</i> is <i>unbound</i>
+and an attempt is made to <i>read</i> its <i>value</i>.  (No such error is signaled
+on an attempt to <i>write</i> its <i>value</i>.)
+</p>
+<a name="See-Also_003a_003a-203"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="boundp.html#boundp">boundp</a>
+, 
+<a href="makunbound.html#makunbound">makunbound</a>
+, 
+<a href="set.html#set">set</a>
+, 
+<a href="setq.html#setq">setq</a>
+</p>
+<a name="Notes_003a_003a-123"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p><b>symbol-value</b> can be used to get the value of a <i>constant variable</i>.
+<b>symbol-value</b> cannot <i>access</i> the value of a <i>lexical variable</i>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

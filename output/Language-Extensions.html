@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Language Extensions (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Introduction-_0028Introduction_0029.html#Introduction-_0028Introduction_0029" rel="up" title="Introduction (Introduction)">
+<link href="Language-Subsets.html#Language-Subsets" rel="next" title="Language Subsets">
+<link href="Use-of-Read_002dTime-Conditionals.html#Use-of-Read_002dTime-Conditionals" rel="prev" title="Use of Read-Time Conditionals">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Use-of-Read_002dTime-Conditionals.html#Use-of-Read_002dTime-Conditionals" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Use of Read-Time Conditionals
+                            </a>
+                            <a href="Introduction-_0028Introduction_0029.html#Introduction-_0028Introduction_0029.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Introduction (Introduction)
+                            </a>
+                            <a href="Language-Subsets.html#Language-Subsets.html" class="nav-btn nav__next ">
+                                Language Subsets
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Language-Extensions"></a>
+<a name="Language-Extensions-1"></a>
+<div class="section top-most">
+<h3 class="section">Language Extensions</h3>
+
+
+<p>A language extension is any documented <i>implementation-defined</i> behavior
+of a <i>defined name</i> in this standard that varies from the
+behavior described in this standard, or a documented consequence of a
+situation that the standard specifies as undefined, unspecified, or
+extendable by the implementation.  For example, if this standard says
+that &ldquo;the results are unspecified,&rdquo; an extension would be to specify
+the results.
+</p>
+<p>[Reviewer Note by Barmar: This contradicts previous definitions of conforming code.]
+If the correct behavior of a program depends on the results provided
+by an extension, only implementations with the same extension will
+execute the program correctly.  Note that such a program might be
+non-conforming.  Also, if this standard says that &ldquo;an implementation
+may be extended,&rdquo; a conforming, but possibly non-portable, program
+can be written using an extension.
+</p>
+<p>An implementation can have extensions, provided they do not alter the
+behavior of conforming code and provided they are not explicitly
+prohibited by this standard.
+</p>
+<p>The term &ldquo;extension&rdquo; refers only to extensions available upon
+startup.  An implementation is free to allow or prohibit redefinition
+of an extension.
+</p>
+<p>The following list contains specific guidance to implementations 
+concerning certain types of extensions.
+</p><dl compact="compact">
+<dt><b>Extra return values</b></dt>
+<dd>
+<p>An implementation must return exactly
+the number of return values specified by this standard unless the
+standard specifically indicates otherwise.
+</p>
+</dd>
+<dt><b>Unsolicited messages</b></dt>
+<dd>
+<p>No output can be produced by a function other than that specified in
+the standard or due to the signaling of <i>conditions</i>
+detected by the function.
+</p>
+<p>Unsolicited output, such as garbage collection notifications and
+autoload heralds, should not go directly to the <i>stream</i>
+that is the value of a <i>stream</i> variable defined in this
+standard, but can go indirectly to <i>terminal I/O</i> by using a
+<i>synonym stream</i> to <b>*terminal-io*</b>.
+</p>
+<p>Progress reports from such functions as <b>load</b> and
+<b>compile</b> are considered solicited, and are not covered by
+this prohibition.
+</p>
+</dd>
+<dt><b>Implementation of macros and special forms</b></dt>
+<dd>
+<p><i>Macros</i> and <i>special operators</i> defined in this standard
+must not be <i>functions</i>.
+</p>
+</dd>
+</dl>
+
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>exp (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="exp (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="exp (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Numbers-Dictionary.html#Numbers-Dictionary" rel="up" title="Numbers Dictionary">
+<link href="gcd.html#gcd" rel="next" title="gcd">
+<link href="evenp.html#evenp" rel="prev" title="evenp">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="exp"></a>
+<div class="header">
+<p>
+Next: <a href="gcd.html#gcd" accesskey="n" rel="next">gcd</a>, Previous: <a href="evenp.html#evenp" accesskey="p" rel="prev">evenp</a>, Up: <a href="Numbers-Dictionary.html#Numbers-Dictionary" accesskey="u" rel="up">Numbers Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="exp_002c-expt-_005bFunction_005d"></a>
+<h4 class="subsection">12.2.31 exp, expt                                                        [Function]</h4>
+
+<p><code>exp</code>  <i>number</i> &rArr;  <i>result</i>
+</p>
+<p><code>expt</code>  <i>base-number power-number</i> &rArr;  <i>result</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-216"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>number</i>&mdash;a <i>number</i>.
+</p>
+<p><i>base-number</i>&mdash;a <i>number</i>.
+</p>
+<p><i>power-number</i>&mdash;a <i>number</i>.
+</p>
+<p><i>result</i>&mdash;a <i>number</i>.
+</p>
+<a name="Description_003a_003a-296"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>exp</b> and <b>expt</b> perform exponentiation.
+</p>
+<p><b>exp</b> returns <i>e</i> raised to the power <i>number</i>,
+where <i>e</i> is the base of the natural logarithms.
+<b>exp</b> has no branch cut.
+</p>
+<p><b>expt</b> returns <i>base-number</i> 
+raised to the power <i>power-number</i>.
+If the <i>base-number</i> is a <i>rational</i> 
+and <i>power-number</i> is
+an <i>integer</i>,
+the calculation is exact and the result will be of <i>type</i> <b>rational</b>;
+otherwise a floating-point approximation might result.
+</p>
+<p>For <b>expt</b> of a <i>complex rational</i> to an <i>integer</i> power,
+the calculation must be exact and the result is
+of type <tt>(or rational (complex rational))</tt>.
+</p>
+<p>The result of <b>expt</b> can be a <i>complex</i>,
+even when neither argument is a <i>complex</i>,
+if <i>base-number</i> is negative and <i>power-number</i>
+is not an <i>integer</i>. 
+The result is always the <i>principal</i> <i>complex</i> <i>value</i>.
+For example, <tt>(expt -8 1/3)</tt> is not permitted to return <tt>-2</tt>,
+even though <tt>-2</tt> is one of the cube roots of <tt>-8</tt>. 
+The <i>principal</i> cube root is a <i>complex</i>
+approximately equal to <tt>#C(1.0 1.73205)</tt>, not <tt>-2</tt>.
+</p>
+<p><b>expt</b> is defined
+as <i>b^x = e^x log b\/</i>.
+This defines the <i>principal</i> <i>values</i> precisely.  The range of
+<b>expt</b> is the entire complex plane.  Regarded
+as a function of <i>x</i>, with <i>b</i> fixed, there is no branch cut.
+Regarded as a function of <i>b</i>, with <i>x</i> fixed, there is in general
+a branch cut along the negative real axis, continuous with quadrant II.
+The domain excludes the origin.
+By definition, 0^0=1.  If <i>b</i>=0 and the real part of <i>x</i> is strictly
+positive, then 
+<i>b^x</i>=0. For all other values of <i>x</i>, 0^<i>x</i> 
+is an error.
+</p>
+<p>When <i>power-number</i> is an <i>integer</i> <tt>0</tt>,
+then the result is always the value one in the <i>type</i> 
+of <i>base-number</i>,
+even if the <i>base-number</i> is zero (of any <i>type</i>).  That is:
+</p>
+<div class="example">
+<pre class="example"> (expt x 0) &equiv; (coerce 1 (type-of x))
+</pre></div>
+
+<p>If <i>power-number</i> is a zero of any other <i>type</i>,
+then the result is also the value one, in the <i>type</i> of the arguments
+after the application of the contagion rules in <a href="Contagion-in-Numeric-Operations.html#Contagion-in-Numeric-Operations">Contagion in Numeric Operations</a>,
+with one exception:
+the consequences are undefined if <i>base-number</i> is zero when <i>power-number</i>
+is zero and not of <i>type</i> <b>integer</b>.
+</p>
+<a name="Examples_003a_003a-200"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (exp 0) &rArr;  1.0
+ (exp 1) &rArr;  2.718282
+ (exp (log 5)) &rArr;  5.0 
+ (expt 2 8) &rArr;  256
+ (expt 4 .5) &rArr;  2.0
+ (expt #c(0 1) 2) &rArr;  -1
+ (expt #c(2 2) 3) &rArr;  #C(-16 16)
+ (expt #c(2 2) 4) &rArr;  -64 
+</pre></div>
+
+<a name="See-Also_003a_003a-249"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="log.html#log">log</a>
+,
+<a href="Rule-of-Float-Substitutability.html#Rule-of-Float-Substitutability">Rule of Float Substitutability</a>
+</p>
+<a name="Notes_003a_003a-150"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>Implementations of <b>expt</b> are permitted to use different algorithms
+for the cases of a <i>power-number</i> of <i>type</i> <b>rational</b> 
+	     and a <i>power-number</i> of <i>type</i> <b>float</b>.
+</p>
+<p>Note that by the following logic, 
+<tt>(sqrt (expt <i>x</i> 3))</tt> is not equivalent to 
+<tt>(expt <i>x</i> 3/2)</tt>.
+</p>
+<div class="example">
+<pre class="example"> (setq x (exp (/ (* 2 pi #c(0 1)) 3)))         ;exp(2.pi.i/3)
+ (expt x 3) &rArr;  1 ;except for round-off error
+ (sqrt (expt x 3)) &rArr;  1 ;except for round-off error
+ (expt x 3/2) &rArr;  -1 ;except for round-off error
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="gcd.html#gcd" accesskey="n" rel="next">gcd</a>, Previous: <a href="evenp.html#evenp" accesskey="p" rel="prev">evenp</a>, Up: <a href="Numbers-Dictionary.html#Numbers-Dictionary" accesskey="u" rel="up">Numbers Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

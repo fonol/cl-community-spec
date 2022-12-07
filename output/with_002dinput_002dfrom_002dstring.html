@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>with-input-from-string (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="with_002doutput_002dto_002dstring.html#with_002doutput_002dto_002dstring" rel="next" title="with-output-to-string">
+<link href="make_002dstring_002doutput_002dstream.html#make_002dstring_002doutput_002dstream" rel="prev" title="make-string-output-stream">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="make_002dstring_002doutput_002dstream.html#make_002dstring_002doutput_002dstream" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                make-string-output-stream
+                            </a>
+                            <a href="Streams-Dictionary.html#Streams-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Streams Dictionary
+                            </a>
+                            <a href="with_002doutput_002dto_002dstring.html#with_002doutput_002dto_002dstring.html" class="nav-btn nav__next ">
+                                with-output-to-string
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="with_002dinput_002dfrom_002dstring"></a>
+<a name="with_002dinput_002dfrom_002dstring-_005bMacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Macro</div>
+<h4 class="subsection">with-input-from-string                                              </h4>
+
+<p><code>with-input-from-string</code>  <i><span class="roman">(</span>var string &amp;key</i> index start end<span class="roman">)</span>
+			  {<i>declaration</i>}*
+			  {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-452"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>var</i>&mdash;a <i>variable</i> <i>name</i>.
+</p>
+<p><i>string</i>&mdash;a <i>form</i>; evaluated to produce a <i>string</i>.
+</p>
+<p><i>index</i>&mdash;a <i>place</i>.
+</p>
+<p><i>start</i>, <i>end</i>&mdash;<i>bounding index designators</i> of <i>string</i>.
+ The defaults for <i>start</i> and <i>end</i> are <tt>0</tt> and <b>nil</b>, respectively.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>result</i>&mdash;the <i>values</i> returned by the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-582"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Creates an
+</p>
+<p><i>input</i> <i>string stream</i>, 
+</p>
+<p>provides an opportunity to perform operations on the <i>stream</i> 
+ (returning zero or more <i>values</i>),
+and then closes the <i>string stream</i>.
+</p>
+<p><i>String</i> is evaluated first, and <i>var</i> is bound to
+a character <i>input</i> <i>string stream</i> that supplies 
+<i>characters</i> from the subsequence of the resulting <i>string</i> <i>bounded</i> by
+<i>start</i> and <i>end</i>. 
+The body is executed as an <i>implicit progn</i>.
+</p>
+<p>The <i>input</i> <i>string stream</i> is automatically closed on exit from
+<b>with-input-from-string</b>, no matter whether the exit is normal or abnormal.
+</p>
+<p>The <i>input</i> <i>string stream</i> to which the <i>variable</i> <i>var</i>
+is <i>bound</i> has <i>dynamic extent</i>;
+its <i>extent</i> ends when the <i>form</i> is exited.
+</p>
+<p>The <i>index</i> is a pointer within the <i>string</i> to be advanced.
+If <b>with-input-from-string</b>
+is exited normally, then <i>index</i> will have
+as its <i>value</i>
+the index into the <i>string</i> indicating the first character not read
+which is <tt>(length <i>string</i>)</tt> if all characters were used.
+The place specified by <i>index</i>
+is not updated as reading progresses, but only at the
+end of the operation. 
+</p>
+<p><i>start</i> and <i>index</i> may both specify the same variable, 
+which is a pointer within the <i>string</i> to be advanced,
+perhaps repeatedly by some containing loop.
+</p>
+<p>The consequences are undefined if an attempt is made to <i>assign</i> 
+the <i>variable</i> <i>var</i>.
+</p>
+<a name="Examples_003a_003a-423"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+<div class="example">
+<pre class="example"><code> (with-input-from-string (s &quot;XXX1 2 3 4xxx&quot;
+                             :index ind
+                             :start 3 :end 10)
+    (+ (read s) (read s) (read s))) &rArr;  6
+ ind &rArr;  9
+ (with-input-from-string (s &quot;Animal Crackers&quot; :index j :start 6)
+   (read s)) &rArr;  CRACKERS
+</code>
+</pre></div>
+
+<p>The variable <tt>j</tt> is set to <tt>15</tt>.
+</p>
+<a name="Side-Effects_003a_003a-73"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Side Effects</h4>
+
+<p>The <i>value</i> of the <i>place</i> named by <i>index</i>, if any, is modified.
+</p>
+<a name="See-Also_003a_003a-473"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="make_002dstring_002dinput_002dstream.html#make_002dstring_002dinput_002dstream">make-string-input-stream</a>
+,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

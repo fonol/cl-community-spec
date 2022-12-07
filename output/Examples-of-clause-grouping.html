@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Examples of clause grouping (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Examples-of-Miscellaneous-Loop-Features.html#Examples-of-Miscellaneous-Loop-Features" rel="up" title="Examples of Miscellaneous Loop Features">
+<link href="Notes-about-Loop.html#Notes-about-Loop" rel="next" title="Notes about Loop">
+<link href="Examples-of-Miscellaneous-Loop-Features.html#Examples-of-Miscellaneous-Loop-Features" rel="prev" title="Examples of Miscellaneous Loop Features">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Examples-of-Miscellaneous-Loop-Features.html#Examples-of-Miscellaneous-Loop-Features" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Examples of Miscellaneous Loop Features
+                            </a>
+                            <a href="Examples-of-Miscellaneous-Loop-Features.html#Examples-of-Miscellaneous-Loop-Features.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Examples of Miscellaneous Loop Features
+                            </a>
+                            <a href="Notes-about-Loop.html#Notes-about-Loop.html" class="nav-btn nav__next ">
+                                Notes about Loop
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Examples-of-clause-grouping"></a>
+<a name="Examples-of-clause-grouping-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Examples of clause grouping</h4>
+
+<div class="example">
+<pre class="example"><code>;; Group conditional clauses.
+ (loop for i in '(1 324 2345 323 2 4 235 252)
+       when (oddp i)
+         do (print i)
+         and collect i into odd-numbers
+         and do (terpri)
+       else                              ; I is even.
+         collect i into even-numbers
+       finally
+         (return (values odd-numbers even-numbers)))
+<tt> |&gt; </tt> 1 
+<tt> |&gt; </tt> 
+<tt> |&gt; </tt> 2345 
+<tt> |&gt; </tt> 
+<tt> |&gt; </tt> 323 
+<tt> |&gt; </tt> 
+<tt> |&gt; </tt> 235 
+&rArr;  (1 2345 323 235), (324 2 4 252)
+
+;; Collect numbers larger than 3.
+ (loop for i in '(1 2 3 4 5 6)
+       when (and (&gt; i 3) i)
+       collect it)                      ; IT refers to (and (&gt; i 3) i).
+&rArr;  (4 5 6)
+
+;; Find a number in a list.
+ (loop for i in '(1 2 3 4 5 6)
+       when (and (&gt; i 3) i)
+       return it)
+&rArr;  4
+
+;; The above example is similar to the following one.
+ (loop for i in '(1 2 3 4 5 6)
+       thereis (and (&gt; i 3) i))
+&rArr;  4
+
+;; Nest conditional clauses.
+ (let ((list '(0 3.0 apple 4 5 9.8 orange banana)))
+   (loop for i in list
+         when (numberp i)
+           when (floatp i)
+             collect i into float-numbers
+           else                                  ; Not (floatp i)
+             collect i into other-numbers
+         else                                    ; Not (numberp i)
+           when (symbolp i) 
+             collect i into symbol-list
+           else                                  ; Not (symbolp i)
+             do (error &quot;found a funny value in list ~S, value ~S~
+         finally (return (values float-numbers other-numbers symbol-list))))
+&rArr;  (3.0 9.8), (0 4 5), (APPLE ORANGE BANANA)
+
+;; Without the END preposition, the last AND would apply to the
+;; inner IF rather than the outer one.
+ (loop for x from 0 to 3 
+       do (print x)
+       if (zerop (mod x 2))
+         do (princ &quot; a&quot;)
+          and if (zerop (floor x 2))
+                do (princ &quot; b&quot;)
+                end
+          and do (princ &quot; c&quot;))
+<tt> |&gt; </tt> 0  a b c
+<tt> |&gt; </tt> 1 
+<tt> |&gt; </tt> 2  a c
+<tt> |&gt; </tt> 3 
+&rArr;  NIL
+</code>
+</pre></div>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>load-logical-pathname-translations (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="load-logical-pathname-translations (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="load-logical-pathname-translations (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Filenames-Dictionary.html#Filenames-Dictionary" rel="up" title="Filenames Dictionary">
+<link href="logical_002dpathname_002dtranslations.html#logical_002dpathname_002dtranslations" rel="next" title="logical-pathname-translations">
+<link href="pathname_002dhost.html#pathname_002dhost" rel="prev" title="pathname-host">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="load_002dlogical_002dpathname_002dtranslations"></a>
+<div class="header">
+<p>
+Next: <a href="logical_002dpathname_002dtranslations.html#logical_002dpathname_002dtranslations" accesskey="n" rel="next">logical-pathname-translations</a>, Previous: <a href="pathname_002dhost.html#pathname_002dhost" accesskey="p" rel="prev">pathname-host</a>, Up: <a href="Filenames-Dictionary.html#Filenames-Dictionary" accesskey="u" rel="up">Filenames Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="load_002dlogical_002dpathname_002dtranslations-_005bFunction_005d"></a>
+<h4 class="subsection">19.4.7 load-logical-pathname-translations                               [Function]</h4>
+
+<p><code>load-logical-pathname-translations</code>  <i>host</i> &rArr;  <i>just-loaded</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-393"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>host</i>&mdash;a <i>string</i>.
+</p>
+<p><i>just-loaded</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-511"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Searches for and loads the definition of a <i>logical host</i> named <i>host</i>,
+if it is not already defined.
+The specific nature of the search is <i>implementation-defined</i>.
+</p>
+<p>If the <i>host</i> is already defined, 
+no attempt to find or load a definition is attempted,
+and <i>false</i> is returned.
+If the <i>host</i> is not already defined,
+but a definition is successfully found and loaded,
+<i>true</i> is returned.
+Otherwise, an error is signaled.
+</p>
+<a name="Examples_003a_003a-373"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (translate-logical-pathname &quot;hacks:weather;barometer.lisp.newest&quot;)
+<tt> |&gt; </tt> Error: The logical host HACKS is not defined.
+ (load-logical-pathname-translations &quot;HACKS&quot;)
+<tt> |&gt; </tt> ;; Loading SYS:SITE;HACKS.TRANSLATIONS
+<tt> |&gt; </tt> ;; Loading done.
+&rArr;  <i>true</i>
+ (translate-logical-pathname &quot;hacks:weather;barometer.lisp.newest&quot;)
+&rArr;  #P&quot;HELIUM:[SHARED.HACKS.WEATHER]BAROMETER.LSP;0&quot;
+ (load-logical-pathname-translations &quot;HACKS&quot;)
+&rArr;  <i>false</i>
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-175"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If no definition is found, an error of <i>type</i> <b>error</b> is signaled.
+</p>
+<a name="See-Also_003a_003a-415"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>logical-pathname</b>
+</p>
+<a name="Notes_003a_003a-277"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><i>Logical pathname</i> definitions will be created not just by 
+<i>implementors</i> but also by <i>programmers</i>.  As such,
+it is important that the search strategy be documented.
+For example, an <i>implementation</i> might define that the
+definition of a <i>host</i> is to be found in a file called
+&ldquo;<i>host</i>.translations&rdquo; in some specifically named directory.
+</p>
+
+
+
+</body>
+</html>

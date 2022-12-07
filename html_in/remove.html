@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>remove (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="remove (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="remove (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Sequences-Dictionary.html#Sequences-Dictionary" rel="up" title="Sequences Dictionary">
+<link href="remove_002dduplicates.html#remove_002dduplicates" rel="next" title="remove-duplicates">
+<link href="merge.html#merge" rel="prev" title="merge">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="remove"></a>
+<div class="header">
+<p>
+Next: <a href="remove_002dduplicates.html#remove_002dduplicates" accesskey="n" rel="next">remove-duplicates</a>, Previous: <a href="merge.html#merge" accesskey="p" rel="prev">merge</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="remove_002c-remove_002dif_002c-remove_002dif_002dnot_002c"></a>
+<h4 class="subsection">17.3.22 remove, remove-if, remove-if-not,</h4>
+<a name="delete_002c-delete_002dif_002c-delete_002dif_002dnot"></a>
+<h4 class="subheading">delete, delete-if, delete-if-not</h4>
+<p align="right"><i>[Function]</i>
+</p>
+<p><code>remove</code>  <i>item sequence &amp;key</i> from-end test test-not start end count key &rArr;  <i>result-sequence</i>
+</p>
+<p><code>remove-if</code>  <i>test sequence &amp;key</i> from-end start end count key &rArr;  <i>result-sequence</i>
+</p>
+<p><code>remove-if-not</code>  <i>test sequence &amp;key</i> from-end start end count key &rArr;  <i>result-sequence</i>
+</p>
+<p><code>delete</code>  <i>item sequence &amp;key</i> from-end test test-not start end count key &rArr;  <i>result-sequence</i>
+</p>
+<p><code>delete-if</code>  <i>test sequence &amp;key</i> from-end start end count key &rArr;  <i>result-sequence</i>
+</p>
+<p><code>delete-if-not</code>  <i>test sequence &amp;key</i> from-end start end count key &rArr;  <i>result-sequence</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-374"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>item</i>&mdash;an <i>object</i>.
+</p>
+<p><i>sequence</i>&mdash;a <i>proper sequence</i>.
+</p>
+<p><i>test</i>&mdash;a <i>designator</i> for a <i>function</i> 
+  of one <i>argument</i> that returns a <i>generalized boolean</i>.
+</p>
+<p><i>from-end</i>&mdash;a <i>generalized boolean</i>.
+  The default is <i>false</i>.
+</p>
+<p><i>test</i>&mdash;a <i>designator</i> for a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test-not</i>&mdash;a <i>designator</i> for 
+  a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>start</i>, <i>end</i>&mdash;<i>bounding index designators</i> of <i>sequence</i>.
+ The defaults for <i>start</i> and <i>end</i> are <tt>0</tt> and <b>nil</b>, respectively.
+</p>
+<p><i>count</i>&mdash;an <i>integer</i> or <b>nil</b>.
+</p>
+<p>The default is <b>nil</b>.
+</p>
+<p><i>key</i>&mdash;a <i>designator</i> for a <i>function</i> of one argument,
+  or <b>nil</b>.
+</p>
+<p><i>result-sequence</i>&mdash;a <i>sequence</i>.
+</p>
+<a name="Description_003a_003a-489"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>remove</b>, <b>remove-if</b>, and <b>remove-if-not</b>
+return a <i>sequence</i> from which 
+the elements that <i>satisfy the test</i> 
+have been removed.  
+</p>
+<p><b>delete</b>, <b>delete-if</b>, and <b>delete-if-not</b>
+are like <b>remove</b>, <b>remove-if</b>, and
+<b>remove-if-not</b> respectively, 
+but they may modify <i>sequence</i>.
+</p>
+<p>If <i>sequence</i> is a <i>vector</i>, the result is a
+<i>vector</i> that has the same
+<i>actual array element type</i> as <i>sequence</i>.
+The result might or might not be simple, and 
+might or might not be <i>identical</i>
+to <i>sequence</i>.
+If <i>sequence</i> is a <i>list</i>, the result is a <i>list</i>. 
+</p>
+<p>Supplying a <i>from-end</i> of <i>true</i> matters only when the
+<i>count</i> is provided; in that case only the rightmost <i>count</i> elements 
+<i>satisfying the test</i> are deleted.
+</p>
+<p><i>Count</i>, if supplied, limits the number of elements
+removed or deleted; if more than <i>count</i> elements <i>satisfy the test</i>,
+then of these elements only the leftmost or rightmost, depending on
+<i>from-end</i>,
+are deleted or removed,
+as many as specified by <i>count</i>.
+</p>
+<p>If <i>count</i> is supplied and negative, 
+the behavior is as if zero had been supplied instead.
+</p>
+<p>If <i>count</i> is <b>nil</b>, all matching items are affected.
+</p>
+<p>For all these functions,
+elements 
+not removed or deleted occur in the same order in the result
+as they did in <i>sequence</i>.
+</p>
+<p><b>remove</b>, <b>remove-if</b>, <b>remove-if-not</b> return
+a <i>sequence</i>
+of the same <i>type</i> as <i>sequence</i>
+that has the same elements except that those in the subsequence
+<i>bounded</i> by <i>start</i> and <i>end</i> and <i>satisfying the test</i>
+have been removed.  
+This is a non-destructive operation. If any
+elements need to be removed, the result will be a copy.
+The result of <b>remove</b> may share
+with <i>sequence</i>; 
+the result may be <i>identical</i> to the input <i>sequence</i>
+if no elements need to be removed.
+</p>
+<p><b>delete</b>, <b>delete-if</b>, and <b>delete-if-not</b>
+return a <i>sequence</i> 
+of the same <i>type</i> as <i>sequence</i>
+that has the same elements except that those in the subsequence
+<i>bounded</i> by <i>start</i> and <i>end</i> and <i>satisfying the test</i>
+have been deleted. 
+<i>Sequence</i> may be destroyed and used to construct
+the result; however, the result might or might not be <i>identical</i> 
+to <i>sequence</i>.
+</p>
+<p><b>delete</b>, when <i>sequence</i> is a <i>list</i>, is permitted to 
+<b>setf</b> any part, <b>car</b> or <b>cdr</b>, of the
+top-level list structure in that <i>sequence</i>.
+When <i>sequence</i> is a <i>vector</i>,  <b>delete</b> is 
+permitted to change the dimensions of the <i>vector</i> 
+and to slide its elements into new positions without
+permuting them to produce the resulting <i>vector</i>.
+</p>
+<p><b>delete-if</b> is constrained to behave exactly as follows:
+</p>
+<div class="example">
+<pre class="example"> (delete nil <i>sequence</i>
+             :test #'(lambda (ignore <i>item</i>) (funcall <i>test</i> <i>item</i>))
+             ...)
+</pre></div>
+
+<a name="Examples_003a_003a-356"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (remove 4 '(1 3 4 5 9)) &rArr;  (1 3 5 9)
+ (remove 4 '(1 2 4 1 3 4 5)) &rArr;  (1 2 1 3 5)
+ (remove 4 '(1 2 4 1 3 4 5) :count 1) &rArr;  (1 2 1 3 4 5)
+ (remove 4 '(1 2 4 1 3 4 5) :count 1 :from-end t) &rArr;  (1 2 4 1 3 5)
+ (remove 3 '(1 2 4 1 3 4 5) :test #'&gt;) &rArr;  (4 3 4 5)
+ (setq lst '(list of four elements)) &rArr;  (LIST OF FOUR ELEMENTS)
+ (setq lst2 (copy-seq lst)) &rArr;  (LIST OF FOUR ELEMENTS)
+ (setq lst3 (delete 'four lst)) &rArr;  (LIST OF ELEMENTS)
+ (equal lst lst2) &rArr;  <i>false</i>
+ (remove-if #'oddp '(1 2 4 1 3 4 5)) &rArr;  (2 4 4)
+ (remove-if #'evenp '(1 2 4 1 3 4 5) :count 1 :from-end t) 
+&rArr;  (1 2 4 1 3 5)
+ (remove-if-not #'evenp '(1 2 3 4 5 6 7 8 9) :count 2 :from-end t)
+&rArr;  (1 2 3 4 5 6 8)
+ (setq tester (list 1 2 4 1 3 4 5)) &rArr;  (1 2 4 1 3 4 5)
+ (delete 4 tester) &rArr;  (1 2 1 3 5)
+ (setq tester (list 1 2 4 1 3 4 5)) &rArr;  (1 2 4 1 3 4 5)
+ (delete 4 tester :count 1) &rArr;  (1 2 1 3 4 5)
+ (setq tester (list 1 2 4 1 3 4 5)) &rArr;  (1 2 4 1 3 4 5)
+ (delete 4 tester :count 1 :from-end t) &rArr;  (1 2 4 1 3 5)
+ (setq tester (list 1 2 4 1 3 4 5)) &rArr;  (1 2 4 1 3 4 5)
+ (delete 3 tester :test #'&gt;) &rArr;  (4 3 4 5)
+ (setq tester (list 1 2 4 1 3 4 5)) &rArr;  (1 2 4 1 3 4 5)
+ (delete-if #'oddp tester) &rArr;  (2 4 4)
+ (setq tester (list 1 2 4 1 3 4 5)) &rArr;  (1 2 4 1 3 4 5)
+ (delete-if #'evenp tester :count 1 :from-end t) &rArr;  (1 2 4 1 3 5)    
+ (setq tester (list 1 2 3 4 5 6)) &rArr;  (1 2 3 4 5 6) 
+ (delete-if #'evenp tester) &rArr;  (1 3 5) 
+ tester &rArr;  <i>implementation-dependent</i>
+</pre></div>
+
+<div class="example">
+<pre class="example"> (setq foo (list 'a 'b 'c)) &rArr;  (A B C)
+ (setq bar (cdr foo)) &rArr;  (B C)
+ (setq foo (delete 'b foo)) &rArr;  (A C)
+ bar &rArr;  ((C)) or ...
+ (eq (cdr foo) (car bar)) &rArr;  T or ...
+</pre></div>
+
+<a name="Side-Effects_003a_003a-55"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>For <b>delete</b>, <b>delete-if</b>, and <b>delete-if-not</b>,
+<i>sequence</i> may be destroyed and used to construct the result.
+</p>
+<a name="Exceptional-Situations_003a_003a-167"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>sequence</i> is not a <i>proper sequence</i>.
+</p>
+<a name="See-Also_003a_003a-399"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Compiler-Terminology.html#Compiler-Terminology">Compiler Terminology</a>,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<a name="Notes_003a_003a-267"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <tt>:test-not</tt> <i>argument</i> is deprecated.
+</p>
+<p>The functions <b>delete-if-not</b> and <b>remove-if-not</b> are deprecated.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="remove_002dduplicates.html#remove_002dduplicates" accesskey="n" rel="next">remove-duplicates</a>, Previous: <a href="merge.html#merge" accesskey="p" rel="prev">merge</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

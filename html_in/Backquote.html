@@ -1,0 +1,218 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Backquote (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Backquote (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Backquote (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Standard-Macro-Characters.html#Standard-Macro-Characters" rel="up" title="Standard Macro Characters">
+<link href="Notes-about-Backquote.html#Notes-about-Backquote" rel="next" title="Notes about Backquote">
+<link href="Double_002dQuote.html#Double_002dQuote" rel="prev" title="Double-Quote">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Backquote"></a>
+<div class="header">
+<p>
+Next: <a href="Comma.html#Comma" accesskey="n" rel="next">Comma</a>, Previous: <a href="Double_002dQuote.html#Double_002dQuote" accesskey="p" rel="prev">Double-Quote</a>, Up: <a href="Standard-Macro-Characters.html#Standard-Macro-Characters" accesskey="u" rel="up">Standard Macro Characters</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Backquote-1"></a>
+<h4 class="subsection">2.4.6 Backquote</h4>
+
+<p>The <i>backquote</i> introduces a template of a data structure to be built.  
+For example, writing
+</p>
+<div class="example">
+<pre class="example"> `(cond ((numberp ,x) ,@y) (t (print ,x) ,@y))
+</pre></div>
+
+<p>is roughly equivalent to writing
+</p>
+<div class="example">
+<pre class="example"> (list 'cond 
+       (cons (list 'numberp x) y) 
+       (list* 't (list 'print x) y))
+</pre></div>
+
+<p>Where a comma
+occurs in the template, 
+the <i>expression</i>
+following the comma is to be evaluated to produce an <i>object</i> to
+be inserted at that point.  Assume <tt>b</tt> has the value 3, for example, then
+evaluating the <i>form</i> denoted by <tt>`(a b ,b ,(+ b 1) b)</tt> produces
+the result <tt>(a b 3 4 b)</tt>.
+</p>
+<p>If a comma is immediately followed by an <i>at-sign</i>, 
+then the <i>form</i> following the <i>at-sign</i>
+is evaluated to produce a <i>list</i> of <i>objects</i>.
+These <i>objects</i> are then &ldquo;spliced&rdquo; into place in the template.  For
+example, if <tt>x</tt> has the value <tt>(a b c)</tt>, then
+</p>
+<div class="example">
+<pre class="example"> `(x ,x ,@x foo ,(cadr x) bar ,(cdr x) baz ,@(cdr x))
+&rArr;  (x (a b c) a b c foo b bar (b c) baz b c)
+</pre></div>
+
+<p>The backquote syntax can be summarized formally as follows.
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p><tt>`<i>basic</i></tt> is the same as <tt>'<i>basic</i></tt>,
+that is, <tt>(quote <i>basic</i>)</tt>, for any <i>expression</i> 
+<i>basic</i> that is not a <i>list</i> or a general <i>vector</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><tt>`,<i>form</i></tt> is the same as <i>form</i>, for any <i>form</i>, provided
+that the representation of <i>form</i> does not begin with <i>at-sign</i>
+or <i>dot</i>.  (A similar caveat holds for all occurrences of a form after a <i>comma</i>.)
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><tt>`,@<i>form</i></tt> has undefined consequences.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><tt>`(x1 x2 x3 ... xn . atom)</tt>
+may be interpreted to mean
+</p>
+<div class="example">
+<pre class="example"> (append [ x1] [ x2] [ x3] ... [ xn] (quote atom))
+</pre></div>
+
+<p>where the brackets are used to indicate
+a transformation of an <i>xj</i> as follows:
+</p>
+<dl compact="compact">
+<dt>&ndash;</dt>
+<dd><p><tt>[<i>form</i>]</tt> is interpreted as <tt>(list `<i>form</i>)</tt>, 
+which contains a backquoted form that must then be further interpreted.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p><tt>[,<i>form</i>]</tt> is interpreted as <tt>(list <i>form</i>)</tt>.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p><tt>[,@<i>form</i>]</tt> is interpreted as <i>form</i>.
+</p></dd>
+</dl>
+
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><tt>`(x1 x2 x3 ... xn)</tt> may be interpreted to mean
+the same as the backquoted form
+<tt>`(x1 x2 x3 ... xn . <b>nil</b>)</tt>,
+thereby reducing it to the previous case.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><tt>`(x1 x2 x3 ... xn . ,form)</tt> may be interpreted to mean
+</p>
+<div class="example">
+<pre class="example"> (append [ x1] [ x2] [ x3] ... [ xn] form)
+</pre></div>
+
+<p>where the brackets indicate a transformation of an <tt>xj</tt> as described above.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><tt>`(x1 x2 x3 ... xn . ,@form)</tt> has undefined consequences.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><tt>`#(x1 x2 x3 ... xn)</tt> may be interpreted to mean
+<tt>(apply #'vector `(x1 x2 x3 ... xn))</tt>.
+</p></dd>
+</dl>
+
+<p>Anywhere &ldquo;<tt>,@</tt>&rdquo; may be used, the syntax &ldquo;<tt>,.</tt>&rdquo; may be used instead
+to indicate that it is permissible to operate <i>destructively</i> on 
+the <i>list structure</i>  produced by the form following the &ldquo;<tt>,.</tt>&rdquo; 
+(in effect, to use <b>nconc</b> instead of <b>append</b>).
+</p>
+<p>If the backquote syntax is nested, the innermost backquoted form
+should be expanded first.  This means that if several commas occur
+in a row, the leftmost one belongs to the innermost <i>backquote</i>.
+</p>
+<p>An <i>implementation</i> is free to interpret a backquoted <i>form</i> F_1
+as any <i>form</i> F_2 that, when evaluated, will produce a result that is
+the <i>same</i> under <b>equal</b> as the result implied by the above definition, 
+provided that the side-effect behavior of the substitute <i>form</i> F_2 
+is also consistent with the description given above.
+The constructed
+copy of the template might or might not share <i>list</i> structure with the
+template itself.  As an example, the above definition implies that
+</p>
+<div class="example">
+<pre class="example"> `((,a b) ,c ,@d)
+</pre></div>
+
+<p>will be interpreted as if it were
+</p>
+<div class="example">
+<pre class="example"> (append (list (append (list a) (list 'b) '<b>nil</b>)) (list c) d '<b>nil</b>)
+</pre></div>
+
+<p>but it could also be legitimately interpreted to mean any of the following:
+</p>
+<div class="example">
+<pre class="example"> (append (list (append (list a) (list 'b))) (list c) d)
+ (append (list (append (list a) '(b))) (list c) d)
+ (list* (cons a '(b)) c d)
+ (list* (cons a (list 'b)) c d)
+ (append (list (cons a '(b))) (list c) d)
+ (list* (cons a '(b)) c (copy-list d))
+</pre></div>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Notes-about-Backquote.html#Notes-about-Backquote" accesskey="1">Notes about Backquote</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Comma.html#Comma" accesskey="n" rel="next">Comma</a>, Previous: <a href="Double_002dQuote.html#Double_002dQuote" accesskey="p" rel="prev">Double-Quote</a>, Up: <a href="Standard-Macro-Characters.html#Standard-Macro-Characters" accesskey="u" rel="up">Standard Macro Characters</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

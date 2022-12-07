@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>unread-char (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="write_002dchar.html#write_002dchar" rel="next" title="write-char">
+<link href="terpri.html#terpri" rel="prev" title="terpri">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="terpri.html#terpri" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                terpri
+                            </a>
+                            <a href="Streams-Dictionary.html#Streams-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Streams Dictionary
+                            </a>
+                            <a href="write_002dchar.html#write_002dchar.html" class="nav-btn nav__next ">
+                                write-char
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="unread_002dchar"></a>
+<a name="unread_002dchar-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">unread-char                                                      </h4>
+
+<p><code>unread-char</code>  <i>character &amp;optional</i> input-stream &rArr;  <i><b>nil</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-423"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>character</i>&mdash;a <i>character</i>;
+  must be the last <i>character</i> that was read from <i>input-stream</i>.
+</p>
+<p><i>input-stream</i>&mdash;an <i>input</i> <i>stream designator</i>.
+ The default is <i>standard input</i>.
+</p>
+<a name="Description_003a_003a-551"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>unread-char</b> places <i>character</i> back onto the front of
+<i>input-stream</i> so that it will again be the next character
+in <i>input-stream</i>.
+</p>
+<p>When <i>input-stream</i> is an <i>echo stream</i>,
+no attempt is made to undo any echoing of the character that might already
+have been done on <i>input-stream</i>. However, characters placed on 
+<i>input-stream</i> by <b>unread-char</b> are marked in such a way 
+as to inhibit later re-echo by <b>read-char</b>.
+</p>
+<p>It is an error to invoke <b>unread-char</b> 
+twice consecutively on the same <i>stream</i>
+without an intervening call to <b>read-char</b> 
+(or some other input operation which implicitly reads characters)
+on that <i>stream</i>.
+</p>
+<p>Invoking <b>peek-char</b> or <b>read-char</b> commits all previous characters.
+The consequences of invoking <b>unread-char</b>
+on any character preceding that which is returned by 
+<b>peek-char</b> (including those passed over by 
+<b>peek-char</b> that has a <i>non-nil</i> <i>peek-type</i>)
+are unspecified.
+In particular, the consequences of 
+invoking <b>unread-char</b> after <b>peek-char</b>
+are unspecified.
+</p>
+<a name="Examples_003a_003a-398"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (with-input-from-string (is &quot;0123&quot;)
+    (dotimes (i 6)
+      (let ((c (read-char is)))
+        (if (evenp i) (format t &quot;~&amp;~S ~S~
+<tt> |&gt; </tt> 0 #\0
+<tt> |&gt; </tt> 2 #\1
+<tt> |&gt; </tt> 4 #\2
+&rArr;  NIL
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-86"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p><b>*standard-input*</b>,
+<b>*terminal-io*</b>.
+</p>
+<a name="See-Also_003a_003a-448"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="peek_002dchar.html#peek_002dchar">peek-char</a>
+,
+<a href="read_002dchar.html#read_002dchar">read-char</a>
+,
+<a href="Stream-Concepts.html#Stream-Concepts">Stream Concepts</a>
+</p>
+<a name="Notes_003a_003a-288"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p><b>unread-char</b> is intended to be an efficient mechanism for allowing
+the <i>Lisp reader</i> and other parsers to perform one-character lookahead
+in <i>input-stream</i>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

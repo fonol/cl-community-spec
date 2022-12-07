@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>digit-char-p (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="digit-char-p (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="digit-char-p (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Characters-Dictionary.html#Characters-Dictionary" rel="up" title="Characters Dictionary">
+<link href="graphic_002dchar_002dp.html#graphic_002dchar_002dp" rel="next" title="graphic-char-p">
+<link href="digit_002dchar.html#digit_002dchar" rel="prev" title="digit-char">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="digit_002dchar_002dp"></a>
+<div class="header">
+<p>
+Next: <a href="graphic_002dchar_002dp.html#graphic_002dchar_002dp" accesskey="n" rel="next">graphic-char-p</a>, Previous: <a href="digit_002dchar.html#digit_002dchar" accesskey="p" rel="prev">digit-char</a>, Up: <a href="Characters-Dictionary.html#Characters-Dictionary" accesskey="u" rel="up">Characters Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="digit_002dchar_002dp-_005bFunction_005d"></a>
+<h4 class="subsection">13.2.11 digit-char-p                                                     [Function]</h4>
+
+<p><code>digit-char-p</code>  <i>char &amp;optional</i> radix &rArr;  <i>weight</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-264"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>char</i>&mdash;a <i>character</i>.
+</p>
+<p><i>radix</i>&mdash;a <i>radix</i>.
+ The default is <tt>10</tt>.
+</p>
+<p><i>weight</i>&mdash;either a non-negative <i>integer</i> less than <i>radix</i>, 
+		 or <i>false</i>.
+</p>
+<a name="Description_003a_003a-360"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Tests whether <i>char</i> is a digit in the specified <i>radix</i>
+(<i>i.e.</i>, with a weight less than <i>radix</i>).
+If it is a digit in that <i>radix</i>,
+its weight is returned as an <i>integer</i>; 
+otherwise <b>nil</b> is returned.
+</p>
+<a name="Examples_003a_003a-248"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (digit-char-p #\5)    &rArr;  5
+ (digit-char-p #\5 2)  &rArr;  <i>false</i>
+ (digit-char-p #\A)    &rArr;  <i>false</i>
+ (digit-char-p #\a)    &rArr;  <i>false</i>
+ (digit-char-p #\A 11) &rArr;  10
+ (digit-char-p #\a 11) &rArr;  10
+ (mapcar #'(lambda (radix) 
+             (map 'list #'(lambda (x) (digit-char-p x radix)) 
+                  &quot;059AaFGZ&quot;))
+         '(2 8 10 16 36))
+ &rArr;  ((0 NIL NIL NIL NIL NIL NIL NIL)
+     (0 5 NIL NIL NIL NIL NIL NIL)
+     (0 5 9 NIL NIL NIL NIL NIL)
+     (0 5 9 10 10 15 NIL NIL)
+     (0 5 9 10 10 15 16 35))
+</pre></div>
+
+<a name="Affected-By_003a_003a-61"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>None.
+(In particular, the results of this predicate are independent 
+of any special syntax which might have been enabled in the <i>current readtable</i>.)
+</p>
+<a name="See-Also_003a_003a-290"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="alphanumericp.html#alphanumericp">alphanumericp</a>
+</p>
+<a name="Notes_003a_003a-192"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>Digits are <i>graphic</i> <i>characters</i>.
+</p>
+
+
+
+</body>
+</html>

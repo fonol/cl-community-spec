@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Valid Patterns for Tokens (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Valid Patterns for Tokens (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Valid Patterns for Tokens (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Interpretation-of-Tokens.html#Interpretation-of-Tokens" rel="up" title="Interpretation of Tokens">
+<link href="Package-System-Consistency-Rules.html#Package-System-Consistency-Rules" rel="next" title="Package System Consistency Rules">
+<link href="Symbols-as-Tokens.html#Symbols-as-Tokens" rel="prev" title="Symbols as Tokens">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Valid-Patterns-for-Tokens"></a>
+<div class="header">
+<p>
+Next: <a href="Package-System-Consistency-Rules.html#Package-System-Consistency-Rules" accesskey="n" rel="next">Package System Consistency Rules</a>, Previous: <a href="Symbols-as-Tokens.html#Symbols-as-Tokens" accesskey="p" rel="prev">Symbols as Tokens</a>, Up: <a href="Interpretation-of-Tokens.html#Interpretation-of-Tokens" accesskey="u" rel="up">Interpretation of Tokens</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Valid-Patterns-for-Tokens-1"></a>
+<h4 class="subsection">2.3.5 Valid Patterns for Tokens</h4>
+
+<p>The valid patterns for <i>tokens</i> are summarized in Figure 2&ndash;17. 
+</p>
+<p>&nbsp;&nbsp;<tt><i>nnnnn</i></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;<i>number</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt><i>xxxxx</i></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;<i>symbol</i>&nbsp;in&nbsp;the&nbsp;<i>current&nbsp;package</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>:<i>xxxxx</i></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;<i>symbol</i>&nbsp;in&nbsp;the&nbsp;the&nbsp;<tt>KEYWORD</tt>&nbsp;<i>package</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt><i>ppppp</i>:<i>xxxxx</i></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;an&nbsp;<i>external&nbsp;symbol</i>&nbsp;in&nbsp;the&nbsp;<i>ppppp</i>&nbsp;<i>package</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt><i>ppppp</i>::<i>xxxxx</i></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a&nbsp;(possibly&nbsp;internal)&nbsp;<i>symbol</i>&nbsp;in&nbsp;the&nbsp;<i>ppppp</i>&nbsp;<i>package</i>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>:<i>nnnnn</i></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;undefined&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt><i>ppppp</i>:<i>nnnnn</i></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;undefined&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt><i>ppppp</i>::<i>nnnnn</i></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;undefined&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>::<i>aaaaa</i></tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;undefined&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt><i>aaaaa</i>:</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;undefined&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt><i>aaaaa</i>:<i>aaaaa</i>:<i>aaaaa</i></tt>&nbsp;&nbsp;undefined&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;2&ndash;17:&nbsp;Valid&nbsp;patterns&nbsp;for&nbsp;tokens&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<p>Note that <i>nnnnn</i> has number syntax,
+          neither <i>xxxxx</i> nor <i>ppppp</i> has number syntax,
+      and <i>aaaaa</i> has any syntax.
+</p>
+<p>A summary of rules concerning <i>package markers</i> follows.
+In each case, examples are offered to illustrate the case;
+for presentational simplicity, the examples assume that
+the <i>readtable case</i> of the <i>current readtable</i> is <tt>:upcase</tt>.
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>If there is a single <i>package marker</i>, and it occurs at the beginning of the
+<i>token</i>, then the <i>token</i> is interpreted as a <i>symbol</i> in the <tt>KEYWORD</tt> <i>package</i>.
+It also sets the <b>symbol-value</b> of the newly-created <i>symbol</i> to that
+same <i>symbol</i> so that the <i>symbol</i> will self-evaluate.
+</p>
+<p>For example, 
+<tt>:bar</tt>, when read, interns <tt>BAR</tt> as an <i>external symbol</i> in the <tt>KEYWORD</tt> <i>package</i>.
+</p>
+</dd>
+<dt>2.</dt>
+<dd><p>If there is a single <i>package marker</i> not at the beginning or end of the
+<i>token</i>, then it divides the <i>token</i> into two parts.  The first part
+specifies a <i>package</i>; 
+the second part is the name of an <i>external symbol</i>
+available in that package.  
+</p>
+<p>For example, 
+<tt>foo:bar</tt>, when read, looks up <tt>BAR</tt> among the <i>external symbols</i> of
+the <i>package</i> named <tt>FOO</tt>.
+</p>
+</dd>
+<dt>3.</dt>
+<dd><p>If there are two adjacent <i>package markers</i> not at the beginning or end of the
+<i>token</i>, then they divide the <i>token</i> into two parts.  The first part
+specifies a <i>package</i>;
+the second part is the name of a <i>symbol</i> within
+that <i>package</i> (possibly an <i>internal symbol</i>).
+</p>
+<p>For example, 
+<tt>foo::bar</tt>, when read, interns <tt>BAR</tt> in the <i>package</i> named <tt>FOO</tt>.
+</p>
+</dd>
+<dt>4.</dt>
+<dd><p>If the <i>token</i> contains no <i>package markers</i>, 
+and does not have <i>potential number</i> syntax,
+then the entire <i>token</i> is the name of the <i>symbol</i>.
+The <i>symbol</i> is looked up in the <i>current package</i>.
+</p>
+<p>For example, 
+<tt>bar</tt>, when read, interns <tt>BAR</tt> in the <i>current package</i>.
+</p>
+</dd>
+<dt>5.</dt>
+<dd><p>The consequences are unspecified if any other pattern of <i>package markers</i>
+in a <i>token</i> is used.
+All other uses of <i>package markers</i> within names of <i>symbols</i> 
+are not defined by this standard 
+but are reserved for <i>implementation-dependent</i> use.
+</p></dd>
+</dl>
+
+<p>For example,
+assuming the <i>readtable case</i> of the <i>current readtable</i> is <tt>:upcase</tt>,
+<tt>editor:buffer</tt> refers to the <i>external symbol</i> 
+named <tt>BUFFER</tt> present in the <i>package</i> named <tt>editor</tt>,
+regardless of whether there is a <i>symbol</i> named <tt>BUFFER</tt> in
+the <i>current package</i>.  If there is no <i>package</i> named
+<tt>editor</tt>, or if no <i>symbol</i> named <tt>BUFFER</tt>
+is present in <tt>editor</tt>, or if <tt>BUFFER</tt> is not exported by
+<tt>editor</tt>, the reader signals
+a correctable error.
+If <tt>editor::buffer</tt> is seen, the effect is exactly the same as
+reading <tt>buffer</tt> with the <tt>EDITOR</tt> <i>package</i> being the <i>current package</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Package-System-Consistency-Rules.html#Package-System-Consistency-Rules" accesskey="n" rel="next">Package System Consistency Rules</a>, Previous: <a href="Symbols-as-Tokens.html#Symbols-as-Tokens" accesskey="p" rel="prev">Symbols as Tokens</a>, Up: <a href="Interpretation-of-Tokens.html#Interpretation-of-Tokens" accesskey="u" rel="up">Interpretation of Tokens</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

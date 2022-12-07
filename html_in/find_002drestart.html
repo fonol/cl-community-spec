@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>find-restart (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="find-restart (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="find-restart (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="invoke_002drestart.html#invoke_002drestart" rel="next" title="invoke-restart">
+<link href="compute_002drestarts.html#compute_002drestarts" rel="prev" title="compute-restarts">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="find_002drestart"></a>
+<div class="header">
+<p>
+Next: <a href="invoke_002drestart.html#invoke_002drestart" accesskey="n" rel="next">invoke-restart</a>, Previous: <a href="compute_002drestarts.html#compute_002drestarts" accesskey="p" rel="prev">compute-restarts</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="find_002drestart-_005bFunction_005d"></a>
+<h4 class="subsection">9.2.33 find-restart                                                     [Function]</h4>
+
+<p><code>find-restart</code>  <i>identifier &amp;optional</i> condition
+ restart
+</p>
+<a name="Arguments-and-Values_003a_003a-149"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>identifier</i>&mdash;a <i>non-nil</i> <i>symbol</i>, or a <i>restart</i>.
+</p>
+<p><i>condition</i>&mdash;a <i>condition</i> <i>object</i>, or <b>nil</b>.
+</p>
+<p><i>restart</i>&mdash;a <i>restart</i> or <b>nil</b>.
+</p>
+<a name="Description_003a_003a-203"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>find-restart</b> searches for a particular <i>restart</i> in the 
+current <i>dynamic environment</i>.
+</p>
+<p>When <i>condition</i> is <i>non-nil</i>, only those <i>restarts</i>
+are considered that are either explicitly associated with that <i>condition</i>,
+or not associated with any <i>condition</i>; that is, the excluded <i>restarts</i> 
+are those that are associated with a non-empty set of <i>conditions</i> of 
+which the given <i>condition</i> is not an <i>element</i>.
+If <i>condition</i> is <b>nil</b>, all <i>restarts</i> are considered.
+</p>
+<p>If <i>identifier</i> is a <i>symbol</i>, then the innermost 
+(most recently established) <i>applicable restart</i> with that <i>name</i> is returned.
+<b>nil</b> is returned if no such restart is found.
+</p>
+<p>If <i>identifier</i> is a currently active restart, then it is returned.
+Otherwise, <b>nil</b> is returned.
+</p>
+<a name="Examples_003a_003a-131"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (restart-case
+     (let ((r (find-restart 'my-restart)))
+       (format t &quot;~S is named ~S&quot; r (restart-name r)))
+   (my-restart () nil))
+<tt> |&gt; </tt> #&lt;RESTART 32307325&gt; is named MY-RESTART
+&rArr;  NIL
+ (find-restart 'my-restart)
+&rArr;  NIL
+</pre></div>
+
+<a name="Affected-By_003a_003a-31"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>Existing restarts.
+</p>
+<p><b>restart-case</b>, <b>restart-bind</b>, <b>with-condition-restarts</b>.
+</p>
+<a name="See-Also_003a_003a-177"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="compute_002drestarts.html#compute_002drestarts">compute-restarts</a>
+</p>
+<a name="Notes_003a_003a-107"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<div class="example">
+<pre class="example"> (find-restart <i>identifier</i>)
+ &equiv; (find <i>identifier</i> (compute-restarts) :key :restart-name)
+</pre></div>
+
+<p>Although anonymous restarts have a name of <b>nil</b>,
+the consequences are unspecified if <b>nil</b> is given as an <i>identifier</i>.  
+Occasionally, programmers lament that <b>nil</b> is not permissible as an
+<i>identifier</i> argument.  In most such cases, <b>compute-restarts</b>
+can probably be used to simulate the desired effect.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="invoke_002drestart.html#invoke_002drestart" accesskey="n" rel="next">invoke-restart</a>, Previous: <a href="compute_002drestarts.html#compute_002drestarts" accesskey="p" rel="prev">compute-restarts</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

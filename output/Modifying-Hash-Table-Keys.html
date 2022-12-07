@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Modifying Hash Table Keys (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Hash-Table-Concepts.html#Hash-Table-Concepts" rel="up" title="Hash Table Concepts">
+<link href="Visible-Modification-of-Objects-with-respect-to-EQ-and-EQL.html#Visible-Modification-of-Objects-with-respect-to-EQ-and-EQL" rel="next" title="Visible Modification of Objects with respect to EQ and EQL">
+<link href="Hash_002dTable-Operations.html#Hash_002dTable-Operations" rel="prev" title="Hash-Table Operations">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Hash_002dTable-Operations.html#Hash_002dTable-Operations" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Hash-Table Operations
+                            </a>
+                            <a href="Hash-Table-Concepts.html#Hash-Table-Concepts.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Hash Table Concepts
+                            </a>
+                            <a href="Visible-Modification-of-Objects-with-respect-to-EQ-and-EQL.html#Visible-Modification-of-Objects-with-respect-to-EQ-and-EQL.html" class="nav-btn nav__next ">
+                                Visible Modification of Objects with respect to EQ and EQL
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Modifying-Hash-Table-Keys"></a>
+<a name="Modifying-Hash-Table-Keys-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Modifying Hash Table Keys</h4>
+
+<p>The function supplied as the <tt>:test</tt> argument to <b>make-hash-table</b>
+specifies the &lsquo;equivalence test&rsquo; for the <i>hash table</i> it creates.
+</p>
+<p>An <i>object</i> is &lsquo;visibly modified&rsquo; with regard to an equivalence test
+if there exists some set of <i>objects</i> (or potential <i>objects</i>)
+which are equivalent to the <i>object</i> before the modification but are
+no longer equivalent afterwards.
+</p>
+<p>If an <i>object</i> O_1 is used as a key in a <i>hash table</i> H
+and is then visibly modified with regard to the equivalence test of H,
+then the consequences are unspecified if O_1, or any <i>object</i>
+O_2 equivalent to O_1 under the equivalence test (either before
+or after the modification), is used as a key in further operations on H.
+The consequences of using O_1 as a key are unspecified 
+even if O_1 is visibly modified 
+and then later modified again in such a way as 
+to undo the visible modification.
+</p>
+<p>Following are specifications of the modifications which are visible to the
+equivalence tests which must be supported by <i>hash tables</i>.  The modifications
+are described in terms of modification of components, and are defined
+recursively.  Visible modifications of components of the <i>object</i> are 
+visible modifications of the <i>object</i>.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Visible-Modification-of-Objects-with-respect-to-EQ-and-EQL.html#Visible-Modification-of-Objects-with-respect-to-EQ-and-EQL" accesskey="1">Visible Modification of Objects with respect to EQ and EQL</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Visible-Modification-of-Objects-with-respect-to-EQUAL.html#Visible-Modification-of-Objects-with-respect-to-EQUAL" accesskey="2">Visible Modification of Objects with respect to EQUAL</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Visible-Modification-of-Conses-with-respect-to-EQUAL.html#Visible-Modification-of-Conses-with-respect-to-EQUAL" accesskey="3">Visible Modification of Conses with respect to EQUAL</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Visible-Modification-of-Bit-Vectors-and-Strings-with-respect-to-EQUAL.html#Visible-Modification-of-Bit-Vectors-and-Strings-with-respect-to-EQUAL" accesskey="4">Visible Modification of Bit Vectors and Strings with respect to EQUAL</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Visible-Modification-of-Objects-with-respect-to-EQUALP.html#Visible-Modification-of-Objects-with-respect-to-EQUALP" accesskey="5">Visible Modification of Objects with respect to EQUALP</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Visible-Modification-of-Structures-with-respect-to-EQUALP.html#Visible-Modification-of-Structures-with-respect-to-EQUALP" accesskey="6">Visible Modification of Structures with respect to EQUALP</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Visible-Modification-of-Arrays-with-respect-to-EQUALP.html#Visible-Modification-of-Arrays-with-respect-to-EQUALP" accesskey="7">Visible Modification of Arrays with respect to EQUALP</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Visible-Modification-of-Hash-Tables-with-respect-to-EQUALP.html#Visible-Modification-of-Hash-Tables-with-respect-to-EQUALP" accesskey="8">Visible Modification of Hash Tables with respect to EQUALP</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Visible-Modifications-by-Language-Extensions.html#Visible-Modifications-by-Language-Extensions" accesskey="9">Visible Modifications by Language Extensions</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

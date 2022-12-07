@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Syntax of Logical Pathname Namestrings (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Syntax of Logical Pathname Namestrings (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Syntax of Logical Pathname Namestrings (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Logical-Pathnames.html#Logical-Pathnames" rel="up" title="Logical Pathnames">
+<link href="Additional-Information-about-Parsing-Logical-Pathname-Namestrings.html#Additional-Information-about-Parsing-Logical-Pathname-Namestrings" rel="next" title="Additional Information about Parsing Logical Pathname Namestrings">
+<link href="Logical-Pathnames.html#Logical-Pathnames" rel="prev" title="Logical Pathnames">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Syntax-of-Logical-Pathname-Namestrings"></a>
+<div class="header">
+<p>
+Next: <a href="Logical-Pathname-Components.html#Logical-Pathname-Components" accesskey="n" rel="next">Logical Pathname Components</a>, Previous: <a href="Logical-Pathnames.html#Logical-Pathnames" accesskey="p" rel="prev">Logical Pathnames</a>, Up: <a href="Logical-Pathnames.html#Logical-Pathnames" accesskey="u" rel="up">Logical Pathnames</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Syntax-of-Logical-Pathname-Namestrings-1"></a>
+<h4 class="subsection">19.3.1 Syntax of Logical Pathname Namestrings</h4>
+
+<p>The syntax of a <i>logical pathname</i> <i>namestring</i> is as follows.
+(Note that unlike many notational descriptions in this document,
+ this is a syntactic description of character sequences,
+ not a structural description of <i>objects</i>.)
+</p>
+<p><i><span class="nolinebreak">logical-pathname</span></i>&nbsp;::=<span class="roman">[</span>!<i>host</i>&nbsp;<i><span class="nolinebreak">host-marker</span></i><span class="roman">]</span>&nbsp;<!-- /@w -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">[</span>!<i><i><span class="nolinebreak">relative-directory-marker</span></i></i><span class="roman">]</span>&nbsp;{!<i>directory</i>&nbsp;<i><span class="nolinebreak">directory-marker</span></i>}*<!-- /@w --> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">[</span>!<i>name</i><span class="roman">]</span>&nbsp;<span class="roman">[</span><i><span class="nolinebreak">type-marker</span></i>&nbsp;!<i>type</i>&nbsp;<span class="roman">[</span><i><span class="nolinebreak">version-marker</span></i>&nbsp;!<i>version</i><span class="roman">]</span><span class="roman">]</span><!-- /@w -->
+</p>
+<p><i>host</i>&nbsp;::=!<i>word</i><!-- /@w -->
+</p>
+<p><i>directory</i>&nbsp;::=!<i>word</i>&nbsp;|&nbsp;!<i><span class="nolinebreak">wildcard-word</span></i>&nbsp;|&nbsp;!<i><span class="nolinebreak">wild-inferiors-word</span></i><!-- /@w -->
+</p>
+<p><i>name</i>&nbsp;::=!<i>word</i>&nbsp;|&nbsp;!<i><span class="nolinebreak">wildcard-word</span></i><!-- /@w -->
+</p>
+<p><i>type</i>&nbsp;::=!<i>word</i>&nbsp;|&nbsp;!<i><span class="nolinebreak">wildcard-word</span></i><!-- /@w -->
+</p>
+<p><i>version</i>&nbsp;::=!<i><span class="nolinebreak">pos-int</span></i>&nbsp;|&nbsp;<i><span class="nolinebreak">newest-word</span></i>&nbsp;|&nbsp;<i><span class="nolinebreak">wildcard-version</span></i><!-- /@w -->
+</p>
+<p><i>host-marker</i>&mdash;a <i>colon</i>.
+</p>
+<p><i>relative-directory-marker</i>&mdash;a <i>semicolon</i>.
+</p>
+<p><i>directory-marker</i>&mdash;a <i>semicolon</i>.
+</p>
+<p><i>type-marker</i>&mdash;a <i>dot</i>.
+</p>
+<p><i>version-marker</i>&mdash;a <i>dot</i>.
+</p>
+<p><i>wild-inferiors-word</i>&mdash;The two character sequence &ldquo;<tt>**</tt>&rdquo; (two <i>asterisks</i>).
+</p>
+<p><i>newest-word</i>&mdash;The six character sequence &ldquo;<tt>newest</tt>&rdquo; 
+		   or the six character sequence &ldquo;<tt>NEWEST</tt>&rdquo;.
+</p>
+<p><i>wildcard-version</i>&mdash;an <i>asterisk</i>.
+</p>
+<p><i>wildcard-word</i>&mdash;one or more <i>asterisks</i>, uppercase letters,
+   digits, and hyphens, including at least one <i>asterisk</i>, 
+   with no two <i>asterisks</i> adjacent.
+</p>
+<p><i>word</i>&mdash;one or more uppercase letters, digits, and hyphens.
+</p>
+<p><i>pos-int</i>&mdash;a positive <i>integer</i>.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Additional-Information-about-Parsing-Logical-Pathname-Namestrings.html#Additional-Information-about-Parsing-Logical-Pathname-Namestrings" accesskey="1">Additional Information about Parsing Logical Pathname Namestrings</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="The-Host-part-of-a-Logical-Pathname-Namestring.html#The-Host-part-of-a-Logical-Pathname-Namestring" accesskey="2">The Host part of a Logical Pathname Namestring</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="The-Device-part-of-a-Logical-Pathname-Namestring.html#The-Device-part-of-a-Logical-Pathname-Namestring" accesskey="3">The Device part of a Logical Pathname Namestring</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="The-Directory-part-of-a-Logical-Pathname-Namestring.html#The-Directory-part-of-a-Logical-Pathname-Namestring" accesskey="4">The Directory part of a Logical Pathname Namestring</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="The-Type-part-of-a-Logical-Pathname-Namestring.html#The-Type-part-of-a-Logical-Pathname-Namestring" accesskey="5">The Type part of a Logical Pathname Namestring</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="The-Version-part-of-a-Logical-Pathname-Namestring.html#The-Version-part-of-a-Logical-Pathname-Namestring" accesskey="6">The Version part of a Logical Pathname Namestring</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Wildcard-Words-in-a-Logical-Pathname-Namestring.html#Wildcard-Words-in-a-Logical-Pathname-Namestring" accesskey="7">Wildcard Words in a Logical Pathname Namestring</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Lowercase-Letters-in-a-Logical-Pathname-Namestring.html#Lowercase-Letters-in-a-Logical-Pathname-Namestring" accesskey="8">Lowercase Letters in a Logical Pathname Namestring</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Other-Syntax-in-a-Logical-Pathname-Namestring.html#Other-Syntax-in-a-Logical-Pathname-Namestring" accesskey="9">Other Syntax in a Logical Pathname Namestring</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Logical-Pathname-Components.html#Logical-Pathname-Components" accesskey="n" rel="next">Logical Pathname Components</a>, Previous: <a href="Logical-Pathnames.html#Logical-Pathnames" accesskey="p" rel="prev">Logical Pathnames</a>, Up: <a href="Logical-Pathnames.html#Logical-Pathnames" accesskey="u" rel="up">Logical Pathnames</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

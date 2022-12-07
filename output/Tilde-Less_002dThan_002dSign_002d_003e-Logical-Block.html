@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Tilde Less-Than-Sign-&gt; Logical Block (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Pretty-Printer-Operations.html#FORMAT-Pretty-Printer-Operations" rel="up" title="FORMAT Pretty Printer Operations">
+<link href="Tilde-I_002d_003e-Indent.html#Tilde-I_002d_003e-Indent" rel="next" title="Tilde I-&gt; Indent">
+<link href="Tilde-Underscore_002d_003e-Conditional-Newline.html#Tilde-Underscore_002d_003e-Conditional-Newline" rel="prev" title="Tilde Underscore-&gt; Conditional Newline">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Tilde-Underscore_002d_003e-Conditional-Newline.html#Tilde-Underscore_002d_003e-Conditional-Newline" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Tilde Underscore-&gt; Conditional Newline
+                            </a>
+                            <a href="FORMAT-Pretty-Printer-Operations.html#FORMAT-Pretty-Printer-Operations.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                FORMAT Pretty Printer Operations
+                            </a>
+                            <a href="Tilde-I_002d_003e-Indent.html#Tilde-I_002d_003e-Indent.html" class="nav-btn nav__next ">
+                                Tilde I-&gt; Indent
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Tilde-Less_002dThan_002dSign_002d_003e-Logical-Block"></a>
+<a name="Tilde-Less_002dThan_002dSign_003a-Logical-Block"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Tilde Less-Than-Sign: Logical Block</h4>
+
+<p><tt>~&lt;...~:&gt;</tt>
+</p>
+<p>If <tt>~:&gt;</tt> is used to terminate a <tt>~&lt;...~&gt;</tt>,
+the directive is equivalent to a call to <b>pprint-logical-block</b>.
+The argument corresponding to the <tt>~&lt;...~:&gt;</tt> directive is treated in
+the same way as the <i>list</i> argument to <b>pprint-logical-block</b>,
+thereby providing automatic support for non-<i>list</i> arguments and
+the detection of circularity, sharing, and depth abbreviation.  
+The portion of the <i>control-string</i> nested within the <tt>~&lt;...~:&gt;</tt>
+specifies the <tt>:prefix</tt> (or <tt>:per-line-prefix</tt>), <tt>:suffix</tt>,
+and body of the <b>pprint-logical-block</b>.
+</p>
+<p>The <i>control-string</i> portion enclosed by <tt>~&lt;...~:&gt;</tt> can be divided
+into segments <tt>~&lt;<i>prefix</i>~;<i>body</i>~;<i>suffix</i>~:&gt;</tt>
+by <tt>~;</tt> directives.  If the first section is terminated by <tt>~@;</tt>, 
+it specifies a per-line prefix rather than a simple prefix.  
+The <i>prefix</i> and <i>suffix</i> cannot contain format directives.  
+An error is signaled if either the prefix or suffix fails to be a
+constant string or if the enclosed portion is divided into more than three segments.
+</p>
+<p>If the enclosed portion is divided into only two segments, the <i>suffix</i>
+defaults to the null string.  If the enclosed portion consists of only
+a single segment, both the <i>prefix</i> and the <i>suffix</i> default to 
+the null string.  If the <i>colon</i> modifier is used (<i>i.e.</i>, <tt>~:&lt;...~:&gt;</tt>),
+the <i>prefix</i> and <i>suffix</i> default to <tt>&quot;(&quot;</tt> and <tt>&quot;)&quot;</tt>
+(respectively) instead of the null string.
+</p>
+<p>The body segment can be any arbitrary <i>format string</i>.
+This <i>format string</i> is applied to the elements of the list
+corresponding to the <tt>~&lt;...~:&gt;</tt> directive as a whole.
+Elements are extracted from this list using <b>pprint-pop</b>,
+thereby providing automatic support for malformed lists, and the detection
+of circularity, sharing, and length abbreviation.
+Within the body segment, <tt>~<tt>^</tt></tt> acts like <b>pprint-exit-if-list-exhausted</b>.
+</p>
+<p><tt>~&lt;...~:&gt;</tt> supports a feature not supported by <b>pprint-logical-block</b>.
+If <tt>~:@&gt;</tt> is used to terminate the directive (<i>i.e.</i>, <tt>~&lt;...~:@&gt;</tt>), 
+then a fill-style conditional newline is automatically inserted after each
+group of blanks immediately contained in the body (except for blanks
+after a ~&lt;<i>Newline</i>&gt; directive).  This makes it easy to achieve the
+equivalent of paragraph filling.
+</p>
+<p>If the <i>at-sign</i> modifier is used with <tt>~&lt;...~:&gt;</tt>, the entire remaining argument
+list is passed to the directive as its argument.  All of the remaining
+arguments are always consumed by <tt>~@&lt;...~:&gt;</tt>, even if they are not all used
+by the <i>format string</i> nested in the directive.  Other than the difference in
+its argument, <tt>~@&lt;...~:&gt;</tt> is exactly the same as <tt>~&lt;...~:&gt;</tt> except that
+circularity detection is not applied if <tt>~@&lt;...~:&gt;</tt> is encountered at top
+level in a <i>format string</i>.  This ensures that circularity detection is
+applied only to data lists, not to <i>format argument</i> <i>lists</i>.
+</p>
+<p><tt>&quot; . #<i>n</i>#&quot;</tt> is printed if circularity or sharing has to be indicated
+for its argument as a whole.
+</p>
+<p>To a considerable extent, the basic form of the directive <tt>~&lt;...~&gt;</tt> is
+incompatible with the dynamic control of the arrangement of output by
+<tt>~W</tt>, <tt>~_</tt>, <tt>~&lt;...~:&gt;</tt>, <tt>~I</tt>, and <tt>~:T</tt>.  As a result, an error 
+is signaled if any of these directives is nested within <tt>~&lt;...~&gt;</tt>.  
+Beyond this, an error is also signaled if the <tt>~&lt;...~:;...~&gt;</tt> form of
+<tt>~&lt;...~&gt;</tt> is used in the same <i>format string</i> with 
+<tt>~W</tt>, <tt>~_</tt>, <tt>~&lt;...~:&gt;</tt>, <tt>~I</tt>, or <tt>~:T</tt>.
+</p>
+<p>See also <a href="Tilde-Less_002dThan_002dSign_002d_003e-Justification.html#Tilde-Less_002dThan_002dSign_002d_003e-Justification">Tilde Less-Than-Sign-&gt; Justification</a>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

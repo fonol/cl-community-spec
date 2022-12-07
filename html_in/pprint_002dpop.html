@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>pprint-pop (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="pprint-pop (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="pprint-pop (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer-Dictionary.html#Printer-Dictionary" rel="up" title="Printer Dictionary">
+<link href="pprint_002dtab.html#pprint_002dtab" rel="next" title="pprint-tab">
+<link href="pprint_002dnewline.html#pprint_002dnewline" rel="prev" title="pprint-newline">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="pprint_002dpop"></a>
+<div class="header">
+<p>
+Next: <a href="pprint_002dtab.html#pprint_002dtab" accesskey="n" rel="next">pprint-tab</a>, Previous: <a href="pprint_002dnewline.html#pprint_002dnewline" accesskey="p" rel="prev">pprint-newline</a>, Up: <a href="Printer-Dictionary.html#Printer-Dictionary" accesskey="u" rel="up">Printer Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="pprint_002dpop-_005bLocal-Macro_005d"></a>
+<h4 class="subsection">22.4.9 pprint-pop                                                    [Local Macro]</h4>
+
+<a name="Syntax_003a_003a-38"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><code>pprint-pop</code>  <i>&lt;<i>no <i>arguments</i></i>&gt;</i> &rArr;  <i>object</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-462"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>object</i>&mdash;an <i>element</i> of the <i>list</i> 
+		 being printed in the <i>lexically current logical block</i>,
+		 or <b>nil</b>.
+</p>
+<a name="Description_003a_003a-597"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Pops one <i>element</i> from the <i>list</i> being printed
+in the <i>lexically current logical block</i>, obeying <b>*print-length*</b>
+and <b>*print-circle*</b> as described below.
+</p>
+<p>Each time <b>pprint-pop</b> is called, it pops the next value off the
+<i>list</i> passed to the <i>lexically current logical block</i> and returns it.
+However, before doing this, it performs three tests:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>If the remaining &lsquo;list&rsquo; is not a <i>list</i>, 
+    &ldquo;<tt>. </tt>&rdquo; is printed followed by the remaining &lsquo;list.&rsquo; 
+    (This makes it easier to write printing functions that 
+    are robust in the face of malformed arguments.)
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>If <b>*print-length*</b> is <i>non-nil</i>,
+    and <b>pprint-pop</b> has already been called <b>*print-length*</b> times 
+    within the immediately containing logical block,
+    &ldquo;<tt>...</tt>&rdquo; is printed.
+    (This makes it easy to write printing functions that properly handle
+    <b>*print-length*</b>.)
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>If <b>*print-circle*</b> is
+    <i>non-nil</i>, and the remaining list is a circular (or shared) reference,
+    then &ldquo;<tt>. </tt>&rdquo; is printed followed by an appropriate
+    &ldquo;<tt>#<i>n</i>#</tt>&rdquo; marker.
+    (This catches instances of <i>cdr</i> circularity and sharing in lists.)
+</p></dd>
+</dl>
+
+<p>If either of the three conditions above occurs, the indicated output is
+printed on the <i>pretty printing stream</i> created by the immediately containing
+<b>pprint-logical-block</b> and the execution of the immediately containing
+<b>pprint-logical-block</b> is terminated except for the printing of the suffix.
+</p>
+<p>If <b>pprint-logical-block</b> is given a &lsquo;list&rsquo; argument of <b>nil</b>&mdash;because
+it is not processing a list&mdash;<b>pprint-pop</b> can still be used to obtain 
+support for <b>*print-length*</b>.  
+In this situation, the first and third tests above are disabled and
+<b>pprint-pop</b> always returns <b>nil</b>.
+See <a href="Examples-of-using-the-Pretty-Printer.html#Examples-of-using-the-Pretty-Printer">Examples of using the Pretty Printer</a>&mdash;specifically, the <b>pprint-vector</b> example.
+</p>
+<p>Whether or not <b>pprint-pop</b> is <i>fbound</i> in the
+<i>global environment</i> is <i>implementation-dependent</i>;
+however, the restrictions on redefinition and <i>shadowing</i> of
+<b>pprint-pop</b> are the same as for <i>symbols</i> in the <tt>COMMON-LISP</tt> <i>package</i>
+which are <i>fbound</i> in the <i>global environment</i>.
+The consequences of attempting to use <b>pprint-pop</b> outside
+of <b>pprint-logical-block</b> are undefined.
+</p>
+<a name="Side-Effects_003a_003a-77"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>Might cause output
+to the <i>pretty printing stream</i> associated with the lexically current logical block.
+</p>
+<a name="Affected-By_003a_003a-101"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*print-length*</b>, <b>*print-circle*</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-224"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>An error is signaled (either at macro expansion time or at run time)
+if a usage of <b>pprint-pop</b> occurs where there is no lexically
+containing <b>pprint-logical-block</b> <i>form</i>.
+</p>
+<p>The consequences are undefined if <b>pprint-pop</b> is executed outside
+of the <i>dynamic extent</i> of this <b>pprint-logical-block</b>.
+</p>
+<a name="See-Also_003a_003a-485"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="pprint_002dexit_002dif_002dlist_002dexhausted.html#pprint_002dexit_002dif_002dlist_002dexhausted">pprint-exit-if-list-exhausted</a>
+, 
+<a href="pprint_002dlogical_002dblock.html#pprint_002dlogical_002dblock">pprint-logical-block</a>
+.
+</p>
+<a name="Notes_003a_003a-301"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>It is frequently a good idea to call <b>pprint-exit-if-list-exhausted</b> 
+before calling <b>pprint-pop</b>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="pprint_002dtab.html#pprint_002dtab" accesskey="n" rel="next">pprint-tab</a>, Previous: <a href="pprint_002dnewline.html#pprint_002dnewline" accesskey="p" rel="prev">pprint-newline</a>, Up: <a href="Printer-Dictionary.html#Printer-Dictionary" accesskey="u" rel="up">Printer Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>pathname (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="pathname (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="pathname (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Filenames-Dictionary.html#Filenames-Dictionary" rel="up" title="Filenames Dictionary">
+<link href="make_002dpathname.html#make_002dpathname" rel="next" title="make-pathname">
+<link href="logical_002dpathname-_0028System-Class_0029.html#logical_002dpathname-_0028System-Class_0029" rel="prev" title="logical-pathname (System Class)">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="pathname"></a>
+<div class="header">
+<p>
+Next: <a href="make_002dpathname.html#make_002dpathname" accesskey="n" rel="next">make-pathname</a>, Previous: <a href="logical_002dpathname-_0028System-Class_0029.html#logical_002dpathname-_0028System-Class_0029" accesskey="p" rel="prev">logical-pathname (System Class)</a>, Up: <a href="Filenames-Dictionary.html#Filenames-Dictionary" accesskey="u" rel="up">Filenames Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="pathname-_005bFunction_005d"></a>
+<h4 class="subsection">19.4.3 pathname                                                         [Function]</h4>
+
+<p><code>pathname</code>  <i>pathspec</i> &rArr;  <i>pathname</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-389"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>pathspec</i>&mdash;a <i>pathname designator</i>.
+</p>
+<p><i>pathname</i>&mdash;a <i>pathname</i>.
+</p>
+<a name="Description_003a_003a-507"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns the <i>pathname</i> denoted by <i>pathspec</i>.
+</p>
+<p>If the <i>pathspec</i> <i>designator</i> is a <i>stream</i>,
+the <i>stream</i> can be either open or closed;
+in both cases, the <b>pathname</b> returned 
+corresponds to the <i>filename</i> used to open the <i>file</i>.
+<b>pathname</b> returns the same <i>pathname</i> for a <i>file stream</i>
+after it is closed as it did when it was open.
+</p>
+<p>If the <i>pathspec</i> <i>designator</i> is
+a <i>file stream</i> created by opening a <i>logical pathname</i>,
+a <i>logical pathname</i> is returned.
+</p>
+<a name="Examples_003a_003a-369"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> ;; There is a great degree of variability permitted here.  The next
+ ;; several examples are intended to illustrate just a few of the many
+ ;; possibilities.  Whether the name is canonicalized to a particular
+ ;; case (either upper or lower) depends on both the file system and the
+ ;; implementation since two different implementations using the same
+ ;; file system might differ on many issues.  How information is stored
+ ;; internally (and possibly presented in #S notation) might vary,
+ ;; possibly requiring `accessors' such as PATHNAME-NAME to perform case
+ ;; conversion upon access.  The format of a namestring is dependent both
+ ;; on the file system and the implementation since, for example, one
+ ;; implementation might include the host name in a namestring, and
+ ;; another might not.  #S notation would generally only be used in a
+ ;; situation where no appropriate namestring could be constructed for use
+ ;; with #P.
+ (setq p1 (pathname &quot;test&quot;))
+&rArr;  #P&quot;CHOCOLATE:TEST&quot; ; with case canonicalization (e.g., VMS)
+<i>OR</i>&rArr; #P&quot;VANILLA:test&quot;   ; without case canonicalization (e.g., Unix)
+<i>OR</i>&rArr; #P&quot;test&quot;
+<i>OR</i>&rArr; #S(PATHNAME :HOST &quot;STRAWBERRY&quot; :NAME &quot;TEST&quot;)
+<i>OR</i>&rArr; #S(PATHNAME :HOST &quot;BELGIAN-CHOCOLATE&quot; :NAME &quot;test&quot;)
+ (setq p2 (pathname &quot;test&quot;))
+&rArr;  #P&quot;CHOCOLATE:TEST&quot;
+<i>OR</i>&rArr; #P&quot;VANILLA:test&quot;
+<i>OR</i>&rArr; #P&quot;test&quot;
+<i>OR</i>&rArr; #S(PATHNAME :HOST &quot;STRAWBERRY&quot; :NAME &quot;TEST&quot;)
+<i>OR</i>&rArr; #S(PATHNAME :HOST &quot;BELGIAN-CHOCOLATE&quot; :NAME &quot;test&quot;)
+ (pathnamep p1) &rArr;  <i>true</i>
+ (eq p1 (pathname p1)) &rArr;  <i>true</i>
+ (eq p1 p2)
+&rArr;  <i>true</i>
+<i>OR</i>&rArr; <i>false</i>
+ (with-open-file (stream &quot;test&quot; :direction :output)
+   (pathname stream))
+&rArr;  #P&quot;ORANGE-CHOCOLATE:&gt;Gus&gt;test.lisp.newest&quot;
+</pre></div>
+
+<a name="See-Also_003a_003a-412"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>pathname</b>,
+<b>logical-pathname</b>,
+<a href="File-System-Concepts.html#File-System-Concepts">File System Concepts</a>,
+</p>
+<p><a href="Pathnames-as-Filenames.html#Pathnames-as-Filenames">Pathnames as Filenames</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="make_002dpathname.html#make_002dpathname" accesskey="n" rel="next">make-pathname</a>, Previous: <a href="logical_002dpathname-_0028System-Class_0029.html#logical_002dpathname-_0028System-Class_0029" accesskey="p" rel="prev">logical-pathname (System Class)</a>, Up: <a href="Filenames-Dictionary.html#Filenames-Dictionary" accesskey="u" rel="up">Filenames Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

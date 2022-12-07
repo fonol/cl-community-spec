@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Printing Symbols (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Default-Print_002dObject-Methods.html#Default-Print_002dObject-Methods" rel="up" title="Default Print-Object Methods">
+<link href="Package-Prefixes-for-Symbols.html#Package-Prefixes-for-Symbols" rel="next" title="Package Prefixes for Symbols">
+<link href="Printing-Characters.html#Printing-Characters" rel="prev" title="Printing Characters">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Printing-Characters.html#Printing-Characters" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Printing Characters
+                            </a>
+                            <a href="Default-Print_002dObject-Methods.html#Default-Print_002dObject-Methods.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Default Print-Object Methods
+                            </a>
+                            <a href="Package-Prefixes-for-Symbols.html#Package-Prefixes-for-Symbols.html" class="nav-btn nav__next ">
+                                Package Prefixes for Symbols
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Printing-Symbols"></a>
+<a name="Printing-Symbols-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Printing Symbols</h4>
+
+<p>When <i>printer escaping</i> is disabled,
+</p>
+<p>only the characters of the <i>symbol</i>&rsquo;s <i>name</i> are output 
+</p>
+<p>(but the case in which to print characters in the <i>name</i> is
+controlled by <b>*print-case*</b>;
+see <a href="Effect-of-Readtable-Case-on-the-Lisp-Printer.html#Effect-of-Readtable-Case-on-the-Lisp-Printer">Effect of Readtable Case on the Lisp Printer</a>).
+</p>
+<p>The remainder of this section applies only 
+</p>
+<p>when <i>printer escaping</i> is enabled.
+</p>
+<p>When printing a <i>symbol</i>, the printer inserts enough 
+<i>single escape</i> and/or <i>multiple escape</i>
+characters (<i>backslashes</i> and/or <i>vertical-bars</i>) so that if
+<b>read</b> were called with the same <b>*readtable*</b> and
+with <b>*read-base*</b> bound to the <i>current output base</i>, it
+would return the same <i>symbol</i> (if it is not 
+<i>apparently uninterned</i>) or an <i>uninterned</i> <i>symbol</i>
+with the same <i>print name</i> (otherwise).
+</p>
+<p>For example, if the <i>value</i> of <b>*print-base*</b> were <tt>16</tt> 
+when printing the symbol <tt>face</tt>, it would have to be printed as
+<tt>\FACE</tt> or <tt>\Face</tt> or <tt>|FACE|</tt>, 
+because the token <tt>face</tt> would be read as a hexadecimal
+number (decimal value 64206) if the <i>value</i> of <b>*read-base*</b> were <tt>16</tt>.
+</p>
+<p>For additional restrictions concerning characters with  nonstandard
+<i>syntax types</i> in the <i>current readtable</i>, see the <i>variable</i> <b>*print-readably*</b> 
+</p>
+<p>For information about how the <i>Lisp reader</i> parses <i>symbols</i>,
+see <a href="Symbols-as-Tokens.html#Symbols-as-Tokens">Symbols as Tokens</a> and <a href="Sharpsign-Colon.html#Sharpsign-Colon">Sharpsign Colon</a>.
+</p>
+<p><b>nil</b> might be printed as <tt>()</tt> 
+</p>
+<p>when <b>*print-pretty*</b> is <i>true</i>
+and <i>printer escaping</i> is enabled.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

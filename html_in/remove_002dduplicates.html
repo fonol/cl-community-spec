@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>remove-duplicates (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="remove-duplicates (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="remove-duplicates (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Sequences-Dictionary.html#Sequences-Dictionary" rel="up" title="Sequences Dictionary">
+<link href="Hash-Tables.html#Hash-Tables" rel="next" title="Hash Tables">
+<link href="remove.html#remove" rel="prev" title="remove">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="remove_002dduplicates"></a>
+<div class="header">
+<p>
+Previous: <a href="remove.html#remove" accesskey="p" rel="prev">remove</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="remove_002dduplicates_002c-delete_002dduplicates-_005bFunction_005d"></a>
+<h4 class="subsection">17.3.23 remove-duplicates, delete-duplicates                             [Function]</h4>
+
+<p><code>remove-duplicates</code>  <i>sequence &amp;key</i>
+ 			  from-end test test-not
+				start end key<br>
+   &rArr;  <i>result-sequence</i>
+</p>
+<p><code>delete-duplicates</code>  <i>sequence &amp;key</i> 
+			   from-end test test-not
+                                 start end key<br>
+   &rArr;  <i>result-sequence</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-375"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>sequence</i>&mdash;a <i>proper sequence</i>.
+</p>
+<p><i>from-end</i>&mdash;a <i>generalized boolean</i>.
+  The default is <i>false</i>.
+</p>
+<p><i>test</i>&mdash;a <i>designator</i> for a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test-not</i>&mdash;a <i>designator</i> for 
+  a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>start</i>, <i>end</i>&mdash;<i>bounding index designators</i> of <i>sequence</i>.
+ The defaults for <i>start</i> and <i>end</i> are <tt>0</tt> and <b>nil</b>, respectively.
+</p>
+<p><i>key</i>&mdash;a <i>designator</i> for a <i>function</i> of one argument,
+  or <b>nil</b>.
+</p>
+<p><i>result-sequence</i>&mdash;a <i>sequence</i>.
+</p>
+<a name="Description_003a_003a-490"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>remove-duplicates</b> returns a modified copy of <i>sequence</i> 
+from which any element that matches another element occurring in
+<i>sequence</i> has been removed. 
+</p>
+<p>If <i>sequence</i> is a <i>vector</i>, the result is a
+<i>vector</i> that has the same
+<i>actual array element type</i> as <i>sequence</i>.
+The result might or might not be simple, and 
+might or might not be <i>identical</i>
+to <i>sequence</i>.
+If <i>sequence</i> is a <i>list</i>, the result is a <i>list</i>. 
+</p>
+<p><b>delete-duplicates</b> is like <b>remove-duplicates</b>,
+but <b>delete-duplicates</b> may modify <i>sequence</i>.
+</p>
+<p>The elements of <i>sequence</i> are compared <i>pairwise</i>, and if any two match,
+then the one occurring earlier in <i>sequence</i>
+is discarded, unless <i>from-end</i> is <i>true</i>, in which case the one
+later in <i>sequence</i> is discarded.
+</p>
+<p><b>remove-duplicates</b> and <b>delete-duplicates</b> 
+return a <i>sequence</i> of the same <i>type</i> as 
+<i>sequence</i> with enough elements removed so that no two of the remaining
+elements match.  The order of the elements remaining in the result
+is the same as the order in which they appear in <i>sequence</i>.
+</p>
+<p><b>remove-duplicates</b> returns a <i>sequence</i>
+that may share
+with <i>sequence</i> or may be <i>identical</i> to <i>sequence</i>
+if no elements need to be removed.
+</p>
+<p><b>delete-duplicates</b>, when <i>sequence</i> is a <i>list</i>,
+is permitted to <b>setf</b> any part, <b>car</b> or <b>cdr</b>,
+of the top-level list structure in that <i>sequence</i>.
+When <i>sequence</i> is a <i>vector</i>, <b>delete-duplicates</b> 
+is permitted to change the dimensions of the <i>vector</i> 
+and to slide its elements into new positions without
+permuting them to produce the resulting <i>vector</i>.
+</p>
+<a name="Examples_003a_003a-357"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (remove-duplicates &quot;aBcDAbCd&quot; :test #'char-equal :from-end t) &rArr;  &quot;aBcD&quot;
+ (remove-duplicates '(a b c b d d e)) &rArr;  (A C B D E)
+ (remove-duplicates '(a b c b d d e) :from-end t) &rArr;  (A B C D E)
+ (remove-duplicates '((foo #\a) (bar #\%) (baz #\A))
+     :test #'char-equal :key #'cadr) &rArr;  ((BAR #\%) (BAZ #\A))
+ (remove-duplicates '((foo #\a) (bar #\%) (baz #\A)) 
+     :test #'char-equal :key #'cadr :from-end t) &rArr;  ((FOO #\a) (BAR #\%))
+ (setq tester (list 0 1 2 3 4 5 6))
+ (delete-duplicates tester :key #'oddp :start 1 :end 6) &rArr;  (0 4 5 6)
+</pre></div>
+
+<a name="Side-Effects_003a_003a-56"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p><b>delete-duplicates</b> might destructively modify <i>sequence</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-168"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>sequence</i> is not a <i>proper sequence</i>.
+</p>
+<a name="See-Also_003a_003a-400"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Compiler-Terminology.html#Compiler-Terminology">Compiler Terminology</a>,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<a name="Notes_003a_003a-268"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <tt>:test-not</tt> <i>argument</i> is deprecated.
+</p>
+<p>These functions are useful for converting <i>sequence</i> into a canonical
+form suitable for representing a set.
+</p>
+
+
+
+
+
+<hr>
+<div class="header">
+<p>
+Previous: <a href="remove.html#remove" accesskey="p" rel="prev">remove</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

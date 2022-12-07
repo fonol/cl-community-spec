@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Special Symbols (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Notational-Conventions.html#Notational-Conventions" rel="up" title="Notational Conventions">
+<link href="Objects-with-Multiple-Notations.html#Objects-with-Multiple-Notations" rel="next" title="Objects with Multiple Notations">
+<link href="Additional-Uses-for-Indirect-Definitions-in-Modified-BNF-Syntax.html#Additional-Uses-for-Indirect-Definitions-in-Modified-BNF-Syntax" rel="prev" title="Additional Uses for Indirect Definitions in Modified BNF Syntax">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Additional-Uses-for-Indirect-Definitions-in-Modified-BNF-Syntax.html#Additional-Uses-for-Indirect-Definitions-in-Modified-BNF-Syntax" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Additional Uses for Indirect Definitions in Modified BNF Syntax
+                            </a>
+                            <a href="Notational-Conventions.html#Notational-Conventions.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Notational Conventions
+                            </a>
+                            <a href="Objects-with-Multiple-Notations.html#Objects-with-Multiple-Notations.html" class="nav-btn nav__next ">
+                                Objects with Multiple Notations
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Special-Symbols"></a>
+<a name="Special-Symbols-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Special Symbols</h4>
+
+<p>The special symbols described here are used as a notational convenience
+within this document, and are part of neither the <span class="roman">Common Lisp</span> language nor
+its environment.
+</p>
+<dl compact="compact">
+<dt>&rArr;</dt>
+<dd><p>This indicates evaluation.
+For example:
+</p>
+<div class="example">
+<pre class="example"><code> (+ 4 5) &rArr;  9 
+</code>
+</pre></div>
+
+<p>This means that the result of
+evaluating the <i>form</i> <tt>(+ 4 5)</tt> is <tt>9</tt>.
+</p>
+<p>If a <i>form</i> returns <i>multiple values</i>, those values might
+be shown separated by spaces, line breaks, or commas.
+For example:
+</p>
+<div class="example">
+<pre class="example"><code> (truncate 7 5)
+&rArr;  1 2
+ (truncate 7 5) 
+&rArr;  1
+   2
+ (truncate 7 5)
+&rArr;  1, 2
+</code>
+</pre></div>
+
+<p>Each of the above three examples is equivalent, and specifies
+that <tt>(truncate 7 5)</tt> returns two values, which are <tt>1</tt> and <tt>2</tt>.
+</p>
+<p>Some <i>conforming implementations</i> actually type an arrow (or some
+other indicator) before showing return values, while others do not.
+</p>
+</dd>
+<dt><i>OR</i>&rArr;</dt>
+<dd><p>The notation &ldquo;<i>OR</i>&rArr;&rdquo; is used to denote one of several possible
+alternate results.  The example
+</p>
+<div class="example">
+<pre class="example"><code> (char-name #\a)
+&rArr;  NIL
+<i>OR</i>&rArr; &quot;LOWERCASE-a&quot;
+<i>OR</i>&rArr; &quot;Small-A&quot;
+<i>OR</i>&rArr; &quot;LA01&quot;
+</code>
+</pre></div>
+
+<p>indicates that <b>nil</b>, <tt>&quot;LOWERCASE-a&quot;</tt>, <tt>&quot;Small-A&quot;</tt>, <tt>&quot;LA01&quot;</tt> are
+among the possible results of <tt>(char-name #\a)</tt>&mdash;each with equal preference.
+Unless explicitly specified otherwise, it should not be assumed that the set of possible 
+results shown is exhaustive.
+Formally, the above example is equivalent to
+</p>
+<div class="example">
+<pre class="example"><code> (char-name #\a) &rArr;  <i>implementation-dependent</i>
+</code>
+</pre></div>
+
+<p>but it is intended to provide additional information to illustrate some
+of the ways in which it is permitted for implementations to diverge.
+</p>
+</dd>
+<dt><i>NOT</i>&rArr;</dt>
+<dd><p>The notation &ldquo;<i>NOT</i>&rArr;&rdquo; is used to denote a result which is not possible.
+This might be used, for example, in order to emphasize a situation where
+some anticipated misconception might lead the reader to falsely believe
+that the result might be possible.  For example,
+</p>
+<div class="example">
+<pre class="example"><code> (function-lambda-expression 
+    (funcall #'(lambda (x) #'(lambda () x)) nil))
+&rArr;  NIL, <i>true</i>, NIL
+<i>OR</i>&rArr; (LAMBDA () X), <i>true</i>, NIL
+<i>NOT</i>&rArr; NIL, <i>false</i>, NIL
+<i>NOT</i>&rArr; (LAMBDA () X), <i>false</i>, NIL
+</code>
+</pre></div>
+
+</dd>
+<dt>&equiv;</dt>
+<dd><p>This indicates code equivalence. For example:
+</p>
+<div class="example">
+<pre class="example"><code> (gcd x (gcd y z)) &equiv; (gcd (gcd x y) z)
+</code>
+</pre></div>
+
+<p>This means that the results and observable side-effects of evaluating
+the <i>form</i>
+<tt>(gcd x (gcd y z))</tt>  are always the same as the results
+and observable side-effects of
+<tt>(gcd (gcd x y) z)</tt>  for any 
+<tt>x</tt>, <tt>y</tt>, and <tt>z</tt>.
+</p>
+</dd>
+<dt><tt> |&gt; </tt></dt>
+<dd><p><span class="roman">Common Lisp</span> specifies input and output with respect to a non-interactive stream model.
+The specific details of how interactive input and output are mapped onto that
+non-interactive model are <i>implementation-defined</i>.
+</p>
+<p>For example, <i>conforming implementations</i> are permitted to differ in issues 
+of how interactive input is terminated.  For example, the <i>function</i> <b>read</b>
+terminates when the final delimiter is typed on a non-interactive stream.
+In some <i>implementations</i>, an interactive call to <b>read</b> returns
+as soon as the final delimiter is typed, even if that delimiter is not a <i>newline</i>.
+In other <i>implementations</i>, a final <i>newline</i> is always required.
+In still other <i>implementations</i>, there might be a command which &ldquo;activates&rdquo;
+a buffer full of input without the command itself being visible on the program&rsquo;s
+input stream.
+</p>
+<p>In the examples in this document, the notation &ldquo;<tt> |&gt; </tt>&rdquo; precedes 
+lines where interactive input and output occurs.  Within such a scenario,
+&ldquo;<b>|&gt;&gt;</b><tt>this notation</tt><b>&lt;&lt;|</b>&rdquo; notates user input.
+</p>
+<p>For example, the notation
+</p>
+<div class="example">
+<pre class="example"><code> (+ 1 (print (+ (sqrt (read)) (sqrt (read)))))
+<tt> |&gt; </tt> <b>|&gt;&gt;</b><tt>9 16 </tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> 7
+&rArr;  8
+</code>
+</pre></div>
+
+<p>shows an interaction in which
+  &ldquo;<tt>(+ 1 (print (+ (sqrt (read)) (sqrt (read)))))</tt>&rdquo;
+    is a <i>form</i> to be <i>evaluated</i>,
+  &ldquo;<tt>9 16 </tt>&rdquo; is interactive input,
+  &ldquo;<tt>7</tt>&rdquo; is interactive output, and 
+  &ldquo;<tt>8</tt>&rdquo; is the <i>value</i> <i>yielded</i> from the <i>evaluation</i>.
+</p>
+<p>The use of this notation is intended to disguise small differences 
+in interactive input and output behavior between <i>implementations</i>.
+</p>
+<p>Sometimes, the non-interactive stream model calls for a <i>newline</i>.
+How that <i>newline</i> character is interactively entered is an 
+<i>implementation-defined</i> detail of the user interface, but in that
+case, either the notation &ldquo;&lt;<i>Newline</i>&gt;&rdquo; or &ldquo;<i>[&lt;&ndash;</i>~]&rdquo; might be used.
+</p>
+<div class="example">
+<pre class="example"><code> (progn (format t &quot;~&amp;Who? &quot;) (read-line))
+<tt> |&gt; </tt> Who? <b>|&gt;&gt;</b><tt>Fred, Mary, and Sally<i>[&lt;&ndash;</i>~]</tt><b>&lt;&lt;|</b>
+&rArr;  &quot;Fred, Mary, and Sally&quot;, <i>false</i>
+</code>
+</pre></div>
+
+</dd>
+</dl>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

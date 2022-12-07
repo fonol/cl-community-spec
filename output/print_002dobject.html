@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>print-object (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer-Dictionary.html#Printer-Dictionary" rel="up" title="Printer Dictionary">
+<link href="print_002dunreadable_002dobject.html#print_002dunreadable_002dobject" rel="next" title="print-unreadable-object">
+<link href="pprint_002dtab.html#pprint_002dtab" rel="prev" title="pprint-tab">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="pprint_002dtab.html#pprint_002dtab" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                pprint-tab
+                            </a>
+                            <a href="Printer-Dictionary.html#Printer-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Printer Dictionary
+                            </a>
+                            <a href="print_002dunreadable_002dobject.html#print_002dunreadable_002dobject.html" class="nav-btn nav__next ">
+                                print-unreadable-object
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="print_002dobject"></a>
+<a name="print_002dobject-_005bStandard-Generic-Function_005d"></a>
+<div class="section top-most">
+<div class="node-type">Standard Generic Function</div>
+<h4 class="subsection">print-object                                    </h4>
+
+<a name="Syntax_003a_003a-39"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Syntax</h4>
+
+<p><code>print-object</code>  <i>object stream</i> &rArr;  <i>object</i>
+</p>
+<a name="Method-Signatures_003a_003a-22"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Method Signatures</h4>
+
+<p><code>print-object</code>  <i><span class="roman">(</span><i>object</i> standard-object<span class="roman">)</span> <i>stream</i></i>
+</p>
+<p><code>print-object</code>  <i><span class="roman">(</span><i>object</i> structure-object<span class="roman">)</span> <i>stream</i></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-464"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>object</i>&mdash;an <i>object</i>.
+</p>
+<p><i>stream</i>&mdash;a <i>stream</i>.
+</p>
+<a name="Description_003a_003a-599"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The <i>generic function</i> <b>print-object</b> writes the printed representation of <i>object</i>
+to <i>stream</i>.
+The <i>function</i> <b>print-object</b> is called by the <i>Lisp printer</i>; 
+it should not be called by the user.
+</p>
+<p>Each implementation is required to provide a <i>method</i> on
+the <i>class</i> <b>standard-object</b> and on the <i>class</i> <b>structure-object</b>.
+In addition, each <i>implementation</i> must provide 
+<i>methods</i> on enough other <i>classes</i> 
+so as to ensure that there is always an applicable <i>method</i>.
+Implementations are free to add <i>methods</i> for other <i>classes</i>.
+Users may write <i>methods</i> for <b>print-object</b> for their own
+<i>classes</i> if they do not wish to inherit an 
+<i>implementation-dependent</i> <i>method</i>.
+</p>
+<p>The <i>method</i> on the <i>class</i> <b>structure-object</b> prints the object in the
+default <tt>#S</tt> notation; see <a href="Printing-Structures.html#Printing-Structures">Printing Structures</a>.
+</p>
+<p><i>Methods</i> on <b>print-object</b> are responsible for implementing
+their part of the semantics of the <i>printer control variables</i>, as follows:
+</p>
+<dl compact="compact">
+<dt><b>*print-readably*</b></dt>
+<dd><p>All methods for <b>print-object</b> must obey <b>*print-readably*</b>.
+This includes both user-defined methods and <i>implementation-defined</i> methods.
+Readable printing of <i>structures</i> and <i>standard objects</i> 
+is controlled by their <b>print-object</b> method, 
+not by their <b>make-load-form</b> <i>method</i>.
+<i>Similarity</i> for these <i>objects</i> is application dependent
+and hence is defined to be whatever these <i>methods</i> do; 
+see <a href="Similarity-of-Literal-Objects.html#Similarity-of-Literal-Objects">Similarity of Literal Objects</a>.
+</p>
+</dd>
+<dt><b>*print-escape*</b></dt>
+<dd><p>Each <i>method</i> must implement <b>*print-escape*</b>. 
+</p>
+</dd>
+<dt><b>*print-pretty*</b></dt>
+<dd>
+<p>The <i>method</i> may wish to perform specialized line breaking
+or other output conditional on the <i>value</i> of <b>*print-pretty*</b>.
+For further information,
+see (for example) the <i>macro</i> <b>pprint-fill</b>.
+See also <a href="Pretty-Print-Dispatch-Tables.html#Pretty-Print-Dispatch-Tables">Pretty Print Dispatch Tables</a> and <a href="Examples-of-using-the-Pretty-Printer.html#Examples-of-using-the-Pretty-Printer">Examples of using the Pretty Printer</a>.
+</p>
+</dd>
+<dt><b>*print-length*</b></dt>
+<dd><p><i>Methods</i> that produce output of indefinite length must obey
+<b>*print-length*</b>.
+</p>
+<p>For further information,
+see (for example) the <i>macros</i> <b>pprint-logical-block</b>
+and <b>pprint-pop</b>.
+See also <a href="Pretty-Print-Dispatch-Tables.html#Pretty-Print-Dispatch-Tables">Pretty Print Dispatch Tables</a> and <a href="Examples-of-using-the-Pretty-Printer.html#Examples-of-using-the-Pretty-Printer">Examples of using the Pretty Printer</a>.
+</p>
+</dd>
+<dt><b>*print-level*</b></dt>
+<dd><p>The printer takes care of <b>*print-level*</b> automatically,
+provided that each <i>method</i> handles exactly one level of structure and
+calls <b>write</b> (or an equivalent <i>function</i>) recursively if
+there are more structural levels.  The printer&rsquo;s decision of whether an
+<i>object</i> has components (and therefore should not be printed when the
+printing depth is not less than <b>*print-level*</b>) is
+<i>implementation-dependent</i>.  In some implementations its 
+<b>print-object</b> <i>method</i> is not called; 
+in others the <i>method</i> is called, 
+and the determination that the <i>object</i> has components is based on what
+it tries to write to the <i>stream</i>.
+</p>
+</dd>
+<dt><b>*print-circle*</b></dt>
+<dd>
+<p>When the <i>value</i> of <b>*print-circle*</b> is <i>true</i>,
+a user-defined 
+</p>
+<p><b>print-object</b> <i>method</i>
+</p>
+<p>can print <i>objects</i> to the supplied <i>stream</i> 
+using <b>write</b>,
+      <b>prin1</b>,
+      <b>princ</b>,
+   or <b>format</b>
+and expect circularities to be detected 
+and printed using the <tt>#<i>n</i>#</tt> syntax.
+If a user-defined
+</p>
+<p><b>print-object</b> <i>method</i>
+</p>
+<p>prints to a <i>stream</i> other than the one
+that was supplied, then circularity detection starts over for that
+<i>stream</i>.  See <b>*print-circle*</b>.
+</p>
+</dd>
+<dt><b>*print-base*</b>,</dt>
+<dd><p><b>*print-radix*</b>,
+      <b>*print-case*</b>, 
+      <b>*print-gensym*</b>,
+  and <b>*print-array*</b>  
+These <i>printer control variables</i> apply to specific types of <i>objects</i>
+and are handled by the <i>methods</i> for those <i>objects</i>.
+</p>
+</dd>
+</dl>
+
+<p>If these rules are not obeyed, the results are undefined.
+</p>
+<p>In general, the printer and the <b>print-object</b> methods should not
+rebind the print control variables as they operate recursively through the
+structure, but this is <i>implementation-dependent</i>.
+</p>
+<p>In some implementations the <i>stream</i> argument passed to a 
+<b>print-object</b> <i>method</i> is not the original <i>stream</i>, 
+but is an intermediate <i>stream</i> that implements part of the printer.
+<i>methods</i> should therefore not depend on the identity of this <i>stream</i>.
+</p>
+<a name="See-Also_003a_003a-487"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p>&lsquo;pprint-fill; pprint-linear; pprint-tabular&rsquo;
+,
+<a href="pprint_002dlogical_002dblock.html#pprint_002dlogical_002dblock">pprint-logical-block</a>
+,
+<a href="pprint_002dpop.html#pprint_002dpop">pprint-pop</a>
+,
+&lsquo;write; prin1; print; pprint; princ&rsquo;
+,
+<b>*print-readably*</b>,
+<b>*print-escape*</b>,
+<b>*print-pretty*</b>,
+<b>*print-length*</b>,
+<a href="Default-Print_002dObject-Methods.html#Default-Print_002dObject-Methods">Default Print-Object Methods</a>,
+</p>
+<p><a href="Printing-Structures.html#Printing-Structures">Printing Structures</a>,
+</p>
+<p><a href="Pretty-Print-Dispatch-Tables.html#Pretty-Print-Dispatch-Tables">Pretty Print Dispatch Tables</a>,
+<a href="Examples-of-using-the-Pretty-Printer.html#Examples-of-using-the-Pretty-Printer">Examples of using the Pretty Printer</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

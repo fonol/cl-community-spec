@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>storage-condition (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="storage-condition (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="storage-condition (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="assert.html#assert" rel="next" title="assert">
+<link href="parse_002derror.html#parse_002derror" rel="prev" title="parse-error">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="storage_002dcondition"></a>
+<div class="header">
+<p>
+Next: <a href="assert.html#assert" accesskey="n" rel="next">assert</a>, Previous: <a href="parse_002derror.html#parse_002derror" accesskey="p" rel="prev">parse-error</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="storage_002dcondition-_005bCondition-Type_005d"></a>
+<h4 class="subsection">9.2.9 storage-condition                                          [Condition Type]</h4>
+
+<a name="Class-Precedence-List_003a_003a-26"></a>
+<h4 class="subsubheading">Class Precedence List::</h4>
+<p><b>storage-condition</b>,
+<b>serious-condition</b>,
+<b>condition</b>,
+<b>t</b>
+</p>
+<a name="Description_003a_003a-179"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <i>type</i> <b>storage-condition</b> consists of serious conditions that 
+relate to problems with memory management that are potentially due to
+<i>implementation-dependent</i> limits rather than semantic errors
+in <i>conforming programs</i>, and that typically warrant entry to the 
+debugger if not handled.  Depending on the details of the <i>implementation</i>, 
+these might include such problems as 
+  stack overflow,
+  memory region overflow, 
+and
+  storage exhausted.
+</p>
+<a name="Notes_003a_003a-96"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>While some <span class="roman">Common Lisp</span> operations might signal <i>storage-condition</i>
+because they are defined to create <i>objects</i>,
+it is unspecified whether operations that are not defined to create
+<i>objects</i> create them anyway 
+and so might also signal <b>storage-condition</b>.
+Likewise, the evaluator itself might create <i>objects</i>
+and so might signal <b>storage-condition</b>.
+(The natural assumption might be that such 
+<i>object</i> creation is naturally inefficient, 
+but even that is <i>implementation-dependent</i>.)
+In general, the entire question of how storage allocation is done is
+<i>implementation-dependent</i>, 
+and so any operation might signal <b>storage-condition</b> at any time.
+Because such a <i>condition</i> is indicative of a limitation 
+   of the <i>implementation</i> 
+or of the <i>image</i>
+rather than an error in a <i>program</i>,
+<i>objects</i> of <i>type</i> <b>storage-condition</b> are not of <i>type</i> <b>error</b>.
+</p>
+
+
+
+</body>
+</html>

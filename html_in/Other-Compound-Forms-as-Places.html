@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Other Compound Forms as Places (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Other Compound Forms as Places (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Other Compound Forms as Places (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Kinds-of-Places.html#Kinds-of-Places" rel="up" title="Kinds of Places">
+<link href="Treatment-of-Other-Macros-Based-on-SETF.html#Treatment-of-Other-Macros-Based-on-SETF" rel="next" title="Treatment of Other Macros Based on SETF">
+<link href="Symbol-Macros-as-Places.html#Symbol-Macros-as-Places" rel="prev" title="Symbol Macros as Places">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Other-Compound-Forms-as-Places"></a>
+<div class="header">
+<p>
+Previous: <a href="Symbol-Macros-as-Places.html#Symbol-Macros-as-Places" accesskey="p" rel="prev">Symbol Macros as Places</a>, Up: <a href="Kinds-of-Places.html#Kinds-of-Places" accesskey="u" rel="up">Kinds of Places</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Other-Compound-Forms-as-Places-1"></a>
+<h4 class="subsubsection">5.1.2.9 Other Compound Forms as Places</h4>
+
+<p>For any other <i>compound form</i> for which the <i>operator</i> is a
+<i>symbol</i> <i>f</i>,
+the <b>setf</b> <i>form</i> expands into a call 
+to the <i>function</i> named <tt>(setf <i>f</i>)</tt>.
+The first <i>argument</i> in the newly constructed <i>function form</i>
+is <i>newvalue</i> and the
+     remaining <i>arguments</i> are the remaining <i>elements</i> of
+     <i>place</i>.
+This expansion occurs regardless of whether <i>f</i> or <tt>(setf <i>f</i>)</tt>
+is defined as a <i>function</i> locally, globally, or not at all.
+For example,
+</p>
+<p><tt>(setf (<i>f</i> <i>arg1</i> <i>arg2</i> ...) <i>new-value</i>)</tt>
+</p>
+<p>expands into a form with the same effect and value as
+</p>
+<div class="example">
+<pre class="example"> (let ((#:temp-1 arg1)          ;force correct order of evaluation
+       (#:temp-2 arg2)
+       ...
+       (#:temp-0 <i>new-value</i>))
+   (funcall (function (setf <i>f</i>)) #:temp-0 #:temp-1 #:temp-2...))
+</pre></div>
+
+<p>A <i>function</i> named <tt>(setf <i>f</i>)</tt> must return its first argument
+as its only value in order to preserve the semantics of <b>setf</b>.
+</p>
+
+
+
+</body>
+</html>

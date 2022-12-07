@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>row-major-aref (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="row-major-aref (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="row-major-aref (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Arrays-Dictionary.html#Arrays-Dictionary" rel="up" title="Arrays Dictionary">
+<link href="upgraded_002darray_002delement_002dtype.html#upgraded_002darray_002delement_002dtype" rel="next" title="upgraded-array-element-type">
+<link href="fill_002dpointer.html#fill_002dpointer" rel="prev" title="fill-pointer">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="row_002dmajor_002daref"></a>
+<div class="header">
+<p>
+Next: <a href="upgraded_002darray_002delement_002dtype.html#upgraded_002darray_002delement_002dtype" accesskey="n" rel="next">upgraded-array-element-type</a>, Previous: <a href="fill_002dpointer.html#fill_002dpointer" accesskey="p" rel="prev">fill-pointer</a>, Up: <a href="Arrays-Dictionary.html#Arrays-Dictionary" accesskey="u" rel="up">Arrays Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="row_002dmajor_002daref-_005bAccessor_005d"></a>
+<h4 class="subsection">15.2.22 row-major-aref                                                   [Accessor]</h4>
+
+<p><code>row-major-aref</code>  <i>array index</i> &rArr;  <i>element</i>
+</p>
+<p>(setf (<code>         row-major-aref</code> <i>array index</i>) new-element)<br>
+</p>
+<a name="Arguments-and-Values_003a_003a-334"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>array</i>&mdash;an <i>array</i>.
+</p>
+<p><i>index</i>&mdash;a <i>valid array row-major index</i> for the <i>array</i>.
+</p>
+<p><i>element</i>, <i>new-element</i>&mdash;an <i>object</i>.
+</p>
+<a name="Description_003a_003a-441"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Considers <i>array</i> as a <i>vector</i> by viewing its <i>elements</i>
+in row-major order, and returns the <i>element</i> of that <i>vector</i> 
+which is referred to by the given <i>index</i>.
+</p>
+<p><b>row-major-aref</b> is valid for use with <b>setf</b>.
+</p>
+<a name="See-Also_003a_003a-361"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="aref.html#aref">aref</a>
+,
+<a href="array_002drow_002dmajor_002dindex.html#array_002drow_002dmajor_002dindex">array-row-major-index</a>
+</p>
+<a name="Notes_003a_003a-241"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<div class="example">
+<pre class="example"> (row-major-aref array index) &equiv;
+   (aref (make-array (array-total-size array)
+                     :displaced-to array
+                     :element-type (array-element-type array))
+         index)
+
+ (aref array i1 i2 ...) &equiv;
+     (row-major-aref array (array-row-major-index array i1 i2))
+</pre></div>
+
+
+
+
+</body>
+</html>

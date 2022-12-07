@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Initial and Final Execution (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Initial and Final Execution (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Initial and Final Execution (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Miscellaneous-Clauses.html#Miscellaneous-Clauses" rel="up" title="Miscellaneous Clauses">
+<link href="Examples-of-Miscellaneous-Loop-Features.html#Examples-of-Miscellaneous-Loop-Features" rel="next" title="Examples of Miscellaneous Loop Features">
+<link href="Examples-of-NAMED-clause.html#Examples-of-NAMED-clause" rel="prev" title="Examples of NAMED clause">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Initial-and-Final-Execution"></a>
+<div class="header">
+<p>
+Previous: <a href="Examples-of-NAMED-clause.html#Examples-of-NAMED-clause" accesskey="p" rel="prev">Examples of NAMED clause</a>, Up: <a href="Miscellaneous-Clauses.html#Miscellaneous-Clauses" accesskey="u" rel="up">Miscellaneous Clauses</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Initial-and-Final-Execution-1"></a>
+<h4 class="subsubsection">6.1.7.3 Initial and Final Execution</h4>
+
+<p>The <tt>initially</tt> and <tt>finally</tt> constructs
+evaluate forms that occur before and after the loop body.
+</p>
+<p>The <tt>initially</tt> construct causes the supplied
+<i>compound-forms</i>
+to be evaluated
+in the loop prologue, which precedes all loop code except for 
+initial settings supplied by constructs <tt>with</tt>, <tt>for</tt>, or
+<tt>as</tt>.
+  The code for any <tt>initially</tt> clauses is 
+executed
+in the order in which the clauses appeared in
+  the <b>loop</b>.  
+</p>
+<p>The <tt>finally</tt> construct causes the supplied
+<i>compound-forms</i>
+to be evaluated
+in the loop epilogue after normal iteration terminates.
+  The code for any <tt>finally</tt> clauses is 
+executed
+ in the order in which the clauses appeared in
+  the <b>loop</b>.  The collected code is executed once in the loop epilogue
+  before any implicit values are returned from the accumulation clauses.
+An explicit transfer of control (<i>e.g.</i>, by <b>return</b>, <b>go</b>, or <b>throw</b>)
+from the loop body, however, will exit the 
+  <b>loop</b> without executing the epilogue code.
+</p>
+<p>Clauses such as <tt>return</tt>, <tt>always</tt>, <tt>never</tt>, and 
+<tt>thereis</tt>
+can bypass the <tt>finally</tt> clause.
+</p>
+<p><b>return</b> (or <b>return-from</b>, if the <tt>named</tt> option was supplied)
+</p>
+<p>can be used after <tt>finally</tt> to return values from a <b>loop</b>.  
+</p>
+<p>Such an <i>explicit return</i>
+</p>
+<p>inside the
+<tt>finally</tt> clause takes precedence over returning the accumulation
+from clauses supplied by such keywords as <tt>collect</tt>, <tt>nconc</tt>, 
+<tt>append</tt>, <tt>sum</tt>, <tt>count</tt>, <tt>maximize</tt>, and 
+<tt>minimize</tt>; 
+the accumulation values for these preempted clauses are not returned by 
+<b>loop</b> if <b>return</b> or <b>return-from</b> is used.
+</p>
+
+
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>define-symbol-macro (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="define-symbol-macro (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="define-symbol-macro (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="symbol_002dmacrolet.html#symbol_002dmacrolet" rel="next" title="symbol-macrolet">
+<link href="macroexpand.html#macroexpand" rel="prev" title="macroexpand">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="define_002dsymbol_002dmacro"></a>
+<div class="header">
+<p>
+Next: <a href="symbol_002dmacrolet.html#symbol_002dmacrolet" accesskey="n" rel="next">symbol-macrolet</a>, Previous: <a href="macroexpand.html#macroexpand" accesskey="p" rel="prev">macroexpand</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="define_002dsymbol_002dmacro-_005bMacro_005d"></a>
+<h4 class="subsection">3.8.13 define-symbol-macro                                                 [Macro]</h4>
+
+<p><code>define-symbol-macro</code>  <i>symbol expansion</i><br>
+   &rArr;  <i>symbol</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-11"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>symbol</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>expansion</i>&mdash;a <i>form</i>.
+</p>
+<a name="Description_003a_003a-12"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Provides a mechanism for globally affecting the <i>macro expansion</i>
+of the indicated <i>symbol</i>.
+</p>
+<p>Globally establishes an expansion function for the <i>symbol macro</i> 
+named by <i>symbol</i>.
+The only guaranteed property of an expansion <i>function</i> for a <i>symbol macro</i>
+is that when it is applied to the <i>form</i> and the <i>environment</i> it returns
+the correct expansion.  (In particular, it is <i>implementation-dependent</i> 
+whether the expansion is conceptually stored in the expansion function,
+the <i>environment</i>, or both.)
+</p>
+<p>Each global reference to <i>symbol</i> (<i>i.e.</i>, not <i>shadowed</i>_2 by a 
+<i>binding</i> for a <i>variable</i> or <i>symbol macro</i> named by
+the same <i>symbol</i>) is expanded by the normal macro expansion process;
+see <a href="Symbols-as-Forms.html#Symbols-as-Forms">Symbols as Forms</a>.
+The expansion of a <i>symbol macro</i> is subject to further <i>macro expansion</i>
+in the same <i>lexical environment</i> as the <i>symbol macro</i> reference,
+exactly analogous to normal <i>macros</i>.
+</p>
+<p>The consequences are unspecified if a <b>special</b> declaration is made for
+<i>symbol</i> while in the scope of this definition (<i>i.e.</i>, when it is not 
+<i>shadowed</i>_2 by a <i>binding</i> for a <i>variable</i>
+or <i>symbol macro</i> named by the same <i>symbol</i>).
+</p>
+<p>Any use of <b>setq</b> to set the value of 
+the <i>symbol</i>
+ while in the scope of this definition
+ is treated as if it were a <b>setf</b>.
+<b>psetq</b> of <i>symbol</i>
+ is treated as if it were a <b>psetf</b>, and
+<b>multiple-value-setq</b> 
+ is treated as if it were a <b>setf</b> of <b>values</b>.
+</p>
+<p>A <i>binding</i> for a <i>symbol macro</i> can be <i>shadowed</i>_2
+by <b>let</b> or <b>symbol-macrolet</b>.
+</p>
+<a name="Examples_003a_003a-10"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">(defvar *things* (list 'alpha 'beta 'gamma)) &rArr;  *THINGS*
+
+(define-symbol-macro thing1 (first *things*)) &rArr;  THING1
+(define-symbol-macro thing2 (second *things*)) &rArr;  THING2
+(define-symbol-macro thing3 (third *things*)) &rArr;  THING3
+
+thing1 &rArr;  ALPHA
+(setq thing1 'ONE) &rArr;  ONE
+*things* &rArr;  (ONE BETA GAMMA)
+(multiple-value-setq (thing2 thing3) (values 'two 'three)) &rArr;  TWO
+thing3 &rArr;  THREE
+*things* &rArr;  (ONE TWO THREE)
+
+(list thing2 (let ((thing2 2)) thing2)) &rArr;  (TWO 2)
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-3"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If <i>symbol</i> is already defined as a <i>global variable</i>,
+an error of <i>type</i> <b>program-error</b> is signaled.
+</p>
+<a name="See-Also_003a_003a-12"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="symbol_002dmacrolet.html#symbol_002dmacrolet">symbol-macrolet</a>
+,
+&lsquo;macroexpand; macroexpand-1&rsquo;
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="symbol_002dmacrolet.html#symbol_002dmacrolet" accesskey="n" rel="next">symbol-macrolet</a>, Previous: <a href="macroexpand.html#macroexpand" accesskey="p" rel="prev">macroexpand</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

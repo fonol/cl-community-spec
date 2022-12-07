@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>copy-symbol (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="copy-symbol (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="copy-symbol (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Symbols-Dictionary.html#Symbols-Dictionary" rel="up" title="Symbols Dictionary">
+<link href="gensym.html#gensym" rel="next" title="gensym">
+<link href="make_002dsymbol.html#make_002dsymbol" rel="prev" title="make-symbol">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="copy_002dsymbol"></a>
+<div class="header">
+<p>
+Next: <a href="gensym.html#gensym" accesskey="n" rel="next">gensym</a>, Previous: <a href="make_002dsymbol.html#make_002dsymbol" accesskey="p" rel="prev">make-symbol</a>, Up: <a href="Symbols-Dictionary.html#Symbols-Dictionary" accesskey="u" rel="up">Symbols Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="copy_002dsymbol-_005bFunction_005d"></a>
+<h4 class="subsection">10.2.6 copy-symbol                                                      [Function]</h4>
+
+<p><code>copy-symbol</code>  <i>symbol &amp;optional</i> copy-properties &rArr;  <i>new-symbol</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-161"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>symbol</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>copy-properties</i>&mdash;a <i>generalized boolean</i>.
+  The default is <i>false</i>.
+</p>
+<p><i>new-symbol</i>&mdash;a <i>fresh</i>, <i>uninterned</i> <i>symbol</i>.
+</p>
+<a name="Description_003a_003a-222"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>copy-symbol</b> returns a <i>fresh</i>, <i>uninterned</i> <i>symbol</i>,
+the <i>name</i> of which is <b>string=</b> to and possibly the <i>same</i> as
+the <i>name</i> of the given <i>symbol</i>.
+</p>
+<p>If <i>copy-properties</i> is <i>false</i>,
+the <i>new-symbol</i> is neither <i>bound</i> nor <i>fbound</i> 
+and has a <i>null</i> <i>property list</i>.
+If <i>copy-properties</i> is <i>true</i>, then
+the initial <i>value</i> of <i>new-symbol</i> is
+ the <i>value</i> of <i>symbol</i>,
+the initial <i>function</i> definition of <i>new-symbol</i> is
+ the <i>functional value</i> of <i>symbol</i>,
+and the <i>property list</i> of <i>new-symbol</i> is
+</p>
+<p>a <i>copy</i>_2 of the <i>property list</i> of <i>symbol</i>.
+</p>
+<a name="Examples_003a_003a-144"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq fred 'fred-smith) &rArr;  FRED-SMITH
+ (setf (symbol-value fred) 3) &rArr;  3
+ (setq fred-clone-1a (copy-symbol fred nil)) &rArr;  #:FRED-SMITH
+ (setq fred-clone-1b (copy-symbol fred nil)) &rArr;  #:FRED-SMITH
+ (setq fred-clone-2a (copy-symbol fred t))   &rArr;  #:FRED-SMITH
+ (setq fred-clone-2b (copy-symbol fred t))   &rArr;  #:FRED-SMITH
+ (eq fred fred-clone-1a) &rArr;  <i>false</i>
+ (eq fred-clone-1a fred-clone-1b) &rArr;  <i>false</i>
+ (eq fred-clone-2a fred-clone-2b) &rArr;  <i>false</i>
+ (eq fred-clone-1a fred-clone-2a) &rArr;  <i>false</i>
+ (symbol-value fred) &rArr;  3
+ (boundp fred-clone-1a) &rArr;  <i>false</i>
+ (symbol-value fred-clone-2a) &rArr;  3
+ (setf (symbol-value fred-clone-2a) 4) &rArr;  4
+ (symbol-value fred) &rArr;  3
+ (symbol-value fred-clone-2a) &rArr;  4
+ (symbol-value fred-clone-2b) &rArr;  3
+ (boundp fred-clone-1a) &rArr;  <i>false</i>
+ (setf (symbol-function fred) #'(lambda (x) x)) &rArr;  #&lt;FUNCTION anonymous&gt;
+ (fboundp fred) &rArr;  <i>true</i>
+ (fboundp fred-clone-1a) &rArr;  <i>false</i>
+ (fboundp fred-clone-2a) &rArr;  <i>false</i>
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-51"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>symbol</i> is not a <i>symbol</i>.
+</p>
+<a name="See-Also_003a_003a-196"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="make_002dsymbol.html#make_002dsymbol">make-symbol</a>
+</p>
+<a name="Notes_003a_003a-117"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>Implementors are encouraged not to copy the <i>string</i> 
+which is the <i>symbol</i>&rsquo;s <i>name</i> unnecessarily.  
+Unless there is a good reason to do so, the normal implementation
+strategy is for the <i>new-symbol</i>&rsquo;s <i>name</i> to
+be <i>identical</i> to the given <i>symbol</i>&rsquo;s <i>name</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="gensym.html#gensym" accesskey="n" rel="next">gensym</a>, Previous: <a href="make_002dsymbol.html#make_002dsymbol" accesskey="p" rel="prev">make-symbol</a>, Up: <a href="Symbols-Dictionary.html#Symbols-Dictionary" accesskey="u" rel="up">Symbols Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

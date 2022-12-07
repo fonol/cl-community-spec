@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Summary of Termination Test Clauses (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Overview-of-the-Loop-Facility.html#Overview-of-the-Loop-Facility" rel="up" title="Overview of the Loop Facility">
+<link href="Summary-of-Unconditional-Execution-Clauses.html#Summary-of-Unconditional-Execution-Clauses" rel="next" title="Summary of Unconditional Execution Clauses">
+<link href="Summary-of-Value-Accumulation-Clauses.html#Summary-of-Value-Accumulation-Clauses" rel="prev" title="Summary of Value Accumulation Clauses">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Summary-of-Value-Accumulation-Clauses.html#Summary-of-Value-Accumulation-Clauses" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Summary of Value Accumulation Clauses
+                            </a>
+                            <a href="Overview-of-the-Loop-Facility.html#Overview-of-the-Loop-Facility.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Overview of the Loop Facility
+                            </a>
+                            <a href="Summary-of-Unconditional-Execution-Clauses.html#Summary-of-Unconditional-Execution-Clauses.html" class="nav-btn nav__next ">
+                                Summary of Unconditional Execution Clauses
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Summary-of-Termination-Test-Clauses"></a>
+<a name="Summary-of-Termination-Test-Clauses-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Summary of Termination Test Clauses</h4>
+
+<p>The <tt>for</tt> and <tt>as</tt> constructs provide a termination test
+that is determined by the iteration control clause.
+</p>
+<p>The <tt>repeat</tt> construct causes termination after a specified
+number of iterations.
+(It uses an internal variable to keep track of the number of iterations.)
+</p>
+<p>The <tt>while</tt> construct takes one <i>form</i>, a <i>test</i>, 
+and terminates the iteration if the <i>test</i> evaluates to <i>false</i>.
+A <tt>while</tt> clause is equivalent to the expression 
+<tt>(if (not <i>test</i>) (loop-finish))</tt>.
+</p>
+<p>The <tt>until</tt> construct is the inverse of <tt>while</tt>;
+it terminates the iteration if the <i>test</i> evaluates to
+any <i>non-nil</i> value.
+An <tt>until</tt> clause is equivalent to the expression
+<tt>(if <i>test</i> (loop-finish))</tt>.
+</p>
+<p>The <tt>always</tt> construct takes one <i>form</i> and
+terminates the <b>loop</b> if the <i>form</i> ever evaluates to <i>false</i>;
+in this case, the <b>loop</b> <i>form</i> returns <b>nil</b>.
+Otherwise, it provides a default return value of <b>t</b>.
+</p>
+<p>The <tt>never</tt> construct takes one <i>form</i> and
+terminates the <b>loop</b> if the <i>form</i> ever evaluates to <i>true</i>;
+in this case, the <b>loop</b> <i>form</i> returns <b>nil</b>.
+Otherwise, it provides a default return value of <b>t</b>.
+</p>
+<p>The <tt>thereis</tt> construct takes one <i>form</i> and
+terminates the <b>loop</b> if the <i>form</i> ever evaluates to
+a <i>non-nil</i> <i>object</i>;
+in this case, the <b>loop</b> <i>form</i> returns that <i>object</i>.
+</p>
+<p>Otherwise, it provides a default return value of <b>nil</b>.
+</p>
+<p>If multiple termination test clauses are specified, 
+the <b>loop</b> <i>form</i> terminates if any are satisfied.
+</p>
+<p>For more information, see <a href="Termination-Test-Clauses.html#Termination-Test-Clauses">Termination Test Clauses</a>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

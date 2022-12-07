@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Tilde C-&gt; Character (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Basic-Output.html#FORMAT-Basic-Output" rel="up" title="FORMAT Basic Output">
+<link href="Tilde-Percent_002d_003e-Newline.html#Tilde-Percent_002d_003e-Newline" rel="next" title="Tilde Percent-&gt; Newline">
+<link href="FORMAT-Basic-Output.html#FORMAT-Basic-Output" rel="prev" title="FORMAT Basic Output">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="FORMAT-Basic-Output.html#FORMAT-Basic-Output" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                FORMAT Basic Output
+                            </a>
+                            <a href="FORMAT-Basic-Output.html#FORMAT-Basic-Output.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                FORMAT Basic Output
+                            </a>
+                            <a href="Tilde-Percent_002d_003e-Newline.html#Tilde-Percent_002d_003e-Newline.html" class="nav-btn nav__next ">
+                                Tilde Percent-&gt; Newline
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Tilde-C_002d_003e-Character"></a>
+<a name="Tilde-C_003a-Character"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Tilde C: Character</h4>
+
+<p>The next <i>arg</i> should be a <i>character</i>; 
+it is printed
+according to the modifier flags.
+</p>
+<p><tt>~C</tt> prints the <i>character</i> 
+as if by using <b>write-char</b> if it is a <i>simple character</i>.
+<i>Characters</i> that are not <i>simple</i>
+are not necessarily printed as if by <b>write-char</b>,
+but are displayed in an <i>implementation-defined</i>, abbreviated format.
+For example,
+</p>
+<div class="example">
+<pre class="example"><code> (format nil &quot;~C&quot; #\A) &rArr;  &quot;A&quot;
+ (format nil &quot;~C&quot; #\Space) &rArr;  &quot; &quot;
+</code>
+</pre></div>
+
+<p><tt>~:C</tt> is the same as <tt>~C</tt> for <i>printing</i> <i>characters</i>,
+but other <i>characters</i> are &ldquo;spelled out.&rdquo;  The intent is that this
+is a &ldquo;pretty&rdquo; format for printing characters.
+For <i>simple</i> <i>characters</i> that are not <i>printing</i>,
+what is spelled out is the <i>name</i> of the <i>character</i> (see <b>char-name</b>).
+For <i>characters</i> that are not <i>simple</i> and not <i>printing</i>,
+what is spelled out is <i>implementation-defined</i>.
+For example, 
+</p>
+<div class="example">
+<pre class="example"><code> (format nil &quot;~:C&quot; #\A) &rArr;  &quot;A&quot;
+ (format nil &quot;~:C&quot; #\Space) &rArr;  &quot;Space&quot;
+;; This next example assumes an implementation-defined &quot;Control&quot; attribute.
+ (format nil &quot;~:C&quot; #\Control-Space)
+&rArr;  &quot;Control-Space&quot;
+<i>OR</i>&rArr; &quot;c-Space&quot;
+</code>
+</pre></div>
+
+<p><tt>~:@C</tt> prints what <tt>~:C</tt> would, and then
+if the <i>character</i> requires unusual shift keys on the keyboard to type it,
+this fact is mentioned.  For example,
+</p>
+<div class="example">
+<pre class="example"><code> (format nil &quot;~:@C&quot; #\Control-Partial) &rArr;  &quot;Control-\partial (Top-F)&quot;  
+</code>
+</pre></div>
+
+<p>This is the format used for telling the user about a key he is expected to type,
+in prompts, for instance.  The precise output may depend not only
+on the implementation, but on the particular I/O devices in use.
+</p>
+<p><tt>~@C</tt> 
+prints the <i>character</i> in a way that the <i>Lisp reader</i> can understand,
+using <tt>#\</tt> syntax.
+</p>
+<p><tt>~@C</tt>  binds <b>*print-escape*</b> to <b>t</b>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

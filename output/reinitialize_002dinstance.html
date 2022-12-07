@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>reinitialize-instance (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="shared_002dinitialize.html#shared_002dinitialize" rel="next" title="shared-initialize">
+<link href="allocate_002dinstance.html#allocate_002dinstance" rel="prev" title="allocate-instance">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="allocate_002dinstance.html#allocate_002dinstance" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                allocate-instance
+                            </a>
+                            <a href="Objects-Dictionary.html#Objects-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Objects Dictionary
+                            </a>
+                            <a href="shared_002dinitialize.html#shared_002dinitialize.html" class="nav-btn nav__next ">
+                                shared-initialize
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="reinitialize_002dinstance"></a>
+<a name="reinitialize_002dinstance-_005bStandard-Generic-Function_005d"></a>
+<div class="section top-most">
+<div class="node-type">Standard Generic Function</div>
+<h4 class="subsection">reinitialize-instance                           </h4>
+
+<a name="Syntax_003a_003a-13"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Syntax</h4>
+
+<p><code>reinitialize-instance</code>  <i>instance &amp;rest</i> initargs &amp;key &amp;allow-other-keys &rArr;  <i>instance</i>
+</p>
+<a name="Method-Signatures_003a_003a-2"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Method Signatures</h4>
+
+<p><code>reinitialize-instance</code>  <i><span class="roman">(</span><i>instance</i> <b>standard-object</b><span class="roman">)</span> &amp;rest</i> initargs
+</p>
+<a name="Arguments-and-Values_003a_003a-92"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>instance</i>&mdash;an <i>object</i>.
+</p>
+<p><i>initargs</i>&mdash;an <i>initialization argument list</i>.
+</p>
+<a name="Description_003a_003a-131"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The <i>generic function</i> <b>reinitialize-instance</b> can be used to change
+the values of <i>local slots</i> of an <i>instance</i> according to 
+<i>initargs</i>.
+This <i>generic function</i> can be called by users.
+</p>
+<p>The system-supplied primary <i>method</i> for <b>reinitialize-instance</b>
+checks the validity of <i>initargs</i> and signals an error if
+an <i>initarg</i> is supplied that is not declared as valid.
+The <i>method</i> then calls the generic function <b>shared-initialize</b>
+with the following arguments:  the <i>instance</i>, 
+<b>nil</b> (which means no <i>slots</i>
+should be initialized according to their initforms), and the
+<i>initargs</i> it received.
+</p>
+<a name="Side-Effects_003a_003a-6"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Side Effects</h4>
+
+<p>The <i>generic function</i> <b>reinitialize-instance</b> changes the values of <i>local slots</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-23"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>The system-supplied primary <i>method</i> for <b>reinitialize-instance</b>
+signals an error if an <i>initarg</i> is supplied that is not declared as valid.
+</p>
+<a name="See-Also_003a_003a-113"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="Initialize_002dInstance.html#Initialize_002dInstance">Initialize-Instance</a>
+,
+<a href="Shared_002dInitialize.html#Shared_002dInitialize">Shared-Initialize</a>
+,
+<a href="update_002dinstance_002dfor_002dredefined_002dclass.html#update_002dinstance_002dfor_002dredefined_002dclass">update-instance-for-redefined-class</a>
+,
+<a href="update_002dinstance_002dfor_002ddifferent_002dclass.html#update_002dinstance_002dfor_002ddifferent_002dclass">update-instance-for-different-class</a>
+,
+<a href="slot_002dboundp.html#slot_002dboundp">slot-boundp</a>
+,
+<a href="slot_002dmakunbound.html#slot_002dmakunbound">slot-makunbound</a>
+,
+<a href="Reinitializing-an-Instance.html#Reinitializing-an-Instance">Reinitializing an Instance</a>,
+<a href="Rules-for-Initialization-Arguments.html#Rules-for-Initialization-Arguments">Rules for Initialization Arguments</a>,
+<a href="Declaring-the-Validity-of-Initialization-Arguments.html#Declaring-the-Validity-of-Initialization-Arguments">Declaring the Validity of Initialization Arguments</a>
+</p>
+<a name="Notes_003a_003a-75"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p><i>Initargs</i> are declared as valid by using the
+<tt>:initarg</tt> option to <b>defclass</b>, or by defining 
+<i>methods</i> for <b>reinitialize-instance</b>
+or <b>shared-initialize</b>.  The keyword name
+of each keyword parameter specifier in the <i>lambda list</i> of any 
+<i>method</i>
+defined on <b>reinitialize-instance</b> or <b>shared-initialize</b> is
+declared as a valid initialization argument name for all 
+<i>classes</i> for
+which that <i>method</i> is applicable.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

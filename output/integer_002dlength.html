@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>integer-length (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Numbers-Dictionary.html#Numbers-Dictionary" rel="up" title="Numbers Dictionary">
+<link href="integerp.html#integerp" rel="next" title="integerp">
+<link href="ash.html#ash" rel="prev" title="ash">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="ash.html#ash" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                ash
+                            </a>
+                            <a href="Numbers-Dictionary.html#Numbers-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Numbers Dictionary
+                            </a>
+                            <a href="integerp.html#integerp.html" class="nav-btn nav__next ">
+                                integerp
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="integer_002dlength"></a>
+<a name="integer_002dlength-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">integer-length                                                   </h4>
+
+<p><code>integer-length</code>  <i>integer</i> &rArr;  <i>number-of-bits</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-240"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>integer</i>&mdash;an <i>integer</i>.
+</p>
+<p><i>number-of-bits</i>&mdash;a non-negative <i>integer</i>.
+</p>
+<a name="Description_003a_003a-322"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Returns the number of bits needed to represent <i>integer</i>
+in binary two&rsquo;s-complement format.
+</p>
+<a name="Examples_003a_003a-224"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (integer-length 0) &rArr;  0
+ (integer-length 1) &rArr;  1
+ (integer-length 3) &rArr;  2
+ (integer-length 4) &rArr;  3
+ (integer-length 7) &rArr;  3
+ (integer-length -1) &rArr;  0
+ (integer-length -4) &rArr;  2
+ (integer-length -7) &rArr;  3
+ (integer-length -8) &rArr;  3
+ (integer-length (expt 2 9)) &rArr;  10
+ (integer-length (1- (expt 2 9))) &rArr;  9
+ (integer-length (- (expt 2 9))) &rArr;  9
+ (integer-length (- (1+ (expt 2 9)))) &rArr;  10
+</code>
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-99"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>integer</i> is not an <i>integer</i>.
+</p>
+<a name="Notes_003a_003a-169"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>This function could have been defined by:
+</p>
+<div class="example">
+<pre class="example"><code>(defun integer-length (integer)
+  (ceiling (log (if (minusp integer)
+                    (- integer)
+                    (1+ integer))
+                2)))
+</code>
+</pre></div>
+
+<p>If <i>integer</i> is non-negative, then its value can be represented
+in unsigned binary form in a field whose width in bits is
+no smaller than <tt>(integer-length <i>integer</i>)</tt>.
+Regardless of the sign of <i>integer</i>, its value can be
+represented in signed binary two&rsquo;s-complement form in a field
+whose width in bits is no smaller than <tt>(+ (integer-length <i>integer</i>) 1)</tt>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

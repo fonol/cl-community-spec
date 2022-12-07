@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Signaling and Handling Conditions (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Condition-System-Concepts.html#Condition-System-Concepts" rel="up" title="Condition System Concepts">
+<link href="Signaling.html#Signaling" rel="next" title="Signaling">
+<link href="Mentioning-Containing-Function-in-Condition-Reports.html#Mentioning-Containing-Function-in-Condition-Reports" rel="prev" title="Mentioning Containing Function in Condition Reports">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Mentioning-Containing-Function-in-Condition-Reports.html#Mentioning-Containing-Function-in-Condition-Reports" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Mentioning Containing Function in Condition Reports
+                            </a>
+                            <a href="Condition-System-Concepts.html#Condition-System-Concepts.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Condition System Concepts
+                            </a>
+                            <a href="Signaling.html#Signaling.html" class="nav-btn nav__next ">
+                                Signaling
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Signaling-and-Handling-Conditions"></a>
+<a name="Signaling-and-Handling-Conditions-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Signaling and Handling Conditions</h4>
+
+<p>The operation of the condition system depends on the ordering of
+active <i>applicable handlers</i> from most recent to least recent.
+</p>
+<p>Each <i>handler</i> is associated with a <i>type specifier</i>
+that must designate a <i>subtype</i> of <i>type</i> <b>condition</b>.  A <i>handler</i>
+is said to be <i>applicable</i> to a <i>condition</i> if that
+<i>condition</i> is of the <i>type</i> designated by the associated
+<i>type specifier</i>.
+</p>
+<p><i>Active</i> <i>handlers</i> are <i>established</i> by using 
+<b>handler-bind</b> (or an abstraction based on <b>handler-bind</b>, 
+such as <b>handler-case</b> or <b>ignore-errors</b>).
+</p>
+<p><i>Active</i> <i>handlers</i> can be <i>established</i> within the
+dynamic scope of other <i>active</i> <i>handlers</i>.
+At any point during program execution, there is a set of <i>active</i> <i>handlers</i>.
+When a <i>condition</i> is signaled, the <i>most recent</i> active <i>applicable handler</i>
+for that <i>condition</i> is selected from this set.
+Given a <i>condition</i>, the order of recentness of 
+active <i>applicable handlers</i> is defined by the following two rules:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>Each handler in a set of active handlers H_1 is
+more recent than every handler in a set H_2 if the
+handlers in H_2 were active when the handlers in H_1 were
+established.
+</p>
+</dd>
+<dt>2.</dt>
+<dd><p>Let h_1 and h_2 be two applicable active
+handlers established by the same <i>form</i>. Then h_1 is
+more recent than h_2 if h_1 was defined to the left of
+h_2 in the <i>form</i> that established them.
+</p>
+</dd>
+</dl>
+
+<p>Once a handler in a handler binding <i>form</i> (such as 
+<b>handler-bind</b> or <b>handler-case</b>) has been selected, all
+handlers in that <i>form</i> become inactive for 
+the remainder of the signaling process.
+While the selected <i>handler</i> runs, no other <i>handler</i> established
+by that <i>form</i> is active. That is, if the <i>handler</i> declines, 
+no other handler established by that <i>form</i> will be considered for possible invocation.
+</p>
+<p>Figure 9&ndash;4 shows <i>operators</i> relating to 
+the <i>handling</i> of <i>conditions</i>.
+</p>
+<p>&nbsp;&nbsp;<span class="nolinebreak">handler-bind</span>&nbsp;&nbsp;<span class="nolinebreak">handler-case</span>&nbsp;&nbsp;<span class="nolinebreak">ignore-errors</span>&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;9&ndash;4:&nbsp;Operators&nbsp;relating&nbsp;to&nbsp;handling&nbsp;conditions.<!-- /@w -->
+</p>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Signaling.html#Signaling" accesskey="1">Signaling</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Resignaling-a-Condition.html#Resignaling-a-Condition" accesskey="2">Resignaling a Condition</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Restarts.html#Restarts" accesskey="3">Restarts</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Interactive-Use-of-Restarts.html#Interactive-Use-of-Restarts" accesskey="4">Interactive Use of Restarts</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Interfaces-to-Restarts.html#Interfaces-to-Restarts" accesskey="5">Interfaces to Restarts</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Restart-Tests.html#Restart-Tests" accesskey="6">Restart Tests</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Associating-a-Restart-with-a-Condition.html#Associating-a-Restart-with-a-Condition" accesskey="7">Associating a Restart with a Condition</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

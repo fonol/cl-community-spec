@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>slot-makunbound (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="slot_002dmissing.html#slot_002dmissing" rel="next" title="slot-missing">
+<link href="slot_002dexists_002dp.html#slot_002dexists_002dp" rel="prev" title="slot-exists-p">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="slot_002dexists_002dp.html#slot_002dexists_002dp" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                slot-exists-p
+                            </a>
+                            <a href="Objects-Dictionary.html#Objects-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Objects Dictionary
+                            </a>
+                            <a href="slot_002dmissing.html#slot_002dmissing.html" class="nav-btn nav__next ">
+                                slot-missing
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="slot_002dmakunbound"></a>
+<a name="slot_002dmakunbound-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">slot-makunbound                                                  </h4>
+
+<p><code>slot-makunbound</code>  <i>instance slot-name</i> &rArr;  <i>instance</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-99"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>instance</i> &ndash; instance.
+</p>
+<p><i>Slot-name</i>&mdash;a <i>symbol</i>.
+</p>
+<a name="Description_003a_003a-138"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The <i>function</i> <b>slot-makunbound</b> restores a <i>slot</i> 
+of the name <i>slot-name</i> in an <i>instance</i> to
+the unbound state.
+</p>
+<a name="Exceptional-Situations_003a_003a-27"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>If no <i>slot</i> of the name <i>slot-name</i> exists in the 
+<i>instance</i>, <b>slot-missing</b> is called as follows:
+</p>
+<div class="example">
+<pre class="example"><code>(slot-missing (class-of <i>instance</i>)
+              <i>instance</i>
+              <i>slot-name</i>
+              'slot-makunbound)
+</code>
+</pre></div>
+
+<p>(Any values returned by <b>slot-missing</b> in this case are
+ignored by <b>slot-makunbound</b>.)
+</p>
+<p>The specific behavior depends on <i>instance</i>&rsquo;s <i>metaclass</i>.
+An error is never signaled if <i>instance</i> has <i>metaclass</i> <b>standard-class</b>.
+An error is always signaled if <i>instance</i> has <i>metaclass</i> <b>built-in-class</b>.
+The consequences are undefined if <i>instance</i> has any other <i>metaclass</i>&ndash;an error
+might or might not be signaled in this situation.  Note in particular that the behavior
+for <i>conditions</i> and <i>structures</i> is not specified.
+</p>
+<a name="See-Also_003a_003a-120"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="slot_002dboundp.html#slot_002dboundp">slot-boundp</a>
+,
+<a href="slot_002dmissing.html#slot_002dmissing">slot-missing</a>
+</p>
+<a name="Notes_003a_003a-82"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>Although no <i>implementation</i> is required to do so,
+  implementors are strongly encouraged to implement the <i>function</i> <b>slot-makunbound</b> using 
+  the <i>function</i> <tt>slot-makunbound-using-class</tt> described in the <i>Metaobject Protocol</i>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

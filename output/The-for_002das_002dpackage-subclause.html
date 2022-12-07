@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>The for-as-package subclause (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" rel="up" title="Variable Initialization and Stepping Clauses">
+<link href="Examples-of-for_002das_002dpackage-subclause.html#Examples-of-for_002das_002dpackage-subclause" rel="next" title="Examples of for-as-package subclause">
+<link href="The-for_002das_002dhash-subclause.html#The-for_002das_002dhash-subclause" rel="prev" title="The for-as-hash subclause">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="The-for_002das_002dhash-subclause.html#The-for_002das_002dhash-subclause" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                The for-as-hash subclause
+                            </a>
+                            <a href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Variable Initialization and Stepping Clauses
+                            </a>
+                            <a href="Examples-of-for_002das_002dpackage-subclause.html#Examples-of-for_002das_002dpackage-subclause.html" class="nav-btn nav__next ">
+                                Examples of for-as-package subclause
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="The-for_002das_002dpackage-subclause"></a>
+<a name="The-for_002das_002dpackage-subclause-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">The for-as-package subclause</h4>
+
+<p>In the <i>for-as-package</i> subclause
+the <tt>for</tt> 
+or <tt>as</tt> construct                    
+iterates over the <i>symbols</i> in a <i>package</i>.
+In this syntax, a compound preposition is used to designate access to a
+<i>package</i>.
+The variable <i>var</i> takes on the value of each <i>symbol</i>
+in the supplied <i>package</i>.  
+ The following <i>loop keywords</i> serve as valid prepositions within this syntax:
+</p>
+<dl compact="compact">
+<dt><tt>being</tt></dt>
+<dd><p>The keyword <tt>being</tt> introduces either the Loop schema 
+<tt>symbol</tt>, <tt>present-symbol</tt>,  or <tt>external-symbol</tt>.
+</p>
+</dd>
+<dt><tt>each</tt>, <tt>the</tt></dt>
+<dd><p>The <i>loop keyword</i> <tt>each</tt>
+follows the <i>loop keyword</i> <tt>being</tt> when <tt>symbol</tt>, 
+<tt>present-symbol</tt>, or <tt>external-symbol</tt> is used.  
+The <i>loop keyword</i> <tt>the</tt> is used with <tt>symbols</tt>, 
+<tt>present-symbols</tt>, and <tt>external-symbols</tt> only for ease of reading.
+This agreement isn&rsquo;t required.
+</p>
+</dd>
+<dt><tt>present-symbol</tt>, <tt>present-symbols</tt></dt>
+<dd><p>These Loop schemas iterate over the <i>symbols</i> 
+</p>
+<p>that are <i>present</i> in a <i>package</i>.
+</p>
+<p>The <i>package</i> to be iterated over is supplied in the same way
+that <i>package</i> arguments to <b>find-package</b> are supplied.  
+If the <i>package</i> for the iteration is not supplied, 
+the <i>current package</i> is used.  
+If a <i>package</i> that does not exist is supplied, 
+an error of <i>type</i> <b>package-error</b> is signaled.
+</p>
+</dd>
+<dt><tt>symbol</tt>, <tt>symbols</tt></dt>
+<dd><p>These Loop schemas iterate over <i>symbols</i> that are
+<i>accessible</i> in a given <i>package</i>.  
+The <i>package</i> to be iterated over is supplied in the same way
+that <i>package</i> arguments to <b>find-package</b> are supplied.
+If the <i>package</i> for the iteration is not supplied, 
+the <i>current package</i> is used.
+If a <i>package</i> that does not exist is supplied, 
+an error of <i>type</i> <b>package-error</b> is signaled.
+</p>
+</dd>
+<dt><tt>external-symbol</tt>, <tt>external-symbols</tt></dt>
+<dd><p>These Loop schemas iterate over the <i>external symbols</i> of a <i>package</i>.
+The <i>package</i> to be iterated over is supplied in the same way
+that <i>package</i> arguments to <b>find-package</b> are supplied.
+If the <i>package</i> for the iteration is not supplied, 
+the <i>current package</i> is used.
+If a <i>package</i> that does not exist is supplied, 
+an error of <i>type</i> <b>package-error</b> is signaled.
+</p>
+</dd>
+<dt><tt>in</tt>, <tt>of</tt></dt>
+<dd><p>These loop prepositions introduce <i>package</i>.
+</p>
+</dd>
+</dl>
+
+<p>In effect 
+</p>
+<p><tt>being</tt>
+{each | <tt>the</tt>}
+{symbol          |
+       <tt>symbols</tt>         |
+       <tt>present-symbol</tt>  |
+       <tt>present-symbols</tt> |
+       <tt>external-symbol</tt> |
+       <tt>external-symbols</tt>}
+{in | <tt>of</tt>}
+</p>
+<p>is a compound preposition.
+</p>
+<p>Iteration stops when there are no more <i>symbols</i> to be referenced 
+in the supplied <i>package</i>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

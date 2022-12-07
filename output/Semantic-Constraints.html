@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Semantic Constraints (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Compilation-Semantics.html#Compilation-Semantics" rel="up" title="Compilation Semantics">
+<link href="File-Compilation.html#File-Compilation" rel="next" title="File Compilation">
+<link href="Minimal-Compilation.html#Minimal-Compilation" rel="prev" title="Minimal Compilation">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Minimal-Compilation.html#Minimal-Compilation" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Minimal Compilation
+                            </a>
+                            <a href="Compilation-Semantics.html#Compilation-Semantics.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Compilation Semantics
+                            </a>
+                            <a href="File-Compilation.html#File-Compilation.html" class="nav-btn nav__next ">
+                                File Compilation
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Semantic-Constraints"></a>
+<a name="Semantic-Constraints-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Semantic Constraints</h4>
+
+<p>All <i>conforming programs</i> must obey the following constraints,
+which are designed to minimize the observable differences 
+between compiled and interpreted programs:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>Definitions of any referenced <i>macros</i>
+must be present in the <i>compilation environment</i>.  
+Any <i>form</i> that is a <i>list</i>
+beginning with a <i>symbol</i> that does not name a
+<i>special operator</i> or a <i>macro</i> defined in the 
+<i>compilation environment</i> is treated by the compiler as a 
+function call.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><b>Special</b> proclamations for <i>dynamic variables</i>
+must be made in the <i>compilation environment</i>.  Any <i>binding</i>
+for which there is no <b>special</b> declaration or proclamation in
+the <i>compilation environment</i> is treated by the compiler as
+a <i>lexical binding</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The definition of a function that is defined and
+declared <b>inline</b> in the <i>compilation environment</i> must be
+the same at run time.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Within a <i>function</i> named F, the compiler may
+(but is not required to)
+assume that an apparent recursive call to a <i>function</i> named F 
+refers to the same definition of F,
+unless that function has been declared <b>notinline</b>.
+The consequences of redefining such a recursively defined <i>function</i> F 
+while it is executing are undefined.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>A call within a file to a named function that is
+defined in the same file refers to that function, unless that function
+has been declared <b>notinline</b>.  The consequences are unspecified
+if functions are redefined individually at run time or multiply
+defined in the same file.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The argument syntax and number of return values for
+all functions whose <b>ftype</b> is declared at compile time must
+remain the same at run time.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><i>Constant variables</i> defined in
+the <i>compilation environment</i> must have a <i>similar</i> value at
+run time.  A reference to 
+a <i>constant variable</i> 
+in <i>source code</i> is equivalent to a reference to 
+a <i>literal</i> <i>object</i> that is the <i>value</i> of the <i>constant variable</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Type definitions made with <b>deftype</b> or
+<b>defstruct</b> in the <i>compilation environment</i> must
+retain the same definition at run time.  Classes defined by <b>defclass</b>
+in the <i>compilation environment</i> must be defined
+at run time to have the same <i>superclasses</i> and same 
+<i>metaclass</i>.
+</p>
+<p>This implies that <i>subtype</i>/<i>supertype</i> relationships of 
+<i>type specifiers</i> must not change between <i>compile time</i> and <i>run time</i>.  
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Type declarations present in the compilation 
+<i>environment</i> must accurately describe the corresponding values at run time;
+otherwise, the consequences are undefined.  It is permissible
+for an unknown <i>type</i> to appear in a declaration at 
+compile time, though a warning might be signaled in such a case.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Except in the situations explicitly listed above, a
+<i>function</i> defined in the <i>evaluation environment</i>
+is permitted to have a different definition or a different <i>signature</i>
+at run time, and the run-time definition prevails.
+</p>
+</dd>
+</dl>
+
+<p><i>Conforming programs</i> should not be written using any additional
+assumptions about consistency between the run-time 
+<i>environment</i> and the startup, evaluation, and compilation 
+<i>environments</i>.
+</p>
+<p>Except where noted, when a compile-time and a run-time definition are
+different, one of the following occurs at run time:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>an error of <i>type</i> <b>error</b> is signaled
+</p></dd>
+<dt><tt>*</tt></dt>
+<dd><p>the compile-time definition prevails
+</p></dd>
+<dt><tt>*</tt></dt>
+<dd><p>the run-time definition prevails
+</p>
+</dd>
+</dl>
+
+<p>If the <i>compiler</i> processes a <i>function form</i> whose <i>operator</i> 
+is not defined at compile time, no error is signaled at compile time.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

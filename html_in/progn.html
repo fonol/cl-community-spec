@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>progn (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="progn (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="progn (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="define_002dmodify_002dmacro.html#define_002dmodify_002dmacro" rel="next" title="define-modify-macro">
+<link href="prog1.html#prog1" rel="prev" title="prog1">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="progn"></a>
+<div class="header">
+<p>
+Next: <a href="define_002dmodify_002dmacro.html#define_002dmodify_002dmacro" accesskey="n" rel="next">define-modify-macro</a>, Previous: <a href="prog1.html#prog1" accesskey="p" rel="prev">prog1</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="progn-_005bSpecial-Operator_005d"></a>
+<h4 class="subsection">5.3.59 progn                                                    [Special Operator]</h4>
+
+<p><code>progn</code>  <i>{<i>form</i>}*</i> &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-77"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> of the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-112"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>progn</b> evaluates <i>forms</i>,
+in the order in which they are given.
+</p>
+<p>The values of each <i>form</i> but the last are discarded.
+</p>
+<p>If <b>progn</b> appears as a <i>top level form</i>, then all <i>forms</i>
+within that <b>progn</b> are considered by the compiler to be 
+<i>top level forms</i>.
+</p>
+<a name="Examples_003a_003a-85"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (progn) &rArr;  NIL
+ (progn 1 2 3) &rArr;  3
+ (progn (values 1 2 3)) &rArr;  1, 2, 3
+ (setq a 1) &rArr;  1
+ (if a
+      (progn (setq a nil) 'here)
+      (progn (setq a t) 'there)) &rArr;  HERE
+ a &rArr;  NIL
+</pre></div>
+
+<a name="See-Also_003a_003a-96"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;prog1; prog2&rsquo;
+, <b>prog2</b>, <a href="Evaluation.html#Evaluation">Evaluation</a>
+</p>
+<a name="Notes_003a_003a-63"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>Many places in <span class="roman">Common Lisp</span> involve syntax that uses <i>implicit progns</i>.
+That is, part of their syntax allows many <i>forms</i> to be written
+that are to be evaluated sequentially, discarding the results
+of all <i>forms</i> but the last and returning the results of the last <i>form</i>.
+Such places include, but are not limited to, the following:
+     the body of a <i>lambda expression</i>;
+     the bodies of various control and conditional <i>forms</i>
+    (<i>e.g.</i>, <b>case</b>, <b>catch</b>, <b>progn</b>, and <b>when</b>).
+</p>
+
+
+
+</body>
+</html>

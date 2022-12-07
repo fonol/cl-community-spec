@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Tilde R-&gt; Radix (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Radix-Control.html#FORMAT-Radix-Control" rel="up" title="FORMAT Radix Control">
+<link href="Tilde-D_002d_003e-Decimal.html#Tilde-D_002d_003e-Decimal" rel="next" title="Tilde D-&gt; Decimal">
+<link href="FORMAT-Radix-Control.html#FORMAT-Radix-Control" rel="prev" title="FORMAT Radix Control">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="FORMAT-Radix-Control.html#FORMAT-Radix-Control" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                FORMAT Radix Control
+                            </a>
+                            <a href="FORMAT-Radix-Control.html#FORMAT-Radix-Control.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                FORMAT Radix Control
+                            </a>
+                            <a href="Tilde-D_002d_003e-Decimal.html#Tilde-D_002d_003e-Decimal.html" class="nav-btn nav__next ">
+                                Tilde D-&gt; Decimal
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Tilde-R_002d_003e-Radix"></a>
+<a name="Tilde-R_003a-Radix"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Tilde R: Radix</h4>
+
+<p><tt>~<i>n</i>R</tt> prints <i>arg</i> in radix <i>n</i>.
+The modifier flags and any remaining parameters are used as for
+the <tt>~D</tt> directive.
+<tt>~D</tt> is the same as <tt>~10R</tt>.  
+The full form is 
+<tt>~<i>radix</i>,<i>mincol</i>,<i>padchar</i>,<i>commachar</i>,<i>comma-interval</i>R</tt>.
+</p>
+<p>If no prefix parameters are given to <tt>~R</tt>, then a different
+interpretation is given.  The argument should be an <i>integer</i>.
+For example, if <i>arg</i> is 4:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p><tt>~R</tt> prints <i>arg</i> as a cardinal English number: <tt>four</tt>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><tt>~:R</tt> prints <i>arg</i> as an ordinal English number: <tt>fourth</tt>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><tt>~@R</tt> prints <i>arg</i> as a Roman numeral: <tt>IV</tt>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><tt>~:@R</tt> prints <i>arg</i> as an old Roman numeral: <tt>IIII</tt>.
+</p></dd>
+</dl>
+
+<p>For example:
+</p>
+<div class="example">
+<pre class="example"><code> (format nil &quot;~,,' ,4:B&quot; 13) &rArr;  &quot;1101&quot;
+ (format nil &quot;~,,' ,4:B&quot; 17) &rArr;  &quot;1 0001&quot;
+ (format nil &quot;~19,0,' ,4:B&quot; 3333) &rArr;  &quot;0000 1101 0000 0101&quot;
+ (format nil &quot;~3,,,' ,2:R&quot; 17) &rArr;  &quot;1 22&quot;
+ (format nil &quot;~,,'|,2:D&quot; #xFFFF) &rArr;   &quot;6|55|35&quot;
+</code>
+</pre></div>
+
+<p>If and only if the first parameter, <i>n</i>, is supplied,
+<tt>~R</tt> binds
+     <b>*print-escape*</b> to <i>false</i>,
+     <b>*print-radix*</b> to <i>false</i>, 
+     <b>*print-base*</b> to <i>n</i>,
+</p>
+<p>and <b>*print-readably*</b> to <i>false</i>.
+</p>
+<p>If and only if no parameters are supplied,
+<tt>~R</tt> binds <b>*print-base*</b> to <tt>10</tt>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

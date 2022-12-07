@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Definition of Similarity (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Definition of Similarity (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Definition of Similarity (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Literal-Objects-in-Compiled-Files.html#Literal-Objects-in-Compiled-Files" rel="up" title="Literal Objects in Compiled Files">
+<link href="Extensions-to-Similarity-Rules.html#Extensions-to-Similarity-Rules" rel="next" title="Extensions to Similarity Rules">
+<link href="Similarity-of-Aggregate-Objects.html#Similarity-of-Aggregate-Objects" rel="prev" title="Similarity of Aggregate Objects">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Definition-of-Similarity"></a>
+<div class="header">
+<p>
+Next: <a href="Extensions-to-Similarity-Rules.html#Extensions-to-Similarity-Rules" accesskey="n" rel="next">Extensions to Similarity Rules</a>, Previous: <a href="Similarity-of-Aggregate-Objects.html#Similarity-of-Aggregate-Objects" accesskey="p" rel="prev">Similarity of Aggregate Objects</a>, Up: <a href="Literal-Objects-in-Compiled-Files.html#Literal-Objects-in-Compiled-Files" accesskey="u" rel="up">Literal Objects in Compiled Files</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Definition-of-Similarity-1"></a>
+<h4 class="subsubsection">3.2.4.4 Definition of Similarity</h4>
+
+<p>Two <i>objects</i> S (in <i>source code</i>) and C (in <i>compiled code</i>)
+     are defined to be <i>similar</i> if and only if 
+     they are both of one of the <i>types</i> listed here
+      (or defined by the <i>implementation</i>) 
+ and they both satisfy all additional requirements of <i>similarity</i> 
+      indicated for that <i>type</i>.
+</p>
+<dl compact="compact">
+<dt><b>number</b></dt>
+<dd><p>Two <i>numbers</i> S and C are <i>similar</i> if they are of the same <i>type</i>
+and represent the same mathematical value.
+</p>
+</dd>
+<dt><b>character</b></dt>
+<dd><p>Two <i>simple</i> <i>characters</i> S and C are <i>similar</i> 
+if they have <i>similar</i> <i>code</i> <i>attributes</i>.
+</p>
+<p><i>Implementations</i> providing additional, <i>implementation-defined</i> 
+<i>attributes</i> must define whether and how <i>non-simple</i> <i>characters</i> 
+can be regarded as <i>similar</i>.
+</p>
+</dd>
+<dt><b>symbol</b></dt>
+<dd><p>Two <i>apparently uninterned</i> <i>symbols</i> S and C are <i>similar</i>
+if their
+<i>names</i>
+are <i>similar</i>.
+</p>
+<p>Two <i>interned</i> symbols S and C are <i>similar</i> 
+if their <i>names</i> are <i>similar</i>,
+and if either S is accessible in the <i>current package</i> at compile time
+          and C is accessible in the <i>current package</i> at load time,
+       or C is accessible in the <i>package</i> that is <i>similar</i> to
+          the <i>home package</i> of S.
+</p>
+<p>(Note that <i>similarity</i> of
+<i>symbols</i> is dependent
+on neither the <i>current readtable</i> nor how the <i>function</i> <b>read</b> would
+parse the <i>characters</i> in the <i>name</i> of the <i>symbol</i>.)
+</p>
+</dd>
+<dt><b>package</b></dt>
+<dd><p>Two <i>packages</i> S and C are <i>similar</i> if their <i>names</i> are <i>similar</i>.
+</p>
+<p>Note that although a <i>package</i> <i>object</i> is an <i>externalizable object</i>,
+the programmer is responsible for ensuring that the corresponding <i>package</i> is
+already in existence when code referencing it as a <i>literal</i> <i>object</i> 
+is <i>loaded</i>.  The <i>loader</i> finds the corresponding <i>package</i> <i>object</i>
+as if by calling <b>find-package</b> with that <i>name</i> as an <i>argument</i>.
+An error is signaled by the <i>loader</i> if no <i>package</i> exists at load time.
+</p>
+</dd>
+<dt><b>random-state</b></dt>
+<dd><p>Two <i>random states</i> S and C are <i>similar</i> if S
+would always produce the same sequence of pseudo-random numbers 
+as a <i>copy</i>_5 of C
+when given as the <i>random-state</i> <i>argument</i> to the <i>function</i> <b>random</b>, 
+assuming equivalent <i>limit</i> <i>arguments</i> in each case.
+</p>
+<p>(Note that since C has been processed by the <i>file compiler</i>,
+it cannot be used directly as an <i>argument</i> to <b>random</b>
+because <b>random</b> would perform a side effect.)
+</p>
+</dd>
+<dt><b>cons</b></dt>
+<dd><p>Two <i>conses</i>, S and C, are <i>similar</i> if
+    the <i>car</i>_2 of S is <i>similar</i> to the <i>car</i>_2 of C,
+and the <i>cdr</i>_2 of S is <i>similar</i> to the <i>cdr</i>_2 of C.
+</p>
+</dd>
+<dt><b>array</b></dt>
+<dd><p>Two one-dimensional <i>arrays</i>, S and C, are <i>similar</i> if
+     the <i>length</i> of S is <i>similar</i> to the <i>length</i> of C,
+     the <i>actual array element type</i> of S is <i>similar</i> to
+     the <i>actual array element type</i> of C,
+ and each <i>active</i> <i>element</i> of S is <i>similar</i> to
+      the corresponding <i>element</i> of C.
+</p>
+<p>Two <i>arrays</i> of <i>rank</i> other than one, S and C, are <i>similar</i> if
+     the <i>rank</i> of S is <i>similar</i> to the <i>rank</i> of C,
+     each <i>dimension</i>_1 of S is <i>similar</i> to 
+      the corresponding <i>dimension</i>_1 of C,
+     the <i>actual array element type</i> of S is <i>similar</i> to
+     the <i>actual array element type</i> of C,
+ and each <i>element</i> of S is <i>similar</i> to
+      the corresponding <i>element</i> of C.
+</p>
+<p>In addition,
+if S is a <i>simple array</i>, then C must also be a <i>simple array</i>.
+If S is a <i>displaced array</i>,
+       has a <i>fill pointer</i>,
+    or is <i>actually adjustable</i>, 
+C is permitted to lack any or all of these qualities.
+</p>
+</dd>
+<dt><b>hash-table</b></dt>
+<dd><p>Two <i>hash tables</i> S and C are <i>similar</i> if they meet the following
+three requirements:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>They both have the same test 
+ 	    (<i>e.g.</i>, they are both <b>eql</b> <i>hash tables</i>).
+</p>
+</dd>
+<dt>2.</dt>
+<dd><p>There is a unique one-to-one correspondence between the keys of
+           the two <i>hash tables</i>, such that the corresponding keys are 
+	   <i>similar</i>.
+</p>
+</dd>
+<dt>3.</dt>
+<dd><p>For all keys, the values associated with two corresponding keys
+           are <i>similar</i>.
+</p></dd>
+</dl>
+
+<p>If there is more than one possible one-to-one correspondence between
+the keys of S and C, the consequences are unspecified.  
+A <i>conforming program</i> cannot use a table such as S as an
+<i>externalizable constant</i>.
+</p>
+</dd>
+<dt><b>pathname</b></dt>
+<dd><p>Two <i>pathnames</i> S and C are <i>similar</i> if all corresponding 
+<i>pathname components</i> are <i>similar</i>.
+</p>
+</dd>
+<dt><b>function</b></dt>
+<dd>
+<p><i>Functions</i> are not <i>externalizable objects</i>.
+</p>
+</dd>
+<dt><b>structure-object</b> and <b>standard-object</b></dt>
+<dd>
+<p>A general-purpose concept of <i>similarity</i> does not exist for <i>structures</i>
+and <i>standard objects</i>.
+However, a <i>conforming program</i> is permitted to define a <b>make-load-form</b>
+<i>method</i> for any <i>class</i> K defined by that <i>program</i> that is
+a <i>subclass</i> of either <b>structure-object</b> or <b>standard-object</b>.
+The effect of such a <i>method</i> is to define that an <i>object</i> S of <i>type</i> K
+in <i>source code</i> is <i>similar</i> to an <i>object</i> C of <i>type</i> K
+in <i>compiled code</i> if C was constructed from <i>code</i> produced by 
+calling <b>make-load-form</b> on S.
+</p>
+</dd>
+</dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Extensions-to-Similarity-Rules.html#Extensions-to-Similarity-Rules" accesskey="n" rel="next">Extensions to Similarity Rules</a>, Previous: <a href="Similarity-of-Aggregate-Objects.html#Similarity-of-Aggregate-Objects" accesskey="p" rel="prev">Similarity of Aggregate Objects</a>, Up: <a href="Literal-Objects-in-Compiled-Files.html#Literal-Objects-in-Compiled-Files" accesskey="u" rel="up">Literal Objects in Compiled Files</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

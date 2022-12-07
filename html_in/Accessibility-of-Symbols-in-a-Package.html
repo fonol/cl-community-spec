@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Accessibility of Symbols in a Package (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Accessibility of Symbols in a Package (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Accessibility of Symbols in a Package (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Introduction-to-Packages.html#Introduction-to-Packages" rel="up" title="Introduction to Packages">
+<link href="Locating-a-Symbol-in-a-Package.html#Locating-a-Symbol-in-a-Package" rel="next" title="Locating a Symbol in a Package">
+<link href="Package-Inheritance.html#Package-Inheritance" rel="prev" title="Package Inheritance">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Accessibility-of-Symbols-in-a-Package"></a>
+<div class="header">
+<p>
+Next: <a href="Locating-a-Symbol-in-a-Package.html#Locating-a-Symbol-in-a-Package" accesskey="n" rel="next">Locating a Symbol in a Package</a>, Previous: <a href="Package-Inheritance.html#Package-Inheritance" accesskey="p" rel="prev">Package Inheritance</a>, Up: <a href="Introduction-to-Packages.html#Introduction-to-Packages" accesskey="u" rel="up">Introduction to Packages</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Accessibility-of-Symbols-in-a-Package-1"></a>
+<h4 class="subsubsection">11.1.1.5 Accessibility of Symbols in a Package</h4>
+
+<p>A <i>symbol</i> becomes <i>accessible</i>
+<a name="index-accessible"></a>
+ in a <i>package</i> 
+    if that is its <i>home package</i> when it is created,
+ or if it is <i>imported</i> into that <i>package</i>,
+ or by inheritance via <b>use-package</b>.
+</p>
+<p>If a <i>symbol</i> is <i>accessible</i> in a <i>package</i>,
+it can be referred to when using the <i>Lisp reader</i>
+without a <i>package prefix</i> when that <i>package</i> is the <i>current package</i>,
+regardless of whether it is <i>present</i> or inherited.
+</p>
+<p><i>Symbols</i> from one <i>package</i> can be made <i>accessible</i> 
+in another <i>package</i> in two ways.
+</p>
+<dl compact="compact">
+<dt>&ndash;</dt>
+<dd><p>Any individual <i>symbol</i> can be added to a <i>package</i> by use
+of <b>import</b>.  After the call to <b>import</b> the
+<i>symbol</i> is <i>present</i> in the importing <i>package</i>.
+The status of the <i>symbol</i> in the <i>package</i> 
+it came from (if any) is unchanged, and the <i>home package</i> for
+this <i>symbol</i> is unchanged.
+Once <i>imported</i>, a <i>symbol</i> is <i>present</i> in the
+importing <i>package</i>
+and can be removed only by calling <b>unintern</b>.
+</p>
+<p>A <i>symbol</i> is <i>shadowed</i>_3 by another <i>symbol</i> 
+in some <i>package</i> if the first <i>symbol</i> would be <i>accessible</i>
+by inheritance if not for the presence of the second <i>symbol</i>.
+See <b>shadowing-import</b>.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>The second mechanism for making <i>symbols</i> from one <i>package</i>
+<i>accessible</i> in another is provided by <b>use-package</b>.  
+All of the <i>external symbols</i> of the used <i>package</i> are inherited
+by the using <i>package</i>.
+The <i>function</i> <b>unuse-package</b> undoes the effects of a previous <b>use-package</b>.  
+</p></dd>
+</dl>
+
+
+
+
+</body>
+</html>

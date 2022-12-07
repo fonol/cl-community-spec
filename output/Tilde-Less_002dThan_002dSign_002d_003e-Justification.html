@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Tilde Less-Than-Sign-&gt; Justification (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Layout-Control.html#FORMAT-Layout-Control" rel="up" title="FORMAT Layout Control">
+<link href="Tilde-Greater_002dThan_002dSign_002d_003e-End-of-Justification.html#Tilde-Greater_002dThan_002dSign_002d_003e-End-of-Justification" rel="next" title="Tilde Greater-Than-Sign-&gt; End of Justification">
+<link href="Tilde-T_002d_003e-Tabulate.html#Tilde-T_002d_003e-Tabulate" rel="prev" title="Tilde T-&gt; Tabulate">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Tilde-T_002d_003e-Tabulate.html#Tilde-T_002d_003e-Tabulate" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Tilde T-&gt; Tabulate
+                            </a>
+                            <a href="FORMAT-Layout-Control.html#FORMAT-Layout-Control.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                FORMAT Layout Control
+                            </a>
+                            <a href="Tilde-Greater_002dThan_002dSign_002d_003e-End-of-Justification.html#Tilde-Greater_002dThan_002dSign_002d_003e-End-of-Justification.html" class="nav-btn nav__next ">
+                                Tilde Greater-Than-Sign-&gt; End of Justification
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Tilde-Less_002dThan_002dSign_002d_003e-Justification"></a>
+<a name="Tilde-Less_002dThan_002dSign_003a-Justification"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Tilde Less-Than-Sign: Justification</h4>
+
+<p><tt>~<i>mincol</i>,<i>colinc</i>,<i>minpad</i>,<i>padchar</i>&lt;<i>str</i>~&gt;</tt>
+</p>
+<p>This justifies the text produced by processing <i>str</i>
+within a field at least <i>mincol</i> columns wide.  <i>str</i>
+may be divided up into segments with <tt>~;</tt>, in which case the
+spacing is evenly divided between the text segments.
+</p>
+<p>With no modifiers, the leftmost text segment is left justified in the
+field, and the rightmost text segment is right justified.  If there is
+only one text element, as a special case, it is right justified.
+The <tt>:</tt> modifier causes                                            
+spacing to be introduced before the first text segment;  the 
+<tt>@</tt> modifier causes spacing to be added after the last.
+The <i>minpad</i> parameter (default <tt>0</tt>) is the minimum number of
+padding characters to be output between each segment.
+The padding character is supplied by <i>padchar</i>,
+which defaults to the space character.
+If the total width needed to satisfy these constraints is greater
+than <i>mincol</i>, then the width used is <i>mincol</i>+<i>k</i>*<i>colinc</i>
+for the smallest possible non-negative integer value <i>k</i>.
+<i>colinc</i> defaults to <tt>1</tt>, and <i>mincol</i> defaults to <tt>0</tt>.
+</p>
+<p>Note that <i>str</i> may include <b>format</b> directives.
+All the clauses in <i>str</i> are processed in order;
+it is the resulting pieces of text that are justified.
+</p>
+<p>The <tt>~<tt>^</tt> </tt> directive may be used to terminate processing of the
+clauses prematurely, in which case only the completely processed clauses
+are justified.
+</p>
+<p>If the first clause of a <tt>~&lt;</tt> 
+is terminated with <tt>~:;</tt> instead of
+<tt>~;</tt>, then it is used in a special way.  All of the clauses are
+processed (subject to <tt>~<tt>^</tt> </tt>, of course), but the 
+first one is not used
+in performing the spacing and padding.  When the padded result has been
+determined, then if it will fit on the current line of output, it is
+output, and the text for the first clause is discarded.  If, however, the
+padded text will not fit on the current line, then the text segment for
+the first clause is output before the padded text.  The first clause
+ought to contain a newline (such as a <tt>~%</tt> directive).  The first
+clause is always processed, and so any arguments it refers to will be
+used; the decision is whether to use the resulting segment of text, not
+whether to process the first clause.  If the <tt>~:;</tt> has a prefix
+parameter <i>n</i>, then the padded text must fit on the current line with
+<i>n</i> character positions to spare to avoid outputting the first clause&rsquo;s
+text.  For example, the control string
+</p>
+<div class="example">
+<pre class="example"><code> &quot;~
+</code>
+</pre></div>
+
+<p>can be used to print a list of items separated by commas without
+breaking items over line boundaries, beginning each line with
+<tt>;; </tt>.  The prefix parameter 
+<tt>1</tt> in <tt>~1:;</tt> accounts for the width of the
+comma that will follow the justified item if it is not the last
+element in the list, or the period 
+if it is.  If <tt>~:;</tt> has a second
+prefix parameter, then it is used as the width of the line,
+thus overriding the natural line width of the output stream.  To make
+the preceding example use a line width of 50, one would write
+</p>
+<div class="example">
+<pre class="example"><code> &quot;~
+</code>
+</pre></div>
+
+<p>If the second argument is not supplied, then <b>format</b> uses the
+line width of the <i>destination</i> output stream.
+If this cannot be determined (for example, when producing a 
+<i>string</i> result), then <b>format</b> uses <tt>72</tt> as the line length.
+</p>
+<p>See also <a href="Tilde-Less_002dThan_002dSign_002d_003e-Logical-Block.html#Tilde-Less_002dThan_002dSign_002d_003e-Logical-Block">Tilde Less-Than-Sign-&gt; Logical Block</a>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

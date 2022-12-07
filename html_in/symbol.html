@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>symbol (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="symbol (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="symbol (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Symbols-Dictionary.html#Symbols-Dictionary" rel="up" title="Symbols Dictionary">
+<link href="keyword.html#keyword" rel="next" title="keyword">
+<link href="Symbols-Dictionary.html#Symbols-Dictionary" rel="prev" title="Symbols Dictionary">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="symbol"></a>
+<div class="header">
+<p>
+Next: <a href="keyword.html#keyword" accesskey="n" rel="next">keyword</a>, Previous: <a href="Symbols-Dictionary.html#Symbols-Dictionary" accesskey="p" rel="prev">Symbols Dictionary</a>, Up: <a href="Symbols-Dictionary.html#Symbols-Dictionary" accesskey="u" rel="up">Symbols Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="symbol-_005bSystem-Class_005d"></a>
+<h4 class="subsection">10.2.1 symbol                                                       [System Class]</h4>
+
+<a name="Class-Precedence-List_003a_003a-31"></a>
+<h4 class="subsubheading">Class Precedence List::</h4>
+<p><b>symbol</b>,
+<b>t</b>
+</p>
+<a name="Description_003a_003a-217"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><i>Symbols</i> are used for their <i>object</i> identity to name various entities
+in <span class="roman">Common Lisp</span>, including (but not limited to) linguistic entities such as
+<i>variables</i> and <i>functions</i>.
+</p>
+<p><i>Symbols</i> can be collected together into <i>packages</i>.
+A <i>symbol</i> is said to be <i>interned</i> in a <i>package</i> 
+if it is <i>accessible</i> in that <i>package</i>;
+the same <i>symbol</i> can be <i>interned</i> in more than one <i>package</i>.
+If a <i>symbol</i> is not <i>interned</i> in any <i>package</i>, 
+it is called <i>uninterned</i>.
+</p>
+<p>An <i>interned</i> <i>symbol</i> is uniquely identifiable by its <i>name</i> from 
+any <i>package</i> in which it is <i>accessible</i>.
+</p>
+<p><i>Symbols</i> have the following attributes. For historically reasons,
+these are sometimes referred to as <i>cells</i>, although the actual
+internal representation of <i>symbols</i> and their attributes is
+<i>implementation-dependent</i>.
+</p>
+<dl compact="compact">
+<dt><b>Name</b></dt>
+<dd><p>The <i>name</i> of a <i>symbol</i> is a <i>string</i> used to identify the <i>symbol</i>.
+Every <i>symbol</i> has a <i>name</i>, 
+</p>
+<p>and the consequences are undefined if that <i>name</i> is altered.  
+</p>
+<p>The <i>name</i> is used as part of the external, printed representation of
+the <i>symbol</i>; see <a href="Character-Syntax.html#Character-Syntax">Character Syntax</a>.
+The <i>function</i> <b>symbol-name</b> returns the <i>name</i> of a given <i>symbol</i>.
+</p>
+<p>A <i>symbol</i> may have any <i>character</i> in its <i>name</i>.
+</p>
+</dd>
+<dt><b>Package</b></dt>
+<dd><p>The <i>object</i> in this <i>cell</i> is called the <i>home package</i> 
+of the <i>symbol</i>.  If the <i>home package</i> is <b>nil</b>, the <i>symbol</i>
+is sometimes said to have no <i>home package</i>.
+</p>
+<p>When a <i>symbol</i> is first created, it has no <i>home package</i>.
+When it is first <i>interned</i>, the <i>package</i> in which it is
+initially <i>interned</i> becomes its <i>home package</i>.
+The <i>home package</i> of a <i>symbol</i> can be <i>accessed</i>
+by using the <i>function</i> <b>symbol-package</b>.
+</p>
+<p>If a <i>symbol</i> is <i>uninterned</i> from the <i>package</i> 
+which is its <i>home package</i>, its <i>home package</i> is set to <b>nil</b>.
+Depending on whether there is another <i>package</i> in which the <i>symbol</i>
+is <i>interned</i>, the symbol might or might not really be an <i>uninterned</i> <i>symbol</i>.
+A <i>symbol</i> with no <i>home package</i> is therefore called 
+<i>apparently uninterned</i>.
+</p>
+<p>The consequences are undefined if an attempt is made to alter the <i>home package</i>
+of a <i>symbol</i> 
+external
+in the <tt>COMMON-LISP</tt> <i>package</i> or the <tt>KEYWORD</tt> <i>package</i>.
+</p>
+</dd>
+<dt><b>Property list</b></dt>
+<dd><p>The <i>property list</i> of a <i>symbol</i> provides a mechanism for
+associating named attributes with that <i>symbol</i>.
+The operations for adding and removing entries are <i>destructive</i>
+to the <i>property list</i>.  <span class="roman">Common Lisp</span> provides <i>operators</i> both for
+direct manipulation of <i>property list</i> <i>objects</i> 
+ (<i>e.g.</i>, see <b>getf</b>, <b>remf</b>, and <b>symbol-plist</b>)
+and for implicit manipulation of a <i>symbol</i>&rsquo;s <i>property list</i> 
+by reference to the <i>symbol</i> 
+ (<i>e.g.</i>, see <b>get</b> and <b>remprop</b>).
+The <i>property list</i> associated with a <i>fresh</i> <i>symbol</i> is 
+initially <i>null</i>.
+</p>
+</dd>
+<dt><b>Value</b></dt>
+<dd><p>If a symbol has a value attribute, it is said to be <i>bound</i>,
+and that fact can be detected by the <i>function</i> <b>boundp</b>.
+The <i>object</i> contained in the <i>value cell</i> of a <i>bound</i> <i>symbol</i>
+is the <i>value</i> of the <i>global variable</i> named by that <i>symbol</i>, 
+and can be <i>accessed</i> by the <i>function</i> <b>symbol-value</b>.
+A <i>symbol</i> can be made to be <i>unbound</i> by the <i>function</i> <b>makunbound</b>.
+</p>
+<p>The consequences are undefined if an attempt is made to change the <i>value</i>
+of a <i>symbol</i> that names a <i>constant variable</i>, or to make such a 
+<i>symbol</i> be <i>unbound</i>.
+</p>
+</dd>
+<dt><b>Function</b></dt>
+<dd><p>If a symbol has a function attribute, it is said to be <i>fbound</i>,
+and that fact can be detected by the <i>function</i> <b>fboundp</b>.
+If the <i>symbol</i> is the <i>name</i> of a <i>function</i> in the <i>global environment</i>,
+the <i>function cell</i> contains the <i>function</i>, 
+and can be <i>accessed</i> by the <i>function</i> <b>symbol-function</b>.
+If the <i>symbol</i> is the <i>name</i> of either
+   a <i>macro</i> in the <i>global environment</i> (see <b>macro-function</b>)
+or a <i>special operator</i> (see <b>special-operator-p</b>),
+the <i>symbol</i> is <i>fbound</i>, 
+and can be <i>accessed</i> by the <i>function</i> <b>symbol-function</b>,
+but the <i>object</i> which the <i>function cell</i>
+contains is of <i>implementation-dependent</i> <i>type</i> and purpose.
+A <i>symbol</i> can be made to be <i>funbound</i> by the <i>function</i> <b>fmakunbound</b>.
+</p>
+<p>The consequences are undefined if an attempt is made to change the <i>functional value</i>
+of a <i>symbol</i> that names a <i>special form</i>.
+</p>
+</dd>
+</dl>
+
+<p>Operations on a <i>symbol</i>&rsquo;s <i>value cell</i> and <i>function cell</i> are
+sometimes described in terms of their effect on the <i>symbol</i> itself, but 
+the user should keep in mind that there is an intimate relationship between the
+contents of those <i>cells</i> and the <i>global variable</i> or 
+global <i>function</i> definition, respectively.
+</p>
+<p><i>Symbols</i> are used as identifiers for <i>lexical variables</i> and 
+lexical <i>function</i> definitions, but in that role, only their <i>object</i>
+identity is significant.  <span class="roman">Common Lisp</span> provides no operation on a <i>symbol</i> that
+can have any effect on a <i>lexical variable</i> or 
+on a lexical <i>function</i> definition.
+</p>
+<a name="See-Also_003a_003a-191"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Symbols-as-Tokens.html#Symbols-as-Tokens">Symbols as Tokens</a>,
+<a href="Potential-Numbers-as-Tokens.html#Potential-Numbers-as-Tokens">Potential Numbers as Tokens</a>,
+<a href="Printing-Symbols.html#Printing-Symbols">Printing Symbols</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="keyword.html#keyword" accesskey="n" rel="next">keyword</a>, Previous: <a href="Symbols-Dictionary.html#Symbols-Dictionary" accesskey="p" rel="prev">Symbols Dictionary</a>, Up: <a href="Symbols-Dictionary.html#Symbols-Dictionary" accesskey="u" rel="up">Symbols Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Safe and Unsafe Calls (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Safe and Unsafe Calls (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Safe and Unsafe Calls (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Argument-Mismatch-Detection.html#Argument-Mismatch-Detection" rel="up" title="Argument Mismatch Detection">
+<link href="Error-Detection-Time-in-Safe-Calls.html#Error-Detection-Time-in-Safe-Calls" rel="next" title="Error Detection Time in Safe Calls">
+<link href="Argument-Mismatch-Detection.html#Argument-Mismatch-Detection" rel="prev" title="Argument Mismatch Detection">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Safe-and-Unsafe-Calls"></a>
+<div class="header">
+<p>
+Next: <a href="Error-Detection-Time-in-Safe-Calls.html#Error-Detection-Time-in-Safe-Calls" accesskey="n" rel="next">Error Detection Time in Safe Calls</a>, Previous: <a href="Argument-Mismatch-Detection.html#Argument-Mismatch-Detection" accesskey="p" rel="prev">Argument Mismatch Detection</a>, Up: <a href="Argument-Mismatch-Detection.html#Argument-Mismatch-Detection" accesskey="u" rel="up">Argument Mismatch Detection</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Safe-and-Unsafe-Calls-1"></a>
+<h4 class="subsubsection">3.5.1.1 Safe and Unsafe Calls</h4>
+
+<p>A <i>call</i> is a <i>safe call</i>
+<a name="index-safe-call"></a>
+ if each of the following is
+either <i>safe</i> <i>code</i> or <i>system code</i> (other than
+<i>system code</i> that results from <i>macro expansion</i> of 
+<i>programmer code</i>):
+</p><dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>the <i>call</i>.
+</p></dd>
+<dt><tt>*</tt></dt>
+<dd><p>the definition of the <i>function</i> being <i>called</i>.
+</p></dd>
+<dt><tt>*</tt></dt>
+<dd><p>the point of <i>functional evaluation</i> 
+</p></dd>
+</dl>
+
+<p>The following special cases require some elaboration:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>If the <i>function</i> being called is a <i>generic function</i>,
+it is considered <i>safe</i> if all of the following are
+</p>
+<p><i>safe code</i> or <i>system code</i>:
+</p>
+<dl compact="compact">
+<dt>&ndash;</dt>
+<dd><p>its definition (if it was defined explicitly).
+</p></dd>
+<dt>&ndash;</dt>
+<dd><p>the <i>method</i> definitions for all <i>applicable</i> <i>methods</i>.
+</p></dd>
+<dt>&ndash;</dt>
+<dd><p>the definition of its <i>method combination</i>.
+</p></dd>
+</dl>
+
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>For the form <tt>(coerce <i>x</i> 'function)</tt>, 
+where <i>x</i> is a <i>lambda expression</i>,
+the value of the <i>optimize quality</i> <b>safety</b>
+in the global environment at the time the <b>coerce</b>
+is <i>executed</i> applies to the resulting <i>function</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>For a call to the <i>function</i> <b>ensure-generic-function</b>, the value of the
+<i>optimize quality</i> <b>safety</b> in the <i>environment</i>
+<i>object</i> passed as the <tt>:environment</tt> <i>argument</i> applies 
+to the resulting <i>generic function</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>For a call to <b>compile</b> with a <i>lambda expression</i> as the
+<i>argument</i>, the value of the <i>optimize quality</i> <b>safety</b>
+in the <i>global environment</i> at the time <b>compile</b> is <i>called</i>
+applies to the resulting <i>compiled function</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>For a call to <b>compile</b> with only one argument, if the original definition
+of the <i>function</i> was <i>safe</i>, then the resulting <i>compiled function</i>
+must also be <i>safe</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>A <i>call</i> to a <i>method</i> by <b>call-next-method</b> must be 
+considered <i>safe</i> if each of the following is 
+</p>
+<p><i>safe code</i> or <i>system code</i>:
+</p>
+<dl compact="compact">
+<dt>&ndash;</dt>
+<dd><p>the definition of the <i>generic function</i> (if it was defined explicitly).
+</p></dd>
+<dt>&ndash;</dt>
+<dd><p>the <i>method</i> definitions for all <i>applicable</i> <i>methods</i>.
+</p></dd>
+<dt>&ndash;</dt>
+<dd><p>the definition of the <i>method combination</i>.
+</p></dd>
+<dt>&ndash;</dt>
+<dd><p>the point of entry into the body of the <i>method defining form</i>,
+	      where the <i>binding</i> of <b>call-next-method</b> is established.
+</p></dd>
+<dt>&ndash;</dt>
+<dd><p>the point of <i>functional evaluation</i> of the name <b>call-next-method</b>.
+</p></dd>
+</dl>
+
+</dd>
+</dl>
+
+<p>An <i>unsafe call</i>
+<a name="index-unsafe-call"></a>
+ is a <i>call</i> that is not a <i>safe call</i>.
+</p>
+<p>The informal intent is that the <i>programmer</i> can rely on a <i>call</i>
+to be <i>safe</i>, even when <i>system code</i> is involved, if all reasonable
+steps have been taken to ensure that the <i>call</i> is <i>safe</i>.
+For example, if a <i>programmer</i> calls <b>mapcar</b> from <i>safe</i>
+<i>code</i> and supplies a <i>function</i> that was <i>compiled</i> 
+as <i>safe</i>, the <i>implementation</i> is required to ensure that
+<b>mapcar</b> makes a <i>safe call</i> as well.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Error-Detection-Time-in-Safe-Calls.html#Error-Detection-Time-in-Safe-Calls" accesskey="n" rel="next">Error Detection Time in Safe Calls</a>, Previous: <a href="Argument-Mismatch-Detection.html#Argument-Mismatch-Detection" accesskey="p" rel="prev">Argument Mismatch Detection</a>, Up: <a href="Argument-Mismatch-Detection.html#Argument-Mismatch-Detection" accesskey="u" rel="up">Argument Mismatch Detection</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

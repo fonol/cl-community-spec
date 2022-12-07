@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>The for-as-package subclause (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="The for-as-package subclause (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="The for-as-package subclause (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" rel="up" title="Variable Initialization and Stepping Clauses">
+<link href="Examples-of-for_002das_002dpackage-subclause.html#Examples-of-for_002das_002dpackage-subclause" rel="next" title="Examples of for-as-package subclause">
+<link href="The-for_002das_002dhash-subclause.html#The-for_002das_002dhash-subclause" rel="prev" title="The for-as-hash subclause">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="The-for_002das_002dpackage-subclause"></a>
+<div class="header">
+<p>
+Next: <a href="Examples-of-for_002das_002dpackage-subclause.html#Examples-of-for_002das_002dpackage-subclause" accesskey="n" rel="next">Examples of for-as-package subclause</a>, Previous: <a href="The-for_002das_002dhash-subclause.html#The-for_002das_002dhash-subclause" accesskey="p" rel="prev">The for-as-hash subclause</a>, Up: <a href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" accesskey="u" rel="up">Variable Initialization and Stepping Clauses</a> &nbsp; </p>
+</div>
+<hr>
+<a name="The-for_002das_002dpackage-subclause-1"></a>
+<h4 class="subsubsection">6.1.2.13 The for-as-package subclause</h4>
+
+<p>In the <i>for-as-package</i> subclause
+the <tt>for</tt> 
+or <tt>as</tt> construct                    
+iterates over the <i>symbols</i> in a <i>package</i>.
+In this syntax, a compound preposition is used to designate access to a
+<i>package</i>.
+The variable <i>var</i> takes on the value of each <i>symbol</i>
+in the supplied <i>package</i>.  
+ The following <i>loop keywords</i> serve as valid prepositions within this syntax:
+</p>
+<dl compact="compact">
+<dt><tt>being</tt></dt>
+<dd><p>The keyword <tt>being</tt> introduces either the Loop schema 
+<tt>symbol</tt>, <tt>present-symbol</tt>,  or <tt>external-symbol</tt>.
+</p>
+</dd>
+<dt><tt>each</tt>, <tt>the</tt></dt>
+<dd><p>The <i>loop keyword</i> <tt>each</tt>
+follows the <i>loop keyword</i> <tt>being</tt> when <tt>symbol</tt>, 
+<tt>present-symbol</tt>, or <tt>external-symbol</tt> is used.  
+The <i>loop keyword</i> <tt>the</tt> is used with <tt>symbols</tt>, 
+<tt>present-symbols</tt>, and <tt>external-symbols</tt> only for ease of reading.
+This agreement isn&rsquo;t required.
+</p>
+</dd>
+<dt><tt>present-symbol</tt>, <tt>present-symbols</tt></dt>
+<dd><p>These Loop schemas iterate over the <i>symbols</i> 
+</p>
+<p>that are <i>present</i> in a <i>package</i>.
+</p>
+<p>The <i>package</i> to be iterated over is supplied in the same way
+that <i>package</i> arguments to <b>find-package</b> are supplied.  
+If the <i>package</i> for the iteration is not supplied, 
+the <i>current package</i> is used.  
+If a <i>package</i> that does not exist is supplied, 
+an error of <i>type</i> <b>package-error</b> is signaled.
+</p>
+</dd>
+<dt><tt>symbol</tt>, <tt>symbols</tt></dt>
+<dd><p>These Loop schemas iterate over <i>symbols</i> that are
+<i>accessible</i> in a given <i>package</i>.  
+The <i>package</i> to be iterated over is supplied in the same way
+that <i>package</i> arguments to <b>find-package</b> are supplied.
+If the <i>package</i> for the iteration is not supplied, 
+the <i>current package</i> is used.
+If a <i>package</i> that does not exist is supplied, 
+an error of <i>type</i> <b>package-error</b> is signaled.
+</p>
+</dd>
+<dt><tt>external-symbol</tt>, <tt>external-symbols</tt></dt>
+<dd><p>These Loop schemas iterate over the <i>external symbols</i> of a <i>package</i>.
+The <i>package</i> to be iterated over is supplied in the same way
+that <i>package</i> arguments to <b>find-package</b> are supplied.
+If the <i>package</i> for the iteration is not supplied, 
+the <i>current package</i> is used.
+If a <i>package</i> that does not exist is supplied, 
+an error of <i>type</i> <b>package-error</b> is signaled.
+</p>
+</dd>
+<dt><tt>in</tt>, <tt>of</tt></dt>
+<dd><p>These loop prepositions introduce <i>package</i>.
+</p>
+</dd>
+</dl>
+
+<p>In effect 
+</p>
+<p><tt>being</tt>
+{each | <tt>the</tt>}
+{symbol          |
+       <tt>symbols</tt>         |
+       <tt>present-symbol</tt>  |
+       <tt>present-symbols</tt> |
+       <tt>external-symbol</tt> |
+       <tt>external-symbols</tt>}
+{in | <tt>of</tt>}
+</p>
+<p>is a compound preposition.
+</p>
+<p>Iteration stops when there are no more <i>symbols</i> to be referenced 
+in the supplied <i>package</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Examples-of-for_002das_002dpackage-subclause.html#Examples-of-for_002das_002dpackage-subclause" accesskey="n" rel="next">Examples of for-as-package subclause</a>, Previous: <a href="The-for_002das_002dhash-subclause.html#The-for_002das_002dhash-subclause" accesskey="p" rel="prev">The for-as-hash subclause</a>, Up: <a href="Variable-Initialization-and-Stepping-Clauses.html#Variable-Initialization-and-Stepping-Clauses" accesskey="u" rel="up">Variable Initialization and Stepping Clauses</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

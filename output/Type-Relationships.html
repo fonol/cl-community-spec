@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Type Relationships (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Types.html#Types" rel="up" title="Types">
+<link href="Type-Specifiers.html#Type-Specifiers" rel="next" title="Type Specifiers">
+<link href="Data-Type-Definition.html#Data-Type-Definition" rel="prev" title="Data Type Definition">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Data-Type-Definition.html#Data-Type-Definition" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Data Type Definition
+                            </a>
+                            <a href="Types.html#Types.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Types
+                            </a>
+                            <a href="Type-Specifiers.html#Type-Specifiers.html" class="nav-btn nav__next ">
+                                Type Specifiers
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Type-Relationships"></a>
+<a name="Type-Relationships-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Type Relationships</h4>
+
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>The <i>types</i> <b>cons</b>, <b>symbol</b>, <b>array</b>, <b>number</b>,
+<b>character</b>, <b>hash-table</b>, 
+</p>
+<p><b>function</b>,
+</p>
+<p><b>readtable</b>, <b>package</b>, <b>pathname</b>, <b>stream</b>, 
+<b>random-state</b>, <b>condition</b>, <b>restart</b>,
+and any single other <i>type</i> created by <b>defstruct</b>,
+</p>
+<p><b>define-condition</b>,
+</p>
+<p>or <b>defclass</b> are <i>pairwise</i> <i>disjoint</i>, 
+except for type relations explicitly established by specifying 
+<i>superclasses</i> in <b>defclass</b> 
+</p>
+<p>or <b>define-condition</b>
+</p>
+<p>or the <tt>:include</tt> option of <b>destruct</b>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Any two <i>types</i> created by <b>defstruct</b> are 
+<i>disjoint</i> unless
+one is a <i>supertype</i> of the other by virtue of
+the <b>defstruct</b> <tt>:include</tt> option.
+</p>
+<p>[Editorial Note by KMP: The comments in the source say gray suggested some change
+from &ldquo;common superclass&rdquo; to &ldquo;common subclass&rdquo; in the following, but the
+result looks suspicious to me.]
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Any two <i>distinct</i> <i>classes</i> created by <b>defclass</b> 
+or <b>define-condition</b>
+are <i>disjoint</i> unless they have a common <i>subclass</i> or
+one <i>class</i> is a <i>subclass</i> of the other.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>An implementation may be extended to add other <i>subtype</i>
+relationships between the specified <i>types</i>, as long as they do
+not violate the type relationships and disjointness requirements
+specified here.  An implementation may define additional <i>types</i>
+that are <i>subtypes</i> or <i>supertypes</i> of any
+specified <i>types</i>, as long as each additional <i>type</i> is
+a <i>subtype</i> of <i>type</i> <b>t</b> and a <i>supertype</i> of <i>type</i> <b>nil</b> and the disjointness requirements
+are not violated.
+</p>
+<p>At the discretion of the implementation, either <b>standard-object</b>
+or <b>structure-object</b> might appear in any class precedence list
+for a <i>system class</i> that does not already specify either 
+<b>standard-object</b> or <b>structure-object</b>.  If it does,
+it must precede the <i>class</i> <b>t</b> and follow all other <i>standardized</i> <i>classes</i>.
+</p>
+</dd>
+</dl>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

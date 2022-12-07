@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>initialize-instance (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="class_002dname.html#class_002dname" rel="next" title="class-name">
+<link href="add_002dmethod.html#add_002dmethod" rel="prev" title="add-method">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="add_002dmethod.html#add_002dmethod" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                add-method
+                            </a>
+                            <a href="Objects-Dictionary.html#Objects-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Objects Dictionary
+                            </a>
+                            <a href="class_002dname.html#class_002dname.html" class="nav-btn nav__next ">
+                                class-name
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="initialize_002dinstance"></a>
+<a name="initialize_002dinstance-_005bStandard-Generic-Function_005d"></a>
+<div class="section top-most">
+<div class="node-type">Standard Generic Function</div>
+<h4 class="subsection">initialize-instance                             </h4>
+
+<a name="Syntax_003a_003a-33"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Syntax</h4>
+
+<p><code>initialize-instance</code>  <i>instance &amp;rest</i> initargs &amp;key &amp;allow-other-keys &rArr;  <i>instance</i>
+</p>
+<a name="Method-Signatures_003a_003a-19"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Method Signatures</h4>
+
+<p><code>initialize-instance</code>  <i><span class="roman">(</span><i>instance</i> <b>standard-object</b><span class="roman">)</span> &amp;rest</i> initargs
+</p>
+<a name="Arguments-and-Values_003a_003a-124"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>instance</i>&mdash;an <i>object</i>.
+</p>
+<p><i>initargs</i>&mdash;a <i>defaulted initialization argument list</i>.
+</p>
+<a name="Description_003a_003a-163"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Called by <b>make-instance</b> to initialize a newly created <i>instance</i>.
+The generic function is called with the new <i>instance</i> 
+and the <i>defaulted initialization argument list</i>.
+</p>
+<p>The system-supplied primary <i>method</i> on <b>initialize-instance</b>
+initializes the <i>slots</i> of the <i>instance</i> with values according 
+to the <i>initargs</i> and the <tt>:initform</tt> forms of the <i>slots</i>.
+It does this by calling the generic function <b>shared-initialize</b>
+with the following arguments: the <i>instance</i>, <b>t</b> (this indicates
+that all <i>slots</i> for which no initialization arguments are provided
+should be initialized according to their <tt>:initform</tt> forms), and
+the <i>initargs</i>.
+</p>
+<p>Programmers can define <i>methods</i> for <b>initialize-instance</b> to
+specify actions to be taken when an instance is initialized.  If only
+<i>after methods</i> are defined, they will be run after the
+system-supplied primary <i>method</i> for initialization and therefore will
+not interfere with the default behavior of <b>initialize-instance</b>.
+</p>
+<a name="See-Also_003a_003a-145"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="Shared_002dInitialize.html#Shared_002dInitialize">Shared-Initialize</a>
+,
+<a href="make_002dinstance.html#make_002dinstance">make-instance</a>
+,
+<a href="slot_002dboundp.html#slot_002dboundp">slot-boundp</a>
+,
+<a href="slot_002dmakunbound.html#slot_002dmakunbound">slot-makunbound</a>
+,
+<a href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization">Object Creation and Initialization</a>,
+<a href="Rules-for-Initialization-Arguments.html#Rules-for-Initialization-Arguments">Rules for Initialization Arguments</a>,
+<a href="Declaring-the-Validity-of-Initialization-Arguments.html#Declaring-the-Validity-of-Initialization-Arguments">Declaring the Validity of Initialization Arguments</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

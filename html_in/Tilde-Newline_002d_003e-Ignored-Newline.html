@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Tilde Newline-&gt; Ignored Newline (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Tilde Newline-&gt; Ignored Newline (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Tilde Newline-&gt; Ignored Newline (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Miscellaneous-Pseudo_002dOperations.html#FORMAT-Miscellaneous-Pseudo_002dOperations" rel="up" title="FORMAT Miscellaneous Pseudo-Operations">
+<link href="Additional-Information-about-FORMAT-Operations.html#Additional-Information-about-FORMAT-Operations" rel="next" title="Additional Information about FORMAT Operations">
+<link href="Tilde-Circumflex_002d_003e-Escape-Upward.html#Tilde-Circumflex_002d_003e-Escape-Upward" rel="prev" title="Tilde Circumflex-&gt; Escape Upward">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Tilde-Newline_002d_003e-Ignored-Newline"></a>
+<div class="header">
+<p>
+Previous: <a href="Tilde-Circumflex_002d_003e-Escape-Upward.html#Tilde-Circumflex_002d_003e-Escape-Upward" accesskey="p" rel="prev">Tilde Circumflex-&gt; Escape Upward</a>, Up: <a href="FORMAT-Miscellaneous-Pseudo_002dOperations.html#FORMAT-Miscellaneous-Pseudo_002dOperations" accesskey="u" rel="up">FORMAT Miscellaneous Pseudo-Operations</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Tilde-Newline_003a-Ignored-Newline"></a>
+<h4 class="subsubsection">22.3.9.3 Tilde Newline: Ignored Newline</h4>
+
+<p><i>Tilde</i> immediately followed by a <i>newline</i> ignores the <i>newline</i>
+and any following non-newline <i>whitespace</i>_1 characters.
+With a <tt>:</tt>,
+ the <i>newline</i> is ignored, 
+ but any following <i>whitespace</i>_1 is left in place.
+With an <tt>@</tt>,
+ the <i>newline</i> is left in place,
+ but any following <i>whitespace</i>_1 is ignored.
+For example:
+</p>
+<div class="example">
+<pre class="example"> (defun type-clash-error (fn nargs argnum right-type wrong-type)
+   (format *error-output*
+           &quot;~&amp;~S requires its ~:[~:R~;~*~]~ 
+           argument to be of type ~S,~
+           with an argument of type ~S.~
+           fn (eql nargs 1) argnum right-type wrong-type))
+ (type-clash-error 'aref nil 2 'integer 'vector)  prints:
+AREF requires its second argument to be of type INTEGER,
+but it was called with an argument of type VECTOR.
+NIL
+ (type-clash-error 'car 1 1 'list 'short-float)  prints:
+CAR requires its argument to be of type LIST,
+but it was called with an argument of type SHORT-FLOAT.
+NIL
+</pre></div>
+
+<p>Note that in this example newlines appear in the output only as specified
+by the <tt>~&amp;</tt> and <tt>~%</tt> directives; the 
+actual newline characters
+in the control string are suppressed because each is preceded by a tilde.
+</p>
+
+
+
+</body>
+</html>

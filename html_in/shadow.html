@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>shadow (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="shadow (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="shadow (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Packages-Dictionary.html#Packages-Dictionary" rel="up" title="Packages Dictionary">
+<link href="shadowing_002dimport.html#shadowing_002dimport" rel="next" title="shadowing-import">
+<link href="rename_002dpackage.html#rename_002dpackage" rel="prev" title="rename-package">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="shadow"></a>
+<div class="header">
+<p>
+Next: <a href="shadowing_002dimport.html#shadowing_002dimport" accesskey="n" rel="next">shadowing-import</a>, Previous: <a href="rename_002dpackage.html#rename_002dpackage" accesskey="p" rel="prev">rename-package</a>, Up: <a href="Packages-Dictionary.html#Packages-Dictionary" accesskey="u" rel="up">Packages Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="shadow-_005bFunction_005d"></a>
+<h4 class="subsection">11.2.9 shadow                                                           [Function]</h4>
+
+<p><code>shadow</code>  <i>symbol-names &amp;optional</i> package &rArr;  <i><b>t</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-181"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>symbol-names</i>&mdash;a <i>designator</i> for 
+		       a <i>list</i> of <i>string designators</i>.
+</p>
+<p><i>package</i>&mdash;a <i>package designator</i>.
+</p>
+<p>The default is the <i>current package</i>.
+</p>
+<a name="Description_003a_003a-245"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>shadow</b> assures that <i>symbols</i> with names given 
+by <i>symbol-names</i> are <i>present</i> 
+in
+the <i>package</i>.
+</p>
+<p>Specifically, <i>package</i> is searched for <i>symbols</i> 
+with the <i>names</i> supplied by <i>symbol-names</i>.
+</p>
+<p>For each such <i>name</i>, if a corresponding <i>symbol</i> 
+is not <i>present</i> in <i>package</i> (directly, not by inheritance), 
+then a corresponding <i>symbol</i> is created with that <i>name</i>,
+and inserted into <i>package</i> as an <i>internal symbol</i>.
+The corresponding <i>symbol</i>, whether pre-existing or newly created,
+is then added, if not already present, to the <i>shadowing symbols list</i>
+of <i>package</i>.
+</p>
+<a name="Examples_003a_003a-164"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (package-shadowing-symbols (make-package 'temp)) &rArr;  NIL
+ (find-symbol 'car 'temp) &rArr;  CAR, :INHERITED
+ (shadow 'car 'temp) &rArr;  T
+ (find-symbol 'car 'temp) &rArr;  TEMP::CAR, :INTERNAL
+ (package-shadowing-symbols 'temp) &rArr;  (TEMP::CAR)
+</pre></div>
+
+<div class="example">
+<pre class="example"> (make-package 'test-1) &rArr;  #&lt;PACKAGE &quot;TEST-1&quot;&gt;
+ (intern &quot;TEST&quot; (find-package 'test-1)) &rArr;  TEST-1::TEST, NIL
+ (shadow 'test-1::test (find-package 'test-1)) &rArr;  T
+ (shadow 'TEST (find-package 'test-1)) &rArr;  T
+ (assert (not (null (member 'test-1::test (package-shadowing-symbols
+                                            (find-package 'test-1))))))
+
+ (make-package 'test-2) &rArr;  #&lt;PACKAGE &quot;TEST-2&quot;&gt;
+ (intern &quot;TEST&quot; (find-package 'test-2)) &rArr;  TEST-2::TEST, NIL
+ (export 'test-2::test (find-package 'test-2)) &rArr;  T
+ (use-package 'test-2 (find-package 'test-1))    ;should not error
+
+</pre></div>
+
+<a name="Side-Effects_003a_003a-26"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p><b>shadow</b> changes the state of the package system in such a 
+way that the package consistency rules do not hold across the change.
+</p>
+<a name="Affected-By_003a_003a-47"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>Current state of the package system.
+</p>
+<a name="See-Also_003a_003a-217"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="package_002dshadowing_002dsymbols.html#package_002dshadowing_002dsymbols">package-shadowing-symbols</a>
+,
+<a href="Package-Concepts.html#Package-Concepts">Package Concepts</a>
+</p>
+<a name="Notes_003a_003a-129"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>If a <i>symbol</i> with a name in <i>symbol-names</i> already exists
+in <i>package</i>, but by inheritance, the inherited symbol becomes
+<i>shadowed</i>_3 by a newly created <i>internal symbol</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="shadowing_002dimport.html#shadowing_002dimport" accesskey="n" rel="next">shadowing-import</a>, Previous: <a href="rename_002dpackage.html#rename_002dpackage" accesskey="p" rel="prev">rename-package</a>, Up: <a href="Packages-Dictionary.html#Packages-Dictionary" accesskey="u" rel="up">Packages Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

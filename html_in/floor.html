@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>floor (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="floor (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="floor (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Numbers-Dictionary.html#Numbers-Dictionary" rel="up" title="Numbers Dictionary">
+<link href="sin.html#sin" rel="next" title="sin">
+<link href="zerop.html#zerop" rel="prev" title="zerop">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="floor"></a>
+<div class="header">
+<p>
+Next: <a href="sin.html#sin" accesskey="n" rel="next">sin</a>, Previous: <a href="zerop.html#zerop" accesskey="p" rel="prev">zerop</a>, Up: <a href="Numbers-Dictionary.html#Numbers-Dictionary" accesskey="u" rel="up">Numbers Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="floor_002c-ffloor_002c-ceiling_002c-fceiling_002c"></a>
+<h4 class="subsection">12.2.19 floor, ffloor, ceiling, fceiling,</h4>
+<a name="truncate_002c-ftruncate_002c-round_002c-fround"></a>
+<h4 class="subheading">truncate, ftruncate, round, fround</h4>
+<p align="right"><i>[Function]</i>
+</p>
+<p><code>floor</code>  <i>number &amp;optional</i> divisor &rArr;  <i>quotient, remainder</i>
+</p>
+<p><code>ffloor</code>  <i>number &amp;optional</i> divisor &rArr;  <i>quotient, remainder</i>
+</p>
+<p><code>ceiling</code>  <i>number &amp;optional</i> divisor &rArr;  <i>quotient, remainder</i>
+</p>
+<p><code>fceiling</code>  <i>number &amp;optional</i> divisor &rArr;  <i>quotient, remainder</i>
+</p>
+<p><code>truncate</code>  <i>number &amp;optional</i> divisor &rArr;  <i>quotient, remainder</i>
+</p>
+<p><code>ftruncate</code>  <i>number &amp;optional</i> divisor &rArr;  <i>quotient, remainder</i>
+</p>
+<p><code>round</code>  <i>number &amp;optional</i> divisor &rArr;  <i>quotient, remainder</i>
+</p>
+<p><code>fround</code>  <i>number &amp;optional</i> divisor &rArr;  <i>quotient, remainder</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-205"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>number</i>&mdash;a <i>real</i>.
+</p>
+<p><i>divisor</i>&mdash;a non-zero <i>real</i>.
+ The default is the <i>integer</i> <tt>1</tt>.
+</p>
+<p><i>quotient</i>&mdash;for <b>floor</b>, <b>ceiling</b>, 
+		       <b>truncate</b>, and <b>round</b>: an <i>integer</i>;
+		   for <b>ffloor</b>, <b>fceiling</b>, 
+		       <b>ftruncate</b>, and <b>fround</b>: a <i>float</i>.
+</p>
+<p><i>remainder</i>&mdash;a <i>real</i>.
+</p>
+<a name="Description_003a_003a-284"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>These functions divide <i>number</i> by <i>divisor</i>, 
+returning a <i>quotient</i> and <i>remainder</i>, such that 
+</p>
+<p><i>quotient</i>\cdot <i>divisor</i>+<i>remainder</i>=<i>number</i>
+</p>
+<p>The <i>quotient</i> always represents a mathematical integer.
+When more than one mathematical integer might be possible
+ (<i>i.e.</i>, when the remainder is not zero),
+the kind of rounding or truncation depends on the <i>operator</i>:
+</p>
+<dl compact="compact">
+<dt><b>floor</b>, <b>ffloor</b></dt>
+<dd><p><b>floor</b> and <b>ffloor</b> produce a <i>quotient</i> 
+that has been truncated toward negative infinity;
+that is, the <i>quotient</i> represents the largest mathematical integer
+that is not larger than the mathematical quotient.
+</p>
+</dd>
+<dt><b>ceiling</b>, <b>fceiling</b></dt>
+<dd><p><b>ceiling</b> and <b>fceiling</b> produce a <i>quotient</i>
+that has been truncated toward positive infinity;
+that is, the <i>quotient</i> represents the smallest mathematical integer
+that is not smaller than the mathematical result.
+</p>
+</dd>
+<dt><b>truncate</b>, <b>ftruncate</b></dt>
+<dd><p><b>truncate</b> and <b>ftruncate</b> produce a <i>quotient</i>
+that has been truncated towards zero;
+that is, the <i>quotient</i> represents the mathematical integer
+of the same sign as the mathematical quotient, and
+that has the greatest integral magnitude not greater than that of the mathematical quotient.
+</p>
+</dd>
+<dt><b>round</b>, <b>fround</b></dt>
+<dd><p><b>round</b> and <b>fround</b> produce a <i>quotient</i>
+that has been rounded to the nearest mathematical integer;
+if the mathematical quotient is exactly halfway between two integers,
+(that is, it has the form <i>integer</i>+1\over2),
+then the <i>quotient</i> has been rounded to the even (divisible by two) integer.
+</p>
+</dd>
+</dl>
+
+<p>All of these functions perform type conversion operations on <i>numbers</i>.
+</p>
+<p>The <i>remainder</i>
+is an <i>integer</i>  if both   <tt>x</tt> and <tt>y</tt> are <i>integers</i>,
+is a  <i>rational</i> if both   <tt>x</tt> and <tt>y</tt> are <i>rationals</i>, and
+is a  <i>float</i>    if either <tt>x</tt> or  <tt>y</tt> is  a <i>float</i>.
+</p>
+<p><b>ffloor</b>, <b>fceiling</b>, <b>ftruncate</b>, and <b>fround</b> 
+handle arguments of different <i>types</i> in the following way:
+If  <i>number</i>  is     a <i>float</i>,
+and <i>divisor</i> is not a <i>float</i> of longer format,
+then the first result is a <i>float</i> of the same <i>type</i> as <i>number</i>.
+Otherwise, the first result is of the <i>type</i> determined by <i>contagion</i> rules;
+see <a href="Contagion-in-Numeric-Operations.html#Contagion-in-Numeric-Operations">Contagion in Numeric Operations</a>.
+</p>
+<a name="Examples_003a_003a-188"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (floor 3/2) &rArr;  1, 1/2
+ (ceiling 3 2) &rArr;  2, -1
+ (ffloor 3 2) &rArr;  1.0, 1
+ (ffloor -4.7) &rArr;  -5.0, 0.3
+ (ffloor 3.5d0) &rArr;  3.0d0, 0.5d0
+ (fceiling 3/2) &rArr;  2.0, -1/2
+ (truncate 1) &rArr;  1, 0
+ (truncate .5) &rArr;  0, 0.5
+ (round .5) &rArr;  0, 0.5
+ (ftruncate -7 2) &rArr;  -3.0, -1
+ (fround -7 2) &rArr;  -4.0, 1
+ (dolist (n '(2.6 2.5 2.4 0.7 0.3 -0.3 -0.7 -2.4 -2.5 -2.6))
+   (format t &quot;~&amp;~4,1@F ~2,' D ~2,' D ~2,' D ~2,' D&quot;
+           n (floor n) (ceiling n) (truncate n) (round n)))
+<tt> |&gt; </tt> +2.6  2  3  2  3
+<tt> |&gt; </tt> +2.5  2  3  2  2
+<tt> |&gt; </tt> +2.4  2  3  2  2
+<tt> |&gt; </tt> +0.7  0  1  0  1
+<tt> |&gt; </tt> +0.3  0  1  0  0
+<tt> |&gt; </tt> -0.3 -1  0  0  0
+<tt> |&gt; </tt> -0.7 -1  0  0 -1
+<tt> |&gt; </tt> -2.4 -3 -2 -2 -2
+<tt> |&gt; </tt> -2.5 -3 -2 -2 -2
+<tt> |&gt; </tt> -2.6 -3 -2 -2 -3
+&rArr;  NIL
+</pre></div>
+
+<a name="Notes_003a_003a-143"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>When only <i>number</i> is given, the two results are exact;
+the mathematical sum of the two results is always equal to the
+mathematical value of <i>number</i>.
+</p>
+<p><tt>(<i>function</i> <i>number</i> <i>divisor</i>)</tt>
+and <tt>(<i>function</i> (/ <i>number</i> <i>divisor</i>))</tt>
+(where <i>function</i> is any of one
+of <b>floor</b>, <b>ceiling</b>, <b>ffloor</b>, 
+<b>fceiling</b>, <b>truncate</b>, 
+<b>round</b>, <b>ftruncate</b>, and <b>fround</b>)
+return the same first value, but
+they return different remainders as the second value. For example:
+</p>
+<div class="example">
+<pre class="example"> (floor 5 2) &rArr;  2, 1
+ (floor (/ 5 2)) &rArr;  2, 1/2
+</pre></div>
+
+<p>If an effect is desired that is similar to <b>round</b>,
+but that always rounds up or down (rather than toward the nearest even integer) 
+if the mathematical quotient is exactly halfway between two integers, 
+the programmer should consider a construction such as
+    <tt>(floor (+ x 1/2))</tt>
+ or <tt>(ceiling (- x 1/2))</tt>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="sin.html#sin" accesskey="n" rel="next">sin</a>, Previous: <a href="zerop.html#zerop" accesskey="p" rel="prev">zerop</a>, Up: <a href="Numbers-Dictionary.html#Numbers-Dictionary" accesskey="u" rel="up">Numbers Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

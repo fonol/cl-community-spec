@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>vector (System Class) (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="vector (System Class) (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="vector (System Class) (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Arrays-Dictionary.html#Arrays-Dictionary" rel="up" title="Arrays Dictionary">
+<link href="simple_002dvector.html#simple_002dvector" rel="next" title="simple-vector">
+<link href="simple_002darray.html#simple_002darray" rel="prev" title="simple-array">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="vector-_0028System-Class_0029"></a>
+<div class="header">
+<p>
+Next: <a href="simple_002dvector.html#simple_002dvector" accesskey="n" rel="next">simple-vector</a>, Previous: <a href="simple_002darray.html#simple_002darray" accesskey="p" rel="prev">simple-array</a>, Up: <a href="Arrays-Dictionary.html#Arrays-Dictionary" accesskey="u" rel="up">Arrays Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="vector-_005bSystem-Class_005d"></a>
+<h4 class="subsection">15.2.3 vector                                                       [System Class]</h4>
+
+<a name="Class-Precedence-List_003a_003a-54"></a>
+<h4 class="subsubheading">Class Precedence List::</h4>
+<p><b>vector</b>,
+<b>array</b>,
+<b>sequence</b>,
+<b>t</b>
+</p>
+<a name="Description_003a_003a-422"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Any one-dimensional <i>array</i> is a <i>vector</i>.
+</p>
+<p>The <i>type</i> <b>vector</b> is a <i>subtype</i> of <i>type</i> <b>array</b>; 
+for all <i>types</i> <tt>x</tt>, <tt>(vector x)</tt> is the same as <tt>(array x (*))</tt>.
+</p>
+<p>The <i>type</i> <tt>(vector t)</tt>, the <i>type</i> <b>string</b>, and the <i>type</i> <b>bit-vector</b>
+are <i>disjoint</i> <i>subtypes</i> of <i>type</i> <b>vector</b>.
+</p>
+<a name="Compound-Type-Specifier-Kind_003a_003a-20"></a>
+<h4 class="subsubheading">Compound Type Specifier Kind::</h4>
+
+<p>Specializing.
+</p>
+<a name="Compound-Type-Specifier-Syntax_003a_003a-20"></a>
+<h4 class="subsubheading">Compound Type Specifier Syntax::</h4>
+
+<p>(<code>vector</code>{<i><tt>[</tt>{element-type | <b>*</b>} <span class="roman">[</span>{size | <b>*</b>}]</i><tt>]</tt>})
+</p>
+<a name="Compound-Type-Specifier-Arguments_003a_003a-20"></a>
+<h4 class="subsubheading">Compound Type Specifier Arguments::</h4>
+
+<p><i>size</i>&mdash;a non-negative <i>fixnum</i>.
+</p>
+<p><i>element-type</i>&mdash;a <i>type specifier</i>.
+</p>
+<a name="Compound-Type-Specifier-Description_003a_003a-20"></a>
+<h4 class="subsubheading">Compound Type Specifier Description::</h4>
+
+<p>This denotes the set of specialized <i>vectors</i>
+whose <i>element type</i> and <i>dimension</i> match the specified values.
+Specifically:
+</p>
+<p>If <i>element-type</i> is the <i>symbol</i> <b>*</b>,
+<i>vectors</i> are not excluded on the basis of their <i>element type</i>.
+Otherwise, only those <i>vectors</i> are included whose <i>actual array element type</i>
+</p>
+<p>is the result of <i>upgrading</i> <i>element-type</i>;
+see <a href="Array-Upgrading.html#Array-Upgrading">Array Upgrading</a>.
+</p>
+<p>If a <i>size</i> is specified,
+the set includes only those <i>vectors</i> whose only <i>dimension</i>
+is <i>size</i>.
+If the <i>symbol</i> <b>*</b> is specified instead of a <i>size</i>,
+the set is not restricted on the basis of <i>dimension</i>.
+</p>
+<a name="See-Also_003a_003a-345"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Required-Kinds-of-Specialized-Arrays.html#Required-Kinds-of-Specialized-Arrays">Required Kinds of Specialized Arrays</a>,
+<a href="Sharpsign-Left_002dParenthesis.html#Sharpsign-Left_002dParenthesis">Sharpsign Left-Parenthesis</a>,
+<a href="Printing-Other-Vectors.html#Printing-Other-Vectors">Printing Other Vectors</a>,
+<a href="Sharpsign-A.html#Sharpsign-A">Sharpsign A</a>
+</p>
+<a name="Notes_003a_003a-232"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <i>type</i> <tt>(vector <i>e</i> <i>s</i>)</tt> 
+is equivalent to the <i>type</i> <tt>(array <i>e</i> (<i>s</i>))</tt>.
+</p>
+<p>The type <tt>(vector bit)</tt> has the name <b>bit-vector</b>.
+</p>
+<p>The union of all <i>types</i> <tt>(vector C)</tt>, 
+where C is any <i>subtype</i> of <b>character</b>,
+has the name <b>string</b>.
+</p>
+<p><tt>(vector *)</tt> refers to all <i>vectors</i> 
+regardless of element type, <tt>(vector <i>type-specifier</i>)</tt>
+refers only to those <i>vectors</i> 
+that can result from giving <i>type-specifier</i> as the
+<tt>:element-type</tt> argument to <b>make-array</b>.  
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="simple_002dvector.html#simple_002dvector" accesskey="n" rel="next">simple-vector</a>, Previous: <a href="simple_002darray.html#simple_002darray" accesskey="p" rel="prev">simple-array</a>, Up: <a href="Arrays-Dictionary.html#Arrays-Dictionary" accesskey="u" rel="up">Arrays Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

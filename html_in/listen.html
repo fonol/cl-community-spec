@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>listen (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="listen (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="listen (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="clear_002dinput.html#clear_002dinput" rel="next" title="clear-input">
+<link href="with_002dopen_002dstream.html#with_002dopen_002dstream" rel="prev" title="with-open-stream">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="listen"></a>
+<div class="header">
+<p>
+Next: <a href="clear_002dinput.html#clear_002dinput" accesskey="n" rel="next">clear-input</a>, Previous: <a href="with_002dopen_002dstream.html#with_002dopen_002dstream" accesskey="p" rel="prev">with-open-stream</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="listen-_005bFunction_005d"></a>
+<h4 class="subsection">21.2.34 listen                                                           [Function]</h4>
+
+<p><code>listen</code>  <i>&amp;optional</i> input-stream &rArr;  <i>generalized-boolean</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-435"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>input-stream</i>&mdash;an <i>input</i> <i>stream designator</i>.
+ The default is <i>standard input</i>.
+</p>
+<p><i>generalized-boolean</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-565"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns <i>true</i> if 
+there is a character immediately available from <i>input-stream</i>;
+otherwise, returns <i>false</i>.
+On a non-interactive <i>input-stream</i>,
+<b>listen</b> returns <i>true</i> except when at <i>end of file</i>_1.
+If an <i>end of file</i> is encountered, <b>listen</b> returns <i>false</i>.
+<b>listen</b> is intended to be used 
+when <i>input-stream</i> obtains characters
+from an interactive device such as a keyboard.  
+</p>
+<a name="Examples_003a_003a-411"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (progn (unread-char (read-char)) (list (listen) (read-char)))
+<tt> |&gt; </tt> <b>|&gt;&gt;</b><tt>1</tt><b>&lt;&lt;|</b>
+&rArr;  (T #\1)
+ (progn (clear-input) (listen))
+&rArr;  NIL ;Unless you're a very fast typist!
+</pre></div>
+
+<a name="Affected-By_003a_003a-93"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*standard-input*</b>
+</p>
+<a name="See-Also_003a_003a-461"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="interactive_002dstream_002dp.html#interactive_002dstream_002dp">interactive-stream-p</a>
+,
+<a href="read_002dchar_002dno_002dhang.html#read_002dchar_002dno_002dhang">read-char-no-hang</a>
+</p>
+
+
+
+</body>
+</html>

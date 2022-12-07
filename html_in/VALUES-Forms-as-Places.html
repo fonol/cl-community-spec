@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>VALUES Forms as Places (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="VALUES Forms as Places (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="VALUES Forms as Places (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Kinds-of-Places.html#Kinds-of-Places" rel="up" title="Kinds of Places">
+<link href="THE-Forms-as-Places.html#THE-Forms-as-Places" rel="next" title="THE Forms as Places">
+<link href="Function-Call-Forms-as-Places.html#Function-Call-Forms-as-Places" rel="prev" title="Function Call Forms as Places">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="VALUES-Forms-as-Places"></a>
+<div class="header">
+<p>
+Next: <a href="THE-Forms-as-Places.html#THE-Forms-as-Places" accesskey="n" rel="next">THE Forms as Places</a>, Previous: <a href="Function-Call-Forms-as-Places.html#Function-Call-Forms-as-Places" accesskey="p" rel="prev">Function Call Forms as Places</a>, Up: <a href="Kinds-of-Places.html#Kinds-of-Places" accesskey="u" rel="up">Kinds of Places</a> &nbsp; </p>
+</div>
+<hr>
+<a name="VALUES-Forms-as-Places-1"></a>
+<h4 class="subsubsection">5.1.2.3 VALUES Forms as Places</h4>
+
+<p>A <b>values</b> <i>form</i> can be used as a <i>place</i>,
+provided that each of its <i>subforms</i> is also a <i>place</i> form.
+</p>
+<p>A form such as
+</p>
+<p><tt>(setf (values <i>place-1</i> \dots <i>place-n</i>) <i>values-form</i>)</tt>
+</p>
+<p>does the following:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>The <i>subforms</i> of each nested <i>place</i> are evaluated
+in left-to-right order.
+</p></dd>
+<dt>2.</dt>
+<dd><p>The <i>values-form</i> is evaluated, and the first store
+variable from each <i>place</i> is bound to its return values as if by 
+<b>multiple-value-bind</b>.  
+</p></dd>
+<dt>3.</dt>
+<dd><p>If the <i>setf expansion</i> for any <i>place</i> 
+involves more than one store variable, then the additional
+store variables are bound to <b>nil</b>.
+</p></dd>
+<dt>4.</dt>
+<dd><p>The storing forms for each <i>place</i> are evaluated in
+left-to-right order.
+</p></dd>
+</dl>
+
+<p>The storing form in the <i>setf expansion</i> of <b>values</b>
+returns as <i>multiple values</i>_2 the values of the store
+variables in step 2.  That is, the number of values returned is the
+same as the number of <i>place</i> forms.  This may be more or fewer
+values than are produced by the <i>values-form</i>.
+</p>
+
+
+
+</body>
+</html>

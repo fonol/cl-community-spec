@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Satisfying a Two-Argument Test (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Rules-about-Test-Functions.html#Rules-about-Test-Functions" rel="up" title="Rules about Test Functions">
+<link href="Examples-of-Satisfying-a-Two_002dArgument-Test.html#Examples-of-Satisfying-a-Two_002dArgument-Test" rel="next" title="Examples of Satisfying a Two-Argument Test">
+<link href="Rules-about-Test-Functions.html#Rules-about-Test-Functions" rel="prev" title="Rules about Test Functions">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Rules-about-Test-Functions.html#Rules-about-Test-Functions" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Rules about Test Functions
+                            </a>
+                            <a href="Rules-about-Test-Functions.html#Rules-about-Test-Functions.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Rules about Test Functions
+                            </a>
+                            <a href="Examples-of-Satisfying-a-Two_002dArgument-Test.html#Examples-of-Satisfying-a-Two_002dArgument-Test.html" class="nav-btn nav__next ">
+                                Examples of Satisfying a Two-Argument Test
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Satisfying-a-Two_002dArgument-Test"></a>
+<a name="Satisfying-a-Two_002dArgument-Test-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Satisfying a Two-Argument Test</h4>
+
+<p>When an <i>object</i> O is being considered iteratively 
+against each <i>element</i> E_i
+of a <i>sequence</i> S
+by an <i>operator</i> F listed in Figure 17&ndash;2,
+it is sometimes useful to control the way in which the presence of O 
+is tested in S is tested by F.
+This control is offered on the basis of a <i>function</i> designated with 
+either a <tt>:test</tt> or <tt>:test-not</tt> <i>argument</i>.
+</p>
+<p>&nbsp;&nbsp;adjoin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">nset-exclusive-or</span>&nbsp;&nbsp;search&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;assoc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nsublis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">set-difference</span>&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;count&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nsubst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">set-exclusive-or</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;delete&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nsubstitute&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sublis&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;find&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nunion&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subsetp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;intersection&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;position&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subst&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;member&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pushnew&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;substitute&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;mismatch&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rassoc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">tree-equal</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;nintersection&nbsp;&nbsp;&nbsp;&nbsp;remove&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;union&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">nset-difference</span>&nbsp;&nbsp;<span class="nolinebreak">remove-duplicates</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;17&ndash;2:&nbsp;Operators&nbsp;that&nbsp;have&nbsp;<span class="nolinebreak">Two-Argument</span>&nbsp;Tests&nbsp;to&nbsp;be&nbsp;Satisfied<!-- /@w -->
+</p>
+
+<p>The object O might not be compared directly to E_i.
+If a <tt>:key</tt> <i>argument</i> is provided,
+it is a <i>designator</i> for a <i>function</i> of one <i>argument</i> 
+to be called with each E_i as an <i>argument</i>, 
+and <i>yielding</i> an <i>object</i> Z_i to be used for comparison.
+(If there is no <tt>:key</tt> <i>argument</i>, Z_i is E_i.)
+</p>
+<p>The <i>function</i> designated by the <tt>:key</tt> <i>argument</i> is never called on O itself.
+However, if the function operates on multiple sequences
+(<i>e.g.</i>, as happens in <b>set-difference</b>), O
+will be the result of calling the <tt>:key</tt> function on an
+<i>element</i> of the other sequence.  
+</p>
+<p>A <tt>:test</tt> <i>argument</i>, if supplied to F,
+is a <i>designator</i> for a  <i>function</i>
+of two <i>arguments</i>, O and Z_i.
+An E_i is said (or, sometimes, an O and an E_i are said)
+to <i>satisfy the test</i>
+<a name="index-satisfy-the-test"></a>
+</p>
+<p>if this <tt>:test</tt> <i>function</i> returns a <i>generalized boolean</i> representing 
+<i>true</i>.
+</p>
+<p>A <tt>:test-not</tt> <i>argument</i>, if supplied to F, 
+is <i>designator</i> for a <i>function</i> 
+of two <i>arguments</i>, O and Z_i.
+An E_i is said (or, sometimes, an O and an E_i are said)
+to <i>satisfy the test</i>
+<a name="index-satisfy-the-test-1"></a>
+</p>
+<p>if this <tt>:test-not</tt> <i>function</i>
+returns a <i>generalized boolean</i> representing <i>false</i>.
+</p>
+<p>If neither a <tt>:test</tt> nor a <tt>:test-not</tt> <i>argument</i> is supplied, 
+it is as if a <tt>:test</tt> argument of <tt>#'eql</tt> was supplied.
+</p>
+<p>The consequences are unspecified if both a <tt>:test</tt> and a <tt>:test-not</tt> <i>argument</i>
+are supplied in the same <i>call</i> to F.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Examples-of-Satisfying-a-Two_002dArgument-Test.html#Examples-of-Satisfying-a-Two_002dArgument-Test" accesskey="1">Examples of Satisfying a Two-Argument Test</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

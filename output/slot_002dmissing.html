@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>slot-missing (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="slot_002dunbound.html#slot_002dunbound" rel="next" title="slot-unbound">
+<link href="slot_002dmakunbound.html#slot_002dmakunbound" rel="prev" title="slot-makunbound">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="slot_002dmakunbound.html#slot_002dmakunbound" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                slot-makunbound
+                            </a>
+                            <a href="Objects-Dictionary.html#Objects-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Objects Dictionary
+                            </a>
+                            <a href="slot_002dunbound.html#slot_002dunbound.html" class="nav-btn nav__next ">
+                                slot-unbound
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="slot_002dmissing"></a>
+<a name="slot_002dmissing-_005bStandard-Generic-Function_005d"></a>
+<div class="section top-most">
+<div class="node-type">Standard Generic Function</div>
+<h4 class="subsection">slot-missing                                    </h4>
+
+<a name="Syntax_003a_003a-18"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Syntax</h4>
+
+<p><code>slot-missing</code>  <i>class object slot-name operation &amp;optional</i> new-value &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Method-Signatures_003a_003a-7"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Method Signatures</h4>
+
+<p><code>slot-missing</code>  <i><span class="roman">(</span><i>class</i> <b>t</b><span class="roman">)</span>
+				   object slot-name
+			     operation &amp;optional</i> new-value
+</p>
+<a name="Arguments-and-Values_003a_003a-100"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>class</i>&mdash;the <i>class</i> of <i>object</i>.
+</p>
+<p><i>object</i>&mdash;an <i>object</i>.
+</p>
+<p><i>slot-name</i>&mdash;a <i>symbol</i> (the <i>name</i> of a would-be <i>slot</i>).
+</p>
+<p><i>operation</i>&mdash;one of the <i>symbols</i>
+		    <b>setf</b>,
+		    <b>slot-boundp</b>,
+		    <b>slot-makunbound</b>,
+		 or <b>slot-value</b>.
+</p>
+<p><i>new-value</i>&mdash;an <i>object</i>.
+</p>
+<p><i>result</i>&mdash;an <i>object</i>.
+</p>
+<a name="Description_003a_003a-139"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The generic function <b>slot-missing</b> is invoked when an attempt is
+made to <i>access</i> a <i>slot</i> in an <i>object</i> whose 
+<i>metaclass</i> is <b>standard-class</b>
+and the <i>slot</i> of the name <i>slot-name</i>
+is not a <i>name</i> of a
+<i>slot</i> in that <i>class</i>. 
+The default <i>method</i> signals an error.
+</p>
+<p>The generic function <b>slot-missing</b> is not intended to be called by
+programmers.  Programmers may write <i>methods</i> for it.
+</p>
+<p>The generic function <b>slot-missing</b> may be called during
+evaluation of <b>slot-value</b>, <tt>(setf slot-value)</tt>, 
+<b>slot-boundp</b>, and <b>slot-makunbound</b>.  For each
+of these operations the corresponding <i>symbol</i> 
+for the <i>operation</i>
+argument is <b>slot-value</b>, <b>setf</b>, <b>slot-boundp</b>,
+and <b>slot-makunbound</b> respectively.
+</p>
+<p>The optional <i>new-value</i> argument to <b>slot-missing</b> is used
+when the operation is attempting to set the value of the <i>slot</i>.
+</p>
+<p>If <b>slot-missing</b> returns, its values will be treated as follows:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>If the <i>operation</i> is <b>setf</b> or <b>slot-makunbound</b>,
+any <i>values</i> will be ignored by the caller.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>If the <i>operation</i> is <b>slot-value</b>,
+only the <i>primary value</i> will be used by the caller,
+and all other values will be ignored.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>If the <i>operation</i> is <b>slot-boundp</b>,
+any <i>boolean equivalent</i> of the <i>primary value</i>
+of the <i>method</i> might be is used,
+and all other values will be ignored.
+</p></dd>
+</dl>
+
+<a name="Exceptional-Situations_003a_003a-28"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>The default <i>method</i> on <b>slot-missing</b> 
+signals an error of <i>type</i> <b>error</b>.
+</p>
+<a name="See-Also_003a_003a-121"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="defclass.html#defclass">defclass</a>
+,
+<a href="slot_002dexists_002dp.html#slot_002dexists_002dp">slot-exists-p</a>
+,
+<a href="slot_002dvalue.html#slot_002dvalue">slot-value</a>
+</p>
+<a name="Notes_003a_003a-83"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The set of arguments (including the <i>class</i> of the instance) facilitates
+defining methods on the metaclass for <b>slot-missing</b>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

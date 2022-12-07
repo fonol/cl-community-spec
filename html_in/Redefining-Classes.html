@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Redefining Classes (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Redefining Classes (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Redefining Classes (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Classes.html#Classes" rel="up" title="Classes">
+<link href="Modifying-the-Structure-of-Instances.html#Modifying-the-Structure-of-Instances" rel="next" title="Modifying the Structure of Instances">
+<link href="Examples-of-Class-Precedence-List-Determination.html#Examples-of-Class-Precedence-List-Determination" rel="prev" title="Examples of Class Precedence List Determination">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Redefining-Classes"></a>
+<div class="header">
+<p>
+Next: <a href="Integrating-Types-and-Classes.html#Integrating-Types-and-Classes" accesskey="n" rel="next">Integrating Types and Classes</a>, Previous: <a href="Determining-the-Class-Precedence-List.html#Determining-the-Class-Precedence-List" accesskey="p" rel="prev">Determining the Class Precedence List</a>, Up: <a href="Classes.html#Classes" accesskey="u" rel="up">Classes</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Redefining-Classes-1"></a>
+<h4 class="subsection">4.3.6 Redefining Classes</h4>
+
+<p>A <i>class</i> that is a <i>direct instance</i> of <b>standard-class</b> can
+be redefined if the new <i>class</i> is also
+a <i>direct instance</i> of <b>standard-class</b>.
+Redefining a <i>class</i> modifies the existing
+<i>class</i> <i>object</i> to reflect the new <i>class</i> definition; it does not
+create a new <i>class</i> <i>object</i> for the <i>class</i>.  
+Any <i>method</i> <i>object</i> created by a <tt>:reader</tt>, <tt>:writer</tt>, 
+or <tt>:accessor</tt> option specified by the old <b>defclass</b> form is
+removed from the corresponding <i>generic function</i>.
+<i>Methods</i> specified by the new <b>defclass</b> form are added.
+</p>
+<p>When the class C is redefined, changes are propagated to its <i>instances</i>
+and to <i>instances</i> of any of its <i>subclasses</i>.  Updating such an
+<i>instance</i> occurs at an <i>implementation-dependent</i> time, but no later than
+the next time a <i>slot</i> 
+of that <i>instance</i> is read or written.  Updating an
+<i>instance</i> 
+does not change its identity as defined by the <i>function</i> <b>eq</b>.
+The updating process may change the <i>slots</i> of that
+particular <i>instance</i>, 
+but it does not create a new <i>instance</i>.  Whether
+updating an <i>instance</i> consumes storage is <i>implementation-dependent</i>.
+</p>
+<p>Note that redefining a <i>class</i> may cause <i>slots</i> to be added or 
+deleted.  If a <i>class</i> is redefined in a way that changes the set of
+<i>local slots</i> <i>accessible</i> in <i>instances</i>, the <i>instances</i> 
+are updated.  It is <i>implementation-dependent</i> whether <i>instances</i> 
+are updated if a <i>class</i> is redefined in a way that does not change 
+the set of <i>local slots</i> <i>accessible</i> in <i>instances</i>.
+</p>
+<p>The value of a <i>slot</i> 
+that is specified as shared both in the old <i>class</i>
+and in the new <i>class</i> is retained.  
+If such a <i>shared slot</i> was unbound
+in the old <i>class</i>, it is unbound in the new <i>class</i>.  
+<i>Slots</i> that
+were local in the old <i>class</i> and that are shared in the new 
+<i>class</i> are
+initialized.  Newly added <i>shared slots</i> are initialized.
+</p>
+<p>Each newly added <i>shared slot</i> is set to the result of evaluating the
+<i>captured initialization form</i> for the <i>slot</i> that was specified 
+in the <b>defclass</b> <i>form</i> for the new <i>class</i>.  
+If there was no <i>initialization form</i>, the <i>slot</i> is unbound.
+</p>
+<p>If a <i>class</i> is redefined in such a way that the set of
+<i>local slots</i> <i>accessible</i> in an <i>instance</i> of the <i>class</i> 
+is changed, a two-step process of updating the <i>instances</i> of the
+<i>class</i> takes place.  The process may be explicitly started by 
+invoking the generic function <b>make-instances-obsolete</b>.  This
+two-step process can happen in other circumstances in some implementations.
+For example, in some implementations this two-step process is
+triggered if the order of <i>slots</i> in storage is changed.
+</p>
+<p>The first step modifies the structure of the <i>instance</i> by adding new
+<i>local slots</i> and discarding <i>local slots</i> that are not
+defined in the new version of the <i>class</i>.  The second step
+initializes the newly-added <i>local slots</i> and performs any other
+user-defined actions. These two steps are further specified
+in the next two sections.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Modifying-the-Structure-of-Instances.html#Modifying-the-Structure-of-Instances" accesskey="1">Modifying the Structure of Instances</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Initializing-Newly-Added-Local-Slots-_0028Redefining-Classes_0029.html#Initializing-Newly-Added-Local-Slots-_0028Redefining-Classes_0029" accesskey="2">Initializing Newly Added Local Slots (Redefining Classes)</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Customizing-Class-Redefinition.html#Customizing-Class-Redefinition" accesskey="3">Customizing Class Redefinition</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Integrating-Types-and-Classes.html#Integrating-Types-and-Classes" accesskey="n" rel="next">Integrating Types and Classes</a>, Previous: <a href="Determining-the-Class-Precedence-List.html#Determining-the-Class-Precedence-List" accesskey="p" rel="prev">Determining the Class Precedence List</a>, Up: <a href="Classes.html#Classes" accesskey="u" rel="up">Classes</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

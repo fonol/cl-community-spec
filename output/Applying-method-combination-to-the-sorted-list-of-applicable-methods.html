@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Applying method combination to the sorted list of applicable methods (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" rel="up" title="Method Selection and Combination">
+<link href="Standard-Method-Combination.html#Standard-Method-Combination" rel="next" title="Standard Method Combination">
+<link href="Sorting-the-Applicable-Methods-by-Precedence-Order.html#Sorting-the-Applicable-Methods-by-Precedence-Order" rel="prev" title="Sorting the Applicable Methods by Precedence Order">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Sorting-the-Applicable-Methods-by-Precedence-Order.html#Sorting-the-Applicable-Methods-by-Precedence-Order" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Sorting the Applicable Methods by Precedence Order
+                            </a>
+                            <a href="Method-Selection-and-Combination.html#Method-Selection-and-Combination.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Method Selection and Combination
+                            </a>
+                            <a href="Standard-Method-Combination.html#Standard-Method-Combination.html" class="nav-btn nav__next ">
+                                Standard Method Combination
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Applying-method-combination-to-the-sorted-list-of-applicable-methods"></a>
+<a name="Applying-method-combination-to-the-sorted-list-of-applicable-methods-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Applying method combination to the sorted list of applicable methods</h4>
+
+<p>In the simple case&mdash;if standard method combination is used and all
+applicable methods are primary methods&mdash;the 
+effective method is the most specific method.
+That method can call the next most specific
+method by using the <i>function</i> <b>call-next-method</b>.  The method that
+<b>call-next-method</b> will call is referred to as the 
+<i>next method</i>
+<a name="index-next-method"></a>
+.  The predicate <b>next-method-p</b> tests whether a next
+method exists.  If <b>call-next-method</b> is called and there is no
+next most specific method, the generic function <b>no-next-method</b>
+is invoked.
+</p>
+<p>In general, the effective method is some combination of the applicable
+methods.  It is described by a <i>form</i> that contains calls to some or
+all of the applicable methods, returns the value or values that will
+be returned as the value or values of the generic function, and
+optionally makes some of the methods accessible by means of 
+<b>call-next-method</b>.
+</p>
+<p>The role of each method in the effective method is determined by its
+<i>qualifiers</i> and the specificity of the method.  A <i>qualifier</i>
+serves to mark a method, and the meaning of a <i>qualifier</i> is
+determined by the way that these marks are used by this step
+of the procedure.  If an applicable method has an unrecognized
+<i>qualifier</i>, this step signals an error and does not include that method
+in the effective method.
+</p>
+<p>When standard method combination is used together with qualified methods, 
+the effective method is produced as described in <a href="Standard-Method-Combination.html#Standard-Method-Combination">Standard Method Combination</a>.
+</p>
+<p>Another type of method combination can be specified by using the
+<tt>:method-combination</tt> option of <b>defgeneric</b> or
+of any of the other operators that specify generic function options.  In
+this way this step of the procedure can be customized.
+</p>
+<p>New types of method combination can be defined by using 
+the <b>define-method-combination</b> <i>macro</i>. 
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

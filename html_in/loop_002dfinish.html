@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>loop-finish (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="loop-finish (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="loop-finish (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Iteration-Dictionary.html#Iteration-Dictionary" rel="up" title="Iteration Dictionary">
+<link href="Objects.html#Objects" rel="next" title="Objects">
+<link href="loop.html#loop" rel="prev" title="loop">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="loop_002dfinish"></a>
+<div class="header">
+<p>
+Previous: <a href="loop.html#loop" accesskey="p" rel="prev">loop</a>, Up: <a href="Iteration-Dictionary.html#Iteration-Dictionary" accesskey="u" rel="up">Iteration Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="loop_002dfinish-_005bLocal-Macro_005d"></a>
+<h4 class="subsection">6.2.5 loop-finish                                                   [Local Macro]</h4>
+
+<a name="Syntax_003a_003a-10"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><code>loop-finish</code>  <i>&lt;<i>no <i>arguments</i></i>&gt;</i> &rArr;  #&lt;NoValue&gt;
+</p>
+<a name="Description_003a_003a-127"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <b>loop-finish</b> <i>macro</i> can be used lexically within 
+an extended
+<b>loop</b> <i>form</i> 
+to terminate that <i>form</i> &ldquo;normally.&rdquo;
+That is, it transfers control to the loop epilogue
+of the lexically innermost extended <b>loop</b> <i>form</i>.
+This permits execution of any <b>finally</b> clause (for effect)
+and
+the return of
+any accumulated result.
+</p>
+<a name="Examples_003a_003a-97"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">;; Terminate the loop, but return the accumulated count.
+ (loop for i in '(1 2 3 stop-here 4 5 6)
+       when (symbolp i) do (loop-finish)
+       count i)
+&rArr;  3
+
+;; The preceding loop is equivalent to:
+ (loop for i in '(1 2 3 stop-here 4 5 6)
+       until (symbolp i)
+       count i)
+&rArr;  3
+
+;; While LOOP-FINISH can be used can be used in a variety of 
+;; situations it is really most needed in a situation where a need
+;; to exit is detected at other than the loop's `top level'
+;; (where UNTIL or WHEN often work just as well), or where some 
+;; computation must occur between the point where a need to exit is
+;; detected and the point where the exit actually occurs.  For example:
+ (defun tokenize-sentence (string)
+   (macrolet ((add-word (wvar svar)
+                `(when ,wvar
+                   (push (coerce (nreverse ,wvar) 'string) ,svar)
+                   (setq ,wvar nil))))
+     (loop with word = '() and sentence = '() and endpos = nil
+           for i below (length string)
+           do (let ((char (aref string i)))
+                (case char
+                  (#\Space (add-word word sentence))
+                  (#\. (setq endpos (1+ i)) (loop-finish))
+                  (otherwise (push char word))))
+           finally (add-word word sentence)
+                   (return (values (nreverse sentence) endpos)))))
+&rArr;  TOKENIZE-SENTENCE
+
+ (tokenize-sentence &quot;this is a sentence. this is another sentence.&quot;)
+&rArr;  (&quot;this&quot; &quot;is&quot; &quot;a&quot; &quot;sentence&quot;), 19
+
+ (tokenize-sentence &quot;this is a sentence&quot;)
+&rArr;  (&quot;this&quot; &quot;is&quot; &quot;a&quot; &quot;sentence&quot;), NIL
+
+</pre></div>
+
+<a name="Side-Effects_003a_003a-5"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>Transfers control.
+</p>
+<a name="Exceptional-Situations_003a_003a-21"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Whether or not <b>loop-finish</b> is <i>fbound</i> in the
+<i>global environment</i> is <i>implementation-dependent</i>;
+however, the restrictions on redefinition and <i>shadowing</i> of
+<b>loop-finish</b> are the same as for <i>symbols</i> in the <tt>COMMON-LISP</tt> <i>package</i>
+which are <i>fbound</i> in the <i>global environment</i>.
+The consequences of attempting to use <b>loop-finish</b> outside
+of <b>loop</b> are undefined.
+</p>
+<a name="See-Also_003a_003a-109"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="loop.html#loop">loop</a>
+,
+<a href="The-LOOP-Facility.html#The-LOOP-Facility">The LOOP Facility</a>
+</p>
+<a name="Notes_003a_003a-73"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+
+
+
+
+
+<hr>
+<div class="header">
+<p>
+Previous: <a href="loop.html#loop" accesskey="p" rel="prev">loop</a>, Up: <a href="Iteration-Dictionary.html#Iteration-Dictionary" accesskey="u" rel="up">Iteration Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

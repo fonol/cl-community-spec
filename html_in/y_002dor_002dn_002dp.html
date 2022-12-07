@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>y-or-n-p (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="y-or-n-p (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="y-or-n-p (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="make_002dsynonym_002dstream.html#make_002dsynonym_002dstream" rel="next" title="make-synonym-stream">
+<link href="finish_002doutput.html#finish_002doutput" rel="prev" title="finish-output">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="y_002dor_002dn_002dp"></a>
+<div class="header">
+<p>
+Next: <a href="make_002dsynonym_002dstream.html#make_002dsynonym_002dstream" accesskey="n" rel="next">make-synonym-stream</a>, Previous: <a href="finish_002doutput.html#finish_002doutput" accesskey="p" rel="prev">finish-output</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="y_002dor_002dn_002dp_002c-yes_002dor_002dno_002dp-_005bFunction_005d"></a>
+<h4 class="subsection">21.2.37 y-or-n-p, yes-or-no-p                                            [Function]</h4>
+
+<p><code>y-or-n-p</code>  <i>&amp;optional</i> control &amp;rest arguments &rArr;  <i>generalized-boolean</i>
+</p>
+<p><code>yes-or-no-p</code>  <i>&amp;optional</i> control &amp;rest arguments &rArr;  <i>generalized-boolean</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-438"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>control</i>&mdash;a <i>format control</i>.
+</p>
+<p><i>arguments</i>&mdash;<i>format arguments</i> for <i>control</i>.
+</p>
+<p><i>generalized-boolean</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-568"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>These functions ask a question and parse a response from the user.
+They return <i>true</i> if the answer is affirmative,
+or <i>false</i> if the answer is negative.
+</p>
+<p><b>y-or-n-p</b> is for asking the user a question whose answer is either
+&ldquo;yes&rdquo; or &ldquo;no.&rdquo;  
+It is intended that the reply require
+the user to answer a yes-or-no question with a single
+character.
+<b>yes-or-no-p</b> is also for asking the user a question
+whose answer is either &ldquo;Yes&rdquo; or &ldquo;No.&rdquo;  
+It is intended that the reply require
+the user to take more action than just a single keystroke, such as typing
+the full word <tt>yes</tt> or <tt>no</tt> followed by a newline.
+</p>
+<p><b>y-or-n-p</b> types out a message (if supplied), reads an answer
+in some <i>implementation-dependent</i> manner (intended to be short and simple,
+such as reading a single character such as <tt>Y</tt> or <tt>N</tt>).
+<b>yes-or-no-p</b> types out a message (if supplied), 
+attracts the user&rsquo;s attention (for example, by ringing
+the terminal&rsquo;s bell),
+and reads an answer
+in some <i>implementation-dependent</i> manner (intended to be multiple characters,
+such as <tt>YES</tt> or <tt>NO</tt>).
+</p>
+<p>If <i>format-control</i> is supplied and not <b>nil</b>,
+then a <b>fresh-line</b> operation is performed; then
+a message is printed as if <i>format-control</i> and <i>arguments</i>
+were given to <b>format</b>.
+In any case, <b>yes-or-no-p</b> and <b>y-or-n-p</b> will provide 
+a prompt such as &ldquo;<tt>(Y or N)</tt>&rdquo; or &ldquo;<tt>(Yes or No)</tt>&rdquo; if appropriate.
+</p>
+<p>All input and output are performed using <i>query I/O</i>.
+</p>
+<a name="Examples_003a_003a-414"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (y-or-n-p &quot;(t or nil) given by&quot;)
+<tt> |&gt; </tt> (t or nil) given by (Y or N) <b>|&gt;&gt;</b><tt>Y</tt><b>&lt;&lt;|</b>
+&rArr;  <i>true</i>
+ (yes-or-no-p &quot;a ~S message&quot; 'frightening) 
+<tt> |&gt; </tt> a FRIGHTENING message (Yes or No) <b>|&gt;&gt;</b><tt>no</tt><b>&lt;&lt;|</b>
+&rArr;  <i>false</i>
+ (y-or-n-p &quot;Produce listing file?&quot;) 
+<tt> |&gt; </tt> Produce listing file?
+<tt> |&gt; </tt> Please respond with Y or N. <b>|&gt;&gt;</b><tt>n</tt><b>&lt;&lt;|</b>
+&rArr;  <i>false</i>
+</pre></div>
+
+<a name="Side-Effects_003a_003a-71"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>Output to and input from <i>query I/O</i> will occur.
+</p>
+<a name="Affected-By_003a_003a-96"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*query-io*</b>.
+</p>
+<a name="See-Also_003a_003a-464"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="format.html#format">format</a>
+</p>
+<a name="Notes_003a_003a-296"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>yes-or-no-p</b> and <b>yes-or-no-p</b> do not add question marks
+to the end of the prompt string, so any desired question mark or other
+punctuation should be explicitly included in the text query.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="make_002dsynonym_002dstream.html#make_002dsynonym_002dstream" accesskey="n" rel="next">make-synonym-stream</a>, Previous: <a href="finish_002doutput.html#finish_002doutput" accesskey="p" rel="prev">finish-output</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

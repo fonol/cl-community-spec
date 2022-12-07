@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>read-line (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="write_002dstring.html#write_002dstring" rel="next" title="write-string">
+<link href="write_002dchar.html#write_002dchar" rel="prev" title="write-char">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="write_002dchar.html#write_002dchar" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                write-char
+                            </a>
+                            <a href="Streams-Dictionary.html#Streams-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Streams Dictionary
+                            </a>
+                            <a href="write_002dstring.html#write_002dstring.html" class="nav-btn nav__next ">
+                                write-string
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="read_002dline"></a>
+<a name="read_002dline-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">read-line                                                        </h4>
+
+<p><code>read-line</code>  <i>&amp;optional</i> input-stream eof-error-p eof-value recursive-p<br>
+   &rArr;  <i>line, missing-newline-p</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-425"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>input-stream</i>&mdash;an <i>input</i> <i>stream designator</i>.
+ The default is <i>standard input</i>.
+</p>
+<p><i>eof-error-p</i>&mdash;a <i>generalized boolean</i>.
+ The default is <i>true</i>.
+</p>
+<p><i>eof-value</i>&mdash;an <i>object</i>.
+ The default is <b>nil</b>.
+</p>
+<p><i>recursive-p</i>&mdash;a <i>generalized boolean</i>.
+ The default is <i>false</i>.
+</p>
+<p><i>line</i>&mdash;a <i>string</i> or the <i>eof-value</i>.
+</p>
+<p><i>missing-newline-p</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-553"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Reads from <i>input-stream</i> a line of text
+that is terminated by a <i>newline</i> or <i>end of file</i>.
+</p>
+ <p>If <i>recursive-p</i> is <i>true</i>,
+this call is expected to be embedded in a higher-level call to <b>read</b> 
+or a similar <i>function</i> used by the <i>Lisp reader</i>.
+</p>
+<p>The <i>primary value</i>, <i>line</i>, is the line that is read,
+represented as a <i>string</i> (without the trailing <i>newline</i>, if any).
+If  <i>eof-error-p</i> is <i>false</i> 
+and the <i>end of file</i> for <i>input-stream</i> is reached
+     before any <i>characters</i> are read,
+<i>eof-value</i> is returned as the <i>line</i>.
+</p>
+<p>The <i>secondary value</i>, <i>missing-newline-p</i>, 
+is a <i>generalized boolean</i> that is
+    <i>false</i> if the <i>line</i> was terminated by a <i>newline</i>,
+ or <i>true</i>  if the <i>line</i> was terminated by 
+		   the <i>end of file</i> for <i>input-stream</i>
+		   (or if the <i>line</i> is the <i>eof-value</i>).
+</p>
+<a name="Examples_003a_003a-400"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (setq a &quot;line 1
+ line2&quot;)
+&rArr;  &quot;line 1
+ line2&quot;
+ (read-line (setq input-stream (make-string-input-stream a)))
+&rArr;  &quot;line 1&quot;, <i>false</i>
+ (read-line input-stream)
+&rArr;  &quot;line2&quot;, <i>true</i>
+ (read-line input-stream nil nil)
+&rArr;  NIL, <i>true</i>
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-88"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p><b>*standard-input*</b>,
+<b>*terminal-io*</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-202"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>If an <i>end of file</i>_2 occurs before any characters are read in the line,
+an error is signaled if <i>eof-error-p</i> is <i>true</i>.  
+</p>
+<a name="See-Also_003a_003a-450"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p>&lsquo;read; read-preserving-whitespace&rsquo;
+</p>
+<a name="Notes_003a_003a-289"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The corresponding output function is <b>write-line</b>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

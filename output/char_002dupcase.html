@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>char-upcase (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Characters-Dictionary.html#Characters-Dictionary" rel="up" title="Characters Dictionary">
+<link href="upper_002dcase_002dp.html#upper_002dcase_002dp" rel="next" title="upper-case-p">
+<link href="standard_002dchar_002dp.html#standard_002dchar_002dp" rel="prev" title="standard-char-p">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="standard_002dchar_002dp.html#standard_002dchar_002dp" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                standard-char-p
+                            </a>
+                            <a href="Characters-Dictionary.html#Characters-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Characters Dictionary
+                            </a>
+                            <a href="upper_002dcase_002dp.html#upper_002dcase_002dp.html" class="nav-btn nav__next ">
+                                upper-case-p
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="char_002dupcase"></a>
+<a name="char_002dupcase_002c-char_002ddowncase-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">char-upcase, char-downcase                                       </h4>
+
+<p><code>char-upcase</code>  <i>character</i> &rArr;  <i>corresponding-character</i>
+</p>
+<p><code>char-downcase</code>  <i>character</i> &rArr;  <i>corresponding-character</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-267"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>character</i>, <i>corresponding-character</i>&mdash;a <i>character</i>.
+</p>
+<a name="Description_003a_003a-363"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>If <i>character</i> is a <i>lowercase</i> <i>character</i>,
+<b>char-upcase</b> returns the corresponding <i>uppercase</i> <i>character</i>.
+Otherwise, <b>char-upcase</b> just returns the given <i>character</i>.
+</p>
+<p>If <i>character</i> is an <i>uppercase</i> <i>character</i>,
+<b>char-downcase</b> returns the corresponding <i>lowercase</i> <i>character</i>.
+Otherwise, <b>char-downcase</b> just returns the given <i>character</i>.
+</p>
+<p>The result only ever differs from <i>character</i> 
+in its <i>code</i> <i>attribute</i>;
+all <i>implementation-defined</i> <i>attributes</i> are preserved.
+</p>
+<a name="Examples_003a_003a-251"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (char-upcase #\a) &rArr;  #\A
+ (char-upcase #\A) &rArr;  #\A
+ (char-downcase #\a) &rArr;  #\a
+ (char-downcase #\A) &rArr;  #\a
+ (char-upcase #\9) &rArr;  #\9
+ (char-downcase #\9) &rArr;  #\9
+ (char-upcase #\@) &rArr;  #\@
+ (char-downcase #\@) &rArr;  #\@
+ ;; Note that this next example might run for a very long time in 
+ ;; some implementations if CHAR-CODE-LIMIT happens to be very large
+ ;; for that implementation.
+ (dotimes (code char-code-limit)
+   (let ((char (code-char code)))
+     (when char
+       (unless (cond ((upper-case-p char) (char= (char-upcase (char-downcase char)) char))
+                     ((lower-case-p char) (char= (char-downcase (char-upcase char)) char))
+                     (t (and (char= (char-upcase (char-downcase char)) char)
+                             (char= (char-downcase (char-upcase char)) char))))
+         (return char)))))
+&rArr;  NIL
+</code>
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-113"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>character</i> is not a <i>character</i>.
+</p>
+<a name="See-Also_003a_003a-292"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p>&lsquo;upper-case-p; lower-case-p; both-case-p&rsquo;
+,
+<a href="alpha_002dchar_002dp.html#alpha_002dchar_002dp">alpha-char-p</a>
+,
+<a href="Characters-With-Case.html#Characters-With-Case">Characters With Case</a>,
+<a href="Documentation-of-Implementation_002dDefined-Scripts.html#Documentation-of-Implementation_002dDefined-Scripts">Documentation of Implementation-Defined Scripts</a>
+</p>
+<a name="Notes_003a_003a-193"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>If the <i>corresponding-char</i> is <i>different</i> than <i>character</i>,
+then both the <i>character</i> and the <i>corresponding-char</i> have <i>case</i>.
+</p>
+<p>Since <b>char-equal</b> ignores the <i>case</i> of the <i>characters</i> it compares,
+the <i>corresponding-character</i> is always the <i>same</i> as <i>character</i>
+under <b>char-equal</b>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Destructuring Lambda Lists (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Destructuring Lambda Lists (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Destructuring Lambda Lists (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Lambda-Lists.html#Lambda-Lists" rel="up" title="Lambda Lists">
+<link href="Boa-Lambda-Lists.html#Boa-Lambda-Lists" rel="next" title="Boa Lambda Lists">
+<link href="Lambda_002dlist_002ddirected-Destructuring-by-Lambda-Lists.html#Lambda_002dlist_002ddirected-Destructuring-by-Lambda-Lists" rel="prev" title="Lambda-list-directed Destructuring by Lambda Lists">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Destructuring-Lambda-Lists"></a>
+<div class="header">
+<p>
+Next: <a href="Boa-Lambda-Lists.html#Boa-Lambda-Lists" accesskey="n" rel="next">Boa Lambda Lists</a>, Previous: <a href="Macro-Lambda-Lists.html#Macro-Lambda-Lists" accesskey="p" rel="prev">Macro Lambda Lists</a>, Up: <a href="Lambda-Lists.html#Lambda-Lists" accesskey="u" rel="up">Lambda Lists</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Destructuring-Lambda-Lists-1"></a>
+<h4 class="subsection">3.4.5 Destructuring Lambda Lists</h4>
+
+<p>A <i>destructuring lambda list</i>
+<a name="index-destructuring-lambda-list"></a>
+ is used by <b>destructuring-bind</b>.
+</p>
+<p><i>Destructuring lambda lists</i> are closely related to 
+<i>macro lambda lists</i>; see <a href="Macro-Lambda-Lists.html#Macro-Lambda-Lists">Macro Lambda Lists</a>.
+A <i>destructuring lambda list</i> can contain all of the
+<i>lambda list keywords</i> listed for <i>macro lambda lists</i>
+except for <b>&amp;environment</b>, and supports destructuring in the
+same way.  Inner <i>lambda lists</i> nested within a <i>macro lambda list</i>
+have the syntax of <i>destructuring lambda lists</i>.
+</p>
+<p>A <i>destructuring lambda list</i> has the following syntax:
+</p>
+
+<p><i>reqvars</i>&nbsp;::={<i>var</i>&nbsp;|&nbsp;!<i><span class="nolinebreak">lambda-list</span></i>}*<!-- /@w -->
+</p>
+<p><i>optvars</i>&nbsp;::=<tt>[</tt>&amp;optional<!-- /@w --> {<i>var</i> |
+		       <span class="roman">(</span>{<i>var</i> | !<i>lambda-list</i>} <span class="roman">[</span>init-form <span class="roman">[</span>supplied-p-parameter<span class="roman">]</span><span class="roman">]</span><span class="roman">)</span>}*<tt>]</tt>
+</p>
+<p><i>restvar</i>&nbsp;::=<tt>[</tt>{<tt>&amp;rest</tt><!-- /@w --> | &amp;body} <i>{<i>var</i> | !<i>lambda-list</i>}</i><tt>]</tt>
+</p>
+<p><i>keyvars</i>&nbsp;::=<span class="roman">[</span>&amp;key<!-- /@w --> {<i>var</i> |
+		          	 <span class="roman">(</span>{<i>var</i> | 
+					       <span class="roman">(</span><i>keyword-name</i> {<i>var</i> | !<i>lambda-list</i>}<span class="roman">)</span>}
+				 	<span class="roman">[</span>init-form <span class="roman">[</span>supplied-p-parameter<span class="roman">]</span><span class="roman">]</span><span class="roman">)</span>}*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">[</span><tt><span class="nolinebreak">&amp;allow-other-keys</span></tt><span class="roman">]</span><span class="roman">]</span><!-- /@w -->
+</p>
+
+<p><i>auxvars</i>&nbsp;::=<tt>[</tt>&amp;aux<!-- /@w --> {<i>var</i> | <span class="roman">(</span><i>var</i> <span class="roman">[</span><i>init-form</i><span class="roman">]</span><span class="roman">)</span>}*<tt>]</tt>
+
+<i>envvar</i>&nbsp;::=<tt>[</tt>&amp;environment<!-- /@w --> <i>var</i><tt>]</tt>
+</p>
+<p><i>wholevar</i>&nbsp;::=<tt>[</tt>&amp;whole<!-- /@w --> <i>var</i><tt>]</tt>
+</p>
+<p><i><span class="nolinebreak">lambda-list</span></i>&nbsp;::=<span class="roman">(</span>!<i>wholevar</i>&nbsp;!<i>reqvars</i>&nbsp;!<i>optvars</i>&nbsp;!<i>restvar</i>&nbsp;!<i>keyvars</i>&nbsp;!<i>auxvars</i><span class="roman">)</span>&nbsp;|<!-- /@w -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">(</span>!<i>wholevar</i>&nbsp;!<i>reqvars</i>&nbsp;!<i>optvars</i>&nbsp;<tt>.</tt>&nbsp;<i>var</i><span class="roman">)</span><!-- /@w -->
+</p>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Shadowing (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Shadowing (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Shadowing (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation.html#Evaluation" rel="up" title="Evaluation">
+<link href="Extent.html#Extent" rel="next" title="Extent">
+<link href="Closures-and-Lexical-Binding.html#Closures-and-Lexical-Binding" rel="prev" title="Closures and Lexical Binding">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Shadowing"></a>
+<div class="header">
+<p>
+Next: <a href="Extent.html#Extent" accesskey="n" rel="next">Extent</a>, Previous: <a href="Closures-and-Lexical-Binding.html#Closures-and-Lexical-Binding" accesskey="p" rel="prev">Closures and Lexical Binding</a>, Up: <a href="Evaluation.html#Evaluation" accesskey="u" rel="up">Evaluation</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Shadowing-1"></a>
+<h4 class="subsection">3.1.5 Shadowing</h4>
+
+<p>If two <i>forms</i> that <i>establish</i> <i>lexical bindings</i> with
+the same <i>name</i> N are textually nested, then references to N
+within the inner <i>form</i> refer to the <i>binding</i> established by
+the inner <i>form</i>; the inner <i>binding</i> for N
+<i>shadows</i>
+<a name="index-shadow"></a>
+ the outer <i>binding</i> for N.  Outside the inner
+<i>form</i> but inside the outer one, references to N refer to the
+<i>binding</i> established by the outer <i>form</i>.  For example:
+</p>
+<div class="example">
+<pre class="example"> (defun test (x z)
+   (let ((z (* x 2)))
+     (print z))
+   z)
+</pre></div>
+
+<p>The <i>binding</i> of the variable <tt>z</tt> by
+<b>let</b> shadows
+the <i>parameter</i> binding for the function <tt>test</tt>.  The reference to the
+variable <tt>z</tt> in the <b>print</b> <i>form</i> refers to the <b>let</b> binding.
+The reference to <tt>z</tt> at the end of the function <tt>test</tt> 
+refers to the <i>parameter</i> named <tt>z</tt>.
+</p>
+<p>Constructs that are lexically scoped act as if new names were
+generated for each <i>object</i> on each execution.  Therefore,
+dynamic shadowing cannot occur.  For example:
+</p>
+<div class="example">
+<pre class="example"> (defun contorted-example (f g x)
+   (if (= x 0)
+       (funcall f)
+       (block here
+          (+ 5 (contorted-example g
+                                  #'(lambda () (return-from here 4))
+                                  (- x 1))))))
+</pre></div>
+
+<p>Consider the call <tt>(contorted-example nil nil 2)</tt>.  This produces
+<tt>4</tt>.  During the course of execution, there are three
+calls to <tt>contorted-example</tt>, interleaved with two 
+blocks:
+</p>
+<div class="example">
+<pre class="example"> (contorted-example nil nil 2)
+   (block here_1 ...)
+     (contorted-example nil #'(lambda () (return-from here_1 4)) 1)
+       (block here_2 ...)
+         (contorted-example #'(lambda () (return-from here_1 4))
+                            #'(lambda () (return-from here_2 4))
+                            0)
+             (funcall f)
+                    where f &rArr;  #'(lambda () (return-from here_1 4))
+                 (return-from here_1 4)
+</pre></div>
+
+<p>At the time the <tt>funcall</tt> is executed
+there are two <b>block</b> <i>exit points</i> outstanding, each apparently
+named <tt>here</tt>.
+The <b>return-from</b> <i>form</i> executed as a result of the <tt>funcall</tt>
+operation
+refers to the outer outstanding <i>exit point</i>
+(here_1), not the
+inner one (here_2).
+It
+refers to that <i>exit point</i> textually visible at the point of
+execution of <b>function</b>
+(here abbreviated by the <tt>#'</tt> syntax) that resulted
+in creation of the <i>function</i> <i>object</i> actually invoked by 
+<b>funcall</b>.                       
+</p>
+<p>If, in this example, one were to change the <tt>(funcall f)</tt> to
+<tt>(funcall g)</tt>, then the value of the call <tt>(contorted-example nil nil 2)</tt>
+would be <tt>9</tt>.  The value would change because 
+<b>funcall</b> would cause the
+execution of <tt>(return-from here</tt>_2 4), thereby causing
+a return from the inner <i>exit point</i> (here_2).
+When that occurs, the value <tt>4</tt> is returned from the
+middle invocation of <tt>contorted-example</tt>, <tt>5</tt> is added to that
+to get <tt>9</tt>, and that value is returned from the outer block
+and the outermost call to <tt>contorted-example</tt>.  The point
+is that the choice of <i>exit point</i>
+returned from has nothing to do with its
+being innermost or outermost; rather,
+it depends on the lexical environment
+that is packaged up with a <i>lambda expression</i> when
+<b>function</b> is executed.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Extent.html#Extent" accesskey="n" rel="next">Extent</a>, Previous: <a href="Closures-and-Lexical-Binding.html#Closures-and-Lexical-Binding" accesskey="p" rel="prev">Closures and Lexical Binding</a>, Up: <a href="Evaluation.html#Evaluation" accesskey="u" rel="up">Evaluation</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

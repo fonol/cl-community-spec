@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>macro-function (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="macro-function (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="macro-function (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="macroexpand.html#macroexpand" rel="next" title="macroexpand">
+<link href="defmacro.html#defmacro" rel="prev" title="defmacro">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="macro_002dfunction"></a>
+<div class="header">
+<p>
+Next: <a href="macroexpand.html#macroexpand" accesskey="n" rel="next">macroexpand</a>, Previous: <a href="defmacro.html#defmacro" accesskey="p" rel="prev">defmacro</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="macro_002dfunction-_005bAccessor_005d"></a>
+<h4 class="subsection">3.8.11 macro-function                                                   [Accessor]</h4>
+
+<p><code>macro-function</code>  <i>symbol &amp;optional</i> environment &rArr;  <i>function</i>
+</p>
+<p>(setf (<code>         macro-function</code> <i>symbol &amp;optional</i> environment) new-function)<br>
+</p>
+<a name="Arguments-and-Values_003a_003a-9"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>symbol</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>environment</i>&mdash;an <i>environment</i> <i>object</i>.
+</p>
+<p><i>function</i>&mdash;a <i>macro function</i> or <b>nil</b>.
+</p>
+<p><i>new-function</i>&mdash;a <i>macro function</i>.
+</p>
+<a name="Description_003a_003a-10"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Determines whether <i>symbol</i> has a function definition 
+as a macro in the specified <i>environment</i>.
+</p>
+<p>If so, the macro expansion function, a function of two arguments,
+is returned.  If <i>symbol</i> has no function definition
+in the lexical environment <i>environment</i>, or its definition
+is not a <i>macro</i>, <b>macro-function</b> returns <b>nil</b>.
+</p>
+<p>It is possible for both <b>macro-function</b> and 
+</p>
+<p><b>special-operator-p</b>
+</p>
+<p>to return <i>true</i> of <i>symbol</i>.  The <i>macro</i> definition must
+be available for use by programs that understand only the standard 
+<span class="roman">Common Lisp</span> <i>special forms</i>.
+</p>
+<a name="Examples_003a_003a-8"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (defmacro macfun (x) '(macro-function 'macfun)) &rArr;  MACFUN 
+ (not (macro-function 'macfun)) &rArr;  <i>false</i> 
+</pre></div>
+
+<div class="example">
+<pre class="example"> (macrolet ((foo (&amp;environment env)
+               (if (macro-function 'bar env)
+                  ''yes
+                  ''no)))
+    (list (foo)
+          (macrolet ((bar () :beep))
+             (foo))))
+
+&rArr;  (NO YES)
+</pre></div>
+
+<a name="Affected-By_003a_003a-1"></a>
+<h4 class="subsubheading">Affected By::</h4>
+<p><tt>(setf macro-function)</tt>, <b>defmacro</b>, and <b>macrolet</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-2"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>The consequences are undefined if <i>environment</i> is <i>non-nil</i>
+in a use of <b>setf</b> of <b>macro-function</b>.
+</p>
+<a name="See-Also_003a_003a-10"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="defmacro.html#defmacro">defmacro</a>
+, <a href="Evaluation.html#Evaluation">Evaluation</a>
+</p>
+<a name="Notes_003a_003a-7"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>setf</b> can be used with <b>macro-function</b> to install
+a <i>macro</i> as a symbol&rsquo;s global function definition:
+</p>
+<div class="example">
+<pre class="example"> (setf (macro-function symbol) fn)
+</pre></div>
+
+<p>The value installed must be a <i>function</i> that accepts two arguments,
+the entire macro call and an <i>environment</i>, 
+and computes the expansion for that call.
+Performing this operation causes <i>symbol</i> to have only that
+macro definition as its global function definition; any previous
+definition, whether as a <i>macro</i> or as a 
+<i>function</i>, is lost.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="macroexpand.html#macroexpand" accesskey="n" rel="next">macroexpand</a>, Previous: <a href="defmacro.html#defmacro" accesskey="p" rel="prev">defmacro</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

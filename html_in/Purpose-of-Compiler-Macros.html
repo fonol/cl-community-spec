@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Purpose of Compiler Macros (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Purpose of Compiler Macros (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Purpose of Compiler Macros (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Compilation-Semantics.html#Compilation-Semantics" rel="up" title="Compilation Semantics">
+<link href="Naming-of-Compiler-Macros.html#Naming-of-Compiler-Macros" rel="next" title="Naming of Compiler Macros">
+<link href="Compiler-Macros.html#Compiler-Macros" rel="prev" title="Compiler Macros">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Purpose-of-Compiler-Macros"></a>
+<div class="header">
+<p>
+Next: <a href="Naming-of-Compiler-Macros.html#Naming-of-Compiler-Macros" accesskey="n" rel="next">Naming of Compiler Macros</a>, Previous: <a href="Compiler-Macros.html#Compiler-Macros" accesskey="p" rel="prev">Compiler Macros</a>, Up: <a href="Compilation-Semantics.html#Compilation-Semantics" accesskey="u" rel="up">Compilation Semantics</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Purpose-of-Compiler-Macros-1"></a>
+<h4 class="subsubsection">3.2.2.2 Purpose of Compiler Macros</h4>
+
+<p>The purpose of the <i>compiler macro</i> facility is to permit 
+selective source code transformations as optimization advice 
+to the <i>compiler</i>.  When a <i>compound form</i> is being
+processed (as by the compiler), if the <i>operator</i> names a
+<i>compiler macro</i> then the <i>compiler macro function</i> may be
+invoked on the form, and the resulting expansion recursively processed
+in preference to performing the usual processing on the original <i>form</i>
+according to its normal interpretation as a <i>function form</i> or
+<i>macro form</i>.
+</p>
+<p>A <i>compiler macro function</i>, like a <i>macro function</i>,
+is a <i>function</i> of two <i>arguments</i>: the entire call <i>form</i>
+and the <i>environment</i>. Unlike an ordinary <i>macro function</i>, a 
+<i>compiler macro function</i> can decline to provide an expansion merely by
+returning a value that is the <i>same</i> as the original <i>form</i>.
+The consequences are undefined if a <i>compiler macro function</i>
+destructively modifies any part of its <i>form</i> argument.
+</p>
+<p>The <i>form</i> passed to the compiler macro function can either be a <i>list</i>
+whose <i>car</i> is the function name, or a <i>list</i> whose <i>car</i> is
+<b>funcall</b> and whose <i>cadr</i> is a list <tt>(function <i>name</i>)</tt>;
+note that this affects destructuring of the form argument by the 
+<i>compiler macro function</i>.
+<b>define-compiler-macro</b> arranges for destructuring of arguments to be
+performed correctly for both possible formats.
+</p>
+<p>When <b>compile-file</b> chooses to expand a <i>top level form</i> that is
+a <i>compiler macro</i> <i>form</i>, the expansion is also treated as a <i>top level form</i>
+for the purposes of <b>eval-when</b> processing; see <a href="Processing-of-Top-Level-Forms.html#Processing-of-Top-Level-Forms">Processing of Top Level Forms</a>.
+</p>
+
+
+
+</body>
+</html>

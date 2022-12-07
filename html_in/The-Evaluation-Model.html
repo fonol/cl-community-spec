@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>The Evaluation Model (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="The Evaluation Model (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="The Evaluation Model (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation.html#Evaluation" rel="up" title="Evaluation">
+<link href="Form-Evaluation.html#Form-Evaluation" rel="next" title="Form Evaluation">
+<link href="Environment-Objects.html#Environment-Objects" rel="prev" title="Environment Objects">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="The-Evaluation-Model"></a>
+<div class="header">
+<p>
+Next: <a href="Lambda-Expressions.html#Lambda-Expressions" accesskey="n" rel="next">Lambda Expressions</a>, Previous: <a href="Introduction-to-Environments.html#Introduction-to-Environments" accesskey="p" rel="prev">Introduction to Environments</a>, Up: <a href="Evaluation.html#Evaluation" accesskey="u" rel="up">Evaluation</a> &nbsp; </p>
+</div>
+<hr>
+<a name="The-Evaluation-Model-1"></a>
+<h4 class="subsection">3.1.2 The Evaluation Model</h4>
+
+<p>A <span class="roman">Common Lisp</span> system evaluates <i>forms</i> with respect to lexical,
+dynamic, and global <i>environments</i>.  The following sections
+describe the components of the <span class="roman">Common Lisp</span> evaluation model.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Form-Evaluation.html#Form-Evaluation" accesskey="1">Form Evaluation</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Symbols-as-Forms.html#Symbols-as-Forms" accesskey="2">Symbols as Forms</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Lexical-Variables.html#Lexical-Variables" accesskey="3">Lexical Variables</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Dynamic-Variables.html#Dynamic-Variables" accesskey="4">Dynamic Variables</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Constant-Variables.html#Constant-Variables" accesskey="5">Constant Variables</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Symbols-Naming-Both-Lexical-and-Dynamic-Variables.html#Symbols-Naming-Both-Lexical-and-Dynamic-Variables" accesskey="6">Symbols Naming Both Lexical and Dynamic Variables</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Conses-as-Forms.html#Conses-as-Forms" accesskey="7">Conses as Forms</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Special-Forms.html#Special-Forms" accesskey="8">Special Forms</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Macro-Forms.html#Macro-Forms" accesskey="9">Macro Forms</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Function-Forms.html#Function-Forms">Function Forms</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Lambda-Forms.html#Lambda-Forms">Lambda Forms</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Self_002dEvaluating-Objects.html#Self_002dEvaluating-Objects">Self-Evaluating Objects</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Examples-of-Self_002dEvaluating-Objects.html#Examples-of-Self_002dEvaluating-Objects">Examples of Self-Evaluating Objects</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+</html>

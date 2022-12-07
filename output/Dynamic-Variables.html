@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Dynamic Variables (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="The-Evaluation-Model.html#The-Evaluation-Model" rel="up" title="The Evaluation Model">
+<link href="Constant-Variables.html#Constant-Variables" rel="next" title="Constant Variables">
+<link href="Lexical-Variables.html#Lexical-Variables" rel="prev" title="Lexical Variables">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Lexical-Variables.html#Lexical-Variables" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Lexical Variables
+                            </a>
+                            <a href="The-Evaluation-Model.html#The-Evaluation-Model.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                The Evaluation Model
+                            </a>
+                            <a href="Constant-Variables.html#Constant-Variables.html" class="nav-btn nav__next ">
+                                Constant Variables
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Dynamic-Variables"></a>
+<a name="Dynamic-Variables-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Dynamic Variables</h4>
+
+<p>A <i>variable</i> is a <i>dynamic variable</i> if one of the following
+conditions hold:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>It is locally declared or globally proclaimed <b>special</b>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>It occurs textually within a <i>form</i> that
+creates a <i>dynamic binding</i> for a <i>variable</i> of the <i>same</i> <i>name</i>,
+and the <i>binding</i> is not <i>shadowed</i>_2 by a <i>form</i>
+that creates a <i>lexical binding</i> of the same <i>variable</i> <i>name</i>.
+</p>
+</dd>
+</dl>
+
+<p>A <i>dynamic variable</i> can be referenced at any time in any <i>program</i>;
+there is no textual limitation on references to <i>dynamic variables</i>.
+At any given time, all <i>dynamic variables</i> with a given name refer to 
+exactly one <i>binding</i>, either in the <i>dynamic environment</i>
+or in the <i>global environment</i>.
+</p>
+<p>The <i>value</i> part of the <i>binding</i> for a <i>dynamic variable</i> might
+be empty; in this case, the <i>dynamic variable</i> is said to have no <i>value</i>,
+or to be <i>unbound</i>.  A <i>dynamic variable</i> can be made <i>unbound</i>
+by using <b>makunbound</b>.
+</p>
+<p>The effect of <i>binding</i> a <i>dynamic variable</i> is to create
+a new <i>binding</i> to which all references to that <i>dynamic variable</i>
+in any <i>program</i> refer for the duration of the <i>evaluation</i> of the <i>form</i>
+that creates the <i>dynamic binding</i>.
+</p>
+<p>A <i>dynamic variable</i> can be referenced outside the <i>dynamic extent</i> of
+a <i>form</i> that <i>binds</i> it.  Such a <i>variable</i> is sometimes called 
+a &ldquo;global variable&rdquo; but is still in all respects just a <i>dynamic variable</i>
+whose <i>binding</i> happens to exist in the <i>global environment</i> rather than in some
+<i>dynamic environment</i>.
+</p>
+<p>A <i>dynamic variable</i> is <i>unbound</i>
+unless and until explicitly assigned a value, except for 
+those variables whose initial value is 
+defined in this specification or by an <i>implementation</i>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

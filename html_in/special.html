@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>special (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="special (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="special (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="locally.html#locally" rel="next" title="locally">
+<link href="optimize.html#optimize" rel="prev" title="optimize">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="special"></a>
+<div class="header">
+<p>
+Next: <a href="locally.html#locally" accesskey="n" rel="next">locally</a>, Previous: <a href="optimize.html#optimize" accesskey="p" rel="prev">optimize</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="special-_005bDeclaration_005d"></a>
+<h4 class="subsection">3.8.26 special                                                       [Declaration]</h4>
+
+<a name="Syntax_003a_003a-9"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><tt>(special {<i>var</i>}*</tt>)
+</p>
+<a name="Arguments_003a_003a-9"></a>
+<h4 class="subsubheading">Arguments::</h4>
+
+<p><i>var</i>&mdash;a <i>symbol</i>.
+</p>
+<a name="Valid-Context_003a_003a-7"></a>
+<h4 class="subsubheading">Valid Context::</h4>
+
+<p><i>declaration</i> or <i>proclamation</i>
+</p>
+<a name="Binding-Types-Affected_003a_003a-5"></a>
+<h4 class="subsubheading">Binding Types Affected::</h4>
+
+<p><i>variable</i>
+</p>
+<a name="Description_003a_003a-25"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Specifies that all of
+the <i>vars</i> named are dynamic.
+This specifier affects variable <i>bindings</i> and 
+affects references.
+All variable <i>bindings</i> affected are made to be dynamic <i>bindings</i>,
+and affected variable references refer to the current dynamic 
+<i>binding</i>.
+For example:
+</p>
+<div class="example">
+<pre class="example"> (defun hack (thing *mod*)    ;The binding of the parameter
+   (declare (special *mod*))  ; *mod* is visible to hack1,
+   (hack1 (car thing)))       ; but not that of thing.
+ (defun hack1 (arg)
+   (declare (special *mod*))  ;Declare references to *mod*
+                              ;within hack1 to be special.
+   (if (atom arg) *mod*
+       (cons (hack1 (car arg)) (hack1 (cdr arg)))))
+</pre></div>
+
+<p>A <b>special</b> declaration does not affect inner <i>bindings</i> 
+of a <i>var</i>; the inner <i>bindings</i> implicitly shadow
+a <b>special</b> declaration and must be explicitly re-declared to
+be <b>special</b>.
+<b>special</b> declarations never apply to function <i>bindings</i>.
+</p>
+<p><b>special</b> declarations can be either <i>bound declarations</i>,
+affecting both a binding and references, or <i>free declarations</i>,
+affecting only references, depending on whether the declaration is 
+attached to a variable binding.
+</p>
+<p>When used in a <i>proclamation</i>, a <b>special</b> 
+<i>declaration specifier</i>
+applies to all <i>bindings</i> as well as to all references of the
+mentioned variables.  For example, after
+</p>
+<div class="example">
+<pre class="example"> (declaim (special x))
+</pre></div>
+
+<p>then in a function definition such as
+</p>
+<div class="example">
+<pre class="example"> (defun example (x) ...)
+</pre></div>
+
+<p>the parameter <tt>x</tt> is bound as a dynamic variable
+rather than as a lexical variable.  
+</p>
+<a name="Examples_003a_003a-21"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">(defun declare-eg (y)                 ;this y is special
+ (declare (special y))
+ (let ((y t))                         ;this y is lexical
+      (list y
+            (locally (declare (special y)) y)))) ;this y refers to the
+                                                 ;special binding of y
+&rArr;  DECLARE-EG 
+ (declare-eg nil) &rArr;  (T NIL) 
+</pre></div>
+
+<div class="example">
+<pre class="example">(setf (symbol-value 'x) 6)
+(defun foo (x)                         ;a lexical binding of x
+  (print x)
+  (let ((x (1+ x)))                    ;a special binding of x
+    (declare (special x))              ;and a lexical reference
+    (bar))
+  (1+ x))
+(defun bar () 
+  (print (locally (declare (special x))
+           x)))
+(foo 10) 
+<tt> |&gt; </tt> 10
+<tt> |&gt; </tt> 11
+&rArr;  11
+</pre></div>
+
+<div class="example">
+<pre class="example">(setf (symbol-value 'x) 6)
+(defun bar (x y)            ;[1] 1st occurrence of x
+  (let ((old-x x)           ;[2] 2nd occurrence of x -- same as 1st occurrence
+        (x y))              ;[3] 3rd occurrence of x
+    (declare (special x))
+    (list old-x x)))
+(bar 'first 'second) &rArr;  (FIRST SECOND)
+</pre></div>
+
+<div class="example">
+<pre class="example"> (defun few (x &amp;optional (y *foo*))
+   (declare (special *foo*))
+   ...)
+</pre></div>
+
+<p>The reference to <tt>*foo*</tt>
+in the first line of this example is not <b>special</b>
+even though there is a <b>special</b> declaration in the second line.
+</p>
+<div class="example">
+<pre class="example"> (declaim (special prosp)) &rArr;  <i>implementation-dependent</i>
+ (setq prosp 1 reg 1) &rArr;  1
+ (let ((prosp 2) (reg 2))         ;the binding of prosp is special
+    (set 'prosp 3) (set 'reg 3)   ;due to the preceding proclamation,
+    (list prosp reg))             ;whereas the variable reg is lexical
+&rArr;  (3 2)
+ (list prosp reg) &rArr;  (1 3)
+
+ (declaim (special x))          ;x is always special.
+ (defun example (x y)                                 
+   (declare (special y))
+   (let ((y 3) (x (* x 2)))
+     (print (+ y (locally (declare (special y)) y)))
+     (let ((y 4)) (declare (special y)) (foo x)))) &rArr;  EXAMPLE
+</pre></div>
+
+<p>In the contorted code above, the outermost and innermost <i>bindings</i> of
+<tt>y</tt> are dynamic,
+but the middle
+binding is lexical. The two arguments to <tt>+</tt> are different,
+one being the value, which is <tt>3</tt>, of the lexical variable
+<tt>y</tt>, and the other being the value of the dynamic variable named <tt>y</tt>
+(a <i>binding</i> 
+of which happens, coincidentally, to lexically surround it at
+an outer level).  All the <i>bindings</i> 
+of <tt>x</tt> and references to <tt>x</tt>
+are dynamic, however, because of the proclamation that <tt>x</tt> is
+always <b>special</b>.
+</p>
+<a name="See-Also_003a_003a-25"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;defparameter; defvar&rsquo;
+,
+<b>defvar</b>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="locally.html#locally" accesskey="n" rel="next">locally</a>, Previous: <a href="optimize.html#optimize" accesskey="p" rel="prev">optimize</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

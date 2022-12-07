@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>with-hash-table-iterator (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Hash-Tables-Dictionary.html#Hash-Tables-Dictionary" rel="up" title="Hash Tables Dictionary">
+<link href="clrhash.html#clrhash" rel="next" title="clrhash">
+<link href="maphash.html#maphash" rel="prev" title="maphash">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="maphash.html#maphash" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                maphash
+                            </a>
+                            <a href="Hash-Tables-Dictionary.html#Hash-Tables-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Hash Tables Dictionary
+                            </a>
+                            <a href="clrhash.html#clrhash.html" class="nav-btn nav__next ">
+                                clrhash
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="with_002dhash_002dtable_002diterator"></a>
+<a name="with_002dhash_002dtable_002diterator-_005bMacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Macro</div>
+<h4 class="subsection">with-hash-table-iterator                                            </h4>
+
+<p><code>with-hash-table-iterator</code>  <i><span class="roman">(</span>name hash-table<span class="roman">)</span> 
+	           {<i>declaration</i>}*</i> {<i>form</i>}* &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-386"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>name</i>&mdash;a name suitable for the first argument to <b>macrolet</b>.
+</p>
+<p><i>hash-table</i>&mdash;a <i>form</i>, evaluated once, that should produce a <i>hash table</i>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by <i>forms</i>.
+</p>
+<a name="Description_003a_003a-502"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Within the lexical scope of the body, <i>name</i> is defined via <b>macrolet</b> 
+such that successive invocations of <tt>(<i>name</i>)</tt> return the items,
+one by one, from the <i>hash table</i> that is obtained by evaluating
+<i>hash-table</i> only once.
+</p>
+<p>An invocation <tt>(<i>name</i>)</tt> returns three values as follows:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>A <i>generalized boolean</i> that is <i>true</i> if an entry is returned.
+</p></dd>
+<dt>2.</dt>
+<dd><p>The key from the <i>hash-table</i> entry.
+</p></dd>
+<dt>3.</dt>
+<dd><p>The value from the <i>hash-table</i> entry.
+</p></dd>
+</dl>
+
+<p>After all entries have been returned by successive invocations of
+<tt>(<i>name</i>)</tt>, then only one value is returned, namely <b>nil</b>.
+</p>
+<p>It is unspecified what happens if any of the implicit interior state 
+of an iteration is returned outside the dynamic extent of the 
+<b>with-hash-table-iterator</b> <i>form</i>
+such as by returning some <i>closure</i> over the invocation <i>form</i>.
+</p>
+<p>Any number of invocations of <b>with-hash-table-iterator</b> 
+can be nested, and the body of the innermost one can invoke all of the
+locally <i>established</i> <i>macros</i>, provided all of those <i>macros</i>
+have <i>distinct</i> names.
+</p>
+<a name="Examples_003a_003a-366"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<p>The following function should return <b>t</b> on any 
+<i>hash table</i>, and signal
+an error if the usage of <b>with-hash-table-iterator</b> does not agree
+with the corresponding usage of <b>maphash</b>.
+</p>
+<div class="example">
+<pre class="example"><code> (defun test-hash-table-iterator (hash-table)
+   (let ((all-entries '())
+         (generated-entries '())
+         (unique (list nil)))
+     (maphash #'(lambda (key value) (push (list key value) all-entries))
+              hash-table)
+     (with-hash-table-iterator (generator-fn hash-table)
+       (loop     
+         (multiple-value-bind (more? key value) (generator-fn)
+           (unless more? (return))
+           (unless (eql value (gethash key hash-table unique))
+             (error &quot;Key ~S not found for value ~S&quot; key value))
+           (push (list key value) generated-entries))))
+     (unless (= (length all-entries)
+                (length generated-entries)
+                (length (union all-entries generated-entries
+                               :key #'car :test (hash-table-test hash-table))))
+       (error &quot;Generated entries and Maphash entries don't correspond&quot;))
+     t))
+</code>
+</pre></div>
+
+<p>The following could be an acceptable definition of 
+<b>maphash</b>, implemented by <b>with-hash-table-iterator</b>.
+</p>
+<div class="example">
+<pre class="example"><code> (defun maphash (function hash-table)
+   (with-hash-table-iterator (next-entry hash-table)
+     (loop (multiple-value-bind (more key value) (next-entry)
+             (unless more (return nil))
+             (funcall function key value)))))
+</code>
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-173"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>The consequences are undefined if the local function named <i>name</i>
+<i>established</i> by <b>with-hash-table-iterator</b> is called after it has
+returned <i>false</i> as its <i>primary value</i>.
+</p>
+<a name="See-Also_003a_003a-410"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

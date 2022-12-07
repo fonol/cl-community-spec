@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Hash-Table Operations (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Hash-Table-Concepts.html#Hash-Table-Concepts" rel="up" title="Hash Table Concepts">
+<link href="Modifying-Hash-Table-Keys.html#Modifying-Hash-Table-Keys" rel="next" title="Modifying Hash Table Keys">
+<link href="Hash-Table-Concepts.html#Hash-Table-Concepts" rel="prev" title="Hash Table Concepts">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Hash-Table-Concepts.html#Hash-Table-Concepts" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Hash Table Concepts
+                            </a>
+                            <a href="Hash-Table-Concepts.html#Hash-Table-Concepts.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Hash Table Concepts
+                            </a>
+                            <a href="Modifying-Hash-Table-Keys.html#Modifying-Hash-Table-Keys.html" class="nav-btn nav__next ">
+                                Modifying Hash Table Keys
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Hash_002dTable-Operations"></a>
+<a name="Hash_002dTable-Operations-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Hash-Table Operations</h4>
+
+<p>Figure 18&ndash;1 lists some <i>defined names</i> that are applicable 
+to <i>hash tables</i>.  The following rules apply to <i>hash tables</i>.
+</p>
+<dl compact="compact">
+<dt>&ndash;</dt>
+<dd><p>A <i>hash table</i> can only associate one value with a given
+key. If an attempt is made to add a second value for a given key,
+the second value will replace the first.
+Thus, adding a value to a <i>hash table</i> is a destructive operation;
+the <i>hash table</i> is modified.  
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>There are four kinds of <i>hash tables</i>:
+  those whose keys are compared with <b>eq</b>,
+  those whose keys are compared with <b>eql</b>,
+  those whose keys are compared with <b>equal</b>, and
+</p>
+<p>those whose keys are compared with <b>equalp</b>.  
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p><i>Hash tables</i> are created by <b>make-hash-table</b>. 
+<b>gethash</b> is used to look up a key and find the associated value.
+New entries are added to <i>hash tables</i> using <b>setf</b> with <b>gethash</b>.
+<b>remhash</b> is used to remove an entry.
+For example:
+</p>
+<div class="example">
+<pre class="example"><code> (setq a (make-hash-table)) &rArr;  #&lt;HASH-TABLE EQL 0/120 32536573&gt;
+ (setf (gethash 'color a) 'brown) &rArr;  BROWN
+ (setf (gethash 'name a) 'fred) &rArr;  FRED
+ (gethash 'color a) &rArr;  BROWN, <i>true</i>
+ (gethash 'name a) &rArr;  FRED, <i>true</i>
+ (gethash 'pointy a) &rArr;  NIL, <i>false</i>
+</code>
+</pre></div>
+
+<p>In this example, the symbols <tt>color</tt> and <tt>name</tt> are being used as
+keys, and the symbols <tt>brown</tt> and <tt>fred</tt> are being used as the
+associated values.  The <i>hash table</i> 
+has two items in it, one of which                              
+associates from <tt>color</tt> to <tt>brown</tt>, and the other of which
+associates from <tt>name</tt> to <tt>fred</tt>.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>A key or a value may be any <i>object</i>.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>The existence of an entry in the <i>hash table</i> can be determined
+from the <i>secondary value</i> returned by <b>gethash</b>.
+</p></dd>
+</dl>
+
+<p>&nbsp;&nbsp;clrhash&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">hash-table-p</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remhash&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;gethash&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">make-hash-table</span>&nbsp;&nbsp;sxhash&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">hash-table-count</span>&nbsp;&nbsp;maphash&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;18&ndash;1:&nbsp;<span class="nolinebreak">Hash-table</span>&nbsp;defined&nbsp;names&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

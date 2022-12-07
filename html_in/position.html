@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>position (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="position (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="position (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Sequences-Dictionary.html#Sequences-Dictionary" rel="up" title="Sequences Dictionary">
+<link href="search.html#search" rel="next" title="search">
+<link href="find.html#find" rel="prev" title="find">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="position"></a>
+<div class="header">
+<p>
+Next: <a href="search.html#search" accesskey="n" rel="next">search</a>, Previous: <a href="find.html#find" accesskey="p" rel="prev">find</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="position_002c-position_002dif_002c-position_002dif_002dnot-_005bFunction_005d"></a>
+<h4 class="subsection">17.3.15 position, position-if, position-if-not                           [Function]</h4>
+
+<p><code>position</code>  <i>item sequence &amp;key</i> from-end test test-not start end key &rArr;  <i>position</i>
+</p>
+<p><code>position-if</code>  <i>predicate sequence &amp;key</i> from-end start end key &rArr;  <i>position</i>
+</p>
+<p><code>position-if-not</code>  <i>predicate sequence &amp;key</i> from-end start end key &rArr;  <i>position</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-367"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>item</i>&mdash;an <i>object</i>.
+</p>
+<p><i>sequence</i>&mdash;a <i>proper sequence</i>.
+</p>
+<p><i>predicate</i>&mdash;a <i>designator</i> for a <i>function</i> of one argument 
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>from-end</i>&mdash;a <i>generalized boolean</i>.
+  The default is <i>false</i>.
+</p>
+<p><i>test</i>&mdash;a <i>designator</i> for a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test-not</i>&mdash;a <i>designator</i> for 
+  a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>start</i>, <i>end</i>&mdash;<i>bounding index designators</i> of <i>sequence</i>.
+ The defaults for <i>start</i> and <i>end</i> are <tt>0</tt> and <b>nil</b>, respectively.
+</p>
+<p><i>key</i>&mdash;a <i>designator</i> for a <i>function</i> of one argument,
+  or <b>nil</b>.
+</p>
+<p><i>position</i>&mdash;a <i>bounding index</i> of <i>sequence</i>, or <b>nil</b>.
+</p>
+<a name="Description_003a_003a-482"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>position</b>, <b>position-if</b>, and <b>position-if-not</b> 
+each search <i>sequence</i> for an <i>element</i> that <i>satisfies the test</i>.
+</p>
+<p>The <i>position</i> returned is the index within <i>sequence</i>
+    of the leftmost  (if <i>from-end</i> is <i>true</i>)
+ or of the rightmost (if <i>from-end</i> is <i>false</i>)
+<i>element</i> that <i>satisfies the test</i>;
+otherwise <b>nil</b> is returned.
+The index returned is relative to the left-hand end of the entire <i>sequence</i>,
+regardless of the value of <i>start</i>, <i>end</i>, or <i>from-end</i>.
+</p>
+<a name="Examples_003a_003a-349"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (position #\a &quot;baobab&quot; :from-end t) &rArr;  4
+ (position-if #'oddp '((1) (2) (3) (4)) :start 1 :key #'car) &rArr;  2
+ (position 595 '()) &rArr;  NIL
+ (position-if-not #'integerp '(1 2 3 4 5.0)) &rArr;  4 
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-163"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>sequence</i> is not a <i>proper sequence</i>.
+</p>
+<a name="See-Also_003a_003a-392"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;find; find-if; find-if-not&rsquo;
+,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<a name="Notes_003a_003a-263"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <tt>:test-not</tt> <i>argument</i> is deprecated.
+</p>
+<p>The <i>function</i> <b>position-if-not</b> is deprecated.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="search.html#search" accesskey="n" rel="next">search</a>, Previous: <a href="find.html#find" accesskey="p" rel="prev">find</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

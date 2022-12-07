@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Introduction to Packages (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Introduction to Packages (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Introduction to Packages (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Package-Concepts.html#Package-Concepts" rel="up" title="Package Concepts">
+<link href="Package-Names-and-Nicknames.html#Package-Names-and-Nicknames" rel="next" title="Package Names and Nicknames">
+<link href="Package-Concepts.html#Package-Concepts" rel="prev" title="Package Concepts">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Introduction-to-Packages"></a>
+<div class="header">
+<p>
+Next: <a href="Standardized-Packages.html#Standardized-Packages" accesskey="n" rel="next">Standardized Packages</a>, Previous: <a href="Package-Concepts.html#Package-Concepts" accesskey="p" rel="prev">Package Concepts</a>, Up: <a href="Package-Concepts.html#Package-Concepts" accesskey="u" rel="up">Package Concepts</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Introduction-to-Packages-1"></a>
+<h4 class="subsection">11.1.1 Introduction to Packages</h4>
+
+<p>A <i>package</i>
+<a name="index-package"></a>
+ establishes a mapping from names to <i>symbols</i>. 
+At any given time, one <i>package</i> is current.
+The <i>current package</i>
+<a name="index-current-package"></a>
+ is the one that is the <i>value</i> of <b>*package*</b>.
+When using the <i>Lisp reader</i>,
+it is possible to refer to <i>symbols</i> in <i>packages</i> 
+other than the current one through the use of <i>package prefixes</i> in the 
+printed representation of the <i>symbol</i>.
+</p>
+<p>Figure 11&ndash;1 lists some <i>defined names</i> that are applicable
+to <i>packages</i>.
+Where an <i>operator</i> 
+takes an argument that is either a <i>symbol</i> or a <i>list</i> 
+of <i>symbols</i>,
+an argument of <b>nil</b> is treated as an empty <i>list</i> of <i>symbols</i>.
+Any <i>package</i> argument may be either a <i>string</i>, a <i>symbol</i>, or
+a <i>package</i>.  If a <i>symbol</i> is supplied, its name will be used
+as the <i>package</i> name.
+</p>
+<p>&nbsp;&nbsp;*modules*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;import&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;provide&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;*package*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">in-package</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">rename-package</span>&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defpackage&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;intern&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;require&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">do-all-symbols</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">list-all-packages</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shadow&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">do-external-symbols</span>&nbsp;&nbsp;<span class="nolinebreak">make-package</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">shadowing-import</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">do-symbols</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">package-name</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unexport&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;export&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">package-nicknames</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unintern&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">find-all-symbols</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">package-shadowing-symbols</span>&nbsp;&nbsp;<span class="nolinebreak">unuse-package</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">find-package</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">package-use-list</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">use-package</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">find-symbol</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">package-used-by-list</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;11&ndash;1:&nbsp;Some&nbsp;Defined&nbsp;Names&nbsp;related&nbsp;to&nbsp;Packages&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Package-Names-and-Nicknames.html#Package-Names-and-Nicknames" accesskey="1">Package Names and Nicknames</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Symbols-in-a-Package.html#Symbols-in-a-Package" accesskey="2">Symbols in a Package</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Internal-and-External-Symbols.html#Internal-and-External-Symbols" accesskey="3">Internal and External Symbols</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Package-Inheritance.html#Package-Inheritance" accesskey="4">Package Inheritance</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Accessibility-of-Symbols-in-a-Package.html#Accessibility-of-Symbols-in-a-Package" accesskey="5">Accessibility of Symbols in a Package</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Locating-a-Symbol-in-a-Package.html#Locating-a-Symbol-in-a-Package" accesskey="6">Locating a Symbol in a Package</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Prevention-of-Name-Conflicts-in-Packages.html#Prevention-of-Name-Conflicts-in-Packages" accesskey="7">Prevention of Name Conflicts in Packages</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Standardized-Packages.html#Standardized-Packages" accesskey="n" rel="next">Standardized Packages</a>, Previous: <a href="Package-Concepts.html#Package-Concepts" accesskey="p" rel="prev">Package Concepts</a>, Up: <a href="Package-Concepts.html#Package-Concepts" accesskey="u" rel="up">Package Concepts</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

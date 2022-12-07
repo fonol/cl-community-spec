@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Type Relationships (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Type Relationships (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Type Relationships (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Types.html#Types" rel="up" title="Types">
+<link href="Type-Specifiers.html#Type-Specifiers" rel="next" title="Type Specifiers">
+<link href="Data-Type-Definition.html#Data-Type-Definition" rel="prev" title="Data Type Definition">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Type-Relationships"></a>
+<div class="header">
+<p>
+Next: <a href="Type-Specifiers.html#Type-Specifiers" accesskey="n" rel="next">Type Specifiers</a>, Previous: <a href="Data-Type-Definition.html#Data-Type-Definition" accesskey="p" rel="prev">Data Type Definition</a>, Up: <a href="Types.html#Types" accesskey="u" rel="up">Types</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Type-Relationships-1"></a>
+<h4 class="subsection">4.2.2 Type Relationships</h4>
+
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>The <i>types</i> <b>cons</b>, <b>symbol</b>, <b>array</b>, <b>number</b>,
+<b>character</b>, <b>hash-table</b>, 
+</p>
+<p><b>function</b>,
+</p>
+<p><b>readtable</b>, <b>package</b>, <b>pathname</b>, <b>stream</b>, 
+<b>random-state</b>, <b>condition</b>, <b>restart</b>,
+and any single other <i>type</i> created by <b>defstruct</b>,
+</p>
+<p><b>define-condition</b>,
+</p>
+<p>or <b>defclass</b> are <i>pairwise</i> <i>disjoint</i>, 
+except for type relations explicitly established by specifying 
+<i>superclasses</i> in <b>defclass</b> 
+</p>
+<p>or <b>define-condition</b>
+</p>
+<p>or the <tt>:include</tt> option of <b>destruct</b>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Any two <i>types</i> created by <b>defstruct</b> are 
+<i>disjoint</i> unless
+one is a <i>supertype</i> of the other by virtue of
+the <b>defstruct</b> <tt>:include</tt> option.
+</p>
+<p>[Editorial Note by KMP: The comments in the source say gray suggested some change
+from &ldquo;common superclass&rdquo; to &ldquo;common subclass&rdquo; in the following, but the
+result looks suspicious to me.]
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Any two <i>distinct</i> <i>classes</i> created by <b>defclass</b> 
+or <b>define-condition</b>
+are <i>disjoint</i> unless they have a common <i>subclass</i> or
+one <i>class</i> is a <i>subclass</i> of the other.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>An implementation may be extended to add other <i>subtype</i>
+relationships between the specified <i>types</i>, as long as they do
+not violate the type relationships and disjointness requirements
+specified here.  An implementation may define additional <i>types</i>
+that are <i>subtypes</i> or <i>supertypes</i> of any
+specified <i>types</i>, as long as each additional <i>type</i> is
+a <i>subtype</i> of <i>type</i> <b>t</b> and a <i>supertype</i> of <i>type</i> <b>nil</b> and the disjointness requirements
+are not violated.
+</p>
+<p>At the discretion of the implementation, either <b>standard-object</b>
+or <b>structure-object</b> might appear in any class precedence list
+for a <i>system class</i> that does not already specify either 
+<b>standard-object</b> or <b>structure-object</b>.  If it does,
+it must precede the <i>class</i> <b>t</b> and follow all other <i>standardized</i> <i>classes</i>.
+</p>
+</dd>
+</dl>
+
+
+
+
+</body>
+</html>

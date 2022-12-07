@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Pretty Print Dispatch Tables (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Pretty Print Dispatch Tables (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Pretty Print Dispatch Tables (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Pretty-Printer-Concepts.html#Pretty-Printer-Concepts" rel="up" title="Pretty Printer Concepts">
+<link href="Pretty-Printer-Margins.html#Pretty-Printer-Margins" rel="next" title="Pretty Printer Margins">
+<link href="Compiling-Format-Strings.html#Compiling-Format-Strings" rel="prev" title="Compiling Format Strings">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Pretty-Print-Dispatch-Tables"></a>
+<div class="header">
+<p>
+Next: <a href="Pretty-Printer-Margins.html#Pretty-Printer-Margins" accesskey="n" rel="next">Pretty Printer Margins</a>, Previous: <a href="Compiling-Format-Strings.html#Compiling-Format-Strings" accesskey="p" rel="prev">Compiling Format Strings</a>, Up: <a href="Pretty-Printer-Concepts.html#Pretty-Printer-Concepts" accesskey="u" rel="up">Pretty Printer Concepts</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Pretty-Print-Dispatch-Tables-1"></a>
+<h4 class="subsubsection">22.2.1.4 Pretty Print Dispatch Tables</h4>
+
+<p>A <i>pprint dispatch table</i>
+<a name="index-pprint-dispatch-table"></a>
+ is a mapping from keys to pairs of values.  
+Each key is a <i>type specifier</i>.  
+The values associated with a key are
+     a &ldquo;function&rdquo; (specifically, a <i>function designator</i> or <b>nil</b>)
+ and a &ldquo;numerical priority&rdquo; (specifically, a <i>real</i>).
+Basic insertion and retrieval is done based on the keys with the equality
+of keys being tested by <b>equal</b>.
+</p>
+<p>When <b>*print-pretty*</b> is <i>true</i>, 
+the <i>current pprint dispatch table</i>
+<a name="index-current-pprint-dispatch-table"></a>
+ (in <b>*print-pprint-dispatch*</b>)
+controls how <i>objects</i> are printed.
+The information in this table takes precedence over
+all other mechanisms for specifying how to print <i>objects</i>.
+In particular, it 
+has priority over
+user-defined <b>print-object</b> <i>methods</i> 
+</p>
+<p>because the <i>current pprint dispatch table</i> is consulted first.
+</p>
+<p>The function is chosen from the <i>current pprint dispatch table</i>
+by finding the highest priority function 
+that is associated with a <i>type specifier</i> that matches the <i>object</i>;
+if there is more than one such function, 
+it is <i>implementation-dependent</i> which is used.
+</p>
+<p>However, if there is no 
+information in the table
+about how to <i>pretty print</i> a particular kind of <i>object</i>, 
+a <i>function</i> is invoked which uses <b>print-object</b> to print the <i>object</i>.
+The value of <b>*print-pretty*</b> is still <i>true</i> 
+when this function is <i>called</i>,
+and individual methods for <b>print-object</b> might still elect to
+produce output in a special format conditional on the <i>value</i> of <b>*print-pretty*</b>.
+</p>
+
+
+
+</body>
+</html>

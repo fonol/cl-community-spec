@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>broadcast-stream (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="broadcast-stream (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="broadcast-stream (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="concatenated_002dstream.html#concatenated_002dstream" rel="next" title="concatenated-stream">
+<link href="stream.html#stream" rel="prev" title="stream">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="broadcast_002dstream"></a>
+<div class="header">
+<p>
+Next: <a href="concatenated_002dstream.html#concatenated_002dstream" accesskey="n" rel="next">concatenated-stream</a>, Previous: <a href="stream.html#stream" accesskey="p" rel="prev">stream</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="broadcast_002dstream-_005bSystem-Class_005d"></a>
+<h4 class="subsection">21.2.2 broadcast-stream                                             [System Class]</h4>
+
+<a name="Class-Precedence-List_003a_003a-63"></a>
+<h4 class="subsubheading">Class Precedence List::</h4>
+
+<p><b>broadcast-stream</b>,
+<b>stream</b>,
+<b>t</b>
+</p>
+<a name="Description_003a_003a-533"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>A <i>broadcast stream</i> is an <i>output</i> <i>stream</i> which 
+has associated with it a set of zero or more <i>output</i> <i>streams</i> 
+such that any output sent to the <i>broadcast stream</i> gets passed on
+as output to each of the associated <i>output</i> <i>streams</i>.
+(If a <i>broadcast stream</i> has no <i>component streams</i>,
+then all output to the <i>broadcast stream</i> is discarded.)
+</p>
+<p>The set of operations that may be performed on a <i>broadcast stream</i> 
+is the intersection of those for its associated <i>output</i> <i>streams</i>.
+</p>
+<p>Some output operations (<i>e.g.</i>, <b>fresh-line</b>) return <i>values</i> based on the
+state of the <i>stream</i> at the time of the operation.
+</p>
+<p>Since these <i>values</i> might differ for each of the <i>component streams</i>,
+it is necessary to describe their return value specifically:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p><b>stream-element-type</b> returns
+    the value from the last component stream, 
+    or <b>t</b> if there are no component streams.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p><b>fresh-line</b> returns
+     the value from the last component stream, 
+     or <b>nil</b> if there are no component streams.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The functions
+          <b>file-length</b>,
+          <b>file-position</b>,
+          <b>file-string-length</b>,
+      and <b>stream-external-format</b>
+   return the value from the last component stream;
+   if there are no component streams,
+       <b>file-length</b> and <b>file-position</b> return <tt>0</tt>,
+       <b>file-string-length</b> returns <tt>1</tt>,
+   and <b>stream-external-format</b> returns <tt>:default</tt>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The functions <b>streamp</b> and <b>output-stream-p</b> 
+  always return <i>true</i> for <i>broadcast streams</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The functions <b>open-stream-p</b> tests whether the <i>broadcast stream</i>
+  is <i>open</i>_2, not whether its component streams are <i>open</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The functions <b>input-stream-p</b> and <i>interactive-stream-p</i> 
+  return an <i>implementation-defined</i>, <i>generalized boolean</i> value.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>For the input operations
+        <b>clear-input</b>
+        <b>listen</b>,
+        <b>peek-char</b>,
+        <b>read-byte</b>,
+        <b>read-char-no-hang</b>,
+        <b>read-char</b>,
+        <b>read-line</b>,
+    and <b>unread-char</b>,
+  the consequences are undefined if the indicated operation is performed.
+  However, an <i>implementation</i> is permitted 
+  to define such a behavior as an <i>implementation-dependent</i> extension.
+</p></dd>
+</dl>
+
+<p>For any output operations not having their return values explicitly specified above
+or elsewhere in this document, it is defined that
+the <i>values</i> returned by such an operation are 
+the <i>values</i> resulting from performing the operation 
+on the last of its <i>component streams</i>;
+the <i>values</i> resulting from performing the operation
+on all preceding <i>streams</i> are discarded.                    
+If there are no <i>component streams</i>, 
+the value is <i>implementation-dependent</i>.
+</p>
+<a name="See-Also_003a_003a-436"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="broadcast_002dstream_002dstreams.html#broadcast_002dstream_002dstreams">broadcast-stream-streams</a>
+,
+<a href="make_002dbroadcast_002dstream.html#make_002dbroadcast_002dstream">make-broadcast-stream</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="concatenated_002dstream.html#concatenated_002dstream" accesskey="n" rel="next">concatenated-stream</a>, Previous: <a href="stream.html#stream" accesskey="p" rel="prev">stream</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

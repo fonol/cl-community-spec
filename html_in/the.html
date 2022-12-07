@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>the (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="the (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="the (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="special_002doperator_002dp.html#special_002doperator_002dp" rel="next" title="special-operator-p">
+<link href="locally.html#locally" rel="prev" title="locally">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="the"></a>
+<div class="header">
+<p>
+Next: <a href="special_002doperator_002dp.html#special_002doperator_002dp" accesskey="n" rel="next">special-operator-p</a>, Previous: <a href="locally.html#locally" accesskey="p" rel="prev">locally</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="the-_005bSpecial-Operator_005d"></a>
+<h4 class="subsection">3.8.28 the                                                      [Special Operator]</h4>
+
+<p><code>the</code>  <i>value-type form</i> &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-16"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>value-type</i>&mdash;a <i>type specifier</i>; not evaluated.
+</p>
+<p><i>form</i>&mdash;a <i>form</i>; evaluated.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> resulting from the <i>evaluation</i> of <i>form</i>.
+  These <i>values</i> must conform to the <i>type</i> supplied by <i>value-type</i>;
+  see below.
+</p>
+<a name="Description_003a_003a-27"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>the</b> specifies that the <i>values</i>_{1a} returned by <i>form</i>
+are of the <i>types</i> specified by <i>value-type</i>.
+The consequences are undefined if any <i>result</i>
+is not of the declared type.
+</p>
+<p>It is permissible for <i>form</i> to <i>yield</i> a different number of <i>values</i> 
+than are specified by <i>value-type</i>, provided that the values
+for which <i>types</i> are declared are indeed of those <i>types</i>.
+Missing values are treated as <b>nil</b> for the purposes of checking their <i>types</i>.
+</p>
+<p>Regardless of number of <i>values</i> declared by <i>value-type</i>,
+the number of <i>values</i> returned by the <b>the</b> <i>special form</i> is the same as
+the number of <i>values</i> returned by <i>form</i>. 
+</p>
+<a name="Examples_003a_003a-23"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (the symbol (car (list (gensym)))) &rArr;  #:G9876
+ (the fixnum (+ 5 7)) &rArr;  12
+ (the (values) (truncate 3.2 2)) &rArr;  1, 1.2
+ (the integer (truncate 3.2 2)) &rArr;  1, 1.2
+ (the (values integer) (truncate 3.2 2)) &rArr;  1, 1.2
+ (the (values integer float) (truncate 3.2 2))   &rArr;  1, 1.2
+ (the (values integer float symbol) (truncate 3.2 2)) &rArr;  1, 1.2
+ (the (values integer float symbol t null list) 
+      (truncate 3.2 2)) &rArr;  1, 1.2
+ (let ((i 100))
+    (declare (fixnum i))
+    (the fixnum (1+ i))) &rArr;  101
+ (let* ((x (list 'a 'b 'c))
+        (y 5))
+    (setf (the fixnum (car x)) y)
+    x) &rArr;  (5 B C)
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-6"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>The consequences are undefined if
+the <i>values</i> <i>yielded</i> by the <i>form</i> 
+are not of the <i>type</i> specified by <i>value-type</i>.
+</p>
+<a name="See-Also_003a_003a-27"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>values</b>
+</p>
+<a name="Notes_003a_003a-16"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <b>values</b> <i>type specifier</i> can be used to indicate the types
+of <i>multiple values</i>:
+</p>
+<div class="example">
+<pre class="example"> (the (values integer integer) (floor x y))
+ (the (values string t)
+      (gethash the-key the-string-table))
+</pre></div>
+
+<p><b>setf</b> can be used with <b>the</b> type declarations.
+In this case the declaration is transferred to the form that
+specifies  the new value.  The resulting <b>setf</b> <i>form</i>
+is then analyzed.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="special_002doperator_002dp.html#special_002doperator_002dp" accesskey="n" rel="next">special-operator-p</a>, Previous: <a href="locally.html#locally" accesskey="p" rel="prev">locally</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

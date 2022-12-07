@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>pprint-indent (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="pprint-indent (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="pprint-indent (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer-Dictionary.html#Printer-Dictionary" rel="up" title="Printer Dictionary">
+<link href="pprint_002dlogical_002dblock.html#pprint_002dlogical_002dblock" rel="next" title="pprint-logical-block">
+<link href="pprint_002dfill.html#pprint_002dfill" rel="prev" title="pprint-fill">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="pprint_002dindent"></a>
+<div class="header">
+<p>
+Next: <a href="pprint_002dlogical_002dblock.html#pprint_002dlogical_002dblock" accesskey="n" rel="next">pprint-logical-block</a>, Previous: <a href="pprint_002dfill.html#pprint_002dfill" accesskey="p" rel="prev">pprint-fill</a>, Up: <a href="Printer-Dictionary.html#Printer-Dictionary" accesskey="u" rel="up">Printer Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="pprint_002dindent-_005bFunction_005d"></a>
+<h4 class="subsection">22.4.6 pprint-indent                                                    [Function]</h4>
+
+<p><code>pprint-indent</code>  <i>relative-to n &amp;optional</i> stream &rArr;  <i><b>nil</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-459"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>relative-to</i>&mdash;either <tt>:block</tt> or <tt>:current</tt>.
+</p>
+<p><i>n</i>&mdash;a <i>real</i>.
+</p>
+<p><i>stream</i>&mdash;an <i>output</i> <i>stream designator</i>.
+  The default is <i>standard output</i>.
+</p>
+<a name="Description_003a_003a-594"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>pprint-indent</b> specifies the indentation to use in a logical block on <i>stream</i>.
+</p>
+<p>If <i>stream</i> is a <i>pretty printing stream</i>
+   and the <i>value</i> of <b>*print-pretty*</b> is <i>true</i>,
+<b>pprint-indent</b> sets the indentation in the innermost 
+dynamically enclosing logical block;
+otherwise, <b>pprint-indent</b> has no effect.
+</p>
+<p><i>N</i> specifies the indentation in
+<i>ems</i>.  If <i>relative-to</i> is <tt>:block</tt>, the indentation is set
+to the horizontal position of the first character in the <i>dynamically current logical block</i> plus <i>n</i> 
+<i>ems</i>. If <i>relative-to</i> is <tt>:current</tt>, the indentation is set
+to the current output position plus <i>n</i> <i>ems</i>. (For robustness
+in the face of variable-width fonts, it is advisable to use <tt>:current</tt>
+with an <i>n</i> of zero whenever possible.)
+</p>
+<p><i>N</i> can be negative;
+however, the total indentation cannot be moved 
+left of the beginning of the line 
+or left of the end of the rightmost per-line prefix&mdash;an attempt to move beyond
+one of these limits is treated
+the same as an attempt to move to that limit.
+Changes in indentation caused by <i>pprint-indent</i>
+do not take effect until after the next line break.  In addition, in 
+miser mode all calls to <b>pprint-indent</b> are ignored, forcing the lines 
+corresponding to the logical block to line up under the first character in
+the block.
+</p>
+<a name="Exceptional-Situations_003a_003a-221"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>An error is signaled if <i>relative-to</i> is any <i>object</i> other
+than <tt>:block</tt> or <tt>:current</tt>.
+</p>
+<a name="See-Also_003a_003a-482"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Tilde-I_002d_003e-Indent.html#Tilde-I_002d_003e-Indent">Tilde I-&gt; Indent</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="pprint_002dlogical_002dblock.html#pprint_002dlogical_002dblock" accesskey="n" rel="next">pprint-logical-block</a>, Previous: <a href="pprint_002dfill.html#pprint_002dfill" accesskey="p" rel="prev">pprint-fill</a>, Up: <a href="Printer-Dictionary.html#Printer-Dictionary" accesskey="u" rel="up">Printer Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

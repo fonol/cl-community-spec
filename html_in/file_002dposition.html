@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>file-position (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="file-position (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="file-position (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="file_002dstring_002dlength.html#file_002dstring_002dlength" rel="next" title="file-string-length">
+<link href="file_002dlength.html#file_002dlength" rel="prev" title="file-length">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="file_002dposition"></a>
+<div class="header">
+<p>
+Next: <a href="file_002dstring_002dlength.html#file_002dstring_002dlength" accesskey="n" rel="next">file-string-length</a>, Previous: <a href="file_002dlength.html#file_002dlength" accesskey="p" rel="prev">file-length</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="file_002dposition-_005bFunction_005d"></a>
+<h4 class="subsection">21.2.27 file-position                                                    [Function]</h4>
+
+<p><code>file-position</code>  <i>stream</i> &rArr;  <i>position</i>
+</p>
+<p><code>file-position</code>  <i>stream position-spec</i> &rArr;  <i>success-p</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-428"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>stream</i>&mdash;a <i>stream</i>.
+</p>
+<p><i>position-spec</i>&mdash;a <i>file position designator</i>.
+</p>
+<p><i>position</i>&mdash;a <i>file position</i> or <b>nil</b>.
+</p>
+<p><i>success-p</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-558"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns or changes the current position within a <i>stream</i>.
+</p>
+<p>When <i>position-spec</i> is not supplied,
+<b>file-position</b> returns the current <i>file position</i> in the <i>stream</i>,
+or <b>nil</b> if this cannot be determined.
+</p>
+<p>When <i>position-spec</i> is supplied,
+the <i>file position</i> in <i>stream</i> is set to that <i>file position</i> (if possible).
+<b>file-position</b> returns <i>true</i> 
+if the repositioning is performed successfully,
+or <i>false</i> if it is not.
+</p>
+<p>An <i>integer</i> returned by <b>file-position</b> of one argument 
+should be acceptable as <i>position-spec</i> for use with the same file.
+</p>
+<p>For a character file,
+performing a single <b>read-char</b> or <b>write-char</b> operation
+may cause the file position to be increased by more than 1 because of
+character-set translations (such as translating between the <span class="roman">Common Lisp</span>
+<tt>#\Newline</tt> character and an external ASCII
+carriage-return/line-feed sequence) and other aspects of the
+implementation.  For a binary file, every <b>read-byte</b> 
+or <b>write-byte</b>
+operation increases the file position by 1.
+</p>
+<a name="Examples_003a_003a-405"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defun tester ()
+   (let ((noticed '()) file-written)
+     (flet ((notice (x) (push x noticed) x))
+       (with-open-file (s &quot;test.bin&quot; 
+                          :element-type '(unsigned-byte 8)
+                          :direction :output
+                          :if-exists :error)
+          (notice (file-position s)) ;1
+          (write-byte 5 s) 
+          (write-byte 6 s)
+          (let ((p (file-position s)))
+            (notice p) ;2
+            (notice (when p (file-position s (1- p))))) ;3
+          (write-byte 7 s)
+          (notice (file-position s)) ;4
+          (setq file-written (truename s)))
+        (with-open-file (s file-written
+                           :element-type '(unsigned-byte 8)
+                           :direction :input)
+          (notice (file-position s)) ;5
+          (let ((length (file-length s)))
+            (notice length) ;6
+            (when length
+              (dotimes (i length)
+                (notice (read-byte s)))))) ;7,...
+        (nreverse noticed))))
+&rArr;  tester
+ (tester)
+&rArr;  (0 2 T 2 0 2 5 7)
+<i>OR</i>&rArr; (0 2 NIL 3 0 3 5 6 7)
+<i>OR</i>&rArr; (NIL NIL NIL NIL NIL NIL)
+</pre></div>
+
+<a name="Side-Effects_003a_003a-66"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>When the <i>position-spec</i> argument is supplied,
+the <i>file position</i> in the <i>stream</i> might be moved.
+</p>
+<a name="Affected-By_003a_003a-90"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>The value returned by <b>file-position</b> increases monotonically
+as input or output operations are performed.  
+</p>
+<a name="Exceptional-Situations_003a_003a-206"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If <i>position-spec</i> is supplied, but is too large or otherwise inappropriate, 
+an error is signaled.
+</p>
+<a name="See-Also_003a_003a-455"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="file_002dlength.html#file_002dlength">file-length</a>
+,
+<a href="file_002dstring_002dlength.html#file_002dstring_002dlength">file-string-length</a>
+,
+<a href="open.html#open">open</a>
+</p>
+<a name="Notes_003a_003a-293"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>Implementations that have character files represented
+as a sequence of records of bounded size might choose to encode the
+file position as, for example,
+&lt;&lt;<i>record-number</i>&gt;&gt;*&lt;&lt;<i>max-record-size</i>&gt;&gt;+&lt;&lt;<i>character-within-record</i>&gt;&gt;.
+This is a valid encoding because it increases monotonically as
+each character is read or written, though not necessarily by 1 at
+each step.  An <i>integer</i> might then be considered &ldquo;inappropriate&rdquo;
+as <i>position-spec</i> to <b>file-position</b> if, when decoded into
+record number and character number, it turned out that the
+supplied record was too short for the specified character number.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="file_002dstring_002dlength.html#file_002dstring_002dlength" accesskey="n" rel="next">file-string-length</a>, Previous: <a href="file_002dlength.html#file_002dlength" accesskey="p" rel="prev">file-length</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

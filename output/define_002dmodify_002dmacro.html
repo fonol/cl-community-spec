@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>define-modify-macro (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="defsetf.html#defsetf" rel="next" title="defsetf">
+<link href="progn.html#progn" rel="prev" title="progn">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="progn.html#progn" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                progn
+                            </a>
+                            <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Data and Control Flow Dictionary
+                            </a>
+                            <a href="defsetf.html#defsetf.html" class="nav-btn nav__next ">
+                                defsetf
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="define_002dmodify_002dmacro"></a>
+<a name="define_002dmodify_002dmacro-_005bMacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Macro</div>
+<h4 class="subsection">define-modify-macro                                                 </h4>
+
+<p><code>define-modify-macro</code>  <i>name lambda-list function <span class="roman">[</span>documentation<span class="roman">]</span></i> &rArr;  <i>name</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-78"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>name</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>lambda-list</i>&mdash;a <i>define-modify-macro lambda list</i> 
+</p>
+<p><i>function</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>documentation</i>&mdash;a <i>string</i>; not evaluated.
+</p>
+<a name="Description_003a_003a-113"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>define-modify-macro</b> defines a <i>macro</i> named
+<i>name</i> to <i>read</i> and <i>write</i> a <i>place</i>.
+</p>
+<p>The arguments to the new <i>macro</i> are a <i>place</i>,
+followed
+by the arguments that are supplied in <i>lambda-list</i>.
+</p>
+<p><i>Macros</i> defined with <b>define-modify-macro</b> 
+correctly pass the <i>environment parameter</i> to 
+</p>
+<p><b>get-setf-expansion</b>.
+</p>
+<p>When the <i>macro</i> is invoked, <i>function</i> 
+is applied to the old contents of the <i>place</i>
+and the <i>lambda-list</i> arguments to obtain the new value,
+and the <i>place</i> is updated to contain the result.
+</p>
+<p>Except for the issue of avoiding multiple evaluation (see below), the expansion
+of a <b>define-modify-macro</b> is equivalent to the following:
+</p>
+<div class="example">
+<pre class="example"><code> (defmacro <i>name</i> (reference . <i>lambda-list</i>)
+   <i>documentation</i>
+   `(setf ,reference
+          (<i>function</i> ,reference ,<i>arg1</i> ,<i>arg2</i> ...)))
+</code>
+</pre></div>
+
+<p>where <i>arg1</i>, <i>arg2</i>, ..., 
+are the parameters appearing in <i>lambda-list</i>;
+appropriate provision is made for a <i>rest parameter</i>.
+</p>
+<p>The <i>subforms</i> of the macro calls defined by <b>define-modify-macro</b>
+are evaluated as specified in <a href="Evaluation-of-Subforms-to-Places.html#Evaluation-of-Subforms-to-Places">Evaluation of Subforms to Places</a>.
+</p>
+<p><i>Documentation</i> is attached as a <i>documentation string</i> 
+    to <i>name</i> (as kind <b>function</b>)
+and to the <i>macro function</i>.
+</p>
+<p>If a <b>define-modify-macro</b> <i>form</i> appears as a <i>top level form</i>,
+the <i>compiler</i> must store the <i>macro</i> definition at compile time,
+so that occurrences of the macro later on in the file can be expanded correctly.
+</p>
+<a name="Examples_003a_003a-86"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+<div class="example">
+<pre class="example"><code> (define-modify-macro appendf (&amp;rest args) 
+    append &quot;Append onto list&quot;) &rArr;  APPENDF
+ (setq x '(a b c) y x) &rArr;  (A B C)
+ (appendf x '(d e f) '(1 2 3)) &rArr;  (A B C D E F 1 2 3)
+ x &rArr;  (A B C D E F 1 2 3)
+ y &rArr;  (A B C)
+ (define-modify-macro new-incf (&amp;optional (delta 1)) +)
+ (define-modify-macro unionf (other-set &amp;rest keywords) union)
+</code>
+</pre></div>
+
+<a name="Side-Effects_003a_003a-4"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Side Effects</h4>
+
+<p>A macro definition is assigned to <i>name</i>.
+</p>
+<a name="See-Also_003a_003a-97"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="defsetf.html#defsetf">defsetf</a>
+,
+</p>
+<p><a href="define_002dsetf_002dexpander.html#define_002dsetf_002dexpander">define-setf-expander</a>
+,
+</p>
+<p>&lsquo;documentation; (setf documentation)&rsquo;
+,
+<a href="Syntactic-Interaction-of-Documentation-Strings-and-Declarations.html#Syntactic-Interaction-of-Documentation-Strings-and-Declarations">Syntactic Interaction of Documentation Strings and Declarations</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

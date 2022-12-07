@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Processing of Defining Macros (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="File-Compilation.html#File-Compilation" rel="up" title="File Compilation">
+<link href="Constraints-on-Macros-and-Compiler-Macros.html#Constraints-on-Macros-and-Compiler-Macros" rel="next" title="Constraints on Macros and Compiler Macros">
+<link href="Processing-of-Top-Level-Forms.html#Processing-of-Top-Level-Forms" rel="prev" title="Processing of Top Level Forms">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Processing-of-Top-Level-Forms.html#Processing-of-Top-Level-Forms" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Processing of Top Level Forms
+                            </a>
+                            <a href="File-Compilation.html#File-Compilation.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                File Compilation
+                            </a>
+                            <a href="Constraints-on-Macros-and-Compiler-Macros.html#Constraints-on-Macros-and-Compiler-Macros.html" class="nav-btn nav__next ">
+                                Constraints on Macros and Compiler Macros
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Processing-of-Defining-Macros"></a>
+<a name="Processing-of-Defining-Macros-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Processing of Defining Macros</h4>
+
+<p>Defining <i>macros</i> (such as <b>defmacro</b> or <b>defvar</b>)
+appearing within a file being processed by <b>compile-file</b>
+normally have compile-time side effects which affect how subsequent <i>forms</i>
+in the same <i>file</i> are compiled.  A convenient model for explaining how these
+side effects happen is that the defining macro expands into one or
+more <b>eval-when</b> <i>forms</i>, and that the calls which cause the compile-time
+side effects to happen appear 
+in the body of an <tt>(eval-when (:compile-toplevel) ...)</tt> <i>form</i>.
+</p>
+<p>The compile-time side effects may cause information about the definition to
+be stored differently than if the defining macro had been processed in the
+&lsquo;normal&rsquo; way (either interpretively or by loading the compiled file).
+</p>
+<p>In particular, the information stored by the defining <i>macros</i> at compile time
+might or might not be available to the interpreter (either during or after compilation),
+or during subsequent calls to the <i>compiler</i>.  For example,
+the following code is nonportable because it assumes that the <i>compiler</i>
+stores the macro definition of <tt>foo</tt> where it is available to the interpreter:
+</p>
+<div class="example">
+<pre class="example"><code> (defmacro foo (x) `(car ,x))
+ (eval-when (:execute :compile-toplevel :load-toplevel)
+   (print (foo '(a b c))))
+</code>
+</pre></div>
+
+<p>A portable way to do the same thing would be to include the macro
+definition inside the <b>eval-when</b> <i>form</i>, as in:
+</p>
+<div class="example">
+<pre class="example"><code> (eval-when (:execute :compile-toplevel :load-toplevel)
+   (defmacro foo (x) `(car ,x))
+   (print (foo '(a b c))))
+</code>
+</pre></div>
+
+<p>Figure 3&ndash;8 lists macros that make definitions
+available both in the compilation and run-time <i>environments</i>.
+It is not specified whether definitions made available in the
+<i>compilation environment</i> are available in the evaluation
+<i>environment</i>, nor is it specified whether they are available
+in subsequent compilation units or subsequent invocations of the
+compiler.  As with <b>eval-when</b>, these compile-time side
+effects happen only when the defining macros appear at 
+top level.
+</p>
+<p>&nbsp;&nbsp;declaim&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">define-modify-macro</span>&nbsp;&nbsp;&nbsp;defsetf&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defclass&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">define-setf-expander</span>&nbsp;&nbsp;defstruct&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defconstant&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;defmacro&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deftype&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">define-compiler-macro</span>&nbsp;&nbsp;defpackage&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;defvar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">define-condition</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;defparameter&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;3&ndash;8:&nbsp;Defining&nbsp;Macros&nbsp;That&nbsp;Affect&nbsp;the&nbsp;<span class="nolinebreak">Compile-Time</span>&nbsp;Environment<!-- /@w -->
+</p>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

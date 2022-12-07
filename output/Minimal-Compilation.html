@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Minimal Compilation (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Compilation-Semantics.html#Compilation-Semantics" rel="up" title="Compilation Semantics">
+<link href="Semantic-Constraints.html#Semantic-Constraints" rel="next" title="Semantic Constraints">
+<link href="Notes-about-the-Implementation-of-Compiler-Macros.html#Notes-about-the-Implementation-of-Compiler-Macros" rel="prev" title="Notes about the Implementation of Compiler Macros">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Notes-about-the-Implementation-of-Compiler-Macros.html#Notes-about-the-Implementation-of-Compiler-Macros" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Notes about the Implementation of Compiler Macros
+                            </a>
+                            <a href="Compilation-Semantics.html#Compilation-Semantics.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Compilation Semantics
+                            </a>
+                            <a href="Semantic-Constraints.html#Semantic-Constraints.html" class="nav-btn nav__next ">
+                                Semantic Constraints
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Minimal-Compilation"></a>
+<a name="Minimal-Compilation-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Minimal Compilation</h4>
+
+<p><i>Minimal compilation</i> is defined as follows:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>All <i>compiler macro</i>
+<a name="index-compiler-macro"></a>
+ calls appearing in the
+<i>source code</i> being compiled are expanded, if at all, at compile time;
+they will not be expanded at run time.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>All <i>macro</i>
+<a name="index-macro"></a>
+ and 
+<i>symbol macro</i>
+<a name="index-symbol-macro"></a>
+ calls
+appearing in the source code being compiled are expanded at compile time
+in such a way that they will not be expanded again at run time.
+<b>macrolet</b>
+<a name="index-macrolet"></a>
+</p>
+<p>and
+<b>symbol-macrolet</b>
+<a name="index-symbol_002dmacrolet"></a>
+</p>
+<p>are effectively replaced by
+<i>forms</i> corresponding to their bodies in which calls to 
+<i>macros</i> are replaced by their expansions.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The first <i>argument</i> in a <b>load-time-value</b>
+<a name="index-load_002dtime_002dvalue"></a>
+</p>
+<p><i>form</i> 
+in <i>source code</i> processed by <b>compile</b>
+<a name="index-compile-1"></a>
+</p>
+<p>is <i>evaluated</i> at <i>compile time</i>;
+in <i>source code</i> processed by <b>compile-file</b>
+<a name="index-compile_002dfile"></a>
+, 
+the compiler arranges for it to be <i>evaluated</i> at <i>load time</i>.
+In either case, the result of the <i>evaluation</i>
+is remembered and used later as the value of the 
+<b>load-time-value</b> <i>form</i> at <i>execution time</i>.
+</p>
+</dd>
+</dl>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

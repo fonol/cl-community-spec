@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>adjoin (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="adjoin (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="adjoin (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conses-Dictionary.html#Conses-Dictionary" rel="up" title="Conses Dictionary">
+<link href="pushnew.html#pushnew" rel="next" title="pushnew">
+<link href="intersection.html#intersection" rel="prev" title="intersection">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="adjoin"></a>
+<div class="header">
+<p>
+Next: <a href="pushnew.html#pushnew" accesskey="n" rel="next">pushnew</a>, Previous: <a href="intersection.html#intersection" accesskey="p" rel="prev">intersection</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="adjoin-_005bFunction_005d"></a>
+<h4 class="subsection">14.2.44 adjoin                                                           [Function]</h4>
+
+<p><code>adjoin</code>  <i>item list &amp;key</i> key test test-not &rArr;  <i>new-list</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-313"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>item</i>&mdash;an <i>object</i>.
+</p>
+<p><i>list</i>&mdash;a <i>proper list</i>.
+</p>
+<p><i>test</i>&mdash;a <i>designator</i> for a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test-not</i>&mdash;a <i>designator</i> for 
+  a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>key</i>&mdash;a <i>designator</i> for a <i>function</i> of one argument,
+  or <b>nil</b>.
+</p>
+<p><i>new-list</i>&mdash;a <i>list</i>.
+</p>
+<a name="Description_003a_003a-414"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Tests whether <i>item</i> is the same as an existing element of <i>list</i>.
+If the <i>item</i> is not an existing element,
+<b>adjoin</b> adds it to <i>list</i> (as if by <b>cons</b>)
+and returns the resulting <i>list</i>; 
+otherwise, nothing is added and the original <i>list</i> is returned.
+</p>
+<p>The <i>test</i>, <i>test-not</i>, and <i>key</i> 
+affect how it is determined whether <i>item</i> is the same as an <i>element</i> of <i>list</i>.
+For details, see <a href="Satisfying-a-Two_002dArgument-Test.html#Satisfying-a-Two_002dArgument-Test">Satisfying a Two-Argument Test</a>.\ifvmode\else\endgraf
+\ifdim \prevdepth&gt;-1000pt 
+\NIS\parskip \normalparskip\relax\fi
+</p>
+<a name="Examples_003a_003a-297"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq slist '()) &rArr;  NIL 
+ (adjoin 'a slist) &rArr;  (A) 
+ slist &rArr;  NIL 
+ (setq slist (adjoin '(test-item 1) slist)) &rArr;  ((TEST-ITEM 1)) 
+ (adjoin '(test-item 1) slist) &rArr;  ((TEST-ITEM 1) (TEST-ITEM 1)) 
+ (adjoin '(test-item 1) slist :test 'equal) &rArr;  ((TEST-ITEM 1)) 
+ (adjoin '(new-test-item 1) slist :key #'cadr) &rArr;  ((TEST-ITEM 1)) 
+ (adjoin '(new-test-item 1) slist) &rArr;  ((NEW-TEST-ITEM 1) (TEST-ITEM 1)) 
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-133"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>list</i> is not a <i>proper list</i>.
+</p>
+<a name="See-Also_003a_003a-338"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="pushnew.html#pushnew">pushnew</a>
+,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<a name="Notes_003a_003a-224"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <tt>:test-not</tt> parameter is deprecated.
+</p>
+<div class="example">
+<pre class="example"> (adjoin item list :key fn)
+   &equiv; (if (member (fn item) list :key fn) list (cons item list))
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="pushnew.html#pushnew" accesskey="n" rel="next">pushnew</a>, Previous: <a href="intersection.html#intersection" accesskey="p" rel="prev">intersection</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

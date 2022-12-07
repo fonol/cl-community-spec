@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>file-position (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="file_002dstring_002dlength.html#file_002dstring_002dlength" rel="next" title="file-string-length">
+<link href="file_002dlength.html#file_002dlength" rel="prev" title="file-length">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="file_002dlength.html#file_002dlength" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                file-length
+                            </a>
+                            <a href="Streams-Dictionary.html#Streams-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Streams Dictionary
+                            </a>
+                            <a href="file_002dstring_002dlength.html#file_002dstring_002dlength.html" class="nav-btn nav__next ">
+                                file-string-length
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="file_002dposition"></a>
+<a name="file_002dposition-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">file-position                                                    </h4>
+
+<p><code>file-position</code>  <i>stream</i> &rArr;  <i>position</i>
+</p>
+<p><code>file-position</code>  <i>stream position-spec</i> &rArr;  <i>success-p</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-428"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>stream</i>&mdash;a <i>stream</i>.
+</p>
+<p><i>position-spec</i>&mdash;a <i>file position designator</i>.
+</p>
+<p><i>position</i>&mdash;a <i>file position</i> or <b>nil</b>.
+</p>
+<p><i>success-p</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-558"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Returns or changes the current position within a <i>stream</i>.
+</p>
+<p>When <i>position-spec</i> is not supplied,
+<b>file-position</b> returns the current <i>file position</i> in the <i>stream</i>,
+or <b>nil</b> if this cannot be determined.
+</p>
+<p>When <i>position-spec</i> is supplied,
+the <i>file position</i> in <i>stream</i> is set to that <i>file position</i> (if possible).
+<b>file-position</b> returns <i>true</i> 
+if the repositioning is performed successfully,
+or <i>false</i> if it is not.
+</p>
+<p>An <i>integer</i> returned by <b>file-position</b> of one argument 
+should be acceptable as <i>position-spec</i> for use with the same file.
+</p>
+<p>For a character file,
+performing a single <b>read-char</b> or <b>write-char</b> operation
+may cause the file position to be increased by more than 1 because of
+character-set translations (such as translating between the <span class="roman">Common Lisp</span>
+<tt>#\Newline</tt> character and an external ASCII
+carriage-return/line-feed sequence) and other aspects of the
+implementation.  For a binary file, every <b>read-byte</b> 
+or <b>write-byte</b>
+operation increases the file position by 1.
+</p>
+<a name="Examples_003a_003a-405"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (defun tester ()
+   (let ((noticed '()) file-written)
+     (flet ((notice (x) (push x noticed) x))
+       (with-open-file (s &quot;test.bin&quot; 
+                          :element-type '(unsigned-byte 8)
+                          :direction :output
+                          :if-exists :error)
+          (notice (file-position s)) ;1
+          (write-byte 5 s) 
+          (write-byte 6 s)
+          (let ((p (file-position s)))
+            (notice p) ;2
+            (notice (when p (file-position s (1- p))))) ;3
+          (write-byte 7 s)
+          (notice (file-position s)) ;4
+          (setq file-written (truename s)))
+        (with-open-file (s file-written
+                           :element-type '(unsigned-byte 8)
+                           :direction :input)
+          (notice (file-position s)) ;5
+          (let ((length (file-length s)))
+            (notice length) ;6
+            (when length
+              (dotimes (i length)
+                (notice (read-byte s)))))) ;7,...
+        (nreverse noticed))))
+&rArr;  tester
+ (tester)
+&rArr;  (0 2 T 2 0 2 5 7)
+<i>OR</i>&rArr; (0 2 NIL 3 0 3 5 6 7)
+<i>OR</i>&rArr; (NIL NIL NIL NIL NIL NIL)
+</code>
+</pre></div>
+
+<a name="Side-Effects_003a_003a-66"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Side Effects</h4>
+
+<p>When the <i>position-spec</i> argument is supplied,
+the <i>file position</i> in the <i>stream</i> might be moved.
+</p>
+<a name="Affected-By_003a_003a-90"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p>The value returned by <b>file-position</b> increases monotonically
+as input or output operations are performed.  
+</p>
+<a name="Exceptional-Situations_003a_003a-206"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>If <i>position-spec</i> is supplied, but is too large or otherwise inappropriate, 
+an error is signaled.
+</p>
+<a name="See-Also_003a_003a-455"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="file_002dlength.html#file_002dlength">file-length</a>
+,
+<a href="file_002dstring_002dlength.html#file_002dstring_002dlength">file-string-length</a>
+,
+<a href="open.html#open">open</a>
+</p>
+<a name="Notes_003a_003a-293"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>Implementations that have character files represented
+as a sequence of records of bounded size might choose to encode the
+file position as, for example,
+&lt;&lt;<i>record-number</i>&gt;&gt;*&lt;&lt;<i>max-record-size</i>&gt;&gt;+&lt;&lt;<i>character-within-record</i>&gt;&gt;.
+This is a valid encoding because it increases monotonically as
+each character is read or written, though not necessarily by 1 at
+each step.  An <i>integer</i> might then be considered &ldquo;inappropriate&rdquo;
+as <i>position-spec</i> to <b>file-position</b> if, when decoded into
+record number and character number, it turned out that the
+supplied record was too short for the specified character number.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

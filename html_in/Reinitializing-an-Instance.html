@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Reinitializing an Instance (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Reinitializing an Instance (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Reinitializing an Instance (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects.html#Objects" rel="up" title="Objects">
+<link href="Customizing-Reinitialization.html#Customizing-Reinitialization" rel="next" title="Customizing Reinitialization">
+<link href="Customizing-the-Change-of-Class-of-an-Instance.html#Customizing-the-Change-of-Class-of-an-Instance" rel="prev" title="Customizing the Change of Class of an Instance">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Reinitializing-an-Instance"></a>
+<div class="header">
+<p>
+Next: <a href="Meta_002dObjects.html#Meta_002dObjects" accesskey="n" rel="next">Meta-Objects</a>, Previous: <a href="Changing-the-Class-of-an-Instance.html#Changing-the-Class-of-an-Instance" accesskey="p" rel="prev">Changing the Class of an Instance</a>, Up: <a href="Objects.html#Objects" accesskey="u" rel="up">Objects</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Reinitializing-an-Instance-1"></a>
+<h3 class="section">7.3 Reinitializing an Instance</h3>
+
+
+<p>The generic function <b>reinitialize-instance</b> may be used to change
+the values of <i>slots</i> according to initialization arguments.
+</p>
+<p>The process of reinitialization changes the values of some <i>slots</i> and
+performs any user-defined actions.  It does not modify the structure
+of an <i>instance</i> to add or delete <i>slots</i>, 
+and it does not use any <tt>:initform</tt> forms to initialize <i>slots</i>.
+</p>
+<p>The generic function <b>reinitialize-instance</b> may be called
+directly.  It takes one required argument, the <i>instance</i>.  It also
+takes any number of initialization arguments to be used by <i>methods</i> for
+<b>reinitialize-instance</b> or for <b>shared-initialize</b>. The
+arguments after the required <i>instance</i> must form an 
+<i>initialization argument list</i>.
+</p>
+<p>There is a system-supplied primary <i>method</i> for 
+<b>reinitialize-instance</b> whose <i>parameter specializer</i> is 
+the <i>class</i> <b>standard-object</b>.  First this <i>method</i> checks the validity of
+initialization arguments and signals an error if an initialization
+argument is supplied that is not declared as valid. 
+(For more information, see <a href="Declaring-the-Validity-of-Initialization-Arguments.html#Declaring-the-Validity-of-Initialization-Arguments">Declaring the Validity of Initialization Arguments</a>.)
+Then it calls the generic function 
+<b>shared-initialize</b> with the following arguments: the <i>instance</i>,
+<b>nil</b>, and the initialization arguments it received.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Customizing-Reinitialization.html#Customizing-Reinitialization" accesskey="1">Customizing Reinitialization</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+</html>

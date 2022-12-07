@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Numeric Operations (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Number-Concepts.html#Number-Concepts" rel="up" title="Number Concepts">
+<link href="Associativity-and-Commutativity-in-Numeric-Operations.html#Associativity-and-Commutativity-in-Numeric-Operations" rel="next" title="Associativity and Commutativity in Numeric Operations">
+<link href="Number-Concepts.html#Number-Concepts" rel="prev" title="Number Concepts">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Number-Concepts.html#Number-Concepts" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Number Concepts
+                            </a>
+                            <a href="Number-Concepts.html#Number-Concepts.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Number Concepts
+                            </a>
+                            <a href="Associativity-and-Commutativity-in-Numeric-Operations.html#Associativity-and-Commutativity-in-Numeric-Operations.html" class="nav-btn nav__next ">
+                                Associativity and Commutativity in Numeric Operations
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Numeric-Operations"></a>
+<a name="Numeric-Operations-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Numeric Operations</h4>
+
+<p><span class="roman">Common Lisp</span> provides a large variety of operations related to <i>numbers</i>.
+This section provides an overview of those operations by grouping them
+into categories that emphasize some of the relationships among them.
+</p>
+<p>Figure 12&ndash;1 shows <i>operators</i> relating to
+arithmetic operations.
+</p>
+<p>&nbsp;&nbsp;*&nbsp;&nbsp;1+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gcd&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;+&nbsp;&nbsp;<span class="nolinebreak">1-</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;incf&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">-</span>&nbsp;&nbsp;conjugate&nbsp;&nbsp;lcm&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;/&nbsp;&nbsp;decf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;12&ndash;1:&nbsp;Operators&nbsp;relating&nbsp;to&nbsp;Arithmetic.<!-- /@w -->
+</p>
+
+<p>Figure 12&ndash;2 shows <i>defined names</i> relating to
+exponential, logarithmic, and trigonometric operations.
+</p>
+<p>&nbsp;&nbsp;abs&nbsp;&nbsp;&nbsp;&nbsp;cos&nbsp;&nbsp;&nbsp;&nbsp;signum&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;acos&nbsp;&nbsp;&nbsp;cosh&nbsp;&nbsp;&nbsp;sin&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;acosh&nbsp;&nbsp;exp&nbsp;&nbsp;&nbsp;&nbsp;sinh&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;asin&nbsp;&nbsp;&nbsp;expt&nbsp;&nbsp;&nbsp;sqrt&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;asinh&nbsp;&nbsp;isqrt&nbsp;&nbsp;tan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;atan&nbsp;&nbsp;&nbsp;log&nbsp;&nbsp;&nbsp;&nbsp;tanh&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;atanh&nbsp;&nbsp;phase&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cis&nbsp;&nbsp;&nbsp;&nbsp;pi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;12&ndash;2:&nbsp;Defined&nbsp;names&nbsp;relating&nbsp;to&nbsp;Exponentials,&nbsp;Logarithms,&nbsp;and&nbsp;Trigonometry.<!-- /@w -->
+</p>
+
+<p>Figure 12&ndash;3 shows <i>operators</i> relating to
+numeric comparison and predication.
+</p>
+<p>&nbsp;&nbsp;/=&nbsp;&nbsp;&gt;=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;oddp&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;&lt;&nbsp;&nbsp;&nbsp;evenp&nbsp;&nbsp;&nbsp;plusp&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;&lt;=&nbsp;&nbsp;max&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zerop&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;=&nbsp;&nbsp;&nbsp;min&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;&gt;&nbsp;&nbsp;&nbsp;minusp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;12&ndash;3:&nbsp;Operators&nbsp;for&nbsp;numeric&nbsp;comparison&nbsp;and&nbsp;predication.<!-- /@w -->
+</p>
+
+<p>Figure 12&ndash;4 shows <i>defined names</i> relating to
+numeric type manipulation and coercion.
+</p>
+<p>&nbsp;&nbsp;ceiling&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">float-radix</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rational&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;complex&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">float-sign</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rationalize&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">decode-float</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;floor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;realpart&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;denominator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fround&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;fceiling&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ftruncate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;round&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;ffloor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;imagpart&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">scale-float</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;float&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">integer-decode-float</span>&nbsp;&nbsp;truncate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">float-digits</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mod&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">float-precision</span>&nbsp;&nbsp;numerator&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;12&ndash;4:&nbsp;Defined&nbsp;names&nbsp;relating&nbsp;to&nbsp;numeric&nbsp;type&nbsp;manipulation&nbsp;and&nbsp;coercion.<!-- /@w -->
+</p>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Associativity-and-Commutativity-in-Numeric-Operations.html#Associativity-and-Commutativity-in-Numeric-Operations" accesskey="1">Associativity and Commutativity in Numeric Operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Examples-of-Associativity-and-Commutativity-in-Numeric-Operations.html#Examples-of-Associativity-and-Commutativity-in-Numeric-Operations" accesskey="2">Examples of Associativity and Commutativity in Numeric Operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Contagion-in-Numeric-Operations.html#Contagion-in-Numeric-Operations" accesskey="3">Contagion in Numeric Operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Viewing-Integers-as-Bits-and-Bytes.html#Viewing-Integers-as-Bits-and-Bytes" accesskey="4">Viewing Integers as Bits and Bytes</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Logical-Operations-on-Integers.html#Logical-Operations-on-Integers" accesskey="5">Logical Operations on Integers</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Byte-Operations-on-Integers.html#Byte-Operations-on-Integers" accesskey="6">Byte Operations on Integers</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

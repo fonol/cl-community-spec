@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>char-upcase (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="char-upcase (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="char-upcase (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Characters-Dictionary.html#Characters-Dictionary" rel="up" title="Characters Dictionary">
+<link href="upper_002dcase_002dp.html#upper_002dcase_002dp" rel="next" title="upper-case-p">
+<link href="standard_002dchar_002dp.html#standard_002dchar_002dp" rel="prev" title="standard-char-p">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="char_002dupcase"></a>
+<div class="header">
+<p>
+Next: <a href="upper_002dcase_002dp.html#upper_002dcase_002dp" accesskey="n" rel="next">upper-case-p</a>, Previous: <a href="standard_002dchar_002dp.html#standard_002dchar_002dp" accesskey="p" rel="prev">standard-char-p</a>, Up: <a href="Characters-Dictionary.html#Characters-Dictionary" accesskey="u" rel="up">Characters Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="char_002dupcase_002c-char_002ddowncase-_005bFunction_005d"></a>
+<h4 class="subsection">13.2.14 char-upcase, char-downcase                                       [Function]</h4>
+
+<p><code>char-upcase</code>  <i>character</i> &rArr;  <i>corresponding-character</i>
+</p>
+<p><code>char-downcase</code>  <i>character</i> &rArr;  <i>corresponding-character</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-267"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>character</i>, <i>corresponding-character</i>&mdash;a <i>character</i>.
+</p>
+<a name="Description_003a_003a-363"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>If <i>character</i> is a <i>lowercase</i> <i>character</i>,
+<b>char-upcase</b> returns the corresponding <i>uppercase</i> <i>character</i>.
+Otherwise, <b>char-upcase</b> just returns the given <i>character</i>.
+</p>
+<p>If <i>character</i> is an <i>uppercase</i> <i>character</i>,
+<b>char-downcase</b> returns the corresponding <i>lowercase</i> <i>character</i>.
+Otherwise, <b>char-downcase</b> just returns the given <i>character</i>.
+</p>
+<p>The result only ever differs from <i>character</i> 
+in its <i>code</i> <i>attribute</i>;
+all <i>implementation-defined</i> <i>attributes</i> are preserved.
+</p>
+<a name="Examples_003a_003a-251"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (char-upcase #\a) &rArr;  #\A
+ (char-upcase #\A) &rArr;  #\A
+ (char-downcase #\a) &rArr;  #\a
+ (char-downcase #\A) &rArr;  #\a
+ (char-upcase #\9) &rArr;  #\9
+ (char-downcase #\9) &rArr;  #\9
+ (char-upcase #\@) &rArr;  #\@
+ (char-downcase #\@) &rArr;  #\@
+ ;; Note that this next example might run for a very long time in 
+ ;; some implementations if CHAR-CODE-LIMIT happens to be very large
+ ;; for that implementation.
+ (dotimes (code char-code-limit)
+   (let ((char (code-char code)))
+     (when char
+       (unless (cond ((upper-case-p char) (char= (char-upcase (char-downcase char)) char))
+                     ((lower-case-p char) (char= (char-downcase (char-upcase char)) char))
+                     (t (and (char= (char-upcase (char-downcase char)) char)
+                             (char= (char-downcase (char-upcase char)) char))))
+         (return char)))))
+&rArr;  NIL
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-113"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>character</i> is not a <i>character</i>.
+</p>
+<a name="See-Also_003a_003a-292"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;upper-case-p; lower-case-p; both-case-p&rsquo;
+,
+<a href="alpha_002dchar_002dp.html#alpha_002dchar_002dp">alpha-char-p</a>
+,
+<a href="Characters-With-Case.html#Characters-With-Case">Characters With Case</a>,
+<a href="Documentation-of-Implementation_002dDefined-Scripts.html#Documentation-of-Implementation_002dDefined-Scripts">Documentation of Implementation-Defined Scripts</a>
+</p>
+<a name="Notes_003a_003a-193"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>If the <i>corresponding-char</i> is <i>different</i> than <i>character</i>,
+then both the <i>character</i> and the <i>corresponding-char</i> have <i>case</i>.
+</p>
+<p>Since <b>char-equal</b> ignores the <i>case</i> of the <i>characters</i> it compares,
+the <i>corresponding-character</i> is always the <i>same</i> as <i>character</i>
+under <b>char-equal</b>.
+</p>
+
+
+
+</body>
+</html>

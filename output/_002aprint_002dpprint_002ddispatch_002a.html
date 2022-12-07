@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>*print-pprint-dispatch* (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer-Dictionary.html#Printer-Dictionary" rel="up" title="Printer Dictionary">
+<link href="_002aprint_002dpretty_002a.html#g_t_002aprint_002dpretty_002a" rel="next" title="*print-pretty*">
+<link href="_002aprint_002dmiser_002dwidth_002a.html#g_t_002aprint_002dmiser_002dwidth_002a" rel="prev" title="*print-miser-width*">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="_002aprint_002dmiser_002dwidth_002a.html#g_t_002aprint_002dmiser_002dwidth_002a" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                *print-miser-width*
+                            </a>
+                            <a href="Printer-Dictionary.html#Printer-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Printer Dictionary
+                            </a>
+                            <a href="_002aprint_002dpretty_002a.html#g_t_002aprint_002dpretty_002a.html" class="nav-btn nav__next ">
+                                *print-pretty*
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="g_t_002aprint_002dpprint_002ddispatch_002a"></a>
+<a name="g_t_002aprint_002dpprint_002ddispatch_002a-_005bVariable_005d"></a>
+<div class="section top-most">
+<div class="node-type">Variable</div>
+<h4 class="subsection">*print-pprint-dispatch*                                          </h4>
+
+<a name="Value-Type_003a_003a-18"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Value Type</h4>
+
+<p>a <i>pprint dispatch table</i>.
+</p>
+<a name="Initial-Value_003a_003a-18"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Initial Value</h4>
+
+<p><i>implementation-dependent</i>, but the initial entries all use a 
+special class of priorities that have the property that they are less
+than every priority that can be specified using <b>set-pprint-dispatch</b>,
+so that the initial contents of any entry can be overridden.
+</p>
+<a name="Description_003a_003a-613"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The <i>pprint dispatch table</i> which currently controls the <i>pretty printer</i>.
+</p>
+<a name="See-Also_003a_003a-497"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><b>*print-pretty*</b>,
+<a href="Pretty-Print-Dispatch-Tables.html#Pretty-Print-Dispatch-Tables">Pretty Print Dispatch Tables</a>
+</p>
+<a name="Notes_003a_003a-309"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The intent is that the initial <i>value</i> of this <i>variable</i> should
+cause &lsquo;traditional&rsquo; <i>pretty printing</i> of <i>code</i>.
+In general, however, you can put a value in <b>*print-pprint-dispatch*</b>
+that makes pretty-printed output look exactly like non-pretty-printed output.
+</p>
+<p>Setting <b>*print-pretty*</b> to <i>true</i> 
+just causes the functions contained in the <i>current pprint dispatch table</i> 
+to have priority over normal <b>print-object</b> methods;
+it has no magic way of enforcing that those functions actually produce pretty
+output.  For details, see <a href="Pretty-Print-Dispatch-Tables.html#Pretty-Print-Dispatch-Tables">Pretty Print Dispatch Tables</a>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

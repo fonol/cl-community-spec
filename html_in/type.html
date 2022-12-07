@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>type (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="type (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="type (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="inline.html#inline" rel="next" title="inline">
+<link href="dynamic_002dextent.html#dynamic_002dextent" rel="prev" title="dynamic-extent">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="type"></a>
+<div class="header">
+<p>
+Next: <a href="inline.html#inline" accesskey="n" rel="next">inline</a>, Previous: <a href="dynamic_002dextent.html#dynamic_002dextent" accesskey="p" rel="prev">dynamic-extent</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="type-_005bDeclaration_005d"></a>
+<h4 class="subsection">3.8.21 type                                                          [Declaration]</h4>
+
+<a name="Syntax_003a_003a-4"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><tt>(type <i>typespec</i> {<i>var</i>}*</tt>)
+</p>
+<p><tt>(<i>typespec</i> {<i>var</i>}*</tt>)
+</p>
+<a name="Arguments_003a_003a-4"></a>
+<h4 class="subsubheading">Arguments::</h4>
+
+<p><i>typespec</i>&mdash;a <i>type specifier</i>.
+</p>
+<p><i>var</i>&mdash;a <i>variable</i> <i>name</i>.
+</p>
+<a name="Valid-Context_003a_003a-2"></a>
+<h4 class="subsubheading">Valid Context::</h4>
+
+<p><i>declaration</i> or <i>proclamation</i>
+</p>
+<a name="Binding-Types-Affected_003a_003a-2"></a>
+<h4 class="subsubheading">Binding Types Affected::</h4>
+
+<p><i>variable</i>
+</p>
+<a name="Description_003a_003a-20"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Affects
+only variable <i>bindings</i> and specifies that the
+<i>vars</i> take on 
+values only of the specified <i>typespec</i>.
+In particular, values assigned to the variables by <b>setq</b>,
+as well as the initial values of the <i>vars</i> must be of
+the specified <i>typespec</i>.
+<b>type</b> declarations never apply to function <i>bindings</i> (see <b>ftype</b>).
+</p>
+<p>A type declaration of a <i>symbol</i> 
+defined by <b>symbol-macrolet</b> is equivalent
+to wrapping a <b>the</b> 
+expression around the expansion of that <i>symbol</i>,
+</p>
+<p>although the <i>symbol</i>&rsquo;s <i>macro expansion</i> is not actually affected.
+</p>
+<p>The meaning of a type declaration
+  is equivalent to changing each reference to 
+a variable (<i>var</i>) within the scope of the
+  declaration to <tt>(the <i>typespec</i> <i>var</i>)</tt>,
+changing each expression assigned to the
+  variable (<i>new-value</i>) within the scope of the declaration to 
+<tt>(the <i>typespec</i> <i>new-value</i>)</tt>,
+  and executing 
+<tt>(the <i>typespec</i> <i>var</i>)</tt> at the moment the scope of the declaration
+  is entered.
+</p>
+<p>A <i>type</i> declaration is valid in all declarations. The interpretation
+  of a type declaration is as follows:
+</p><dl compact="compact">
+<dt>1.</dt>
+<dd><p>During the execution of any reference to the
+  declared variable within the scope of the declaration, the consequences
+are 
+undefined
+if
+  the value of the declared variable is not of the declared <i>type</i>.
+</p>
+</dd>
+<dt>2.</dt>
+<dd><p>During the execution of any 
+<b>setq</b> of the declared variable within the scope
+  of the declaration, the consequences are 
+undefined
+if the newly assigned value of the
+  declared variable is not of the declared <i>type</i>. 
+</p>
+</dd>
+<dt>3.</dt>
+<dd><p>At the moment the
+  scope of the declaration is entered, the consequences are 
+undefined
+if the value of the
+  declared variable is not of the declared <i>type</i>.
+</p></dd>
+</dl>
+
+<p>A <i>type</i> declaration affects only variable references within
+its scope.
+</p>
+<p>If nested <i>type</i> declarations refer to the same variable,
+  then the value of the variable must be a member of the intersection of
+  the declared <i>types</i>.
+</p>
+<p>If there is a local <tt>type</tt> declaration for a dynamic
+  variable, and there is also a global <tt>type</tt> proclamation for that same
+  variable, then the value of the variable within the scope of the local
+  declaration must be a member of the intersection of the two declared
+  <i>types</i>.
+</p>
+<p><b>type</b> declarations can  be <i>free declarations</i>
+or <i>bound declarations</i>.
+</p>
+<p>A <i>symbol</i> cannot be both the name of a <i>type</i> and the name of a
+declaration.  Defining a <i>symbol</i> as the <i>name</i> of a <i>class</i>,
+<i>structure</i>, <i>condition</i>, or <i>type</i>, when the <i>symbol</i>
+has been <i>declared</i> as a declaration name, or vice versa, signals an error.
+</p>
+<p>Within the <i>lexical scope</i> of an <b>array</b> type declaration, 
+all references to <i>array</i> <i>elements</i> are assumed to satisfy the
+<i>expressed array element type</i> (as opposed to the <i>upgraded array element type</i>).
+A compiler can treat
+the code within the scope of the <b>array</b> type declaration as if each
+<i>access</i> of an <i>array</i> <i>element</i> were surrounded by an appropriate 
+<b>the</b> form.
+</p>
+<a name="Examples_003a_003a-17"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defun f (x y)
+   (declare (type fixnum x y))
+   (let ((z (+ x y)))
+     (declare (type fixnum z))
+     z)) &rArr;  F
+ (f 1 2) &rArr;  3
+ ;; The previous definition of F is equivalent to
+ (defun f (x y)
+   ;; This declaration is a shorthand form of the TYPE declaration
+   (declare (fixnum x y))
+   ;; To declare the type of a return value, it's not necessary to
+   ;; create a named variable.  A THE special form can be used instead.
+   (the fixnum (+ x y))) &rArr;  F
+ (f 1 2) &rArr;  3
+</pre></div>
+
+<div class="example">
+<pre class="example"> (defvar *one-array* (make-array 10 :element-type '(signed-byte 5)))
+ (defvar *another-array* (make-array 10 :element-type '(signed-byte 8)))
+
+ (defun frob (an-array)
+   (declare (type (array (signed-byte 5) 1) an-array))
+   (setf (aref an-array 1) 31)
+   (setf (aref an-array 2) 127)
+   (setf (aref an-array 3) (* 2 (aref an-array 3)))
+   (let ((foo 0))
+     (declare (type (signed-byte 5) foo))
+     (setf foo (aref an-array 0))))
+
+ (frob *one-array*)
+ (frob *another-array*)
+</pre></div>
+
+<p>The above definition of <tt>frob</tt> is equivalent to:
+</p>
+<div class="example">
+<pre class="example"> (defun frob (an-array)
+   (setf (the (signed-byte 5) (aref an-array 1)) 31)
+   (setf (the (signed-byte 5) (aref an-array 2)) 127)
+   (setf (the (signed-byte 5) (aref an-array 3))
+         (* 2 (the (signed-byte 5) (aref an-array 3))))
+   (let ((foo 0))
+     (declare (type (signed-byte 5) foo))
+     (setf foo (the (signed-byte 5) (aref an-array 0)))))
+</pre></div>
+
+<p>Given an implementation in which 
+<i>fixnums</i> are 29 bits but <b>fixnum</b> <i>arrays</i> 
+are upgraded to signed 32-bit <i>arrays</i>,
+the following 
+could be compiled with all <i>fixnum</i> arithmetic:
+</p>
+<div class="example">
+<pre class="example"> (defun bump-counters (counters)
+   (declare (type (array fixnum *) bump-counters))
+   (dotimes (i (length counters))
+     (incf (aref counters i))))
+</pre></div>
+
+<a name="See-Also_003a_003a-20"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>declare</b>,
+<a href="declaim.html#declaim">declaim</a>
+,
+<a href="proclaim.html#proclaim">proclaim</a>
+</p>
+<a name="Notes_003a_003a-13"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><tt>(<i>typespec</i> {<i>var</i>}*</tt>) 
+is an abbreviation for <tt>(type <i>typespec</i> {<i>var</i>}*</tt>).
+</p>
+<p>A <b>type</b> declaration for the arguments to a function does not
+necessarily imply anything about the type of the result.  The following
+function is not permitted to be compiled using <i>implementation-dependent</i>
+<i>fixnum</i>-only arithmetic:
+</p>
+<div class="example">
+<pre class="example"> (defun f (x y) (declare (fixnum x y)) (+ x y))
+</pre></div>
+
+<p>To see why, consider <tt>(f most-positive-fixnum 1)</tt>.
+Common Lisp defines that <tt>F</tt> must return a <i>bignum</i> here, rather
+than signal an error or produce a mathematically incorrect result.
+If you have special knowledge such &ldquo;<i>fixnum</i> overflow&rdquo; cases will
+not come up, you can declare the result value to be in the <i>fixnum</i>
+range, enabling some compilers to use more efficient arithmetic:
+</p>
+<div class="example">
+<pre class="example"> (defun f (x y)
+   (declare (fixnum x y))
+   (the fixnum (+ x y)))
+</pre></div>
+
+<p>Note, however, that in the three-argument case, because of the possibility
+of an implicit intermediate value growing too large, the following will not
+cause <i>implementation-dependent</i> <i>fixnum</i>-only arithmetic to be used:
+</p>
+<div class="example">
+<pre class="example"> (defun f (x y)
+   (declare (fixnum x y z))
+   (the fixnum (+ x y z)))
+</pre></div>
+
+<p>To see why, consider <tt>(f most-positive-fixnum 1 -1).</tt>
+Although the arguments and the result are all <i>fixnums</i>, an intermediate
+value is not a <i>fixnum</i>.  If it is important that 
+<i>implementation-dependent</i> <i>fixnum</i>-only arithmetic be selected
+in <i>implementations</i> that provide it, 
+consider writing something like this instead:
+</p>
+<div class="example">
+<pre class="example"> (defun f (x y)
+   (declare (fixnum x y z))
+   (the fixnum (+ (the fixnum (+ x y)) z)))
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="inline.html#inline" accesskey="n" rel="next">inline</a>, Previous: <a href="dynamic_002dextent.html#dynamic_002dextent" accesskey="p" rel="prev">dynamic-extent</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

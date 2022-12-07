@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>deposit-field (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="deposit-field (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="deposit-field (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Numbers-Dictionary.html#Numbers-Dictionary" rel="up" title="Numbers Dictionary">
+<link href="dpb.html#dpb" rel="next" title="dpb">
+<link href="byte.html#byte" rel="prev" title="byte">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="deposit_002dfield"></a>
+<div class="header">
+<p>
+Next: <a href="dpb.html#dpb" accesskey="n" rel="next">dpb</a>, Previous: <a href="byte.html#byte" accesskey="p" rel="prev">byte</a>, Up: <a href="Numbers-Dictionary.html#Numbers-Dictionary" accesskey="u" rel="up">Numbers Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="deposit_002dfield-_005bFunction_005d"></a>
+<h4 class="subsection">12.2.67 deposit-field                                                    [Function]</h4>
+
+<p><code>deposit-field</code>  <i>newbyte bytespec integer</i> &rArr;  <i>result-integer</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-249"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>newbyte</i>&mdash;an <i>integer</i>.
+</p>
+<p><i>bytespec</i>&mdash;a <i>byte specifier</i>.
+</p>
+<p><i>integer</i>&mdash;an <i>integer</i>.
+</p>
+<p><i>result-integer</i>&mdash;an <i>integer</i>.
+</p>
+<a name="Description_003a_003a-332"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Replaces a field of bits within <i>integer</i>; specifically,
+returns an <i>integer</i> that contains the bits of <i>newbyte</i>
+within the <i>byte</i> specified by <i>bytespec</i>,
+and elsewhere contains the bits of <i>integer</i>.  
+</p>
+<a name="Examples_003a_003a-234"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (deposit-field 7 (byte 2 1) 0) &rArr;  6
+ (deposit-field -1 (byte 4 0) 0) &rArr;  15
+ (deposit-field 0 (byte 2 1) -3) &rArr;  -7
+</pre></div>
+
+<a name="See-Also_003a_003a-274"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;byte; byte-size; byte-position&rsquo;
+,
+<a href="dpb.html#dpb">dpb</a>
+</p>
+<a name="Notes_003a_003a-177"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<div class="example">
+<pre class="example"> (logbitp <i>j</i> (deposit-field <i>m</i> (byte <i>s</i> <i>p</i>) <i>n</i>))
+ &equiv; (if (and (&gt;= <i>j</i> <i>p</i>) (&lt; <i>j</i> (+ <i>p</i> <i>s</i>)))
+        (logbitp <i>j</i> <i>m</i>)
+        (logbitp <i>j</i> <i>n</i>))
+</pre></div>
+
+<p><b>deposit-field</b> is to <b>mask-field</b> 
+as <b>dpb</b>           is to <b>ldb</b>.
+</p>
+
+
+
+</body>
+</html>

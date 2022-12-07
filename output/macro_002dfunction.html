@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>macro-function (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="macroexpand.html#macroexpand" rel="next" title="macroexpand">
+<link href="defmacro.html#defmacro" rel="prev" title="defmacro">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="defmacro.html#defmacro" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                defmacro
+                            </a>
+                            <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Evaluation and Compilation Dictionary
+                            </a>
+                            <a href="macroexpand.html#macroexpand.html" class="nav-btn nav__next ">
+                                macroexpand
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="macro_002dfunction"></a>
+<a name="macro_002dfunction-_005bAccessor_005d"></a>
+<div class="section top-most">
+<div class="node-type">Accessor</div>
+<h4 class="subsection">macro-function                                                   </h4>
+
+<p><code>macro-function</code>  <i>symbol &amp;optional</i> environment &rArr;  <i>function</i>
+</p>
+<p>(setf (<code>         macro-function</code> <i>symbol &amp;optional</i> environment) new-function)<br>
+</p>
+<a name="Arguments-and-Values_003a_003a-9"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>symbol</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>environment</i>&mdash;an <i>environment</i> <i>object</i>.
+</p>
+<p><i>function</i>&mdash;a <i>macro function</i> or <b>nil</b>.
+</p>
+<p><i>new-function</i>&mdash;a <i>macro function</i>.
+</p>
+<a name="Description_003a_003a-10"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Determines whether <i>symbol</i> has a function definition 
+as a macro in the specified <i>environment</i>.
+</p>
+<p>If so, the macro expansion function, a function of two arguments,
+is returned.  If <i>symbol</i> has no function definition
+in the lexical environment <i>environment</i>, or its definition
+is not a <i>macro</i>, <b>macro-function</b> returns <b>nil</b>.
+</p>
+<p>It is possible for both <b>macro-function</b> and 
+</p>
+<p><b>special-operator-p</b>
+</p>
+<p>to return <i>true</i> of <i>symbol</i>.  The <i>macro</i> definition must
+be available for use by programs that understand only the standard 
+<span class="roman">Common Lisp</span> <i>special forms</i>.
+</p>
+<a name="Examples_003a_003a-8"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+<div class="example">
+<pre class="example"><code> (defmacro macfun (x) '(macro-function 'macfun)) &rArr;  MACFUN 
+ (not (macro-function 'macfun)) &rArr;  <i>false</i> 
+</code>
+</pre></div>
+
+<div class="example">
+<pre class="example"><code> (macrolet ((foo (&amp;environment env)
+               (if (macro-function 'bar env)
+                  ''yes
+                  ''no)))
+    (list (foo)
+          (macrolet ((bar () :beep))
+             (foo))))
+
+&rArr;  (NO YES)
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-1"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+<p><tt>(setf macro-function)</tt>, <b>defmacro</b>, and <b>macrolet</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-2"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>The consequences are undefined if <i>environment</i> is <i>non-nil</i>
+in a use of <b>setf</b> of <b>macro-function</b>.
+</p>
+<a name="See-Also_003a_003a-10"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="defmacro.html#defmacro">defmacro</a>
+, <a href="Evaluation.html#Evaluation">Evaluation</a>
+</p>
+<a name="Notes_003a_003a-7"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p><b>setf</b> can be used with <b>macro-function</b> to install
+a <i>macro</i> as a symbol&rsquo;s global function definition:
+</p>
+<div class="example">
+<pre class="example"><code> (setf (macro-function symbol) fn)
+</code>
+</pre></div>
+
+<p>The value installed must be a <i>function</i> that accepts two arguments,
+the entire macro call and an <i>environment</i>, 
+and computes the expansion for that call.
+Performing this operation causes <i>symbol</i> to have only that
+macro definition as its global function definition; any previous
+definition, whether as a <i>macro</i> or as a 
+<i>function</i>, is lost.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

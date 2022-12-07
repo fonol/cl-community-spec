@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Transfer of Control to an Exit Point (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Transfer of Control to an Exit Point (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Transfer of Control to an Exit Point (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow.html#Data-and-Control-Flow" rel="up" title="Data and Control Flow">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="next" title="Data and Control Flow Dictionary">
+<link href="Treatment-of-Other-Macros-Based-on-SETF.html#Treatment-of-Other-Macros-Based-on-SETF" rel="prev" title="Treatment of Other Macros Based on SETF">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Transfer-of-Control-to-an-Exit-Point"></a>
+<div class="header">
+<p>
+Next: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="n" rel="next">Data and Control Flow Dictionary</a>, Previous: <a href="Generalized-Reference.html#Generalized-Reference" accesskey="p" rel="prev">Generalized Reference</a>, Up: <a href="Data-and-Control-Flow.html#Data-and-Control-Flow" accesskey="u" rel="up">Data and Control Flow</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Transfer-of-Control-to-an-Exit-Point-1"></a>
+<h3 class="section">5.2 Transfer of Control to an Exit Point</h3>
+
+
+<p>When a transfer of control is initiated by <b>go</b>, 
+<b>return-from</b>, or <b>throw</b>
+the following events occur in order to accomplish the transfer of control.
+Note that for <b>go</b>, 
+the <i>exit point</i> is the <i>form</i> within the <b>tagbody</b>
+that is being executed at the time the <b>go</b> is performed;
+for <b>return-from</b>,
+the <i>exit point</i> is the corresponding 
+<b>block</b> <i>form</i>;
+and for <b>throw</b>,
+the <i>exit point</i> is the corresponding 
+<b>catch</b> <i>form</i>. 
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>Intervening <i>exit points</i> are &ldquo;abandoned&rdquo;
+ (<i>i.e.</i>, their <i>extent</i> ends 
+      and it is no longer valid to attempt to transfer control through them).
+</p>
+</dd>
+<dt>2.</dt>
+<dd><p>The cleanup clauses of any intervening <b>unwind-protect</b> clauses
+ are evaluated.
+</p>
+</dd>
+<dt>3.</dt>
+<dd><p>Intervening dynamic <i>bindings</i> of <b>special</b> variables,
+ <i>catch tags</i>, <i>condition handlers</i>, and <i>restarts</i>
+ are undone.
+</p>
+</dd>
+<dt>4.</dt>
+<dd><p>The <i>extent</i> of the <i>exit point</i> being invoked ends,
+ and control is passed to the target.
+</p></dd>
+</dl>
+
+<p>The extent of an exit being &ldquo;abandoned&rdquo; because it is being passed over
+ends as soon as the transfer of control is initiated. That is,
+event 1 occurs at the beginning of the initiation of the transfer of
+control. 
+The consequences are undefined if an attempt is made to transfer control 
+to an <i>exit point</i> whose <i>dynamic extent</i> has ended.
+</p>
+<p>Events 2 and 3 are actually performed interleaved, in the order
+corresponding to the reverse order in which they were established.
+The effect of this is that the cleanup clauses of an <b>unwind-protect</b>
+see the same dynamic <i>bindings</i> 
+of variables and <i>catch tags</i> as were
+visible when the <b>unwind-protect</b> was entered.
+</p>
+<p>Event 4 occurs at the end of the transfer of control.
+</p>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="n" rel="next">Data and Control Flow Dictionary</a>, Previous: <a href="Generalized-Reference.html#Generalized-Reference" accesskey="p" rel="prev">Generalized Reference</a>, Up: <a href="Data-and-Control-Flow.html#Data-and-Control-Flow" accesskey="u" rel="up">Data and Control Flow</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

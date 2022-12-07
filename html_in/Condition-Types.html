@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Condition Types (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Condition Types (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Condition Types (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Condition-System-Concepts.html#Condition-System-Concepts" rel="up" title="Condition System Concepts">
+<link href="Serious-Conditions.html#Serious-Conditions" rel="next" title="Serious Conditions">
+<link href="Condition-System-Concepts.html#Condition-System-Concepts" rel="prev" title="Condition System Concepts">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Condition-Types"></a>
+<div class="header">
+<p>
+Next: <a href="Creating-Conditions.html#Creating-Conditions" accesskey="n" rel="next">Creating Conditions</a>, Previous: <a href="Condition-System-Concepts.html#Condition-System-Concepts" accesskey="p" rel="prev">Condition System Concepts</a>, Up: <a href="Condition-System-Concepts.html#Condition-System-Concepts" accesskey="u" rel="up">Condition System Concepts</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Condition-Types-1"></a>
+<h4 class="subsection">9.1.1 Condition Types</h4>
+
+<p>Figure 9&ndash;1 lists the <i>standardized</i> <i>condition</i> <i>types</i>.
+Additional <i>condition</i> <i>types</i> can be defined by using <b>define-condition</b>.
+</p>
+<p>&nbsp;<span class="nolinebreak">arithmetic-error</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">floating-point-overflow</span>&nbsp;&nbsp;<span class="nolinebreak">simple-type-error</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;<span class="nolinebreak">cell-error</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">floating-point-underflow</span>&nbsp;<span class="nolinebreak">simple-warning</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;condition&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">package-error</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">storage-condition</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;<span class="nolinebreak">control-error</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">parse-error</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">stream-error</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;<span class="nolinebreak">division-by-zero</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">print-not-readable</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">style-warning</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;<span class="nolinebreak">end-of-file</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">program-error</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">type-error</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;error&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">reader-error</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">unbound-slot</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;<span class="nolinebreak">file-error</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">serious-condition</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">unbound-variable</span>&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;<span class="nolinebreak">floating-point-inexact</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">simple-condition</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">undefined-function</span>&nbsp;<!-- /@w -->
+&nbsp;<span class="nolinebreak">floating-point-invalid-operation</span>&nbsp;<span class="nolinebreak">simple-error</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;warning&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;9&ndash;1:&nbsp;Standardized&nbsp;Condition&nbsp;Types&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<p>All <i>condition</i> types are <i>subtypes</i> of <i>type</i> <b>condition</b>.  That is,
+</p>
+<div class="example">
+<pre class="example"> (typep <i>c</i> 'condition) &rArr;  <i>true</i>
+</pre></div>
+
+<p>if and only if <i>c</i> is a <i>condition</i>.
+</p>
+<p><i>Implementations</i> must define all specified <i>subtype</i> relationships.
+Except where noted, all <i>subtype</i> relationships indicated in 
+this document are not mutually exclusive.
+A <i>condition</i> inherits the structure of its <i>supertypes</i>.
+</p>
+<p>The metaclass of the <i>class</i> <b>condition</b> is not specified.
+<i>Names</i> of <i>condition</i> <i>types</i> may be used to specify
+<i>supertype</i> relationships in <b>define-condition</b>, 
+but the consequences are not specified if an attempt is made to use
+a <i>condition</i> <i>type</i> as a <i>superclass</i> in a <b>defclass</b> <i>form</i>.
+</p>
+<p>Figure 9&ndash;2 shows <i>operators</i> that
+define <i>condition</i> <i>types</i> and creating <i>conditions</i>.
+</p>
+<p>&nbsp;&nbsp;<span class="nolinebreak">define-condition</span>&nbsp;&nbsp;<span class="nolinebreak">make-condition</span>&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;9&ndash;2:&nbsp;Operators&nbsp;that&nbsp;define&nbsp;and&nbsp;create&nbsp;conditions.<!-- /@w -->
+</p>
+
+<p>Figure 9&ndash;3 shows <i>operators</i> that <i>read</i> 
+the <i>value</i> of <i>condition</i> <i>slots</i>.
+</p>
+<p>&nbsp;&nbsp;<span class="nolinebreak">arithmetic-error-operands</span>&nbsp;&nbsp;&nbsp;<span class="nolinebreak">simple-condition-format-arguments</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">arithmetic-error-operation</span>&nbsp;&nbsp;<span class="nolinebreak">simple-condition-format-control</span>&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">cell-error-name</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">stream-error-stream</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">file-error-pathname</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">type-error-datum</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">package-error-package</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">type-error-expected-type</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">print-not-readable-object</span>&nbsp;&nbsp;&nbsp;<span class="nolinebreak">unbound-slot-instance</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;9&ndash;3:&nbsp;Operators&nbsp;that&nbsp;read&nbsp;condition&nbsp;slots.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Serious-Conditions.html#Serious-Conditions" accesskey="1">Serious Conditions</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+</html>

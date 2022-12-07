@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>do-symbols (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="do-symbols (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="do-symbols (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Packages-Dictionary.html#Packages-Dictionary" rel="up" title="Packages Dictionary">
+<link href="intern.html#intern" rel="next" title="intern">
+<link href="defpackage.html#defpackage" rel="prev" title="defpackage">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="do_002dsymbols"></a>
+<div class="header">
+<p>
+Next: <a href="intern.html#intern" accesskey="n" rel="next">intern</a>, Previous: <a href="defpackage.html#defpackage" accesskey="p" rel="prev">defpackage</a>, Up: <a href="Packages-Dictionary.html#Packages-Dictionary" accesskey="u" rel="up">Packages Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="do_002dsymbols_002c-do_002dexternal_002dsymbols_002c-do_002dall_002dsymbols-_005bMacro_005d"></a>
+<h4 class="subsection">11.2.20 do-symbols, do-external-symbols, do-all-symbols                     [Macro]</h4>
+
+<p><code>do-symbols</code>  <i><span class="roman">(</span>var <span class="roman">[</span>package <span class="roman">[</span>result-form<span class="roman">]</span><span class="roman">]</span><span class="roman">)</span>
+			 {<i>declaration</i>}*</i>
+			       {tag | statement}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<p><code>do-external-symbols</code>  <i><span class="roman">(</span>var <span class="roman">[</span>package <span class="roman">[</span>result-form<span class="roman">]</span><span class="roman">]</span><span class="roman">)</span>
+			 {<i>declaration</i>}*</i>
+			       {tag | statement}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<p><code>do-all-symbols</code>  <i><span class="roman">(</span>var <span class="roman">[</span>result-form<span class="roman">]</span><span class="roman">)</span>
+			 {<i>declaration</i>}*</i>
+		    	       {tag | statement}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-192"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>var</i>&mdash;a <i>variable</i> <i>name</i>; not evaluated.
+</p>
+<p><i>package</i>&mdash;a <i>package designator</i>; evaluated.
+</p>
+<p>The default in <b>do-symbols</b> and <b>do-external-symbols</b> is the <i>current package</i>.
+</p>
+<p><i>result-form</i>&mdash;a <i>form</i>; evaluated as described below.
+ The default is <b>nil</b>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>tag</i>&mdash;a <i>go tag</i>; not evaluated.
+</p>
+<p><i>statement</i>&mdash;a <i>compound form</i>; evaluated as described below.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by the <i>result-form</i> 
+            if a <i>normal return</i> occurs,
+   or else, if an <i>explicit return</i> occurs, the <i>values</i> that were transferred.
+</p>
+<a name="Description_003a_003a-256"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>do-symbols</b>,
+<b>do-external-symbols</b>, and
+<b>do-all-symbols</b> iterate over the <i>symbols</i> 
+of <i>packages</i>.
+For each <i>symbol</i> in the set of <i>packages</i> chosen,
+the <i>var</i> is bound to the <i>symbol</i>,
+and the <i>statements</i> in the body are executed.  
+When all the <i>symbols</i> have been processed,
+<i>result-form</i> is evaluated and returned as the value of the macro.  
+</p>
+<p><b>do-symbols</b> iterates 
+over the <i>symbols</i> <i>accessible</i> in
+<i>package</i>.
+</p>
+<p><i>Statements</i> may execute more than once for <i>symbols</i> 
+that are inherited from multiple <i>packages</i>.
+</p>
+<p><b>do-all-symbols</b> iterates on every <i>registered package</i>. 
+<b>do-all-symbols</b> will not process every <i>symbol</i>
+whatsoever, because a <i>symbol</i> not <i>accessible</i> in any
+<i>registered package</i> will not be processed.
+<b>do-all-symbols</b> may cause a <i>symbol</i> that is <i>present</i> in
+several <i>packages</i> to be processed more than once.
+</p>
+<p><b>do-external-symbols</b> iterates on the external symbols of <i>package</i>.
+</p>
+<p>When <i>result-form</i> is evaluated, <i>var</i> is bound and has the value <b>nil</b>.
+</p>
+<p>An <i>implicit block</i> named <b>nil</b> surrounds the entire <b>do-symbols</b>,
+<b>do-external-symbols</b>, or <b>do-all-symbols</b> <i>form</i>.
+</p>
+<p><b>return</b> or <b>return-from</b> may be used to terminate the 
+iteration prematurely.  
+</p>
+<p>If execution of the body affects which <i>symbols</i> 
+are contained in the set of <i>packages</i> over which iteration
+is occurring, other than to
+remove the <i>symbol</i> 
+currently the value of <i>var</i> by using <b>unintern</b>,
+the consequences are undefined.
+</p>
+<p>For each of these macros, the 
+<i>scope</i> of the name binding does not include any
+initial value form, but the optional result forms are included.
+</p>
+<p>Any <i>tag</i> in the body is treated as with <b>tagbody</b>.
+</p>
+<a name="Examples_003a_003a-174"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (make-package 'temp :use nil) &rArr;  #&lt;PACKAGE &quot;TEMP&quot;&gt;
+ (intern &quot;SHY&quot; 'temp) &rArr;  TEMP::SHY, NIL ;SHY will be an internal symbol
+                                         ;in the package TEMP
+ (export (intern &quot;BOLD&quot; 'temp) 'temp)  &rArr;  T  ;BOLD will be external  
+ (let ((lst ()))
+   (do-symbols (s (find-package 'temp)) (push s lst))
+   lst)
+&rArr;  (TEMP::SHY TEMP:BOLD)
+<i>OR</i>&rArr; (TEMP:BOLD TEMP::SHY)
+ (let ((lst ()))
+   (do-external-symbols (s (find-package 'temp) lst) (push s lst))
+   lst) 
+&rArr;  (TEMP:BOLD)
+ (let ((lst ()))                                                     
+   (do-all-symbols (s lst)
+     (when (eq (find-package 'temp) (symbol-package s)) (push s lst)))
+   lst)
+&rArr;  (TEMP::SHY TEMP:BOLD)
+<i>OR</i>&rArr; (TEMP:BOLD TEMP::SHY)
+</pre></div>
+
+<a name="See-Also_003a_003a-228"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="intern.html#intern">intern</a>
+,
+<a href="export.html#export">export</a>
+,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="intern.html#intern" accesskey="n" rel="next">intern</a>, Previous: <a href="defpackage.html#defpackage" accesskey="p" rel="prev">defpackage</a>, Up: <a href="Packages-Dictionary.html#Packages-Dictionary" accesskey="u" rel="up">Packages Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

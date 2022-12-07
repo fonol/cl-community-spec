@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Examples of WHEN clause (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Examples of WHEN clause (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Examples of WHEN clause (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditional-Execution-Clauses.html#Conditional-Execution-Clauses" rel="up" title="Conditional Execution Clauses">
+<link href="Miscellaneous-Clauses.html#Miscellaneous-Clauses" rel="next" title="Miscellaneous Clauses">
+<link href="Conditional-Execution-Clauses.html#Conditional-Execution-Clauses" rel="prev" title="Conditional Execution Clauses">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Examples-of-WHEN-clause"></a>
+<div class="header">
+<p>
+Previous: <a href="Conditional-Execution-Clauses.html#Conditional-Execution-Clauses" accesskey="p" rel="prev">Conditional Execution Clauses</a>, Up: <a href="Conditional-Execution-Clauses.html#Conditional-Execution-Clauses" accesskey="u" rel="up">Conditional Execution Clauses</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Examples-of-WHEN-clause-1"></a>
+<h4 class="subsubsection">6.1.6.1 Examples of WHEN clause</h4>
+
+<div class="example">
+<pre class="example">;; Signal an exceptional condition.
+ (loop for item in '(1 2 3 a 4 5)
+       when (not (numberp item))
+        return (cerror &quot;enter new value&quot; &quot;non-numeric value: ~s&quot; item))
+Error: non-numeric value: A
+
+;; The previous example is equivalent to the following one.
+ (loop for item in '(1 2 3 a 4 5)
+       when (not (numberp item))
+        do (return 
+            (cerror &quot;Enter new value&quot; &quot;non-numeric value: ~s&quot; item)))
+Error: non-numeric value: A
+</pre></div>
+
+<div class="example">
+<pre class="example">;; This example parses a simple printed string representation from 
+;; BUFFER (which is itself a string) and returns the index of the
+;; closing double-quote character.
+ (let ((buffer &quot;\&quot;a\&quot; \&quot;b\&quot;&quot;))
+   (loop initially (unless (char= (char buffer 0) #\&quot;)
+                     (loop-finish))
+         for i of-type fixnum from 1 below (length (the string buffer))
+         when (char= (char buffer i) #\&quot;)
+          return i))
+&rArr;  2
+
+;; The collected value is returned.
+ (loop for i from 1 to 10
+       when (&gt; i 5)
+         collect i
+       finally (prin1 'got-here))
+<tt> |&gt; </tt> GOT-HERE
+&rArr;  (6 7 8 9 10) 
+
+;; Return both the count of collected numbers and the numbers.
+ (loop for i from 1 to 10
+       when (&gt; i 5)
+         collect i into number-list
+         and count i into number-count
+       finally (return (values number-count number-list)))
+&rArr;  5, (6 7 8 9 10)
+</pre></div>
+
+
+
+
+</body>
+</html>

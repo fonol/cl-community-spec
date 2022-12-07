@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>format (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="format (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="format (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer-Dictionary.html#Printer-Dictionary" rel="up" title="Printer Dictionary">
+<link href="Reader.html#Reader" rel="next" title="Reader">
+<link href="print_002dnot_002dreadable_002dobject.html#print_002dnot_002dreadable_002dobject" rel="prev" title="print-not-readable-object">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="format"></a>
+<div class="header">
+<p>
+Previous: <a href="print_002dnot_002dreadable_002dobject.html#print_002dnot_002dreadable_002dobject" accesskey="p" rel="prev">print-not-readable-object</a>, Up: <a href="Printer-Dictionary.html#Printer-Dictionary" accesskey="u" rel="up">Printer Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="format-_005bFunction_005d"></a>
+<h4 class="subsection">22.4.31 format                                                           [Function]</h4>
+
+<p><code>format</code>  <i>destination control-string &amp;rest</i> args &rArr;  <i>result</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-470"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>destination</i>&mdash;<b>nil</b>,
+		      <b>t</b>,
+		      a <i>stream</i>,
+		   or a <i>string</i> with a <i>fill pointer</i>.
+</p>
+<p><i>control-string</i>&mdash;a <i>format control</i>.
+</p>
+<p><i>args</i>&mdash;<i>format arguments</i> for <i>control-string</i>.
+</p>
+<p><i>result</i>&mdash;if <i>destination</i> is <i>non-nil</i>, then <b>nil</b>;
+		 otherwise, a <i>string</i>.
+</p>
+<a name="Description_003a_003a-619"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>format</b> produces formatted output by outputting the characters
+of <i>control-string</i> and observing that a <i>tilde</i>
+introduces a directive.  The character after the tilde, possibly preceded 
+by prefix parameters and modifiers, specifies what kind of formatting 
+is desired.  Most directives use one or more elements of <i>args</i> to
+create their output.
+</p>
+<p>If <i>destination</i> is a <i>string</i>, a <i>stream</i>, or <b>t</b>, 
+then the <i>result</i> is <b>nil</b>.  Otherwise, the <i>result</i> is
+a <i>string</i> containing the &lsquo;output.&rsquo;
+</p>
+<p><b>format</b> is useful for producing nicely formatted text, producing
+good-looking messages, and so on.  <b>format</b> can generate and return
+a <i>string</i> or output to <i>destination</i>.
+</p>
+<p>For details on how the <i>control-string</i> is interpreted,
+see <a href="Formatted-Output.html#Formatted-Output">Formatted Output</a>.
+</p>
+<a name="Affected-By_003a_003a-107"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*standard-output*</b>,
+<b>*print-escape*</b>,
+<b>*print-radix*</b>,
+<b>*print-base*</b>,
+<b>*print-circle*</b>,
+<b>*print-pretty*</b>,
+<b>*print-level*</b>,
+<b>*print-length*</b>,
+<b>*print-case*</b>,
+<b>*print-gensym*</b>,
+<b>*print-array*</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-228"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If <i>destination</i> is a <i>string</i> with a <i>fill pointer</i>,
+the consequences are undefined if destructive modifications are performed
+directly on the <i>string</i> during the <i>dynamic extent</i> of the call.
+</p>
+<a name="See-Also_003a_003a-502"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;write; prin1; print; pprint; princ&rsquo;
+,
+<a href="Documentation-of-Implementation_002dDefined-Scripts.html#Documentation-of-Implementation_002dDefined-Scripts">Documentation of Implementation-Defined Scripts</a>
+</p>
+
+
+
+
+
+
+
+
+</body>
+</html>

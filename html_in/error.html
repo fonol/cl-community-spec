@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>error (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="error (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="error (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="cerror.html#cerror" rel="next" title="cerror">
+<link href="assert.html#assert" rel="prev" title="assert">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="error"></a>
+<div class="header">
+<p>
+Next: <a href="cerror.html#cerror" accesskey="n" rel="next">cerror</a>, Previous: <a href="assert.html#assert" accesskey="p" rel="prev">assert</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="error-_005bFunction_005d"></a>
+<h4 class="subsection">9.2.11 error                                                            [Function]</h4>
+
+<p><code>error</code>  <i>datum &amp;rest</i> arguments 
+       &rArr;  #&lt;NoValue&gt;
+</p>
+<a name="Arguments-and-Values_003a_003a-133"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>datum</i>, <i>arguments</i>&mdash;<i>designators</i> for a <i>condition</i> 
+ of default type <b>simple-error</b>.
+</p>
+<a name="Description_003a_003a-181"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>error</b> effectively invokes <b>signal</b> on the denoted <i>condition</i>.
+</p>
+<p>If the <i>condition</i> is not handled, <tt>(invoke-debugger <i>condition</i>)</tt> is done.  
+As a consequence of calling <b>invoke-debugger</b>, <b>error</b> 
+cannot directly return; the only exit from <b>error</b>
+can come by non-local transfer of control in a handler or by use of
+an interactive debugging command.
+</p>
+<a name="Examples_003a_003a-115"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defun factorial (x)
+   (cond ((or (not (typep x 'integer)) (minusp x))
+          (error &quot;~S is not a valid argument to FACTORIAL.&quot; x))
+         ((zerop x) 1)
+         (t (* x (factorial (- x 1))))))
+&rArr;  FACTORIAL
+(factorial 20)
+&rArr;  2432902008176640000
+(factorial -1)
+<tt> |&gt; </tt> Error: -1 is not a valid argument to FACTORIAL.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Return to Lisp Toplevel.
+<tt> |&gt; </tt> Debug&gt; 
+</pre></div>
+
+<div class="example">
+<pre class="example"> (setq a 'fred)
+&rArr;  FRED
+ (if (numberp a) (1+ a) (error &quot;~S is not a number.&quot; A))
+<tt> |&gt; </tt> Error: FRED is not a number.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Return to Lisp Toplevel.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:Continue 1</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Return to Lisp Toplevel.
+
+ (define-condition not-a-number (error) 
+                   ((argument :reader not-a-number-argument :initarg :argument))
+   (:report (lambda (condition stream)
+              (format stream &quot;~S is not a number.&quot;
+                      (not-a-number-argument condition)))))
+&rArr;  NOT-A-NUMBER
+
+ (if (numberp a) (1+ a) (error 'not-a-number :argument a))
+<tt> |&gt; </tt> Error: FRED is not a number.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Return to Lisp Toplevel.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:Continue 1</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Return to Lisp Toplevel.
+</pre></div>
+
+<a name="Side-Effects_003a_003a-8"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p><i>Handlers</i> for the specified condition, if any, are invoked 
+and might have side effects.
+Program execution might stop, and the debugger might be entered.
+</p>
+<a name="Affected-By_003a_003a-19"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>Existing handler bindings.
+</p>
+<p><b>*break-on-signals*</b>
+</p>
+<p>Signals an error of <i>type</i> <b>type-error</b> if <i>datum</i> and <i>arguments</i> are not <i>designators</i> for a <i>condition</i>.
+</p>
+<a name="See-Also_003a_003a-159"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="cerror.html#cerror">cerror</a>
+, 
+<a href="signal.html#signal">signal</a>
+, 
+<a href="format.html#format">format</a>
+, 
+<a href="ignore_002derrors.html#ignore_002derrors">ignore-errors</a>
+, <b>*break-on-signals*</b>, 
+<a href="handler_002dbind.html#handler_002dbind">handler-bind</a>
+, <a href="Condition-System-Concepts.html#Condition-System-Concepts">Condition System Concepts</a>
+</p>
+<a name="Notes_003a_003a-98"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>Some implementations may provide debugger
+commands for interactively returning from individual stack frames.
+However, it should be possible for the programmer to feel confident
+about writing code like:
+</p>
+<div class="example">
+<pre class="example"> (defun wargames:no-win-scenario ()
+   (if (error &quot;pushing the button would be stupid.&quot;))
+   (push-the-button))
+</pre></div>
+
+<p>In this scenario, there should be no chance that
+<b>error</b> will return
+and the button will get pushed.
+</p>
+<p>While the meaning of this program is clear and it might be proven &lsquo;safe&rsquo;
+by a formal theorem prover, such a proof is no guarantee that the
+program is safe to execute.  Compilers have been known to have bugs,
+computers to have signal glitches, and human beings to manually
+intervene in ways that are not always possible to predict.  Those kinds
+of errors, while beyond the scope of the condition system to formally
+model, are not beyond the scope of things that should seriously be
+considered when writing code that could have the kinds of sweeping
+effects hinted at by this example.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="cerror.html#cerror" accesskey="n" rel="next">cerror</a>, Previous: <a href="assert.html#assert" accesskey="p" rel="prev">assert</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

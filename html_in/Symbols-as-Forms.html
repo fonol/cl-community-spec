@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Symbols as Forms (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Symbols as Forms (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Symbols as Forms (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="The-Evaluation-Model.html#The-Evaluation-Model" rel="up" title="The Evaluation Model">
+<link href="Lexical-Variables.html#Lexical-Variables" rel="next" title="Lexical Variables">
+<link href="Form-Evaluation.html#Form-Evaluation" rel="prev" title="Form Evaluation">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Symbols-as-Forms"></a>
+<div class="header">
+<p>
+Next: <a href="Lexical-Variables.html#Lexical-Variables" accesskey="n" rel="next">Lexical Variables</a>, Previous: <a href="Form-Evaluation.html#Form-Evaluation" accesskey="p" rel="prev">Form Evaluation</a>, Up: <a href="The-Evaluation-Model.html#The-Evaluation-Model" accesskey="u" rel="up">The Evaluation Model</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Symbols-as-Forms-1"></a>
+<h4 class="subsubsection">3.1.2.2 Symbols as Forms</h4>
+
+<p>If a <i>form</i> is a <i>symbol</i>,
+then it is either a <i>symbol macro</i> or a <i>variable</i>.
+</p>
+<p>The <i>symbol</i> names a <i>symbol macro</i> 
+if there is a <i>binding</i> of the <i>symbol</i> as a <i>symbol macro</i>
+in the current <i>lexical environment</i> 
+</p>
+<p>(see <b>define-symbol-macro</b> and <b>symbol-macrolet</b>).
+</p>
+<p>If the <i>symbol</i> is a <i>symbol macro</i>,
+its expansion function is obtained.
+The expansion function is a function of two arguments, and is invoked
+by calling the <i>macroexpand hook</i> with 
+     the expansion function as its first argument,
+     the <i>symbol</i> as its second argument,
+ and an <i>environment object</i> (corresponding to the current <i>lexical environment</i>)
+      as its third argument.
+The <i>macroexpand hook</i>, in turn, calls the expansion function with the
+<i>form</i> as its first argument and the <i>environment</i> as its second argument.
+The <i>value</i> of the expansion function, which is passed through
+by the <i>macroexpand hook</i>, is a <i>form</i>. 
+This resulting <i>form</i> is processed in place of the original <i>symbol</i>.
+</p>
+<p>If a <i>form</i> is a <i>symbol</i> that is not a <i>symbol macro</i>,
+then it is the <i>name</i> of a <i>variable</i>, and the <i>value</i> of that
+<i>variable</i> is returned. There are three kinds of variables:
+ <i>lexical variables</i>,
+ <i>dynamic variables</i>,
+and
+ <i>constant variables</i>.
+A <i>variable</i> can store one <i>object</i>.
+The main operations on a <i>variable</i> are 
+ to <i>read</i>_1 and 
+ to <i>write</i>_1
+its <i>value</i>.
+</p>
+<p>An error of <i>type</i> <b>unbound-variable</b> should be signaled if
+an <i>unbound variable</i> is referenced.
+</p>
+<p><i>Non-constant variables</i> can be <i>assigned</i> by using <b>setq</b> 
+or <i>bound</i>_3 by using <b>let</b>.
+Figure 3&ndash;1 lists some <i>defined names</i> that
+are applicable to assigning, binding, and defining <i>variables</i>.
+</p>
+<p>&nbsp;&nbsp;boundp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;progv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defconstant&nbsp;&nbsp;&nbsp;let*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;psetq&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defparameter&nbsp;&nbsp;makunbound&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defvar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">multiple-value-bind</span>&nbsp;&nbsp;setq&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;lambda&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">multiple-value-setq</span>&nbsp;&nbsp;<span class="nolinebreak">symbol-value</span>&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;3&ndash;1:&nbsp;Some&nbsp;Defined&nbsp;Names&nbsp;Applicable&nbsp;to&nbsp;Variables<!-- /@w -->
+</p>
+
+<p>The following is a description of each kind of variable.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Lexical-Variables.html#Lexical-Variables" accesskey="n" rel="next">Lexical Variables</a>, Previous: <a href="Form-Evaluation.html#Form-Evaluation" accesskey="p" rel="prev">Form Evaluation</a>, Up: <a href="The-Evaluation-Model.html#The-Evaluation-Model" accesskey="u" rel="up">The Evaluation Model</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

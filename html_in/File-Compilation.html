@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>File Compilation (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="File Compilation (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="File Compilation (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Compilation.html#Compilation" rel="up" title="Compilation">
+<link href="Processing-of-Top-Level-Forms.html#Processing-of-Top-Level-Forms" rel="next" title="Processing of Top Level Forms">
+<link href="Semantic-Constraints.html#Semantic-Constraints" rel="prev" title="Semantic Constraints">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="File-Compilation"></a>
+<div class="header">
+<p>
+Next: <a href="Literal-Objects-in-Compiled-Files.html#Literal-Objects-in-Compiled-Files" accesskey="n" rel="next">Literal Objects in Compiled Files</a>, Previous: <a href="Compilation-Semantics.html#Compilation-Semantics" accesskey="p" rel="prev">Compilation Semantics</a>, Up: <a href="Compilation.html#Compilation" accesskey="u" rel="up">Compilation</a> &nbsp; </p>
+</div>
+<hr>
+<a name="File-Compilation-1"></a>
+<h4 class="subsection">3.2.3 File Compilation</h4>
+
+<p>The <i>function</i> <b>compile-file</b> performs compilation of 
+<i>forms</i> in a file following the rules specified in <a href="Compilation-Semantics.html#Compilation-Semantics">Compilation Semantics</a>,
+and produces an output file that can be loaded by using <b>load</b>.
+</p>
+<p>Normally, the <i>top level forms</i> appearing in a file compiled with
+<b>compile-file</b> are evaluated only when the resulting
+compiled file is loaded, and not when the file is compiled.  However,
+it is typically the case that some forms in the file need to be evaluated
+at compile time so the
+remainder of the file can be read and compiled correctly.
+</p>
+<p>The <b>eval-when</b> <i>special form</i> can be used to control
+whether a <i>top level form</i> is evaluated at compile time, load
+time, or both.  It is possible to specify any of three situations with
+<b>eval-when</b>, denoted by the symbols <tt>:compile-toplevel</tt>,
+<tt>:load-toplevel</tt>, and <tt>:execute</tt>.  For top level 
+<b>eval-when</b> forms, <tt>:compile-toplevel</tt> specifies that the
+compiler must evaluate the body at compile time, and <tt>:load-toplevel</tt> specifies that the compiler must arrange to evaluate
+the body at load time. For non-top level <b>eval-when</b> forms,
+<tt>:execute</tt> specifies that the body must be executed in the run-time
+<i>environment</i>.
+</p>
+<p>The behavior of this <i>form</i> can be more precisely understood in
+terms of a model of how <b>compile-file</b> processes forms in
+a file to be compiled. There are two processing modes, called
+&ldquo;not-compile-time&rdquo; and &ldquo;compile-time-too&rdquo;.
+</p>
+<p>Successive forms are read from the file by <b>compile-file</b>
+and processed in not-compile-time mode; in this mode, 
+<b>compile-file</b> arranges for forms to be evaluated only at load time
+and not at compile time.  When <b>compile-file</b> is in
+compile-time-too mode, forms are evaluated both at compile time and
+load time.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Processing-of-Top-Level-Forms.html#Processing-of-Top-Level-Forms" accesskey="1">Processing of Top Level Forms</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Processing-of-Defining-Macros.html#Processing-of-Defining-Macros" accesskey="2">Processing of Defining Macros</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Constraints-on-Macros-and-Compiler-Macros.html#Constraints-on-Macros-and-Compiler-Macros" accesskey="3">Constraints on Macros and Compiler Macros</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Literal-Objects-in-Compiled-Files.html#Literal-Objects-in-Compiled-Files" accesskey="n" rel="next">Literal Objects in Compiled Files</a>, Previous: <a href="Compilation-Semantics.html#Compilation-Semantics" accesskey="p" rel="prev">Compilation Semantics</a>, Up: <a href="Compilation.html#Compilation" accesskey="u" rel="up">Compilation</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

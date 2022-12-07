@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Symbols as Tokens (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Interpretation-of-Tokens.html#Interpretation-of-Tokens" rel="up" title="Interpretation of Tokens">
+<link href="Valid-Patterns-for-Tokens.html#Valid-Patterns-for-Tokens" rel="next" title="Valid Patterns for Tokens">
+<link href="The-Consing-Dot.html#The-Consing-Dot" rel="prev" title="The Consing Dot">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="The-Consing-Dot.html#The-Consing-Dot" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                The Consing Dot
+                            </a>
+                            <a href="Interpretation-of-Tokens.html#Interpretation-of-Tokens.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Interpretation of Tokens
+                            </a>
+                            <a href="Valid-Patterns-for-Tokens.html#Valid-Patterns-for-Tokens.html" class="nav-btn nav__next ">
+                                Valid Patterns for Tokens
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Symbols-as-Tokens"></a>
+<a name="Symbols-as-Tokens-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Symbols as Tokens</h4>
+
+<p>Any <i>token</i> that is not a <i>potential number</i>,
+does not contain a <i>package marker</i>,
+and does not consist entirely of dots
+will always be interpreted as a <i>symbol</i>.
+Any <i>token</i> that is a <i>potential number</i> but does not fit the       
+number syntax is a reserved <i>token</i> and
+has an <i>implementation-dependent</i> interpretation.
+In all other cases, the <i>token</i> is construed to be the name of a <i>symbol</i>.
+</p>
+<p>Examples of the printed representation of <i>symbols</i> are in Figure 2&ndash;15. 
+For presentational simplicity,
+these examples assume that
+the <i>readtable case</i> of the <i>current readtable</i> is <tt>:upcase</tt>.
+</p>
+<p>&nbsp;&nbsp;<tt>FROBBOZ</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<i>symbol</i>&nbsp;whose&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>FROBBOZ</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>frobboz</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Another&nbsp;way&nbsp;to&nbsp;notate&nbsp;the&nbsp;same&nbsp;<i>symbol</i>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>fRObBoz</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Yet&nbsp;another&nbsp;way&nbsp;to&nbsp;notate&nbsp;it.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt><span class="nolinebreak">unwind-protect</span></tt>&nbsp;&nbsp;A&nbsp;<i>symbol</i>&nbsp;with&nbsp;a&nbsp;hyphen&nbsp;in&nbsp;its&nbsp;<i>name</i>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>+$</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<i>symbol</i>&nbsp;named&nbsp;<tt>+$</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>1+</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<i>symbol</i>&nbsp;named&nbsp;<tt>1+</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>+1</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;is&nbsp;the&nbsp;<i>integer</i>&nbsp;<tt>1</tt>,&nbsp;not&nbsp;a&nbsp;<i>symbol</i>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt><span class="nolinebreak">pascal_style</span></tt>&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;<i>symbol</i>&nbsp;has&nbsp;an&nbsp;underscore&nbsp;in&nbsp;its&nbsp;<i>name</i>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>file.rel.43</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This&nbsp;<i>symbol</i>&nbsp;has&nbsp;periods&nbsp;in&nbsp;its&nbsp;<i>name</i>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>\(</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<i>symbol</i>&nbsp;whose&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>(</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>\+1</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<i>symbol</i>&nbsp;whose&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>+1</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>+\1</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Also&nbsp;the&nbsp;<i>symbol</i>&nbsp;whose&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>+1</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>\frobboz</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<i>symbol</i>&nbsp;whose&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>fROBBOZ</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>3.14159265\s0</tt>&nbsp;&nbsp;&nbsp;The&nbsp;<i>symbol</i>&nbsp;whose&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>3.14159265s0</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>3.14159265\S0</tt>&nbsp;&nbsp;&nbsp;A&nbsp;different&nbsp;<i>symbol</i>,&nbsp;whose&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>3.14159265S0</tt>.&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>3.14159265s0</tt>&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;possible&nbsp;<i>short&nbsp;float</i>&nbsp;approximation&nbsp;to&nbsp;\pi.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;2&ndash;15:&nbsp;Examples&nbsp;of&nbsp;the&nbsp;printed&nbsp;representation&nbsp;of&nbsp;symbols&nbsp;(Part&nbsp;1&nbsp;of&nbsp;2)<!-- /@w -->
+</p>
+
+<p>&nbsp;&nbsp;<tt>APL\\360</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<i>symbol</i>&nbsp;whose&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>APL\360</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>apl\\360</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Also&nbsp;the&nbsp;<i>symbol</i>&nbsp;whose&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>APL\360</tt>.&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>\(b<tt>^</tt></tt>2\)\&nbsp;<span class="nolinebreak">-\</span>&nbsp;4*a<tt>*c</tt><!-- /@w -->    The <i>name</i> is <tt>(B<tt>^</tt></tt>2) - 4*A*C.            
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parentheses&nbsp;and&nbsp;two&nbsp;spaces&nbsp;in&nbsp;it.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>\(\b<tt>^</tt></tt>2\)\&nbsp;<span class="nolinebreak">-\4*\a*\c</span><!-- /@w -->  The <i>name</i> is <tt>(b<tt>^</tt></tt>2) - 4*a*c.            
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Letters&nbsp;explicitly&nbsp;lowercase.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>|&quot;|</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;same&nbsp;as&nbsp;writing&nbsp;<tt>\&quot;</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>|(b<tt>^</tt></tt>2)&nbsp;<span class="nolinebreak">-</span>&nbsp;4*a*c|<!-- /@w -->      The <i>name</i> is <tt>(b<tt>^</tt></tt>2) - 4*a*c.            
+&nbsp;&nbsp;<tt>|frobboz|</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>frobboz</tt>,&nbsp;not&nbsp;<tt>FROBBOZ</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>|APL\360|</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>APL360</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>|APL\\360|</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>APL\360</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>|apl\\360|</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>apl\360</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>|\|\||</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Same&nbsp;as&nbsp;<tt>\|\|</tt>&nbsp;&mdash;the&nbsp;<i>name</i>&nbsp;is&nbsp;<tt>||</tt>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>|(B<tt>^</tt></tt>2)&nbsp;<span class="nolinebreak">-</span>&nbsp;4*A*C|<!-- /@w -->      The <i>name</i> is <tt>(B<tt>^</tt></tt>2) - 4*A*C.            
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parentheses&nbsp;and&nbsp;two&nbsp;spaces&nbsp;in&nbsp;it.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>|(b<tt>^</tt></tt>2)&nbsp;<span class="nolinebreak">-</span>&nbsp;4*a*c|<!-- /@w -->      The <i>name</i> is <tt>(b<tt>^</tt></tt>2) - 4*a*c.            
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;2&ndash;16:&nbsp;Examples&nbsp;of&nbsp;the&nbsp;printed&nbsp;representation&nbsp;of&nbsp;symbols&nbsp;(Part&nbsp;2&nbsp;of&nbsp;2)<!-- /@w -->
+</p>
+
+<p>In the process of parsing a <i>symbol</i>,
+it is <i>implementation-dependent</i> which
+<i>implementation-defined</i> <i>attributes</i> are removed
+from the <i>characters</i> forming a <i>token</i> that represents a <i>symbol</i>.
+</p>
+<p>When parsing the syntax for a <i>symbol</i>,
+the <i>Lisp reader</i> looks up the <i>name</i> of that <i>symbol</i> 
+in the <i>current package</i>.
+This lookup may involve looking in other 
+<i>packages</i> whose <i>external symbols</i>
+are inherited by the <i>current package</i>.  If the name is found,
+the corresponding <i>symbol</i> is returned.  If the name is not found
+(that is, there is no <i>symbol</i> 
+of that name <i>accessible</i> in the <i>current package</i>),
+a new <i>symbol</i> is created and is placed in the <i>current package</i>
+as an <i>internal symbol</i>.  The <i>current package</i> becomes the owner
+(<i>home package</i>) of the <i>symbol</i>, 
+and the <i>symbol</i> becomes interned in the <i>current package</i>.
+If the name is later read again while this same <i>package</i> is
+current, the same <i>symbol</i> will be found and returned.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

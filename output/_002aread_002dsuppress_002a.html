@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>*read-suppress* (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Reader-Dictionary.html#Reader-Dictionary" rel="up" title="Reader Dictionary">
+<link href="_002areadtable_002a.html#g_t_002areadtable_002a" rel="next" title="*readtable*">
+<link href="_002aread_002deval_002a.html#g_t_002aread_002deval_002a" rel="prev" title="*read-eval*">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="_002aread_002deval_002a.html#g_t_002aread_002deval_002a" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                *read-eval*
+                            </a>
+                            <a href="Reader-Dictionary.html#Reader-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Reader Dictionary
+                            </a>
+                            <a href="_002areadtable_002a.html#g_t_002areadtable_002a.html" class="nav-btn nav__next ">
+                                *readtable*
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="g_t_002aread_002dsuppress_002a"></a>
+<a name="g_t_002aread_002dsuppress_002a-_005bVariable_005d"></a>
+<div class="section top-most">
+<div class="node-type">Variable</div>
+<h4 class="subsection">*read-suppress*                                                  </h4>
+
+<a name="Value-Type_003a_003a-25"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Value Type</h4>
+
+<p>a <i>generalized boolean</i>.
+</p>
+<a name="Initial-Value_003a_003a-25"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Initial Value</h4>
+
+<p><i>false</i>.
+</p>
+<a name="Description_003a_003a-635"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>This variable is intended primarily to support the operation of the
+read-time conditional notations <tt>#+</tt> and <tt>#-</tt>. It is important for the
+<i>reader macros</i> which implement these notations
+to be able to skip over the printed representation of an
+<i>expression</i> despite the possibility that the syntax of the skipped
+<i>expression</i> may not be entirely valid for the current implementation,
+since <tt>#+</tt> and <tt>#-</tt> exist in order to allow the same program to be
+shared among several <span class="roman">Lisp</span> implementations (including dialects other than <span class="roman">Common Lisp</span>)
+despite small incompatibilities of syntax.
+</p>
+<p>If it is <i>false</i>, the <i>Lisp reader</i> operates normally.
+</p>
+<p>If the <i>value</i> of <b>*read-suppress*</b> is <i>true</i>,
+      <b>read</b>,
+      <b>read-preserving-whitespace</b>,
+      <b>read-delimited-list</b>,
+  and <b>read-from-string</b>
+all return a <i>primary value</i> of <b>nil</b> when they complete successfully;
+however, they continue to parse the representation of an <i>object</i>
+in the normal way, in order to skip over the <i>object</i>,
+and continue to indicate <i>end of file</i> in the normal way.
+Except as noted below,
+any <i>standardized</i> <i>reader macro</i>_2
+that is defined to <i>read</i>_2 
+a following <i>object</i> or <i>token</i> 
+will do so,
+but not signal an error if the <i>object</i>
+read is not of an appropriate type or syntax.
+The <i>standard syntax</i> and its associated <i>reader macros</i>
+will not construct any new <i>objects</i> 
+ (<i>e.g.</i>, when reading the representation of a <i>symbol</i>,
+      no <i>symbol</i> will be constructed or interned).
+</p>
+<dl compact="compact">
+<dt>Extended tokens</dt>
+<dd><p>All extended tokens are completely uninterpreted.
+Errors such as those that might otherwise be signaled due to
+     detection of invalid <i>potential numbers</i>,
+     invalid patterns of <i>package markers</i>,
+ and invalid uses of the <i>dot</i> character are suppressed.
+</p>
+</dd>
+<dt>Dispatching macro characters (including <i>sharpsign</i>)</dt>
+<dd><p><i>Dispatching macro characters</i> continue to parse an infix numerical
+argument, and invoke the dispatch function.  The <i>standardized</i>
+<i>sharpsign</i> <i>reader macros</i> do not enforce any constraints
+on either the presence of or the value of the numerical argument.
+</p>
+</dd>
+<dt>#=</dt>
+<dd><p>The <tt>#=</tt> notation is totally ignored.  It does not read
+a following <i>object</i>. It produces no <i>object</i>,
+but is treated as <i>whitespace</i>_2.
+</p>
+</dd>
+<dt>##</dt>
+<dd><p>The <tt>##</tt> notation always produces <b>nil</b>.
+</p></dd>
+</dl>
+
+<p>No matter what the <i>value</i> of <b>*read-suppress*</b>,
+parentheses still continue to delimit and construct <i>lists</i>;
+the <tt>#(</tt> notation continues to delimit <i>vectors</i>;
+and comments, <i>strings</i>, 
+and the <i>single-quote</i> and <i>backquote</i> notations continue to be
+interpreted properly.  Such situations as
+<tt>')</tt>,	<tt>#&lt;</tt>, 
+<tt>#)</tt>, and <tt>#&lt;<i>Space</i>&gt;</tt> continue to signal errors.
+</p>
+<a name="Examples_003a_003a-455"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (let ((*read-suppress* t))
+   (mapcar #'read-from-string
+           '(&quot;#(foo bar baz)&quot; &quot;#P(:type :lisp)&quot; &quot;#c1.2&quot;
+             &quot;#.(PRINT 'FOO)&quot; &quot;#3AHELLO&quot; &quot;#S(INTEGER)&quot;
+             &quot;#*ABC&quot; &quot;#\GARBAGE&quot; &quot;#RALPHA&quot; &quot;#3R444&quot;)))
+&rArr;  (NIL NIL NIL NIL NIL NIL NIL NIL NIL NIL)
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-515"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p>&lsquo;read; read-preserving-whitespace&rsquo;
+,
+<a href="Syntax.html#Syntax">Syntax</a>
+</p>
+<a name="Notes_003a_003a-321"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p><i>Programmers</i> and <i>implementations</i> that define additional
+<i>macro characters</i> are strongly encouraged to make them respect
+<b>*read-suppress*</b> just as <i>standardized</i> <i>macro characters</i> do.
+That is, when the <i>value</i> of <b>*read-suppress*</b> is <i>true</i>,
+they should ignore type errors when reading a following <i>object</i>
+and the <i>functions</i> that implement <i>dispatching macro characters</i>
+should tolerate <b>nil</b> as their infix <i>parameter</i> value even if a numeric
+value would ordinarily be required.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

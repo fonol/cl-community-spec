@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>return-from (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="return.html#return" rel="next" title="return">
+<link href="go.html#go" rel="prev" title="go">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="go.html#go" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                go
+                            </a>
+                            <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Data and Control Flow Dictionary
+                            </a>
+                            <a href="return.html#return.html" class="nav-btn nav__next ">
+                                return
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="return_002dfrom"></a>
+<a name="return_002dfrom-_005bSpecial-Operator_005d"></a>
+<div class="section top-most">
+<div class="node-type">Special Operator</div>
+<h4 class="subsection">return-from                                              </h4>
+
+<p><code>return-from</code>  <i><i>name</i> <span class="roman">[</span><i>result</i><span class="roman">]</span></i> 
+        &rArr;  #&lt;NoValue&gt;
+</p><a name="Arguments-and-Values_003a_003a-46"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>name</i>&mdash;a <i>block tag</i>; not evaluated.
+</p>
+<p><i>result</i>&mdash;a <i>form</i>; evaluated.
+  The default is <b>nil</b>.
+</p>
+<a name="Description_003a_003a-78"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Returns control and <i>multiple values</i>_2 from a lexically enclosing <i>block</i>.
+</p>
+<p>A <b>block</b> <i>form</i> named <i>name</i> must lexically enclose
+the occurrence of <b>return-from</b>;  any <i>values</i> <i>yielded</i>
+by the <i>evaluation</i> of <i>result</i> are immediately returned from
+the innermost such lexically enclosing <i>block</i>.
+</p>
+<p>The transfer of control initiated by <b>return-from</b> is performed
+as described in <a href="Transfer-of-Control-to-an-Exit-Point.html#Transfer-of-Control-to-an-Exit-Point">Transfer of Control to an Exit Point</a>.
+</p>
+<a name="Examples_003a_003a-52"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (block alpha (return-from alpha) 1) &rArr;  NIL
+ (block alpha (return-from alpha 1) 2) &rArr;  1
+ (block alpha (return-from alpha (values 1 2)) 3) &rArr;  1, 2
+ (let ((a 0))
+    (dotimes (i 10) (incf a) (when (oddp i) (return)))
+    a) &rArr;  2
+ (defun temp (x)
+    (if x (return-from temp 'dummy))
+    44) &rArr;  TEMP
+ (temp nil) &rArr;  44
+ (temp t) &rArr;  DUMMY
+ (block out
+   (flet ((exit (n) (return-from out n)))
+     (block out (exit 1)))
+   2) &rArr;  1
+ (block nil   
+   (unwind-protect (return-from nil 1)
+     (return-from nil 2)))
+&rArr;  2
+ (dolist (flag '(nil t))
+   (block nil
+     (let ((x 5))
+       (declare (special x))
+       (unwind-protect (return-from nil)
+         (print x))))
+   (print 'here))
+<tt> |&gt; </tt> 5
+<tt> |&gt; </tt> HERE
+<tt> |&gt; </tt> 5
+<tt> |&gt; </tt> HERE
+&rArr;  NIL
+ (dolist (flag '(nil t))
+   (block nil
+     (let ((x 5))
+       (declare (special x))
+       (unwind-protect
+           (if flag (return-from nil))
+         (print x))))
+   (print 'here))
+<tt> |&gt; </tt> 5
+<tt> |&gt; </tt> HERE
+<tt> |&gt; </tt> 5
+<tt> |&gt; </tt> HERE
+&rArr;  NIL
+</code>
+</pre></div>
+
+<p>The following has undefined consequences because the <b>block</b> <i>form</i>
+exits normally before the <b>return-from</b> <i>form</i> is attempted.
+</p>
+<div class="example">
+<pre class="example"><code> (funcall (block nil #'(lambda () (return-from nil)))) is an error.
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-63"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="block.html#block">block</a>
+,
+<a href="return.html#return">return</a>
+,
+<a href="Evaluation.html#Evaluation">Evaluation</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>merge-pathnames (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Filenames-Dictionary.html#Filenames-Dictionary" rel="up" title="Filenames Dictionary">
+<link href="Files.html#Files" rel="next" title="Files">
+<link href="translate_002dpathname.html#translate_002dpathname" rel="prev" title="translate-pathname">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="translate_002dpathname.html#translate_002dpathname" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                translate-pathname
+                            </a>
+                            <a href="Filenames-Dictionary.html#Filenames-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Filenames Dictionary
+                            </a>
+                            <a href="Files.html#Files.html" class="nav-btn nav__next ">
+                                Files
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="merge_002dpathnames"></a>
+<a name="merge_002dpathnames-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">merge-pathnames                                                  </h4>
+
+<p><code>merge-pathnames</code>  <i>pathname &amp;optional</i> default-pathname default-version<br>
+   &rArr;  <i>merged-pathname</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-402"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>pathname</i>&mdash;a <i>pathname designator</i>.
+</p>
+<p><i>default-pathname</i>&mdash;a <i>pathname designator</i>.
+</p>
+<p>The default is the <i>value</i> of <b>*default-pathname-defaults*</b>.
+</p>
+<p><i>default-version</i>&mdash;a <i>valid pathname version</i>.
+</p>
+<p>The default is <tt>:newest</tt>.
+</p>
+<p><i>merged-pathname</i>&mdash;a <i>pathname</i>.
+</p>
+<a name="Description_003a_003a-521"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Constructs a <i>pathname</i> from <i>pathname</i> 
+by filling in any unsupplied components with the corresponding values
+from <i>default-pathname</i> and <i>default-version</i>. 
+</p>
+<p>Defaulting of pathname components 
+is done by filling in components taken from another <i>pathname</i>.
+</p>
+<p>This is especially useful for cases such as 
+a program that has an input file and an output file.
+Unspecified components of the output pathname will come from the input pathname,
+except that the type should not default
+to the type of the input pathname
+but rather to the appropriate default type for output from the program;
+for example, see the <i>function</i> <b>compile-file-pathname</b>.
+</p>
+<p>If no version is supplied, <i>default-version</i> is used.
+If <i>default-version</i> is <b>nil</b>, the version component will remain unchanged.
+</p>
+<p>If <i>pathname</i> explicitly specifies a host and not a device, and 
+if the host component of <i>default-pathname</i> matches the host component
+of <i>pathname</i>, then the device is taken from the <i>default-pathname</i>;
+otherwise the device will be the default file device for that host.  If
+<i>pathname</i> does not specify a host, device, directory, name,
+or type, each such component is copied from <i>default-pathname</i>.
+If <i>pathname</i> does not specify a name, then the version, if not provided, will
+come from <i>default-pathname</i>, just like the other components.  If
+<i>pathname</i> does specify a name, then the version is not affected
+by <i>default-pathname</i>. If this process leaves the
+version missing, the <i>default-version</i> is used.
+If the host&rsquo;s file name syntax provides a way
+to input a version without a name or type, the user can let the name
+and type default but supply a version different from the one in <i>default-pathname</i>.
+</p>
+<p>If <i>pathname</i> is a <i>stream</i>, <i>pathname</i> effectively
+becomes <tt>(pathname <i>pathname</i>)</tt>. <b>merge-pathnames</b>
+can be used on either an open or a closed <i>stream</i>.
+</p>
+<p>If <i>pathname</i> is a <i>pathname</i>
+it represents the name used to open the file. This may be, but is
+not required to be, the actual name of the file. 
+</p>
+<p><b>merge-pathnames</b> recognizes a <i>logical pathname</i> <i>namestring</i>
+   when <i>default-pathname</i> is a <i>logical pathname</i>,
+</p>
+<p>or when the <i>namestring</i> begins with 
+    the name of a defined <i>logical host</i> followed by a <i>colon</i>.
+In the first of these two cases,
+</p>
+<p>the host portion of the <i>logical pathname</i> <i>namestring</i>
+and its following <i>colon</i> are optional.
+</p>
+<p><b>merge-pathnames</b> returns a 
+<i>logical pathname</i> if and only if
+   its first argument is a <i>logical pathname</i>,
+</p>
+<p>or its first argument is a <i>logical pathname</i> <i>namestring</i> with an explicit host,
+or its first argument does not specify a host 
+    and the <i>default-pathname</i> is a <i>logical pathname</i>.
+</p>
+<p><i>Pathname</i> merging treats a relative directory specially.  
+If <tt>(pathname-directory <i>pathname</i>)</tt> is a <i>list</i> whose
+<i>car</i> is <tt>:relative</tt>, and 
+<tt>(pathname-directory <i>default-pathname</i>)</tt> is a <i>list</i>, then
+the merged directory is the value of
+</p>
+<div class="example">
+<pre class="example"><code> (append (pathname-directory <i>default-pathname</i>)
+         (cdr  ;remove :relative from the front
+           (pathname-directory <i>pathname</i>)))
+</code>
+</pre></div>
+
+<p>except that if the resulting <i>list</i> contains a <i>string</i> or <tt>:wild</tt>
+immediately followed by <tt>:back</tt>, both of them are removed.  This removal of 
+redundant <tt>:back</tt> <i>keywords</i> is repeated as many times as possible.
+If <tt>(pathname-directory <i>default-pathname</i>)</tt> is not a <i>list</i> or
+<tt>(pathname-directory <i>pathname</i>)</tt> is not a <i>list</i> 
+whose <i>car</i> is <tt>:relative</tt>, the merged directory is
+<tt>(or (pathname-directory <i>pathname</i>) (pathname-directory <i>default-pathname</i>))</tt>
+</p>
+<p><b>merge-pathnames</b> maps customary case in <i>pathname</i> 
+into customary case in the output <i>pathname</i>.
+</p>
+<a name="Examples_003a_003a-381"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+<div class="example">
+<pre class="example"><code> (merge-pathnames &quot;CMUC::FORMAT&quot;
+                  &quot;CMUC::PS:&lt;LISPIO&gt;.FASL&quot;)
+&rArr;  #P&quot;CMUC::PS:&lt;LISPIO&gt;FORMAT.FASL.0&quot;
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-424"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><b>*default-pathname-defaults*</b>,
+<b>pathname</b>,
+<b>logical-pathname</b>,
+<a href="File-System-Concepts.html#File-System-Concepts">File System Concepts</a>,
+</p>
+<p><a href="Pathnames-as-Filenames.html#Pathnames-as-Filenames">Pathnames as Filenames</a>
+</p>
+<a name="Notes_003a_003a-281"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The net effect 
+is that if just a name is supplied, 
+the host, device, directory, and type will come from <i>default-pathname</i>, 
+but the version will come from <i>default-version</i>.
+If nothing or just a directory is supplied,
+the name, type, and version will come from <i>default-pathname</i> together.
+</p>
+
+
+
+
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

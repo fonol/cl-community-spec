@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Object Creation and Initialization (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects.html#Objects" rel="up" title="Objects">
+<link href="Initialization-Arguments.html#Initialization-Arguments" rel="next" title="Initialization Arguments">
+<link href="Objects.html#Objects" rel="prev" title="Objects">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Objects.html#Objects" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Objects
+                            </a>
+                            <a href="Objects.html#Objects.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Objects
+                            </a>
+                            <a href="Initialization-Arguments.html#Initialization-Arguments.html" class="nav-btn nav__next ">
+                                Initialization Arguments
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Object-Creation-and-Initialization"></a>
+<a name="Object-Creation-and-Initialization-1"></a>
+<div class="section top-most">
+<h3 class="section">Object Creation and Initialization</h3>
+
+
+<p>The <i>generic function</i> <b>make-instance</b> creates and returns a new
+<i>instance</i> of a <i>class</i>.  The first argument is a <i>class</i> or
+the <i>name</i> of a <i>class</i>, and the remaining arguments form an 
+<i>initialization argument list</i>
+<a name="index-initialization-argument-list"></a>
+.
+</p>
+<p>The initialization of a new <i>instance</i> consists of several distinct
+steps, including the following: combining the explicitly supplied initialization
+arguments with default values for the unsupplied initialization arguments, 
+checking the validity of the initialization arguments, allocating storage 
+for the <i>instance</i>, filling <i>slots</i> with
+values, and executing user-supplied <i>methods</i> that perform additional
+initialization.  Each step of <b>make-instance</b> is implemented by a
+<i>generic function</i> to provide a mechanism for customizing that step.  
+In addition, <b>make-instance</b> is itself a <i>generic function</i> 
+and thus also can be customized.
+</p>
+<p>The object system specifies system-supplied primary <i>methods</i> for each step 
+and thus specifies a well-defined standard behavior for the entire
+initialization process.  The standard behavior provides four simple
+mechanisms for controlling initialization:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>Declaring a <i>symbol</i> to be an initialization argument 
+for a <i>slot</i>.  An initialization argument is declared by using the
+<tt>:initarg</tt> slot option to <b>defclass</b>.  This provides a mechanism
+for supplying a value for a <i>slot</i> in a call to <b>make-instance</b>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Supplying a default value form for an initialization argument.
+Default value forms for initialization arguments are defined by using the
+<tt>:default-initargs</tt> class option to <b>defclass</b>.  If an 
+initialization argument is not explicitly provided
+as an argument to <b>make-instance</b>, the default value form is
+evaluated in the lexical environment of the <b>defclass</b> form that
+defined it, and the resulting value is used as the value of the
+initialization argument.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Supplying a default initial value form for a <i>slot</i>.  
+A default initial value form for a <i>slot</i> is defined by using the 
+<tt>:initform</tt> slot option to <b>defclass</b>.  If no initialization
+argument associated with that <i>slot</i> is given as an argument to 
+<b>make-instance</b> or is defaulted by <tt>:default-initargs</tt>, this
+default initial value form is evaluated in the lexical environment of
+the <b>defclass</b> form that defined it, and the resulting value is
+stored in the <i>slot</i>.  The <tt>:initform</tt> form for a
+<i>local slot</i> may be used when creating an <i>instance</i>, when 
+updating an <i>instance</i> to conform to a redefined <i>class</i>, 
+or when updating an <i>instance</i> to conform to the definition of a
+different <i>class</i>. The <tt>:initform</tt> form for a
+<i>shared slot</i> may be used when defining or re-defining the <i>class</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Defining <i>methods</i> for <b>initialize-instance</b> and
+<b>shared-initialize</b>.  The slot-filling behavior described above is
+implemented by a system-supplied primary <i>method</i> for
+<b>initialize-instance</b> which invokes <b>shared-initialize</b>. The
+<i>generic function</i> <b>shared-initialize</b> implements the parts of
+initialization shared by these four situations: when making an <i>instance</i>, 
+when re-initializing an <i>instance</i>, when updating an <i>instance</i>
+to conform to a redefined <i>class</i>, and when updating an <i>instance</i> 
+to conform to the definition of a different <i>class</i>. The system-supplied
+primary <i>method</i> for <b>shared-initialize</b> directly implements the
+slot-filling behavior described above, and <b>initialize-instance</b>
+simply invokes <b>shared-initialize</b>.
+</p>
+</dd>
+</dl>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Initialization-Arguments.html#Initialization-Arguments" accesskey="1">Initialization Arguments</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Declaring-the-Validity-of-Initialization-Arguments.html#Declaring-the-Validity-of-Initialization-Arguments" accesskey="2">Declaring the Validity of Initialization Arguments</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Defaulting-of-Initialization-Arguments.html#Defaulting-of-Initialization-Arguments" accesskey="3">Defaulting of Initialization Arguments</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Rules-for-Initialization-Arguments.html#Rules-for-Initialization-Arguments" accesskey="4">Rules for Initialization Arguments</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Shared_002dInitialize.html#Shared_002dInitialize" accesskey="5">Shared-Initialize</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Initialize_002dInstance.html#Initialize_002dInstance" accesskey="6">Initialize-Instance</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Definitions-of-Make_002dInstance-and-Initialize_002dInstance.html#Definitions-of-Make_002dInstance-and-Initialize_002dInstance" accesskey="7">Definitions of Make-Instance and Initialize-Instance</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

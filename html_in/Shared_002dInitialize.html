@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>shared-initialize (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="shared-initialize (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="shared-initialize (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="update_002dinstance_002dfor_002ddifferent_002dclass.html#update_002dinstance_002dfor_002ddifferent_002dclass" rel="next" title="update-instance-for-different-class">
+<link href="reinitialize_002dinstance.html#reinitialize_002dinstance" rel="prev" title="reinitialize-instance">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="shared_002dinitialize"></a>
+<div class="header">
+<p>
+Next: <a href="update_002dinstance_002dfor_002ddifferent_002dclass.html#update_002dinstance_002dfor_002ddifferent_002dclass" accesskey="n" rel="next">update-instance-for-different-class</a>, Previous: <a href="reinitialize_002dinstance.html#reinitialize_002dinstance" accesskey="p" rel="prev">reinitialize-instance</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="shared_002dinitialize-_005bStandard-Generic-Function_005d"></a>
+<h4 class="subsection">7.7.5 shared-initialize                               [Standard Generic Function]</h4>
+
+<a name="Syntax_003a_003a-14"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><code>shared-initialize</code>  <i>instance slot-names &amp;rest</i> initargs &amp;key &amp;allow-other-keys &rArr;  <i>instance</i>
+</p>
+<a name="Method-Signatures_003a_003a-3"></a>
+<h4 class="subsubheading">Method Signatures::</h4>
+
+<p><code>shared-initialize</code>  <i><span class="roman">(</span><i>instance</i> <b>standard-object</b><span class="roman">)</span> slot-names &amp;rest</i> initargs
+</p>
+<a name="Arguments-and-Values_003a_003a-93"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>instance</i>&mdash;an <i>object</i>.
+</p>
+<p><i>slot-names</i>&mdash;a <i>list</i> or <b>t</b>.
+</p>
+<p><i>initargs</i>&mdash;a <i>list</i> of <i>keyword/value pairs</i>
+		   (of initialization argument <i>names</i> and <i>values</i>).
+</p>
+<a name="Description_003a_003a-132"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The generic function <b>shared-initialize</b> is used to fill the 
+<i>slots</i>                        
+of an <i>instance</i> 
+using <i>initargs</i> and <tt>:initform</tt>
+forms.  It is called when an instance is created, when an instance is
+re-initialized, when an instance is updated to conform to a redefined
+<i>class</i>, and when an instance is updated to conform to a different
+<i>class</i>. The generic function <b>shared-initialize</b> is called by the
+system-supplied primary <i>method</i> for <b>initialize-instance</b>,
+<b>reinitialize-instance</b>, <b>update-instance-for-redefined-class</b>, and
+<b>update-instance-for-different-class</b>.
+</p>
+<p>The generic function <b>shared-initialize</b> takes the following
+arguments: the <i>instance</i> to be initialized, a specification of a set of
+<i>slot-names</i> <i>accessible</i> in that <i>instance</i>, 
+and any number of <i>initargs</i>.
+The arguments after the first two must form an 
+<i>initialization argument list</i>.  The system-supplied primary <i>method</i> on 
+<b>shared-initialize</b> initializes the <i>slots</i> with values according to the
+<i>initargs</i> and supplied <tt>:initform</tt> forms.  <i>Slot-names</i>
+indicates which <i>slots</i> should be initialized according
+to their <tt>:initform</tt> forms if no <i>initargs</i> are
+provided for those <i>slots</i>. 
+</p>
+<p>The system-supplied primary <i>method</i> behaves as follows, 
+regardless of whether the <i>slots</i> are local or shared: 
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>If an <i>initarg</i> in the <i>initialization argument list</i> 
+ specifies a value for that <i>slot</i>, that
+ value is stored into the <i>slot</i>, even if a value has
+ already been stored in the <i>slot</i> before the <i>method</i> is run.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Any <i>slots</i> indicated by <i>slot-names</i> that are still unbound
+ at this point are initialized according to their <tt>:initform</tt> forms.
+ For any such <i>slot</i> that has an <tt>:initform</tt> form,
+ that <i>form</i> is evaluated in the lexical environment of its defining 
+ <b>defclass</b> <i>form</i> and the result is stored into the <i>slot</i>.
+ For example, if a <i>before method</i> stores a value in the <i>slot</i>, 
+ the <tt>:initform</tt> form will not be used to supply a value for the <i>slot</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The rules mentioned in <a href="Rules-for-Initialization-Arguments.html#Rules-for-Initialization-Arguments">Rules for Initialization Arguments</a> are obeyed.
+</p>
+</dd>
+</dl>
+
+<p>The <i>slots-names</i> argument specifies the <i>slots</i> that are to be
+initialized according to their <tt>:initform</tt> forms if no
+initialization arguments apply.  It can be a <i>list</i> of slot <i>names</i>, 
+which specifies the set of those slot <i>names</i>; or it can be the <i>symbol</i> <b>t</b>, 
+which specifies the set of all of the <i>slots</i>.
+</p>
+<a name="See-Also_003a_003a-114"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Initialize_002dInstance.html#Initialize_002dInstance">Initialize-Instance</a>
+,
+<a href="reinitialize_002dinstance.html#reinitialize_002dinstance">reinitialize-instance</a>
+,
+<a href="update_002dinstance_002dfor_002dredefined_002dclass.html#update_002dinstance_002dfor_002dredefined_002dclass">update-instance-for-redefined-class</a>
+,
+<a href="update_002dinstance_002dfor_002ddifferent_002dclass.html#update_002dinstance_002dfor_002ddifferent_002dclass">update-instance-for-different-class</a>
+,
+<a href="slot_002dboundp.html#slot_002dboundp">slot-boundp</a>
+,
+<a href="slot_002dmakunbound.html#slot_002dmakunbound">slot-makunbound</a>
+,
+<a href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization">Object Creation and Initialization</a>,
+<a href="Rules-for-Initialization-Arguments.html#Rules-for-Initialization-Arguments">Rules for Initialization Arguments</a>,
+<a href="Declaring-the-Validity-of-Initialization-Arguments.html#Declaring-the-Validity-of-Initialization-Arguments">Declaring the Validity of Initialization Arguments</a>
+</p>
+<a name="Notes_003a_003a-76"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><i>Initargs</i> are declared as valid by using the <tt>:initarg</tt>
+option to <b>defclass</b>, or by defining 
+<i>methods</i> for <b>shared-initialize</b>. 
+The keyword name of each keyword parameter
+specifier in the <i>lambda list</i> of any <i>method</i> defined on 
+<b>shared-initialize</b> is declared as a valid <i>initarg</i>
+name for all <i>classes</i> for which that <i>method</i> is applicable.
+</p>
+<p>Implementations are permitted to optimize <tt>:initform</tt> forms that 
+neither produce nor depend on side effects, by evaluating these <i>forms</i>
+and storing them into slots before running any 
+<b>initialize-instance</b> methods, rather than by handling them in the
+primary <b>initialize-instance</b> method.  (This optimization might
+be implemented by having the <b>allocate-instance</b> method copy a
+prototype instance.)
+</p>
+<p>Implementations are permitted to optimize default initial value forms
+for <i>initargs</i> associated with slots by not actually
+creating the complete initialization argument 
+<i>list</i> when the only <i>method</i>
+that would receive the complete <i>list</i> is the 
+<i>method</i> on <b>standard-object</b>.
+In this case default initial value forms can be 
+treated like <tt>:initform</tt> forms.  This optimization has no visible
+effects other than a performance improvement.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="update_002dinstance_002dfor_002ddifferent_002dclass.html#update_002dinstance_002dfor_002ddifferent_002dclass" accesskey="n" rel="next">update-instance-for-different-class</a>, Previous: <a href="reinitialize_002dinstance.html#reinitialize_002dinstance" accesskey="p" rel="prev">reinitialize-instance</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

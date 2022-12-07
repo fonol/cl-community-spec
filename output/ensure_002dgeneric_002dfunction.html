@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>ensure-generic-function (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="allocate_002dinstance.html#allocate_002dinstance" rel="next" title="allocate-instance">
+<link href="function_002dkeywords.html#function_002dkeywords" rel="prev" title="function-keywords">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="function_002dkeywords.html#function_002dkeywords" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                function-keywords
+                            </a>
+                            <a href="Objects-Dictionary.html#Objects-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Objects Dictionary
+                            </a>
+                            <a href="allocate_002dinstance.html#allocate_002dinstance.html" class="nav-btn nav__next ">
+                                allocate-instance
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="ensure_002dgeneric_002dfunction"></a>
+<a name="ensure_002dgeneric_002dfunction-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">ensure-generic-function                                          </h4>
+
+<p><code>ensure-generic-function</code>  <i>function-name &amp;key</i>
+			 argument-precedence-order declare
+                               documentation environment
+                               generic-function-class lambda-list
+                               method-class method-combination<br>
+   &rArr;  <i>generic-function</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-90"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>function-name</i>&mdash;a <i>function name</i>.
+</p>
+<p>The keyword arguments correspond to the <i>option</i> arguments of
+<b>defgeneric</b>, except that the <tt>:method-class</tt> and
+<tt>:generic-function-class</tt> arguments can be <i>class</i> <i>object</i>s
+as well as names.
+</p>
+<p><tt>Method-combination</tt> &ndash; method combination object.
+</p>
+<p><tt>Environment</tt> &ndash; the same as the <b>&amp;environment</b> argument
+to macro expansion functions and is used to distinguish between compile-time
+and run-time environments.
+</p>
+<p>[Editorial Note by KMP: What about documentation. Missing from this arguments enumeration,
+  and confusing in description below.]
+</p>
+<p><i>generic-function</i>&mdash;a <i>generic function</i> <i>object</i>.
+</p>
+<a name="Description_003a_003a-129"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The <i>function</i> <b>ensure-generic-function</b> is used to define 
+a globally named <i>generic function</i> with no <i>methods</i> 
+or to specify or modify options and declarations that pertain to 
+a globally named <i>generic function</i> as a whole.
+</p>
+<p>If <i>function-name</i> is not <i>fbound</i> in the <i>global environment</i>,
+a new
+<i>generic function</i> is created.  
+If 
+</p>
+<p><tt>(fdefinition <i>function-name</i>)</tt> 
+</p>
+<p>is an <i>ordinary function</i>, 
+a <i>macro</i>, 
+or a <i>special operator</i>,
+an error is signaled.
+</p>
+<p>If <i>function-name</i> 
+is a <i>list</i>, it must be of the
+form <tt>(setf <i>symbol</i>)</tt>.
+If <i>function-name</i> specifies a <i>generic function</i> that has a
+different value for any of the following arguments,
+the <i>generic function</i> is modified to have the new value: 
+<tt>:argument-precedence-order</tt>, <tt>:declare</tt>, <tt>:documentation</tt>,
+<tt>:method-combination</tt>.
+</p>
+<p>If <i>function-name</i> specifies a <i>generic function</i> that has a
+different value for the <tt>:lambda-list</tt> argument, and the new value
+is congruent with the <i>lambda lists</i> of all existing 
+<i>methods</i> or there
+are no <i>methods</i>, the value is changed; otherwise an error is signaled.
+</p>
+<p>If <i>function-name</i> specifies a <i>generic function</i> that has a
+different value for the <tt>:generic-function-class</tt> argument and if
+the new generic function class is compatible with the old,
+<b>change-class</b> is called to change the <i>class</i> of the 
+<i>generic function</i>;
+otherwise an error is signaled.
+</p>
+<p>If <i>function-name</i> specifies a <i>generic function</i> that has a
+different value for the <tt>:method-class</tt> argument, the value is
+changed, but any existing <i>methods</i> are not changed.
+</p>
+<a name="Affected-By_003a_003a-10"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p>Existing function binding of <i>function-name</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-22"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>If 
+</p>
+<p><tt>(fdefinition <i>function-name</i>)</tt>
+</p>
+<p>is an <i>ordinary function</i>, a <i>macro</i>, or a <i>special operator</i>, 
+an error of <i>type</i> <b>error</b> is signaled.
+</p>
+<p>If <i>function-name</i> specifies a 
+<i>generic function</i> that has a
+different value for the <tt>:lambda-list</tt> argument, and the new value
+is not congruent with the <i>lambda list</i> of any existing 
+<i>method</i>,
+an error of <i>type</i> <b>error</b> is signaled.
+</p>
+<p>If <i>function-name</i> specifies a 
+<i>generic function</i> that has a
+different value for the <tt>:generic-function-class</tt> argument and if
+the new generic function class not is compatible with the old,
+an error of <i>type</i> <b>error</b> is signaled.
+</p>
+<a name="See-Also_003a_003a-111"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="defgeneric.html#defgeneric">defgeneric</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

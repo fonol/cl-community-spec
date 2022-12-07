@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>symbol-macrolet (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="symbol-macrolet (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="symbol-macrolet (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="_002amacroexpand_002dhook_002a.html#g_t_002amacroexpand_002dhook_002a" rel="next" title="*macroexpand-hook*">
+<link href="define_002dsymbol_002dmacro.html#define_002dsymbol_002dmacro" rel="prev" title="define-symbol-macro">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="symbol_002dmacrolet"></a>
+<div class="header">
+<p>
+Next: <a href="_002amacroexpand_002dhook_002a.html#g_t_002amacroexpand_002dhook_002a" accesskey="n" rel="next">*macroexpand-hook*</a>, Previous: <a href="define_002dsymbol_002dmacro.html#define_002dsymbol_002dmacro" accesskey="p" rel="prev">define-symbol-macro</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="symbol_002dmacrolet-_005bSpecial-Operator_005d"></a>
+<h4 class="subsection">3.8.14 symbol-macrolet                                          [Special Operator]</h4>
+
+<p><code>symbol-macrolet</code>  <i><span class="roman">(</span>{(</i>symbol expansion<span class="roman">)</span>}*<span class="roman">)</span>
+			   {<i>declaration</i>}* 
+			   {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-12"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>symbol</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>expansion</i>&mdash;a <i>form</i>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-13"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>symbol-macrolet</b> provides a mechanism for 
+affecting the <i>macro expansion</i> environment for <i>symbols</i>.
+</p>
+<p><b>symbol-macrolet</b> lexically establishes expansion functions
+for each of the <i>symbol macros</i> named by <i>symbols</i>.
+</p>
+<p>The only guaranteed property of an expansion <i>function</i> for a <i>symbol macro</i>
+is that when it is applied to the <i>form</i> and the <i>environment</i> it returns
+the correct expansion.  (In particular, it is <i>implementation-dependent</i> 
+whether the expansion is conceptually stored in the expansion function,
+the <i>environment</i>, or both.)
+</p>
+<p>Each reference to <i>symbol</i> as a variable within the lexical <i>scope</i>
+of <b>symbol-macrolet</b> is expanded by the normal macro expansion process;
+see <a href="Symbols-as-Forms.html#Symbols-as-Forms">Symbols as Forms</a>.
+The expansion of a symbol macro is subject to further macro expansion
+in the same lexical environment as the symbol macro invocation, exactly 
+analogous to normal <i>macros</i>.
+</p>
+<p>Exactly the same <i>declarations</i> are allowed as for <b>let</b>
+with one exception: <b>symbol-macrolet</b> signals an error
+if a <b>special</b> declaration names one of the <i>symbols</i> 
+being defined by <b>symbol-macrolet</b>.  
+</p>
+<p>When the <i>forms</i> of the <b>symbol-macrolet</b> form are expanded, 
+any use of <b>setq</b> to set the value of one of the specified variables 
+ is treated as if it were a <b>setf</b>.
+<b>psetq</b> of a <i>symbol</i> defined as a symbol macro 
+ is treated as if it were a <b>psetf</b>, and
+<b>multiple-value-setq</b> 
+ is treated as if it were a <b>setf</b> of <b>values</b>.
+</p>
+<p>The use of <b>symbol-macrolet</b> can be shadowed by <b>let</b>.
+In other words, <b>symbol-macrolet</b> only substitutes for occurrences
+of <i>symbol</i> that would be in the <i>scope</i> of a lexical binding of
+<i>symbol</i> surrounding the <i>forms</i>.
+</p>
+<a name="Examples_003a_003a-11"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">;;; The following is equivalent to
+;;;   (list 'foo (let ((x 'bar)) x)),
+;;; not
+;;;   (list 'foo (let (('foo 'bar)) 'foo))
+ (symbol-macrolet ((x 'foo))
+   (list x (let ((x 'bar)) x))) 
+&rArr;  (foo bar)
+<i>NOT</i>&rArr; (foo foo) 
+
+ (symbol-macrolet ((x '(foo x)))
+   (list x))
+&rArr;  ((FOO X))
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-4"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If an attempt is made to bind a <i>symbol</i> that is defined as a <i>global variable</i>,
+an error of <i>type</i> <b>program-error</b> is signaled.
+</p>
+<p>If <i>declaration</i> contains a <b>special</b> declaration 
+that names one of the <i>symbols</i> being bound by <b>symbol-macrolet</b>,
+an error of <i>type</i> <b>program-error</b> is signaled.
+</p>
+<a name="See-Also_003a_003a-13"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="with_002dslots.html#with_002dslots">with-slots</a>
+, 
+&lsquo;macroexpand; macroexpand-1&rsquo;
+</p>
+<a name="Notes_003a_003a-9"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The special form <b>symbol-macrolet</b> is the basic mechanism that is used to
+implement <b>with-slots</b>.
+</p>
+<p>If a <b>symbol-macrolet</b> <i>form</i> is a <i>top level form</i>,
+the <i>forms</i> are also processed as <i>top level forms</i>.
+See <a href="File-Compilation.html#File-Compilation">File Compilation</a>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="_002amacroexpand_002dhook_002a.html#g_t_002amacroexpand_002dhook_002a" accesskey="n" rel="next">*macroexpand-hook*</a>, Previous: <a href="define_002dsymbol_002dmacro.html#define_002dsymbol_002dmacro" accesskey="p" rel="prev">define-symbol-macro</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

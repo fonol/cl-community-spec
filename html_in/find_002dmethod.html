@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>find-method (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="find-method (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="find-method (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="add_002dmethod.html#add_002dmethod" rel="next" title="add-method">
+<link href="define_002dmethod_002dcombination.html#define_002dmethod_002dcombination" rel="prev" title="define-method-combination">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="find_002dmethod"></a>
+<div class="header">
+<p>
+Next: <a href="add_002dmethod.html#add_002dmethod" accesskey="n" rel="next">add-method</a>, Previous: <a href="define_002dmethod_002dcombination.html#define_002dmethod_002dcombination" accesskey="p" rel="prev">define-method-combination</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="find_002dmethod-_005bStandard-Generic-Function_005d"></a>
+<h4 class="subsection">7.7.34 find-method                                     [Standard Generic Function]</h4>
+
+<a name="Syntax_003a_003a-31"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><code>find-method</code>  <i>generic-function method-qualifiers specializers &amp;optional</i> errorp<br>
+   &rArr;  <i>method</i>
+</p>
+<a name="Method-Signatures_003a_003a-17"></a>
+<h4 class="subsubheading">Method Signatures::</h4>
+
+<p><code>find-method</code>  <i><span class="roman">(</span><i>generic-function</i> <b>standard-generic-function</b><span class="roman">)</span>
+		method-qualifiers specializers &amp;optional</i> errorp
+</p>
+<a name="Arguments-and-Values_003a_003a-122"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>generic-function</i>&mdash;a <i>generic function</i>.
+</p>
+<p><i>method-qualifiers</i>&mdash;a <i>list</i>.
+</p>
+<p><i>specializers</i>&mdash;a <i>list</i>.
+</p>
+<p><i>errorp</i>&mdash;a <i>generalized boolean</i>.
+ The default is <i>true</i>.
+</p>
+<p><i>method</i>&mdash;a <i>method</i> <i>object</i>, or <b>nil</b>.
+</p>
+<a name="Description_003a_003a-161"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <i>generic function</i> <b>find-method</b> takes a <i>generic function</i> 
+and returns the <i>method</i> <i>object</i> that agrees on <i>qualifiers</i> 
+and <i>parameter specializers</i> with the <i>method-qualifiers</i> and 
+<i>specializers</i> arguments of <b>find-method</b>.  
+<i>Method-qualifiers</i>  contains the
+method <i>qualifiers</i> for the <i>method</i>. 
+The order of the method <i>qualifiers</i>
+is significant.                                
+For a definition of agreement in this context,
+see <a href="Agreement-on-Parameter-Specializers-and-Qualifiers.html#Agreement-on-Parameter-Specializers-and-Qualifiers">Agreement on Parameter Specializers and Qualifiers</a>.
+</p>
+<p>The <i>specializers</i> argument contains the parameter
+specializers for the <i>method</i>. It must correspond in length to
+the number of required arguments of the <i>generic function</i>, or
+an error is signaled.  This means that to obtain the
+default <i>method</i> on a given <i>generic-function</i>,
+a <i>list</i> whose elements are the <i>class</i> <b>t</b> must be given.
+</p>
+<p>If there is no such <i>method</i> and <i>errorp</i> is <i>true</i>,
+<b>find-method</b> signals an error.
+If there is no such <i>method</i> and <i>errorp</i> is <i>false</i>,
+<b>find-method</b> returns <b>nil</b>.
+</p>
+<a name="Examples_003a_003a-111"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defmethod some-operation ((a integer) (b float)) (list a b))
+&rArr;  #&lt;STANDARD-METHOD SOME-OPERATION (INTEGER FLOAT) 26723357&gt;
+ (find-method #'some-operation '() (mapcar #'find-class '(integer float)))
+&rArr;  #&lt;STANDARD-METHOD SOME-OPERATION (INTEGER FLOAT) 26723357&gt;
+ (find-method #'some-operation '() (mapcar #'find-class '(integer integer)))
+<tt> |&gt; </tt> Error: No matching method
+ (find-method #'some-operation '() (mapcar #'find-class '(integer integer)) nil)
+&rArr;  NIL
+</pre></div>
+
+<a name="Affected-By_003a_003a-17"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>add-method</b>,
+<b>defclass</b>,
+<b>defgeneric</b>,
+<b>defmethod</b>
+</p>
+<a name="Exceptional-Situations_003a_003a-43"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If the <i>specializers</i> argument does not correspond in length to
+the number of required arguments of the <i>generic-function</i>, an
+an error of <i>type</i> <b>error</b> is signaled.  
+</p>
+<p>If there is no such <i>method</i> and <i>errorp</i> is <i>true</i>, 
+<b>find-method</b> signals an error of <i>type</i> <b>error</b>.
+</p>
+<a name="See-Also_003a_003a-143"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Agreement-on-Parameter-Specializers-and-Qualifiers.html#Agreement-on-Parameter-Specializers-and-Qualifiers">Agreement on Parameter Specializers and Qualifiers</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="add_002dmethod.html#add_002dmethod" accesskey="n" rel="next">add-method</a>, Previous: <a href="define_002dmethod_002dcombination.html#define_002dmethod_002dcombination" accesskey="p" rel="prev">define-method-combination</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

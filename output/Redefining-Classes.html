@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Redefining Classes (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Classes.html#Classes" rel="up" title="Classes">
+<link href="Modifying-the-Structure-of-Instances.html#Modifying-the-Structure-of-Instances" rel="next" title="Modifying the Structure of Instances">
+<link href="Examples-of-Class-Precedence-List-Determination.html#Examples-of-Class-Precedence-List-Determination" rel="prev" title="Examples of Class Precedence List Determination">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Examples-of-Class-Precedence-List-Determination.html#Examples-of-Class-Precedence-List-Determination" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Examples of Class Precedence List Determination
+                            </a>
+                            <a href="Classes.html#Classes.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Classes
+                            </a>
+                            <a href="Modifying-the-Structure-of-Instances.html#Modifying-the-Structure-of-Instances.html" class="nav-btn nav__next ">
+                                Modifying the Structure of Instances
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Redefining-Classes"></a>
+<a name="Redefining-Classes-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Redefining Classes</h4>
+
+<p>A <i>class</i> that is a <i>direct instance</i> of <b>standard-class</b> can
+be redefined if the new <i>class</i> is also
+a <i>direct instance</i> of <b>standard-class</b>.
+Redefining a <i>class</i> modifies the existing
+<i>class</i> <i>object</i> to reflect the new <i>class</i> definition; it does not
+create a new <i>class</i> <i>object</i> for the <i>class</i>.  
+Any <i>method</i> <i>object</i> created by a <tt>:reader</tt>, <tt>:writer</tt>, 
+or <tt>:accessor</tt> option specified by the old <b>defclass</b> form is
+removed from the corresponding <i>generic function</i>.
+<i>Methods</i> specified by the new <b>defclass</b> form are added.
+</p>
+<p>When the class C is redefined, changes are propagated to its <i>instances</i>
+and to <i>instances</i> of any of its <i>subclasses</i>.  Updating such an
+<i>instance</i> occurs at an <i>implementation-dependent</i> time, but no later than
+the next time a <i>slot</i> 
+of that <i>instance</i> is read or written.  Updating an
+<i>instance</i> 
+does not change its identity as defined by the <i>function</i> <b>eq</b>.
+The updating process may change the <i>slots</i> of that
+particular <i>instance</i>, 
+but it does not create a new <i>instance</i>.  Whether
+updating an <i>instance</i> consumes storage is <i>implementation-dependent</i>.
+</p>
+<p>Note that redefining a <i>class</i> may cause <i>slots</i> to be added or 
+deleted.  If a <i>class</i> is redefined in a way that changes the set of
+<i>local slots</i> <i>accessible</i> in <i>instances</i>, the <i>instances</i> 
+are updated.  It is <i>implementation-dependent</i> whether <i>instances</i> 
+are updated if a <i>class</i> is redefined in a way that does not change 
+the set of <i>local slots</i> <i>accessible</i> in <i>instances</i>.
+</p>
+<p>The value of a <i>slot</i> 
+that is specified as shared both in the old <i>class</i>
+and in the new <i>class</i> is retained.  
+If such a <i>shared slot</i> was unbound
+in the old <i>class</i>, it is unbound in the new <i>class</i>.  
+<i>Slots</i> that
+were local in the old <i>class</i> and that are shared in the new 
+<i>class</i> are
+initialized.  Newly added <i>shared slots</i> are initialized.
+</p>
+<p>Each newly added <i>shared slot</i> is set to the result of evaluating the
+<i>captured initialization form</i> for the <i>slot</i> that was specified 
+in the <b>defclass</b> <i>form</i> for the new <i>class</i>.  
+If there was no <i>initialization form</i>, the <i>slot</i> is unbound.
+</p>
+<p>If a <i>class</i> is redefined in such a way that the set of
+<i>local slots</i> <i>accessible</i> in an <i>instance</i> of the <i>class</i> 
+is changed, a two-step process of updating the <i>instances</i> of the
+<i>class</i> takes place.  The process may be explicitly started by 
+invoking the generic function <b>make-instances-obsolete</b>.  This
+two-step process can happen in other circumstances in some implementations.
+For example, in some implementations this two-step process is
+triggered if the order of <i>slots</i> in storage is changed.
+</p>
+<p>The first step modifies the structure of the <i>instance</i> by adding new
+<i>local slots</i> and discarding <i>local slots</i> that are not
+defined in the new version of the <i>class</i>.  The second step
+initializes the newly-added <i>local slots</i> and performs any other
+user-defined actions. These two steps are further specified
+in the next two sections.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Modifying-the-Structure-of-Instances.html#Modifying-the-Structure-of-Instances" accesskey="1">Modifying the Structure of Instances</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Initializing-Newly-Added-Local-Slots-_0028Redefining-Classes_0029.html#Initializing-Newly-Added-Local-Slots-_0028Redefining-Classes_0029" accesskey="2">Initializing Newly Added Local Slots (Redefining Classes)</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Customizing-Class-Redefinition.html#Customizing-Class-Redefinition" accesskey="3">Customizing Class Redefinition</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

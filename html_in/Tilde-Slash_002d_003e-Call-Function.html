@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Tilde Slash-&gt; Call Function (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Tilde Slash-&gt; Call Function (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Tilde Slash-&gt; Call Function (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Pretty-Printer-Operations.html#FORMAT-Pretty-Printer-Operations" rel="up" title="FORMAT Pretty Printer Operations">
+<link href="FORMAT-Layout-Control.html#FORMAT-Layout-Control" rel="next" title="FORMAT Layout Control">
+<link href="Tilde-I_002d_003e-Indent.html#Tilde-I_002d_003e-Indent" rel="prev" title="Tilde I-&gt; Indent">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Tilde-Slash_002d_003e-Call-Function"></a>
+<div class="header">
+<p>
+Previous: <a href="Tilde-I_002d_003e-Indent.html#Tilde-I_002d_003e-Indent" accesskey="p" rel="prev">Tilde I-&gt; Indent</a>, Up: <a href="FORMAT-Pretty-Printer-Operations.html#FORMAT-Pretty-Printer-Operations" accesskey="u" rel="up">FORMAT Pretty Printer Operations</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Tilde-Slash_003a-Call-Function"></a>
+<h4 class="subsubsection">22.3.5.4 Tilde Slash: Call Function</h4>
+
+<p><tt>~/<i>name</i>/</tt>
+</p>
+<p>User defined functions can be called from within a format
+string by using the directive <tt>~/<i>name</i>/</tt>.
+The <i>colon</i> modifier, the <i>at-sign</i> modifier, and arbitrarily many parameters 
+can be specified with the <tt>~/<i>name</i>/</tt> directive.
+<i>name</i> can be any arbitrary string that does not contain a &quot;/&quot;.
+All of the characters in <i>name</i> are treated as if they were upper case.
+If <i>name</i> contains a single <i>colon</i> (<tt>:</tt>) or double <i>colon</i> (<tt>::</tt>),
+then everything up to but not including the first <tt>&quot;:&quot;</tt> or <tt>&quot;::&quot;</tt>
+is taken to be a <i>string</i> that names a <i>package</i>.
+Everything after the first <tt>&quot;:&quot;</tt> or <tt>&quot;::&quot;</tt> (if any) is taken to be a 
+<i>string</i> that names a <tt>symbol</tt>.  The function corresponding to a 
+<tt>~/name/</tt> directive is obtained by looking up the <i>symbol</i>
+that has the indicated name in the indicated <i>package</i>.
+If <i>name</i> does not contain a <tt>&quot;:&quot;</tt> or <tt>&quot;::&quot;</tt>,
+then the whole <i>name</i> string is looked up in the <tt>COMMON-LISP-USER</tt> <i>package</i>. 
+</p>
+<p>When a <tt>~/name/</tt> directive is encountered,
+the indicated function is called with four or more arguments.
+The first four arguments are:
+     the output stream,
+     the <i>format argument</i> corresponding to the directive,
+     a <i>generalized boolean</i> that is <i>true</i> if the <i>colon</i> modifier was used,
+ and a <i>generalized boolean</i> that is <i>true</i> if the <i>at-sign</i> modifier was used.
+The remaining arguments consist of any parameters specified with the directive.
+The function should print the argument appropriately.
+Any values returned by the function are ignored.
+</p>
+<p>The three <i>functions</i> 
+      <b>pprint-linear</b>,
+      <b>pprint-fill</b>,
+  and <b>pprint-tabular</b>
+are specifically designed so that they can be called by <tt>~/.../</tt>
+(<i>i.e.</i>, <tt>~/pprint-linear/</tt>, <tt>~/pprint-fill/</tt>, and <tt>~/pprint-tabular/</tt>).
+In particular they take <i>colon</i> and <i>at-sign</i> arguments.
+</p>
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Tilde-I_002d_003e-Indent.html#Tilde-I_002d_003e-Indent" accesskey="p" rel="prev">Tilde I-&gt; Indent</a>, Up: <a href="FORMAT-Pretty-Printer-Operations.html#FORMAT-Pretty-Printer-Operations" accesskey="u" rel="up">FORMAT Pretty Printer Operations</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

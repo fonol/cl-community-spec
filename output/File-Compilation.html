@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>File Compilation (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Compilation.html#Compilation" rel="up" title="Compilation">
+<link href="Processing-of-Top-Level-Forms.html#Processing-of-Top-Level-Forms" rel="next" title="Processing of Top Level Forms">
+<link href="Semantic-Constraints.html#Semantic-Constraints" rel="prev" title="Semantic Constraints">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Semantic-Constraints.html#Semantic-Constraints" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Semantic Constraints
+                            </a>
+                            <a href="Compilation.html#Compilation.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Compilation
+                            </a>
+                            <a href="Processing-of-Top-Level-Forms.html#Processing-of-Top-Level-Forms.html" class="nav-btn nav__next ">
+                                Processing of Top Level Forms
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="File-Compilation"></a>
+<a name="File-Compilation-1"></a>
+<div class="section top-most">
+<h4 class="subsection">File Compilation</h4>
+
+<p>The <i>function</i> <b>compile-file</b> performs compilation of 
+<i>forms</i> in a file following the rules specified in <a href="Compilation-Semantics.html#Compilation-Semantics">Compilation Semantics</a>,
+and produces an output file that can be loaded by using <b>load</b>.
+</p>
+<p>Normally, the <i>top level forms</i> appearing in a file compiled with
+<b>compile-file</b> are evaluated only when the resulting
+compiled file is loaded, and not when the file is compiled.  However,
+it is typically the case that some forms in the file need to be evaluated
+at compile time so the
+remainder of the file can be read and compiled correctly.
+</p>
+<p>The <b>eval-when</b> <i>special form</i> can be used to control
+whether a <i>top level form</i> is evaluated at compile time, load
+time, or both.  It is possible to specify any of three situations with
+<b>eval-when</b>, denoted by the symbols <tt>:compile-toplevel</tt>,
+<tt>:load-toplevel</tt>, and <tt>:execute</tt>.  For top level 
+<b>eval-when</b> forms, <tt>:compile-toplevel</tt> specifies that the
+compiler must evaluate the body at compile time, and <tt>:load-toplevel</tt> specifies that the compiler must arrange to evaluate
+the body at load time. For non-top level <b>eval-when</b> forms,
+<tt>:execute</tt> specifies that the body must be executed in the run-time
+<i>environment</i>.
+</p>
+<p>The behavior of this <i>form</i> can be more precisely understood in
+terms of a model of how <b>compile-file</b> processes forms in
+a file to be compiled. There are two processing modes, called
+&ldquo;not-compile-time&rdquo; and &ldquo;compile-time-too&rdquo;.
+</p>
+<p>Successive forms are read from the file by <b>compile-file</b>
+and processed in not-compile-time mode; in this mode, 
+<b>compile-file</b> arranges for forms to be evaluated only at load time
+and not at compile time.  When <b>compile-file</b> is in
+compile-time-too mode, forms are evaluated both at compile time and
+load time.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Processing-of-Top-Level-Forms.html#Processing-of-Top-Level-Forms" accesskey="1">Processing of Top Level Forms</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Processing-of-Defining-Macros.html#Processing-of-Defining-Macros" accesskey="2">Processing of Defining Macros</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Constraints-on-Macros-and-Compiler-Macros.html#Constraints-on-Macros-and-Compiler-Macros" accesskey="3">Constraints on Macros and Compiler Macros</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

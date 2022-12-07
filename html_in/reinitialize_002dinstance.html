@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>reinitialize-instance (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="reinitialize-instance (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="reinitialize-instance (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="shared_002dinitialize.html#shared_002dinitialize" rel="next" title="shared-initialize">
+<link href="allocate_002dinstance.html#allocate_002dinstance" rel="prev" title="allocate-instance">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="reinitialize_002dinstance"></a>
+<div class="header">
+<p>
+Next: <a href="shared_002dinitialize.html#shared_002dinitialize" accesskey="n" rel="next">shared-initialize</a>, Previous: <a href="allocate_002dinstance.html#allocate_002dinstance" accesskey="p" rel="prev">allocate-instance</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="reinitialize_002dinstance-_005bStandard-Generic-Function_005d"></a>
+<h4 class="subsection">7.7.4 reinitialize-instance                           [Standard Generic Function]</h4>
+
+<a name="Syntax_003a_003a-13"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><code>reinitialize-instance</code>  <i>instance &amp;rest</i> initargs &amp;key &amp;allow-other-keys &rArr;  <i>instance</i>
+</p>
+<a name="Method-Signatures_003a_003a-2"></a>
+<h4 class="subsubheading">Method Signatures::</h4>
+
+<p><code>reinitialize-instance</code>  <i><span class="roman">(</span><i>instance</i> <b>standard-object</b><span class="roman">)</span> &amp;rest</i> initargs
+</p>
+<a name="Arguments-and-Values_003a_003a-92"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>instance</i>&mdash;an <i>object</i>.
+</p>
+<p><i>initargs</i>&mdash;an <i>initialization argument list</i>.
+</p>
+<a name="Description_003a_003a-131"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <i>generic function</i> <b>reinitialize-instance</b> can be used to change
+the values of <i>local slots</i> of an <i>instance</i> according to 
+<i>initargs</i>.
+This <i>generic function</i> can be called by users.
+</p>
+<p>The system-supplied primary <i>method</i> for <b>reinitialize-instance</b>
+checks the validity of <i>initargs</i> and signals an error if
+an <i>initarg</i> is supplied that is not declared as valid.
+The <i>method</i> then calls the generic function <b>shared-initialize</b>
+with the following arguments:  the <i>instance</i>, 
+<b>nil</b> (which means no <i>slots</i>
+should be initialized according to their initforms), and the
+<i>initargs</i> it received.
+</p>
+<a name="Side-Effects_003a_003a-6"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>The <i>generic function</i> <b>reinitialize-instance</b> changes the values of <i>local slots</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-23"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>The system-supplied primary <i>method</i> for <b>reinitialize-instance</b>
+signals an error if an <i>initarg</i> is supplied that is not declared as valid.
+</p>
+<a name="See-Also_003a_003a-113"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Initialize_002dInstance.html#Initialize_002dInstance">Initialize-Instance</a>
+,
+<a href="Shared_002dInitialize.html#Shared_002dInitialize">Shared-Initialize</a>
+,
+<a href="update_002dinstance_002dfor_002dredefined_002dclass.html#update_002dinstance_002dfor_002dredefined_002dclass">update-instance-for-redefined-class</a>
+,
+<a href="update_002dinstance_002dfor_002ddifferent_002dclass.html#update_002dinstance_002dfor_002ddifferent_002dclass">update-instance-for-different-class</a>
+,
+<a href="slot_002dboundp.html#slot_002dboundp">slot-boundp</a>
+,
+<a href="slot_002dmakunbound.html#slot_002dmakunbound">slot-makunbound</a>
+,
+<a href="Reinitializing-an-Instance.html#Reinitializing-an-Instance">Reinitializing an Instance</a>,
+<a href="Rules-for-Initialization-Arguments.html#Rules-for-Initialization-Arguments">Rules for Initialization Arguments</a>,
+<a href="Declaring-the-Validity-of-Initialization-Arguments.html#Declaring-the-Validity-of-Initialization-Arguments">Declaring the Validity of Initialization Arguments</a>
+</p>
+<a name="Notes_003a_003a-75"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><i>Initargs</i> are declared as valid by using the
+<tt>:initarg</tt> option to <b>defclass</b>, or by defining 
+<i>methods</i> for <b>reinitialize-instance</b>
+or <b>shared-initialize</b>.  The keyword name
+of each keyword parameter specifier in the <i>lambda list</i> of any 
+<i>method</i>
+defined on <b>reinitialize-instance</b> or <b>shared-initialize</b> is
+declared as a valid initialization argument name for all 
+<i>classes</i> for
+which that <i>method</i> is applicable.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="shared_002dinitialize.html#shared_002dinitialize" accesskey="n" rel="next">shared-initialize</a>, Previous: <a href="allocate_002dinstance.html#allocate_002dinstance" accesskey="p" rel="prev">allocate-instance</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

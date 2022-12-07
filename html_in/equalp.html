@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>equalp (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="equalp (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="equalp (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="identity.html#identity" rel="next" title="identity">
+<link href="equal.html#equal" rel="prev" title="equal">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="equalp"></a>
+<div class="header">
+<p>
+Next: <a href="identity.html#identity" accesskey="n" rel="next">identity</a>, Previous: <a href="equal.html#equal" accesskey="p" rel="prev">equal</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="equalp-_005bFunction_005d"></a>
+<h4 class="subsection">5.3.36 equalp                                                           [Function]</h4>
+
+<p><code>equalp</code>  <i>x y</i> &rArr;  <i>generalized-boolean</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-55"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>x</i>&mdash;an <i>object</i>.
+</p>
+<p><i>y</i>&mdash;an <i>object</i>.
+</p>
+<p><i>generalized-boolean</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-89"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns <i>true</i> if <i>x</i> and <i>y</i> are <b>equal</b>,
+or if they have components that are of the same <i>type</i> as each other
+   and if those components are <b>equalp</b>;
+specifically, <b>equalp</b> returns <i>true</i> in the following cases:
+</p><dl compact="compact">
+<dt><i>Characters</i></dt>
+<dd><p>If two <i>characters</i> are <b>char-equal</b>.
+</p>
+</dd>
+<dt><i>Numbers</i></dt>
+<dd><p>If two <i>numbers</i> are the <i>same</i> under <b>=</b>. 
+</p>
+</dd>
+<dt><i>Conses</i></dt>
+<dd><p>If the two <i>cars</i> in the <i>conses</i> are <b>equalp</b> 
+and the two <i>cdrs</i> in the <i>conses</i> are <b>equalp</b>.
+</p>
+</dd>
+<dt><i>Arrays</i></dt>
+<dd><p>If two <i>arrays</i> have the same
+number of dimensions, the dimensions match,
+and the corresponding
+<i>active elements</i> 
+are <b>equalp</b>.
+The <i>types</i> for which the <i>arrays</i> are <i>specialized</i> need not match; 
+for example, a <i>string</i> and a general <i>array</i> that happens to contain the same 
+<i>characters</i> are <b>equalp</b>.
+Because <b>equalp</b> performs <i>element</i>-by-<i>element</i> comparisons
+of <i>strings</i> and ignores the <i>case</i> of <i>characters</i>,
+<i>case</i> distinctions are ignored when <b>equalp</b> compares <i>strings</i>.
+</p>
+</dd>
+<dt><i>Structures</i></dt>
+<dd><p>If two <i>structures</i> S_1 and S_2 have the same <i>class</i>
+and the value of each <i>slot</i> in S_1 is the <i>same</i> under <b>equalp</b>
+as the value of the corresponding <i>slot</i> in S_2.
+</p>
+</dd>
+<dt><i>Hash Tables</i></dt>
+<dd><p><b>equalp</b> descends <i>hash-tables</i> by first comparing the count of entries
+  and the <tt>:test</tt> function; if those are the same, it compares the
+  keys of the tables using the <tt>:test</tt> function and then the values
+  of the matching keys using <b>equalp</b> recursively.
+</p>
+</dd>
+</dl>
+
+<p><b>equalp</b> does not descend any <i>objects</i>
+  other than the ones explicitly specified above.
+Figure 5&ndash;13 summarizes the information given in the previous list.
+In addition, the figure specifies the priority of the behavior of <b>equalp</b>,
+with upper
+  entries taking priority over lower ones.
+</p>
+<p>&nbsp;&nbsp;Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Behavior&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<i>number</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uses&nbsp;<b>=</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<i>character</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uses&nbsp;<b><span class="nolinebreak">char-equal</span></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<i>cons</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;descends&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<i>bit&nbsp;vector</i>&nbsp;&nbsp;&nbsp;&nbsp;descends&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<i>string</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;descends&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<i>pathname</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;same&nbsp;as&nbsp;<b>equal</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<i>structure</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;descends,&nbsp;as&nbsp;described&nbsp;above&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;Other&nbsp;<i>array</i>&nbsp;&nbsp;&nbsp;descends&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<i>hash&nbsp;table</i>&nbsp;&nbsp;&nbsp;&nbsp;descends,&nbsp;as&nbsp;described&nbsp;above&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;Other&nbsp;<i>object</i>&nbsp;&nbsp;uses&nbsp;<b>eq</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;5&ndash;13:&nbsp;Summary&nbsp;and&nbsp;priorities&nbsp;of&nbsp;behavior&nbsp;of&nbsp;<b>equalp</b><!-- /@w -->
+</p>
+
+<a name="Examples_003a_003a-63"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (equalp 'a 'b) &rArr;  <i>false</i>
+ (equalp 'a 'a) &rArr;  <i>true</i>
+ (equalp 3 3) &rArr;  <i>true</i>
+ (equalp 3 3.0) &rArr;  <i>true</i>
+ (equalp 3.0 3.0) &rArr;  <i>true</i>
+ (equalp #c(3 -4) #c(3 -4)) &rArr;  <i>true</i>
+ (equalp #c(3 -4.0) #c(3 -4)) &rArr;  <i>true</i>
+ (equalp (cons 'a 'b) (cons 'a 'c)) &rArr;  <i>false</i>
+ (equalp (cons 'a 'b) (cons 'a 'b)) &rArr;  <i>true</i>
+ (equalp #\A #\A) &rArr;  <i>true</i>
+ (equalp #\A #\a) &rArr;  <i>true</i>
+ (equalp &quot;Foo&quot; &quot;Foo&quot;) &rArr;  <i>true</i>
+ (equalp &quot;Foo&quot; (copy-seq &quot;Foo&quot;)) &rArr;  <i>true</i>
+ (equalp &quot;FOO&quot; &quot;foo&quot;) &rArr;  <i>true</i>
+</pre></div>
+
+<div class="example">
+<pre class="example"> (setq array1 (make-array 6 :element-type 'integer
+                            :initial-contents '(1 1 1 3 5 7))) 
+&rArr;  #(1 1 1 3 5 7)
+ (setq array2 (make-array 8 :element-type 'integer
+                            :initial-contents '(1 1 1 3 5 7 2 6)
+                            :fill-pointer 6))
+&rArr;  #(1 1 1 3 5 7)
+ (equalp array1 array2) &rArr;  <i>true</i>
+ (setq vector1 (vector 1 1 1 3 5 7)) &rArr;  #(1 1 1 3 5 7)
+ (equalp array1 vector1) &rArr;  <i>true</i> 
+</pre></div>
+
+<a name="See-Also_003a_003a-74"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="eq.html#eq">eq</a>
+, 
+<a href="eql.html#eql">eql</a>
+, 
+<a href="equal.html#equal">equal</a>
+, 
+&lsquo;=; /=; &lt;; &gt;; &lt;=; &gt;=&rsquo;
+, 
+&lsquo;string=; string/=; string&lt;; string&gt;; string&lt;=; string&gt;=; string-equal; string-not-equal; string-lessp; string-greaterp; string-not-greaterp; string-not-lessp&rsquo;
+, <b>string-equal</b>, 
+&lsquo;char=; char/=; char&lt;; char&gt;; char&lt;=; char&gt;=; char-equal; char-not-equal; char-lessp; char-greaterp; char-not-greaterp; char-not-lessp&rsquo;
+, 
+<b>char-equal</b>
+</p>
+<a name="Notes_003a_003a-45"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><i>Object</i> equality is not a concept for which there is a uniquely
+    determined correct algorithm. The appropriateness of an equality
+    predicate can be judged only in the context of the needs of some
+    particular program. Although these functions take any type of
+    argument and their names sound very generic, 
+<b>equal</b> and <b>equalp</b> are
+    not appropriate for every application. 
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="identity.html#identity" accesskey="n" rel="next">identity</a>, Previous: <a href="equal.html#equal" accesskey="p" rel="prev">equal</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

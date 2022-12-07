@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Tilde Slash-&gt; Call Function (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Pretty-Printer-Operations.html#FORMAT-Pretty-Printer-Operations" rel="up" title="FORMAT Pretty Printer Operations">
+<link href="FORMAT-Layout-Control.html#FORMAT-Layout-Control" rel="next" title="FORMAT Layout Control">
+<link href="Tilde-I_002d_003e-Indent.html#Tilde-I_002d_003e-Indent" rel="prev" title="Tilde I-&gt; Indent">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Tilde-I_002d_003e-Indent.html#Tilde-I_002d_003e-Indent" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Tilde I-&gt; Indent
+                            </a>
+                            <a href="FORMAT-Pretty-Printer-Operations.html#FORMAT-Pretty-Printer-Operations.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                FORMAT Pretty Printer Operations
+                            </a>
+                            <a href="FORMAT-Layout-Control.html#FORMAT-Layout-Control.html" class="nav-btn nav__next ">
+                                FORMAT Layout Control
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Tilde-Slash_002d_003e-Call-Function"></a>
+<a name="Tilde-Slash_003a-Call-Function"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Tilde Slash: Call Function</h4>
+
+<p><tt>~/<i>name</i>/</tt>
+</p>
+<p>User defined functions can be called from within a format
+string by using the directive <tt>~/<i>name</i>/</tt>.
+The <i>colon</i> modifier, the <i>at-sign</i> modifier, and arbitrarily many parameters 
+can be specified with the <tt>~/<i>name</i>/</tt> directive.
+<i>name</i> can be any arbitrary string that does not contain a &quot;/&quot;.
+All of the characters in <i>name</i> are treated as if they were upper case.
+If <i>name</i> contains a single <i>colon</i> (<tt>:</tt>) or double <i>colon</i> (<tt>::</tt>),
+then everything up to but not including the first <tt>&quot;:&quot;</tt> or <tt>&quot;::&quot;</tt>
+is taken to be a <i>string</i> that names a <i>package</i>.
+Everything after the first <tt>&quot;:&quot;</tt> or <tt>&quot;::&quot;</tt> (if any) is taken to be a 
+<i>string</i> that names a <tt>symbol</tt>.  The function corresponding to a 
+<tt>~/name/</tt> directive is obtained by looking up the <i>symbol</i>
+that has the indicated name in the indicated <i>package</i>.
+If <i>name</i> does not contain a <tt>&quot;:&quot;</tt> or <tt>&quot;::&quot;</tt>,
+then the whole <i>name</i> string is looked up in the <tt>COMMON-LISP-USER</tt> <i>package</i>. 
+</p>
+<p>When a <tt>~/name/</tt> directive is encountered,
+the indicated function is called with four or more arguments.
+The first four arguments are:
+     the output stream,
+     the <i>format argument</i> corresponding to the directive,
+     a <i>generalized boolean</i> that is <i>true</i> if the <i>colon</i> modifier was used,
+ and a <i>generalized boolean</i> that is <i>true</i> if the <i>at-sign</i> modifier was used.
+The remaining arguments consist of any parameters specified with the directive.
+The function should print the argument appropriately.
+Any values returned by the function are ignored.
+</p>
+<p>The three <i>functions</i> 
+      <b>pprint-linear</b>,
+      <b>pprint-fill</b>,
+  and <b>pprint-tabular</b>
+are specifically designed so that they can be called by <tt>~/.../</tt>
+(<i>i.e.</i>, <tt>~/pprint-linear/</tt>, <tt>~/pprint-fill/</tt>, and <tt>~/pprint-tabular/</tt>).
+In particular they take <i>colon</i> and <i>at-sign</i> arguments.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

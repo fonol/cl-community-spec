@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Specifiers for keyword parameters (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Ordinary-Lambda-Lists.html#Ordinary-Lambda-Lists" rel="up" title="Ordinary Lambda Lists">
+<link href="Suppressing-Keyword-Argument-Checking.html#Suppressing-Keyword-Argument-Checking" rel="next" title="Suppressing Keyword Argument Checking">
+<link href="A-specifier-for-a-rest-parameter.html#A-specifier-for-a-rest-parameter" rel="prev" title="A specifier for a rest parameter">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="A-specifier-for-a-rest-parameter.html#A-specifier-for-a-rest-parameter" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                A specifier for a rest parameter
+                            </a>
+                            <a href="Ordinary-Lambda-Lists.html#Ordinary-Lambda-Lists.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Ordinary Lambda Lists
+                            </a>
+                            <a href="Suppressing-Keyword-Argument-Checking.html#Suppressing-Keyword-Argument-Checking.html" class="nav-btn nav__next ">
+                                Suppressing Keyword Argument Checking
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Specifiers-for-keyword-parameters"></a>
+<a name="Specifiers-for-keyword-parameters-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Specifiers for keyword parameters</h4>
+
+<p>If <b>&amp;key</b> 
+is present, all specifiers up to the next <i>lambda list keyword</i>
+or the end of the <i>list</i> are keyword parameter specifiers.
+When keyword parameters are processed,
+the same arguments are processed that
+would be made into a <i>list</i> for a <i>rest parameter</i>.
+It is permitted to specify both <b>&amp;rest</b> and <b>&amp;key</b>.
+In this case the remaining arguments are used for both purposes;
+that is, all remaining arguments are made into a <i>list</i> for the
+<i>rest parameter</i>, and are also processed for the <b>&amp;key</b> parameters.
+</p>
+<p>If <b>&amp;key</b> is specified, there must remain
+an even number of arguments; see <a href="Odd-Number-of-Keyword-Arguments.html#Odd-Number-of-Keyword-Arguments">Odd Number of Keyword Arguments</a>.
+</p>
+<p>These arguments are considered as pairs,
+the first argument in each pair being interpreted as a name
+and the second as the corresponding value.
+The first <i>object</i> of each pair must be a <i>symbol</i>;
+see <a href="Invalid-Keyword-Arguments.html#Invalid-Keyword-Arguments">Invalid Keyword Arguments</a>.
+The keyword parameter specifiers may optionally be followed by the
+<i>lambda list keyword</i> <b>&amp;allow-other-keys</b>.
+</p>
+<p>In each keyword parameter specifier must be a name <i>var</i> for
+the parameter variable.
+</p>
+<p>If the <i>var</i> appears alone or in a <tt>(<i>var</i> <i>init-form</i>)</tt>
+combination, the keyword name used when matching <i>arguments</i> to <i>parameters</i>
+is a <i>symbol</i> in the <tt>KEYWORD</tt> <i>package</i> whose <i>name</i> is the
+<i>same</i> (under <b>string=</b>) as <i>var</i>&rsquo;s.
+If the notation <tt>((<i>keyword-name</i> <i>var</i>) <i>init-form</i>)</tt> is used,
+then the keyword name used to match <i>arguments</i> to <i>parameters</i> is
+<i>keyword-name</i>, which may be a <i>symbol</i> in any <i>package</i>.
+(Of course, if it is not a <i>symbol</i> in the <tt>KEYWORD</tt> <i>package</i>,
+it does not necessarily self-evaluate, so care must be taken when calling the function
+to make sure that normal evaluation still yields the keyword name.)
+</p>
+<p>Thus
+</p>
+<div class="example">
+<pre class="example"><code> (defun foo (&amp;key radix (type 'integer)) ...)
+</code>
+</pre></div>
+
+<p>means exactly the same as
+</p>
+<div class="example">
+<pre class="example"><code> (defun foo (&amp;key ((:radix radix)) ((:type type) 'integer)) ...)
+</code>
+</pre></div>
+
+<p>The keyword parameter specifiers are, like all parameter specifiers,
+effectively processed from left to right.  For each keyword parameter
+specifier, if there is an argument pair whose name matches that
+specifier&rsquo;s name (that is, the names are <b>eq</b>), then the
+parameter variable for that specifier is bound to the second item (the
+value) of that argument pair.  If more than one such argument pair
+matches, the leftmost argument pair is used.  If no such argument pair
+exists, then the <i>init-form</i> for that specifier is evaluated and
+the parameter variable is bound to that value (or to <b>nil</b> if no
+<i>init-form</i> was specified).  <i>supplied-p-parameter</i> is
+treated as for <b>&amp;optional</b> parameters: it is bound to <i>true</i> if there
+was a matching argument pair, and to <i>false</i> otherwise.
+</p>
+<p>Unless keyword argument checking is suppressed,
+an argument pair must a name matched by a parameter specifier;
+see <a href="Unrecognized-Keyword-Arguments.html#Unrecognized-Keyword-Arguments">Unrecognized Keyword Arguments</a>.
+</p>
+<p>If keyword argument checking is suppressed, 
+then it is permitted for an argument pair
+to match no parameter specifier, and the argument pair is ignored, but
+such an argument pair is accessible through the <i>rest parameter</i> if
+one was supplied.  The purpose of these mechanisms is to allow sharing
+of argument lists among several <i>lambda expressions</i> and to
+allow either the caller or the called <i>lambda expression</i> to
+specify that such sharing may be taking place.
+</p>
+<p>Note that if <b>&amp;key</b> is present, a keyword argument of <tt>:allow-other-keys</tt>
+is always permitted&mdash;regardless of whether the associated value is <i>true</i>
+or <i>false</i>.  However, if the value is <i>false</i>, other non-matching
+keywords are not tolerated (unless <b>&amp;allow-other-keys</b> was used).
+</p>
+<p>Furthermore, if the receiving argument list specifies a regular argument which
+would be flagged by <tt>:allow-other-keys</tt>, then <tt>:allow-other-keys</tt> has both
+its special-cased meaning (identifying whether additional keywords are permitted)
+and its normal meaning (data flow into the function in question).
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

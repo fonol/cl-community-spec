@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Formatted Output (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer.html#Printer" rel="up" title="Printer">
+<link href="FORMAT-Basic-Output.html#FORMAT-Basic-Output" rel="next" title="FORMAT Basic Output">
+<link href="Notes-about-the-Pretty-Printer_0027s-Background.html#Notes-about-the-Pretty-Printer_0027s-Background" rel="prev" title="Notes about the Pretty Printer's Background">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Notes-about-the-Pretty-Printer_0027s-Background.html#Notes-about-the-Pretty-Printer_0027s-Background" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Notes about the Pretty Printer's Background
+                            </a>
+                            <a href="Printer.html#Printer.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Printer
+                            </a>
+                            <a href="FORMAT-Basic-Output.html#FORMAT-Basic-Output.html" class="nav-btn nav__next ">
+                                FORMAT Basic Output
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Formatted-Output"></a>
+<a name="Formatted-Output-1"></a>
+<div class="section top-most">
+<h3 class="section">Formatted Output</h3>
+
+
+<p>[Editorial Note by KMP: This is transplanted from FORMAT and will need a bit of work before
+ it looks good standing alone. Bear with me.]
+</p>
+<p><b>format</b> is useful for producing nicely formatted text, producing
+good-looking messages, and so on.  <b>format</b> can generate and return
+a <i>string</i> or output to <i>destination</i>.
+</p>
+<p>The <i>control-string</i> argument to <b>format</b> is actually a <i>format control</i>.
+That is, it can be either a <i>format string</i> or a <i>function</i>,
+for example a <i>function</i> returned
+by the <b>formatter</b> <i>macro</i>.
+</p>
+<p>If it is a <i>function</i>, the <i>function</i> is called with the appropriate
+output stream as its first argument and the data arguments to <b>format</b>
+as its remaining arguments.  The function should perform whatever output is 
+necessary and return the unused tail of the arguments (if any).
+</p>
+<p>The compilation process performed by <b>formatter</b> produces a <i>function</i>
+that would do with its <i>arguments</i> as the <b>format</b> interpreter
+would do with those <i>arguments</i>.
+</p>
+<p>The remainder of this section describes what happens if the <i>control-string</i>
+is a <i>format string</i>.  
+</p>
+<p><i>Control-string</i> is composed of simple text (<i>characters</i>) 
+and embedded directives.
+</p>
+<p><b>format</b> writes the simple text as is;
+each embedded directive specifies further text output 
+that is to appear at the corresponding point within the simple text.  
+Most directives use one or more elements of <i>args</i> to
+create their output.
+</p>
+<p>A directive consists of a <i>tilde</i>,
+optional prefix parameters
+separated by commas, optional <i>colon</i> and <i>at-sign</i> modifiers,
+and a single character indicating what kind of directive this is.
+</p>
+<p>There is no required ordering between the <i>at-sign</i> and <i>colon</i> modifier.
+</p>
+<p>The <i>case</i> of the directive character is ignored.
+Prefix parameters are notated as signed (sign is optional) decimal numbers,
+or as a <i>single-quote</i> followed by a character.
+For example, <tt>~5,'0d</tt> can be used
+to print an <i>integer</i> 
+in decimal radix in five columns with leading zeros,
+or <tt>~5,'*d</tt> to get leading asterisks.
+</p>
+<p>In place of a prefix parameter to a directive, <tt>V</tt> (or <tt>v</tt>) can be used. 
+In this case, <b>format</b> takes an argument from <i>args</i> as a parameter to
+the directive.  The argument should be an <i>integer</i> or <i>character</i>.
+If the <i>arg</i> used by a <tt>V</tt> parameter is <b>nil</b>,
+the effect is as if the parameter had been omitted.
+<tt>#</tt> can be used in place of a prefix parameter; it
+represents the number of <i>args</i> remaining to be processed.
+When used within a recursive format, in the context of <tt>~?</tt> or <tt>~{</tt>,
+the <tt>#</tt> prefix parameter represents the number of <i>format arguments</i>
+remaining within the recursive call.
+</p>
+<p>Examples of <i>format strings</i>:
+</p>
+<p>&nbsp;&nbsp;<tt>&quot;~S&quot;</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;This&nbsp;is&nbsp;an&nbsp;S&nbsp;directive&nbsp;with&nbsp;no&nbsp;parameters&nbsp;or&nbsp;modifiers.&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt><span class="nolinebreak">&quot;~3,-4:</span>@s&quot;</tt>&nbsp;&nbsp;;This&nbsp;is&nbsp;an&nbsp;S&nbsp;directive&nbsp;with&nbsp;two&nbsp;parameters,&nbsp;<tt>3</tt>&nbsp;and&nbsp;<tt><span class="nolinebreak">-4</span></tt>,&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;and&nbsp;both&nbsp;the&nbsp;<i>colon</i>&nbsp;and&nbsp;<i><span class="nolinebreak">at-sign</span></i>&nbsp;flags.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>&quot;~,+4S&quot;</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;Here&nbsp;the&nbsp;first&nbsp;prefix&nbsp;parameter&nbsp;is&nbsp;omitted&nbsp;and&nbsp;takes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;on&nbsp;its&nbsp;default&nbsp;value,&nbsp;while&nbsp;the&nbsp;second&nbsp;parameter&nbsp;is&nbsp;<tt>4</tt>.&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;22&ndash;5:&nbsp;Examples&nbsp;of&nbsp;format&nbsp;control&nbsp;strings&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<p><b>format</b> sends the output to <i>destination</i>.
+If <i>destination</i> is <b>nil</b>,
+<b>format</b> creates and returns a <i>string</i> 
+containing the output from <i>control-string</i>.
+If <i>destination</i> is <i>non-nil</i>, 
+it must be a <i>string</i> with a <i>fill pointer</i>, 
+a <i>stream</i>, or the symbol <b>t</b>.
+If <i>destination</i> is a <i>string</i> with a <i>fill pointer</i>, 
+the output is added to the end of the <i>string</i>. 
+If <i>destination</i> is a <i>stream</i>, 
+the output is sent to that <i>stream</i>. 
+If <i>destination</i> is <b>t</b>,
+the output is sent to <i>standard output</i>.
+</p>
+<p>In the description of the directives that follows,
+the term <i>arg</i> in general
+refers to the next item of the set of <i>args</i> to be processed.
+The word or phrase at the beginning of each description is a mnemonic
+for the directive.
+</p>
+<p><b>format</b> directives do not bind any of the printer control
+variables (<b>*print-...*</b>) except as specified in the following
+descriptions.
+   Implementations may specify the binding of new, implementation-specific 
+printer control variables for each <b>format</b> directive, but they
+    may neither bind any standard printer control variables not
+    specified in description of a <b>format</b> 
+directive nor fail to bind
+    any standard printer control variables as specified in the
+    description.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="FORMAT-Basic-Output.html#FORMAT-Basic-Output" accesskey="1">FORMAT Basic Output</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="FORMAT-Radix-Control.html#FORMAT-Radix-Control" accesskey="2">FORMAT Radix Control</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="FORMAT-Floating_002dPoint-Printers.html#FORMAT-Floating_002dPoint-Printers" accesskey="3">FORMAT Floating-Point Printers</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="FORMAT-Printer-Operations.html#FORMAT-Printer-Operations" accesskey="4">FORMAT Printer Operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="FORMAT-Pretty-Printer-Operations.html#FORMAT-Pretty-Printer-Operations" accesskey="5">FORMAT Pretty Printer Operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="FORMAT-Layout-Control.html#FORMAT-Layout-Control" accesskey="6">FORMAT Layout Control</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="FORMAT-Control_002dFlow-Operations.html#FORMAT-Control_002dFlow-Operations" accesskey="7">FORMAT Control-Flow Operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="FORMAT-Miscellaneous-Operations.html#FORMAT-Miscellaneous-Operations" accesskey="8">FORMAT Miscellaneous Operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="FORMAT-Miscellaneous-Pseudo_002dOperations.html#FORMAT-Miscellaneous-Pseudo_002dOperations" accesskey="9">FORMAT Miscellaneous Pseudo-Operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Additional-Information-about-FORMAT-Operations.html#Additional-Information-about-FORMAT-Operations">Additional Information about FORMAT Operations</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Examples-of-FORMAT.html#Examples-of-FORMAT">Examples of FORMAT</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Notes-about-FORMAT.html#Notes-about-FORMAT">Notes about FORMAT</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

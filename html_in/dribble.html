@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>dribble (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="dribble (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="dribble (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Environment-Dictionary.html#Environment-Dictionary" rel="up" title="Environment Dictionary">
+<link href="inspect.html#inspect" rel="prev" title="inspect">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="dribble"></a>
+<div class="header">
+<p>
+Next: <a href="_002d.html#g_t_002d" accesskey="n" rel="next">-</a>, Previous: <a href="inspect.html#inspect" accesskey="p" rel="prev">inspect</a>, Up: <a href="Environment-Dictionary.html#Environment-Dictionary" accesskey="u" rel="up">Environment Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="dribble-_005bFunction_005d"></a>
+<h4 class="subsection">25.2.19 dribble                                                          [Function]</h4>
+
+<p><code>dribble</code>  <i>&amp;optional</i> pathname &rArr;  <i><i>implementation-dependent</i></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-504"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>pathname</i>&mdash;a <i>pathname designator</i>.
+</p>
+<a name="Description_003a_003a-667"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Either <i>binds</i> <b>*standard-input*</b> and <b>*standard-output*</b> 
+or takes other appropriate action, 
+so as to send a record of the input/output interaction to a file 
+named by <i>pathname</i>.  <b>dribble</b> is intended to create
+a readable record of an interactive session.
+</p>
+<p>If <i>pathname</i> is a <i>logical pathname</i>, it is translated
+into a physical pathname as if by calling <b>translate-logical-pathname</b>.
+</p>
+<p><tt>(dribble)</tt> terminates the recording of input and output 
+and closes the dribble file.
+</p>
+<p>If <b>dribble</b> is <i>called</i> while a <i>stream</i> to a &ldquo;dribble file&rdquo; 
+is still open from a previous <i>call</i> to <b>dribble</b>,
+the effect is <i>implementation-defined</i>.  For example, 
+    the already-<i>open</i> <i>stream</i> might be <i>closed</i>, 
+ or dribbling might occur both to the old <i>stream</i> and to a new one,
+ or the old <i>stream</i> might stay open but not receive any further output,
+ or the new request might be ignored,
+ or some other action might be taken.
+</p>
+<a name="Affected-By_003a_003a-131"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>The <i>implementation</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-243"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If a failure occurs when performing some operation on the <i>file system</i>
+while creating the dribble file, 
+an error of <i>type</i> <b>file-error</b> is signaled.
+</p>
+<p>An error of <i>type</i> <b>file-error</b> might be signaled if <i>pathname</i>
+is a <i>designator</i> for a <i>wild</i> <i>pathname</i>.
+</p>
+<a name="See-Also_003a_003a-542"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Pathnames-as-Filenames.html#Pathnames-as-Filenames">Pathnames as Filenames</a>
+</p>
+<a name="Notes_003a_003a-334"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>dribble</b> can return before subsequent 
+<i>forms</i> are executed. It also
+can enter a recursive interaction loop, 
+returning only when <tt>(dribble)</tt> is done.
+</p>
+<p><b>dribble</b> is intended primarily for interactive debugging;
+its effect cannot be relied upon when used in a program.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="_002d.html#g_t_002d" accesskey="n" rel="next">-</a>, Previous: <a href="inspect.html#inspect" accesskey="p" rel="prev">inspect</a>, Up: <a href="Environment-Dictionary.html#Environment-Dictionary" accesskey="u" rel="up">Environment Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

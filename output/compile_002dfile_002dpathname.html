@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>compile-file-pathname (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="System-Construction-Dictionary.html#System-Construction-Dictionary" rel="up" title="System Construction Dictionary">
+<link href="load.html#load" rel="next" title="load">
+<link href="compile_002dfile.html#compile_002dfile" rel="prev" title="compile-file">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="compile_002dfile.html#compile_002dfile" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                compile-file
+                            </a>
+                            <a href="System-Construction-Dictionary.html#System-Construction-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                System Construction Dictionary
+                            </a>
+                            <a href="load.html#load.html" class="nav-btn nav__next ">
+                                load
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="compile_002dfile_002dpathname"></a>
+<a name="compile_002dfile_002dpathname-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">compile-file-pathname                                            </h4>
+
+<p><code>compile-file-pathname</code>  <i>input-file &amp;key</i> output-file &amp;allow-other-keys &rArr;  <i>pathname</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-483"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>input-file</i>&mdash;a <i>pathname designator</i>.
+  (Default fillers for unspecified components are taken from
+   <b>*default-pathname-defaults*</b>.)
+</p>
+<p><i>output-file</i>&mdash;a <i>pathname designator</i>.
+ The default is <i>implementation-defined</i>.
+</p>
+<p><i>pathname</i>&mdash;a <i>pathname</i>.
+</p>
+<a name="Description_003a_003a-639"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Returns the <i>pathname</i> that <b>compile-file</b> would write into,
+if given the same arguments.
+</p>
+<p>The defaults for the <i>output-file</i> 
+are taken from the <i>pathname</i> 
+that results from merging the <i>input-file</i> 
+with the <i>value</i> of <b>*default-pathname-defaults*</b>,
+except that the type component 
+should default to the appropriate
+<i>implementation-defined</i> default type for <i>compiled files</i>.
+</p>
+<p>If <i>input-file</i> is a <i>logical pathname</i> and <i>output-file</i> 
+is unsupplied, the result is a <i>logical pathname</i>.
+</p>
+<p>If <i>input-file</i> is a <i>logical pathname</i>, 
+it is translated into a physical pathname as if by calling 
+<b>translate-logical-pathname</b>.
+</p>
+<p>If <i>input-file</i> is a <i>stream</i>, 
+the <i>stream</i> can be either open or closed.
+<b>compile-file-pathname</b> returns the same <i>pathname</i> after a
+file is closed as it did when the file was open.
+</p>
+<p>It is an error if <i>input-file</i> is a <i>stream</i> that is 
+created with <b>make-two-way-stream</b>, <b>make-echo-stream</b>,             
+<b>make-broadcast-stream</b>, <b>make-concatenated-stream</b>,
+<b>make-string-input-stream</b>, <b>make-string-output-stream</b>.
+</p>
+<p>If an implementation supports additional keyword arguments to <b>compile-file</b>, 
+<b>compile-file-pathname</b> must accept the same arguments.
+</p>
+<a name="Examples_003a_003a-457"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<p>See <b>logical-pathname-translations</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-234"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>An error of <i>type</i> <b>file-error</b> might be signaled if either <i>input-file</i> or
+<i>output-file</i> is <i>wild</i>.
+</p>
+<a name="See-Also_003a_003a-519"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="compile_002dfile.html#compile_002dfile">compile-file</a>
+,
+<b>pathname</b>,
+<b>logical-pathname</b>,
+<a href="File-System-Concepts.html#File-System-Concepts">File System Concepts</a>,
+</p>
+<p><a href="Pathnames-as-Filenames.html#Pathnames-as-Filenames">Pathnames as Filenames</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

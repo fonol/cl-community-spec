@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>rename-file (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="rename-file (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="rename-file (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Files-Dictionary.html#Files-Dictionary" rel="up" title="Files Dictionary">
+<link href="delete_002dfile.html#delete_002dfile" rel="next" title="delete-file">
+<link href="file_002dwrite_002ddate.html#file_002dwrite_002ddate" rel="prev" title="file-write-date">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="rename_002dfile"></a>
+<div class="header">
+<p>
+Next: <a href="delete_002dfile.html#delete_002dfile" accesskey="n" rel="next">delete-file</a>, Previous: <a href="file_002dwrite_002ddate.html#file_002dwrite_002ddate" accesskey="p" rel="prev">file-write-date</a>, Up: <a href="Files-Dictionary.html#Files-Dictionary" accesskey="u" rel="up">Files Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="rename_002dfile-_005bFunction_005d"></a>
+<h4 class="subsection">20.2.7 rename-file                                                      [Function]</h4>
+
+<p><code>rename-file</code>  <i>filespec new-name</i> &rArr;  <i>defaulted-new-name, old-truename, new-truename</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-409"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>filespec</i>&mdash;a <i>pathname designator</i>.
+</p>
+<p><i>new-name</i>&mdash;a <i>pathname designator</i> 
+other than a <i>stream</i>.
+</p>
+<p><i>defaulted-new-name</i>&mdash;a <i>pathname</i>
+</p>
+<p><i>old-truename</i>&mdash;a <i>physical pathname</i>.
+</p>
+<p><i>new-truename</i>&mdash;a <i>physical pathname</i>.
+</p>
+<a name="Description_003a_003a-528"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>rename-file</b> modifies the file system in such a way
+that the file indicated by <i>filespec</i> is renamed to
+<i>defaulted-new-name</i>.
+</p>
+<p>It is an error to specify a filename containing a <i>wild</i> component,
+for <i>filespec</i> to contain a <b>nil</b> component where the file system does
+not permit a <b>nil</b> component, or for the result of defaulting missing
+components of <i>new-name</i> from <i>filespec</i> to contain a <b>nil</b> component
+where the file system does not permit a <b>nil</b> component.
+</p>
+<p>If <i>new-name</i> is a <i>logical pathname</i>, 
+<b>rename-file</b> returns a <i>logical pathname</i> as its <i>primary value</i>.
+</p>
+<p><b>rename-file</b> 
+returns three values if successful.  The <i>primary value</i>, <i>defaulted-new-name</i>,
+is the resulting name which is composed of
+<i>new-name</i> with any missing components filled in by performing
+a <b>merge-pathnames</b> operation using <i>filespec</i> as the defaults.
+The <i>secondary value</i>, <i>old-truename</i>,
+is the <i>truename</i> of the <i>file</i> before it was renamed.
+The <i>tertiary value</i>, <i>new-truename</i>,
+is the <i>truename</i> of the <i>file</i> after it was renamed.
+</p>
+<p>If the <i>filespec</i> <i>designator</i> is an open <i>stream</i>,
+then the <i>stream</i> itself and the file associated with it are 
+affected (if the <i>file system</i> permits).
+</p>
+<a name="Examples_003a_003a-385"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">;; An example involving logical pathnames.
+ (with-open-file (stream &quot;sys:chemistry;lead.text&quot;
+                         :direction :output :if-exists :error)
+   (princ &quot;eureka&quot; stream)
+   (values (pathname stream) (truename stream)))
+&rArr;  #P&quot;SYS:CHEMISTRY;LEAD.TEXT.NEWEST&quot;, #P&quot;Q:&gt;sys&gt;chem&gt;lead.text.1&quot;
+ (rename-file &quot;sys:chemistry;lead.text&quot; &quot;gold.text&quot;)
+&rArr;  #P&quot;SYS:CHEMISTRY;GOLD.TEXT.NEWEST&quot;,
+   #P&quot;Q:&gt;sys&gt;chem&gt;lead.text.1&quot;,
+   #P&quot;Q:&gt;sys&gt;chem&gt;gold.text.1&quot;
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-189"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If the renaming operation is not successful, an error of <i>type</i> <b>file-error</b> is signaled.
+</p>
+<p>An error of <i>type</i> <b>file-error</b> might be signaled if <i>filespec</i> is <i>wild</i>.
+</p>
+<a name="See-Also_003a_003a-431"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="truename.html#truename">truename</a>
+,
+<b>pathname</b>,
+<b>logical-pathname</b>,
+<a href="File-System-Concepts.html#File-System-Concepts">File System Concepts</a>,
+</p>
+<p><a href="Pathnames-as-Filenames.html#Pathnames-as-Filenames">Pathnames as Filenames</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="delete_002dfile.html#delete_002dfile" accesskey="n" rel="next">delete-file</a>, Previous: <a href="file_002dwrite_002ddate.html#file_002dwrite_002ddate" accesskey="p" rel="prev">file-write-date</a>, Up: <a href="Files-Dictionary.html#Files-Dictionary" accesskey="u" rel="up">Files Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Restrictions on Examining a Pathname Directory Component (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Restrictions on Examining a Pathname Directory Component (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Restrictions on Examining a Pathname Directory Component (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Interpreting-Pathname-Component-Values.html#Interpreting-Pathname-Component-Values" rel="up" title="Interpreting Pathname Component Values">
+<link href="Directory-Components-in-Non_002dHierarchical-File-Systems.html#Directory-Components-in-Non_002dHierarchical-File-Systems" rel="next" title="Directory Components in Non-Hierarchical File Systems">
+<link href="Restrictions-on-Examining-a-Pathname-Device-Component.html#Restrictions-on-Examining-a-Pathname-Device-Component" rel="prev" title="Restrictions on Examining a Pathname Device Component">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Restrictions-on-Examining-a-Pathname-Directory-Component"></a>
+<div class="header">
+<p>
+Next: <a href="Directory-Components-in-Non_002dHierarchical-File-Systems.html#Directory-Components-in-Non_002dHierarchical-File-Systems" accesskey="n" rel="next">Directory Components in Non-Hierarchical File Systems</a>, Previous: <a href="Restrictions-on-Examining-a-Pathname-Device-Component.html#Restrictions-on-Examining-a-Pathname-Device-Component" accesskey="p" rel="prev">Restrictions on Examining a Pathname Device Component</a>, Up: <a href="Interpreting-Pathname-Component-Values.html#Interpreting-Pathname-Component-Values" accesskey="u" rel="up">Interpreting Pathname Component Values</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Restrictions-on-Examining-a-Pathname-Directory-Component-1"></a>
+<h4 class="subsubsection">19.2.2.15 Restrictions on Examining a Pathname Directory Component</h4>
+
+<p>The directory might be a <i>string</i>,
+<tt>:wild</tt>, <tt>:unspecific</tt>, or <b>nil</b>.
+</p>
+<p>The directory can be a <i>list</i> of <i>strings</i> and <i>symbols</i>. 
+</p>
+<p>The <i>car</i> of the <i>list</i> is one of the symbols <tt>:absolute</tt>
+<a name="index-absolute-1"></a>
+ or 
+<tt>:relative</tt>
+<a name="index-relative-1"></a>
+, meaning:
+</p>
+<dl compact="compact">
+<dt><tt>:absolute</tt></dt>
+<dd><p>A <i>list</i> whose <i>car</i> is the symbol <tt>:absolute</tt> represents 
+  a directory path starting from the root directory.  The list 
+  <tt>(:absolute)</tt> represents the root directory.  The list 
+  <tt>(:absolute &quot;foo&quot; &quot;bar&quot; &quot;baz&quot;)</tt> represents the directory called
+  <tt>&quot;/foo/bar/baz&quot;</tt> in Unix (except possibly for <i>case</i>).
+</p>
+</dd>
+<dt><tt>:relative</tt></dt>
+<dd><p>A <i>list</i> whose <i>car</i> is the symbol <tt>:relative</tt> represents 
+  a directory path starting from a default directory.  
+  The list <tt>(:relative)</tt> has the same meaning as <b>nil</b> and hence is not used.
+  The list <tt>(:relative &quot;foo&quot; &quot;bar&quot;)</tt> represents the directory named <tt>&quot;bar&quot;</tt> 
+  in the directory named <tt>&quot;foo&quot;</tt> in the default directory.
+</p>
+</dd>
+</dl>
+
+<p>Each remaining element of the <i>list</i> is a <i>string</i> or a <i>symbol</i>.
+</p>
+<p>Each <i>string</i> names a single level of directory structure.
+The <i>strings</i> should contain only the directory names 
+themselves&mdash;no punctuation characters.
+</p>
+<p>In place of a <i>string</i>, at any point in the <i>list</i>, <i>symbols</i> 
+can occur to indicate special file notations.
+Figure 19&ndash;3 lists the <i>symbols</i> that have standard meanings.
+Implementations are permitted to add additional <i>objects</i> 
+of any <i>type</i> that is disjoint from <b>string</b>
+if necessary to represent features of their file systems that cannot be
+represented with the standard <i>strings</i> and <i>symbols</i>.
+</p>
+<p>Supplying any non-<i>string</i>, including any of the <i>symbols</i> listed below, 
+to a file system for which it does not make sense
+signals an error of <i>type</i> <b>file-error</b>.
+For example, Unix does not support <tt>:wild-inferiors</tt> in most implementations.
+</p>
+<a name="index-wild-2"></a>
+
+<a name="index-wild_002dinferiors-1"></a>
+
+<a name="index-up"></a>
+
+<a name="index-back"></a>
+
+<p>&nbsp;&nbsp;Symbol&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meaning&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>:wild</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Wildcard&nbsp;match&nbsp;of&nbsp;one&nbsp;level&nbsp;of&nbsp;directory&nbsp;structure&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt><span class="nolinebreak">:wild-inferiors</span></tt>&nbsp;&nbsp;Wildcard&nbsp;match&nbsp;of&nbsp;any&nbsp;number&nbsp;of&nbsp;directory&nbsp;levels&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>:up</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Go&nbsp;upward&nbsp;in&nbsp;directory&nbsp;structure&nbsp;(semantic)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<tt>:back</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Go&nbsp;upward&nbsp;in&nbsp;directory&nbsp;structure&nbsp;(syntactic)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;19&ndash;3:&nbsp;Special&nbsp;Markers&nbsp;In&nbsp;Directory&nbsp;Component&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<p>The following notes apply to the previous figure:
+</p>
+<dl compact="compact">
+<dt>Invalid Combinations</dt>
+<dd><p>Using <tt>:absolute</tt> or <tt>:wild-inferiors</tt> 
+immediately followed by <tt>:up</tt> or <tt>:back</tt>
+signals an error of <i>type</i> <b>file-error</b>.
+</p>
+</dd>
+<dt>Syntactic vs Semantic</dt>
+<dd><p>&ldquo;Syntactic&rdquo; means that the action of <tt>:back</tt> 
+depends only on the <i>pathname</i>
+and not on the contents of the file system.  
+</p>
+<p>&ldquo;Semantic&rdquo; means that the action of <tt>:up</tt> 
+depends on the contents of the file system; 
+to resolve a <i>pathname</i> containing 
+<tt>:up</tt> to a <i>pathname</i> whose directory component
+contains only <tt>:absolute</tt> and 
+<i>strings</i> requires probing the file system.
+</p>
+<p><tt>:up</tt> differs from 
+<tt>:back</tt> only in file systems that support multiple
+  names for directories, perhaps via symbolic links.  For example,
+  suppose that there is a directory
+<tt>(:absolute &quot;X&quot; &quot;Y&quot; &quot;Z&quot;)</tt>
+  linked to 
+<tt>(:absolute &quot;A&quot; &quot;B&quot; &quot;C&quot;)</tt>
+  and there also exist directories
+<tt>(:absolute &quot;A&quot; &quot;B&quot; &quot;Q&quot;)</tt> and 
+<tt>(:absolute &quot;X&quot; &quot;Y&quot; &quot;Q&quot;)</tt>.
+Then
+<tt>(:absolute &quot;X&quot; &quot;Y&quot; &quot;Z&quot; :up &quot;Q&quot;)</tt>
+  designates
+<tt>(:absolute &quot;A&quot; &quot;B&quot; &quot;Q&quot;)</tt>
+  while
+<tt>(:absolute &quot;X&quot; &quot;Y&quot; &quot;Z&quot; :back &quot;Q&quot;)</tt>
+  designates
+<tt>(:absolute &quot;X&quot; &quot;Y&quot; &quot;Q&quot;)</tt>
+</p></dd>
+</dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Directory-Components-in-Non_002dHierarchical-File-Systems.html#Directory-Components-in-Non_002dHierarchical-File-Systems" accesskey="n" rel="next">Directory Components in Non-Hierarchical File Systems</a>, Previous: <a href="Restrictions-on-Examining-a-Pathname-Device-Component.html#Restrictions-on-Examining-a-Pathname-Device-Component" accesskey="p" rel="prev">Restrictions on Examining a Pathname Device Component</a>, Up: <a href="Interpreting-Pathname-Component-Values.html#Interpreting-Pathname-Component-Values" accesskey="u" rel="up">Interpreting Pathname Component Values</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

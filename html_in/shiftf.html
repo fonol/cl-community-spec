@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>shiftf (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="shiftf (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="shiftf (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="rotatef.html#rotatef" rel="next" title="rotatef">
+<link href="setf.html#setf" rel="prev" title="setf">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="shiftf"></a>
+<div class="header">
+<p>
+Next: <a href="rotatef.html#rotatef" accesskey="n" rel="next">rotatef</a>, Previous: <a href="setf.html#setf" accesskey="p" rel="prev">setf</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="shiftf-_005bMacro_005d"></a>
+<h4 class="subsection">5.3.65 shiftf                                                              [Macro]</h4>
+
+<p><code>shiftf</code>  <i>{<i>place</i>}^+ newvalue</i> &rArr;  <i>old-value-1</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-83"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>place</i>&mdash;a <i>place</i>.
+</p>
+<p><i>newvalue</i>&mdash;a <i>form</i>; evaluated.
+</p>
+<p><i>old-value-1</i>&mdash;an <i>object</i> (the old <i>value</i> of the first <i>place</i>).
+</p>
+<a name="Description_003a_003a-118"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>shiftf</b> modifies the values of each
+<i>place</i> by storing <i>newvalue</i>
+into the last <i>place</i>, and shifting the 
+values of the second through the last <i>place</i>
+into the remaining <i>places</i>.
+</p>
+<p>If <i>newvalue</i> produces more values than there
+are store variables, the extra values are ignored. If <i>newvalue</i>
+produces fewer values than there are store variables, the missing values
+are set to <b>nil</b>.
+</p>
+<p>In the form <tt>(shiftf <i>place1</i> <i>place2</i> ... <i>placen</i> <i>newvalue</i>)</tt>, 
+the values in <i>place1</i> through <i>placen</i> are <i>read</i> and saved,
+and <i>newvalue</i> is evaluated, for a total of <tt>n</tt>+1 values in all.
+Values 2 through <tt>n</tt>+1 are then stored into <i>place1</i> through <i>placen</i>, respectively.
+It is as if all the <i>places</i> form a shift register; the <i>newvalue</i>
+is shifted in from the right, all values shift over to the left one place,
+and the value shifted out of <i>place1</i> is returned. 
+</p>
+<p>For information about the <i>evaluation</i> of <i>subforms</i> of <i>places</i>,
+see <a href="Evaluation-of-Subforms-to-Places.html#Evaluation-of-Subforms-to-Places">Evaluation of Subforms to Places</a>.  
+</p>
+<a name="Examples_003a_003a-91"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq x (list 1 2 3) y 'trash) &rArr;  TRASH
+ (shiftf y x (cdr x) '(hi there)) &rArr;  TRASH
+ x &rArr;  (2 3)
+ y &rArr;  (1 HI THERE)
+
+ (setq x (list 'a 'b 'c)) &rArr;  (A B C)
+ (shiftf (cadr x) 'z) &rArr;  B
+ x &rArr;  (A Z C)
+ (shiftf (cadr x) (cddr x) 'q) &rArr;  Z
+ x &rArr;  (A (C) . Q)
+ (setq n 0) &rArr;  0
+ (setq x (list 'a 'b 'c 'd)) &rArr;  (A B C D)
+ (shiftf (nth (setq n (+ n 1)) x) 'z) &rArr;  B
+ x &rArr;  (A Z C D)
+</pre></div>
+
+<a name="Affected-By_003a_003a-8"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>define-setf-expander</b>,
+<b>defsetf</b>,
+<b>*macroexpand-hook*</b>
+</p>
+<a name="See-Also_003a_003a-102"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;setf; psetf&rsquo;
+, 
+<a href="rotatef.html#rotatef">rotatef</a>
+, <a href="Generalized-Reference.html#Generalized-Reference">Generalized Reference</a>
+</p>
+<a name="Notes_003a_003a-67"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The effect of
+ <tt>(shiftf <i>place1</i> <i>place2</i> ... <i>placen</i> <i>newvalue</i>)</tt>
+is roughly equivalent to
+</p>
+<div class="example">
+<pre class="example"> (let ((var1 <i>place1</i>)
+       (var2 <i>place2</i>)
+       ...
+       (varn <i>placen</i>)
+       (var0 <i>newvalue</i>))
+   (setf <i>place1</i> var2)
+   (setf <i>place2</i> var3)
+   ...
+   (setf <i>placen</i> var0)
+   var1)
+</pre></div>
+
+<p>except that the latter would evaluate any <i>subforms</i> 
+of each <tt>place</tt> twice, whereas <b>shiftf</b> evaluates them once.
+For example, 
+</p>
+<div class="example">
+<pre class="example"> (setq n 0) &rArr;  0
+ (setq x (list 'a 'b 'c 'd)) &rArr;  (A B C D)
+ (prog1 (nth (setq n (+ n 1)) x)
+        (setf (nth (setq n (+ n 1)) x) 'z)) &rArr;  B
+ x &rArr;  (A B Z D)
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="rotatef.html#rotatef" accesskey="n" rel="next">rotatef</a>, Previous: <a href="setf.html#setf" accesskey="p" rel="prev">setf</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

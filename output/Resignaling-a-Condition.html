@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Resignaling a Condition (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Signaling-and-Handling-Conditions.html#Signaling-and-Handling-Conditions" rel="up" title="Signaling and Handling Conditions">
+<link href="Restarts.html#Restarts" rel="next" title="Restarts">
+<link href="Signaling.html#Signaling" rel="prev" title="Signaling">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Signaling.html#Signaling" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Signaling
+                            </a>
+                            <a href="Signaling-and-Handling-Conditions.html#Signaling-and-Handling-Conditions.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Signaling and Handling Conditions
+                            </a>
+                            <a href="Restarts.html#Restarts.html" class="nav-btn nav__next ">
+                                Restarts
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Resignaling-a-Condition"></a>
+<a name="Resignaling-a-Condition-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Resignaling a Condition</h4>
+
+<p>During the <i>dynamic extent</i> of the <i>signaling</i> process for
+a particular <i>condition</i> <i>object</i>, 
+<b>signaling</b> the same <i>condition</i> <i>object</i> again
+is permitted if and only if the <i>situation</i> represented in both
+cases are the same.
+</p>
+<p>For example, a <i>handler</i> might legitimately <i>signal</i> 
+the <i>condition</i> <i>object</i> that is its <i>argument</i>
+in order to allow outer <i>handlers</i> first opportunity to <i>handle</i> 
+the condition.  (Such a <i>handlers</i> is sometimes called a &ldquo;default handler.&rdquo;)
+This action is permitted because the <i>situation</i> which the second
+<i>signaling</i> process is addressing is really the same <i>situation</i>.
+</p>
+<p>On the other hand, in an <i>implementation</i> that implemented asynchronous 
+keyboard events by interrupting the user process with a call to <b>signal</b>,
+it would not be permissible for two distinct asynchronous keyboard events
+to <i>signal</i> <i>identical</i> <i>condition</i> <i>objects</i>
+at the same time for different 
+situations.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

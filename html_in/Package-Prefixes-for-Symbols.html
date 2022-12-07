@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Package Prefixes for Symbols (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Package Prefixes for Symbols (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Package Prefixes for Symbols (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Default-Print_002dObject-Methods.html#Default-Print_002dObject-Methods" rel="up" title="Default Print-Object Methods">
+<link href="Effect-of-Readtable-Case-on-the-Lisp-Printer.html#Effect-of-Readtable-Case-on-the-Lisp-Printer" rel="next" title="Effect of Readtable Case on the Lisp Printer">
+<link href="Printing-Symbols.html#Printing-Symbols" rel="prev" title="Printing Symbols">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Package-Prefixes-for-Symbols"></a>
+<div class="header">
+<p>
+Next: <a href="Effect-of-Readtable-Case-on-the-Lisp-Printer.html#Effect-of-Readtable-Case-on-the-Lisp-Printer" accesskey="n" rel="next">Effect of Readtable Case on the Lisp Printer</a>, Previous: <a href="Printing-Symbols.html#Printing-Symbols" accesskey="p" rel="prev">Printing Symbols</a>, Up: <a href="Default-Print_002dObject-Methods.html#Default-Print_002dObject-Methods" accesskey="u" rel="up">Default Print-Object Methods</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Package-Prefixes-for-Symbols-1"></a>
+<h4 class="subsubsection">22.1.3.9 Package Prefixes for Symbols</h4>
+
+<p><i>Package prefixes</i> are printed if necessary.
+The rules for <i>package prefixes</i> are as follows.
+When the <i>symbol</i> is printed, if it is in the <tt>KEYWORD</tt> <i>package</i>, 
+then it is printed with a preceding <i>colon</i>; otherwise, if
+it is <i>accessible</i> in the <i>current package</i>, it is printed without any
+<i>package prefix</i>; otherwise, it is printed with a <i>package prefix</i>.
+</p>
+<p>A <i>symbol</i> that is <i>apparently uninterned</i> is printed
+preceded by &ldquo;<tt>#:</tt>&rdquo; 
+</p>
+<p>if <b>*print-gensym*</b> is <i>true</i> and <i>printer escaping</i> is enabled;
+if <b>*print-gensym*</b> is <i>false</i> or <i>printer escaping</i> is disabled,
+</p>
+<p>then the <i>symbol</i> is printed without a prefix,
+as if it were in the <i>current package</i>.
+</p>
+<p>Because the <tt>#:</tt> syntax does not intern the
+following symbol, it is necessary to use circular-list syntax
+if <b>*print-circle*</b> is <i>true</i> and
+the same uninterned symbol appears several times in an expression
+to be printed.  For example, the result of
+</p>
+<div class="example">
+<pre class="example"> (let ((x (make-symbol &quot;FOO&quot;))) (list x x))
+</pre></div>
+
+<p>would be printed as <tt>(#:foo #:foo)</tt> if <b>*print-circle*</b>
+were <i>false</i>, but as <tt>(#1=#:foo #1#)</tt> if <b>*print-circle*</b>
+were <i>true</i>.
+</p>
+<p>A summary of the preceding package prefix rules follows:
+</p>
+<dl compact="compact">
+<dt><tt>foo:bar</tt></dt>
+<dd><p><tt>foo:bar</tt> is printed when <i>symbol</i> <tt>bar</tt> 
+is external in its <i>home package</i> <tt>foo</tt> 
+and is not <i>accessible</i> in the <i>current package</i>.
+</p>
+</dd>
+<dt><tt>foo::bar</tt></dt>
+<dd><p><tt>foo::bar</tt> is printed when <tt>bar</tt> is internal in its <i>home package</i>
+<tt>foo</tt> and is not <i>accessible</i> in the <i>current package</i>.
+</p>
+</dd>
+<dt><tt>:bar</tt></dt>
+<dd><p><tt>:bar</tt> is printed when the home package of <tt>bar</tt> is the <tt>KEYWORD</tt> <i>package</i>.
+</p>
+</dd>
+<dt>#:bar</dt>
+<dd><p><tt>#:bar</tt> is printed when <tt>bar</tt> is <i>apparently uninterned</i>,
+even in the pathological case that <tt>bar</tt> 
+has no <i>home package</i> but is nevertheless somehow <i>accessible</i> 
+in the <i>current package</i>.
+</p></dd>
+</dl>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Effect-of-Readtable-Case-on-the-Lisp-Printer.html#Effect-of-Readtable-Case-on-the-Lisp-Printer" accesskey="n" rel="next">Effect of Readtable Case on the Lisp Printer</a>, Previous: <a href="Printing-Symbols.html#Printing-Symbols" accesskey="p" rel="prev">Printing Symbols</a>, Up: <a href="Default-Print_002dObject-Methods.html#Default-Print_002dObject-Methods" accesskey="u" rel="up">Default Print-Object Methods</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

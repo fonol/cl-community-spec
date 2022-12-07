@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>with-output-to-string (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="_002adebug_002dio_002a.html#g_t_002adebug_002dio_002a" rel="next" title="*debug-io*">
+<link href="with_002dinput_002dfrom_002dstring.html#with_002dinput_002dfrom_002dstring" rel="prev" title="with-input-from-string">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="with_002dinput_002dfrom_002dstring.html#with_002dinput_002dfrom_002dstring" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                with-input-from-string
+                            </a>
+                            <a href="Streams-Dictionary.html#Streams-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Streams Dictionary
+                            </a>
+                            <a href="_002adebug_002dio_002a.html#g_t_002adebug_002dio_002a.html" class="nav-btn nav__next ">
+                                *debug-io*
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="with_002doutput_002dto_002dstring"></a>
+<a name="with_002doutput_002dto_002dstring-_005bMacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Macro</div>
+<h4 class="subsection">with-output-to-string                                               </h4>
+
+<p><code>with-output-to-string</code>  <i><span class="roman">(</span>var &amp;optional</i> string-form &amp;key element-type<span class="roman">)</span>
+ 			  {<i>declaration</i>}*
+ 			  {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-453"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>var</i>&mdash;a <i>variable</i> <i>name</i>.
+</p>
+<p><i>string-form</i>&mdash;a <i>form</i> or <b>nil</b>;
+		      if <i>non-nil</i>, evaluated to produce <i>string</i>.
+</p>
+<p><i>string</i>&mdash;a <i>string</i> that has a <i>fill pointer</i>.
+</p>
+<p><i>element-type</i>&mdash;a <i>type specifier</i>; evaluated.
+</p>
+<p>The default is <b>character</b>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;If a <i>string-form</i> is not supplied or <b>nil</b>,
+		  a <i>string</i>; otherwise, 
+		  the <i>values</i> returned by the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-583"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>with-output-to-string</b> creates a
+</p>
+<p>character <i>output</i> <i>stream</i>, performs a series of operations
+that may send results to this <i>stream</i>, and then closes the <i>stream</i>. 
+</p>
+<p>The <i>element-type</i> names the <i>type</i> of the elements
+of the <i>stream</i>; a <i>stream</i> is constructed of the most specialized
+<i>type</i> that can accommodate elements of the given <i>type</i>.  
+</p>
+<p>The body is executed as an <i>implicit progn</i> with <i>var</i>
+bound to an <i>output</i> <i>string stream</i>.  
+All output to that <i>string stream</i> is saved in a <i>string</i>.  
+</p>
+<p>If <i>string</i> is supplied, <i>element-type</i> is ignored, 
+and the output is incrementally appended to <i>string</i> as
+if by use of <b>vector-push-extend</b>.
+</p>
+<p>The <i>output</i> <i>stream</i> 
+is automatically closed on exit from <b>with-output-from-string</b>,
+no matter whether the exit is normal or abnormal.
+</p>
+<p>The <i>output</i> <i>string stream</i> to which the <i>variable</i> <i>var</i>
+is <i>bound</i> has <i>dynamic extent</i>;
+its <i>extent</i> ends when the <i>form</i> is exited.
+</p>
+<p>If no <i>string</i> is provided, then <b>with-output-from-string</b> 
+</p>
+<p>produces a <i>stream</i> that accepts characters and returns a <i>string</i> 
+of the indicated <i>element-type</i>.
+</p>
+<p>If <i>string</i> is provided,
+<b>with-output-to-string</b> returns the results of evaluating the last <i>form</i>.
+</p>
+<p>The consequences are undefined if an attempt is made to <i>assign</i>
+the <i>variable</i> <i>var</i>.
+</p>
+<a name="Examples_003a_003a-424"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+<div class="example">
+<pre class="example"><code> (setq fstr (make-array '(0) :element-type 'base-char
+                             :fill-pointer 0 :adjustable t)) &rArr;  &quot;&quot;
+ (with-output-to-string (s fstr)
+    (format s &quot;here's some output&quot;)
+    (input-stream-p s)) &rArr;  <i>false</i>
+ fstr &rArr;  &quot;here's some output&quot;
+</code>
+</pre></div>
+
+<a name="Side-Effects_003a_003a-74"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Side Effects</h4>
+
+<p>The <i>string</i> is modified.
+</p>
+<a name="Exceptional-Situations_003a_003a-216"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>The consequences are undefined if destructive modifications are performed
+directly on the <i>string</i> during the <i>dynamic extent</i> of the call.
+</p>
+<a name="See-Also_003a_003a-474"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="make_002dstring_002doutput_002dstream.html#make_002dstring_002doutput_002dstream">make-string-output-stream</a>
+,
+<b>vector-push-extend</b>,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>subtypep (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="subtypep (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="subtypep (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Types-and-Classes-Dictionary.html#Types-and-Classes-Dictionary" rel="up" title="Types and Classes Dictionary">
+<link href="type_002dof.html#type_002dof" rel="next" title="type-of">
+<link href="deftype.html#deftype" rel="prev" title="deftype">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="subtypep"></a>
+<div class="header">
+<p>
+Next: <a href="type_002dof.html#type_002dof" accesskey="n" rel="next">type-of</a>, Previous: <a href="deftype.html#deftype" accesskey="p" rel="prev">deftype</a>, Up: <a href="Types-and-Classes-Dictionary.html#Types-and-Classes-Dictionary" accesskey="u" rel="up">Types and Classes Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="subtypep-_005bFunction_005d"></a>
+<h4 class="subsection">4.4.26 subtypep                                                         [Function]</h4>
+
+<p><code>subtypep</code>  <i>type-1 type-2 &amp;optional</i> environment &rArr;  <i>subtype-p, valid-p</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-21"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>type-1</i>&mdash;a <i>type specifier</i>.
+</p>
+<p><i>type-2</i>&mdash;a <i>type specifier</i>.
+</p>
+<p><i>environment</i>&mdash;an <i>environment</i> <i>object</i>.
+  The default is <b>nil</b>, denoting the <i>null lexical environment</i>
+	   and the current <i>global environment</i>.
+</p>
+<p><i>subtype-p</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<p><i>valid-p</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-48"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>If <i>type-1</i> is a <i>recognizable subtype</i> of <i>type-2</i>, 
+the first <i>value</i> is <i>true</i>.
+Otherwise, the first <i>value</i> is <i>false</i>,
+indicating that either
+ <i>type-1</i> is not a <i>subtype</i> of <i>type-2</i>, or else
+ <i>type-1</i> is a <i>subtype</i> of <i>type-2</i> 
+  but is not a <i>recognizable subtype</i>.
+</p>
+<p>A second <i>value</i> is also returned indicating the &lsquo;certainty&rsquo; of 
+the first <i>value</i>.  If this value is <i>true</i>, then the first
+value is an accurate indication of the <i>subtype</i> relationship.
+(The second <i>value</i> is always <i>true</i> when the first <i>value</i>
+ is <i>true</i>.)
+</p>
+<p>Figure 4&ndash;9 summarizes the possible combinations of <i>values</i>
+that might result.
+</p>
+<p>&nbsp;&nbsp;Value&nbsp;1&nbsp;&nbsp;Value&nbsp;2&nbsp;&nbsp;Meaning&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<i>true</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>true</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><span class="nolinebreak">type-1</span></i>&nbsp;is&nbsp;definitely&nbsp;a&nbsp;<i>subtype</i>&nbsp;of&nbsp;<i><span class="nolinebreak">type-2</span></i>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<i>false</i>&nbsp;&nbsp;&nbsp;&nbsp;<i>true</i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><span class="nolinebreak">type-1</span></i>&nbsp;is&nbsp;definitely&nbsp;not&nbsp;a&nbsp;<i>subtype</i>&nbsp;of&nbsp;<i><span class="nolinebreak">type-2</span></i>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<i>false</i>&nbsp;&nbsp;&nbsp;&nbsp;<i>false</i>&nbsp;&nbsp;&nbsp;&nbsp;<b>subtypep</b>&nbsp;could&nbsp;not&nbsp;determine&nbsp;the&nbsp;relationship,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;so&nbsp;<i><span class="nolinebreak">type-1</span></i>&nbsp;might&nbsp;or&nbsp;might&nbsp;not&nbsp;be&nbsp;a&nbsp;<i>subtype</i>&nbsp;of&nbsp;<i><span class="nolinebreak">type-2</span></i>.&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;4&ndash;9:&nbsp;Result&nbsp;possibilities&nbsp;for&nbsp;subtypep&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<p><b>subtypep</b> is permitted to return the 
+<i>values</i> <i>false</i> and <i>false</i> only when at least
+one argument involves one of these <i>type specifiers</i>:
+  <b>and</b>,
+  <b>eql</b>,
+  the list form of <b>function</b>,
+  <b>member</b>,
+  <b>not</b>,
+  <b>or</b>,
+  <b>satisfies</b>,
+or
+  <b>values</b>.
+(A <i>type specifier</i> &lsquo;involves&rsquo; such a <i>symbol</i> if, 
+ after being <i>type expanded</i>,
+ it contains that <i>symbol</i> in a position that would call for
+ its meaning as a <i>type specifier</i> to be used.)
+One consequence of this is that if neither <i>type-1</i> nor <i>type-2</i>
+involves any of these <i>type specifiers</i>, then <b>subtypep</b> is obliged
+to determine the relationship accurately.  In particular, <b>subtypep</b> 
+returns the <i>values</i> <i>true</i> and <i>true</i>
+if the arguments are <b>equal</b> and do not involve
+any of these <i>type specifiers</i>.
+</p>
+<p><b>subtypep</b> never returns a second value of <b>nil</b> when both
+<i>type-1</i> and <i>type-2</i> involve only
+ the names in <i>Figure~4&ndash;2</i>, or
+ names of <i>types</i> defined by <b>defstruct</b>,
+<b>define-condition</b>,
+ or <b>defclass</b>, or
+ <i>derived types</i> that expand into only those names.
+While <i>type specifiers</i> listed in <i>Figure~4&ndash;2</i> and 
+names of <b>defclass</b> and <b>defstruct</b> can in some cases be
+implemented as <i>derived types</i>, <b>subtypep</b> regards them as primitive.
+</p>
+<p>The relationships between <i>types</i> reflected by <b>subtypep</b>
+are those specific to the particular implementation.  For example, if
+an implementation supports only a single type of floating-point numbers,
+in that implementation <tt>(subtypep 'float 'long-float)</tt> 
+returns the <i>values</i> <i>true</i> and <i>true</i> 
+(since the two <i>types</i> are identical).
+</p>
+<p>For all <i>T1</i> and <i>T2</i> other than <tt>*</tt>, 
+<tt>(array <i>T1</i>)</tt> and <tt>(array <i>T2</i>)</tt> 
+are two different <i>type specifiers</i> that always refer to the same sets of
+things if and only if they refer to <i>arrays</i>
+of exactly the same specialized representation, <i>i.e.</i>, if <tt>(upgraded-array-element-type '<i>T1</i>)</tt>  and
+   <tt>(upgraded-array-element-type '<i>T2</i>)</tt> 
+return two different <i>type specifiers</i> that always refer to the same sets of
+<i>objects</i>.
+This is another way of saying that 
+<tt>`(array <i>type-specifier</i>)</tt>
+and
+<tt>`(array ,(upgraded-array-element-type '<i>type-specifier</i>))</tt> 
+refer to the same
+set of specialized <i>array</i> representations.
+For all <i>T1</i> and <i>T2</i> other than <tt>*</tt>, 
+the intersection of
+    <tt>(array <i>T1</i>)</tt>
+and <tt>(array <i>T2</i>)</tt> is the empty set
+if and only if they refer to <i>arrays</i> of different,
+distinct specialized representations.  
+</p>
+<p>Therefore,
+</p>
+<div class="example">
+<pre class="example"> (subtypep '(array T1) '(array T2)) &rArr;  <i>true</i>
+</pre></div>
+
+<p>if and only if
+</p>
+<div class="example">
+<pre class="example"> (upgraded-array-element-type 'T1)  and
+ (upgraded-array-element-type 'T2)  
+</pre></div>
+
+<p>return two different <i>type specifiers</i> that always refer to the same sets of
+<i>objects</i>.
+</p>
+<p>For all type-specifiers <i>T1</i> and <i>T2</i> other than <tt>*</tt>, 
+</p>
+<div class="example">
+<pre class="example"> (subtypep '(complex T1) '(complex T2)) &rArr;  <i>true</i>, <i>true</i>
+</pre></div>
+
+<p>if:
+</p><dl compact="compact">
+<dt>1.</dt>
+<dd><p><tt>T1</tt> is a <i>subtype</i> of <tt>T2</tt>, or
+</p></dd>
+<dt>2.</dt>
+<dd><p><tt>(upgraded-complex-part-type '<i>T1</i>)</tt> and
+	      <tt>(upgraded-complex-part-type '<i>T2</i>)</tt> 
+   return two different <i>type specifiers</i> that always refer to the 
+   same sets of <i>objects</i>; in this case,
+    <tt>(complex <i>T1</i>)</tt> and 
+    <tt>(complex <i>T2</i>)</tt> both refer to the 
+   same specialized representation.
+</p></dd>
+</dl>
+
+<p>The <i>values</i> are <i>false</i> and <i>true</i> otherwise.
+</p>
+<p>The form
+</p>
+<div class="example">
+<pre class="example"> (subtypep '(complex single-float) '(complex float))
+</pre></div>
+
+<p>must return <i>true</i> in all implementations, but
+</p>
+<div class="example">
+<pre class="example"> (subtypep '(array single-float) '(array float))
+</pre></div>
+
+<p>returns <i>true</i> only in implementations that do not have a specialized <i>array</i>
+representation for <i>single floats</i> distinct from that for other <i>floats</i>.
+</p>
+<a name="Examples_003a_003a-28"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (subtypep 'compiled-function 'function) &rArr;  <i>true</i>, <i>true</i>
+ (subtypep 'null 'list) &rArr;  <i>true</i>, <i>true</i>
+ (subtypep 'null 'symbol) &rArr;  <i>true</i>, <i>true</i>
+ (subtypep 'integer 'string) &rArr;  <i>false</i>, <i>true</i>
+ (subtypep '(satisfies dummy) nil) &rArr;  <i>false</i>, <i>implementation-dependent</i>
+ (subtypep '(integer 1 3) '(integer 1 4)) &rArr;  <i>true</i>, <i>true</i>
+ (subtypep '(integer (0) (0)) 'nil) &rArr;  <i>true</i>, <i>true</i>
+ (subtypep 'nil '(integer (0) (0))) &rArr;  <i>true</i>, <i>true</i>
+ (subtypep '(integer (0) (0)) '(member)) &rArr;  <i>true</i>, <i>true</i> ;or <i>false</i>, <i>false</i>
+ (subtypep '(member) 'nil) &rArr;  <i>true</i>, <i>true</i> ;or <i>false</i>, <i>false</i>
+ (subtypep 'nil '(member)) &rArr;  <i>true</i>, <i>true</i> ;or <i>false</i>, <i>false</i>
+</pre></div>
+
+<p>Let <tt>&lt;aet-x&gt;</tt> and <tt>&lt;aet-y&gt;</tt> be two distinct <i>type specifiers</i> that 
+do not always refer to the same sets of
+<i>objects</i>
+in a given implementation, but for which
+<b>make-array</b>, will return an 
+<i>object</i> of the same <i>array</i> <i>type</i>.
+</p>
+<p>Thus, in each case, 
+</p>
+<div class="example">
+<pre class="example">  (subtypep (array-element-type (make-array 0 :element-type '&lt;aet-x&gt;))
+            (array-element-type (make-array 0 :element-type '&lt;aet-y&gt;)))
+&rArr;  <i>true</i>, <i>true</i>
+
+  (subtypep (array-element-type (make-array 0 :element-type '&lt;aet-y&gt;))
+            (array-element-type (make-array 0 :element-type '&lt;aet-x&gt;)))
+&rArr;  <i>true</i>, <i>true</i>
+</pre></div>
+
+<p>If  <tt>(array &lt;aet-x&gt;)</tt> 
+and <tt>(array &lt;aet-y&gt;)</tt> are different names for
+exactly the same set of <i>objects</i>, 
+these names should always refer to the same sets of
+<i>objects</i>.
+ That implies that the following set of tests are also true:
+</p>
+<div class="example">
+<pre class="example"> (subtypep '(array &lt;aet-x&gt;) '(array &lt;aet-y&gt;)) &rArr;  <i>true</i>, <i>true</i>
+ (subtypep '(array &lt;aet-y&gt;) '(array &lt;aet-x&gt;)) &rArr;  <i>true</i>, <i>true</i>
+</pre></div>
+
+<a name="See-Also_003a_003a-35"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Types.html#Types">Types</a>
+</p>
+<a name="Notes_003a_003a-21"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The small differences between the <b>subtypep</b> specification for
+the <b>array</b> and <b>complex</b> types are necessary because there 
+is no creation function for <i>complexes</i> which allows 
+the specification of the resultant part type independently of
+the actual types of the parts.  Thus in the case of the <i>type</i> <b>complex</b>,
+the actual type of the parts is referred to, although a <i>number</i> 
+can be a member of more than one <i>type</i>.
+For example, <tt>17</tt> is of <i>type</i> <tt>(mod 18)</tt> 
+as well as <i>type</i> <tt>(mod 256)</tt> and <i>type</i> <b>integer</b>;
+and <tt>2.3f5</tt> is of <i>type</i> <b>single-float</b> 
+as well as <i>type</i> <b>float</b>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="type_002dof.html#type_002dof" accesskey="n" rel="next">type-of</a>, Previous: <a href="deftype.html#deftype" accesskey="p" rel="prev">deftype</a>, Up: <a href="Types-and-Classes-Dictionary.html#Types-and-Classes-Dictionary" accesskey="u" rel="up">Types and Classes Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

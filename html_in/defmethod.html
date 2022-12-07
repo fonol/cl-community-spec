@@ -1,0 +1,254 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>defmethod (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="defmethod (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="defmethod (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="find_002dclass.html#find_002dclass" rel="next" title="find-class">
+<link href="defgeneric.html#defgeneric" rel="prev" title="defgeneric">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="defmethod"></a>
+<div class="header">
+<p>
+Next: <a href="find_002dclass.html#find_002dclass" accesskey="n" rel="next">find-class</a>, Previous: <a href="defgeneric.html#defgeneric" accesskey="p" rel="prev">defgeneric</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="defmethod-_005bMacro_005d"></a>
+<h4 class="subsection">7.7.27 defmethod                                                           [Macro]</h4>
+
+<p><code>defmethod</code>  <i><i>function-name</i>
+				      {<i>method-qualifier</i></i>}*
+				      <i>specialized-lambda-list</i>
+				[[{<i>declaration</i>}* | <i>documentation</i>]] {<i>form</i>}*<br>
+   &rArr;  <i>new-method</i>
+</p>
+<p><i>function-name</i>::= {<i>symbol</i> 
+| <tt>(setf <i>symbol</i>)</tt>}
+</p>
+<p><i>method-qualifier</i>::= <i>non-list</i>
+</p>
+<p>&nbsp;<i><span class="nolinebreak">specialized-lambda-list</span></i>::=&nbsp;({<i>var</i>&nbsp;|&nbsp;<span class="roman">(</span><i>var</i>&nbsp;<i><span class="nolinebreak">parameter-specializer-name</span></i><!-- /@w --><span class="roman">)</span>}*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>[</tt>&amp;optional<!-- /@w --> {<i>var</i> | <span class="roman">(</span>var <tt>[</tt><i>initform</i> <span class="roman">[</span><i>supplied-p-parameter</i><span class="roman">]</span> <tt>]</tt><span class="roman">)</span>}*<tt>]</tt><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>[</tt><tt>&amp;rest</tt>&nbsp;<i>var</i><tt>]</tt><!-- /@w --><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>[</tt><!-- /@w -->&amp;key{<i>var</i> | <span class="roman">(</span>{<i>var</i> | <span class="roman">(</span><i>keyword</i><i>var</i><span class="roman">)</span>} <tt>[</tt><i>initform</i> <span class="roman">[</span><i>supplied-p-parameter</i><span class="roman">]</span> <tt>]</tt><span class="roman">)</span>}*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">[</span><b><span class="nolinebreak">&amp;allow-other-keys</span></b><span class="roman">]</span>&nbsp;<tt>]</tt><!-- /@w --><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>[</tt><tt>&amp;aux</tt>&nbsp;{<i>var</i>&nbsp;|&nbsp;<span class="roman">(</span><i>var</i>&nbsp;<span class="roman">[</span><i>initform</i><span class="roman">]</span>&nbsp;<span class="roman">)</span>}*<!-- /@w --><tt>]</tt> <span class="roman">)</span><br>
+</p>
+<p>&nbsp;<i><span class="nolinebreak">parameter-specializer-name</span></i>::=&nbsp;<i>symbol</i>&nbsp;|&nbsp;<span class="roman">(</span><tt>eql</tt>&nbsp;<i><span class="nolinebreak">eql-specializer-form</span></i><span class="roman">)</span><!-- /@w --><br>
+</p>
+<a name="Arguments-and-Values_003a_003a-115"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>documentation</i>&mdash;a <i>string</i>; not evaluated.
+</p>
+<p><i>var</i>&mdash;a <i>variable</i> <i>name</i>.
+</p>
+<p><i>eql-specializer-form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>Form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>Initform</i>&mdash;a <i>form</i>.
+</p>
+<p><i>Supplied-p-parameter</i>&mdash;variable name. 
+</p>
+<p><i>new-method</i>&mdash;the new <i>method</i> <i>object</i>.
+</p>
+<a name="Description_003a_003a-154"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The macro <b>defmethod</b> defines a <i>method</i> on a 
+<i>generic function</i>.  
+</p>
+<p>If <tt>(fboundp <i>function-name</i>)</tt> is <b>nil</b>, a 
+<i>generic function</i> is created with default values for 
+the argument precedence order
+(each argument is more specific than the arguments to its right
+in the argument list),
+for the generic function class (the <i>class</i> <b>standard-generic-function</b>),
+for the method class (the <i>class</i> <b>standard-method</b>),
+and for the method combination type (the standard method combination type).
+The <i>lambda list</i> of the <i>generic function</i> is
+congruent with the <i>lambda list</i> of the 
+<i>method</i> being defined; if the
+<b>defmethod</b> form mentions keyword arguments, the <i>lambda list</i> of
+the <i>generic function</i> 
+will mention <tt>&amp;key</tt> (but no keyword
+arguments).  If <i>function-name</i> names 
+an <i>ordinary function</i>,
+a <i>macro</i>, or a <i>special operator</i>, 
+an error is signaled.
+</p>
+<p>If a <i>generic function</i> is currently named by <i>function-name</i>,
+the <i>lambda list</i> of the
+<i>method</i> must be congruent with the <i>lambda list</i> of the 
+<i>generic function</i>.
+If this condition does not hold, an error is signaled.  
+For a definition of congruence in this context, see <a href="Congruent-Lambda_002dlists-for-all-Methods-of-a-Generic-Function.html#Congruent-Lambda_002dlists-for-all-Methods-of-a-Generic-Function">Congruent Lambda-lists for all Methods of a Generic Function</a>.
+</p>
+<p>Each <i>method-qualifier</i> argument is an <i>object</i> that is used by
+method combination to identify the given <i>method</i>.  
+The method combination type might further
+restrict what a method <i>qualifier</i> can be.
+The standard method combination type allows for <i>unqualified methods</i> and
+<i>methods</i> whose sole
+<i>qualifier</i> is one of the keywords <tt>:before</tt>, <tt>:after</tt>, or <tt>:around</tt>.
+</p>
+<p>The <i>specialized-lambda-list</i> argument is like an ordinary
+<i>lambda list</i> except that the <i>names</i> of required parameters can
+be replaced by specialized parameters.  A specialized parameter is a
+list of the form 
+<tt>(<i>var</i> <i>parameter-specializer-name</i>)</tt>.
+Only required parameters can be
+specialized.  If <i>parameter-specializer-name</i> is a <i>symbol</i> it names a
+<i>class</i>; if it is a <i>list</i>,
+it is of the form <tt>(eql <i>eql-specializer-form</i>)</tt>.  The parameter
+specializer name <tt>(eql <i>eql-specializer-form</i>)</tt> indicates
+that the corresponding argument must be <b>eql</b> to the <i>object</i> that
+is the value of <i>eql-specializer-form</i> for the <i>method</i> to be applicable.  
+The <i>eql-specializer-form</i> is evaluated at the time
+that the expansion of the <b>defmethod</b> macro is evaluated.  
+If no <i>parameter specializer name</i> is specified for a given
+required parameter, the <i>parameter specializer</i> defaults to 
+the <i>class</i> <b>t</b>.
+For further discussion, see <a href="Introduction-to-Methods.html#Introduction-to-Methods">Introduction to Methods</a>.
+</p>
+<p>The <i>form</i> arguments specify the method body.
+The body of the <i>method</i> is enclosed in an <i>implicit block</i>.  If
+<i>function-name</i> is a <i>symbol</i>, 
+this block bears the same <i>name</i> as the <i>generic function</i>.  
+If <i>function-name</i> is a <i>list</i> of the form 
+<tt>(setf <i>symbol</i>)</tt>, the <i>name</i> of the block is <i>symbol</i>.  
+</p>
+<p>The <i>class</i> of the <i>method</i> <i>object</i> that is created is that given by the 
+method class option of the <i>generic function</i> 
+on which the <i>method</i> is defined.
+</p>
+<p>If the <i>generic function</i> already has a <i>method</i> that agrees with the
+<i>method</i> being defined on <i>parameter specializers</i> and <i>qualifiers</i>,
+<b>defmethod</b> replaces the existing <i>method</i> with the one now being
+defined.
+For a definition of agreement in this context.
+see <a href="Agreement-on-Parameter-Specializers-and-Qualifiers.html#Agreement-on-Parameter-Specializers-and-Qualifiers">Agreement on Parameter Specializers and Qualifiers</a>.
+</p>
+<p>The <i>parameter specializers</i> are derived from 
+the <i>parameter specializer names</i> as described in
+<a href="Introduction-to-Methods.html#Introduction-to-Methods">Introduction to Methods</a>.
+</p>
+<p>The expansion of the <b>defmethod</b> macro &ldquo;refers to&rdquo; each
+specialized parameter (see the description of <b>ignore</b> 
+within the description of <b>declare</b>).
+This includes parameters that
+have an explicit <i>parameter specializer name</i> of <b>t</b>.  This means
+that a compiler warning does not occur if the body of the <i>method</i> does
+not refer to a specialized parameter, while a warning might occur
+if the body of the <i>method</i> does not refer to an unspecialized parameter.
+For this reason, a parameter that specializes on <b>t</b> is not quite synonymous
+with an unspecialized parameter in this context.
+</p>
+<p>Declarations at the head of the method body that apply to the 
+method&rsquo;s <i>lambda variables</i> are treated as <i>bound declarations</i>
+whose <i>scope</i> is the same as the corresponding <i>bindings</i>.
+</p>
+<p>Declarations at the head of the method body that apply to the 
+functional bindings of <b>call-next-method</b> or <b>next-method-p</b>
+apply to references to those functions within the method body <i>forms</i>.
+Any outer <i>bindings</i> of the <i>function names</i> <b>call-next-method</b> and
+<b>next-method-p</b>, and declarations associated with such <i>bindings</i>
+are <i>shadowed</i>_2 within the method body <i>forms</i>.
+</p>
+<p>The <i>scope</i> of <i>free declarations</i> at the head of the method body 
+is the entire method body, 
+which includes any implicit local function definitions
+  but excludes <i>initialization forms</i> for the <i>lambda variables</i>.
+</p>
+<p><b>defmethod</b> is not required to perform any compile-time side effects.
+In particular, the <i>methods</i> are not installed for invocation during 
+compilation.  An <i>implementation</i> may choose to store information about
+the <i>generic function</i> for the purposes of compile-time error-checking
+(such as checking the number of arguments on calls, or noting that a definition
+ for the function name has been seen).
+</p>
+<p><i>Documentation</i> is attached as a <i>documentation string</i>
+to the <i>method</i> <i>object</i>.
+</p>
+<a name="Affected-By_003a_003a-14"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>The definition of the referenced <i>generic function</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-39"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If <i>function-name</i> names an <i>ordinary function</i>,
+a <i>macro</i>, or a <i>special operator</i>, 
+an error of <i>type</i> <b>error</b> is signaled.
+</p>
+<p>If a <i>generic function</i> is currently named by <i>function-name</i>,
+the <i>lambda list</i> of the
+<i>method</i> must be congruent with the <i>lambda list</i> of the 
+<i>generic function</i>, or
+an error of <i>type</i> <b>error</b> is signaled.
+</p>
+<a name="See-Also_003a_003a-136"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="defgeneric.html#defgeneric">defgeneric</a>
+, 
+&lsquo;documentation; (setf documentation)&rsquo;
+,
+<a href="Introduction-to-Methods.html#Introduction-to-Methods">Introduction to Methods</a>,
+<a href="Congruent-Lambda_002dlists-for-all-Methods-of-a-Generic-Function.html#Congruent-Lambda_002dlists-for-all-Methods-of-a-Generic-Function">Congruent Lambda-lists for all Methods of a Generic Function</a>,
+<a href="Agreement-on-Parameter-Specializers-and-Qualifiers.html#Agreement-on-Parameter-Specializers-and-Qualifiers">Agreement on Parameter Specializers and Qualifiers</a>,
+<a href="Syntactic-Interaction-of-Documentation-Strings-and-Declarations.html#Syntactic-Interaction-of-Documentation-Strings-and-Declarations">Syntactic Interaction of Documentation Strings and Declarations</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="find_002dclass.html#find_002dclass" accesskey="n" rel="next">find-class</a>, Previous: <a href="defgeneric.html#defgeneric" accesskey="p" rel="prev">defgeneric</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

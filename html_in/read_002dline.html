@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>read-line (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="read-line (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="read-line (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="write_002dstring.html#write_002dstring" rel="next" title="write-string">
+<link href="write_002dchar.html#write_002dchar" rel="prev" title="write-char">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="read_002dline"></a>
+<div class="header">
+<p>
+Next: <a href="write_002dstring.html#write_002dstring" accesskey="n" rel="next">write-string</a>, Previous: <a href="write_002dchar.html#write_002dchar" accesskey="p" rel="prev">write-char</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="read_002dline-_005bFunction_005d"></a>
+<h4 class="subsection">21.2.22 read-line                                                        [Function]</h4>
+
+<p><code>read-line</code>  <i>&amp;optional</i> input-stream eof-error-p eof-value recursive-p<br>
+   &rArr;  <i>line, missing-newline-p</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-425"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>input-stream</i>&mdash;an <i>input</i> <i>stream designator</i>.
+ The default is <i>standard input</i>.
+</p>
+<p><i>eof-error-p</i>&mdash;a <i>generalized boolean</i>.
+ The default is <i>true</i>.
+</p>
+<p><i>eof-value</i>&mdash;an <i>object</i>.
+ The default is <b>nil</b>.
+</p>
+<p><i>recursive-p</i>&mdash;a <i>generalized boolean</i>.
+ The default is <i>false</i>.
+</p>
+<p><i>line</i>&mdash;a <i>string</i> or the <i>eof-value</i>.
+</p>
+<p><i>missing-newline-p</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-553"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Reads from <i>input-stream</i> a line of text
+that is terminated by a <i>newline</i> or <i>end of file</i>.
+</p>
+ <p>If <i>recursive-p</i> is <i>true</i>,
+this call is expected to be embedded in a higher-level call to <b>read</b> 
+or a similar <i>function</i> used by the <i>Lisp reader</i>.
+</p>
+<p>The <i>primary value</i>, <i>line</i>, is the line that is read,
+represented as a <i>string</i> (without the trailing <i>newline</i>, if any).
+If  <i>eof-error-p</i> is <i>false</i> 
+and the <i>end of file</i> for <i>input-stream</i> is reached
+     before any <i>characters</i> are read,
+<i>eof-value</i> is returned as the <i>line</i>.
+</p>
+<p>The <i>secondary value</i>, <i>missing-newline-p</i>, 
+is a <i>generalized boolean</i> that is
+    <i>false</i> if the <i>line</i> was terminated by a <i>newline</i>,
+ or <i>true</i>  if the <i>line</i> was terminated by 
+		   the <i>end of file</i> for <i>input-stream</i>
+		   (or if the <i>line</i> is the <i>eof-value</i>).
+</p>
+<a name="Examples_003a_003a-400"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq a &quot;line 1
+ line2&quot;)
+&rArr;  &quot;line 1
+ line2&quot;
+ (read-line (setq input-stream (make-string-input-stream a)))
+&rArr;  &quot;line 1&quot;, <i>false</i>
+ (read-line input-stream)
+&rArr;  &quot;line2&quot;, <i>true</i>
+ (read-line input-stream nil nil)
+&rArr;  NIL, <i>true</i>
+</pre></div>
+
+<a name="Affected-By_003a_003a-88"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*standard-input*</b>,
+<b>*terminal-io*</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-202"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If an <i>end of file</i>_2 occurs before any characters are read in the line,
+an error is signaled if <i>eof-error-p</i> is <i>true</i>.  
+</p>
+<a name="See-Also_003a_003a-450"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;read; read-preserving-whitespace&rsquo;
+</p>
+<a name="Notes_003a_003a-289"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The corresponding output function is <b>write-line</b>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="write_002dstring.html#write_002dstring" accesskey="n" rel="next">write-string</a>, Previous: <a href="write_002dchar.html#write_002dchar" accesskey="p" rel="prev">write-char</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

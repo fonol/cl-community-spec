@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Syntax of Logical Pathname Namestrings (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Logical-Pathnames.html#Logical-Pathnames" rel="up" title="Logical Pathnames">
+<link href="Additional-Information-about-Parsing-Logical-Pathname-Namestrings.html#Additional-Information-about-Parsing-Logical-Pathname-Namestrings" rel="next" title="Additional Information about Parsing Logical Pathname Namestrings">
+<link href="Logical-Pathnames.html#Logical-Pathnames" rel="prev" title="Logical Pathnames">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Logical-Pathnames.html#Logical-Pathnames" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Logical Pathnames
+                            </a>
+                            <a href="Logical-Pathnames.html#Logical-Pathnames.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Logical Pathnames
+                            </a>
+                            <a href="Additional-Information-about-Parsing-Logical-Pathname-Namestrings.html#Additional-Information-about-Parsing-Logical-Pathname-Namestrings.html" class="nav-btn nav__next ">
+                                Additional Information about Parsing Logical Pathname Namestrings
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Syntax-of-Logical-Pathname-Namestrings"></a>
+<a name="Syntax-of-Logical-Pathname-Namestrings-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Syntax of Logical Pathname Namestrings</h4>
+
+<p>The syntax of a <i>logical pathname</i> <i>namestring</i> is as follows.
+(Note that unlike many notational descriptions in this document,
+ this is a syntactic description of character sequences,
+ not a structural description of <i>objects</i>.)
+</p>
+<p><i><span class="nolinebreak">logical-pathname</span></i>&nbsp;::=<span class="roman">[</span>!<i>host</i>&nbsp;<i><span class="nolinebreak">host-marker</span></i><span class="roman">]</span>&nbsp;<!-- /@w -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">[</span>!<i><i><span class="nolinebreak">relative-directory-marker</span></i></i><span class="roman">]</span>&nbsp;{!<i>directory</i>&nbsp;<i><span class="nolinebreak">directory-marker</span></i>}*<!-- /@w --> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">[</span>!<i>name</i><span class="roman">]</span>&nbsp;<span class="roman">[</span><i><span class="nolinebreak">type-marker</span></i>&nbsp;!<i>type</i>&nbsp;<span class="roman">[</span><i><span class="nolinebreak">version-marker</span></i>&nbsp;!<i>version</i><span class="roman">]</span><span class="roman">]</span><!-- /@w -->
+</p>
+<p><i>host</i>&nbsp;::=!<i>word</i><!-- /@w -->
+</p>
+<p><i>directory</i>&nbsp;::=!<i>word</i>&nbsp;|&nbsp;!<i><span class="nolinebreak">wildcard-word</span></i>&nbsp;|&nbsp;!<i><span class="nolinebreak">wild-inferiors-word</span></i><!-- /@w -->
+</p>
+<p><i>name</i>&nbsp;::=!<i>word</i>&nbsp;|&nbsp;!<i><span class="nolinebreak">wildcard-word</span></i><!-- /@w -->
+</p>
+<p><i>type</i>&nbsp;::=!<i>word</i>&nbsp;|&nbsp;!<i><span class="nolinebreak">wildcard-word</span></i><!-- /@w -->
+</p>
+<p><i>version</i>&nbsp;::=!<i><span class="nolinebreak">pos-int</span></i>&nbsp;|&nbsp;<i><span class="nolinebreak">newest-word</span></i>&nbsp;|&nbsp;<i><span class="nolinebreak">wildcard-version</span></i><!-- /@w -->
+</p>
+<p><i>host-marker</i>&mdash;a <i>colon</i>.
+</p>
+<p><i>relative-directory-marker</i>&mdash;a <i>semicolon</i>.
+</p>
+<p><i>directory-marker</i>&mdash;a <i>semicolon</i>.
+</p>
+<p><i>type-marker</i>&mdash;a <i>dot</i>.
+</p>
+<p><i>version-marker</i>&mdash;a <i>dot</i>.
+</p>
+<p><i>wild-inferiors-word</i>&mdash;The two character sequence &ldquo;<tt>**</tt>&rdquo; (two <i>asterisks</i>).
+</p>
+<p><i>newest-word</i>&mdash;The six character sequence &ldquo;<tt>newest</tt>&rdquo; 
+		   or the six character sequence &ldquo;<tt>NEWEST</tt>&rdquo;.
+</p>
+<p><i>wildcard-version</i>&mdash;an <i>asterisk</i>.
+</p>
+<p><i>wildcard-word</i>&mdash;one or more <i>asterisks</i>, uppercase letters,
+   digits, and hyphens, including at least one <i>asterisk</i>, 
+   with no two <i>asterisks</i> adjacent.
+</p>
+<p><i>word</i>&mdash;one or more uppercase letters, digits, and hyphens.
+</p>
+<p><i>pos-int</i>&mdash;a positive <i>integer</i>.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Additional-Information-about-Parsing-Logical-Pathname-Namestrings.html#Additional-Information-about-Parsing-Logical-Pathname-Namestrings" accesskey="1">Additional Information about Parsing Logical Pathname Namestrings</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="The-Host-part-of-a-Logical-Pathname-Namestring.html#The-Host-part-of-a-Logical-Pathname-Namestring" accesskey="2">The Host part of a Logical Pathname Namestring</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="The-Device-part-of-a-Logical-Pathname-Namestring.html#The-Device-part-of-a-Logical-Pathname-Namestring" accesskey="3">The Device part of a Logical Pathname Namestring</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="The-Directory-part-of-a-Logical-Pathname-Namestring.html#The-Directory-part-of-a-Logical-Pathname-Namestring" accesskey="4">The Directory part of a Logical Pathname Namestring</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="The-Type-part-of-a-Logical-Pathname-Namestring.html#The-Type-part-of-a-Logical-Pathname-Namestring" accesskey="5">The Type part of a Logical Pathname Namestring</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="The-Version-part-of-a-Logical-Pathname-Namestring.html#The-Version-part-of-a-Logical-Pathname-Namestring" accesskey="6">The Version part of a Logical Pathname Namestring</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Wildcard-Words-in-a-Logical-Pathname-Namestring.html#Wildcard-Words-in-a-Logical-Pathname-Namestring" accesskey="7">Wildcard Words in a Logical Pathname Namestring</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Lowercase-Letters-in-a-Logical-Pathname-Namestring.html#Lowercase-Letters-in-a-Logical-Pathname-Namestring" accesskey="8">Lowercase Letters in a Logical Pathname Namestring</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Other-Syntax-in-a-Logical-Pathname-Namestring.html#Other-Syntax-in-a-Logical-Pathname-Namestring" accesskey="9">Other Syntax in a Logical Pathname Namestring</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>break (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="break (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="break (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="_002adebugger_002dhook_002a.html#g_t_002adebugger_002dhook_002a" rel="next" title="*debugger-hook*">
+<link href="invoke_002ddebugger.html#invoke_002ddebugger" rel="prev" title="invoke-debugger">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="break"></a>
+<div class="header">
+<p>
+Next: <a href="_002adebugger_002dhook_002a.html#g_t_002adebugger_002dhook_002a" accesskey="n" rel="next">*debugger-hook*</a>, Previous: <a href="invoke_002ddebugger.html#invoke_002ddebugger" accesskey="p" rel="prev">invoke-debugger</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="break-_005bFunction_005d"></a>
+<h4 class="subsection">9.2.23 break                                                            [Function]</h4>
+
+<p><code>break</code>  <i>&amp;optional</i> format-control &amp;rest format-arguments &rArr;  <i><b>nil</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-142"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>format-control</i>&mdash;a <i>format control</i>.
+</p>
+<p>The default is <i>implementation-dependent</i>.
+</p>
+<p><i>format-arguments</i>&mdash;<i>format arguments</i> for the <i>format-control</i>.
+</p>
+<a name="Description_003a_003a-193"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>break</b> <i>formats</i> <i>format-control</i> and <i>format-arguments</i>
+and then goes directly into the debugger without allowing any possibility of
+interception by programmed error-handling facilities.
+</p>
+<p>If the <b>continue</b> <i>restart</i> is used while in the debugger,
+<b>break</b> immediately returns <b>nil</b> without taking any unusual recovery action.
+</p>
+<p><b>break</b> binds <b>*debugger-hook*</b> to <b>nil</b> 
+before attempting to enter the debugger.
+</p>
+<a name="Examples_003a_003a-122"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (break &quot;You got here with arguments: ~:S.&quot; '(FOO 37 A))
+<tt> |&gt; </tt> BREAK: You got here with these arguments: FOO, 37, A.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Return from BREAK.
+<tt> |&gt; </tt>  2: Top level.
+<tt> |&gt; </tt> Debug&gt; :CONTINUE 1
+<tt> |&gt; </tt> Return from BREAK.
+&rArr;  NIL
+
+</pre></div>
+
+<a name="Side-Effects_003a_003a-15"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>The debugger is entered.
+</p>
+<a name="Affected-By_003a_003a-27"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*debug-io*</b>.
+</p>
+<a name="See-Also_003a_003a-169"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="error.html#error">error</a>
+, 
+<a href="invoke_002ddebugger.html#invoke_002ddebugger">invoke-debugger</a>
+.
+</p>
+<a name="Notes_003a_003a-102"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>break</b> is used as a way of inserting temporary debugging
+&ldquo;breakpoints&rdquo; in a program, not as a way of signaling errors.  
+For this reason, <b>break</b> does not take the <i>continue-format-control</i>
+<i>argument</i> that <b>cerror</b> takes.
+This and the lack of any possibility of interception by
+<i>condition</i> <i>handling</i> are the only program-visible 
+differences between <b>break</b> and <b>cerror</b>.
+</p>
+<p>The user interface aspects of <b>break</b> and <b>cerror</b> are
+permitted to vary more widely, in order to accomodate the interface
+needs of the <i>implementation</i>. For example, it is permissible for a
+<i>Lisp read-eval-print loop</i> to be entered by <b>break</b> rather
+than the conventional debugger.
+</p>
+<p><b>break</b> could be defined by:
+</p>
+<div class="example">
+<pre class="example"> (defun break (&amp;optional (format-control &quot;Break&quot;) &amp;rest format-arguments)
+   (with-simple-restart (continue &quot;Return from BREAK.&quot;)
+     (let ((*debugger-hook* nil))
+       (invoke-debugger
+           (make-condition 'simple-condition
+                           :format-control format-control
+                           :format-arguments format-arguments))))
+   nil)
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="_002adebugger_002dhook_002a.html#g_t_002adebugger_002dhook_002a" accesskey="n" rel="next">*debugger-hook*</a>, Previous: <a href="invoke_002ddebugger.html#invoke_002ddebugger" accesskey="p" rel="prev">invoke-debugger</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

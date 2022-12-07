@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Specialized Arrays (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Specialized Arrays (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Specialized Arrays (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Array-Concepts.html#Array-Concepts" rel="up" title="Array Concepts">
+<link href="Array-Upgrading.html#Array-Upgrading" rel="next" title="Array Upgrading">
+<link href="Implementation-Limits-on-Array-Rank.html#Implementation-Limits-on-Array-Rank" rel="prev" title="Implementation Limits on Array Rank">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Specialized-Arrays"></a>
+<div class="header">
+<p>
+Previous: <a href="Array-Elements.html#Array-Elements" accesskey="p" rel="prev">Array Elements</a>, Up: <a href="Array-Concepts.html#Array-Concepts" accesskey="u" rel="up">Array Concepts</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Specialized-Arrays-1"></a>
+<h4 class="subsection">15.1.2 Specialized Arrays</h4>
+
+<p>An <i>array</i> can be a <i>general</i> <i>array</i>, 
+    meaning each <i>element</i> may be any <i>object</i>,
+or it may be a <i>specialized</i> <i>array</i>,
+    meaning that each <i>element</i> must be of a restricted <i>type</i>.
+</p>
+<p>The phrasing &ldquo;an <i>array</i> <i>specialized</i> to <i>type</i> &lt;&lt;<i>type</i>&gt;&gt;&rdquo;
+is sometimes used to emphasize the <i>element type</i> of an <i>array</i>.
+This phrasing is tolerated even when the &lt;&lt;<i>type</i>&gt;&gt; is <b>t</b>,
+even though an <i>array</i> <i>specialized</i> to <i>type</i> <i>t</i>
+is a <i>general</i> <i>array</i>, not a <i>specialized</i> <i>array</i>.
+</p>
+<p>Figure 15&ndash;1 lists some <i>defined names</i> that are applicable to <i>array</i> 
+creation, <i>access</i>, and information operations.
+</p>
+<p>&nbsp;<span class="nolinebreak">adjust-array</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">array-in-bounds-p</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;svref&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;<span class="nolinebreak">adjustable-array-p</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">array-rank</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">upgraded-array-element-type</span>&nbsp;<!-- /@w -->
+&nbsp;aref&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">array-rank-limit</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">upgraded-complex-part-type</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;<span class="nolinebreak">array-dimension</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">array-row-major-index</span>&nbsp;&nbsp;vector&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;<span class="nolinebreak">array-dimension-limit</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">array-total-size</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">vector-pop</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;<span class="nolinebreak">array-dimensions</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">array-total-size-limit</span>&nbsp;<span class="nolinebreak">vector-push</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;<span class="nolinebreak">array-element-type</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">fill-pointer</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">vector-push-extend</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;<span class="nolinebreak">array-has-fill-pointer-p</span>&nbsp;<span class="nolinebreak">make-array</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;15&ndash;1:&nbsp;General&nbsp;Purpose&nbsp;<span class="nolinebreak">Array-Related</span>&nbsp;Defined&nbsp;Names&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Array-Upgrading.html#Array-Upgrading" accesskey="1">Array Upgrading</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Required-Kinds-of-Specialized-Arrays.html#Required-Kinds-of-Specialized-Arrays" accesskey="2">Required Kinds of Specialized Arrays</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+</html>

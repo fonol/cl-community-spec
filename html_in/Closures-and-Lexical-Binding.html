@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Closures and Lexical Binding (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Closures and Lexical Binding (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Closures and Lexical Binding (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation.html#Evaluation" rel="up" title="Evaluation">
+<link href="Shadowing.html#Shadowing" rel="next" title="Shadowing">
+<link href="Lambda-Expressions.html#Lambda-Expressions" rel="prev" title="Lambda Expressions">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Closures-and-Lexical-Binding"></a>
+<div class="header">
+<p>
+Next: <a href="Shadowing.html#Shadowing" accesskey="n" rel="next">Shadowing</a>, Previous: <a href="Lambda-Expressions.html#Lambda-Expressions" accesskey="p" rel="prev">Lambda Expressions</a>, Up: <a href="Evaluation.html#Evaluation" accesskey="u" rel="up">Evaluation</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Closures-and-Lexical-Binding-1"></a>
+<h4 class="subsection">3.1.4 Closures and Lexical Binding</h4>
+
+<p>A <i>lexical closure</i> is a <i>function</i> that can refer to and alter
+the values of <i>lexical bindings</i> <i>established</i> by <i>binding</i> <i>forms</i>
+that textually include the function definition.
+</p>
+<p>Consider this code, where <tt>x</tt> is not declared <b>special</b>:
+</p>
+<div class="example">
+<pre class="example"> (defun two-funs (x)
+   (list (function (lambda () x))
+         (function (lambda (y) (setq x y)))))
+ (setq funs (two-funs 6))
+ (funcall (car funs)) &rArr;  6
+ (funcall (cadr funs) 43) &rArr;  43
+ (funcall (car funs)) &rArr;  43
+</pre></div>
+
+<p>The <b>function</b> <i>special form</i> coerces a 
+<i>lambda expression</i> into a <i>closure</i> in which the 
+<i>lexical environment</i> in effect when the <i>special form</i> is
+evaluated is captured along with the <i>lambda expression</i>.
+</p>
+<p>The function <tt>two-funs</tt> returns a <i>list</i> of two 
+<i>functions</i>, each of which refers to the <i>binding</i> of the
+variable <tt>x</tt> created on entry to the function <tt>two-funs</tt> when it
+was called.
+This variable has the value <tt>6</tt>
+initially, but <b>setq</b> can alter this <i>binding</i>.
+The <i>lexical closure</i> created for the first 
+<i>lambda expression</i> does not &ldquo;snapshot&rdquo; the <i>value</i> <tt>6</tt> for <tt>x</tt>
+when the <i>closure</i> is created; rather it captures the <i>binding</i> of <tt>x</tt>.
+The second <i>function</i> can be used to alter the <i>value</i> in the same (captured)
+<i>binding</i> (to <tt>43</tt>, in the example), and
+this altered variable binding then affects the value returned by the first <i>function</i>.
+</p>
+<p>In situations where a <i>closure</i> of a 
+<i>lambda expression</i> over the same set of <i>bindings</i> may be
+produced more than once, the various resulting <i>closures</i> may
+or may not be <i>identical</i>, at the discretion of the <i>implementation</i>.
+That is, two <i>functions</i> that are behaviorally
+indistinguishable might or might not be <i>identical</i>.
+Two <i>functions</i> that are behaviorally distinguishable are <i>distinct</i>.
+For example:
+</p>
+<div class="example">
+<pre class="example"> (let ((x 5) (funs '()))
+   (dotimes (j 10)                          
+     (push #'(lambda (z)                        
+               (if (null z) (setq x 0) (+ x z)))
+           funs))
+   funs)
+</pre></div>
+
+<p>The result of the above <i>form</i> is a <i>list</i> of ten <i>closures</i>.
+Each requires only the <i>binding</i> of <tt>x</tt>.
+It is the same <i>binding</i> in each case, 
+but the ten <i>closure</i> <i>objects</i> might or might not be <i>identical</i>.
+On the other hand, the result of the <i>form</i>
+</p>
+<div class="example">
+<pre class="example"> (let ((funs '()))     
+   (dotimes (j 10)
+     (let ((x 5))
+       (push (function (lambda (z)
+                        (if (null z) (setq x 0) (+ x z))))
+             funs)))
+  funs)
+</pre></div>
+
+<p>is also a <i>list</i> of ten <i>closures</i>.
+However, in this case no two of the <i>closure</i> <i>objects</i> can
+be <i>identical</i> because each <i>closure</i> is closed over a distinct
+<i>binding</i> of <tt>x</tt>, and these <i>bindings</i> can be behaviorally
+distinguished because of the use of <b>setq</b>.
+</p>
+<p>The result of the <i>form</i>
+</p>
+<div class="example">
+<pre class="example"> (let ((funs '()))
+   (dotimes (j 10)
+     (let ((x 5))
+       (push (function (lambda (z) (+ x z)))
+            funs)))
+   funs)
+</pre></div>
+
+<p>is a <i>list</i> of ten <i>closure</i> <i>objects</i> that
+might or might not be <i>identical</i>.
+A different <i>binding</i> of <tt>x</tt> is involved for
+each <i>closure</i>, but the <i>bindings</i> cannot be distinguished
+because their values are the <i>same</i> and immutable (there being no occurrence
+of <b>setq</b> on <tt>x</tt>).  A compiler could internally
+transform the <i>form</i> to
+</p>
+<div class="example">
+<pre class="example"> (let ((funs '()))
+   (dotimes (j 10)
+     (push (function (lambda (z) (+ 5 z)))
+           funs))
+  funs)
+</pre></div>
+
+<p>where the <i>closures</i> may be <i>identical</i>.
+</p>
+<p>It is possible that a <i>closure</i> does not
+close over any variable bindings.
+In the code fragment
+</p>
+<div class="example">
+<pre class="example"> (mapcar (function (lambda (x) (+ x 2))) y)
+</pre></div>
+
+<p>the function <tt>(lambda (x) (+ x 2))</tt> contains no references to any outside
+object. In this case, the same <i>closure</i> might be returned
+for all evaluations of the <b>function</b> <i>form</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Shadowing.html#Shadowing" accesskey="n" rel="next">Shadowing</a>, Previous: <a href="Lambda-Expressions.html#Lambda-Expressions" accesskey="p" rel="prev">Lambda Expressions</a>, Up: <a href="Evaluation.html#Evaluation" accesskey="u" rel="up">Evaluation</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

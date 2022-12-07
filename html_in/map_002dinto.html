@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>map-into (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="map-into (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="map-into (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Sequences-Dictionary.html#Sequences-Dictionary" rel="up" title="Sequences Dictionary">
+<link href="reduce.html#reduce" rel="next" title="reduce">
+<link href="map.html#map" rel="prev" title="map">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="map_002dinto"></a>
+<div class="header">
+<p>
+Next: <a href="reduce.html#reduce" accesskey="n" rel="next">reduce</a>, Previous: <a href="map.html#map" accesskey="p" rel="prev">map</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="map_002dinto-_005bFunction_005d"></a>
+<h4 class="subsection">17.3.8 map-into                                                         [Function]</h4>
+
+<p><code>map-into</code>  <i>result-sequence function &amp;rest</i> sequences &rArr;  <i>result-sequence</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-360"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>result-sequence</i>&mdash;a <i>proper sequence</i>.
+</p>
+<p><i>function</i>&mdash;a <i>designator</i> for a <i>function</i>
+		   of as many <i>arguments</i> as there are <i>sequences</i>.
+</p>
+<p><i>sequence</i>&mdash;a <i>proper sequence</i>.
+</p>
+<a name="Description_003a_003a-475"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Destructively modifies <i>result-sequence</i> to contain the results of
+applying <i>function</i> to each element in the argument <i>sequences</i> 
+in turn.
+</p>
+<p><i>result-sequence</i> and each element of <i>sequences</i> can each be
+either a <i>list</i> or a <i>vector</i>. 
+If <i>result-sequence</i> and each element of <i>sequences</i> are not all
+the same length, the iteration terminates when the shortest <i>sequence</i>
+(of any of the <i>sequences</i> or the <i>result-sequence</i>)
+is exhausted.
+If <i>result-sequence</i> is a <i>vector</i> with a 
+<i>fill pointer</i>, the <i>fill pointer</i> is ignored when deciding how
+many iterations to perform, and afterwards the <i>fill pointer</i> is set to
+the number of times <i>function</i> was applied.
+If <i>result-sequence</i> is longer than the shortest element of <i>sequences</i>,
+extra elements at the end of <i>result-sequence</i> are left unchanged.
+If <i>result-sequence</i> is <b>nil</b>, <b>map-into</b> immediately returns
+<b>nil</b>, since <b>nil</b> is a <i>sequence</i> of length zero.
+</p>
+<p>If <i>function</i> has side effects, it can count on being called
+first on all of the elements with index 0, then on all of those 
+numbered 1, and so on.
+</p>
+<a name="Examples_003a_003a-342"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq a (list 1 2 3 4) b (list 10 10 10 10)) &rArr;  (10 10 10 10)
+ (map-into a #'+ a b) &rArr;  (11 12 13 14)
+ a &rArr;  (11 12 13 14)
+ b &rArr;  (10 10 10 10)
+ (setq k '(one two three)) &rArr;  (ONE TWO THREE)
+ (map-into a #'cons k a) &rArr;  ((ONE . 11) (TWO . 12) (THREE . 13) 14)
+ (map-into a #'gensym) &rArr;  (#:G9090 #:G9091 #:G9092 #:G9093)
+ a &rArr;  (#:G9090 #:G9091 #:G9092 #:G9093)
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-156"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>result-sequence</i> is not a <i>proper sequence</i>.
+Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>sequence</i> is not a <i>proper sequence</i>.
+</p>
+<a name="Notes_003a_003a-260"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>map-into</b> differs from <b>map</b> in that it modifies an
+existing <i>sequence</i> rather than creating a new one.
+In addition, <b>map-into</b> can be called with only two 
+arguments, while <b>map</b> requires at least three arguments.
+</p>
+<p><b>map-into</b> could be defined by:
+</p>
+<div class="example">
+<pre class="example"> (defun map-into (result-sequence function &amp;rest sequences)
+   (loop for index below (apply #'min 
+                                (length result-sequence)
+                                (mapcar #'length sequences))
+         do (setf (elt result-sequence index)
+                  (apply function
+                         (mapcar #'(lambda (seq) (elt seq index))
+                                 sequences))))
+   result-sequence)
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="reduce.html#reduce" accesskey="n" rel="next">reduce</a>, Previous: <a href="map.html#map" accesskey="p" rel="prev">map</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

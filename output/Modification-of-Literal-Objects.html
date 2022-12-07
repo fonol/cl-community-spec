@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Modification of Literal Objects (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Destructive-Operations.html#Destructive-Operations" rel="up" title="Destructive Operations">
+<link href="Transfer-of-Control-during-a-Destructive-Operation.html#Transfer-of-Control-during-a-Destructive-Operation" rel="next" title="Transfer of Control during a Destructive Operation">
+<link href="Destructive-Operations.html#Destructive-Operations" rel="prev" title="Destructive Operations">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Destructive-Operations.html#Destructive-Operations" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Destructive Operations
+                            </a>
+                            <a href="Destructive-Operations.html#Destructive-Operations.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Destructive Operations
+                            </a>
+                            <a href="Transfer-of-Control-during-a-Destructive-Operation.html#Transfer-of-Control-during-a-Destructive-Operation.html" class="nav-btn nav__next ">
+                                Transfer of Control during a Destructive Operation
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Modification-of-Literal-Objects"></a>
+<a name="Modification-of-Literal-Objects-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Modification of Literal Objects</h4>
+
+<p>The consequences are undefined if <i>literal</i> <i>objects</i> 
+are destructively modified.  For this purpose, the following operations 
+are considered <i>destructive</i>:
+</p>
+<dl compact="compact">
+<dt><b>random-state</b></dt>
+<dd><p>Using it as an <i>argument</i> to the <i>function</i> <b>random</b>.
+</p>
+</dd>
+<dt><b>cons</b></dt>
+<dd><p>Changing the <i>car</i>_1 or <i>cdr</i>_1 of the <i>cons</i>,
+or performing a <i>destructive</i> operation on an <i>object</i> which is either
+the <i>car</i>_2 or the <i>cdr</i>_2 of the <i>cons</i>.
+</p>
+</dd>
+<dt><b>array</b></dt>
+<dd><p>Storing a new value into some element of the <i>array</i>,
+or performing a <i>destructive</i> operation 
+on an <i>object</i> that is already such an <i>element</i>.
+</p>
+<p>Changing the <i>fill pointer</i>, <i>dimensions</i>, or displacement of
+the <i>array</i> (regardless of whether the <i>array</i> is <i>actually adjustable</i>).
+</p>
+<p>Performing a <i>destructive</i> operation on another <i>array</i> 
+that is displaced to the <i>array</i> or that otherwise shares its contents
+with the <i>array</i>.
+</p>
+</dd>
+<dt><b>hash-table</b></dt>
+<dd><p>Performing a <i>destructive</i> operation on any <i>key</i>.
+</p>
+<p>Storing a new <i>value</i>_4 for any <i>key</i>,
+or performing a <i>destructive</i> operation 
+on any <i>object</i> that is such a <i>value</i>.
+</p>
+<p>Adding or removing entries from the <i>hash table</i>.
+</p>
+</dd>
+<dt><b>structure-object</b></dt>
+<dd><p>Storing a new value into any slot,
+or performing a <i>destructive</i> operation on an <i>object</i> 
+that is the value of some slot.
+</p>
+</dd>
+<dt><b>standard-object</b></dt>
+<dd><p>Storing a new value into any slot,
+or performing a <i>destructive</i> operation on an <i>object</i> 
+that is the value of some slot.
+</p>
+<p>Changing the class of the <i>object</i> (<i>e.g.</i>, using the <i>function</i> <b>change-class</b>).
+</p>
+</dd>
+<dt><b>readtable</b></dt>
+<dd><p>Altering the <i>readtable case</i>.
+</p>
+<p>Altering the syntax type of any character in this readtable.
+</p>
+<p>Altering the <i>reader macro function</i> associated with any <i>character</i>
+in the <i>readtable</i>, or altering the <i>reader macro functions</i>
+associated with <i>characters</i> defined as <i>dispatching macro characters</i>
+in the <i>readtable</i>.
+</p>
+</dd>
+<dt><b>stream</b></dt>
+<dd><p>Performing I/O operations on the <i>stream</i>,
+or <i>closing</i> the <i>stream</i>.
+</p>
+</dd>
+<dt>All other standardized types</dt>
+<dd><p>[This category includes, for example, <b>character</b>,
+                                      <b>condition</b>,
+                                      <b>function</b>,
+                                      <b>method-combination</b>,
+                                      <b>method</b>,
+                                      <b>number</b>,
+                                      <b>package</b>,
+                                      <b>pathname</b>,
+                                      <b>restart</b>,
+                                  and <b>symbol</b>.]
+</p>
+<p>There are no <i>standardized</i> <i>destructive</i> operations
+defined on <i>objects</i> of these <i>types</i>.
+</p>
+</dd>
+</dl>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

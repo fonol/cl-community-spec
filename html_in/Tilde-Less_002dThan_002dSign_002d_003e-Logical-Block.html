@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Tilde Less-Than-Sign-&gt; Logical Block (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Tilde Less-Than-Sign-&gt; Logical Block (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Tilde Less-Than-Sign-&gt; Logical Block (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Pretty-Printer-Operations.html#FORMAT-Pretty-Printer-Operations" rel="up" title="FORMAT Pretty Printer Operations">
+<link href="Tilde-I_002d_003e-Indent.html#Tilde-I_002d_003e-Indent" rel="next" title="Tilde I-&gt; Indent">
+<link href="Tilde-Underscore_002d_003e-Conditional-Newline.html#Tilde-Underscore_002d_003e-Conditional-Newline" rel="prev" title="Tilde Underscore-&gt; Conditional Newline">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Tilde-Less_002dThan_002dSign_002d_003e-Logical-Block"></a>
+<div class="header">
+<p>
+Next: <a href="Tilde-I_002d_003e-Indent.html#Tilde-I_002d_003e-Indent" accesskey="n" rel="next">Tilde I-&gt; Indent</a>, Previous: <a href="Tilde-Underscore_002d_003e-Conditional-Newline.html#Tilde-Underscore_002d_003e-Conditional-Newline" accesskey="p" rel="prev">Tilde Underscore-&gt; Conditional Newline</a>, Up: <a href="FORMAT-Pretty-Printer-Operations.html#FORMAT-Pretty-Printer-Operations" accesskey="u" rel="up">FORMAT Pretty Printer Operations</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Tilde-Less_002dThan_002dSign_003a-Logical-Block"></a>
+<h4 class="subsubsection">22.3.5.2 Tilde Less-Than-Sign: Logical Block</h4>
+
+<p><tt>~&lt;...~:&gt;</tt>
+</p>
+<p>If <tt>~:&gt;</tt> is used to terminate a <tt>~&lt;...~&gt;</tt>,
+the directive is equivalent to a call to <b>pprint-logical-block</b>.
+The argument corresponding to the <tt>~&lt;...~:&gt;</tt> directive is treated in
+the same way as the <i>list</i> argument to <b>pprint-logical-block</b>,
+thereby providing automatic support for non-<i>list</i> arguments and
+the detection of circularity, sharing, and depth abbreviation.  
+The portion of the <i>control-string</i> nested within the <tt>~&lt;...~:&gt;</tt>
+specifies the <tt>:prefix</tt> (or <tt>:per-line-prefix</tt>), <tt>:suffix</tt>,
+and body of the <b>pprint-logical-block</b>.
+</p>
+<p>The <i>control-string</i> portion enclosed by <tt>~&lt;...~:&gt;</tt> can be divided
+into segments <tt>~&lt;<i>prefix</i>~;<i>body</i>~;<i>suffix</i>~:&gt;</tt>
+by <tt>~;</tt> directives.  If the first section is terminated by <tt>~@;</tt>, 
+it specifies a per-line prefix rather than a simple prefix.  
+The <i>prefix</i> and <i>suffix</i> cannot contain format directives.  
+An error is signaled if either the prefix or suffix fails to be a
+constant string or if the enclosed portion is divided into more than three segments.
+</p>
+<p>If the enclosed portion is divided into only two segments, the <i>suffix</i>
+defaults to the null string.  If the enclosed portion consists of only
+a single segment, both the <i>prefix</i> and the <i>suffix</i> default to 
+the null string.  If the <i>colon</i> modifier is used (<i>i.e.</i>, <tt>~:&lt;...~:&gt;</tt>),
+the <i>prefix</i> and <i>suffix</i> default to <tt>&quot;(&quot;</tt> and <tt>&quot;)&quot;</tt>
+(respectively) instead of the null string.
+</p>
+<p>The body segment can be any arbitrary <i>format string</i>.
+This <i>format string</i> is applied to the elements of the list
+corresponding to the <tt>~&lt;...~:&gt;</tt> directive as a whole.
+Elements are extracted from this list using <b>pprint-pop</b>,
+thereby providing automatic support for malformed lists, and the detection
+of circularity, sharing, and length abbreviation.
+Within the body segment, <tt>~<tt>^</tt></tt> acts like <b>pprint-exit-if-list-exhausted</b>.
+</p>
+<p><tt>~&lt;...~:&gt;</tt> supports a feature not supported by <b>pprint-logical-block</b>.
+If <tt>~:@&gt;</tt> is used to terminate the directive (<i>i.e.</i>, <tt>~&lt;...~:@&gt;</tt>), 
+then a fill-style conditional newline is automatically inserted after each
+group of blanks immediately contained in the body (except for blanks
+after a ~&lt;<i>Newline</i>&gt; directive).  This makes it easy to achieve the
+equivalent of paragraph filling.
+</p>
+<p>If the <i>at-sign</i> modifier is used with <tt>~&lt;...~:&gt;</tt>, the entire remaining argument
+list is passed to the directive as its argument.  All of the remaining
+arguments are always consumed by <tt>~@&lt;...~:&gt;</tt>, even if they are not all used
+by the <i>format string</i> nested in the directive.  Other than the difference in
+its argument, <tt>~@&lt;...~:&gt;</tt> is exactly the same as <tt>~&lt;...~:&gt;</tt> except that
+circularity detection is not applied if <tt>~@&lt;...~:&gt;</tt> is encountered at top
+level in a <i>format string</i>.  This ensures that circularity detection is
+applied only to data lists, not to <i>format argument</i> <i>lists</i>.
+</p>
+<p><tt>&quot; . #<i>n</i>#&quot;</tt> is printed if circularity or sharing has to be indicated
+for its argument as a whole.
+</p>
+<p>To a considerable extent, the basic form of the directive <tt>~&lt;...~&gt;</tt> is
+incompatible with the dynamic control of the arrangement of output by
+<tt>~W</tt>, <tt>~_</tt>, <tt>~&lt;...~:&gt;</tt>, <tt>~I</tt>, and <tt>~:T</tt>.  As a result, an error 
+is signaled if any of these directives is nested within <tt>~&lt;...~&gt;</tt>.  
+Beyond this, an error is also signaled if the <tt>~&lt;...~:;...~&gt;</tt> form of
+<tt>~&lt;...~&gt;</tt> is used in the same <i>format string</i> with 
+<tt>~W</tt>, <tt>~_</tt>, <tt>~&lt;...~:&gt;</tt>, <tt>~I</tt>, or <tt>~:T</tt>.
+</p>
+<p>See also <a href="Tilde-Less_002dThan_002dSign_002d_003e-Justification.html#Tilde-Less_002dThan_002dSign_002d_003e-Justification">Tilde Less-Than-Sign-&gt; Justification</a>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Tilde-I_002d_003e-Indent.html#Tilde-I_002d_003e-Indent" accesskey="n" rel="next">Tilde I-&gt; Indent</a>, Previous: <a href="Tilde-Underscore_002d_003e-Conditional-Newline.html#Tilde-Underscore_002d_003e-Conditional-Newline" accesskey="p" rel="prev">Tilde Underscore-&gt; Conditional Newline</a>, Up: <a href="FORMAT-Pretty-Printer-Operations.html#FORMAT-Pretty-Printer-Operations" accesskey="u" rel="up">FORMAT Pretty Printer Operations</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

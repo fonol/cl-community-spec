@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Signaling and Handling Conditions (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Signaling and Handling Conditions (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Signaling and Handling Conditions (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Condition-System-Concepts.html#Condition-System-Concepts" rel="up" title="Condition System Concepts">
+<link href="Signaling.html#Signaling" rel="next" title="Signaling">
+<link href="Mentioning-Containing-Function-in-Condition-Reports.html#Mentioning-Containing-Function-in-Condition-Reports" rel="prev" title="Mentioning Containing Function in Condition Reports">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Signaling-and-Handling-Conditions"></a>
+<div class="header">
+<p>
+Next: <a href="Assertions.html#Assertions" accesskey="n" rel="next">Assertions</a>, Previous: <a href="Printing-Conditions.html#Printing-Conditions" accesskey="p" rel="prev">Printing Conditions</a>, Up: <a href="Condition-System-Concepts.html#Condition-System-Concepts" accesskey="u" rel="up">Condition System Concepts</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Signaling-and-Handling-Conditions-1"></a>
+<h4 class="subsection">9.1.4 Signaling and Handling Conditions</h4>
+
+<p>The operation of the condition system depends on the ordering of
+active <i>applicable handlers</i> from most recent to least recent.
+</p>
+<p>Each <i>handler</i> is associated with a <i>type specifier</i>
+that must designate a <i>subtype</i> of <i>type</i> <b>condition</b>.  A <i>handler</i>
+is said to be <i>applicable</i> to a <i>condition</i> if that
+<i>condition</i> is of the <i>type</i> designated by the associated
+<i>type specifier</i>.
+</p>
+<p><i>Active</i> <i>handlers</i> are <i>established</i> by using 
+<b>handler-bind</b> (or an abstraction based on <b>handler-bind</b>, 
+such as <b>handler-case</b> or <b>ignore-errors</b>).
+</p>
+<p><i>Active</i> <i>handlers</i> can be <i>established</i> within the
+dynamic scope of other <i>active</i> <i>handlers</i>.
+At any point during program execution, there is a set of <i>active</i> <i>handlers</i>.
+When a <i>condition</i> is signaled, the <i>most recent</i> active <i>applicable handler</i>
+for that <i>condition</i> is selected from this set.
+Given a <i>condition</i>, the order of recentness of 
+active <i>applicable handlers</i> is defined by the following two rules:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>Each handler in a set of active handlers H_1 is
+more recent than every handler in a set H_2 if the
+handlers in H_2 were active when the handlers in H_1 were
+established.
+</p>
+</dd>
+<dt>2.</dt>
+<dd><p>Let h_1 and h_2 be two applicable active
+handlers established by the same <i>form</i>. Then h_1 is
+more recent than h_2 if h_1 was defined to the left of
+h_2 in the <i>form</i> that established them.
+</p>
+</dd>
+</dl>
+
+<p>Once a handler in a handler binding <i>form</i> (such as 
+<b>handler-bind</b> or <b>handler-case</b>) has been selected, all
+handlers in that <i>form</i> become inactive for 
+the remainder of the signaling process.
+While the selected <i>handler</i> runs, no other <i>handler</i> established
+by that <i>form</i> is active. That is, if the <i>handler</i> declines, 
+no other handler established by that <i>form</i> will be considered for possible invocation.
+</p>
+<p>Figure 9&ndash;4 shows <i>operators</i> relating to 
+the <i>handling</i> of <i>conditions</i>.
+</p>
+<p>&nbsp;&nbsp;<span class="nolinebreak">handler-bind</span>&nbsp;&nbsp;<span class="nolinebreak">handler-case</span>&nbsp;&nbsp;<span class="nolinebreak">ignore-errors</span>&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;9&ndash;4:&nbsp;Operators&nbsp;relating&nbsp;to&nbsp;handling&nbsp;conditions.<!-- /@w -->
+</p>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Signaling.html#Signaling" accesskey="1">Signaling</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Resignaling-a-Condition.html#Resignaling-a-Condition" accesskey="2">Resignaling a Condition</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Restarts.html#Restarts" accesskey="3">Restarts</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Interactive-Use-of-Restarts.html#Interactive-Use-of-Restarts" accesskey="4">Interactive Use of Restarts</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Interfaces-to-Restarts.html#Interfaces-to-Restarts" accesskey="5">Interfaces to Restarts</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Restart-Tests.html#Restart-Tests" accesskey="6">Restart Tests</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Associating-a-Restart-with-a-Condition.html#Associating-a-Restart-with-a-Condition" accesskey="7">Associating a Restart with a Condition</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Assertions.html#Assertions" accesskey="n" rel="next">Assertions</a>, Previous: <a href="Printing-Conditions.html#Printing-Conditions" accesskey="p" rel="prev">Printing Conditions</a>, Up: <a href="Condition-System-Concepts.html#Condition-System-Concepts" accesskey="u" rel="up">Condition System Concepts</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

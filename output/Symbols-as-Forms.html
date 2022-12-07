@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Symbols as Forms (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="The-Evaluation-Model.html#The-Evaluation-Model" rel="up" title="The Evaluation Model">
+<link href="Lexical-Variables.html#Lexical-Variables" rel="next" title="Lexical Variables">
+<link href="Form-Evaluation.html#Form-Evaluation" rel="prev" title="Form Evaluation">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Form-Evaluation.html#Form-Evaluation" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Form Evaluation
+                            </a>
+                            <a href="The-Evaluation-Model.html#The-Evaluation-Model.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                The Evaluation Model
+                            </a>
+                            <a href="Lexical-Variables.html#Lexical-Variables.html" class="nav-btn nav__next ">
+                                Lexical Variables
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Symbols-as-Forms"></a>
+<a name="Symbols-as-Forms-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Symbols as Forms</h4>
+
+<p>If a <i>form</i> is a <i>symbol</i>,
+then it is either a <i>symbol macro</i> or a <i>variable</i>.
+</p>
+<p>The <i>symbol</i> names a <i>symbol macro</i> 
+if there is a <i>binding</i> of the <i>symbol</i> as a <i>symbol macro</i>
+in the current <i>lexical environment</i> 
+</p>
+<p>(see <b>define-symbol-macro</b> and <b>symbol-macrolet</b>).
+</p>
+<p>If the <i>symbol</i> is a <i>symbol macro</i>,
+its expansion function is obtained.
+The expansion function is a function of two arguments, and is invoked
+by calling the <i>macroexpand hook</i> with 
+     the expansion function as its first argument,
+     the <i>symbol</i> as its second argument,
+ and an <i>environment object</i> (corresponding to the current <i>lexical environment</i>)
+      as its third argument.
+The <i>macroexpand hook</i>, in turn, calls the expansion function with the
+<i>form</i> as its first argument and the <i>environment</i> as its second argument.
+The <i>value</i> of the expansion function, which is passed through
+by the <i>macroexpand hook</i>, is a <i>form</i>. 
+This resulting <i>form</i> is processed in place of the original <i>symbol</i>.
+</p>
+<p>If a <i>form</i> is a <i>symbol</i> that is not a <i>symbol macro</i>,
+then it is the <i>name</i> of a <i>variable</i>, and the <i>value</i> of that
+<i>variable</i> is returned. There are three kinds of variables:
+ <i>lexical variables</i>,
+ <i>dynamic variables</i>,
+and
+ <i>constant variables</i>.
+A <i>variable</i> can store one <i>object</i>.
+The main operations on a <i>variable</i> are 
+ to <i>read</i>_1 and 
+ to <i>write</i>_1
+its <i>value</i>.
+</p>
+<p>An error of <i>type</i> <b>unbound-variable</b> should be signaled if
+an <i>unbound variable</i> is referenced.
+</p>
+<p><i>Non-constant variables</i> can be <i>assigned</i> by using <b>setq</b> 
+or <i>bound</i>_3 by using <b>let</b>.
+Figure 3&ndash;1 lists some <i>defined names</i> that
+are applicable to assigning, binding, and defining <i>variables</i>.
+</p>
+<p>&nbsp;&nbsp;boundp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;progv&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defconstant&nbsp;&nbsp;&nbsp;let*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;psetq&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defparameter&nbsp;&nbsp;makunbound&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;set&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defvar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">multiple-value-bind</span>&nbsp;&nbsp;setq&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;lambda&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">multiple-value-setq</span>&nbsp;&nbsp;<span class="nolinebreak">symbol-value</span>&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;3&ndash;1:&nbsp;Some&nbsp;Defined&nbsp;Names&nbsp;Applicable&nbsp;to&nbsp;Variables<!-- /@w -->
+</p>
+
+<p>The following is a description of each kind of variable.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

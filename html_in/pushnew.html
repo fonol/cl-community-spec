@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>pushnew (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="pushnew (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="pushnew (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conses-Dictionary.html#Conses-Dictionary" rel="up" title="Conses Dictionary">
+<link href="set_002ddifference.html#set_002ddifference" rel="next" title="set-difference">
+<link href="adjoin.html#adjoin" rel="prev" title="adjoin">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="pushnew"></a>
+<div class="header">
+<p>
+Next: <a href="set_002ddifference.html#set_002ddifference" accesskey="n" rel="next">set-difference</a>, Previous: <a href="adjoin.html#adjoin" accesskey="p" rel="prev">adjoin</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="pushnew-_005bMacro_005d"></a>
+<h4 class="subsection">14.2.45 pushnew                                                             [Macro]</h4>
+
+<p><code>pushnew</code>  <i>item place &amp;key</i> key test test-not<br>
+   &rArr;  <i>new-place-value</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-314"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>item</i>&mdash;an <i>object</i>.  
+</p>
+<p><i>place</i>&mdash;a <i>place</i>, the <i>value</i> of which is a <i>proper list</i>. 
+</p>
+<p><i>test</i>&mdash;a <i>designator</i> for a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test-not</i>&mdash;a <i>designator</i> for 
+  a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>key</i>&mdash;a <i>designator</i> for a <i>function</i> of one argument,
+  or <b>nil</b>.
+</p>
+<p><i>new-place-value</i>&mdash;a <i>list</i> (the new <i>value</i> of <i>place</i>).
+</p>
+<a name="Description_003a_003a-415"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>pushnew</b> tests whether  <i>item</i> is the same as any existing
+element of the <i>list</i> stored in <i>place</i>.  If <i>item</i> is not,
+it is prepended to the <i>list</i>, and the new <i>list</i> is stored in
+<i>place</i>.
+</p>
+<p><b>pushnew</b> returns the new <i>list</i> that is stored in <i>place</i>.
+</p>
+<p>Whether or not <i>item</i> is already a member of the <i>list</i> that is
+in <i>place</i> is determined by comparisons using <tt>:test</tt> or <tt>:test-not</tt>.
+The first argument to the <tt>:test</tt> or <tt>:test-not</tt>
+function is <i>item</i>; the second argument is
+an element of the <i>list</i> in <i>place</i> as returned by
+the <tt>:key</tt> function (if supplied).
+</p>
+<p>If <tt>:key</tt> is supplied, it is used to extract the part to be tested from
+both <i>item</i> and the <i>list</i> element,
+as for <b>adjoin</b>.
+</p>
+<p>The argument to the <tt>:key</tt> function 
+is an element of the <i>list</i> stored in 
+<i>place</i>. The <tt>:key</tt> function typically returns part
+part of the element of the <i>list</i>.
+If <tt>:key</tt> is not supplied or <b>nil</b>, the <i>list</i> 
+element is used.
+</p>
+<p>For information about the <i>evaluation</i> of <i>subforms</i> of <i>place</i>,
+see <a href="Evaluation-of-Subforms-to-Places.html#Evaluation-of-Subforms-to-Places">Evaluation of Subforms to Places</a>.
+</p>
+<p>It is <i>implementation-dependent</i> whether or not <b>pushnew</b> 
+actually executes the storing form for its <i>place</i> in the
+situation where the <i>item</i> is already a member of the <i>list</i>
+held by <i>place</i>.
+</p>
+<a name="Examples_003a_003a-298"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (setq x '(a (b c) d)) &rArr;  (A (B C) D)
+ (pushnew 5 (cadr x)) &rArr;  (5 B C)   
+ x &rArr;  (A (5 B C) D)
+ (pushnew 'b (cadr x)) &rArr;  (5 B C)  
+ x &rArr;  (A (5 B C) D)
+ (setq lst '((1) (1 2) (1 2 3))) &rArr;  ((1) (1 2) (1 2 3))
+ (pushnew '(2) lst) &rArr;  ((2) (1) (1 2) (1 2 3))
+ (pushnew '(1) lst) &rArr;  ((1) (2) (1) (1 2) (1 2 3))
+ (pushnew '(1) lst :test 'equal) &rArr;  ((1) (2) (1) (1 2) (1 2 3))
+ (pushnew '(1) lst :key #'car) &rArr;  ((1) (2) (1) (1 2) (1 2 3)) 
+</pre></div>
+
+<a name="Side-Effects_003a_003a-45"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>The contents of <i>place</i> may be modified.
+</p>
+<a name="See-Also_003a_003a-339"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="push.html#push">push</a>
+,
+<a href="adjoin.html#adjoin">adjoin</a>
+,
+<a href="Generalized-Reference.html#Generalized-Reference">Generalized Reference</a>
+</p>
+<a name="Notes_003a_003a-225"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The effect of
+</p><div class="example">
+<pre class="example"> (pushnew item place :test p)
+</pre></div>
+
+<p>is roughly equivalent to
+</p><div class="example">
+<pre class="example"> (setf place (adjoin item place :test p))
+</pre></div>
+
+<p>except that the <i>subforms</i> of <tt>place</tt> are evaluated only once, 
+and <tt>item</tt> is evaluated before <tt>place</tt>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="set_002ddifference.html#set_002ddifference" accesskey="n" rel="next">set-difference</a>, Previous: <a href="adjoin.html#adjoin" accesskey="p" rel="prev">adjoin</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>digit-char-p (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Characters-Dictionary.html#Characters-Dictionary" rel="up" title="Characters Dictionary">
+<link href="graphic_002dchar_002dp.html#graphic_002dchar_002dp" rel="next" title="graphic-char-p">
+<link href="digit_002dchar.html#digit_002dchar" rel="prev" title="digit-char">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="digit_002dchar.html#digit_002dchar" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                digit-char
+                            </a>
+                            <a href="Characters-Dictionary.html#Characters-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Characters Dictionary
+                            </a>
+                            <a href="graphic_002dchar_002dp.html#graphic_002dchar_002dp.html" class="nav-btn nav__next ">
+                                graphic-char-p
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="digit_002dchar_002dp"></a>
+<a name="digit_002dchar_002dp-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">digit-char-p                                                     </h4>
+
+<p><code>digit-char-p</code>  <i>char &amp;optional</i> radix &rArr;  <i>weight</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-264"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>char</i>&mdash;a <i>character</i>.
+</p>
+<p><i>radix</i>&mdash;a <i>radix</i>.
+ The default is <tt>10</tt>.
+</p>
+<p><i>weight</i>&mdash;either a non-negative <i>integer</i> less than <i>radix</i>, 
+		 or <i>false</i>.
+</p>
+<a name="Description_003a_003a-360"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Tests whether <i>char</i> is a digit in the specified <i>radix</i>
+(<i>i.e.</i>, with a weight less than <i>radix</i>).
+If it is a digit in that <i>radix</i>,
+its weight is returned as an <i>integer</i>; 
+otherwise <b>nil</b> is returned.
+</p>
+<a name="Examples_003a_003a-248"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (digit-char-p #\5)    &rArr;  5
+ (digit-char-p #\5 2)  &rArr;  <i>false</i>
+ (digit-char-p #\A)    &rArr;  <i>false</i>
+ (digit-char-p #\a)    &rArr;  <i>false</i>
+ (digit-char-p #\A 11) &rArr;  10
+ (digit-char-p #\a 11) &rArr;  10
+ (mapcar #'(lambda (radix) 
+             (map 'list #'(lambda (x) (digit-char-p x radix)) 
+                  &quot;059AaFGZ&quot;))
+         '(2 8 10 16 36))
+ &rArr;  ((0 NIL NIL NIL NIL NIL NIL NIL)
+     (0 5 NIL NIL NIL NIL NIL NIL)
+     (0 5 9 NIL NIL NIL NIL NIL)
+     (0 5 9 10 10 15 NIL NIL)
+     (0 5 9 10 10 15 16 35))
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-61"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p>None.
+(In particular, the results of this predicate are independent 
+of any special syntax which might have been enabled in the <i>current readtable</i>.)
+</p>
+<a name="See-Also_003a_003a-290"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="alphanumericp.html#alphanumericp">alphanumericp</a>
+</p>
+<a name="Notes_003a_003a-192"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>Digits are <i>graphic</i> <i>characters</i>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>load-time-value (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="load-time-value (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="load-time-value (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="quote.html#quote" rel="next" title="quote">
+<link href="eval_002dwhen.html#eval_002dwhen" rel="prev" title="eval-when">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="load_002dtime_002dvalue"></a>
+<div class="header">
+<p>
+Next: <a href="quote.html#quote" accesskey="n" rel="next">quote</a>, Previous: <a href="eval_002dwhen.html#eval_002dwhen" accesskey="p" rel="prev">eval-when</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="load_002dtime_002dvalue-_005bSpecial-Operator_005d"></a>
+<h4 class="subsection">3.8.6 load-time-value                                          [Special Operator]</h4>
+
+<p><code>load-time-value</code>  <i>form &amp;optional</i> read-only-p &rArr;  <i>object</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-4"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>form</i>&mdash;a <i>form</i>; evaluated as described below.
+</p>
+<p><i>read-only-p</i>&mdash;a <i>boolean</i>; not evaluated.
+</p>
+<p><i>object</i>&mdash;the <i>primary value</i> resulting from evaluating <i>form</i>.
+</p>
+<a name="Description_003a_003a-5"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>load-time-value</b> provides a mechanism for delaying evaluation of <i>form</i>
+until the expression is in the run-time environment; see <a href="Compilation.html#Compilation">Compilation</a>.
+</p>
+<p><i>Read-only-p</i> designates whether the result can be considered a
+<i>constant object</i>.
+If <b>t</b>,
+   the result is a read-only quantity that can, 
+   if appropriate to the <i>implementation</i>, 
+   be copied into read-only space and/or <i>coalesced</i> with <i>similar</i>
+   <i>constant objects</i> from other <i>programs</i>.
+If <b>nil</b> (the default),
+   the result must be neither copied nor coalesced;
+   it must be considered to be potentially modifiable data.
+</p>
+<p>If a <b>load-time-value</b> expression is processed by <b>compile-file</b>,
+the compiler performs its normal semantic processing (such as macro expansion 
+and translation into machine code) on <i>form</i>, but arranges for the
+execution of <i>form</i> to occur at load time in a <i>null lexical environment</i>, 
+with the result of this <i>evaluation</i> then being treated as 
+a <i>literal object</i>
+at run time.  It is guaranteed that the evaluation of <i>form</i> 
+will take place only once when the <i>file</i> is <i>loaded</i>, but 
+the order of evaluation with respect to the evaluation of
+<i>top level forms</i> in the file is <i>implementation-dependent</i>.
+</p>
+<a name="index-order-of-evaluation"></a>
+
+<a name="index-evaluation-order"></a>
+
+<p>If a <b>load-time-value</b> expression appears within a function compiled
+with <b>compile</b>, the <i>form</i> is evaluated at compile time in a
+<i>null lexical environment</i>.  The result of this compile-time evaluation 
+is treated as
+a <i>literal object</i>
+in the compiled code.  
+</p>
+<p>If a <b>load-time-value</b> expression is processed by <b>eval</b>,
+<i>form</i> is evaluated in a <i>null lexical environment</i>, 
+and one value is returned.  Implementations that implicitly compile
+(or partially compile) expressions processed by <b>eval</b> 
+might evaluate <i>form</i> only once, at the time this compilation is performed.  
+</p>
+<p>If the <i>same</i> <i>list</i> <tt>(load-time-value <i>form</i>)</tt> is
+evaluated or compiled more than once, it is <i>implementation-dependent</i>
+whether <i>form</i> is evaluated only once or is evaluated more than once.
+This can happen both when an expression being evaluated or compiled shares
+substructure, and when the <i>same</i> <i>form</i> is processed by <b>eval</b> or 
+<b>compile</b> multiple times.                               
+Since a <b>load-time-value</b> expression can be
+  referenced in more than one place and can be evaluated multiple times
+  by <b>eval</b>, it is 
+<i>implementation-dependent</i> whether each execution returns
+  a fresh <i>object</i> 
+or returns the same <i>object</i> as some other execution.
+  Users must use caution when destructively modifying the resulting
+  <i>object</i>.
+</p>
+<p>If two lists <tt>(load-time-value <i>form</i>)</tt> 
+that are the <i>same</i> under <b>equal</b> but are not <i>identical</i>
+are evaluated or compiled,
+their values always come from distinct evaluations of <i>form</i>.
+Their <i>values</i> may not be coalesced
+unless <i>read-only-p</i> is <b>t</b>.
+</p>
+<a name="Examples_003a_003a-4"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">;;; The function INCR1 always returns the same value, even in different images.
+;;; The function INCR2 always returns the same value in a given image, 
+;;; but the value it returns might vary from image to image.
+(defun incr1 (x) (+ x #.(random 17)))
+(defun incr2 (x) (+ x (load-time-value (random 17))))
+
+;;; The function FOO1-REF references the nth element of the first of 
+;;; the *FOO-ARRAYS* that is available at load time.  It is permissible for
+;;; that array to be modified (e.g., by SET-FOO1-REF); FOO1-REF will see the
+;;; updated values.
+(defvar *foo-arrays* (list (make-array 7) (make-array 8)))
+(defun foo1-ref (n) (aref (load-time-value (first *my-arrays*) nil) n))
+(defun set-foo1-ref (n val) 
+  (setf (aref (load-time-value (first *my-arrays*) nil) n) val))
+
+;;; The function BAR1-REF references the nth element of the first of 
+;;; the *BAR-ARRAYS* that is available at load time.  The programmer has
+;;; promised that the array will be treated as read-only, so the system 
+;;; can copy or coalesce the array.
+(defvar *bar-arrays* (list (make-array 7) (make-array 8)))
+(defun bar1-ref (n) (aref (load-time-value (first *my-arrays*) t) n))
+
+;;; This use of LOAD-TIME-VALUE permits the indicated vector to be coalesced
+;;; even though NIL was specified, because the object was already read-only
+;;; when it was written as a literal vector rather than created by a constructor.
+;;; User programs must treat the vector v as read-only.
+(defun baz-ref (n)
+  (let ((v (load-time-value #(A B C) nil)))
+    (values (svref v n) v)))
+
+;;; This use of LOAD-TIME-VALUE permits the indicated vector to be coalesced
+;;; even though NIL was specified in the outer situation because T was specified
+;;; in the inner situation.  User programs must treat the vector v as read-only.
+(defun baz-ref (n)
+  (let ((v (load-time-value (load-time-value (vector 1 2 3) t) nil)))
+    (values (svref v n) v)))
+</pre></div>
+
+<a name="See-Also_003a_003a-5"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="compile_002dfile.html#compile_002dfile">compile-file</a>
+,
+<a href="compile.html#compile">compile</a>
+,
+<a href="eval.html#eval">eval</a>
+,
+<a href="Minimal-Compilation.html#Minimal-Compilation">Minimal Compilation</a>,
+<a href="Compilation.html#Compilation">Compilation</a>
+</p>
+<a name="Notes_003a_003a-4"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>load-time-value</b> must appear outside of quoted structure in a
+&ldquo;for <i>evaluation</i>&rdquo; position.  In situations which would appear to call
+for use of <b>load-time-value</b> within a quoted structure, 
+the <i>backquote</i> <i>reader macro</i> is probably called for;
+see <a href="Backquote.html#Backquote">Backquote</a>.
+</p>
+<p>Specifying <b>nil</b> for <i>read-only-p</i> is not a way to force an object
+to become modifiable if it has already been made read-only.  It is only a way
+to say that, for an object that is modifiable, this operation is not intended
+to make that object read-only.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="quote.html#quote" accesskey="n" rel="next">quote</a>, Previous: <a href="eval_002dwhen.html#eval_002dwhen" accesskey="p" rel="prev">eval-when</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

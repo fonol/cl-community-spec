@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>with-hash-table-iterator (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="with-hash-table-iterator (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="with-hash-table-iterator (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Hash-Tables-Dictionary.html#Hash-Tables-Dictionary" rel="up" title="Hash Tables Dictionary">
+<link href="clrhash.html#clrhash" rel="next" title="clrhash">
+<link href="maphash.html#maphash" rel="prev" title="maphash">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="with_002dhash_002dtable_002diterator"></a>
+<div class="header">
+<p>
+Next: <a href="clrhash.html#clrhash" accesskey="n" rel="next">clrhash</a>, Previous: <a href="maphash.html#maphash" accesskey="p" rel="prev">maphash</a>, Up: <a href="Hash-Tables-Dictionary.html#Hash-Tables-Dictionary" accesskey="u" rel="up">Hash Tables Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="with_002dhash_002dtable_002diterator-_005bMacro_005d"></a>
+<h4 class="subsection">18.2.12 with-hash-table-iterator                                            [Macro]</h4>
+
+<p><code>with-hash-table-iterator</code>  <i><span class="roman">(</span>name hash-table<span class="roman">)</span> 
+	           {<i>declaration</i>}*</i> {<i>form</i>}* &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-386"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>name</i>&mdash;a name suitable for the first argument to <b>macrolet</b>.
+</p>
+<p><i>hash-table</i>&mdash;a <i>form</i>, evaluated once, that should produce a <i>hash table</i>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by <i>forms</i>.
+</p>
+<a name="Description_003a_003a-502"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Within the lexical scope of the body, <i>name</i> is defined via <b>macrolet</b> 
+such that successive invocations of <tt>(<i>name</i>)</tt> return the items,
+one by one, from the <i>hash table</i> that is obtained by evaluating
+<i>hash-table</i> only once.
+</p>
+<p>An invocation <tt>(<i>name</i>)</tt> returns three values as follows:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>A <i>generalized boolean</i> that is <i>true</i> if an entry is returned.
+</p></dd>
+<dt>2.</dt>
+<dd><p>The key from the <i>hash-table</i> entry.
+</p></dd>
+<dt>3.</dt>
+<dd><p>The value from the <i>hash-table</i> entry.
+</p></dd>
+</dl>
+
+<p>After all entries have been returned by successive invocations of
+<tt>(<i>name</i>)</tt>, then only one value is returned, namely <b>nil</b>.
+</p>
+<p>It is unspecified what happens if any of the implicit interior state 
+of an iteration is returned outside the dynamic extent of the 
+<b>with-hash-table-iterator</b> <i>form</i>
+such as by returning some <i>closure</i> over the invocation <i>form</i>.
+</p>
+<p>Any number of invocations of <b>with-hash-table-iterator</b> 
+can be nested, and the body of the innermost one can invoke all of the
+locally <i>established</i> <i>macros</i>, provided all of those <i>macros</i>
+have <i>distinct</i> names.
+</p>
+<a name="Examples_003a_003a-366"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<p>The following function should return <b>t</b> on any 
+<i>hash table</i>, and signal
+an error if the usage of <b>with-hash-table-iterator</b> does not agree
+with the corresponding usage of <b>maphash</b>.
+</p>
+<div class="example">
+<pre class="example"> (defun test-hash-table-iterator (hash-table)
+   (let ((all-entries '())
+         (generated-entries '())
+         (unique (list nil)))
+     (maphash #'(lambda (key value) (push (list key value) all-entries))
+              hash-table)
+     (with-hash-table-iterator (generator-fn hash-table)
+       (loop     
+         (multiple-value-bind (more? key value) (generator-fn)
+           (unless more? (return))
+           (unless (eql value (gethash key hash-table unique))
+             (error &quot;Key ~S not found for value ~S&quot; key value))
+           (push (list key value) generated-entries))))
+     (unless (= (length all-entries)
+                (length generated-entries)
+                (length (union all-entries generated-entries
+                               :key #'car :test (hash-table-test hash-table))))
+       (error &quot;Generated entries and Maphash entries don't correspond&quot;))
+     t))
+</pre></div>
+
+<p>The following could be an acceptable definition of 
+<b>maphash</b>, implemented by <b>with-hash-table-iterator</b>.
+</p>
+<div class="example">
+<pre class="example"> (defun maphash (function hash-table)
+   (with-hash-table-iterator (next-entry hash-table)
+     (loop (multiple-value-bind (more key value) (next-entry)
+             (unless more (return nil))
+             (funcall function key value)))))
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-173"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>The consequences are undefined if the local function named <i>name</i>
+<i>established</i> by <b>with-hash-table-iterator</b> is called after it has
+returned <i>false</i> as its <i>primary value</i>.
+</p>
+<a name="See-Also_003a_003a-410"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="clrhash.html#clrhash" accesskey="n" rel="next">clrhash</a>, Previous: <a href="maphash.html#maphash" accesskey="p" rel="prev">maphash</a>, Up: <a href="Hash-Tables-Dictionary.html#Hash-Tables-Dictionary" accesskey="u" rel="up">Hash Tables Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

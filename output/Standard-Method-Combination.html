@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Standard Method Combination (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" rel="up" title="Method Selection and Combination">
+<link href="Declarative-Method-Combination.html#Declarative-Method-Combination" rel="next" title="Declarative Method Combination">
+<link href="Applying-method-combination-to-the-sorted-list-of-applicable-methods.html#Applying-method-combination-to-the-sorted-list-of-applicable-methods" rel="prev" title="Applying method combination to the sorted list of applicable methods">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Applying-method-combination-to-the-sorted-list-of-applicable-methods.html#Applying-method-combination-to-the-sorted-list-of-applicable-methods" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Applying method combination to the sorted list of applicable methods
+                            </a>
+                            <a href="Method-Selection-and-Combination.html#Method-Selection-and-Combination.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Method Selection and Combination
+                            </a>
+                            <a href="Declarative-Method-Combination.html#Declarative-Method-Combination.html" class="nav-btn nav__next ">
+                                Declarative Method Combination
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Standard-Method-Combination"></a>
+<a name="Standard-Method-Combination-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Standard Method Combination</h4>
+
+<a name="index-standard"></a>
+
+<p>Standard method combination is supported by the <i>class</i> <b>standard-generic-function</b>.
+It is used if no other type of method
+combination is specified or if the built-in method combination type
+<b>standard</b> is specified. 
+</p>
+<p>Primary methods define the main action of the effective method,  
+while auxiliary methods modify that action in one of three ways.
+A primary method has no method <i>qualifiers</i>.
+</p>
+<p>An auxiliary method is a method whose 
+<i>qualifier</i> is <tt>:before</tt>, <tt>:after</tt>, or <tt>:around</tt>.
+Standard method combination
+allows no more than one <i>qualifier</i> per method; if a method definition
+specifies more than one <i>qualifier</i> per method, an error is signaled.
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>A <i>before method</i> has the keyword <tt>:before</tt> as its only <i>qualifier</i>.
+A <i>before method</i> specifies <i>code</i> that is to be run before any 
+<i>primary methods</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>An <i>after method</i> has the keyword <tt>:after</tt> as its only <i>qualifier</i>.
+An <i>after method</i> specifies <i>code</i> that is to be run after
+<i>primary methods</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>An <i>around method</i> has the keyword <tt>:around</tt> as its only <i>qualifier</i>.
+An <i>around method</i> specifies <i>code</i> that is to be run instead of other
+<i>applicable methods</i>,
+but which might contain explicit <i>code</i>
+which calls some of those <i>shadowed</i> <i>methods</i>
+(via <b>call-next-method</b>).
+</p>
+</dd>
+</dl>
+
+<p>The semantics of standard method combination is as follows:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>If there are any <i>around methods</i>, the most specific
+<i>around method</i> is called.  It supplies the value or values of the
+generic function.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>Inside the body of an <i>around method</i>, 
+<b>call-next-method</b> can be used to call the <i>next method</i>.  When the next
+method returns, the <i>around method</i> can execute more code,
+perhaps based on the returned value or values.
+The <i>generic function</i> <b>no-next-method</b> is invoked if <b>call-next-method</b> is used and
+there is no <i>applicable method</i> to call.  The <i>function</i> <b>next-method-p</b>
+may be used to determine whether a <i>next method</i> exists.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>If an <i>around method</i> invokes <b>call-next-method</b>,
+the next most specific <i>around method</i>
+is called, if one is applicable.  If there are no <i>around methods</i> 
+or if <b>call-next-method</b> is called by the least
+specific <i>around method</i>, the other methods are called as
+follows:
+</p><dl compact="compact">
+<dt>&ndash;</dt>
+<dd><p>All the <i>before methods</i> are called, in
+most-specific-first order.  Their values are ignored.
+An error is signaled if <b>call-next-method</b> is used in a
+<i>before method</i>.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>The most specific primary method is called.  Inside the
+body of a primary method, <b>call-next-method</b> may be used to call
+the next most specific primary method.  When that method returns, the
+previous primary method can execute more code, perhaps based on the
+returned value or values.  The generic function <b>no-next-method</b>
+is invoked if <b>call-next-method</b> is used and there are no more
+applicable primary methods.  The <i>function</i> <b>next-method-p</b> may be
+used to determine whether a <i>next method</i> exists.  If <b>call-next-method</b>
+is not used, only the most specific <i>primary method</i> is called.
+</p>
+</dd>
+<dt>&ndash;</dt>
+<dd><p>All the <i>after methods</i> are called in
+most-specific-last order.  Their values are ignored.
+An error is signaled if <b>call-next-method</b> is used in an
+<i>after method</i>.
+</p></dd>
+</dl>
+
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>If no <i>around methods</i> were invoked, the most
+specific primary method supplies the value or values returned by the
+generic function.  The value or values returned by the invocation of
+<b>call-next-method</b> in the least specific <i>around method</i> are
+those returned by the most specific primary method.
+</p>
+</dd>
+</dl>
+
+<p>In standard method combination, if there is an applicable method
+but no applicable primary method, an error is signaled.
+</p>
+<p>The <i>before methods</i> are run in most-specific-first order while
+the <i>after methods</i> are run in least-specific-first order.  The
+design rationale for this difference can be illustrated with an
+example.  Suppose class C_1 modifies the behavior of its
+superclass, C_2, by adding <i>before methods</i> and <i>after methods</i>.
+Whether the behavior of the class C_2 is defined
+directly by methods on C_2 or is inherited from its superclasses
+does not affect the relative order of invocation of methods on
+instances of the class C_1.  Class C_1&rsquo;s 
+<i>before method</i> runs before all of class C_2&rsquo;s methods.  
+Class C_1&rsquo;s <i>after method</i> runs after all of class C_2&rsquo;s methods.
+</p>
+<p>By contrast, all <i>around methods</i> run before any other methods
+run.  Thus a less specific <i>around method</i> runs before a more
+specific primary method.
+</p>
+<p>If only primary methods are used and if <b>call-next-method</b> is not
+used, only the most specific method is invoked; that is, more specific
+methods shadow more general ones. 
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

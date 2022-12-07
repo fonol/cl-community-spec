@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Input (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Input (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Input (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Introduction-to-Streams.html#Introduction-to-Streams" rel="up" title="Introduction to Streams">
+<link href="Open-and-Closed-Streams.html#Open-and-Closed-Streams" rel="next" title="Open and Closed Streams">
+<link href="Abstract-Classifications-of-Streams-_0028Introduction-to-Streams_0029.html#Abstract-Classifications-of-Streams-_0028Introduction-to-Streams_0029" rel="prev" title="Abstract Classifications of Streams (Introduction to Streams)">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Input"></a>
+<div class="header">
+<p>
+Next: <a href="Open-and-Closed-Streams.html#Open-and-Closed-Streams" accesskey="n" rel="next">Open and Closed Streams</a>, Previous: <a href="Abstract-Classifications-of-Streams-_0028Introduction-to-Streams_0029.html#Abstract-Classifications-of-Streams-_0028Introduction-to-Streams_0029" accesskey="p" rel="prev">Abstract Classifications of Streams (Introduction to Streams)</a>, Up: <a href="Introduction-to-Streams.html#Introduction-to-Streams" accesskey="u" rel="up">Introduction to Streams</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Input_002c-Output_002c-and-Bidirectional-Streams"></a>
+<h4 class="subsubsection">21.1.1.2 Input, Output, and Bidirectional Streams</h4>
+
+<p>A <i>stream</i>, whether a <i>character</i> <i>stream</i> or a <i>binary</i> <i>stream</i>,
+can be an <i>input</i>
+<a name="index-input"></a>
+ <i>stream</i>
+<a name="index-stream-4"></a>
+ (source of data),
+       an <i>output</i>
+<a name="index-output"></a>
+ <i>stream</i>
+<a name="index-stream-5"></a>
+ (sink for data),
+       both, 
+    or (<i>e.g.</i>, when &ldquo;<tt>:direction :probe</tt>&rdquo; is given to <b>open</b>) neither.
+</p>
+<p>Figure 21&ndash;2 shows <i>operators</i> relating to
+<i>input</i> <i>streams</i>.
+</p>
+<p>&nbsp;&nbsp;<span class="nolinebreak">clear-input</span>&nbsp;&nbsp;<span class="nolinebreak">read-byte</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">read-from-string</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;listen&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">read-char</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">read-line</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">peek-char</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">read-char-no-hang</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">read-preserving-whitespace</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;read&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">read-delimited-list</span>&nbsp;&nbsp;<span class="nolinebreak">unread-char</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;21&ndash;2:&nbsp;Operators&nbsp;relating&nbsp;to&nbsp;Input&nbsp;Streams.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<p>Figure 21&ndash;3 shows <i>operators</i> relating to
+<i>output</i> <i>streams</i>.
+</p>
+<p>&nbsp;&nbsp;<span class="nolinebreak">clear-output</span>&nbsp;&nbsp;&nbsp;prin1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;write&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">finish-output</span>&nbsp;&nbsp;<span class="nolinebreak">prin1-to-string</span>&nbsp;&nbsp;<span class="nolinebreak">write-byte</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">force-output</span>&nbsp;&nbsp;&nbsp;princ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">write-char</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;format&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">princ-to-string</span>&nbsp;&nbsp;<span class="nolinebreak">write-line</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">fresh-line</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">write-string</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;pprint&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;terpri&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">write-to-string</span>&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;21&ndash;3:&nbsp;Operators&nbsp;relating&nbsp;to&nbsp;Output&nbsp;Streams.<!-- /@w -->
+</p>
+
+<p>A <i>stream</i> that is both an <i>input</i> <i>stream</i> and an <i>output</i> <i>stream</i>
+is called a <i>bidirectional</i>
+<a name="index-bidirectional"></a>
+ <i>stream</i>
+<a name="index-stream-6"></a>
+.
+See the <i>functions</i> <b>input-stream-p</b> and <b>output-stream-p</b>.
+</p>
+<p>Any of the <i>operators</i> listed in <i>Figure~21&ndash;2</i> or <i>Figure~21&ndash;3</i>
+can be used with <i>bidirectional</i> <i>streams</i>.  In addition, Figure 21&ndash;4
+shows a list of <i>operators</i> that relate specificaly to 
+<i>bidirectional</i> <i>streams</i>.
+</p>
+<p>&nbsp;&nbsp;<span class="nolinebreak">y-or-n-p</span>&nbsp;&nbsp;<span class="nolinebreak">yes-or-no-p</span>&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;21&ndash;4:&nbsp;Operators&nbsp;relating&nbsp;to&nbsp;Bidirectional&nbsp;Streams.<!-- /@w -->
+</p>
+
+
+
+
+</body>
+</html>

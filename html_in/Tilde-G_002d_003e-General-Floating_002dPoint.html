@@ -1,0 +1,98 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Tilde G-&gt; General Floating-Point (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Tilde G-&gt; General Floating-Point (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Tilde G-&gt; General Floating-Point (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Floating_002dPoint-Printers.html#FORMAT-Floating_002dPoint-Printers" rel="up" title="FORMAT Floating-Point Printers">
+<link href="Tilde-Dollarsign_002d_003e-Monetary-Floating_002dPoint.html#Tilde-Dollarsign_002d_003e-Monetary-Floating_002dPoint" rel="next" title="Tilde Dollarsign-&gt; Monetary Floating-Point">
+<link href="Tilde-E_002d_003e-Exponential-Floating_002dPoint.html#Tilde-E_002d_003e-Exponential-Floating_002dPoint" rel="prev" title="Tilde E-&gt; Exponential Floating-Point">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Tilde-G_002d_003e-General-Floating_002dPoint"></a>
+<div class="header">
+<p>
+Next: <a href="Tilde-Dollarsign_002d_003e-Monetary-Floating_002dPoint.html#Tilde-Dollarsign_002d_003e-Monetary-Floating_002dPoint" accesskey="n" rel="next">Tilde Dollarsign-&gt; Monetary Floating-Point</a>, Previous: <a href="Tilde-E_002d_003e-Exponential-Floating_002dPoint.html#Tilde-E_002d_003e-Exponential-Floating_002dPoint" accesskey="p" rel="prev">Tilde E-&gt; Exponential Floating-Point</a>, Up: <a href="FORMAT-Floating_002dPoint-Printers.html#FORMAT-Floating_002dPoint-Printers" accesskey="u" rel="up">FORMAT Floating-Point Printers</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Tilde-G_003a-General-Floating_002dPoint"></a>
+<h4 class="subsubsection">22.3.3.3 Tilde G: General Floating-Point</h4>
+
+<p>The next <i>arg</i> is printed as a <i>float</i> 
+in either fixed-format or exponential notation as appropriate.
+</p>
+<p>The full form is <tt>~<i>w</i>,<i>d</i>,<i>e</i>,<i>k</i>,<i>overflowchar</i>,<i>padchar</i>,<i>exponentchar</i>G</tt>.
+The format in which to print <i>arg</i> depends on the magnitude (absolute
+value) of the <i>arg</i>.  Let <i>n</i> be an integer such that
+10^n-1 \le |<i>arg</i>| &lt; 10^<i>n</i>.
+Let <i>ee</i> equal <i>e</i>+2, or 4 if <i>e</i> is omitted.
+Let <i>ww</i> equal <i>w</i>- <i>ee</i>,
+or <b>nil</b> if <i>w</i> is omitted.  If <i>d</i> is omitted, first let <i>q</i>
+be the number of digits needed to print <i>arg</i> with no loss
+of information and without leading or trailing zeros;
+then let <i>d</i> equal <tt>(max <i>q</i> (min <i>n</i> 7))</tt>.
+Let <i>dd</i> equal <i>d</i>- <i>n</i>.
+</p>
+<p>If 0 \le <i>dd</i> \le <i>d</i>, then <i>arg</i> is printed
+as if by the format directives
+</p>
+<p><tt>~<i>ww</i>,<i>dd</i>,,<i>overflowchar</i>,<i>padchar</i>F~<i>ee</i>@T</tt>
+</p>
+<p>Note that the scale factor <i>k</i> is not passed to the <tt>~F</tt>
+directive.  For all other values of <i>dd</i>, <i>arg</i> is printed as if
+by the format directive
+</p>
+<p><tt>~<i>w</i>,<i>d</i>,<i>e</i>,<i>k</i>,<i>overflowchar</i>,<i>padchar</i>,<i>exponentchar</i>E</tt>
+</p>
+<p>In either case, an <tt>@</tt>
+modifier is supplied to the <tt>~F</tt>
+or <tt>~E</tt> directive if and only if one was supplied to the
+<tt>~G</tt> directive.
+</p>
+<p><tt>~G</tt> binds
+     <b>*print-escape*</b> to <i>false</i>
+</p>
+<p>and <b>*print-readably*</b> to <i>false</i>.
+</p>
+
+
+
+</body>
+</html>

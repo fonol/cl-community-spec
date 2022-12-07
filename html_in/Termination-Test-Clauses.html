@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Termination Test Clauses (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Termination Test Clauses (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Termination Test Clauses (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="The-LOOP-Facility.html#The-LOOP-Facility" rel="up" title="The LOOP Facility">
+<link href="Examples-of-REPEAT-clause.html#Examples-of-REPEAT-clause" rel="next" title="Examples of REPEAT clause">
+<link href="Examples-of-SUM-clause.html#Examples-of-SUM-clause" rel="prev" title="Examples of SUM clause">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Termination-Test-Clauses"></a>
+<div class="header">
+<p>
+Next: <a href="Unconditional-Execution-Clauses.html#Unconditional-Execution-Clauses" accesskey="n" rel="next">Unconditional Execution Clauses</a>, Previous: <a href="Value-Accumulation-Clauses.html#Value-Accumulation-Clauses" accesskey="p" rel="prev">Value Accumulation Clauses</a>, Up: <a href="The-LOOP-Facility.html#The-LOOP-Facility" accesskey="u" rel="up">The LOOP Facility</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Termination-Test-Clauses-1"></a>
+<h4 class="subsection">6.1.4 Termination Test Clauses</h4>
+
+<p>The <tt>repeat</tt> construct causes iteration to terminate after a
+specified number of times.
+ The loop body executes <i>n</i> times, where <i>n</i> is the value 
+of the expression <i>form</i>.  The <i>form</i> argument is evaluated one time
+in the loop prologue.  If the expression evaluates to 0 or 
+to a negative <i>number</i>, the loop body is not evaluated.
+</p>
+<p>The constructs <tt>always</tt>,
+<tt>never</tt>,
+<tt>thereis</tt>,
+<tt>while</tt>,
+<tt>until</tt>,
+and the macro <b>loop-finish</b>
+allow conditional termination of iteration within
+a <b>loop</b>.
+</p>
+<p>The constructs <tt>always</tt>, <tt>never</tt>, and <tt>thereis</tt> provide
+specific values to be returned when a <b>loop</b> terminates.  
+Using <tt>always</tt>, <tt>never</tt>, or <tt>thereis</tt> in a loop with 
+value accumulation clauses that are not <tt>into</tt> causes 
+an error of <i>type</i> <b>program-error</b> to be signaled (at macro expansion time).
+Since <tt>always</tt>, <tt>never</tt>, and <tt>thereis</tt>
+use 
+</p>
+<p>the <b>return-from</b> <i>special operator</i>
+</p>
+<p>to terminate iteration,
+any <tt>finally</tt> clause that is supplied is not evaluated
+when exit occurs due to any of these constructs.
+In all other respects these
+constructs behave like the <tt>while</tt> and <tt>until</tt> constructs.
+</p>
+<p>The <tt>always</tt> construct takes one <i>form</i> and terminates the 
+<b>loop</b>
+  if the <i>form</i> ever evaluates to <b>nil</b>; in this case, it returns
+  <b>nil</b>.  Otherwise, it provides a default return value of <b>t</b>.
+If the value of the supplied <i>form</i> is never <b>nil</b>, some other construct
+can terminate the iteration.
+</p>
+<p>The <tt>never</tt> construct terminates iteration the first time that
+the value of the supplied <i>form</i> is <i>non-nil</i>; the <b>loop</b> returns 
+<b>nil</b>.                                         
+If the value of the supplied <i>form</i> is always  <b>nil</b>, some other 
+construct can terminate the iteration.  
+Unless some other clause contributes 
+a return value, the default value returned is <b>t</b>.
+</p>
+<p>The <tt>thereis</tt> construct terminates iteration the first time that the
+value of the supplied <i>form</i> is <i>non-nil</i>; the <b>loop</b> returns the
+value of the supplied <i>form</i>.
+If the value of the supplied <i>form</i> 
+is always  <b>nil</b>, some other
+construct can terminate the iteration.  Unless some other clause contributes a 
+return value, the default value returned is <b>nil</b>.
+</p>
+<p>There are two differences between the <tt>thereis</tt> and <tt>until</tt>
+constructs: 
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>The <tt>until</tt> construct does not return a value or 
+<b>nil</b> based on the value of the supplied <i>form</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The <tt>until</tt> construct executes 
+any <tt>finally</tt> clause.
+Since <tt>thereis</tt> uses
+</p>
+<p>the <b>return-from</b> <i>special operator</i>
+</p>
+<p>to terminate iteration,
+any <tt>finally</tt> clause that is supplied is not evaluated
+when exit occurs due to <tt>thereis</tt>.
+</p>
+</dd>
+</dl>
+
+<p>The <tt>while</tt> construct allows iteration to continue until the 
+supplied <i>form</i> 
+evaluates to <i>false</i>.  The supplied <i>form</i> 
+is reevaluated at the location of the <tt>while</tt> clause.
+</p>
+<p>The <tt>until</tt> construct is equivalent to 
+<tt>while (not <i>form</i>)\dots</tt>.  If the value of the
+supplied <i>form</i> is <i>non-nil</i>, iteration terminates.
+</p>
+<p>Termination-test control constructs can be used anywhere within the loop body.
+The termination tests are used in the order in which they appear.
+If an <tt>until</tt> or <tt>while</tt> clause causes
+termination, any clauses that precede it in the source
+are still evaluated.  
+If the <tt>until</tt> and <tt>while</tt> constructs cause termination,
+control is passed to the loop epilogue, where any <tt>finally</tt>
+clauses will be executed.  
+</p>
+<p>There are two differences between the <tt>never</tt> and <tt>until</tt>
+constructs: 
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>The <tt>until</tt> construct does not return 
+<b>t</b> or <b>nil</b> based on the value of the supplied <i>form</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>The <tt>until</tt> construct 
+does not bypass any <tt>finally</tt> clauses.
+Since <tt>never</tt> uses 
+</p>
+<p>the <b>return-from</b> <i>special operator</i>
+</p>
+<p>to terminate iteration,
+any <tt>finally</tt> clause that is supplied is not evaluated
+when exit occurs due to <tt>never</tt>. 
+</p></dd>
+</dl>
+
+<p>In most cases it is not necessary to use <b>loop-finish</b>
+because other loop control clauses terminate the <b>loop</b>.  
+The macro <b>loop-finish</b> is used to provide a normal exit
+from a nested conditional inside a <b>loop</b>.
+Since <b>loop-finish</b> transfers control to the loop epilogue,
+using <b>loop-finish</b> within a <tt>finally</tt> expression can cause
+infinite looping.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Examples-of-REPEAT-clause.html#Examples-of-REPEAT-clause" accesskey="1">Examples of REPEAT clause</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Examples-of-ALWAYS.html#Examples-of-ALWAYS" accesskey="2">Examples of ALWAYS</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Examples-of-WHILE-and-UNTIL-clauses.html#Examples-of-WHILE-and-UNTIL-clauses" accesskey="3">Examples of WHILE and UNTIL clauses</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Unconditional-Execution-Clauses.html#Unconditional-Execution-Clauses" accesskey="n" rel="next">Unconditional Execution Clauses</a>, Previous: <a href="Value-Accumulation-Clauses.html#Value-Accumulation-Clauses" accesskey="p" rel="prev">Value Accumulation Clauses</a>, Up: <a href="The-LOOP-Facility.html#The-LOOP-Facility" accesskey="u" rel="up">The LOOP Facility</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

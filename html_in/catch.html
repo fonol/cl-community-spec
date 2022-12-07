@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>catch (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="catch (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="catch (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="go.html#go" rel="next" title="go">
+<link href="block.html#block" rel="prev" title="block">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="catch"></a>
+<div class="header">
+<p>
+Next: <a href="go.html#go" accesskey="n" rel="next">go</a>, Previous: <a href="block.html#block" accesskey="p" rel="prev">block</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="catch-_005bSpecial-Operator_005d"></a>
+<h4 class="subsection">5.3.23 catch                                                    [Special Operator]</h4>
+
+<p><code>catch</code>  <i><i>tag</i> {<i>form</i>}*</i> &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-44"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>tag</i>&mdash;a <i>catch tag</i>; evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;if the <i>forms</i> exit normally,
+	           the <i>values</i> returned by the <i>forms</i>;
+		  if a throw occurs to the <i>tag</i>,
+		   the <i>values</i> that are thrown.
+</p>
+<a name="Description_003a_003a-76"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>catch</b> is used as the destination of a non-local 
+control transfer by <b>throw</b>.
+<i>Tags</i> are used to find the <b>catch</b>
+to which a <b>throw</b> is transferring control.
+<tt>(catch 'foo <i>form</i>)</tt> catches a 
+<tt>(throw 'foo <i>form</i>)</tt> but not a
+<tt>(throw 'bar <i>form</i>)</tt>.
+</p>
+<p>The order of execution of <b>catch</b> follows:
+<a name="index-order-of-evaluation-3"></a>
+</p>
+<a name="index-evaluation-order-3"></a>
+
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p><i>Tag</i> is evaluated.
+It serves as the name of the
+<b>catch</b>.  
+</p>
+</dd>
+<dt>2.</dt>
+<dd><p><i>Forms</i> are then evaluated as an implicit <b>progn</b>,
+and the results of the last <i>form</i> are returned unless a 
+<b>throw</b> occurs.
+</p>
+</dd>
+<dt>3.</dt>
+<dd><p>If a <b>throw</b> occurs 
+during the execution of one of the <i>forms</i>, control
+is transferred  to the <b>catch</b> <i>form</i> whose <i>tag</i> 
+is <b>eq</b> to
+the tag argument of the <b>throw</b>
+and which is the most recently established <b>catch</b> with that 
+<i>tag</i>.
+No further evaluation of <i>forms</i> occurs.
+</p>
+</dd>
+<dt>4.</dt>
+<dd><p>The <i>tag</i> <i>established</i> 
+by <b>catch</b> is <i>disestablished</i>
+just before the results are returned.
+</p>
+</dd>
+</dl>
+
+<p>If during the execution of one of the <i>forms</i>, a <b>throw</b>
+is executed whose tag is <b>eq</b> to the <b>catch</b> tag, 
+then the values specified by the <b>throw</b> are
+returned as the result of the dynamically most recently established
+<b>catch</b> form with that tag.
+</p>
+<p>The mechanism for <b>catch</b> and <b>throw</b> works even
+if <b>throw</b> is not within the lexical scope of <b>catch</b>.
+<b>throw</b> must occur within the <i>dynamic extent</i> 
+of the <i>evaluation</i> of the body of a <b>catch</b> with a corresponding <i>tag</i>.
+</p>
+<a name="Examples_003a_003a-50"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (catch 'dummy-tag 1 2 (throw 'dummy-tag 3) 4) &rArr;  3
+ (catch 'dummy-tag 1 2 3 4) &rArr;  4
+ (defun throw-back (tag) (throw tag t)) &rArr;  THROW-BACK
+ (catch 'dummy-tag (throw-back 'dummy-tag) 2) &rArr;  T
+
+ ;; Contrast behavior of this example with corresponding example of BLOCK.
+ (catch 'c
+   (flet ((c1 () (throw 'c 1)))
+     (catch 'c (c1) (print 'unreachable))
+     2)) &rArr;  2
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-15"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+<p>An error of <i>type</i> <b>control-error</b> is signaled
+if <b>throw</b> is done
+when there is no suitable <b>catch</b> <i>tag</i>. 
+</p><a name="See-Also_003a_003a-61"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="throw.html#throw">throw</a>
+, <a href="Evaluation.html#Evaluation">Evaluation</a>
+</p>
+<a name="Notes_003a_003a-37"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>It is customary for <i>symbols</i> to be used
+as <i>tags</i>, but any <i>object</i> is permitted.  
+However, numbers should not be
+used because the comparison is done using <b>eq</b>.
+</p>
+<p><b>catch</b> differs from <b>block</b> in that 
+<b>catch</b>
+tags have dynamic <i>scope</i> while 
+<b>block</b> names have <i>lexical scope</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="go.html#go" accesskey="n" rel="next">go</a>, Previous: <a href="block.html#block" accesskey="p" rel="prev">block</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

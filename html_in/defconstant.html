@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>defconstant (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="defconstant (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="defconstant (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="defparameter.html#defparameter" rel="next" title="defparameter">
+<link href="lambda_002dparameters_002dlimit.html#lambda_002dparameters_002dlimit" rel="prev" title="lambda-parameters-limit">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="defconstant"></a>
+<div class="header">
+<p>
+Next: <a href="defparameter.html#defparameter" accesskey="n" rel="next">defparameter</a>, Previous: <a href="lambda_002dparameters_002dlimit.html#lambda_002dparameters_002dlimit" accesskey="p" rel="prev">lambda-parameters-limit</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="defconstant-_005bMacro_005d"></a>
+<h4 class="subsection">5.3.15 defconstant                                                         [Macro]</h4>
+
+<p><code>defconstant</code>  <i>name initial-value <span class="roman">[</span>documentation<span class="roman">]</span></i> &rArr;  <i>name</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-36"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>name</i>&mdash;a <i>symbol</i>; not evaluated.
+</p>
+<p><i>initial-value</i>&mdash;a <i>form</i>; evaluated.
+</p>
+<p><i>documentation</i>&mdash;a <i>string</i>; not evaluated.
+</p>
+<a name="Description_003a_003a-68"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>defconstant</b> 
+causes the global variable named by <i>name</i> to be 
+given a value that is the result of evaluating <i>initial-value</i>.
+</p>
+<p>A constant defined by <b>defconstant</b> can be redefined
+with <b>defconstant</b>.
+However, the consequences are undefined if an attempt is made to assign
+a <i>value</i> to the <i>symbol</i> using another operator, or to
+assign it to a <i>different</i>
+<i>value</i> using a subsequent
+<b>defconstant</b>.
+</p>
+<p>If <i>documentation</i> is supplied, it is attached to <i>name</i> as a
+<i>documentation string</i> of kind <b>variable</b>. 
+</p>
+<p><b>defconstant</b> 
+normally appears as a <i>top level form</i>, but it is meaningful
+for it to appear as a <i>non-top-level form</i>.
+However, the compile-time side
+effects described below
+only take place when <b>defconstant</b> appears as a 
+<i>top level form</i>.
+</p>
+<p>The consequences are undefined if there are any 
+<i>bindings</i>
+of the variable named by <i>name</i> at the time <b>defconstant</b> 
+is executed or if the value is not <b>eql</b> to the value of
+<i>initial-value</i>.
+</p>
+<p>The consequences are undefined when constant <i>symbols</i> are rebound
+as either lexical or dynamic variables.  In other words, a reference to a
+<i>symbol</i> declared with <b>defconstant</b> always refers to its global value.
+</p>
+<p>The side effects of the execution of <b>defconstant</b> must
+be equivalent to at least the side effects of the execution of the following
+code:
+</p>
+<div class="example">
+<pre class="example"> (setf (symbol-value '<i>name</i>) <i>initial-value</i>)
+ (setf (documentation '<i>name</i> 'variable) '<i>documentation</i>)
+</pre></div>
+
+<p>If a <b>defconstant</b> <i>form</i> appears as a <i>top level form</i>,
+the <i>compiler</i> must recognize that <i>name</i> names
+a <i>constant variable</i>.  An implementation may choose to
+evaluate the value-form at compile time, load time, or both.
+Therefore, users must ensure that the <i>initial-value</i>
+can be <i>evaluated</i> at compile time
+(regardless of whether or not references to <i>name</i>
+appear in the file) and that it always <i>evaluates</i>
+to the same value.
+</p>
+<p>[Editorial Note by KMP: Does &ldquo;same value&rdquo; here mean eql or similar?]
+</p>
+<p>[Reviewer Note by Moon: Probably depends on whether load time is compared to compile time,
+		or two compiles.]
+</p>
+<a name="Examples_003a_003a-42"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (defconstant this-is-a-constant 'never-changing &quot;for a test&quot;) &rArr;  THIS-IS-A-CONSTANT
+this-is-a-constant &rArr;  NEVER-CHANGING
+ (documentation 'this-is-a-constant 'variable) &rArr;  &quot;for a test&quot;
+ (constantp 'this-is-a-constant) &rArr;  <i>true</i>
+</pre></div>
+
+<a name="See-Also_003a_003a-53"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="declaim.html#declaim">declaim</a>
+,
+&lsquo;defparameter; defvar&rsquo;
+, 
+<b>defvar</b>,
+&lsquo;documentation; (setf documentation)&rsquo;
+,
+<a href="proclaim.html#proclaim">proclaim</a>
+,
+<a href="Constant-Variables.html#Constant-Variables">Constant Variables</a>,
+<a href="Compilation.html#Compilation">Compilation</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="defparameter.html#defparameter" accesskey="n" rel="next">defparameter</a>, Previous: <a href="lambda_002dparameters_002dlimit.html#lambda_002dparameters_002dlimit" accesskey="p" rel="prev">lambda-parameters-limit</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

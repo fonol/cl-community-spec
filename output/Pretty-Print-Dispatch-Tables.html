@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Pretty Print Dispatch Tables (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Pretty-Printer-Concepts.html#Pretty-Printer-Concepts" rel="up" title="Pretty Printer Concepts">
+<link href="Pretty-Printer-Margins.html#Pretty-Printer-Margins" rel="next" title="Pretty Printer Margins">
+<link href="Compiling-Format-Strings.html#Compiling-Format-Strings" rel="prev" title="Compiling Format Strings">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Compiling-Format-Strings.html#Compiling-Format-Strings" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Compiling Format Strings
+                            </a>
+                            <a href="Pretty-Printer-Concepts.html#Pretty-Printer-Concepts.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Pretty Printer Concepts
+                            </a>
+                            <a href="Pretty-Printer-Margins.html#Pretty-Printer-Margins.html" class="nav-btn nav__next ">
+                                Pretty Printer Margins
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Pretty-Print-Dispatch-Tables"></a>
+<a name="Pretty-Print-Dispatch-Tables-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Pretty Print Dispatch Tables</h4>
+
+<p>A <i>pprint dispatch table</i>
+<a name="index-pprint-dispatch-table"></a>
+ is a mapping from keys to pairs of values.  
+Each key is a <i>type specifier</i>.  
+The values associated with a key are
+     a &ldquo;function&rdquo; (specifically, a <i>function designator</i> or <b>nil</b>)
+ and a &ldquo;numerical priority&rdquo; (specifically, a <i>real</i>).
+Basic insertion and retrieval is done based on the keys with the equality
+of keys being tested by <b>equal</b>.
+</p>
+<p>When <b>*print-pretty*</b> is <i>true</i>, 
+the <i>current pprint dispatch table</i>
+<a name="index-current-pprint-dispatch-table"></a>
+ (in <b>*print-pprint-dispatch*</b>)
+controls how <i>objects</i> are printed.
+The information in this table takes precedence over
+all other mechanisms for specifying how to print <i>objects</i>.
+In particular, it 
+has priority over
+user-defined <b>print-object</b> <i>methods</i> 
+</p>
+<p>because the <i>current pprint dispatch table</i> is consulted first.
+</p>
+<p>The function is chosen from the <i>current pprint dispatch table</i>
+by finding the highest priority function 
+that is associated with a <i>type specifier</i> that matches the <i>object</i>;
+if there is more than one such function, 
+it is <i>implementation-dependent</i> which is used.
+</p>
+<p>However, if there is no 
+information in the table
+about how to <i>pretty print</i> a particular kind of <i>object</i>, 
+a <i>function</i> is invoked which uses <b>print-object</b> to print the <i>object</i>.
+The value of <b>*print-pretty*</b> is still <i>true</i> 
+when this function is <i>called</i>,
+and individual methods for <b>print-object</b> might still elect to
+produce output in a special format conditional on the <i>value</i> of <b>*print-pretty*</b>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

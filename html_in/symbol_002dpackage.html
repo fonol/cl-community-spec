@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>symbol-package (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="symbol-package (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="symbol-package (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Symbols-Dictionary.html#Symbols-Dictionary" rel="up" title="Symbols Dictionary">
+<link href="symbol_002dplist.html#symbol_002dplist" rel="next" title="symbol-plist">
+<link href="symbol_002dname.html#symbol_002dname" rel="prev" title="symbol-name">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="symbol_002dpackage"></a>
+<div class="header">
+<p>
+Next: <a href="symbol_002dplist.html#symbol_002dplist" accesskey="n" rel="next">symbol-plist</a>, Previous: <a href="symbol_002dname.html#symbol_002dname" accesskey="p" rel="prev">symbol-name</a>, Up: <a href="Symbols-Dictionary.html#Symbols-Dictionary" accesskey="u" rel="up">Symbols Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="symbol_002dpackage-_005bFunction_005d"></a>
+<h4 class="subsection">10.2.12 symbol-package                                                   [Function]</h4>
+
+<p><code>symbol-package</code>  <i>symbol</i> &rArr;  <i>contents</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-166"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>symbol</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>contents</i>&mdash;a <i>package</i> <i>object</i> or <b>nil</b>.
+</p>
+<a name="Description_003a_003a-228"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns the <i>home package</i> of <i>symbol</i>.
+</p>
+<a name="Examples_003a_003a-149"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (in-package &quot;CL-USER&quot;) &rArr;  #&lt;PACKAGE &quot;COMMON-LISP-USER&quot;&gt;
+ (symbol-package 'car) &rArr;  #&lt;PACKAGE &quot;COMMON-LISP&quot;&gt;
+ (symbol-package 'bus) &rArr;  #&lt;PACKAGE &quot;COMMON-LISP-USER&quot;&gt;
+ (symbol-package :optional) &rArr;  #&lt;PACKAGE &quot;KEYWORD&quot;&gt;
+ ;; Gensyms are uninterned, so have no home package.
+ (symbol-package (gensym)) &rArr;  NIL
+ (make-package 'pk1) &rArr;  #&lt;PACKAGE &quot;PK1&quot;&gt;
+ (intern &quot;SAMPLE1&quot; &quot;PK1&quot;) &rArr;  PK1::SAMPLE1, NIL
+ (export (find-symbol &quot;SAMPLE1&quot; &quot;PK1&quot;) &quot;PK1&quot;) &rArr;  T
+ (make-package 'pk2 :use '(pk1)) &rArr;  #&lt;PACKAGE &quot;PK2&quot;&gt;
+ (find-symbol &quot;SAMPLE1&quot; &quot;PK2&quot;) &rArr;  PK1:SAMPLE1, :INHERITED
+ (symbol-package 'pk1::sample1) &rArr;  #&lt;PACKAGE &quot;PK1&quot;&gt;
+ (symbol-package 'pk2::sample1) &rArr;  #&lt;PACKAGE &quot;PK1&quot;&gt;
+ (symbol-package 'pk1::sample2) &rArr;  #&lt;PACKAGE &quot;PK1&quot;&gt;
+ (symbol-package 'pk2::sample2) &rArr;  #&lt;PACKAGE &quot;PK2&quot;&gt;
+ ;; The next several forms create a scenario in which a symbol
+ ;; is not really uninterned, but is &quot;apparently uninterned&quot;,
+ ;; and so SYMBOL-PACKAGE still returns NIL.
+ (setq s3 'pk1::sample3) &rArr;  PK1::SAMPLE3
+ (import s3 'pk2) &rArr;  T
+ (unintern s3 'pk1) &rArr;  T
+ (symbol-package s3) &rArr;  NIL
+ (eq s3 'pk2::sample3) &rArr;  T
+</pre></div>
+
+<a name="Affected-By_003a_003a-40"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>import</b>,
+<b>intern</b>,
+<b>unintern</b>
+</p>
+<a name="Exceptional-Situations_003a_003a-56"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>symbol</i> is not a <i>symbol</i>.
+</p>
+<a name="See-Also_003a_003a-201"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="intern.html#intern">intern</a>
+</p>
+
+
+
+</body>
+</html>

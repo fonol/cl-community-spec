@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Destructuring Lambda Lists (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Lambda-Lists.html#Lambda-Lists" rel="up" title="Lambda Lists">
+<link href="Boa-Lambda-Lists.html#Boa-Lambda-Lists" rel="next" title="Boa Lambda Lists">
+<link href="Lambda_002dlist_002ddirected-Destructuring-by-Lambda-Lists.html#Lambda_002dlist_002ddirected-Destructuring-by-Lambda-Lists" rel="prev" title="Lambda-list-directed Destructuring by Lambda Lists">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Lambda_002dlist_002ddirected-Destructuring-by-Lambda-Lists.html#Lambda_002dlist_002ddirected-Destructuring-by-Lambda-Lists" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Lambda-list-directed Destructuring by Lambda Lists
+                            </a>
+                            <a href="Lambda-Lists.html#Lambda-Lists.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Lambda Lists
+                            </a>
+                            <a href="Boa-Lambda-Lists.html#Boa-Lambda-Lists.html" class="nav-btn nav__next ">
+                                Boa Lambda Lists
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Destructuring-Lambda-Lists"></a>
+<a name="Destructuring-Lambda-Lists-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Destructuring Lambda Lists</h4>
+
+<p>A <i>destructuring lambda list</i>
+<a name="index-destructuring-lambda-list"></a>
+ is used by <b>destructuring-bind</b>.
+</p>
+<p><i>Destructuring lambda lists</i> are closely related to 
+<i>macro lambda lists</i>; see <a href="Macro-Lambda-Lists.html#Macro-Lambda-Lists">Macro Lambda Lists</a>.
+A <i>destructuring lambda list</i> can contain all of the
+<i>lambda list keywords</i> listed for <i>macro lambda lists</i>
+except for <b>&amp;environment</b>, and supports destructuring in the
+same way.  Inner <i>lambda lists</i> nested within a <i>macro lambda list</i>
+have the syntax of <i>destructuring lambda lists</i>.
+</p>
+<p>A <i>destructuring lambda list</i> has the following syntax:
+</p>
+
+<p><i>reqvars</i>&nbsp;::={<i>var</i>&nbsp;|&nbsp;!<i><span class="nolinebreak">lambda-list</span></i>}*<!-- /@w -->
+</p>
+<p><i>optvars</i>&nbsp;::=<tt>[</tt>&amp;optional<!-- /@w --> {<i>var</i> |
+		       <span class="roman">(</span>{<i>var</i> | !<i>lambda-list</i>} <span class="roman">[</span>init-form <span class="roman">[</span>supplied-p-parameter<span class="roman">]</span><span class="roman">]</span><span class="roman">)</span>}*<tt>]</tt>
+</p>
+<p><i>restvar</i>&nbsp;::=<tt>[</tt>{<tt>&amp;rest</tt><!-- /@w --> | &amp;body} <i>{<i>var</i> | !<i>lambda-list</i>}</i><tt>]</tt>
+</p>
+<p><i>keyvars</i>&nbsp;::=<span class="roman">[</span>&amp;key<!-- /@w --> {<i>var</i> |
+		          	 <span class="roman">(</span>{<i>var</i> | 
+					       <span class="roman">(</span><i>keyword-name</i> {<i>var</i> | !<i>lambda-list</i>}<span class="roman">)</span>}
+				 	<span class="roman">[</span>init-form <span class="roman">[</span>supplied-p-parameter<span class="roman">]</span><span class="roman">]</span><span class="roman">)</span>}*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">[</span><tt><span class="nolinebreak">&amp;allow-other-keys</span></tt><span class="roman">]</span><span class="roman">]</span><!-- /@w -->
+</p>
+
+<p><i>auxvars</i>&nbsp;::=<tt>[</tt>&amp;aux<!-- /@w --> {<i>var</i> | <span class="roman">(</span><i>var</i> <span class="roman">[</span><i>init-form</i><span class="roman">]</span><span class="roman">)</span>}*<tt>]</tt>
+
+<i>envvar</i>&nbsp;::=<tt>[</tt>&amp;environment<!-- /@w --> <i>var</i><tt>]</tt>
+</p>
+<p><i>wholevar</i>&nbsp;::=<tt>[</tt>&amp;whole<!-- /@w --> <i>var</i><tt>]</tt>
+</p>
+<p><i><span class="nolinebreak">lambda-list</span></i>&nbsp;::=<span class="roman">(</span>!<i>wholevar</i>&nbsp;!<i>reqvars</i>&nbsp;!<i>optvars</i>&nbsp;!<i>restvar</i>&nbsp;!<i>keyvars</i>&nbsp;!<i>auxvars</i><span class="roman">)</span>&nbsp;|<!-- /@w -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">(</span>!<i>wholevar</i>&nbsp;!<i>reqvars</i>&nbsp;!<i>optvars</i>&nbsp;<tt>.</tt>&nbsp;<i>var</i><span class="roman">)</span><!-- /@w -->
+</p>
+
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

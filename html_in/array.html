@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>array (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="array (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="array (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Arrays-Dictionary.html#Arrays-Dictionary" rel="up" title="Arrays Dictionary">
+<link href="simple_002darray.html#simple_002darray" rel="next" title="simple-array">
+<link href="Arrays-Dictionary.html#Arrays-Dictionary" rel="prev" title="Arrays Dictionary">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="array"></a>
+<div class="header">
+<p>
+Next: <a href="simple_002darray.html#simple_002darray" accesskey="n" rel="next">simple-array</a>, Previous: <a href="Arrays-Dictionary.html#Arrays-Dictionary" accesskey="p" rel="prev">Arrays Dictionary</a>, Up: <a href="Arrays-Dictionary.html#Arrays-Dictionary" accesskey="u" rel="up">Arrays Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="array-_005bSystem-Class_005d"></a>
+<h4 class="subsection">15.2.1 array                                                        [System Class]</h4>
+
+<a name="Class-Precedence-List_003a_003a-53"></a>
+<h4 class="subsubheading">Class Precedence List::</h4>
+<p><b>array</b>,
+<b>t</b>
+</p>
+<a name="Description_003a_003a-420"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>An <i>array</i> contains <i>objects</i> arranged according to a
+Cartesian coordinate system.
+An <i>array</i> provides mappings from a set of
+</p>
+<p><i>fixnums</i>
+</p>
+<p>\left{i_0,i_1,\dots,i_{r-1}\right} to corresponding <i>elements</i>
+of the <i>array</i>, 
+where 0 \le i_j &lt; d_j,
+r is the rank of the array, and d_j is the size of <i>dimension</i> j of
+the array.
+</p>
+<p>When an <i>array</i> is created, the program requesting its creation may
+declare that all <i>elements</i> are of a particular <i>type</i>, 
+called the <i>expressed array element type</i>.
+The implementation is permitted to <i>upgrade</i> this type in order to 
+produce the <i>actual array element type</i>,
+which is the <i>element type</i> for the <i>array</i> is actually <i>specialized</i>.
+See the <i>function</i> <b>upgraded-array-element-type</b>.
+</p>
+<a name="Compound-Type-Specifier-Kind_003a_003a-18"></a>
+<h4 class="subsubheading">Compound Type Specifier Kind::</h4>
+
+<p>Specializing.
+</p>
+<a name="Compound-Type-Specifier-Syntax_003a_003a-18"></a>
+<h4 class="subsubheading">Compound Type Specifier Syntax::</h4>
+
+<p>(<code>array</code>{<i><tt>[</tt>{element-type | <b>*</b>} <span class="roman">[</span>dimension-spec<span class="roman">]</span><tt>]</tt></i>})
+</p>
+<p><i><span class="nolinebreak">dimension-spec</span></i>&nbsp;::=rank&nbsp;|&nbsp;<b>*</b>&nbsp;|&nbsp;<span class="roman">(</span>{dimension&nbsp;|&nbsp;<b>*</b>}*<!-- /@w --><span class="roman">)</span>
+</p>
+<a name="Compound-Type-Specifier-Arguments_003a_003a-18"></a>
+<h4 class="subsubheading">Compound Type Specifier Arguments::</h4>
+
+<p><i>dimension</i>&mdash;a <i>valid array dimension</i>.
+</p>
+<p><i>element-type</i>&mdash;a <i>type specifier</i>.
+</p>
+<p><i>rank</i>&mdash;a non-negative <i>fixnum</i>.
+</p>
+<a name="Compound-Type-Specifier-Description_003a_003a-18"></a>
+<h4 class="subsubheading">Compound Type Specifier Description::</h4>
+
+<p>This denotes the set of <i>arrays</i> whose
+  <i>element type</i>,  <i>rank</i>,  and <i>dimensions</i>
+match any given
+  <i>element-type</i>, <i>rank</i>, and <i>dimensions</i>.
+Specifically:
+</p>
+<p>If <i>element-type</i> is the <i>symbol</i> <b>*</b>,
+<i>arrays</i> are not excluded on the basis of their <i>element type</i>.
+Otherwise, only those <i>arrays</i> are included whose <i>actual array element type</i>
+</p>
+<p>is the result of <i>upgrading</i> <i>element-type</i>;
+see <a href="Array-Upgrading.html#Array-Upgrading">Array Upgrading</a>.
+</p>
+<p>If the <i>dimension-spec</i> is a <i>rank</i>,
+the set includes only those <i>arrays</i> having that <i>rank</i>.
+If the <i>dimension-spec</i> is a <i>list</i> of <i>dimensions</i>,
+the set includes only those <i>arrays</i> having a <i>rank</i>
+given by the <i>length</i> of the <i>dimensions</i>,
+and having the indicated <i>dimensions</i>; 
+in this case, <b>*</b> matches any value for the corresponding <i>dimension</i>.
+If the <i>dimension-spec</i> is the <i>symbol</i> <b>*</b>,
+the set is not restricted on the basis of <i>rank</i> or <i>dimension</i>.
+</p>
+<a name="See-Also_003a_003a-344"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>*print-array*</b>,
+<a href="aref.html#aref">aref</a>
+,
+<a href="make_002darray.html#make_002darray">make-array</a>
+,
+<b>vector</b>,
+<a href="Sharpsign-A.html#Sharpsign-A">Sharpsign A</a>,
+<a href="Printing-Other-Arrays.html#Printing-Other-Arrays">Printing Other Arrays</a>
+</p>
+<a name="Notes_003a_003a-230"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>Note that the type <tt>(array t)</tt>     
+is a proper <i>subtype</i> of the type <tt>(array *)</tt>.
+The reason is that the type <tt>(array t)</tt> is the set of <i>arrays</i> 
+that can
+hold any <i>object</i> (the <i>elements</i> are of <i>type</i> <b>t</b>,  which includes
+all <i>objects</i>).
+On the other hand, the type <tt>(array *)</tt>
+is the set of all <i>arrays</i> whatsoever, including for example
+<i>arrays</i> that can hold only <i>characters</i>. 
+The type <tt>(array character)</tt> 
+is not a <i>subtype</i> of the type <tt>(array t)</tt>; 
+the two sets                                              
+are <i>disjoint</i> because the type <tt>(array character)</tt> is not the
+set of all <i>arrays</i> that can hold 
+<i>characters</i>, but rather the set of
+<i>arrays</i> 
+that are specialized to hold precisely <i>characters</i> and no
+other <i>objects</i>. 
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="simple_002darray.html#simple_002darray" accesskey="n" rel="next">simple-array</a>, Previous: <a href="Arrays-Dictionary.html#Arrays-Dictionary" accesskey="p" rel="prev">Arrays Dictionary</a>, Up: <a href="Arrays-Dictionary.html#Arrays-Dictionary" accesskey="u" rel="up">Arrays Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

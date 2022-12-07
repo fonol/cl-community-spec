@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>ash (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="ash (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="ash (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Numbers-Dictionary.html#Numbers-Dictionary" rel="up" title="Numbers Dictionary">
+<link href="integer_002dlength.html#integer_002dlength" rel="next" title="integer-length">
+<link href="rationalp.html#rationalp" rel="prev" title="rationalp">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="ash"></a>
+<div class="header">
+<p>
+Next: <a href="integer_002dlength.html#integer_002dlength" accesskey="n" rel="next">integer-length</a>, Previous: <a href="rationalp.html#rationalp" accesskey="p" rel="prev">rationalp</a>, Up: <a href="Numbers-Dictionary.html#Numbers-Dictionary" accesskey="u" rel="up">Numbers Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="ash-_005bFunction_005d"></a>
+<h4 class="subsection">12.2.56 ash                                                              [Function]</h4>
+
+<p><code>ash</code>  <i>integer count</i> &rArr;  <i>shifted-integer</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-239"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>integer</i>&mdash;an <i>integer</i>.
+</p>
+<p><i>count</i>&mdash;an <i>integer</i>.
+</p>
+<p><i>shifted-integer</i>&mdash;an <i>integer</i>.
+</p>
+<a name="Description_003a_003a-321"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>ash</b> performs the arithmetic shift operation on the binary
+representation of <i>integer</i>, which is treated as if it were binary.
+</p>
+<p><b>ash</b> shifts <i>integer</i> arithmetically left by <i>count</i> bit
+positions if <i>count</i> is positive,
+or right <i>count</i> bit positions if <i>count</i> is negative.
+The shifted value of the same sign 
+as <i>integer</i> is returned.
+</p>
+<p>Mathematically speaking, <b>ash</b> performs the computation
+<tt>floor</tt>(<i>integer</i>\cdot 2^<i>count</i>).
+Logically, <b>ash</b> 
+moves all of the bits in <i>integer</i> to the left,
+adding zero-bits at the right, or moves them to the right,
+discarding bits.  
+</p>
+<p><b>ash</b> is defined to behave as if <i>integer</i> were 
+represented in two&rsquo;s complement form, regardless of
+how <i>integers</i> are represented internally.
+</p><a name="Examples_003a_003a-223"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (ash 16 1) &rArr;  32
+ (ash 16 0) &rArr;  16
+ (ash 16 -1) &rArr;  8
+ (ash -100000000000000000000000000000000 -100) &rArr;  -79
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-98"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>integer</i> is not an <i>integer</i>.
+Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>count</i> is not an <i>integer</i>.
+Might signal <b>arithmetic-error</b>.
+</p>
+<a name="Notes_003a_003a-168"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<div class="example">
+<pre class="example"> (logbitp <i>j</i> (ash <i>n</i> <i>k</i>))
+ &equiv; (and (&gt;= <i>j</i> <i>k</i>) (logbitp (- <i>j</i> <i>k</i>) <i>n</i>))
+</pre></div>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>union (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="union (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="union (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conses-Dictionary.html#Conses-Dictionary" rel="up" title="Conses Dictionary">
+<link href="Arrays.html#Arrays" rel="next" title="Arrays">
+<link href="subsetp.html#subsetp" rel="prev" title="subsetp">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="union"></a>
+<div class="header">
+<p>
+Previous: <a href="subsetp.html#subsetp" accesskey="p" rel="prev">subsetp</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="union_002c-nunion-_005bFunction_005d"></a>
+<h4 class="subsection">14.2.49 union, nunion                                                    [Function]</h4>
+
+<p><code>union</code>  <i>list-1 list-2 &amp;key</i> key test test-not &rArr;  <i>result-list</i>
+</p>
+<p><code>nunion</code>  <i>list-1 list-2 &amp;key</i> key test test-not &rArr;  <i>result-list</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-318"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>list-1</i>&mdash;a <i>proper list</i>.
+</p>
+<p><i>list-2</i>&mdash;a <i>proper list</i>.
+</p>
+<p><i>test</i>&mdash;a <i>designator</i> for a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test-not</i>&mdash;a <i>designator</i> for 
+  a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>key</i>&mdash;a <i>designator</i> for a <i>function</i> of one argument,
+  or <b>nil</b>.
+</p>
+<p><i>result-list</i>&mdash;a <i>list</i>.
+</p>
+<a name="Description_003a_003a-419"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>union</b> and <b>nunion</b> return a <i>list</i>
+that contains every element that occurs in either <i>list-1</i> 
+or <i>list-2</i>.                                 
+</p>
+<p>For all possible ordered pairs consisting of one
+element from <i>list-1</i> 
+and one element from <i>list-2</i>, <tt>:test</tt> or  <tt>:test-not</tt> is used
+to determine whether they <i>satisfy the test</i>. 
+The first argument to the <tt>:test</tt> or <tt>:test-not</tt> 
+function is the part of the element of <i>list-1</i> extracted by the
+<tt>:key</tt> function (if supplied); the second argument  
+is the part of the element of <i>list-2</i> extracted by the
+<tt>:key</tt> function (if supplied).
+</p>
+<p>The argument to the <tt>:key</tt> function is an element of
+<i>list-1</i> or <i>list-2</i>; the return value is part of the supplied
+element.  
+If <tt>:key</tt> is not supplied or <b>nil</b>, 
+the element of <i>list-1</i> or <i>list-2</i>
+itself is supplied to the <tt>:test</tt> or <tt>:test-not</tt> function. 
+</p>
+<p>For every matching pair, 
+one of the two elements of the pair will be in the result.  Any
+element from either <i>list-1</i> or <i>list-2</i>
+that matches no element of the other will appear
+in the result.  
+</p>
+<p>If there is a duplication between <i>list-1</i> 
+and <i>list-2</i>,
+only one of the duplicate instances will be in the result.
+If either <i>list-1</i> 
+or <i>list-2</i> has duplicate entries within it,
+the redundant entries
+might or might not appear in the result.
+</p>
+<p>The order of elements in the result do not have to
+reflect the ordering of <i>list-1</i> or <i>list-2</i> in any way.
+The result <i>list</i> may be <b>eq</b> to either
+<i>list-1</i> or <i>list-2</i> if appropriate.
+</p>
+<a name="Examples_003a_003a-302"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (union '(a b c) '(f a d))
+&rArr;  (A B C F D)
+<i>OR</i>&rArr; (B C F A D)
+<i>OR</i>&rArr; (D F A B C)
+ (union '((x 5) (y 6)) '((z 2) (x 4)) :key #'car)
+&rArr;  ((X 5) (Y 6) (Z 2))
+<i>OR</i>&rArr; ((X 4) (Y 6) (Z 2))
+
+ (setq lst1 (list 1 2 '(1 2) &quot;a&quot; &quot;b&quot;)
+       lst2 (list 2 3 '(2 3) &quot;B&quot; &quot;C&quot;))
+&rArr;  (2 3 (2 3) &quot;B&quot; &quot;C&quot;)
+ (nunion lst1 lst2)
+&rArr;  (1 (1 2) &quot;a&quot; &quot;b&quot; 2 3 (2 3) &quot;B&quot; &quot;C&quot;) 
+<i>OR</i>&rArr; (1 2 (1 2) &quot;a&quot; &quot;b&quot; &quot;C&quot; &quot;B&quot; (2 3) 3)
+</pre></div>
+
+<a name="Side-Effects_003a_003a-48"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p><b>nunion</b> is permitted to modify any part, <i>car</i> or <i>cdr</i>, 
+of the <i>list structure</i> of <i>list-1</i> or <i>list-2</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-137"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>list-1</i> and <i>list-2</i> are not <i>proper lists</i>.
+</p>
+<a name="See-Also_003a_003a-343"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;intersection; nintersection&rsquo;
+,
+</p>
+<p><a href="Compiler-Terminology.html#Compiler-Terminology">Compiler Terminology</a>,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<a name="Notes_003a_003a-229"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <tt>:test-not</tt> parameter is deprecated.
+</p>
+<p>Since the <b>nunion</b> side effect is not required,
+it should not be used in for-effect-only positions in portable code.
+</p>
+
+
+
+
+
+<hr>
+<div class="header">
+<p>
+Previous: <a href="subsetp.html#subsetp" accesskey="p" rel="prev">subsetp</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

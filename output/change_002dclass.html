@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>change-class (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="slot_002dboundp.html#slot_002dboundp" rel="next" title="slot-boundp">
+<link href="update_002dinstance_002dfor_002dredefined_002dclass.html#update_002dinstance_002dfor_002dredefined_002dclass" rel="prev" title="update-instance-for-redefined-class">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="update_002dinstance_002dfor_002dredefined_002dclass.html#update_002dinstance_002dfor_002dredefined_002dclass" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                update-instance-for-redefined-class
+                            </a>
+                            <a href="Objects-Dictionary.html#Objects-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Objects Dictionary
+                            </a>
+                            <a href="slot_002dboundp.html#slot_002dboundp.html" class="nav-btn nav__next ">
+                                slot-boundp
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="change_002dclass"></a>
+<a name="change_002dclass-_005bStandard-Generic-Function_005d"></a>
+<div class="section top-most">
+<div class="node-type">Standard Generic Function</div>
+<h4 class="subsection">change-class                                    </h4>
+
+<a name="Syntax_003a_003a-17"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Syntax</h4>
+
+<p><code>change-class</code>  <i>instance new-class &amp;key</i> &amp;allow-other-keys &rArr;  <i>instance</i>
+</p>
+<a name="Method-Signatures_003a_003a-6"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Method Signatures</h4>
+
+<p><code>change-class</code>  <i><span class="roman">(</span><i>instance</i> <b>standard-object</b><span class="roman">)</span>
+			 <span class="roman">(</span><i>new-class</i> <b>standard-class</b><span class="roman">)</span>
+			 &amp;rest</i> initargs
+</p>
+<p><code>change-class</code>  <i><span class="roman">(</span><i>instance</i> <b>t</b><span class="roman">)</span>
+		         <span class="roman">(</span><i>new-class</i> <b>symbol</b><span class="roman">)</span>
+			 &amp;rest</i> initargs
+</p>
+<a name="Arguments-and-Values_003a_003a-96"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>instance</i>&mdash;an <i>object</i>.
+</p>
+<p><i>new-class</i>&mdash;a <i>class designator</i>.
+</p>
+<p><i>initargs</i>&mdash;an <i>initialization argument list</i>.
+</p>
+<a name="Description_003a_003a-135"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The <i>generic function</i> <b>change-class</b> changes the 
+<i>class</i> of an <i>instance</i> to <i>new-class</i>.  
+It destructively modifies and returns the <i>instance</i>.
+</p>
+<p>If in the old <i>class</i> there is any <i>slot</i> of the 
+same name as a local <i>slot</i> in the <i>new-class</i>, 
+the value of that <i>slot</i> is retained.  This means that if 
+the <i>slot</i> has a value, the value returned by <b>slot-value</b>
+after <b>change-class</b> is invoked is <b>eql</b> to the
+value returned by <b>slot-value</b> before <b>change-class</b> is
+invoked.  Similarly, if the <i>slot</i> was unbound, it remains
+unbound.  The other <i>slots</i> are initialized as described in 
+<a href="Changing-the-Class-of-an-Instance.html#Changing-the-Class-of-an-Instance">Changing the Class of an Instance</a>.
+</p>
+<p>After completing all other actions, <b>change-class</b> invokes
+<b>update-instance-for-different-class</b>.  The
+generic function <b>update-instance-for-different-class</b> can be used
+to assign values to slots in the transformed instance.
+</p>
+<p>See &lsquo;Initializing Newly Added Local Slots&rsquo;.
+</p>
+<p>If the second of the above <i>methods</i> is selected, 
+that <i>method</i> invokes <b>change-class</b> 
+on <i>instance</i>, <tt>(find-class <i>new-class</i>)</tt>,
+and the <i>initargs</i>.
+</p>
+<a name="Examples_003a_003a-101"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code>
+
+ (defclass position () ())
+
+ (defclass x-y-position (position)
+     ((x :initform 0 :initarg :x)
+      (y :initform 0 :initarg :y)))
+
+ (defclass rho-theta-position (position)
+     ((rho :initform 0)
+      (theta :initform 0)))
+
+ (defmethod update-instance-for-different-class :before ((old x-y-position) 
+                                                         (new rho-theta-position)
+                                                         &amp;key)
+   ;; Copy the position information from old to new to make new
+   ;; be a rho-theta-position at the same position as old.
+   (let ((x (slot-value old 'x))
+         (y (slot-value old 'y)))
+     (setf (slot-value new 'rho) (sqrt (+ (* x x) (* y y)))
+           (slot-value new 'theta) (atan y x))))
+
+;;; At this point an instance of the class x-y-position can be
+;;; changed to be an instance of the class rho-theta-position using
+;;; change-class:
+
+ (setq p1 (make-instance 'x-y-position :x 2 :y 0))
+
+ (change-class p1 'rho-theta-position)
+
+;;; The result is that the instance bound to p1 is now an instance of
+;;; the class rho-theta-position.   The update-instance-for-different-class
+;;; method performed the initialization of the rho and theta slots based
+;;; on the value of the x and y slots, which were maintained by
+;;; the old instance.
+
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-117"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="update_002dinstance_002dfor_002ddifferent_002dclass.html#update_002dinstance_002dfor_002ddifferent_002dclass">update-instance-for-different-class</a>
+,
+<a href="Changing-the-Class-of-an-Instance.html#Changing-the-Class-of-an-Instance">Changing the Class of an Instance</a>
+</p>
+<a name="Notes_003a_003a-79"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The generic function <b>change-class</b> has several semantic
+difficulties.  First, it performs a destructive operation that can be
+invoked within a <i>method</i> on an <i>instance</i> that was used to select that
+<i>method</i>. 
+When multiple <i>methods</i> are involved because <i>methods</i> are being
+combined, the <i>methods</i> currently executing or about to be executed may
+no longer be applicable.  Second, some implementations might use
+compiler optimizations of slot <i>access</i>, and when the <i>class</i> of an
+<i>instance</i> is changed the assumptions the compiler made might be
+violated.  This implies that a programmer must not use
+<b>change-class</b> inside a <i>method</i> if any 
+<i>methods</i> for that <i>generic function</i>
+<i>access</i> any <i>slots</i>, or the results are undefined.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

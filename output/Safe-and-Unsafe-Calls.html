@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Safe and Unsafe Calls (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Argument-Mismatch-Detection.html#Argument-Mismatch-Detection" rel="up" title="Argument Mismatch Detection">
+<link href="Error-Detection-Time-in-Safe-Calls.html#Error-Detection-Time-in-Safe-Calls" rel="next" title="Error Detection Time in Safe Calls">
+<link href="Argument-Mismatch-Detection.html#Argument-Mismatch-Detection" rel="prev" title="Argument Mismatch Detection">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Argument-Mismatch-Detection.html#Argument-Mismatch-Detection" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Argument Mismatch Detection
+                            </a>
+                            <a href="Argument-Mismatch-Detection.html#Argument-Mismatch-Detection.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Argument Mismatch Detection
+                            </a>
+                            <a href="Error-Detection-Time-in-Safe-Calls.html#Error-Detection-Time-in-Safe-Calls.html" class="nav-btn nav__next ">
+                                Error Detection Time in Safe Calls
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Safe-and-Unsafe-Calls"></a>
+<a name="Safe-and-Unsafe-Calls-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Safe and Unsafe Calls</h4>
+
+<p>A <i>call</i> is a <i>safe call</i>
+<a name="index-safe-call"></a>
+ if each of the following is
+either <i>safe</i> <i>code</i> or <i>system code</i> (other than
+<i>system code</i> that results from <i>macro expansion</i> of 
+<i>programmer code</i>):
+</p><dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>the <i>call</i>.
+</p></dd>
+<dt><tt>*</tt></dt>
+<dd><p>the definition of the <i>function</i> being <i>called</i>.
+</p></dd>
+<dt><tt>*</tt></dt>
+<dd><p>the point of <i>functional evaluation</i> 
+</p></dd>
+</dl>
+
+<p>The following special cases require some elaboration:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>If the <i>function</i> being called is a <i>generic function</i>,
+it is considered <i>safe</i> if all of the following are
+</p>
+<p><i>safe code</i> or <i>system code</i>:
+</p>
+<dl compact="compact">
+<dt>&ndash;</dt>
+<dd><p>its definition (if it was defined explicitly).
+</p></dd>
+<dt>&ndash;</dt>
+<dd><p>the <i>method</i> definitions for all <i>applicable</i> <i>methods</i>.
+</p></dd>
+<dt>&ndash;</dt>
+<dd><p>the definition of its <i>method combination</i>.
+</p></dd>
+</dl>
+
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>For the form <tt>(coerce <i>x</i> 'function)</tt>, 
+where <i>x</i> is a <i>lambda expression</i>,
+the value of the <i>optimize quality</i> <b>safety</b>
+in the global environment at the time the <b>coerce</b>
+is <i>executed</i> applies to the resulting <i>function</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>For a call to the <i>function</i> <b>ensure-generic-function</b>, the value of the
+<i>optimize quality</i> <b>safety</b> in the <i>environment</i>
+<i>object</i> passed as the <tt>:environment</tt> <i>argument</i> applies 
+to the resulting <i>generic function</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>For a call to <b>compile</b> with a <i>lambda expression</i> as the
+<i>argument</i>, the value of the <i>optimize quality</i> <b>safety</b>
+in the <i>global environment</i> at the time <b>compile</b> is <i>called</i>
+applies to the resulting <i>compiled function</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>For a call to <b>compile</b> with only one argument, if the original definition
+of the <i>function</i> was <i>safe</i>, then the resulting <i>compiled function</i>
+must also be <i>safe</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>A <i>call</i> to a <i>method</i> by <b>call-next-method</b> must be 
+considered <i>safe</i> if each of the following is 
+</p>
+<p><i>safe code</i> or <i>system code</i>:
+</p>
+<dl compact="compact">
+<dt>&ndash;</dt>
+<dd><p>the definition of the <i>generic function</i> (if it was defined explicitly).
+</p></dd>
+<dt>&ndash;</dt>
+<dd><p>the <i>method</i> definitions for all <i>applicable</i> <i>methods</i>.
+</p></dd>
+<dt>&ndash;</dt>
+<dd><p>the definition of the <i>method combination</i>.
+</p></dd>
+<dt>&ndash;</dt>
+<dd><p>the point of entry into the body of the <i>method defining form</i>,
+	      where the <i>binding</i> of <b>call-next-method</b> is established.
+</p></dd>
+<dt>&ndash;</dt>
+<dd><p>the point of <i>functional evaluation</i> of the name <b>call-next-method</b>.
+</p></dd>
+</dl>
+
+</dd>
+</dl>
+
+<p>An <i>unsafe call</i>
+<a name="index-unsafe-call"></a>
+ is a <i>call</i> that is not a <i>safe call</i>.
+</p>
+<p>The informal intent is that the <i>programmer</i> can rely on a <i>call</i>
+to be <i>safe</i>, even when <i>system code</i> is involved, if all reasonable
+steps have been taken to ensure that the <i>call</i> is <i>safe</i>.
+For example, if a <i>programmer</i> calls <b>mapcar</b> from <i>safe</i>
+<i>code</i> and supplies a <i>function</i> that was <i>compiled</i> 
+as <i>safe</i>, the <i>implementation</i> is required to ensure that
+<b>mapcar</b> makes a <i>safe call</i> as well.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

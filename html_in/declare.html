@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>declare (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="declare (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="declare (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" rel="up" title="Evaluation and Compilation Dictionary">
+<link href="ignore.html#ignore" rel="next" title="ignore">
+<link href="declaim.html#declaim" rel="prev" title="declaim">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="declare"></a>
+<div class="header">
+<p>
+Next: <a href="ignore.html#ignore" accesskey="n" rel="next">ignore</a>, Previous: <a href="declaim.html#declaim" accesskey="p" rel="prev">declaim</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="declare-_005bSymbol_005d"></a>
+<h4 class="subsection">3.8.18 declare                                                            [Symbol]</h4>
+
+<a name="Syntax_003a_003a-1"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><code>declare</code>  <i>{<i>declaration-specifier</i>}*</i> 
+</p><a name="Arguments_003a_003a-1"></a>
+<h4 class="subsubheading">Arguments::</h4>
+
+<p><i>declaration-specifier</i>&mdash;a <i>declaration specifier</i>; not evaluated.
+</p>
+<a name="Description_003a_003a-17"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>A <b>declare</b> <i>expression</i>, sometimes called a <i>declaration</i>,
+can occur only at the beginning of the bodies of certain <i>forms</i>;
+that is, it may be preceded only by other <b>declare</b> <i>expressions</i>,
+or by a <i>documentation string</i> if the context permits.
+</p>
+<p>A <b>declare</b> <i>expression</i> can occur in a <i>lambda expression</i>
+or in any of the <i>forms</i> listed in Figure 3&ndash;23.
+</p>
+<p>&nbsp;&nbsp;defgeneric&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">do-external-symbols</span>&nbsp;&nbsp;&nbsp;prog&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">define-compiler-macro</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">do-symbols</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prog*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">define-method-combination</span>&nbsp;&nbsp;dolist&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">restart-case</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">define-setf-expander</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dotimes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">symbol-macrolet</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defmacro&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;flet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">with-accessors</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defmethod&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">handler-case</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">with-hash-table-iterator</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defsetf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;labels&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">with-input-from-string</span>&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;deftype&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">with-open-file</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defun&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">with-open-stream</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">destructuring-bind</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;locally&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">with-output-to-string</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;do&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;macrolet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">with-package-iterator</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;do*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">multiple-value-bind</span>&nbsp;&nbsp;&nbsp;<span class="nolinebreak">with-slots</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">do-all-symbols</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">pprint-logical-block</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;3&ndash;23:&nbsp;Standardized&nbsp;Forms&nbsp;In&nbsp;Which&nbsp;Declarations&nbsp;Can&nbsp;Occur&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<p>A <b>declare</b> <i>expression</i> can only occur 
+where specified by the syntax of these <i>forms</i>.
+The consequences of attempting to evaluate a <b>declare</b> <i>expression</i> 
+are undefined.  In situations where such <i>expressions</i> can appear, 
+explicit checks are made for their presence and they are never actually evaluated;
+it is for this reason that they
+are called  &ldquo;<b>declare</b> <i>expressions</i>&rdquo;
+rather than &ldquo;<b>declare</b> <i>forms</i>.&rdquo;
+</p>
+<p><i>Macro forms</i> cannot expand into declarations;
+<b>declare</b> <i>expressions</i> must appear as actual <i>subexpressions</i> of
+the <i>form</i> to which they refer.
+</p>
+<p>Figure 3&ndash;24 shows a list of <i>declaration identifiers</i> 
+that can be used with <b>declare</b>.
+</p>
+<p>&nbsp;&nbsp;<span class="nolinebreak">dynamic-extent</span>&nbsp;&nbsp;ignore&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;optimize&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;ftype&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inline&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;special&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;ignorable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;notinline&nbsp;&nbsp;type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;3&ndash;24:&nbsp;Local&nbsp;Declaration&nbsp;Specifiers<!-- /@w -->
+</p>
+
+<p>An implementation is free to support other (<i>implementation-defined</i>)
+<i>declaration identifiers</i> as well.
+</p>
+<a name="Examples_003a_003a-15"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defun nonsense (k x z)
+   (foo z x)                     ;First call to foo
+   (let ((j (foo k x))           ;Second call to foo
+         (x (* k k)))
+     (declare (inline foo) (special x z))
+     (foo x j z)))               ;Third call to foo
+</pre></div>
+
+<p>In this example,
+the <b>inline</b> declaration applies
+only to the third call to <tt>foo</tt>, but not to the first or second ones.
+The <b>special</b> declaration of <tt>x</tt> causes <b>let</b> 
+to make a dynamic <i>binding</i> for <tt>x</tt>, and causes the reference to 
+<tt>x</tt>
+in the body of <b>let</b> to be a dynamic reference.
+The reference to <tt>x</tt> in the second call to <tt>foo</tt> is a local reference
+to the second parameter of <tt>nonsense</tt>.
+The reference to <tt>x</tt> in the first call to <tt>foo</tt> is a local
+reference, not a <b>special</b> one.  The <b>special</b> declaration of <tt>z</tt>
+causes the reference to <tt>z</tt> in the 
+third
+call
+to <tt>foo</tt> to be a dynamic reference; it does not
+refer to the parameter to <tt>nonsense</tt> named <tt>z</tt>, because that
+parameter <i>binding</i> has not been declared to be <b>special</b>.
+(The <b>special</b> declaration of <tt>z</tt> does not appear in the body
+of <b>defun</b>,  but in an inner <i>form</i>, and therefore does not
+affect the <i>binding</i> of the <i>parameter</i>.)
+</p>
+<a name="Exceptional-Situations_003a_003a-5"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>The consequences  of trying to use a <b>declare</b> <i>expression</i> as 
+a <i>form</i> to be <i>evaluated</i> are undefined.
+</p>
+<p>[Editorial Note by KMP: Probably we need to say something here about ill-formed 
+declare expressions.]
+</p>
+<a name="See-Also_003a_003a-17"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="proclaim.html#proclaim">proclaim</a>
+,
+<a href="Type-Specifiers.html#Type-Specifiers">Type Specifiers</a>,
+<b>declaration</b>,
+<b>dynamic-extent</b>,
+<b>ftype</b>,
+<b>ignorable</b>,
+<b>ignore</b>,
+<b>inline</b>,
+<b>notinline</b>,
+<b>optimize</b>,
+<b>type</b>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="ignore.html#ignore" accesskey="n" rel="next">ignore</a>, Previous: <a href="declaim.html#declaim" accesskey="p" rel="prev">declaim</a>, Up: <a href="Evaluation-and-Compilation-Dictionary.html#Evaluation-and-Compilation-Dictionary" accesskey="u" rel="up">Evaluation and Compilation Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

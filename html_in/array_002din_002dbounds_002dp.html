@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>array-in-bounds-p (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="array-in-bounds-p (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="array-in-bounds-p (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Arrays-Dictionary.html#Arrays-Dictionary" rel="up" title="Arrays Dictionary">
+<link href="array_002drank.html#array_002drank" rel="next" title="array-rank">
+<link href="array_002ddisplacement.html#array_002ddisplacement" rel="prev" title="array-displacement">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="array_002din_002dbounds_002dp"></a>
+<div class="header">
+<p>
+Next: <a href="array_002drank.html#array_002drank" accesskey="n" rel="next">array-rank</a>, Previous: <a href="array_002ddisplacement.html#array_002ddisplacement" accesskey="p" rel="prev">array-displacement</a>, Up: <a href="Arrays-Dictionary.html#Arrays-Dictionary" accesskey="u" rel="up">Arrays Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="array_002din_002dbounds_002dp-_005bFunction_005d"></a>
+<h4 class="subsection">15.2.16 array-in-bounds-p                                                [Function]</h4>
+
+<p><code>array-in-bounds-p</code>  <i>array &amp;rest</i> subscripts &rArr;  <i>generalized-boolean</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-328"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>array</i>&mdash;an <i>array</i>.
+</p>
+<p><i>subscripts</i>&mdash;a list of <i>integers</i> 
+		     of length equal to the <i>rank</i> of the <i>array</i>.
+</p>
+<p><i>generalized-boolean</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-435"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns <i>true</i> if the <i>subscripts</i> are all in bounds for <i>array</i>;
+otherwise returns <i>false</i>.
+(If <i>array</i> is a <i>vector</i> with a <i>fill pointer</i>, 
+ that <i>fill pointer</i> is ignored.)
+</p>
+<a name="Examples_003a_003a-312"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (setq a (make-array '(7 11) :element-type 'string-char))
+ (array-in-bounds-p a 0  0) &rArr;  <i>true</i>
+ (array-in-bounds-p a 6 10) &rArr;  <i>true</i>
+ (array-in-bounds-p a 0 -1) &rArr;  <i>false</i>
+ (array-in-bounds-p a 0 11) &rArr;  <i>false</i>
+ (array-in-bounds-p a 7  0) &rArr;  <i>false</i>
+</pre></div>
+
+<a name="See-Also_003a_003a-356"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="array_002ddimensions.html#array_002ddimensions">array-dimensions</a>
+</p>
+<a name="Notes_003a_003a-236"></a>
+<h4 class="subsubheading">Notes::</h4>
+<div class="example">
+<pre class="example"> (array-in-bounds-p array subscripts)   
+ &equiv; (and (not (some #'minusp (list subscripts)))
+         (every #'&lt; (list subscripts) (array-dimensions array)))
+</pre></div>
+
+
+
+
+</body>
+</html>

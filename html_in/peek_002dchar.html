@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>peek-char (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="peek-char (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="peek-char (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="read_002dchar.html#read_002dchar" rel="next" title="read-char">
+<link href="write_002dbyte.html#write_002dbyte" rel="prev" title="write-byte">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="peek_002dchar"></a>
+<div class="header">
+<p>
+Next: <a href="read_002dchar.html#read_002dchar" accesskey="n" rel="next">read-char</a>, Previous: <a href="write_002dbyte.html#write_002dbyte" accesskey="p" rel="prev">write-byte</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="peek_002dchar-_005bFunction_005d"></a>
+<h4 class="subsection">21.2.16 peek-char                                                        [Function]</h4>
+
+<p><code>peek-char</code>  <i>&amp;optional</i> peek-type input-stream eof-error-p
+			       eof-value recursive-p &rArr;  <i>char</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-419"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>peek-type</i>&mdash;a <i>character</i> or <b>t</b> or <b>nil</b>.
+</p>
+<p><i>input-stream</i>&mdash;<i>input</i> <i>stream designator</i>.
+  The default is <i>standard input</i>.
+</p>
+<p><i>eof-error-p</i>&mdash;a <i>generalized boolean</i>.
+ The default is <i>true</i>.
+</p>
+<p><i>eof-value</i>&mdash;an <i>object</i>.
+ The default is <b>nil</b>.
+</p>
+<p><i>recursive-p</i>&mdash;a <i>generalized boolean</i>.
+ The default is <i>false</i>.
+</p>
+<p><i>char</i>&mdash;a <i>character</i> or the <i>eof-value</i>.
+</p>
+<a name="Description_003a_003a-547"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>peek-char</b> obtains the next character in <i>input-stream</i>
+without actually reading it, thus leaving the character
+to be read at a later time.  It can
+also be used to skip over and discard intervening
+characters in the <i>input-stream</i> 
+until a particular character is found.
+</p>
+<p>If <i>peek-type</i> is not supplied or <b>nil</b>,
+<b>peek-char</b> returns the next character to be read from 
+<i>input-stream</i>, without actually removing it from 
+<i>input-stream</i>.
+The next time input is done from <i>input-stream</i>, the character will still
+be there.  
+If <i>peek-type</i> is <b>t</b>,
+then <b>peek-char</b> skips over <i>whitespace</i>_2 <i>characters</i>,
+but not comments,
+and then performs the peeking operation on the next
+character.
+The last character examined, the one that starts an <i>object</i>,
+is not removed from <i>input-stream</i>.
+If <i>peek-type</i> is a <i>character</i>,
+then <b>peek-char</b> skips
+over input characters until a character that
+is <b>char=</b> to that <i>character</i> is found;          
+that character is left in <i>input-stream</i>.
+</p>
+<p>If an <i>end of file</i>_2 occurs and <i>eof-error-p</i> is <i>false</i>,
+<i>eof-value</i> is returned.  
+</p>
+ <p>If <i>recursive-p</i> is <i>true</i>,
+this call is expected to be embedded in a higher-level call to <b>read</b> 
+or a similar <i>function</i> used by the <i>Lisp reader</i>.
+</p>
+<p>When <i>input-stream</i> is an <i>echo stream</i>,
+characters that are only peeked at are not echoed. In the
+case that <i>peek-type</i> is not <b>nil</b>,
+the characters that are passed by <b>peek-char</b> 
+are treated as if by <b>read-char</b>,
+and so are echoed unless they have been marked otherwise by <b>unread-char</b>.
+</p>
+<a name="Examples_003a_003a-394"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (with-input-from-string (input-stream &quot;    1 2 3 4 5&quot;)
+    (format t &quot;~S ~S ~S&quot; 
+            (peek-char t input-stream)
+            (peek-char #\4 input-stream)
+            (peek-char nil input-stream)))
+<tt> |&gt; </tt> #\1 #\4 #\4
+&rArr;  NIL
+</pre></div>
+
+<a name="Affected-By_003a_003a-82"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*readtable*</b>,
+<b>*standard-input*</b>,
+<b>*terminal-io*</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-198"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If <i>eof-error-p</i> is <i>true</i> and an <i>end of file</i>_2 occurs
+an error of <i>type</i> <b>end-of-file</b> is signaled.
+</p>
+<p>If     <i>peek-type</i> is a <i>character</i>,
+       an <i>end of file</i>_2 occurs,
+   and <i>eof-error-p</i> is <i>true</i>,
+an error of <i>type</i> <b>end-of-file</b> is signaled.
+</p>
+<p>If <i>recursive-p</i> is <i>true</i>
+and an <i>end of file</i>_2 occurs,
+an error of <i>type</i> <b>end-of-file</b> is signaled.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="read_002dchar.html#read_002dchar" accesskey="n" rel="next">read-char</a>, Previous: <a href="write_002dbyte.html#write_002dbyte" accesskey="p" rel="prev">write-byte</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

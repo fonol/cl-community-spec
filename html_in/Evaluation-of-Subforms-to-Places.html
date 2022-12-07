@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Evaluation of Subforms to Places (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Evaluation of Subforms to Places (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Evaluation of Subforms to Places (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Overview-of-Places-and-Generalized-Reference.html#Overview-of-Places-and-Generalized-Reference" rel="up" title="Overview of Places and Generalized Reference">
+<link href="Examples-of-Evaluation-of-Subforms-to-Places.html#Examples-of-Evaluation-of-Subforms-to-Places" rel="next" title="Examples of Evaluation of Subforms to Places">
+<link href="Overview-of-Places-and-Generalized-Reference.html#Overview-of-Places-and-Generalized-Reference" rel="prev" title="Overview of Places and Generalized Reference">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Evaluation-of-Subforms-to-Places"></a>
+<div class="header">
+<p>
+Next: <a href="Examples-of-Evaluation-of-Subforms-to-Places.html#Examples-of-Evaluation-of-Subforms-to-Places" accesskey="n" rel="next">Examples of Evaluation of Subforms to Places</a>, Previous: <a href="Overview-of-Places-and-Generalized-Reference.html#Overview-of-Places-and-Generalized-Reference" accesskey="p" rel="prev">Overview of Places and Generalized Reference</a>, Up: <a href="Overview-of-Places-and-Generalized-Reference.html#Overview-of-Places-and-Generalized-Reference" accesskey="u" rel="up">Overview of Places and Generalized Reference</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Evaluation-of-Subforms-to-Places-1"></a>
+<h4 class="subsubsection">5.1.1.1 Evaluation of Subforms to Places</h4>
+
+<p>The following rules apply to the <i>evaluation</i> of <i>subforms</i> in a
+<i>place</i>:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>The evaluation ordering of <i>subforms</i> within a <i>place</i>
+is determined by the order specified by the second value returned by
+</p>
+<p><b>get-setf-expansion</b>. 
+</p>
+<p>For all <i>places</i> defined by this specification
+(<i>e.g.</i>, <b>getf</b>, <b>ldb</b>, ...),
+this order of evaluation is left-to-right.
+</p>
+<a name="index-order-of-evaluation-1"></a>
+
+<a name="index-evaluation-order-1"></a>
+
+<p>When a <i>place</i> is derived from a macro expansion,
+this rule is applied after the macro is expanded to find the appropriate <i>place</i>. 
+</p>
+<p><i>Places</i> defined by using <b>defmacro</b> or
+</p>
+<p><b>define-setf-expander</b>
+</p>
+<p>use the evaluation order defined by those definitions.
+For example, consider the following:
+</p>
+<div class="example">
+<pre class="example"> (defmacro wrong-order (x y) `(getf ,y ,x))
+</pre></div>
+
+<p>This following <i>form</i> evaluates <tt>place2</tt> first and
+then <tt>place1</tt> because that is the order they are evaluated in
+the macro expansion:
+</p>
+<div class="example">
+<pre class="example"> (push value (wrong-order place1 place2))
+</pre></div>
+
+</dd>
+<dt>2.</dt>
+<dd>
+<p>For the <i>macros</i> that manipulate <i>places</i> 
+  (<b>push</b>,
+   <b>pushnew</b>,
+   <b>remf</b>,
+   <b>incf</b>,
+   <b>decf</b>, 
+   <b>shiftf</b>,
+   <b>rotatef</b>,
+   <b>psetf</b>,
+   <b>setf</b>,
+   <b>pop</b>, and those defined by <b>define-modify-macro</b>)
+the <i>subforms</i> of the macro call are evaluated exactly once
+in left-to-right order, with the <i>subforms</i> of the <i>places</i>
+evaluated in the order specified in (1).
+</p>
+<p><b>push</b>, <b>pushnew</b>, <b>remf</b>, 
+<b>incf</b>, <b>decf</b>, <b>shiftf</b>, <b>rotatef</b>, 
+<b>psetf</b>, <b>pop</b> evaluate all <i>subforms</i> before modifying
+any of the <i>place</i> locations.
+<b>setf</b> (in the case when <b>setf</b> has more than two arguments) 
+performs its operation on each pair in sequence. For example, in 
+</p>
+<div class="example">
+<pre class="example"> (setf place1 value1 place2 value2 ...)
+</pre></div>
+
+<p>the <i>subforms</i> of <tt>place1</tt> and <tt>value1</tt> are evaluated, the location
+specified by 
+<tt>place1</tt> is modified to contain the value returned by 
+<tt>value1</tt>, and
+then the rest of the <b>setf</b> form is processed in a like manner.
+</p>
+</dd>
+<dt>3.</dt>
+<dd><p>For <b>check-type</b>, <b>ctypecase</b>, and <b>ccase</b>,
+<i>subforms</i> of the <i>place</i> are evaluated once as in (1),
+but might be evaluated again if the
+type check fails in the case of <b>check-type</b> 
+or none of the cases hold in
+<b>ctypecase</b> and <b>ccase</b>.
+</p>
+</dd>
+<dt>4.</dt>
+<dd><p>For <b>assert</b>, the order of evaluation of the generalized 
+references is not specified.
+<a name="index-order-of-evaluation-2"></a>
+</p>
+<a name="index-evaluation-order-2"></a>
+
+</dd>
+</dl>
+
+<p>Rules 2, 3 and 4 cover all <i>standardized</i> <i>macros</i> that manipulate <i>places</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Examples-of-Evaluation-of-Subforms-to-Places.html#Examples-of-Evaluation-of-Subforms-to-Places" accesskey="n" rel="next">Examples of Evaluation of Subforms to Places</a>, Previous: <a href="Overview-of-Places-and-Generalized-Reference.html#Overview-of-Places-and-Generalized-Reference" accesskey="p" rel="prev">Overview of Places and Generalized Reference</a>, Up: <a href="Overview-of-Places-and-Generalized-Reference.html#Overview-of-Places-and-Generalized-Reference" accesskey="u" rel="up">Overview of Places and Generalized Reference</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

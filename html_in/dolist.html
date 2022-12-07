@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>dolist (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="dolist (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="dolist (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Iteration-Dictionary.html#Iteration-Dictionary" rel="up" title="Iteration Dictionary">
+<link href="loop.html#loop" rel="next" title="loop">
+<link href="dotimes.html#dotimes" rel="prev" title="dotimes">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="dolist"></a>
+<div class="header">
+<p>
+Next: <a href="loop.html#loop" accesskey="n" rel="next">loop</a>, Previous: <a href="dotimes.html#dotimes" accesskey="p" rel="prev">dotimes</a>, Up: <a href="Iteration-Dictionary.html#Iteration-Dictionary" accesskey="u" rel="up">Iteration Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="dolist-_005bMacro_005d"></a>
+<h4 class="subsection">6.2.3 dolist                                                              [Macro]</h4>
+
+<p><code>dolist</code>  <i><span class="roman">(</span>var list-form <span class="roman">[</span>result-form<span class="roman">]</span><span class="roman">)</span>
+		   {<i>declaration</i>}*</i>
+	           {tag | statement}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-87"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>var</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>list-form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>result-form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>tag</i>&mdash;a <i>go tag</i>; not evaluated.
+</p>
+<p><i>statement</i>&mdash;a <i>compound form</i>; evaluated as described below.
+</p>
+<p><i>results</i>&mdash;if a <b>return</b> or <b>return-from</b> form is executed,
+ the <i>values</i> passed from that <i>form</i>;
+ otherwise, the <i>values</i> returned by the <i>result-form</i>
+ or <b>nil</b> if there is no <i>result-form</i>.
+</p>
+<a name="Description_003a_003a-125"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>dolist</b> iterates over the elements of a <i>list</i>.
+The body of <b>dolist</b> is like a <b>tagbody</b>.
+It consists of a series of <i>tags</i> and <i>statements</i>.
+</p>
+<p><b>dolist</b>
+evaluates <i>list-form</i>,
+which should produce a <i>list</i>. It then executes the body
+once for each element in the <i>list</i>, in the order in which the
+<i>tags</i> and <i>statements</i> occur, with
+<i>var</i> bound to the element.
+Then <i>result-form</i> 
+is evaluated.
+<i>tags</i> label
+<i>statements</i>.
+</p>
+<p>At the time <i>result-form</i> is processed, 
+<i>var</i> is bound to <b>nil</b>.
+</p>
+<p>An <i>implicit block</i>  
+named <b>nil</b> surrounds <b>dolist</b>.
+<b>return</b> may be used to terminate the loop immediately without
+performing any further iterations, returning zero or more <i>values</i>.
+</p>
+<p>The <i>scope</i> of the binding of <i>var</i>
+does not include the <i>list-form</i>,
+but the <i>result-form</i> is included.
+</p>
+<p>It is <i>implementation-dependent</i> whether <b>dolist</b>
+<i>establishes</i> a new <i>binding</i> of <i>var</i> on each iteration
+or whether it <i>establishes</i> a binding for <i>var</i> once at the
+beginning and then <i>assigns</i> it on any subsequent iterations.
+</p>
+<a name="Examples_003a_003a-95"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (setq temp-two '()) &rArr;  NIL
+ (dolist (temp-one '(1 2 3 4) temp-two) (push temp-one temp-two)) &rArr;  (4 3 2 1)
+
+ (setq temp-two 0) &rArr;  0
+ (dolist (temp-one '(1 2 3 4)) (incf temp-two)) &rArr;  NIL
+ temp-two &rArr;  4
+
+ (dolist (x '(a b c d)) (prin1 x) (princ &quot; &quot;)) 
+<tt> |&gt; </tt> A B C D 
+&rArr;  NIL
+</pre></div>
+
+<a name="See-Also_003a_003a-107"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;do; do*&rsquo;
+,
+<a href="dotimes.html#dotimes">dotimes</a>
+,
+<a href="tagbody.html#tagbody">tagbody</a>
+,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<a name="Notes_003a_003a-71"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>go</b> may be used within the body of <b>dolist</b> 
+to transfer control to a statement labeled by a <i>tag</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="loop.html#loop" accesskey="n" rel="next">loop</a>, Previous: <a href="dotimes.html#dotimes" accesskey="p" rel="prev">dotimes</a>, Up: <a href="Iteration-Dictionary.html#Iteration-Dictionary" accesskey="u" rel="up">Iteration Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

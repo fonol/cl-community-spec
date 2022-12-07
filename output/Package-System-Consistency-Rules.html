@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Package System Consistency Rules (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Interpretation-of-Tokens.html#Interpretation-of-Tokens" rel="up" title="Interpretation of Tokens">
+<link href="Standard-Macro-Characters.html#Standard-Macro-Characters" rel="next" title="Standard Macro Characters">
+<link href="Valid-Patterns-for-Tokens.html#Valid-Patterns-for-Tokens" rel="prev" title="Valid Patterns for Tokens">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Valid-Patterns-for-Tokens.html#Valid-Patterns-for-Tokens" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Valid Patterns for Tokens
+                            </a>
+                            <a href="Interpretation-of-Tokens.html#Interpretation-of-Tokens.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Interpretation of Tokens
+                            </a>
+                            <a href="Standard-Macro-Characters.html#Standard-Macro-Characters.html" class="nav-btn nav__next ">
+                                Standard Macro Characters
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Package-System-Consistency-Rules"></a>
+<a name="Package-System-Consistency-Rules-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Package System Consistency Rules</h4>
+
+<p>The following rules apply to the package system as long as 
+the <i>value</i> of <b>*package*</b> is not changed:
+</p>
+<dl compact="compact">
+<dt><b>Read-read consistency</b></dt>
+<dd><p>Reading the same <i>symbol</i> <i>name</i>
+always results in the <i>same</i> <i>symbol</i>.
+</p>
+</dd>
+<dt><b>Print-read consistency</b></dt>
+<dd><p>An <i>interned symbol</i> always prints as a sequence of characters that, 
+when read back in, yields the <i>same</i> <i>symbol</i>.
+</p>
+<p>For information about how the <i>Lisp printer</i> treats <i>symbols</i>,
+see <a href="Printing-Symbols.html#Printing-Symbols">Printing Symbols</a>.
+</p>
+</dd>
+<dt><b>Print-print consistency</b></dt>
+<dd><p>If two interned <i>symbols</i> are not the <i>same</i>,
+then their printed representations will be different sequences of characters.
+</p></dd>
+</dl>
+
+<p>These rules are true regardless of any implicit interning.
+As long as the <i>current package</i> is not changed,
+results are reproducible regardless of the order of <i>loading</i> files 
+or the exact history of what <i>symbols</i> were typed in when.  
+If the <i>value</i> of <b>*package*</b> is changed and then changed back to the previous value,
+consistency is maintained.
+The rules can be violated by
+    changing the <i>value</i> of <b>*package*</b>,
+    forcing a change to <i>symbols</i> 
+                  or to <i>packages</i> 
+    	          or to both
+    by continuing from an error,
+or calling one of the following <i>functions</i>:
+    <b>unintern</b>,
+    <b>unexport</b>,
+    <b>shadow</b>,
+    <b>shadowing-import</b>,
+ or <b>unuse-package</b>.
+</p>
+<p>An inconsistency only applies if one of the restrictions is violated
+between two of the named <i>symbols</i>.
+<b>shadow</b>, <b>unexport</b>, <b>unintern</b>,
+and <b>shadowing-import</b> can only affect the consistency of
+<i>symbols</i> with the same <i>names</i> (under <b>string=</b>)
+as the ones supplied as arguments.
+</p>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

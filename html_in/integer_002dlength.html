@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>integer-length (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="integer-length (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="integer-length (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Numbers-Dictionary.html#Numbers-Dictionary" rel="up" title="Numbers Dictionary">
+<link href="integerp.html#integerp" rel="next" title="integerp">
+<link href="ash.html#ash" rel="prev" title="ash">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="integer_002dlength"></a>
+<div class="header">
+<p>
+Next: <a href="integerp.html#integerp" accesskey="n" rel="next">integerp</a>, Previous: <a href="ash.html#ash" accesskey="p" rel="prev">ash</a>, Up: <a href="Numbers-Dictionary.html#Numbers-Dictionary" accesskey="u" rel="up">Numbers Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="integer_002dlength-_005bFunction_005d"></a>
+<h4 class="subsection">12.2.57 integer-length                                                   [Function]</h4>
+
+<p><code>integer-length</code>  <i>integer</i> &rArr;  <i>number-of-bits</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-240"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>integer</i>&mdash;an <i>integer</i>.
+</p>
+<p><i>number-of-bits</i>&mdash;a non-negative <i>integer</i>.
+</p>
+<a name="Description_003a_003a-322"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns the number of bits needed to represent <i>integer</i>
+in binary two&rsquo;s-complement format.
+</p>
+<a name="Examples_003a_003a-224"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (integer-length 0) &rArr;  0
+ (integer-length 1) &rArr;  1
+ (integer-length 3) &rArr;  2
+ (integer-length 4) &rArr;  3
+ (integer-length 7) &rArr;  3
+ (integer-length -1) &rArr;  0
+ (integer-length -4) &rArr;  2
+ (integer-length -7) &rArr;  3
+ (integer-length -8) &rArr;  3
+ (integer-length (expt 2 9)) &rArr;  10
+ (integer-length (1- (expt 2 9))) &rArr;  9
+ (integer-length (- (expt 2 9))) &rArr;  9
+ (integer-length (- (1+ (expt 2 9)))) &rArr;  10
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-99"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>integer</i> is not an <i>integer</i>.
+</p>
+<a name="Notes_003a_003a-169"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>This function could have been defined by:
+</p>
+<div class="example">
+<pre class="example">(defun integer-length (integer)
+  (ceiling (log (if (minusp integer)
+                    (- integer)
+                    (1+ integer))
+                2)))
+</pre></div>
+
+<p>If <i>integer</i> is non-negative, then its value can be represented
+in unsigned binary form in a field whose width in bits is
+no smaller than <tt>(integer-length <i>integer</i>)</tt>.
+Regardless of the sign of <i>integer</i>, its value can be
+represented in signed binary two&rsquo;s-complement form in a field
+whose width in bits is no smaller than <tt>(+ (integer-length <i>integer</i>) 1)</tt>.
+</p>
+
+
+
+</body>
+</html>

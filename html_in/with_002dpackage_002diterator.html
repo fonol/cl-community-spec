@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>with-package-iterator (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="with-package-iterator (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="with-package-iterator (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Packages-Dictionary.html#Packages-Dictionary" rel="up" title="Packages Dictionary">
+<link href="unexport.html#unexport" rel="next" title="unexport">
+<link href="make_002dpackage.html#make_002dpackage" rel="prev" title="make-package">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="with_002dpackage_002diterator"></a>
+<div class="header">
+<p>
+Next: <a href="unexport.html#unexport" accesskey="n" rel="next">unexport</a>, Previous: <a href="make_002dpackage.html#make_002dpackage" accesskey="p" rel="prev">make-package</a>, Up: <a href="Packages-Dictionary.html#Packages-Dictionary" accesskey="u" rel="up">Packages Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="with_002dpackage_002diterator-_005bMacro_005d"></a>
+<h4 class="subsection">11.2.13 with-package-iterator                                               [Macro]</h4>
+
+<p><code>with-package-iterator</code>  <i><span class="roman">(</span>name package-list-form &amp;rest</i> symbol-types<span class="roman">)</span>
+ 		   {<i>declaration</i>}* {<i>form</i>}*<br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-185"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>name</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>package-list-form</i>&mdash;a <i>form</i>; evaluated once to produce a <i>package-list</i>.
+</p>
+<p><i>package-list</i>&mdash;a <i>designator</i> for a list of <i>package designators</i>.
+</p>
+<p><i>symbol-type</i>&mdash;one of the <i>symbols</i> 
+		      <tt>:internal</tt>, <tt>:external</tt>, or <tt>:inherited</tt>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> of the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-249"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Within the lexical scope of the body <i>forms</i>,
+the <i>name</i> is defined via <b>macrolet</b> 
+such that successive invocations of <tt>(<i>name</i>)</tt>
+will return the <i>symbols</i>, one by one, 
+from the <i>packages</i> in <i>package-list</i>. 
+</p>
+<p>It is unspecified whether <i>symbols</i> inherited from
+multiple <i>packages</i> are returned more than once.  
+The order of <i>symbols</i> returned does not necessarily reflect the order
+of <i>packages</i> in <i>package-list</i>.  When <i>package-list</i> has 
+more than one element, it is unspecified whether duplicate <i>symbols</i> are
+returned once or more than once.  
+</p>
+<p><i>Symbol-types</i> controls which <i>symbols</i> that are <i>accessible</i>
+in a <i>package</i> are returned as follows:
+</p>
+<dl compact="compact">
+<dt><tt>:internal</tt></dt>
+<dd><p>The <i>symbols</i> that are <i>present</i> in the <i>package</i>,
+  but that are not <i>exported</i>.
+</p>
+</dd>
+<dt><tt>:external</tt></dt>
+<dd><p>The <i>symbols</i> that are <i>present</i> in the <i>package</i>
+  and are <i>exported</i>.
+</p>
+</dd>
+<dt><tt>:inherited</tt></dt>
+<dd><p>The <i>symbols</i> that are <i>exported</i> by used <i>packages</i>
+  and that are not <i>shadowed</i>.
+</p></dd>
+</dl>
+
+<p>When more than one argument is supplied for <i>symbol-types</i>, 
+a <i>symbol</i> is returned if its <i>accessibility</i> matches 
+any one of the <i>symbol-types</i> supplied.  
+Implementations may extend this syntax by recognizing additional 
+symbol accessibility types.
+</p>
+<p>An invocation of <tt>(<i>name</i>)</tt> returns four values as follows:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>A flag that indicates whether a <i>symbol</i> is returned
+	      (true means that a <i>symbol</i> is returned).
+</p></dd>
+<dt>2.</dt>
+<dd><p>A <i>symbol</i> that is <i>accessible</i> in one the
+	      indicated <i>packages</i>.
+</p></dd>
+<dt>3.</dt>
+<dd><p>The accessibility type for that <i>symbol</i>; 
+	      <i>i.e.</i>, one of the symbols <tt>:internal</tt>, <tt>:external</tt>, or <tt>:inherited</tt>.
+</p></dd>
+<dt>4.</dt>
+<dd><p>The <i>package</i> from which the <i>symbol</i> was obtained.
+	      The <i>package</i> is one of the <i>packages</i> present 
+	      or named in <i>package-list</i>.
+</p></dd>
+</dl>
+
+<p>After all <i>symbols</i> have been returned by successive invocations of
+<tt>(<i>name</i>)</tt>, then only one value is returned, namely <b>nil</b>.
+</p>
+<p>The meaning of the second, third, and fourth <i>values</i> is that the returned 
+<i>symbol</i> is <i>accessible</i> in the returned <i>package</i>
+in the way indicated by the second return value as follows:
+</p>
+<dl compact="compact">
+<dt><tt>:internal</tt></dt>
+<dd><p>Means <i>present</i> and not <i>exported</i>.
+</p>
+</dd>
+<dt><tt>:external</tt></dt>
+<dd><p>Means <i>present</i> and <i>exported</i>.
+</p>
+</dd>
+<dt><tt>:inherited</tt></dt>
+<dd><p>Means not <i>present</i> (thus not <i>shadowed</i>) but inherited
+from some used <i>package</i>.
+</p></dd>
+</dl>
+
+<p>It is unspecified what happens if any of the implicit interior state 
+of an iteration is returned outside the dynamic extent of the 
+<b>with-package-iterator</b>
+form such as by returning some <i>closure</i> over the invocation <i>form</i>.
+</p>
+<p>Any number of invocations of <b>with-package-iterator</b> 
+can be nested, and the body of the innermost one can invoke all of the
+locally <i>established</i> <i>macros</i>, provided all those <i>macros</i>
+have distinct names.
+</p>
+<a name="Examples_003a_003a-168"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<p>The following function should return <b>t</b> on any <i>package</i>, and signal
+an error if the usage of <b>with-package-iterator</b> does not agree
+with the corresponding usage of <b>do-symbols</b>.
+</p>
+<div class="example">
+<pre class="example"> (defun test-package-iterator (package)
+   (unless (packagep package)
+     (setq package (find-package package)))
+   (let ((all-entries '())
+         (generated-entries '()))
+     (do-symbols (x package) 
+       (multiple-value-bind (symbol accessibility) 
+           (find-symbol (symbol-name x) package)
+         (push (list symbol accessibility) all-entries)))
+     (with-package-iterator (generator-fn package 
+                             :internal :external :inherited)
+       (loop     
+         (multiple-value-bind (more? symbol accessibility pkg)
+             (generator-fn)
+           (unless more? (return))
+           (let ((l (multiple-value-list (find-symbol (symbol-name symbol) 
+                                                      package))))
+             (unless (equal l (list symbol accessibility))
+               (error &quot;Symbol ~S not found as ~S in package ~A [~S]&quot;
+                      symbol accessibility (package-name package) l))
+             (push l generated-entries)))))
+     (unless (and (subsetp all-entries generated-entries :test #'equal)
+                  (subsetp generated-entries all-entries :test #'equal))
+      (error &quot;Generated entries and Do-Symbols entries don't correspond&quot;))
+     t))
+</pre></div>
+
+<p>The following function prints out every <i>present</i> <i>symbol</i> 
+(possibly more than once):
+</p>
+<div class="example">
+<pre class="example"> (defun print-all-symbols () 
+   (with-package-iterator (next-symbol (list-all-packages)
+                           :internal :external)
+     (loop
+       (multiple-value-bind (more? symbol) (next-symbol)
+         (if more? 
+            (print symbol)
+            (return))))))
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-67"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p><b>with-package-iterator</b> signals an error of <i>type</i> <b>program-error</b> if 
+no <i>symbol-types</i> are supplied or if a <i>symbol-type</i> is not
+recognized  by the implementation is supplied.  
+</p>
+<p>The consequences are undefined if the local function named <i>name</i>
+<i>established</i> by <b>with-package-iterator</b> is called after it 
+has returned <i>false</i> as its <i>primary value</i>.
+</p>
+<a name="See-Also_003a_003a-221"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="unexport.html#unexport" accesskey="n" rel="next">unexport</a>, Previous: <a href="make_002dpackage.html#make_002dpackage" accesskey="p" rel="prev">make-package</a>, Up: <a href="Packages-Dictionary.html#Packages-Dictionary" accesskey="u" rel="up">Packages Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

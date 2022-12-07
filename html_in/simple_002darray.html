@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>simple-array (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="simple-array (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="simple-array (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Arrays-Dictionary.html#Arrays-Dictionary" rel="up" title="Arrays Dictionary">
+<link href="vector-_0028System-Class_0029.html#vector-_0028System-Class_0029" rel="next" title="vector (System Class)">
+<link href="array.html#array" rel="prev" title="array">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="simple_002darray"></a>
+<div class="header">
+<p>
+Next: <a href="vector-_0028System-Class_0029.html#vector-_0028System-Class_0029" accesskey="n" rel="next">vector (System Class)</a>, Previous: <a href="array.html#array" accesskey="p" rel="prev">array</a>, Up: <a href="Arrays-Dictionary.html#Arrays-Dictionary" accesskey="u" rel="up">Arrays Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="simple_002darray-_005bType_005d"></a>
+<h4 class="subsection">15.2.2 simple-array                                                         [Type]</h4>
+
+<a name="Supertypes_003a_003a-14"></a>
+<h4 class="subsubheading">Supertypes::</h4>
+
+<p><b>simple-array</b>,
+<b>array</b>,
+<b>t</b>
+</p>
+<a name="Description_003a_003a-421"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <i>type</i> of an <i>array</i> that is not displaced 
+to another <i>array</i>, has no <i>fill pointer</i>, and is
+not
+<i>expressly adjustable</i> is a <i>subtype</i> of <i>type</i> <b>simple-array</b>.
+The concept of a <i>simple array</i>
+exists to allow the implementation to use a specialized representation
+and to allow the user to declare that certain values will always be
+<i>simple arrays</i>. 
+</p>
+<p>The <i>types</i> <b>simple-vector</b>,
+		 <b>simple-string</b>,
+             and <b>simple-bit-vector</b>
+are <i>disjoint</i> <i>subtypes</i> of <i>type</i> <b>simple-array</b>, 
+for they respectively mean <tt>(simple-array t (*))</tt>,
+		           the union of all <tt>(simple-array <i>c</i> (*))</tt> 
+ 			    for any <i>c</i> being a <i>subtype</i> of <i>type</i> <b>character</b>,
+			and <tt>(simple-array bit (*))</tt>.
+</p>
+<a name="Compound-Type-Specifier-Kind_003a_003a-19"></a>
+<h4 class="subsubheading">Compound Type Specifier Kind::</h4>
+
+<p>Specializing.
+</p>
+<a name="Compound-Type-Specifier-Syntax_003a_003a-19"></a>
+<h4 class="subsubheading">Compound Type Specifier Syntax::</h4>
+
+<p>(<code>simple-array</code>{<i><tt>[</tt>{element-type | <b>*</b>} <span class="roman">[</span>dimension-spec<span class="roman">]</span><tt>]</tt></i>})
+</p>
+<p><i><span class="nolinebreak">dimension-spec</span></i>&nbsp;::=rank&nbsp;|&nbsp;<b>*</b>&nbsp;|&nbsp;<span class="roman">(</span>{dimension&nbsp;|&nbsp;<b>*</b>}*<!-- /@w --><span class="roman">)</span>
+</p>
+<a name="Compound-Type-Specifier-Arguments_003a_003a-19"></a>
+<h4 class="subsubheading">Compound Type Specifier Arguments::</h4>
+
+<p><i>dimension</i>&mdash;a <i>valid array dimension</i>.
+</p>
+<p><i>element-type</i>&mdash;a <i>type specifier</i>.
+</p>
+<p><i>rank</i>&mdash;a non-negative <i>fixnum</i>.
+</p>
+<a name="Compound-Type-Specifier-Description_003a_003a-19"></a>
+<h4 class="subsubheading">Compound Type Specifier Description::</h4>
+
+<p>This <i>compound type specifier</i> is treated exactly as the corresponding
+<i>compound type specifier</i> for <i>type</i> <b>array</b> would be treated,
+except that the set is further constrained to include only <i>simple arrays</i>.
+</p>
+<a name="Notes_003a_003a-231"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>It is <i>implementation-dependent</i> 
+whether <i>displaced arrays</i>,
+        <i>vectors</i> with <i>fill pointers</i>,
+     or arrays that are <i>actually adjustable</i>
+  are <i>simple arrays</i>.
+</p>
+<p><tt>(simple-array *)</tt> refers to all <i>simple arrays</i> 
+regardless of element type, <tt>(simple-array <i>type-specifier</i>)</tt>
+refers only to those <i>simple arrays</i>
+that can result from giving <i>type-specifier</i> as the
+<tt>:element-type</tt> argument to <b>make-array</b>.  
+</p>
+
+
+
+</body>
+</html>

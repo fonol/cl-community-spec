@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>describe-object (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Environment-Dictionary.html#Environment-Dictionary" rel="up" title="Environment Dictionary">
+<link href="trace.html#trace" rel="next" title="trace">
+<link href="describe.html#describe" rel="prev" title="describe">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="describe.html#describe" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                describe
+                            </a>
+                            <a href="Environment-Dictionary.html#Environment-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Environment Dictionary
+                            </a>
+                            <a href="trace.html#trace.html" class="nav-btn nav__next ">
+                                trace
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="describe_002dobject"></a>
+<a name="describe_002dobject-_005bStandard-Generic-Function_005d"></a>
+<div class="section top-most">
+<div class="node-type">Standard Generic Function</div>
+<h4 class="subsection">describe-object                                 </h4>
+
+<a name="Syntax_003a_003a-41"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Syntax</h4>
+
+<p><code>describe-object</code>  <i>object stream</i> &rArr;  <i><i>implementation-dependent</i></i>
+</p>
+<a name="Method-Signatures_003a_003a-23"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Method Signatures</h4>
+
+<p><code>describe-object</code>  <i>(<i>object</i> standard-object) <i>stream</i></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-493"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>object</i>&mdash;an <i>object</i>.
+</p>
+<p><i>stream</i>&mdash;a <i>stream</i>.
+</p>
+<a name="Description_003a_003a-655"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The generic function <b>describe-object</b> prints a description of
+<i>object</i> to a <i>stream</i>.  <b>describe-object</b> is called 
+by <b>describe</b>; it must not be called by the user.
+</p>
+<p>Each implementation is required to provide a <i>method</i> on 
+the <i>class</i> <b>standard-object</b> and <i>methods</i> on enough other
+<i>classes</i> so as to ensure that there is always an applicable <i>method</i>.  
+Implementations are free to add <i>methods</i> for other <i>classes</i>.
+Users can write <i>methods</i> for <b>describe-object</b> for their
+own <i>classes</i> if they do not wish to inherit an implementation-supplied
+<i>method</i>.
+</p>
+<p><i>Methods</i> on <b>describe-object</b> can recursively call
+<b>describe</b>.  Indentation, depth limits, and circularity detection
+are all taken care of automatically, provided that each <i>method</i> 
+handles exactly one level of structure and calls <b>describe</b> 
+recursively if there are more structural levels.  The consequences are 
+undefined if this rule is not obeyed.
+</p>
+<p>In some implementations the <i>stream</i> argument passed to a
+<b>describe-object</b> method is not the original <i>stream</i>, but is
+an intermediate <i>stream</i> that implements parts of <b>describe</b>.
+<i>Methods</i> should therefore not depend on the identity of this
+<i>stream</i>.
+</p>
+<a name="Examples_003a_003a-465"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (defclass spaceship ()
+   ((captain :initarg :captain :accessor spaceship-captain)
+    (serial# :initarg :serial-number :accessor spaceship-serial-number)))
+
+ (defclass federation-starship (spaceship) ())
+
+ (defmethod describe-object ((s spaceship) stream)
+   (with-slots (captain serial#) s
+     (format stream &quot;~&amp;~S is a spaceship of type ~S,~
+                     ~
+                       and with serial number ~D.~
+             s (type-of s) captain serial#)))
+
+ (make-instance 'federation-starship
+                :captain &quot;Rachel Garrett&quot;
+                :serial-number &quot;NCC-1701-C&quot;)
+&rArr;  #&lt;FEDERATION-STARSHIP 26312465&gt;
+
+ (describe *)
+<tt> |&gt; </tt> #&lt;FEDERATION-STARSHIP 26312465&gt; is a spaceship of type FEDERATION-STARSHIP,
+<tt> |&gt; </tt> with Rachel Garrett at the helm and with serial number NCC-1701-C.
+&rArr;  &lt;<i>no <i>values</i></i>&gt;
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-533"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="describe.html#describe">describe</a>
+</p>
+<a name="Notes_003a_003a-326"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The same implementation techniques that are applicable to <b>print-object</b> are
+applicable to <b>describe-object</b>.
+</p>
+<p>The reason for making the return values for <b>describe-object</b>
+unspecified is to  avoid forcing users to include explicit <tt>(values)</tt>
+in all of their <i>methods</i>.  <b>describe</b> takes care of that.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

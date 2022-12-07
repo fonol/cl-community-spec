@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Restarts (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Restarts (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Restarts (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Signaling-and-Handling-Conditions.html#Signaling-and-Handling-Conditions" rel="up" title="Signaling and Handling Conditions">
+<link href="Interactive-Use-of-Restarts.html#Interactive-Use-of-Restarts" rel="next" title="Interactive Use of Restarts">
+<link href="Resignaling-a-Condition.html#Resignaling-a-Condition" rel="prev" title="Resignaling a Condition">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Restarts"></a>
+<div class="header">
+<p>
+Next: <a href="Interactive-Use-of-Restarts.html#Interactive-Use-of-Restarts" accesskey="n" rel="next">Interactive Use of Restarts</a>, Previous: <a href="Resignaling-a-Condition.html#Resignaling-a-Condition" accesskey="p" rel="prev">Resignaling a Condition</a>, Up: <a href="Signaling-and-Handling-Conditions.html#Signaling-and-Handling-Conditions" accesskey="u" rel="up">Signaling and Handling Conditions</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Restarts-1"></a>
+<h4 class="subsubsection">9.1.4.3 Restarts</h4>
+
+<p>The interactive condition handler returns only through
+non-local transfer of control to specially defined <i>restarts</i>
+that can be set up either by the system or by user code.  Transferring
+control to a restart is called &ldquo;invoking&rdquo; the restart.  Like
+handlers, active <i>restarts</i> are <i>established</i>
+dynamically, and 
+only active <i>restarts</i>
+can be invoked.  An active 
+<i>restart</i> can be invoked by the user from
+the debugger or by a program by using <b>invoke-restart</b>.
+</p>
+<p>A <i>restart</i> contains a 
+<i>function</i> to be <i>called</i> when the <i>restart</i> is
+invoked, an optional name that can be used to find or invoke the 
+<i>restart</i>, and
+an optional set of interaction information for the debugger to use to
+enable the user to manually invoke a <i>restart</i>. 
+</p>
+<p>The name of a <i>restart</i> is
+used by <b>invoke-restart</b>. <i>Restarts</i> that can be invoked
+only within the debugger do not need names.
+</p>
+<p><i>Restarts</i> can be established by using <b>restart-bind</b>, 
+<b>restart-case</b>, and <b>with-simple-restart</b>.
+A <i>restart</i> function can itself invoke any other <i>restart</i>
+that was active at the time of establishment of the <i>restart</i> 
+of which the <i>function</i> is part.
+</p>
+<p>The <i>restarts</i> <i>established</i> by 
+    a <b>restart-bind</b> <i>form</i>, 
+    a <b>restart-case</b> <i>form</i>,
+ or a <b>with-simple-restart</b> <i>form</i>
+have <i>dynamic extent</i>
+which extends for the duration of that <i>form</i>&rsquo;s execution.
+</p>
+<p><i>Restarts</i> of the same name can be ordered from least recent to
+most recent according to the following two rules:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>Each <i>restart</i> in a set of active restarts
+R_1 is more recent than every <i>restart</i> in a
+set R_2 if the <i>restarts</i> 
+in R_2 were active when the  <i>restarts</i> in R_1 were
+established.
+</p>
+</dd>
+<dt>2.</dt>
+<dd><p>Let r_1 and r_2 be two active <i>restarts</i> with
+the same name established by the same <i>form</i>. Then r_1 is
+more recent than r_2 if r_1 was defined to the
+left of r_2 in the <i>form</i> that established them.
+</p>
+</dd>
+</dl>
+
+<p>If a <i>restart</i> is invoked but does not transfer control,
+the values resulting from the <i>restart</i> function are
+returned by the function that invoked the restart, either
+<b>invoke-restart</b> or <b>invoke-restart-interactively</b>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Interactive-Use-of-Restarts.html#Interactive-Use-of-Restarts" accesskey="n" rel="next">Interactive Use of Restarts</a>, Previous: <a href="Resignaling-a-Condition.html#Resignaling-a-Condition" accesskey="p" rel="prev">Resignaling a Condition</a>, Up: <a href="Signaling-and-Handling-Conditions.html#Signaling-and-Handling-Conditions" accesskey="u" rel="up">Signaling and Handling Conditions</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

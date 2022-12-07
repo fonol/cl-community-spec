@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Additional Constraints on Externalizable Objects (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Literal-Objects-in-Compiled-Files.html#Literal-Objects-in-Compiled-Files" rel="up" title="Literal Objects in Compiled Files">
+<link href="Exceptional-Situations-in-the-Compiler.html#Exceptional-Situations-in-the-Compiler" rel="next" title="Exceptional Situations in the Compiler">
+<link href="Extensions-to-Similarity-Rules.html#Extensions-to-Similarity-Rules" rel="prev" title="Extensions to Similarity Rules">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Extensions-to-Similarity-Rules.html#Extensions-to-Similarity-Rules" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Extensions to Similarity Rules
+                            </a>
+                            <a href="Literal-Objects-in-Compiled-Files.html#Literal-Objects-in-Compiled-Files.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Literal Objects in Compiled Files
+                            </a>
+                            <a href="Exceptional-Situations-in-the-Compiler.html#Exceptional-Situations-in-the-Compiler.html" class="nav-btn nav__next ">
+                                Exceptional Situations in the Compiler
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Additional-Constraints-on-Externalizable-Objects"></a>
+<a name="Additional-Constraints-on-Externalizable-Objects-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Additional Constraints on Externalizable Objects</h4>
+
+<p>If two <i>literal objects</i> appearing in the source code for a single file
+processed with
+the <i>file compiler</i> 
+are the <i>identical</i>,
+the corresponding <i>objects</i> in the <i>compiled code</i> 
+must also be the <i>identical</i>.
+</p>
+<p>With the exception of <i>symbols</i> and <i>packages</i>, any two
+<i>literal objects</i>
+in <i>code</i> being processed by
+the <i>file compiler</i>
+may be <i>coalesced</i> 
+if and only if they are <i>similar</i>; 
+if they are either both <i>symbols</i> or both <i>packages</i>,
+they may only be <i>coalesced</i> if and only if they are <i>identical</i>.
+</p>
+<p><i>Objects</i> containing circular references can 
+be <i>externalizable objects</i>.
+The <i>file compiler</i> is required to preserve <b>eql</b>ness of 
+substructures within a <i>file</i>.
+Preserving <b>eql</b>ness means that subobjects that are
+the <i>same</i>
+in the <i>source code</i> must 
+be
+the <i>same</i>
+in the corresponding <i>compiled code</i>.
+</p>
+<p>In addition, the following are constraints on the handling of
+<i>literal objects</i> by the <i>file compiler</i>:
+</p>
+<dl compact="compact">
+<dt><tt></tt></dt>
+<dd><p><b>array:</b> If an <i>array</i> in the source code is a
+<i>simple array</i>, then the corresponding <i>array</i>
+in the compiled code will also be a <i>simple array</i>.  If
+an <i>array</i> in the source code is displaced, has a 
+<i>fill pointer</i>, or is <i>actually adjustable</i>, the corresponding 
+<i>array</i> in the compiled code might lack any or all of these
+qualities. If an <i>array</i> in the source code has a fill
+pointer, then the corresponding <i>array</i> in the compiled
+code might be only the size implied by the fill pointer.
+</p>
+</dd>
+<dt><tt></tt></dt>
+<dd><p><b>packages:</b> The loader is required to find the
+corresponding <i>package</i> <i>object</i> as if by calling 
+<b>find-package</b> with the package name as an argument.  
+An error of <i>type</i> <b>package-error</b> is signaled if no 
+<i>package</i> of that name exists at load time.
+</p>
+</dd>
+<dt><tt></tt></dt>
+<dd><p><b>random-state:</b> A constant <i>random state</i>
+object cannot be used as the state argument 
+to the <i>function</i> <b>random</b> because <b>random</b> modifies this data structure.
+</p>
+</dd>
+<dt><tt></tt></dt>
+<dd><p><b>structure, standard-object:</b>
+<i>Objects</i> of <i>type</i> <b>structure-object</b> and <b>standard-object</b>
+may appear in compiled constants if there is an
+appropriate <b>make-load-form</b> method defined for that
+<i>type</i>.
+</p>
+<p>The <i>file compiler</i> calls <b>make-load-form</b> on any <i>object</i>
+that is referenced as a <i>literal object</i> if the <i>object</i> is a
+<i>generalized instance</i> of <b>standard-object</b>,
+<b>structure-object</b>, <b>condition</b>, or any of a 
+(possibly empty) <i>implementation-dependent</i> set of other <i>classes</i>.
+The <i>file compiler</i> only calls <b>make-load-form</b> once for
+any given <i>object</i> within a single <i>file</i>.
+</p>
+</dd>
+<dt><tt></tt></dt>
+<dd><p><b>symbol:</b> In order to guarantee that <i>compiled files</i> can be <i>loaded</i>
+  correctly, users must ensure that the <i>packages</i> referenced in those <i>files</i>
+  are defined consistently at compile time and load time.  <i>Conforming programs</i>
+  must satisfy the following requirements:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>The <i>current package</i> when a <i>top level form</i> in the <i>file</i>
+      is processed by <b>compile-file</b> must be the same as the <i>current package</i>
+      when the <i>code</i> corresponding to that <i>top level form</i> in the
+      <i>compiled file</i> is executed by <b>load</b>.  In particular:
+</p>
+<dl compact="compact">
+<dt>a.</dt>
+<dd><p>Any <i>top level form</i> in a <i>file</i> that alters
+	  the <i>current package</i> must change it to a <i>package</i>
+	  of the same <i>name</i> both at compile time and at load time.
+</p>
+</dd>
+<dt>b.</dt>
+<dd><p>If the first <i>non-atomic</i> <i>top level form</i> in the <i>file</i>
+	  is not an <b>in-package</b> <i>form</i>, then the <i>current package</i>
+	  at the time <b>load</b> is called must be a <i>package</i> with the 
+	  same <i>name</i> as the package that was the <i>current package</i>
+	  at the time <b>compile-file</b> was called.
+</p></dd>
+</dl>
+
+</dd>
+<dt>2.</dt>
+<dd><p>For all <i>symbols</i> 
+      appearing lexically within a <i>top level form</i> that
+      were <i>accessible</i> in the <i>package</i> that was the <i>current package</i>
+      during processing of that <i>top level form</i> at compile time, but
+      whose <i>home package</i> was another <i>package</i>, at load time there must
+      be a <i>symbol</i> with the same <i>name</i> that is <i>accessible</i> in both the
+      load-time <i>current package</i> and in the <i>package</i>
+      with the same <i>name</i> as the
+      compile-time <i>home package</i>. 
+</p>
+</dd>
+<dt>3.</dt>
+<dd><p>For all <i>symbols</i> represented in the <i>compiled file</i> 
+      that were <i>external symbols</i> in
+      their <i>home package</i> at compile time, there must be a <i>symbol</i> with the
+      same <i>name</i> that is an <i>external symbol</i> in the <i>package</i> 
+      with the same <i>name</i> at load time.
+</p></dd>
+</dl>
+
+<p>If any of these conditions do not hold, the <i>package</i> in which the <i>loader</i> looks
+  for the affected <i>symbols</i> is unspecified.  <i>Implementations</i> are permitted 
+  to signal an error or to define this behavior.
+</p>
+</dd>
+</dl>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

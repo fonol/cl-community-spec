@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Tilde Question-Mark-&gt; Recursive Processing (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Tilde Question-Mark-&gt; Recursive Processing (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Tilde Question-Mark-&gt; Recursive Processing (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Control_002dFlow-Operations.html#FORMAT-Control_002dFlow-Operations" rel="up" title="FORMAT Control-Flow Operations">
+<link href="FORMAT-Miscellaneous-Operations.html#FORMAT-Miscellaneous-Operations" rel="next" title="FORMAT Miscellaneous Operations">
+<link href="Tilde-Right_002dBrace_002d_003e-End-of-Iteration.html#Tilde-Right_002dBrace_002d_003e-End-of-Iteration" rel="prev" title="Tilde Right-Brace-&gt; End of Iteration">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Tilde-Question_002dMark_002d_003e-Recursive-Processing"></a>
+<div class="header">
+<p>
+Previous: <a href="Tilde-Right_002dBrace_002d_003e-End-of-Iteration.html#Tilde-Right_002dBrace_002d_003e-End-of-Iteration" accesskey="p" rel="prev">Tilde Right-Brace-&gt; End of Iteration</a>, Up: <a href="FORMAT-Control_002dFlow-Operations.html#FORMAT-Control_002dFlow-Operations" accesskey="u" rel="up">FORMAT Control-Flow Operations</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Tilde-Question_002dMark_003a-Recursive-Processing"></a>
+<h4 class="subsubsection">22.3.7.6 Tilde Question-Mark: Recursive Processing</h4>
+
+<p>The next <i>arg</i> must be a <i>format control</i>, and the one after it a <i>list</i>;
+both are consumed by the <tt>~?</tt> directive.
+The two are processed as a <i>control-string</i>, with the elements of the <i>list</i> 
+as the arguments.  Once the recursive processing
+has been finished, the processing of the control
+string containing the <tt>~?</tt> directive is resumed.
+Example:
+</p>
+<div class="example">
+<pre class="example"> (format nil &quot;~? ~D&quot; &quot;&lt;~A ~D&gt;&quot; '(&quot;Foo&quot; 5) 7) &rArr;  &quot;&lt;Foo 5&gt; 7&quot;
+ (format nil &quot;~? ~D&quot; &quot;&lt;~A ~D&gt;&quot; '(&quot;Foo&quot; 5 14) 7) &rArr;  &quot;&lt;Foo 5&gt; 7&quot;
+</pre></div>
+
+<p>Note that in the second example three arguments are supplied
+to the <i>format string</i> <tt>&quot;&lt;~A ~D&gt;&quot;</tt>, but only two are processed
+and the third is therefore ignored.
+</p>
+<p>With the <tt>@</tt>
+modifier, only one <i>arg</i> is directly consumed.
+The <i>arg</i> must be a <i>string</i>; 
+it is processed as part of the control
+string as if it had appeared in place of the <tt>~@?</tt> construct,
+and any directives in the recursively processed control string may      
+consume arguments of the control string containing the <tt>~@?</tt>
+directive.
+Example:
+</p>
+<div class="example">
+<pre class="example"> (format nil &quot;~@? ~D&quot; &quot;&lt;~A ~D&gt;&quot; &quot;Foo&quot; 5 7) &rArr;  &quot;&lt;Foo 5&gt; 7&quot;
+ (format nil &quot;~@? ~D&quot; &quot;&lt;~A ~D&gt;&quot; &quot;Foo&quot; 5 14 7) &rArr;  &quot;&lt;Foo 5&gt; 14&quot;
+</pre></div>
+
+
+
+
+</body>
+</html>

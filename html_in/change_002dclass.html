@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>change-class (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="change-class (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="change-class (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="slot_002dboundp.html#slot_002dboundp" rel="next" title="slot-boundp">
+<link href="update_002dinstance_002dfor_002dredefined_002dclass.html#update_002dinstance_002dfor_002dredefined_002dclass" rel="prev" title="update-instance-for-redefined-class">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="change_002dclass"></a>
+<div class="header">
+<p>
+Next: <a href="slot_002dboundp.html#slot_002dboundp" accesskey="n" rel="next">slot-boundp</a>, Previous: <a href="update_002dinstance_002dfor_002dredefined_002dclass.html#update_002dinstance_002dfor_002dredefined_002dclass" accesskey="p" rel="prev">update-instance-for-redefined-class</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="change_002dclass-_005bStandard-Generic-Function_005d"></a>
+<h4 class="subsection">7.7.8 change-class                                    [Standard Generic Function]</h4>
+
+<a name="Syntax_003a_003a-17"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><code>change-class</code>  <i>instance new-class &amp;key</i> &amp;allow-other-keys &rArr;  <i>instance</i>
+</p>
+<a name="Method-Signatures_003a_003a-6"></a>
+<h4 class="subsubheading">Method Signatures::</h4>
+
+<p><code>change-class</code>  <i><span class="roman">(</span><i>instance</i> <b>standard-object</b><span class="roman">)</span>
+			 <span class="roman">(</span><i>new-class</i> <b>standard-class</b><span class="roman">)</span>
+			 &amp;rest</i> initargs
+</p>
+<p><code>change-class</code>  <i><span class="roman">(</span><i>instance</i> <b>t</b><span class="roman">)</span>
+		         <span class="roman">(</span><i>new-class</i> <b>symbol</b><span class="roman">)</span>
+			 &amp;rest</i> initargs
+</p>
+<a name="Arguments-and-Values_003a_003a-96"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>instance</i>&mdash;an <i>object</i>.
+</p>
+<p><i>new-class</i>&mdash;a <i>class designator</i>.
+</p>
+<p><i>initargs</i>&mdash;an <i>initialization argument list</i>.
+</p>
+<a name="Description_003a_003a-135"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <i>generic function</i> <b>change-class</b> changes the 
+<i>class</i> of an <i>instance</i> to <i>new-class</i>.  
+It destructively modifies and returns the <i>instance</i>.
+</p>
+<p>If in the old <i>class</i> there is any <i>slot</i> of the 
+same name as a local <i>slot</i> in the <i>new-class</i>, 
+the value of that <i>slot</i> is retained.  This means that if 
+the <i>slot</i> has a value, the value returned by <b>slot-value</b>
+after <b>change-class</b> is invoked is <b>eql</b> to the
+value returned by <b>slot-value</b> before <b>change-class</b> is
+invoked.  Similarly, if the <i>slot</i> was unbound, it remains
+unbound.  The other <i>slots</i> are initialized as described in 
+<a href="Changing-the-Class-of-an-Instance.html#Changing-the-Class-of-an-Instance">Changing the Class of an Instance</a>.
+</p>
+<p>After completing all other actions, <b>change-class</b> invokes
+<b>update-instance-for-different-class</b>.  The
+generic function <b>update-instance-for-different-class</b> can be used
+to assign values to slots in the transformed instance.
+</p>
+<p>See &lsquo;Initializing Newly Added Local Slots&rsquo;.
+</p>
+<p>If the second of the above <i>methods</i> is selected, 
+that <i>method</i> invokes <b>change-class</b> 
+on <i>instance</i>, <tt>(find-class <i>new-class</i>)</tt>,
+and the <i>initargs</i>.
+</p>
+<a name="Examples_003a_003a-101"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">
+
+ (defclass position () ())
+
+ (defclass x-y-position (position)
+     ((x :initform 0 :initarg :x)
+      (y :initform 0 :initarg :y)))
+
+ (defclass rho-theta-position (position)
+     ((rho :initform 0)
+      (theta :initform 0)))
+
+ (defmethod update-instance-for-different-class :before ((old x-y-position) 
+                                                         (new rho-theta-position)
+                                                         &amp;key)
+   ;; Copy the position information from old to new to make new
+   ;; be a rho-theta-position at the same position as old.
+   (let ((x (slot-value old 'x))
+         (y (slot-value old 'y)))
+     (setf (slot-value new 'rho) (sqrt (+ (* x x) (* y y)))
+           (slot-value new 'theta) (atan y x))))
+
+;;; At this point an instance of the class x-y-position can be
+;;; changed to be an instance of the class rho-theta-position using
+;;; change-class:
+
+ (setq p1 (make-instance 'x-y-position :x 2 :y 0))
+
+ (change-class p1 'rho-theta-position)
+
+;;; The result is that the instance bound to p1 is now an instance of
+;;; the class rho-theta-position.   The update-instance-for-different-class
+;;; method performed the initialization of the rho and theta slots based
+;;; on the value of the x and y slots, which were maintained by
+;;; the old instance.
+
+</pre></div>
+
+<a name="See-Also_003a_003a-117"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="update_002dinstance_002dfor_002ddifferent_002dclass.html#update_002dinstance_002dfor_002ddifferent_002dclass">update-instance-for-different-class</a>
+,
+<a href="Changing-the-Class-of-an-Instance.html#Changing-the-Class-of-an-Instance">Changing the Class of an Instance</a>
+</p>
+<a name="Notes_003a_003a-79"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The generic function <b>change-class</b> has several semantic
+difficulties.  First, it performs a destructive operation that can be
+invoked within a <i>method</i> on an <i>instance</i> that was used to select that
+<i>method</i>. 
+When multiple <i>methods</i> are involved because <i>methods</i> are being
+combined, the <i>methods</i> currently executing or about to be executed may
+no longer be applicable.  Second, some implementations might use
+compiler optimizations of slot <i>access</i>, and when the <i>class</i> of an
+<i>instance</i> is changed the assumptions the compiler made might be
+violated.  This implies that a programmer must not use
+<b>change-class</b> inside a <i>method</i> if any 
+<i>methods</i> for that <i>generic function</i>
+<i>access</i> any <i>slots</i>, or the results are undefined.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="slot_002dboundp.html#slot_002dboundp" accesskey="n" rel="next">slot-boundp</a>, Previous: <a href="update_002dinstance_002dfor_002dredefined_002dclass.html#update_002dinstance_002dfor_002dredefined_002dclass" accesskey="p" rel="prev">update-instance-for-redefined-class</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

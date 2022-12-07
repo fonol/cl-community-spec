@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Examples of Class Precedence List Determination (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Determining-the-Class-Precedence-List.html#Determining-the-Class-Precedence-List" rel="up" title="Determining the Class Precedence List">
+<link href="Redefining-Classes.html#Redefining-Classes" rel="next" title="Redefining Classes">
+<link href="Topological-Sorting.html#Topological-Sorting" rel="prev" title="Topological Sorting">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Topological-Sorting.html#Topological-Sorting" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Topological Sorting
+                            </a>
+                            <a href="Determining-the-Class-Precedence-List.html#Determining-the-Class-Precedence-List.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Determining the Class Precedence List
+                            </a>
+                            <a href="Redefining-Classes.html#Redefining-Classes.html" class="nav-btn nav__next ">
+                                Redefining Classes
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Examples-of-Class-Precedence-List-Determination"></a>
+<a name="Examples-of-Class-Precedence-List-Determination-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Examples of Class Precedence List Determination</h4>
+
+<p>This example determines a <i>class precedence list</i> for the
+class <tt>pie</tt>.  The following <i>classes</i> are defined:
+</p>
+<div class="example">
+<pre class="example"><code> (defclass pie (apple cinnamon) ())
+
+ (defclass apple (fruit) ())
+
+ (defclass cinnamon (spice) ())
+
+ (defclass fruit (food) ())
+
+ (defclass spice (food) ())
+
+ (defclass food () ())
+</code>
+</pre></div>
+
+<p>The set S_{pie}~= {pie, apple, cinnamon, fruit, spice, food,
+standard-object, t}. The set R~= {(pie, apple),
+(apple, cinnamon), (apple, fruit), (cinnamon, spice), \break
+(fruit, food), (spice, food), (food, standard-object), (standard-object,
+t)}.
+</p>
+<p>The class <tt>pie</tt> is not preceded by anything, so it comes first;
+the result so far is <tt>(pie)</tt>.  Remove <tt>pie</tt> from S and pairs
+mentioning <tt>pie</tt> from R to get S~= {apple, cinnamon,
+fruit, spice, food, standard-object, t} and R~=~{(apple, cinnamon), (apple, fruit), (cinnamon, spice),\break (fruit,
+food), (spice, food), (food, standard-object),
+(standard-object, t)}.
+</p>
+<p>The class <tt>apple</tt> is not preceded by anything, so it is next; the
+result is <tt>(pie apple)</tt>. Removing <tt>apple</tt> and the relevant
+pairs results in S~= {cinnamon, fruit, spice, food,
+standard-object, t} and R~= {(cinnamon, spice),
+(fruit, food), (spice, food), (food, standard-object),\break
+(standard-object, t)}.
+</p>
+<p>The classes <tt>cinnamon</tt> and <tt>fruit</tt> are not preceded by
+anything, so the one with a direct <i>subclass</i> rightmost in the 
+<i>class precedence list</i> computed so far goes next.  The class <tt>apple</tt> is a
+direct <i>subclass</i> of <tt>fruit</tt>, and the class <tt>pie</tt> is a direct
+<i>subclass</i> of <tt>cinnamon</tt>.  Because <tt>apple</tt> appears to the right
+of <tt>pie</tt> in the <i>class precedence list</i>, 
+<tt>fruit</tt> goes next, and the
+result so far is <tt>(pie apple fruit)</tt>.  S~= {cinnamon,
+spice, food, standard-object, t}; R~= {(cinnamon,
+spice), (spice, food),\break (food, standard-object),
+(standard-object, t)}.
+</p>
+<p>The class <tt>cinnamon</tt> is next, giving the result so far as <tt>(pie apple fruit cinnamon)</tt>.  At this point S~= {spice,
+food, standard-object, t}; R~= {(spice, food), (food,
+standard-object), (standard-object, t)}.
+</p>
+<p>The classes <tt>spice</tt>, <tt>food</tt>, <b>standard-object</b>, and 
+<b>t</b> are added in that order, and the <i>class precedence list</i> 
+is <tt>(pie apple fruit cinnamon spice food standard-object t)</tt>.
+</p>
+<p>It is possible to write a set of <i>class</i> definitions that cannot be 
+ordered.   For example: 
+</p>
+<div class="example">
+<pre class="example"><code> (defclass new-class (fruit apple) ())
+
+ (defclass apple (fruit) ())
+</code>
+</pre></div>
+
+<p>The class <tt>fruit</tt> must precede <tt>apple</tt> 
+because the local ordering of <i>superclasses</i> must be preserved.
+The class <tt>apple</tt> must precede <tt>fruit</tt> 
+because a <i>class</i> always precedes its own <i>superclasses</i>.
+When this situation occurs, an error is signaled, as happens here
+when the system tries to compute the <i>class precedence list</i> 
+of <tt>new-class</tt>.
+</p>
+<p>The following might appear to be a conflicting set of definitions:
+</p>
+<div class="example">
+<pre class="example"><code> (defclass pie (apple cinnamon) ())
+
+ (defclass pastry (cinnamon apple) ())
+
+ (defclass apple () ())
+
+ (defclass cinnamon () ())
+</code>
+</pre></div>
+
+<p>The <i>class precedence list</i> for <tt>pie</tt> is 
+<tt>(pie apple cinnamon standard-object t)</tt>.
+</p>
+<p>The <i>class precedence list</i> for <tt>pastry</tt> is  
+<tt>(pastry cinnamon apple standard-object t)</tt>.
+</p>
+<p>It is not a problem for <tt>apple</tt> to precede <tt>cinnamon</tt> in the
+ordering of the <i>superclasses</i> of <tt>pie</tt> but not in the ordering for
+<tt>pastry</tt>.  However, it is not possible to build a new <i>class</i> that
+has both <tt>pie</tt> and <tt>pastry</tt> as <i>superclasses</i>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

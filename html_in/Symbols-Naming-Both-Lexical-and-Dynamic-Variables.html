@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Symbols Naming Both Lexical and Dynamic Variables (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Symbols Naming Both Lexical and Dynamic Variables (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Symbols Naming Both Lexical and Dynamic Variables (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="The-Evaluation-Model.html#The-Evaluation-Model" rel="up" title="The Evaluation Model">
+<link href="Conses-as-Forms.html#Conses-as-Forms" rel="next" title="Conses as Forms">
+<link href="Constant-Variables.html#Constant-Variables" rel="prev" title="Constant Variables">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Symbols-Naming-Both-Lexical-and-Dynamic-Variables"></a>
+<div class="header">
+<p>
+Next: <a href="Conses-as-Forms.html#Conses-as-Forms" accesskey="n" rel="next">Conses as Forms</a>, Previous: <a href="Constant-Variables.html#Constant-Variables" accesskey="p" rel="prev">Constant Variables</a>, Up: <a href="The-Evaluation-Model.html#The-Evaluation-Model" accesskey="u" rel="up">The Evaluation Model</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Symbols-Naming-Both-Lexical-and-Dynamic-Variables-1"></a>
+<h4 class="subsubsection">3.1.2.6 Symbols Naming Both Lexical and Dynamic Variables</h4>
+
+<p>The same <i>symbol</i> can name both 
+    a <i>lexical variable</i> 
+and a <i>dynamic variable</i>,
+but never in the same <i>lexical environment</i>.
+</p>
+<p>In the following example, the <i>symbol</i> <tt>x</tt> is used,
+at different times, 
+    as the <i>name</i> of a <i>lexical variable</i>
+and as the <i>name</i> of a <i>dynamic variable</i>.
+</p>
+<div class="example">
+<pre class="example"> (let ((x 1))            ;Binds a special variable X
+   (declare (special x))
+   (let ((x 2))          ;Binds a lexical variable X
+     (+ x                ;Reads a lexical variable X
+        (locally (declare (special x))
+                 x))))   ;Reads a special variable X
+&rArr;  3
+</pre></div>
+
+
+
+
+</body>
+</html>

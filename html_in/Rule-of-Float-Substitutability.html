@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Rule of Float Substitutability (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Rule of Float Substitutability (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Rule of Float Substitutability (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Rational-Computations.html#Rational-Computations" rel="up" title="Rational Computations">
+<link href="Floating_002dpoint-Computations.html#Floating_002dpoint-Computations" rel="next" title="Floating-point Computations">
+<link href="Rule-of-Canonical-Representation-for-Rationals.html#Rule-of-Canonical-Representation-for-Rationals" rel="prev" title="Rule of Canonical Representation for Rationals">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Rule-of-Float-Substitutability"></a>
+<div class="header">
+<p>
+Previous: <a href="Rule-of-Canonical-Representation-for-Rationals.html#Rule-of-Canonical-Representation-for-Rationals" accesskey="p" rel="prev">Rule of Canonical Representation for Rationals</a>, Up: <a href="Rational-Computations.html#Rational-Computations" accesskey="u" rel="up">Rational Computations</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Rule-of-Float-Substitutability-1"></a>
+<h4 class="subsubsection">12.1.3.3 Rule of Float Substitutability</h4>
+
+<p>When the arguments to an irrational mathematical <i>function</i> 
+</p>
+<p>[Reviewer Note by Barmar: There should be a table of these functions.]
+are all <i>rational</i> and the true mathematical result
+is also (mathematically) rational, then unless otherwise noted
+an implementation is free to return either an accurate
+<i>rational</i> result
+or a <i>single float</i> approximation.
+If the arguments are all <i>rational</i> 
+but the result cannot be expressed
+as a <i>rational</i> number, then a <i>single float</i> 
+approximation is always returned.
+</p>
+<p>If the arguments to a mathematical <i>function</i> are all of type
+  <tt>(or rational (complex rational))</tt> 
+and the true mathematical result is
+  (mathematically) a complex number with rational real and imaginary
+  parts, then unless otherwise noted an implementation is free to return
+  either an accurate result of type <tt>(or rational (complex rational))</tt> 
+or
+  a <i>single float</i>
+  (permissible only if the imaginary part of the true mathematical
+  result is zero) or <tt>(complex single-float)</tt>. If the arguments are
+  all of type <tt>(or rational (complex rational))</tt>
+but the result cannot be
+  expressed as a <i>rational</i> or <i>complex rational</i>,
+then the returned
+  value will be of <i>type</i> <b>single-float</b> 
+(permissible only if the imaginary
+  part of the true mathematical result is zero) or <tt>(complex single-float)</tt>.
+</p>
+<p>&nbsp;&nbsp;Function&nbsp;&nbsp;Sample&nbsp;Results&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>abs</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(abs&nbsp;#c(3&nbsp;4))&nbsp;&rArr;&nbsp;&nbsp;5&nbsp;<i>or</i>&nbsp;5.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>acos</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(acos&nbsp;1)&nbsp;&rArr;&nbsp;&nbsp;0&nbsp;<i>or</i>&nbsp;0.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>acosh</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(acosh&nbsp;1)&nbsp;&rArr;&nbsp;&nbsp;0&nbsp;<i>or</i>&nbsp;0.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>asin</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(asin&nbsp;0)&nbsp;&rArr;&nbsp;&nbsp;0&nbsp;<i>or</i>&nbsp;0.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>asinh</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(asinh&nbsp;0)&nbsp;&rArr;&nbsp;&nbsp;0&nbsp;<i>or</i>&nbsp;0.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>atan</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(atan&nbsp;0)&nbsp;&rArr;&nbsp;&nbsp;0&nbsp;<i>or</i>&nbsp;0.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>atanh</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(atanh&nbsp;0)&nbsp;&rArr;&nbsp;&nbsp;0&nbsp;<i>or</i>&nbsp;0.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>cis</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(cis&nbsp;0)&nbsp;&rArr;&nbsp;&nbsp;#c(1&nbsp;0)&nbsp;<i>or</i>&nbsp;#c(1.0&nbsp;0.0)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>cos</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(cos&nbsp;0)&nbsp;&rArr;&nbsp;&nbsp;1&nbsp;<i>or</i>&nbsp;1.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>cosh</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(cosh&nbsp;0)&nbsp;&rArr;&nbsp;&nbsp;1&nbsp;<i>or</i>&nbsp;1.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>exp</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(exp&nbsp;0)&nbsp;&rArr;&nbsp;&nbsp;1&nbsp;<i>or</i>&nbsp;1.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>expt</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(expt&nbsp;8&nbsp;1/3)&nbsp;&rArr;&nbsp;&nbsp;2&nbsp;<i>or</i>&nbsp;2.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>log</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(log&nbsp;1)&nbsp;&rArr;&nbsp;&nbsp;0&nbsp;<i>or</i>&nbsp;0.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(log&nbsp;8&nbsp;2)&nbsp;&rArr;&nbsp;&nbsp;3&nbsp;<i>or</i>&nbsp;3.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>phase</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(phase&nbsp;7)&nbsp;&rArr;&nbsp;&nbsp;0&nbsp;<i>or</i>&nbsp;0.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>signum</b>&nbsp;&nbsp;&nbsp;&nbsp;<tt>(signum&nbsp;#c(3&nbsp;4))&nbsp;&rArr;&nbsp;&nbsp;#c(3/5&nbsp;4/5)&nbsp;<i>or</i>&nbsp;#c(0.6&nbsp;0.8)</tt>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>sin</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(sin&nbsp;0)&nbsp;&rArr;&nbsp;&nbsp;0&nbsp;<i>or</i>&nbsp;0.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>sinh</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(sinh&nbsp;0)&nbsp;&rArr;&nbsp;&nbsp;0&nbsp;<i>or</i>&nbsp;0.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>sqrt</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(sqrt&nbsp;4)&nbsp;&rArr;&nbsp;&nbsp;2&nbsp;<i>or</i>&nbsp;2.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(sqrt&nbsp;9/16)&nbsp;&rArr;&nbsp;&nbsp;3/4&nbsp;<i>or</i>&nbsp;0.75</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>tan</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(tan&nbsp;0)&nbsp;&rArr;&nbsp;&nbsp;0&nbsp;<i>or</i>&nbsp;0.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>tanh</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>(tanh&nbsp;0)&nbsp;&rArr;&nbsp;&nbsp;0&nbsp;<i>or</i>&nbsp;0.0</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;12&ndash;8:&nbsp;Functions&nbsp;Affected&nbsp;by&nbsp;Rule&nbsp;of&nbsp;Float&nbsp;Substitutability<!-- /@w -->
+</p>
+
+
+
+
+</body>
+</html>

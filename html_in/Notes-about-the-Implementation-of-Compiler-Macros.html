@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Notes about the Implementation of Compiler Macros (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Notes about the Implementation of Compiler Macros (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Notes about the Implementation of Compiler Macros (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Compilation-Semantics.html#Compilation-Semantics" rel="up" title="Compilation Semantics">
+<link href="Minimal-Compilation.html#Minimal-Compilation" rel="next" title="Minimal Compilation">
+<link href="When-Compiler-Macros-Are-Used.html#When-Compiler-Macros-Are-Used" rel="prev" title="When Compiler Macros Are Used">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Notes-about-the-Implementation-of-Compiler-Macros"></a>
+<div class="header">
+<p>
+Next: <a href="Minimal-Compilation.html#Minimal-Compilation" accesskey="n" rel="next">Minimal Compilation</a>, Previous: <a href="When-Compiler-Macros-Are-Used.html#When-Compiler-Macros-Are-Used" accesskey="p" rel="prev">When Compiler Macros Are Used</a>, Up: <a href="Compilation-Semantics.html#Compilation-Semantics" accesskey="u" rel="up">Compilation Semantics</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Notes-about-the-Implementation-of-Compiler-Macros-1"></a>
+<h4 class="subsubsection">3.2.2.5 Notes about the Implementation of Compiler Macros</h4>
+
+<p>Although it is technically permissible, as described above,
+for <b>eval</b> to treat <i>compiler macros</i> in the same situations
+as <i>compiler</i> might, this is not necessarily a good idea in
+<i>interpreted implementations</i>.
+</p>
+<p><i>Compiler macros</i> exist for the purpose of trading compile-time speed
+for run-time speed.  Programmers who write <i>compiler macros</i> tend to
+assume that the <i>compiler macros</i> can take more time than normal <i>functions</i>
+and <i>macros</i> in order to produce code which is especially optimal for use
+at run time.  Since <b>eval</b> in an <i>interpreted implementation</i>
+might perform semantic analysis of the same form multiple times, it might be 
+inefficient in general for the <i>implementation</i> to choose to call
+<i>compiler macros</i> on every such <i>evaluation</i>.
+</p>
+<p>Nevertheless, the decision about what to do in these situations is left to
+each <i>implementation</i>.
+</p>
+
+
+
+</body>
+</html>

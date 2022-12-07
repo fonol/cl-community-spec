@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Tilde E-&gt; Exponential Floating-Point (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Floating_002dPoint-Printers.html#FORMAT-Floating_002dPoint-Printers" rel="up" title="FORMAT Floating-Point Printers">
+<link href="Tilde-G_002d_003e-General-Floating_002dPoint.html#Tilde-G_002d_003e-General-Floating_002dPoint" rel="next" title="Tilde G-&gt; General Floating-Point">
+<link href="Tilde-F_002d_003e-Fixed_002dFormat-Floating_002dPoint.html#Tilde-F_002d_003e-Fixed_002dFormat-Floating_002dPoint" rel="prev" title="Tilde F-&gt; Fixed-Format Floating-Point">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Tilde-F_002d_003e-Fixed_002dFormat-Floating_002dPoint.html#Tilde-F_002d_003e-Fixed_002dFormat-Floating_002dPoint" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Tilde F-&gt; Fixed-Format Floating-Point
+                            </a>
+                            <a href="FORMAT-Floating_002dPoint-Printers.html#FORMAT-Floating_002dPoint-Printers.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                FORMAT Floating-Point Printers
+                            </a>
+                            <a href="Tilde-G_002d_003e-General-Floating_002dPoint.html#Tilde-G_002d_003e-General-Floating_002dPoint.html" class="nav-btn nav__next ">
+                                Tilde G-&gt; General Floating-Point
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Tilde-E_002d_003e-Exponential-Floating_002dPoint"></a>
+<a name="Tilde-E_003a-Exponential-Floating_002dPoint"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Tilde E: Exponential Floating-Point</h4>
+
+<p>The next <i>arg</i> is printed as a <i>float</i> in exponential notation.
+</p>
+<p>The full form is
+<tt>~<i>w</i>,<i>d</i>,<i>e</i>,<i>k</i>,<i>overflowchar</i>,<i>padchar</i>,<i>exponentchar</i>E</tt>.
+The parameter <i>w</i>
+is the width of the field to be printed; <i>d</i> is the number
+of digits to print after the decimal point; <i>e</i> is the number
+of digits to use when printing the exponent;
+<i>k</i> is a scale factor that defaults to one (not zero).
+</p>
+<p>Exactly <i>w</i> characters will
+be output.  First, leading copies of the character <i>padchar</i>
+(which defaults to a space) are printed, if necessary, to pad the
+field on the left.
+If the <i>arg</i> is negative, then a minus sign is printed;
+if the <i>arg</i> is not negative, then a plus sign is printed
+if and only if the <tt>@</tt>
+modifier was supplied.  Then a sequence
+of digits containing a single embedded decimal point is printed.
+The form of this sequence of digits depends on the scale factor <i>k</i>.
+If <i>k</i> is zero, then <i>d</i> digits are printed after the decimal
+point, and a single zero digit appears before the decimal point if
+the total field width will permit it.  If <i>k</i> is positive,
+then it must be strictly less than <i>d</i>+2;  <i>k</i> significant digits
+are printed before the decimal point, and <i>d</i>- <i>k</i>+1
+digits are printed after the decimal point.  If <i>k</i> is negative,
+then it must be strictly greater than - <i>d</i>;
+a single zero digit appears before the decimal point if
+the total field width will permit it, and after the decimal point
+are printed first
+- <i>k</i> zeros and then <i>d</i>+<i>k</i> significant digits.
+The printed fraction must be properly rounded.         
+When rounding up and rounding down would produce printed values
+equidistant from the scaled value of <i>arg</i>, then the implementation
+is free to use either one.  For example, printing the argument
+<tt>637.5</tt> using the format <tt>~8,2E</tt> may correctly produce
+either <tt>6.37E+2</tt> or <tt>6.38E+2</tt>.
+</p>
+<p>Following the digit sequence, the exponent is printed.
+First the character parameter <i>exponentchar</i> is printed; if this
+parameter is omitted, then the <i>exponent marker</i> that
+<b>prin1</b> would use is printed, as determined from the
+type of the <i>float</i> and the current value of
+<b>*read-default-float-format*</b>.
+Next, either a plus sign or a minus sign
+is printed, followed by <i>e</i> digits representing the power of
+ten by which the printed fraction must be multiplied
+to properly represent the rounded value of <i>arg</i>.
+</p>
+<p>If it is impossible to print the value in the required format in a field
+of width <i>w</i>, possibly because <i>k</i> is too large or too small
+or because the exponent cannot be printed in <i>e</i> character positions,
+then one of two actions is taken.  If the
+parameter <i>overflowchar</i> is supplied, then <i>w</i> copies of that
+parameter are printed instead of the scaled value of <i>arg</i>.
+If the <i>overflowchar</i> parameter is omitted, then the scaled value
+is printed using more than <i>w</i> characters, as many more as may be
+needed; if the problem is that <i>d</i> is too small for the supplied <i>k</i>
+or that <i>e</i> is too small, then a larger value is used for <i>d</i> or <i>e</i>
+as may be needed.
+</p>
+<p>If the <i>w</i> parameter is omitted, then the field is of variable width.
+In effect a value is chosen
+for <i>w</i> in such a way that no leading pad characters need to be printed.
+</p>
+<p>If the parameter <i>d</i> is omitted, then there is no constraint
+on the number of digits to appear.
+A value is chosen for <i>d</i> in such a way that as many digits
+as possible may be printed subject to the width constraint
+imposed by the parameter <i>w</i>, the constraint of the scale factor <i>k</i>,
+and the constraint that no trailing
+zero digits may appear in the fraction, except that if the
+fraction to be printed is zero then a single zero digit should
+appear after the decimal point.
+</p>
+<p>If the parameter <i>e</i> is omitted, then the exponent is printed
+using the smallest number of digits necessary to represent its value.
+</p>
+<p>If all of <i>w</i>, <i>d</i>, and <i>e</i> are omitted, then the effect is to print
+the value using ordinary free-format exponential-notation output;
+<b>prin1</b> uses 
+</p>
+<p>a similar
+</p>
+<p>format for any non-zero number whose magnitude
+is less than 10^-3 or greater than or equal to 10^7.
+</p>
+<p>The only difference is that the <tt>~E</tt> 
+directive always prints a plus or minus sign in front of the
+    exponent, while <b>prin1</b> omits the plus sign if the exponent is
+    non-negative.
+</p>
+<p>If <i>arg</i> is a <i>rational</i> 
+number, then it is coerced to be a <i>single float</i>
+and then printed.  Alternatively, an implementation is permitted to
+process a <i>rational</i> 
+number by any other method that has essentially the
+same behavior but avoids loss of precision or overflow
+because of the coercion.  If <i>w</i> and <i>d</i> are
+unsupplied and the number has no exact decimal representation,
+for example <tt>1/3</tt>, some precision cutoff must be chosen
+by the implementation since only a finite number of digits may be printed.
+</p>
+<p>If <i>arg</i> is a <i>complex</i> number or some non-numeric
+<i>object</i>, 
+then it is printed using the format directive <tt>~<i>w</i>D</tt>,
+thereby printing it in decimal radix and a minimum field width of <i>w</i>.
+</p>
+<p><tt>~E</tt> binds
+     <b>*print-escape*</b> to <i>false</i>
+</p>
+<p>and <b>*print-readably*</b> to <i>false</i>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

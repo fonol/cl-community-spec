@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Pathnames as Filenames (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Overview-of-Filenames.html#Overview-of-Filenames" rel="up" title="Overview of Filenames">
+<link href="Parsing-Namestrings-Into-Pathnames.html#Parsing-Namestrings-Into-Pathnames" rel="next" title="Parsing Namestrings Into Pathnames">
+<link href="Namestrings-as-Filenames.html#Namestrings-as-Filenames" rel="prev" title="Namestrings as Filenames">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Namestrings-as-Filenames.html#Namestrings-as-Filenames" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Namestrings as Filenames
+                            </a>
+                            <a href="Overview-of-Filenames.html#Overview-of-Filenames.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Overview of Filenames
+                            </a>
+                            <a href="Parsing-Namestrings-Into-Pathnames.html#Parsing-Namestrings-Into-Pathnames.html" class="nav-btn nav__next ">
+                                Parsing Namestrings Into Pathnames
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Pathnames-as-Filenames"></a>
+<a name="Pathnames-as-Filenames-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Pathnames as Filenames</h4>
+
+<p><i>Pathnames</i>
+<a name="index-pathname"></a>
+ are structured <i>objects</i> that can represent,
+in an <i>implementation-independent</i> way,
+the <i>filenames</i> that are used natively by an underlying <i>file system</i>.
+</p>
+<p>In addition, <i>pathnames</i> can also represent certain partially composed 
+<i>filenames</i> for which an underlying <i>file system</i> 
+might not have a specific <i>namestring</i> representation.
+</p>
+<p>A <i>pathname</i> need not correspond to any file that actually exists, 
+and more than one <i>pathname</i> can refer to the same file.
+For example, the <i>pathname</i> with a version of <tt>:newest</tt> 
+might refer to the same file as a <i>pathname</i> 
+with the same components except a certain number as the version.
+Indeed, a <i>pathname</i> with version <tt>:newest</tt> might refer to
+different files as time passes, because the meaning of such a <i>pathname</i>
+depends on the state of the file system.  
+</p>
+<p>Some <i>file systems</i> naturally use a structural model for their
+<i>filenames</i>, while others do not.  Within the <span class="roman">Common Lisp</span> <i>pathname</i> model, 
+all <i>filenames</i> are seen as having a particular structure,
+even if that structure is not reflected in the underlying <i>file system</i>.
+The nature of the mapping between structure imposed by <i>pathnames</i>
+and the structure, if any, that is used by the underlying <i>file system</i>
+is <i>implementation-defined</i>.
+</p>
+<p>Every <i>pathname</i> has six components:
+     a host,
+     a device,
+     a directory,
+     a name,
+     a type,
+ and a version.
+By naming <i>files</i> with <i>pathnames</i>, 
+<span class="roman">Common Lisp</span> programs can work in essentially the same way even in <i>file systems</i>
+that seem superficially quite different.
+For a detailed description of these components, see <a href="Pathname-Components.html#Pathname-Components">Pathname Components</a>.
+</p>
+<p>The mapping of the <i>pathname</i> components into the concepts peculiar to
+each <i>file system</i> is <i>implementation-defined</i>.
+There exist conceivable <i>pathnames</i>
+for which there is no mapping to a syntactically valid <i>filename</i>
+in a particular <i>implementation</i>.
+An <i>implementation</i> may use various strategies in an attempt to find a mapping;
+for example, 
+an <i>implementation</i> may quietly truncate <i>filenames</i>
+that exceed length limitations imposed by the underlying <i>file system</i>,
+or ignore certain <i>pathname</i> components
+for which the <i>file system</i> provides no support.
+If such a mapping cannot be found,
+an error of <i>type</i> <b>file-error</b> is signaled.
+</p>
+<p>The time at which this mapping and associated error signaling 
+occurs is <i>implementation-dependent</i>.
+Specifically, it may occur 
+    at the time the <i>pathname</i> is constructed,
+    when coercing a <i>pathname</i> to a <i>namestring</i>,
+ or when an attempt is made to <i>open</i> or otherwise access the <i>file</i> 
+     designated by the <i>pathname</i>.
+</p>
+<p>Figure 19&ndash;1 lists some <i>defined names</i> that are applicable to <i>pathnames</i>.
+</p>
+<p>&nbsp;&nbsp;<span class="nolinebreak">*default-pathname-defaults*</span>&nbsp;&nbsp;namestring&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">pathname-name</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">directory-namestring</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">pathname-type</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">enough-namestring</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">parse-namestring</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">pathname-version</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">file-namestring</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pathname&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pathnamep&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">file-string-length</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">pathname-device</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">translate-pathname</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">host-namestring</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">pathname-directory</span>&nbsp;&nbsp;truename&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">make-pathname</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">pathname-host</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">user-homedir-pathname</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">merge-pathnames</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">pathname-match-p</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">wild-pathname-p</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;19&ndash;1:&nbsp;Pathname&nbsp;Operations&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

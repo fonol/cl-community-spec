@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Tilde Newline-&gt; Ignored Newline (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Miscellaneous-Pseudo_002dOperations.html#FORMAT-Miscellaneous-Pseudo_002dOperations" rel="up" title="FORMAT Miscellaneous Pseudo-Operations">
+<link href="Additional-Information-about-FORMAT-Operations.html#Additional-Information-about-FORMAT-Operations" rel="next" title="Additional Information about FORMAT Operations">
+<link href="Tilde-Circumflex_002d_003e-Escape-Upward.html#Tilde-Circumflex_002d_003e-Escape-Upward" rel="prev" title="Tilde Circumflex-&gt; Escape Upward">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Tilde-Circumflex_002d_003e-Escape-Upward.html#Tilde-Circumflex_002d_003e-Escape-Upward" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Tilde Circumflex-&gt; Escape Upward
+                            </a>
+                            <a href="FORMAT-Miscellaneous-Pseudo_002dOperations.html#FORMAT-Miscellaneous-Pseudo_002dOperations.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                FORMAT Miscellaneous Pseudo-Operations
+                            </a>
+                            <a href="Additional-Information-about-FORMAT-Operations.html#Additional-Information-about-FORMAT-Operations.html" class="nav-btn nav__next ">
+                                Additional Information about FORMAT Operations
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Tilde-Newline_002d_003e-Ignored-Newline"></a>
+<a name="Tilde-Newline_003a-Ignored-Newline"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Tilde Newline: Ignored Newline</h4>
+
+<p><i>Tilde</i> immediately followed by a <i>newline</i> ignores the <i>newline</i>
+and any following non-newline <i>whitespace</i>_1 characters.
+With a <tt>:</tt>,
+ the <i>newline</i> is ignored, 
+ but any following <i>whitespace</i>_1 is left in place.
+With an <tt>@</tt>,
+ the <i>newline</i> is left in place,
+ but any following <i>whitespace</i>_1 is ignored.
+For example:
+</p>
+<div class="example">
+<pre class="example"><code> (defun type-clash-error (fn nargs argnum right-type wrong-type)
+   (format *error-output*
+           &quot;~&amp;~S requires its ~:[~:R~;~*~]~ 
+           argument to be of type ~S,~
+           with an argument of type ~S.~
+           fn (eql nargs 1) argnum right-type wrong-type))
+ (type-clash-error 'aref nil 2 'integer 'vector)  prints:
+AREF requires its second argument to be of type INTEGER,
+but it was called with an argument of type VECTOR.
+NIL
+ (type-clash-error 'car 1 1 'list 'short-float)  prints:
+CAR requires its argument to be of type LIST,
+but it was called with an argument of type SHORT-FLOAT.
+NIL
+</code>
+</pre></div>
+
+<p>Note that in this example newlines appear in the output only as specified
+by the <tt>~&amp;</tt> and <tt>~%</tt> directives; the 
+actual newline characters
+in the control string are suppressed because each is preceded by a tilde.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

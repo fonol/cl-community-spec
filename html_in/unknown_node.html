@@ -1,0 +1,967 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>ANSI and GNU Common Lisp Document</title>
+
+<meta name="description" content="ANSI and GNU Common Lisp Document">
+<meta name="keywords" content="ANSI and GNU Common Lisp Document">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="class_002dof.html#class_002dof" rel="next" title="class-of">
+<link href="class_002dname.html#class_002dname" rel="prev" title="class-name">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="header">
+<p>
+ &nbsp; </p>
+</div>
+<hr>
+<a name="g_t_0028setf-class_002dname_0029-_005bStandard-Generic-Function_005d"></a>
+<h4 class="subsection">7.7.38 (setf class-name)                               [Standard Generic Function]</h4>
+
+<a name="Syntax_003a_003a-35"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><code>(setf class-name)</code>  <i>new-value class</i> &rArr;  <i>new-value</i>
+</p>
+<a name="Method-Signatures_003a_003a-21"></a>
+<h4 class="subsubheading">Method Signatures::</h4>
+
+<p><code>(setf class-name)</code>  <i>new-value <span class="roman">(</span><i>class</i> <b>class</b><span class="roman">)</span></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-126"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>new-value</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>class</i>&mdash;a <i>class</i>.
+</p>
+<a name="Description_003a_003a-165"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The generic function <tt>(setf class-name)</tt> sets the name of 
+a <i>class</i> object.
+</p>
+<a name="See-Also_003a_003a-147"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="find_002dclass.html#find_002dclass">find-class</a>
+,
+<i>proper name</i>,
+<a href="Classes.html#Classes">Classes</a>
+</p>
+<div class="header">
+<p>
+ &nbsp; </p>
+</div>
+<a name="abort_002c-continue_002c-muffle_002dwarning_002c-store_002dvalue_002c-use_002dvalue-_005bFunction_005d"></a>
+<h4 class="subsection">9.2.46 abort, continue, muffle-warning, store-value, use-value          [Function]</h4>
+
+<a name="index-abort"></a>
+
+<a name="index-continue"></a>
+
+<a name="index-muffle_002dwarning"></a>
+
+<a name="index-store_002dvalue"></a>
+
+<a name="index-use_002dvalue"></a>
+
+<p><code>abort</code>  <i>&amp;optional</i> condition 
+       &rArr;  #&lt;NoValue&gt;
+</p>
+<p><code>continue</code>  <i>&amp;optional</i> condition &rArr;  <i><b>nil</b></i>
+</p>
+<p><code>muffle-warning</code>  <i>&amp;optional</i> condition 
+       &rArr;  #&lt;NoValue&gt;
+</p>
+<p><code>store-value</code>  <i>value &amp;optional</i> condition &rArr;  <i><b>nil</b></i>
+</p>
+<p><code>use-value</code>  <i>value &amp;optional</i> condition &rArr;  <i><b>nil</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-157"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>value</i>&mdash;an <i>object</i>.
+</p>
+<p><i>condition</i>&mdash;a <i>condition</i> <i>object</i>, or <b>nil</b>.
+</p>
+<a name="Description_003a_003a-216"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Transfers control to the most recently established <i>applicable restart</i>
+having the same name as the function.  That is,
+  the <i>function</i> <b>abort</b>    searches for an <i>applicable</i> <b>abort</b>    <i>restart</i>, 
+  the <i>function</i> <b>continue</b> searches for an <i>applicable</i> <b>continue</b> <i>restart</i>,
+and so on.
+</p>
+<p>If no such <i>restart</i> exists, 
+the functions
+     <b>continue</b>,
+     <b>store-value</b>, 
+ and <b>use-value</b>
+return <b>nil</b>, and 
+the functions
+     <b>abort</b>
+ and <b>muffle-warning</b>
+signal an error of <i>type</i> <b>control-error</b>.
+</p>
+<p>When <i>condition</i> is <i>non-nil</i>,
+only those <i>restarts</i> are considered that are 
+  either explicitly associated with that <i>condition</i>,
+      or not associated with any <i>condition</i>;
+that is, the excluded <i>restarts</i> are 
+those that are associated with a non-empty set of <i>conditions</i>
+of which the given <i>condition</i> is not an <i>element</i>.
+If <i>condition</i> is <b>nil</b>, all <i>restarts</i> are considered.
+</p>
+<a name="Examples_003a_003a-140"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">;;; Example of the ABORT retart
+
+ (defmacro abort-on-error (&amp;body forms)
+   `(handler-bind ((error #'abort))
+      ,@forms)) &rArr;  ABORT-ON-ERROR
+ (abort-on-error (+ 3 5)) &rArr;  8
+ (abort-on-error (error &quot;You lose.&quot;))
+<tt> |&gt; </tt> Returned to Lisp Top Level.
+
+;;; Example of the CONTINUE restart
+
+ (defun real-sqrt (n)
+   (when (minusp n)
+     (setq n (- n))
+     (cerror &quot;Return sqrt(~D) instead.&quot; &quot;Tried to take sqrt(-~D).&quot; n))
+   (sqrt n))
+
+ (real-sqrt 4) &rArr;  2
+ (real-sqrt -9)
+<tt> |&gt; </tt> Error: Tried to take sqrt(-9).
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Return sqrt(9) instead.
+<tt> |&gt; </tt>  2: Return to Lisp Toplevel.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>(continue)</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Return sqrt(9) instead.
+&rArr;  3
+
+ (handler-bind ((error #'(lambda (c) (continue))))
+   (real-sqrt -9)) &rArr;  3
+
+;;; Example of the MUFFLE-WARNING restart
+
+ (defun count-down (x)
+   (do ((counter x (1- counter)))
+       ((= counter 0) 'done)
+     (when (= counter 1)
+       (warn &quot;Almost done&quot;))
+     (format t &quot;~&amp;~D~
+&rArr;  COUNT-DOWN
+ (count-down 3)
+<tt> |&gt; </tt> 3
+<tt> |&gt; </tt> 2
+<tt> |&gt; </tt> Warning: Almost done
+<tt> |&gt; </tt> 1
+&rArr;  DONE
+ (defun ignore-warnings-while-counting (x)
+   (handler-bind ((warning #'ignore-warning))
+     (count-down x)))
+&rArr;  IGNORE-WARNINGS-WHILE-COUNTING
+ (defun ignore-warning (condition)
+   (declare (ignore condition))
+   (muffle-warning))
+&rArr;  IGNORE-WARNING
+ (ignore-warnings-while-counting 3)
+<tt> |&gt; </tt> 3
+<tt> |&gt; </tt> 2
+<tt> |&gt; </tt> 1
+&rArr;  DONE
+
+;;; Example of the STORE-VALUE and USE-VALUE restarts
+
+ (defun careful-symbol-value (symbol)
+   (check-type symbol symbol)
+   (restart-case (if (boundp symbol)
+                     (return-from careful-symbol-value 
+                                  (symbol-value symbol))
+                     (error 'unbound-variable
+                            :name symbol))
+     (use-value (value)
+       :report &quot;Specify a value to use this time.&quot;
+       value)
+     (store-value (value)
+       :report &quot;Specify a value to store and use in the future.&quot;
+       (setf (symbol-value symbol) value))))
+ (setq a 1234) &rArr;  1234
+ (careful-symbol-value 'a) &rArr;  1234
+ (makunbound 'a) &rArr;  A
+ (careful-symbol-value 'a)
+<tt> |&gt; </tt> Error: A is not bound.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number.
+<tt> |&gt; </tt>  1: Specify a value to use this time.
+<tt> |&gt; </tt>  2: Specify a value to store and use in the future.
+<tt> |&gt; </tt>  3: Return to Lisp Toplevel.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>(use-value 12)</tt><b>&lt;&lt;|</b>
+&rArr;  12
+ (careful-symbol-value 'a)
+<tt> |&gt; </tt> Error: A is not bound.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number.
+<tt> |&gt; </tt>   1: Specify a value to use this time.
+<tt> |&gt; </tt>   2: Specify a value to store and use in the future.
+<tt> |&gt; </tt>   3: Return to Lisp Toplevel.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>(store-value 24)</tt><b>&lt;&lt;|</b>
+&rArr;  24
+ (careful-symbol-value 'a)
+&rArr;  24
+
+;;; Example of the USE-VALUE restart
+
+ (defun add-symbols-with-default (default &amp;rest symbols)
+   (handler-bind ((sys:unbound-symbol
+                    #'(lambda (c)
+                        (declare (ignore c)) 
+                        (use-value default))))
+     (apply #'+ (mapcar #'careful-symbol-value symbols))))
+&rArr;  ADD-SYMBOLS-WITH-DEFAULT
+ (setq x 1 y 2) &rArr;  2
+ (add-symbols-with-default 3 'x 'y 'z) &rArr;  6
+
+</pre></div>
+
+<a name="Side-Effects_003a_003a-18"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>A transfer of control may occur if an appropriate <i>restart</i> is available,
+or (in the case of the <i>function</i> <b>abort</b> or the <i>function</i> <b>muffle-warning</b>)
+execution may be stopped.
+</p>
+<a name="Affected-By_003a_003a-35"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>Each of these functions can be affected by 
+the presence of a <i>restart</i> having the same name.
+</p>
+<a name="Exceptional-Situations_003a_003a-49"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If an appropriate <b>abort</b> <i>restart</i>
+ is not available for the <i>function</i> <b>abort</b>,
+or an appropriate <b>muffle-warning</b> <i>restart</i> 
+ is not available for the <i>function</i> <b>muffle-warning</b>,
+an error of <i>type</i> <b>control-error</b> is signaled.
+</p>
+<a name="See-Also_003a_003a-190"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="invoke_002drestart.html#invoke_002drestart">invoke-restart</a>
+,
+<a href="Restarts.html#Restarts">Restarts</a>,
+<a href="Interfaces-to-Restarts.html#Interfaces-to-Restarts">Interfaces to Restarts</a>,
+<a href="assert.html#assert">assert</a>
+,
+<b>ccase</b>,
+<a href="cerror.html#cerror">cerror</a>
+,
+<a href="check_002dtype.html#check_002dtype">check-type</a>
+,
+<b>ctypecase</b>,
+<a href="use_002dvalue.html#use_002dvalue">use-value</a>
+,
+<a href="warn.html#warn">warn</a>
+</p>
+<a name="Notes_003a_003a-114"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<div class="example">
+<pre class="example"> (abort condition) &equiv; (invoke-restart 'abort)
+ (muffle-warning)  &equiv; (invoke-restart 'muffle-warning)
+ (continue)        &equiv; (let ((r (find-restart 'continue))) (if r (invoke-restart r)))
+ (use-value <i>x</i>) &equiv; (let ((r (find-restart 'use-value))) (if r (invoke-restart r <i>x</i>)))
+ (store-value x) &equiv; (let ((r (find-restart 'store-value))) (if r (invoke-restart r <i>x</i>)))
+</pre></div>
+
+<p>No functions defined in this specification are required to provide
+a <b>use-value</b> <i>restart</i>.
+</p>
+
+
+
+
+
+<hr>
+<div class="header">
+<p>
+ &nbsp; </p>
+</div>
+<div class="header">
+<p>
+ &nbsp; </p>
+</div>
+<a name="mod_002c-rem-_005bFunction_005d"></a>
+<h4 class="subsection">12.2.36 mod, rem                                                         [Function]</h4>
+
+<p><code>mod</code>  <i>number divisor</i> &rArr;  <i>modulus</i>
+</p>
+<p><code>rem</code>  <i>number divisor</i> &rArr;  <i>remainder</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-221"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>number</i>&mdash;a <i>real</i>.
+</p>
+<p><i>divisor</i>&mdash;a <i>real</i>.
+</p>
+<p><i>modulus</i>, <i>remainder</i>&mdash;a <i>real</i>.
+</p>
+<a name="Description_003a_003a-301"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>mod</b> and <b>rem</b> are generalizations of the modulus
+and remainder functions respectively.
+</p>
+<p><b>mod</b> performs the operation <b>floor</b> 
+on <i>number</i> and <i>divisor</i> 
+and returns the remainder of the <b>floor</b> operation.
+</p>
+<p><b>rem</b> performs the operation <b>truncate</b> 
+on <i>number</i> and <i>divisor</i>
+and returns the remainder of the <b>truncate</b> operation.
+</p>
+<p><b>mod</b> and <b>rem</b> are 
+the modulus and remainder functions 
+when <i>number</i> and <i>divisor</i> are <i>integers</i>.
+</p>
+<a name="Examples_003a_003a-205"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (rem -1 5) &rArr;  -1
+ (mod -1 5) &rArr;  4
+ (mod 13 4) &rArr;  1
+ (rem 13 4) &rArr;  1
+ (mod -13 4) &rArr;  3
+ (rem -13 4) &rArr;  -1
+ (mod 13 -4) &rArr;  -3
+ (rem 13 -4) &rArr;  1
+ (mod -13 -4) &rArr;  -1
+ (rem -13 -4) &rArr;  -1
+ (mod 13.4 1) &rArr;  0.4
+ (rem 13.4 1) &rArr;  0.4
+ (mod -13.4 1) &rArr;  0.6
+ (rem -13.4 1) &rArr;  -0.4
+</pre></div>
+
+<a name="See-Also_003a_003a-254"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;floor; ffloor; ceiling; fceiling; truncate; ftruncate; round; fround&rsquo;
+, <b>truncate</b>
+</p>
+<a name="Notes_003a_003a-152"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The result of <b>mod</b> is either zero or a 
+</p>
+<p><i>real</i>
+</p>
+<p>with the same sign as <i>divisor</i>.
+</p>
+<div class="header">
+<p>
+ &nbsp; </p>
+</div>
+<a name="rational_002c-rationalize-_005bFunction_005d"></a>
+<h4 class="subsection">12.2.54 rational, rationalize                                            [Function]</h4>
+
+<p><code>rational</code>  <i>number</i> &rArr;  <i>rational</i>
+</p>
+<p><code>rationalize</code>  <i>number</i> &rArr;  <i>rational</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-237"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>number</i>&mdash;a <i>real</i>.
+</p>
+<p><i>rational</i>&mdash;a <i>rational</i>.
+</p>
+<a name="Description_003a_003a-319"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>rational</b> and <b>rationalize</b> convert 
+</p>
+<p><i>reals</i>
+</p>
+<p>to <i>rationals</i>.
+</p>
+<p>If <i>number</i> is already <i>rational</i>, it is returned.
+</p>
+<p>If <i>number</i> is a <i>float</i>, 
+<b>rational</b> returns a <i>rational</i> 
+that is mathematically equal in value to the <i>float</i>. 
+<b>rationalize</b> returns a <i>rational</i> that
+approximates the <i>float</i> to the accuracy of 
+the underlying floating-point representation. 
+</p>
+<p><b>rational</b> assumes that the <i>float</i> is completely accurate.
+</p>
+<p><b>rationalize</b> assumes that the
+<i>float</i> is accurate only to the precision of the
+floating-point representation.
+</p>
+<a name="Examples_003a_003a-221"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (rational 0) &rArr;  0
+ (rationalize -11/100) &rArr;  -11/100
+ (rational .1) &rArr;  13421773/134217728 ;implementation-dependent
+ (rationalize .1) &rArr;  1/10
+</pre></div>
+
+<a name="Affected-By_003a_003a-57"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>The <i>implementation</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-97"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>number</i> is not a <i>real</i>.
+Might signal <b>arithmetic-error</b>.
+</p>
+<a name="Notes_003a_003a-166"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>It is always the case that
+</p>
+<div class="example">
+<pre class="example"> (float (rational x) x) &equiv; x
+</pre></div>
+
+<p>and
+</p>
+<div class="example">
+<pre class="example"> (float (rationalize x) x) &equiv; x
+</pre></div>
+
+<p>That is, rationalizing a <i>float</i> by either method
+and then converting it back
+to a <i>float</i> 
+of the same format produces the original <i>number</i>.
+</p>
+<div class="header">
+<p>
+ &nbsp; </p>
+</div>
+<a name="list_002c-list_002a-_005bFunction_005d"></a>
+<h4 class="subsection">14.2.15 list, list*                                                      [Function]</h4>
+
+<p><code>list</code>  <i>&amp;rest</i> objects &rArr;  <i>list</i>
+</p>
+<p><code>list*</code>  <i>&amp;rest</i> objects^+ &rArr;  <i>result</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-284"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>object</i>&mdash;an <i>object</i>.
+</p>
+<p><i>list</i>&mdash;a <i>list</i>.
+</p>
+<p><i>result</i>&mdash;an <i>object</i>.
+</p>
+<a name="Description_003a_003a-385"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>list</b> returns a <i>list</i> containing the supplied <i>objects</i>.  
+</p>
+<p><b>list*</b> is like <b>list</b> except that 
+the last <i>argument</i> to <b>list</b> becomes 
+the <i>car</i> of the last <i>cons</i> constructed, while
+the last <i>argument</i> to <b>list*</b> becomes 
+the <i>cdr</i> of the last <i>cons</i> constructed.
+Hence, any given call to <b>list*</b> always produces one fewer <i>conses</i>
+than a call to <b>list</b> with the same number of arguments.
+</p>
+<p>If the last <i>argument</i> to <b>list*</b> is a <i>list</i>, 
+the effect is to construct a new <i>list</i> which is similar, but
+which has additional elements added to the front corresponding to
+the preceding <i>arguments</i> of <b>list*</b>.
+</p>
+<p>If <b>list*</b> receives only one <i>object</i>,
+that <i>object</i> is returned, regardless of whether or not it is a <i>list</i>.
+</p>
+<a name="Examples_003a_003a-268"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (list 1) &rArr;  (1)
+ (list* 1) &rArr;  1
+ (setq a 1) &rArr;  1
+ (list a 2) &rArr;  (1 2)
+ '(a 2) &rArr;  (A 2)
+ (list 'a 2) &rArr;  (A 2)
+ (list* a 2) &rArr;  (1 . 2)
+ (list) &rArr;  NIL ;<i>i.e.</i>, ()
+ (setq a '(1 2)) &rArr;  (1 2)
+ (eq a (list* a)) &rArr;  <i>true</i>
+ (list 3 4 'a (car '(b . c)) (+ 6 -2)) &rArr;  (3 4 A B 4)
+ (list* 'a 'b 'c 'd) &equiv; (cons 'a (cons 'b (cons 'c 'd))) &rArr;  (A B C . D)
+ (list* 'a 'b 'c '(d e f)) &rArr;  (A B C D E F)
+</pre></div>
+
+<a name="See-Also_003a_003a-311"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="cons.html#cons">cons</a>
+</p>
+<a name="Notes_003a_003a-205"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<div class="example">
+<pre class="example"> (list* <i>x</i>) &equiv; <i>x</i>
+</pre></div>
+
+<div class="header">
+<p>
+ &nbsp; </p>
+</div>
+<a name="member_002c-member_002dif_002c-member_002dif_002dnot-_005bFunction_005d"></a>
+<h4 class="subsection">14.2.33 member, member-if, member-if-not                                 [Function]</h4>
+
+<p><code>member</code>  <i>item      list &amp;key</i> key test test-not &rArr;  <i>tail</i>
+</p>
+<p><code>member-if</code>  <i>predicate list &amp;key</i> key &rArr;  <i>tail</i>
+</p>
+<p><code>member-if-not</code>  <i>predicate list &amp;key</i> key &rArr;  <i>tail</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-302"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>item</i>&mdash;an <i>object</i>.
+</p>
+<p><i>list</i>&mdash;a <i>proper list</i>.
+</p>
+<p><i>predicate</i>&mdash;a <i>designator</i> for 
+		    a <i>function</i> of one <i>argument</i>
+		    that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test</i>&mdash;a <i>designator</i> for a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test-not</i>&mdash;a <i>designator</i> for 
+  a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>key</i>&mdash;a <i>designator</i> for a <i>function</i> of one argument,
+  or <b>nil</b>.
+</p>
+<p><i>tail</i>&mdash;a <i>list</i>.
+</p>
+<a name="Description_003a_003a-403"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>member</b>, <b>member-if</b>, and <b>member-if-not</b> each
+search <i>list</i> for <i>item</i> or for a top-level element that 
+<i>satisfies the test</i>.  The argument to the <i>predicate</i> function 
+is an element of <i>list</i>.
+</p>
+<p>If some element <i>satisfies the test</i>,
+the tail of <i>list</i> beginning
+with this element is returned; otherwise <b>nil</b> is returned.
+</p>
+<p><i>list</i> is searched on the top level only. 
+</p>
+<a name="Examples_003a_003a-286"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (member 2 '(1 2 3)) &rArr;  (2 3)                                 
+ (member 2 '((1 . 2) (3 . 4)) :test-not #'= :key #'cdr) &rArr;  ((3 . 4))
+ (member 'e '(a b c d)) &rArr;  NIL
+</pre></div>
+
+<div class="example">
+<pre class="example"> (member-if #'listp '(a b nil c d)) &rArr;  (NIL C D)
+ (member-if #'numberp '(a #\Space 5/3 foo)) &rArr;  (5/3 FOO)
+ (member-if-not #'zerop 
+                 '(3 6 9 11 . 12)
+                 :key #'(lambda (x) (mod x 3))) &rArr;  (11 . 12)
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-128"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>list</i> is not a <i>proper list</i>.
+</p>
+<a name="See-Also_003a_003a-327"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;find; find-if; find-if-not&rsquo;
+,
+&lsquo;position; position-if; position-if-not&rsquo;
+,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<a name="Notes_003a_003a-218"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The <tt>:test-not</tt> parameter is deprecated.
+</p>
+<p>The <i>function</i> <b>member-if-not</b> is deprecated.
+</p>
+<p>In the following
+</p>
+<div class="example">
+<pre class="example"> (member 'a '(g (a y) c a d e a f)) &rArr;  (A D E A F)
+</pre></div>
+
+<p>the value returned by <b>member</b> is <i>identical</i> to the portion
+of the <i>list</i> beginning with <tt>a</tt>.  Thus <b>rplaca</b> on the
+result of <b>member</b> can be used to alter the part of the <i>list</i>
+where <tt>a</tt> was found (assuming a check has been made that <b>member</b>
+did not return <b>nil</b>).
+</p>
+<hr>
+<div class="header">
+<p>
+ &nbsp; </p>
+</div>
+<div class="header">
+<p>
+ &nbsp; </p>
+</div>
+<a name="bit_002c-sbit-_005bAccessor_005d"></a>
+<h4 class="subsection">15.2.33 bit, sbit                                                        [Accessor]</h4>
+
+<p><code>bit</code>  <i>bit-array &amp;rest</i> subscripts &rArr;  <i>bit</i>
+</p>
+<p><code>sbit</code>  <i>bit-array &amp;rest</i> subscripts &rArr;  <i>bit</i>
+</p>
+<p>(setf (<code>bit</code> <i>bit-array &amp;rest</i> subscripts) new-bit)<br>(setf (<code>sbit</code> <i>bit-array &amp;rest</i> subscripts) new-bit)<br>
+</p>
+<a name="Arguments-and-Values_003a_003a-342"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>bit-array</i>&mdash;for <b>bit</b>,  a <i>bit array</i>;
+		    for <b>sbit</b>, a <i>simple bit array</i>.
+</p>
+<p><i>subscripts</i>&mdash;a <i>list</i> of <i>valid array indices</i> 
+		     for the <i>bit-array</i>.
+</p>
+<p><i>bit</i>&mdash;a <i>bit</i>.
+</p>
+<a name="Description_003a_003a-452"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>bit</b> and <b>sbit</b> <i>access</i> the <i>bit-array</i> 
+<i>element</i> specified by <i>subscripts</i>.
+</p>
+<p>These <i>functions</i> ignore the <i>fill pointer</i> when <i>accessing</i> <i>elements</i>.
+</p>
+<a name="Examples_003a_003a-324"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (bit (setq ba (make-array 8 
+                            :element-type 'bit 
+                            :initial-element 1))
+       3) &rArr;  1
+ (setf (bit ba 3) 0) &rArr;  0
+ (bit ba 3) &rArr;  0
+ (sbit ba 5) &rArr;  1
+ (setf (sbit ba 5) 1) &rArr;  1
+ (sbit ba 5) &rArr;  1
+</pre></div>
+
+<a name="See-Also_003a_003a-371"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="aref.html#aref">aref</a>
+,
+</p>
+<p><a href="Compiler-Terminology.html#Compiler-Terminology">Compiler Terminology</a>
+</p>
+<a name="Notes_003a_003a-247"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>bit</b> and <b>sbit</b> are like <b>aref</b>
+except that they require <i>arrays</i> to be
+a <i>bit array</i> and a <i>simple bit array</i>, respectively.
+</p>
+<p><b>bit</b> and <b>sbit</b>, unlike <b>char</b> and <b>schar</b>,
+allow the first argument to be an <i>array</i> of any <i>rank</i>.
+</p>
+<div class="header">
+<p>
+ &nbsp; </p>
+</div>
+<a name="g_t_002d-_005bVariable_005d"></a>
+<h4 class="subsection">25.2.20 -                                                              [Variable]</h4>
+
+<a name="Value-Type_003a_003a-33"></a>
+<h4 class="subsubheading">Value Type::</h4>
+
+<p>a <i>form</i>.
+</p>
+<a name="Initial-Value_003a_003a-33"></a>
+<h4 class="subsubheading">Initial Value::</h4>
+
+<p><i>implementation-dependent</i>.
+</p>
+<a name="Description_003a_003a-668"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <i>value</i> of <b>-</b> is the <i>form</i> that is currently being evaluated by
+the <i>Lisp read-eval-print loop</i>.
+</p>
+<a name="Examples_003a_003a-468"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">(format t &quot;~&amp;Evaluating ~S~
+<tt> |&gt; </tt> Evaluating (FORMAT T &quot;~&amp;Evaluating ~S~
+&rArr;  NIL
+</pre></div>
+
+<a name="Affected-By_003a_003a-132"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><i>Lisp read-eval-print loop</i>.
+</p>
+<a name="See-Also_003a_003a-543"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>+</b> (<i>variable</i>),
+<b>*</b> (<i>variable</i>),
+<a href="_002f.html#g_t_002f">/</a>
+ (<i>variable</i>), 
+<a href="Top-level-loop.html#Top-level-loop">Top level loop</a>
+</p>
+<div class="header">
+<p>
+ &nbsp; </p>
+</div>
+<a name="g_t_002b_002c-_002b_002b_002c-_002b_002b_002b-_005bVariable_005d"></a>
+<h4 class="subsection">25.2.21 +, ++, +++                                                       [Variable]</h4>
+
+<a name="Value-Type_003a_003a-34"></a>
+<h4 class="subsubheading">Value Type::</h4>
+
+<p>an <i>object</i>.
+</p>
+<a name="Initial-Value_003a_003a-34"></a>
+<h4 class="subsubheading">Initial Value::</h4>
+
+<p><i>implementation-dependent</i>.
+</p>
+<a name="Description_003a_003a-669"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <i>variables</i> <b>+</b>, <b>++</b>, and <b>+++</b> are maintained by the
+<i>Lisp read-eval-print loop</i> to save <i>forms</i> that were
+recently <i>evaluated</i>.
+</p>
+<p>The <i>value</i> of <b>+</b>   is the last <i>form</i> that was <i>evaluated</i>,
+the <i>value</i> of <b>++</b>  is the previous value of <b>+</b>, and
+the <i>value</i> of <b>+++</b> is the previous value of <b>++</b>.
+</p>
+<a name="Examples_003a_003a-469"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example">(+ 0 1) &rArr;  1
+(- 4 2) &rArr;  2
+(/ 9 3) &rArr;  3
+(list + ++ +++) &rArr;  ((/ 9 3) (- 4 2) (+ 0 1))
+(setq a 1 b 2 c 3 d (list a b c)) &rArr;  (1 2 3)
+(setq a 4 b 5 c 6 d (list a b c)) &rArr;  (4 5 6)
+(list a b c) &rArr;  (4 5 6)
+(eval +++) &rArr;  (1 2 3)
+#.`(,@++ d) &rArr;  (1 2 3 (1 2 3))
+</pre></div>
+
+<a name="Affected-By_003a_003a-133"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><i>Lisp read-eval-print loop</i>.
+</p>
+<a name="See-Also_003a_003a-544"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="_002d.html#g_t_002d">-</a>
+ (<i>variable</i>),
+<b>*</b> (<i>variable</i>),
+<a href="_002f.html#g_t_002f">/</a>
+ (<i>variable</i>), 
+<a href="Top-level-loop.html#Top-level-loop">Top level loop</a>
+</p>
+<div class="header">
+<p>
+ &nbsp; </p>
+</div>
+<a name="g_t_002a_002c-_002a_002a_002c-_002a_002a_002a-_005bVariable_005d"></a>
+<h4 class="subsection">25.2.22 *, **, ***                                                       [Variable]</h4>
+
+<a name="Value-Type_003a_003a-35"></a>
+<h4 class="subsubheading">Value Type::</h4>
+
+<p>an <i>object</i>.
+</p>
+<a name="Initial-Value_003a_003a-35"></a>
+<h4 class="subsubheading">Initial Value::</h4>
+
+<p><i>implementation-dependent</i>.
+</p>
+<a name="Description_003a_003a-670"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <i>variables</i> <b>*</b>, <b>**</b>, and <b>***</b> are 
+maintained by the <i>Lisp read-eval-print loop</i> to save the 
+values of results that are printed each time through the loop.
+</p>
+<p>The <i>value</i> of <b>*</b>   is the most recent <i>primary value</i> that was printed,
+the <i>value</i> of <b>**</b>  is the previous value of <b>*</b>, and 
+the <i>value</i> of <b>***</b> is the previous value of <b>**</b>.
+</p>
+<p>If several values are produced, <b>*</b> contains the first value only;
+<b>*</b> contains <b>nil</b> if zero values are produced.
+</p>
+<p>The <i>values</i> of <b>*</b>, <b>**</b>, and <b>***</b> are updated immediately
+prior to printing the <i>return value</i> of a top-level <i>form</i> by the
+<i>Lisp read-eval-print loop</i>.  If the <i>evaluation</i> of such a <i>form</i>
+is aborted prior to its normal return, the values of <b>*</b>, <b>**</b>, and <b>***</b> 
+are not updated.
+</p>
+<a name="Examples_003a_003a-470"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example">(values 'a1 'a2) &rArr;  A1, A2
+'b &rArr;  B
+(values 'c1 'c2 'c3) &rArr;  C1, C2, C3
+(list * ** ***) &rArr;  (C1 B A1)
+
+(defun cube-root (x) (expt x 1/3)) &rArr;  CUBE-ROOT
+(compile *) &rArr;  CUBE-ROOT
+(setq a (cube-root 27.0)) &rArr;  3.0
+(* * 9.0) &rArr;  27.0
+</pre></div>
+
+<a name="Affected-By_003a_003a-134"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><i>Lisp read-eval-print loop</i>.
+</p>
+<a name="See-Also_003a_003a-545"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="_002d.html#g_t_002d">-</a>
+ (<i>variable</i>),
+<b>+</b> (<i>variable</i>),
+<a href="_002f.html#g_t_002f">/</a>
+ (<i>variable</i>), 
+<a href="Top-level-loop.html#Top-level-loop">Top level loop</a>
+</p>
+<a name="Notes_003a_003a-335"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<div class="example">
+<pre class="example"> *   &equiv; (car /)
+ **  &equiv; (car //)
+ *** &equiv; (car ///)
+</pre></div>
+
+<div class="header">
+<p>
+ &nbsp; </p>
+</div>
+<a name="g_t_002f_002c-_002f_002f_002c-_002f_002f_002f-_005bVariable_005d"></a>
+<h4 class="subsection">25.2.23 /, //, ///                                                       [Variable]</h4>
+
+<a name="Value-Type_003a_003a-36"></a>
+<h4 class="subsubheading">Value Type::</h4>
+
+<p>a <i>proper list</i>.
+</p>
+<a name="Initial-Value_003a_003a-36"></a>
+<h4 class="subsubheading">Initial Value::</h4>
+
+<p><i>implementation-dependent</i>.
+</p>
+<a name="Description_003a_003a-671"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <i>variables</i> <b>/</b>, <b>//</b>, and <b>///</b> are maintained by
+the <i>Lisp read-eval-print loop</i> to save the values of results that
+were printed at the end of the loop.
+</p>
+<p>The <i>value</i> of <b>/</b>   is a <i>list</i> of the most recent <i>values</i> that were printed,
+the <i>value</i> of <b>//</b>  is the previous value of <b>/</b>, and
+the <i>value</i> of <b>///</b> is the previous value of <b>//</b>.
+</p>
+<p>The <i>values</i> of <b>/</b>, <b>//</b>, and <b>///</b> are updated immediately
+prior to printing the <i>return value</i> of a top-level <i>form</i> by the
+<i>Lisp read-eval-print loop</i>.  If the <i>evaluation</i> of such a <i>form</i>
+is aborted prior to its normal return, the values of <b>/</b>, <b>//</b>, and <b>///</b> 
+are not updated.
+</p>
+<a name="Examples_003a_003a-471"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (floor 22 7) &rArr;  3, 1
+ (+ (* (car /) 7) (cadr /)) &rArr;  22
+</pre></div>
+
+<a name="Affected-By_003a_003a-135"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><i>Lisp read-eval-print loop</i>.
+</p>
+<a name="See-Also_003a_003a-546"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="_002d.html#g_t_002d">-</a>
+ (<i>variable</i>),
+<b>+</b> (<i>variable</i>),
+<b>*</b> (<i>variable</i>),
+<a href="Top-level-loop.html#Top-level-loop">Top level loop</a>
+</p>
+
+
+
+</body>
+</html>

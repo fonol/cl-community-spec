@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Conses as Lists (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Cons-Concepts.html#Cons-Concepts" rel="up" title="Cons Concepts">
+<link href="Lists-as-Association-Lists.html#Lists-as-Association-Lists" rel="next" title="Lists as Association Lists">
+<link href="General-Restrictions-on-Parameters-that-must-be-Trees.html#General-Restrictions-on-Parameters-that-must-be-Trees" rel="prev" title="General Restrictions on Parameters that must be Trees">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="General-Restrictions-on-Parameters-that-must-be-Trees.html#General-Restrictions-on-Parameters-that-must-be-Trees" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                General Restrictions on Parameters that must be Trees
+                            </a>
+                            <a href="Cons-Concepts.html#Cons-Concepts.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Cons Concepts
+                            </a>
+                            <a href="Lists-as-Association-Lists.html#Lists-as-Association-Lists.html" class="nav-btn nav__next ">
+                                Lists as Association Lists
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Conses-as-Lists"></a>
+<a name="Conses-as-Lists-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Conses as Lists</h4>
+
+<p>A <i>list</i>
+<a name="index-list"></a>
+ is a chain of <i>conses</i> in which the <i>car</i> of each
+<i>cons</i> is an <i>element</i> of the <i>list</i>, 
+and the <i>cdr</i> of each <i>cons</i> is either the next
+link in the chain or a terminating <i>atom</i>.  
+</p>
+<p>A <i>proper list</i>
+<a name="index-proper-list"></a>
+ is a <i>list</i> terminated by the <i>empty list</i>.
+The <i>empty list</i> is a <i>proper list</i>, but is not a <i>cons</i>.
+</p>
+<p>An <i>improper list</i>
+<a name="index-improper-list"></a>
+ is a <i>list</i> that is not a <i>proper list</i>;
+that is, it is a <i>circular list</i> or a <i>dotted list</i>.
+</p>
+<p>A <i>dotted list</i>
+<a name="index-dotted-list"></a>
+ is a <i>list</i> that has a terminating <i>atom</i>
+that is not the <i>empty list</i>.  A <i>non-nil</i> <i>atom</i> by itself
+is not considered to be a <i>list</i> of any kind&mdash;not even a <i>dotted list</i>.
+</p>
+<p>A <i>circular list</i>
+<a name="index-circular-list"></a>
+ is a chain of <i>conses</i> that has no termination 
+because some <i>cons</i> in the chain is the <i>cdr</i> of a later <i>cons</i>.
+</p>
+<p>&nbsp;&nbsp;append&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;last&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nbutlast&nbsp;&nbsp;rest&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;butlast&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ldiff&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nconc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;revappend&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">copy-alist</span>&nbsp;&nbsp;list&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ninth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;second&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">copy-list</span>&nbsp;&nbsp;&nbsp;list*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nreconc&nbsp;&nbsp;&nbsp;seventh&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;eighth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">list-length</span>&nbsp;&nbsp;&nbsp;&nbsp;nth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sixth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;endp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">make-list</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nthcdr&nbsp;&nbsp;&nbsp;&nbsp;tailp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;fifth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;member&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pop&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tenth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;first&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">member-if</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;push&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;third&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;fourth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">member-if-not</span>&nbsp;&nbsp;pushnew&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;Figure&nbsp;14&ndash;3:&nbsp;Some&nbsp;defined&nbsp;names&nbsp;relating&nbsp;to&nbsp;lists.<!-- /@w -->
+</p>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Lists-as-Association-Lists.html#Lists-as-Association-Lists" accesskey="1">Lists as Association Lists</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="Lists-as-Sets.html#Lists-as-Sets" accesskey="2">Lists as Sets</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top"><a href="General-Restrictions-on-Parameters-that-must-be-Lists.html#General-Restrictions-on-Parameters-that-must-be-Lists" accesskey="3">General Restrictions on Parameters that must be Lists</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

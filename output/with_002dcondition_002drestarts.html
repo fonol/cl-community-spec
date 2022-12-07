@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>with-condition-restarts (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="with_002dsimple_002drestart.html#with_002dsimple_002drestart" rel="next" title="with-simple-restart">
+<link href="restart_002dname.html#restart_002dname" rel="prev" title="restart-name">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="restart_002dname.html#restart_002dname" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                restart-name
+                            </a>
+                            <a href="Conditions-Dictionary.html#Conditions-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Conditions Dictionary
+                            </a>
+                            <a href="with_002dsimple_002drestart.html#with_002dsimple_002drestart.html" class="nav-btn nav__next ">
+                                with-simple-restart
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="with_002dcondition_002drestarts"></a>
+<a name="with_002dcondition_002drestarts-_005bMacro_005d"></a>
+<div class="section top-most">
+<div class="node-type">Macro</div>
+<h4 class="subsection">with-condition-restarts                                             </h4>
+
+<p><code>with-condition-restarts</code>  <i>condition-form restarts-form {<i>form</i>}*</i><br>
+   &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-155"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>condition-form</i>&mdash;a <i>form</i>; <i>evaluated</i> to produce a <i>condition</i>.
+</p>
+<p><i>condition</i>&mdash;a <i>condition</i> <i>object</i> resulting from the 
+		    <i>evaluation</i> of <i>condition-form</i>.
+</p>
+<p><i>restart-form</i>&mdash;a <i>form</i>; <i>evaluated</i> to produce a <i>restart-list</i>.
+</p>
+<p><i>restart-list</i>&mdash;a <i>list</i> of <i>restart</i> <i>objects</i> resulting 
+		       from the <i>evaluation</i> of <i>restart-form</i>.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>; evaluated.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by <i>forms</i>.
+</p>
+<a name="Description_003a_003a-209"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>First, the <i>condition-form</i> and <i>restarts-form</i> are <i>evaluated</i>
+in normal left-to-right order; the <i>primary values</i> yielded by these
+<i>evaluations</i> are respectively called the <i>condition</i> 
+and the <i>restart-list</i>.
+</p>
+<p>Next, the <i>forms</i> are <i>evaluated</i> in a <i>dynamic environment</i>
+in which each <i>restart</i> in <i>restart-list</i> is associated with
+the <i>condition</i>.  See <a href="Associating-a-Restart-with-a-Condition.html#Associating-a-Restart-with-a-Condition">Associating a Restart with a Condition</a>.
+</p>
+<a name="See-Also_003a_003a-183"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="restart_002dcase.html#restart_002dcase">restart-case</a>
+</p>
+<a name="Notes_003a_003a-112"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>Usually this <i>macro</i> is not used explicitly in code, 
+since <b>restart-case</b> handles most of the common cases
+in a way that is syntactically more concise.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>get-universal-time (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Environment-Dictionary.html#Environment-Dictionary" rel="up" title="Environment Dictionary">
+<link href="sleep.html#sleep" rel="next" title="sleep">
+<link href="encode_002duniversal_002dtime.html#encode_002duniversal_002dtime" rel="prev" title="encode-universal-time">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="encode_002duniversal_002dtime.html#encode_002duniversal_002dtime" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                encode-universal-time
+                            </a>
+                            <a href="Environment-Dictionary.html#Environment-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Environment Dictionary
+                            </a>
+                            <a href="sleep.html#sleep.html" class="nav-btn nav__next ">
+                                sleep
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="get_002duniversal_002dtime"></a>
+<a name="get_002duniversal_002dtime_002c-get_002ddecoded_002dtime-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">get-universal-time, get-decoded-time                             </h4>
+
+<p><code>get-universal-time</code>  <i>&lt;<i>no <i>arguments</i></i>&gt;</i> &rArr;  <i>universal-time</i>
+</p>
+<p><code>get-decoded-time</code>  <i>&lt;<i>no <i>arguments</i></i>&gt;</i><br>
+   &rArr;  <i>second, minute, hour, date, month, year, day, daylight-p, zone</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-489"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>universal-time</i>&mdash;a <i>universal time</i>.
+</p>
+<p><i>second</i>, <i>minute</i>, <i>hour</i>,
+<i>date</i>, <i>month</i>, <i>year</i>,
+<i>day</i>, <i>daylight-p</i>, <i>zone</i>&mdash;a <i>decoded time</i>.
+</p>
+<a name="Description_003a_003a-651"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>get-universal-time</b> returns the current time, represented as a <i>universal time</i>.
+</p>
+<p><b>get-decoded-time</b> returns the current time, represented as a <i>decoded time</i>.
+</p>
+<a name="Examples_003a_003a-463"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code>;; At noon on July 4, 1976 in Eastern Daylight Time.
+ (get-decoded-time) &rArr;  0, 0, 12, 4, 7, 1976, 6, <i>true</i>, 5
+;; At exactly the same instant.
+ (get-universal-time) &rArr;  2414332800
+;; Exactly five minutes later.
+ (get-universal-time) &rArr;  2414333100
+;; The difference is 300 seconds (five minutes)
+ (- * **) &rArr;  300
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-120"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+
+<p>The time of day (<i>i.e.</i>, the passage of time),
+the system clock&rsquo;s ability to keep accurate time,
+and the accuracy of the system clock&rsquo;s initial setting.
+</p>
+<a name="Exceptional-Situations_003a_003a-237"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>An error of <i>type</i> <b>error</b> might be signaled if the current time cannot be determined.
+</p>
+<a name="See-Also_003a_003a-531"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="decode_002duniversal_002dtime.html#decode_002duniversal_002dtime">decode-universal-time</a>
+,
+<a href="encode_002duniversal_002dtime.html#encode_002duniversal_002dtime">encode-universal-time</a>
+,
+<a href="Time.html#Time">Time</a>
+</p>
+<a name="Notes_003a_003a-325"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<div class="example">
+<pre class="example"><code> (get-decoded-time) &equiv; (decode-universal-time (get-universal-time))
+</code>
+</pre></div>
+
+<p>No <i>implementation</i> is required to have a way to verify that the
+time returned is correct.  However, if an <i>implementation</i> provides
+a validity check (<i>e.g.</i>, the failure to have properly initialized the system
+clock can be reliably detected) and that validity check fails, 
+the <i>implementation</i> is strongly encouraged (but not required)
+to signal an error of <i>type</i> <b>error</b> (rather than, for example, returning a
+known-to-be-wrong value) that is <i>correctable</i> by allowing the user
+to interactively set the correct time.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

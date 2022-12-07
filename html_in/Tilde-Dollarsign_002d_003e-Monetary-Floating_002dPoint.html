@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Tilde Dollarsign-&gt; Monetary Floating-Point (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Tilde Dollarsign-&gt; Monetary Floating-Point (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Tilde Dollarsign-&gt; Monetary Floating-Point (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="FORMAT-Floating_002dPoint-Printers.html#FORMAT-Floating_002dPoint-Printers" rel="up" title="FORMAT Floating-Point Printers">
+<link href="FORMAT-Printer-Operations.html#FORMAT-Printer-Operations" rel="next" title="FORMAT Printer Operations">
+<link href="Tilde-G_002d_003e-General-Floating_002dPoint.html#Tilde-G_002d_003e-General-Floating_002dPoint" rel="prev" title="Tilde G-&gt; General Floating-Point">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Tilde-Dollarsign_002d_003e-Monetary-Floating_002dPoint"></a>
+<div class="header">
+<p>
+Previous: <a href="Tilde-G_002d_003e-General-Floating_002dPoint.html#Tilde-G_002d_003e-General-Floating_002dPoint" accesskey="p" rel="prev">Tilde G-&gt; General Floating-Point</a>, Up: <a href="FORMAT-Floating_002dPoint-Printers.html#FORMAT-Floating_002dPoint-Printers" accesskey="u" rel="up">FORMAT Floating-Point Printers</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Tilde-Dollarsign_003a-Monetary-Floating_002dPoint"></a>
+<h4 class="subsubsection">22.3.3.4 Tilde Dollarsign: Monetary Floating-Point</h4>
+
+<p>The next <i>arg</i> is printed as a <i>float</i> in fixed-format notation.  
+</p>
+<p>The full form is <tt>~<i>d</i>,<i>n</i>,<i>w</i>,<i>padchar</i>$</tt>.
+The parameter <i>d</i> is the number
+of digits to print after the decimal point (default value 2);
+<i>n</i> is the minimum number of digits to print before the decimal
+point (default value 1);
+<i>w</i> is the minimum total width of the field to be printed (default
+value 0).
+</p>
+<p>First padding and the sign are output.
+If the <i>arg</i> is negative, then a minus sign is printed;
+if the <i>arg</i> is not negative, then a plus sign is printed
+if and only if the <tt>@</tt> modifier was supplied.  
+If the <tt>:</tt> modifier is used, the sign appears before any padding,
+and otherwise after the padding.
+If <i>w</i> is supplied and the number of other characters to be output
+is less than <i>w</i>, then copies of <i>padchar</i> (which defaults
+to a space) are output to
+make the total field width equal <i>w</i>.
+Then <i>n</i> digits are printed for the integer part of <i>arg</i>,
+with leading zeros if necessary; then a decimal point;
+then <i>d</i> digits of fraction, properly rounded.
+</p>
+<p>If the magnitude of <i>arg</i> is so large that more than <i>m</i> digits would
+have to be printed, where <i>m</i> is the larger of <i>w</i> and 100, then an
+implementation is free, at its discretion, to print the number using
+exponential notation instead, as if by the directive
+<tt>~<i>w</i>,<i>q</i>,,,,<i>padchar</i>E</tt>, where <i>w</i> and <i>padchar</i> are
+present or omitted according to whether they were present or omitted in
+the <tt>~$</tt> directive, and where <i>q</i>=<i>d</i>+<i>n</i>- 1,
+where <i>d</i> and <i>n</i> are the (possibly default) values given to the
+<tt>~$</tt> directive.
+</p>
+<p>If <i>arg</i> is a <i>rational</i> 
+number, then it is coerced to be a <i>single float</i>
+and then printed.  Alternatively, an implementation is permitted to
+process a <i>rational</i> number by any 
+other method that has essentially the
+same behavior but avoids loss of precision or overflow
+because of the coercion.
+</p>
+<p>If <i>arg</i> is a <i>complex</i> number or some non-numeric
+<i>object</i>,
+then it is printed using the format directive <tt>~<i>w</i>D</tt>,
+thereby printing it in decimal radix and a minimum field width of <i>w</i>.
+</p>
+<p><tt>~$</tt> binds <b>*print-escape*</b> to <i>false</i>
+</p>
+<p>and <b>*print-readably*</b> to <i>false</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Tilde-G_002d_003e-General-Floating_002dPoint.html#Tilde-G_002d_003e-General-Floating_002dPoint" accesskey="p" rel="prev">Tilde G-&gt; General Floating-Point</a>, Up: <a href="FORMAT-Floating_002dPoint-Printers.html#FORMAT-Floating_002dPoint-Printers" accesskey="u" rel="up">FORMAT Floating-Point Printers</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

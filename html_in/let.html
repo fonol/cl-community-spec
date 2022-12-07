@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>let (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="let (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="let (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="progv.html#progv" rel="next" title="progv">
+<link href="destructuring_002dbind.html#destructuring_002dbind" rel="prev" title="destructuring-bind">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="let"></a>
+<div class="header">
+<p>
+Next: <a href="progv.html#progv" accesskey="n" rel="next">progv</a>, Previous: <a href="destructuring_002dbind.html#destructuring_002dbind" accesskey="p" rel="prev">destructuring-bind</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="let_002c-let_002a-_005bSpecial-Operator_005d"></a>
+<h4 class="subsection">5.3.18 let, let*                                                [Special Operator]</h4>
+
+<p><code>let</code>  <i><span class="roman">(</span>{<i>var</i> | <span class="roman">(</span><i>var</i> <span class="roman">[</span><i>init-form</i><span class="roman">]</span><span class="roman">)</span>}*</i><span class="roman">)</span> {<i>declaration</i>}* {<i>form</i>}* &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<p><code>let*</code>  <i><span class="roman">(</span>{<i>var</i> | <span class="roman">(</span><i>var</i> <span class="roman">[</span><i>init-form</i><span class="roman">]</span><span class="roman">)</span>}*</i><span class="roman">)</span> {<i>declaration</i>}* {<i>form</i>}* &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-39"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>var</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>init-form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by the <i>forms</i>.
+</p>
+<a name="Description_003a_003a-71"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>let</b> and <b>let*</b>
+create new variable <i>bindings</i> and
+execute a series of <i>forms</i> that use these <i>bindings</i>.
+<b>let</b> performs the <i>bindings</i> in parallel and 
+<b>let*</b> does them sequentially.
+</p>
+<p>The form
+</p>
+<div class="example">
+<pre class="example"> (let ((<i>var1</i> <i>init-form-1</i>)
+       (<i>var2</i> <i>init-form-2</i>)
+       ...
+       (<i>varm</i> <i>init-form-m</i>))
+   <i>declaration1</i>
+   <i>declaration2</i>
+   ...
+   <i>declarationp</i>
+   <i>form1</i>
+   <i>form2</i>
+   ...
+   <i>formn</i>)
+</pre></div>
+
+<p>first evaluates the expressions <i>init-form-1</i>, <i>init-form-2</i>, and so on,
+</p>
+<p>in that order, saving the resulting values.
+Then all of the variables <i>varj</i> are bound to the corresponding
+values; each <i>binding</i> is lexical unless
+there is a <b>special</b> declaration to the contrary.
+The expressions <i>formk</i> are then evaluated
+in order; the values of all but the last are discarded
+(that is, the body of a <b>let</b> 
+is an <i>implicit progn</i>).
+</p>
+<p><b>let*</b>
+is similar to <b>let</b>, but the <i>bindings</i> of variables
+are performed sequentially rather than in parallel.  
+The expression for the <i>init-form</i> of a 
+<i>var</i> can refer to <i>vars</i>
+previously bound in the <b>let*</b>.
+</p>
+<p>The form
+</p>
+<div class="example">
+<pre class="example"> (let* ((<i>var1</i> <i>init-form-1</i>)
+        (<i>var2</i> <i>init-form-2</i>)
+        ...
+        (<i>varm</i> <i>init-form-m</i>))
+   <i>declaration1</i>
+   <i>declaration2</i>
+   ...
+   <i>declarationp</i>
+   <i>form1</i>
+   <i>form2</i>
+   ...
+   <i>formn</i>)
+</pre></div>
+
+<p>first evaluates the expression <i>init-form-1</i>, then binds the variable
+<i>var1</i> to that value; then it evaluates <i>init-form-2</i> and binds 
+</p>
+<p><i>var2</i>, and so on.
+The expressions <i>formj</i> are then evaluated
+in order; the values of all but the last are discarded
+(that is, the body of <b>let*</b> is an implicit <b>progn</b>).
+</p>
+<p>For both <b>let</b> and <b>let*</b>,
+if there is not an <i>init-form</i> associated with a <i>var</i>,
+<i>var</i> is initialized to <b>nil</b>.  
+</p>
+<p>The special form <b>let</b> 
+has the property that the <i>scope</i> 
+of the name binding does not include any
+initial value form.
+For <b>let*</b>, a variable&rsquo;s <i>scope</i> also includes the 
+     remaining initial value forms for subsequent variable bindings.
+</p>
+<a name="Examples_003a_003a-45"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq a 'top) &rArr;  TOP
+ (defun dummy-function () a) &rArr;  DUMMY-FUNCTION
+ (let ((a 'inside) (b a))
+    (format nil &quot;~S ~S ~S&quot; a b (dummy-function))) &rArr;  &quot;INSIDE TOP TOP&quot; 
+ (let* ((a 'inside) (b a))
+    (format nil &quot;~S ~S ~S&quot; a b (dummy-function))) &rArr;  &quot;INSIDE INSIDE TOP&quot; 
+ (let ((a 'inside) (b a))
+    (declare (special a))
+    (format nil &quot;~S ~S ~S&quot; a b (dummy-function))) &rArr;  &quot;INSIDE TOP INSIDE&quot;
+</pre></div>
+
+<p>The code
+</p>
+<div class="example">
+<pre class="example"> (let (x)
+   (declare (integer x))
+   (setq x (gcd y z))
+   ...)
+</pre></div>
+
+<p>is incorrect; although <tt>x</tt> is indeed set before it is used,
+and is set to a value of the declared type <i>integer</i>, nevertheless
+<tt>x</tt> initially takes on the value <b>nil</b> in violation of the type
+declaration.
+</p>
+<a name="See-Also_003a_003a-56"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="progv.html#progv">progv</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="progv.html#progv" accesskey="n" rel="next">progv</a>, Previous: <a href="destructuring_002dbind.html#destructuring_002dbind" accesskey="p" rel="prev">destructuring-bind</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

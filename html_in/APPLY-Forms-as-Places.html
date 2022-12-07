@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>APPLY Forms as Places (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="APPLY Forms as Places (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="APPLY Forms as Places (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Kinds-of-Places.html#Kinds-of-Places" rel="up" title="Kinds of Places">
+<link href="Setf-Expansions-and-Places.html#Setf-Expansions-and-Places" rel="next" title="Setf Expansions and Places">
+<link href="THE-Forms-as-Places.html#THE-Forms-as-Places" rel="prev" title="THE Forms as Places">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="APPLY-Forms-as-Places"></a>
+<div class="header">
+<p>
+Next: <a href="Setf-Expansions-and-Places.html#Setf-Expansions-and-Places" accesskey="n" rel="next">Setf Expansions and Places</a>, Previous: <a href="THE-Forms-as-Places.html#THE-Forms-as-Places" accesskey="p" rel="prev">THE Forms as Places</a>, Up: <a href="Kinds-of-Places.html#Kinds-of-Places" accesskey="u" rel="up">Kinds of Places</a> &nbsp; </p>
+</div>
+<hr>
+<a name="APPLY-Forms-as-Places-1"></a>
+<h4 class="subsubsection">5.1.2.5 APPLY Forms as Places</h4>
+
+<p>The following situations involving <b>setf</b> of <b>apply</b> must be supported:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p><tt>(setf (apply #'aref <i>array</i>
+				        {<i>subscript</i>}*</tt>
+					<i>more-subscripts</i>)
+			  <i>new-element</i>)
+</p></dd>
+<dt><tt>*</tt></dt>
+<dd><p><tt>(setf (apply #'bit <i>array</i> 
+				       {<i>subscript</i>}*</tt>
+				       <i>more-subscripts</i>)
+			  <i>new-element</i>)
+</p></dd>
+<dt><tt>*</tt></dt>
+<dd><p><tt>(setf (apply #'sbit <i>array</i> 
+					{<i>subscript</i>}*</tt>
+					<i>more-subscripts</i>) 
+			  <i>new-element</i>)
+</p></dd>
+</dl>
+
+<p>In all three cases, the <i>element</i> of <i>array</i> designated
+by the concatenation of <i>subscripts</i> and <i>more-subscripts</i>
+(<i>i.e.</i>, the same <i>element</i> which would be <i>read</i> by the call to
+     <i>apply</i> if it were not part of a <b>setf</b> <i>form</i>)
+is changed to have the <i>value</i> given by <i>new-element</i>.
+</p>
+<p>For these usages, the function name (<b>aref</b>, <b>bit</b>, or <b>sbit</b>)
+must refer to the global function definition, rather than a locally defined
+<i>function</i>.
+</p>
+<p>No other <i>standardized</i> <i>function</i> is required to be supported,
+but an <i>implementation</i> may define such support.
+An <i>implementation</i> may also define support 
+for <i>implementation-defined</i> <i>operators</i>.
+</p>
+<p>If a user-defined <i>function</i> is used in this context,
+the following equivalence is true, except that care is taken
+to preserve proper left-to-right evaluation of argument <i>subforms</i>:
+</p>
+<div class="example">
+<pre class="example"> (setf (apply #'<i>name</i> {<i>arg</i>}*) <i>val</i>)
+ &equiv; (apply #'(setf <i>name</i>) <i>val</i> {<i>arg</i>}*)
+</pre></div>
+
+
+
+
+</body>
+</html>

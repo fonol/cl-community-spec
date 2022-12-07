@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>concatenate (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="concatenate (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="concatenate (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Sequences-Dictionary.html#Sequences-Dictionary" rel="up" title="Sequences Dictionary">
+<link href="merge.html#merge" rel="next" title="merge">
+<link href="substitute.html#substitute" rel="prev" title="substitute">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="concatenate"></a>
+<div class="header">
+<p>
+Next: <a href="merge.html#merge" accesskey="n" rel="next">merge</a>, Previous: <a href="substitute.html#substitute" accesskey="p" rel="prev">substitute</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="concatenate-_005bFunction_005d"></a>
+<h4 class="subsection">17.3.20 concatenate                                                      [Function]</h4>
+
+<p><code>concatenate</code>  <i>result-type &amp;rest</i> sequences &rArr;  <i>result-sequence</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-372"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>result-type</i>&mdash;a <b>sequence</b> <i>type specifier</i>.
+</p>
+<p><i>sequences</i>&mdash;a <i>sequence</i>.
+</p>
+<p><i>result-sequence</i>&mdash;a <i>proper sequence</i> of <i>type</i> <i>result-type</i>.
+</p>
+<a name="Description_003a_003a-487"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>concatenate</b> returns a <i>sequence</i> that contains 
+all the individual elements of all the <i>sequences</i> in the order 
+that they are supplied.
+The <i>sequence</i> is of type <i>result-type</i>, 
+which must be a <i>subtype</i> of <i>type</i> <b>sequence</b>.
+</p>
+<p>All of the <i>sequences</i> are copied from; the result
+does not share any structure with any of the <i>sequences</i>.
+Therefore, if only one <i>sequence</i> is provided
+and it is of type <i>result-type</i>,
+<b>concatenate</b> is required to copy <i>sequence</i> rather than simply
+returning it.  
+</p>
+<p>It is an error if any element of the <i>sequences</i> cannot be an
+element of the <i>sequence</i> result.
+</p>
+<p>[Reviewer Note by Barmar: Should signal?]
+</p>
+<p>If the <i>result-type</i> is a <i>subtype</i> of <b>list</b>,
+the result will be a <i>list</i>.
+</p>
+<p>If the <i>result-type</i> is a <i>subtype</i> of <b>vector</b>,
+then if the implementation can determine the element type specified
+for the <i>result-type</i>, the element type of the resulting array 
+is the result of <i>upgrading</i> that element type; or, if the
+implementation can determine that the element type is unspecified (or <tt>*</tt>),
+the element type of the resulting array is <b>t</b>;
+otherwise, an error is signaled.
+</p>
+<a name="Examples_003a_003a-354"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">(concatenate 'string &quot;all&quot; &quot; &quot; &quot;together&quot; &quot; &quot; &quot;now&quot;) &rArr;  &quot;all together now&quot;
+(concatenate 'list &quot;ABC&quot; '(d e f) #(1 2 3) #*1011)
+&rArr;  (#\A #\B #\C D E F 1 2 3 1 0 1 1)
+(concatenate 'list) &rArr;  NIL
+</pre></div>
+
+<div class="example">
+<pre class="example">  (concatenate '(vector * 2) &quot;a&quot; &quot;bc&quot;) should signal an error
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-165"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>An error is signaled if the <i>result-type</i> is neither
+     a <i>recognizable subtype</i> of <b>list</b>,
+ nor a <i>recognizable subtype</i> of <b>vector</b>.
+</p>
+<p>An error of <i>type</i> <b>type-error</b> should be signaled if <i>result-type</i> 
+specifies the number of elements and the sum of <i>sequences</i>
+is different from that number.
+</p>
+<a name="See-Also_003a_003a-397"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="append.html#append">append</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="merge.html#merge" accesskey="n" rel="next">merge</a>, Previous: <a href="substitute.html#substitute" accesskey="p" rel="prev">substitute</a>, Up: <a href="Sequences-Dictionary.html#Sequences-Dictionary" accesskey="u" rel="up">Sequences Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

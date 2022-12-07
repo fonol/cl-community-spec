@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>function-keywords (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="function-keywords (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="function-keywords (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="ensure_002dgeneric_002dfunction.html#ensure_002dgeneric_002dfunction" rel="next" title="ensure-generic-function">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="prev" title="Objects Dictionary">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="function_002dkeywords"></a>
+<div class="header">
+<p>
+Next: <a href="ensure_002dgeneric_002dfunction.html#ensure_002dgeneric_002dfunction" accesskey="n" rel="next">ensure-generic-function</a>, Previous: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="p" rel="prev">Objects Dictionary</a>, Up: <a href="Objects-Dictionary.html#Objects-Dictionary" accesskey="u" rel="up">Objects Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="function_002dkeywords-_005bStandard-Generic-Function_005d"></a>
+<h4 class="subsection">7.7.1 function-keywords                               [Standard Generic Function]</h4>
+
+<a name="Syntax_003a_003a-11"></a>
+<h4 class="subsubheading">Syntax::</h4>
+
+<p><code>function-keywords</code>  <i>method</i> &rArr;  <i>keys, allow-other-keys-p</i>
+</p>
+<a name="Method-Signatures_003a_003a"></a>
+<h4 class="subsubheading">Method Signatures::</h4>
+
+<p><code>function-keywords</code>  <i><span class="roman">(</span><i>method</i> <b>standard-method</b><span class="roman">)</span></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-89"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>method</i>&mdash;a <i>method</i>.
+</p>
+<p><i>keys</i>&mdash;a <i>list</i>.
+</p>
+<p><i>allow-other-keys-p</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-128"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Returns the keyword parameter specifiers for a <i>method</i>.
+</p>
+<p>Two values are returned: 
+ a <i>list</i> of the explicitly named keywords 
+ and a <i>generalized boolean</i> that states whether <b>&amp;allow-other-keys</b>
+  had been specified in the <i>method</i> definition.
+</p>
+<a name="Examples_003a_003a-98"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defmethod gf1 ((a integer) &amp;optional (b 2)
+                 &amp;key (c 3) ((:dee d) 4) e ((eff f)))
+   (list a b c d e f))
+&rArr;  #&lt;STANDARD-METHOD GF1 (INTEGER) 36324653&gt;
+ (find-method #'gf1 '() (list (find-class 'integer))) 
+&rArr;  #&lt;STANDARD-METHOD GF1 (INTEGER) 36324653&gt;
+ (function-keywords *)
+&rArr;  (:C :DEE :E EFF), <i>false</i>
+ (defmethod gf2 ((a integer))
+   (list a b c d e f))
+&rArr;  #&lt;STANDARD-METHOD GF2 (INTEGER) 42701775&gt;
+ (function-keywords (find-method #'gf1 '() (list (find-class 'integer))))
+&rArr;  (), <i>false</i>
+ (defmethod gf3 ((a integer) &amp;key b c d &amp;allow-other-keys)
+   (list a b c d e f))
+ (function-keywords *)
+&rArr;  (:B :C :D), <i>true</i>
+</pre></div>
+
+<a name="Affected-By_003a_003a-9"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>defmethod</b>
+</p>
+<a name="See-Also_003a_003a-110"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="defmethod.html#defmethod">defmethod</a>
+</p>
+
+
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>cerror (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="cerror (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="cerror (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conditions-Dictionary.html#Conditions-Dictionary" rel="up" title="Conditions Dictionary">
+<link href="check_002dtype.html#check_002dtype" rel="next" title="check-type">
+<link href="error.html#error" rel="prev" title="error">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="cerror"></a>
+<div class="header">
+<p>
+Next: <a href="check_002dtype.html#check_002dtype" accesskey="n" rel="next">check-type</a>, Previous: <a href="error.html#error" accesskey="p" rel="prev">error</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="cerror-_005bFunction_005d"></a>
+<h4 class="subsection">9.2.12 cerror                                                           [Function]</h4>
+
+<p><code>cerror</code>  <i>continue-format-control datum &amp;rest</i> arguments &rArr;  <i><b>nil</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-134"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>Continue-format-control</i>&mdash;a <i>format control</i>.
+</p>
+<p>[Reviewer Note by Barmar: What is continue-format-control used for??]
+</p>
+<p><i>datum</i>, <i>arguments</i>&mdash;<i>designators</i> for a <i>condition</i> 
+ of default type <b>simple-error</b>.
+</p>
+<a name="Description_003a_003a-182"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>cerror</b> effectively invokes <b>error</b> on the
+<i>condition</i> named by <i>datum</i>.  As with any function that
+implicitly calls <b>error</b>, if the <i>condition</i> is not handled,
+<tt>(invoke-debugger <i>condition</i>)</tt> is executed.  While signaling is going on,
+and while in the debugger if it is reached, it is possible to continue
+code execution (<i>i.e.</i>, to return from <b>cerror</b>) using the <b>continue</b> <i>restart</i>.
+</p>
+<p>If <i>datum</i> is a <i>condition</i>, <i>arguments</i> can be supplied,
+but are used only in conjunction with the <i>continue-format-control</i>.
+</p>
+<a name="Examples_003a_003a-116"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defun real-sqrt (n)
+   (when (minusp n)
+     (setq n (- n))
+     (cerror &quot;Return sqrt(~D) instead.&quot; &quot;Tried to take sqrt(-~D).&quot; n))
+   (sqrt n))
+
+ (real-sqrt 4)
+&rArr;  2.0
+
+ (real-sqrt -9)
+<tt> |&gt; </tt> Correctable error in REAL-SQRT: Tried to take sqrt(-9).
+<tt> |&gt; </tt> Restart options:
+<tt> |&gt; </tt>  1: Return sqrt(9) instead.
+<tt> |&gt; </tt>  2: Top level.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:continue 1</tt><b>&lt;&lt;|</b>
+&rArr;  3.0
+
+ (define-condition not-a-number (error)
+   ((argument :reader not-a-number-argument :initarg :argument))
+   (:report (lambda (condition stream)
+              (format stream &quot;~S is not a number.&quot; 
+                      (not-a-number-argument condition)))))
+
+ (defun assure-number (n)
+   (loop (when (numberp n) (return n))
+         (cerror &quot;Enter a number.&quot;
+                 'not-a-number :argument n)
+         (format t &quot;~&amp;Type a number: &quot;)
+         (setq n (read))
+         (fresh-line)))
+
+ (assure-number 'a)
+<tt> |&gt; </tt> Correctable error in ASSURE-NUMBER: A is not a number.
+<tt> |&gt; </tt> Restart options:
+<tt> |&gt; </tt>  1: Enter a number.
+<tt> |&gt; </tt>  2: Top level.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:continue 1</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Type a number: <b>|&gt;&gt;</b><tt>1/2</tt><b>&lt;&lt;|</b>
+&rArr;  1/2
+
+ (defun assure-large-number (n)
+   (loop (when (and (numberp n) (&gt; n 73)) (return n))
+         (cerror &quot;Enter a number~:[~; a bit larger than ~D~].&quot;
+                 &quot;~*~A is not a large number.&quot; 
+                 (numberp n) n)
+         (format t &quot;~&amp;Type a large number: &quot;)
+         (setq n (read))
+         (fresh-line)))
+
+ (assure-large-number 10000)
+&rArr;  10000
+
+ (assure-large-number 'a)
+<tt> |&gt; </tt> Correctable error in ASSURE-LARGE-NUMBER: A is not a large number.
+<tt> |&gt; </tt> Restart options:
+<tt> |&gt; </tt>  1: Enter a number.
+<tt> |&gt; </tt>  2: Top level.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:continue 1</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Type a large number: <b>|&gt;&gt;</b><tt>88</tt><b>&lt;&lt;|</b>
+&rArr;  88
+
+ (assure-large-number 37)
+<tt> |&gt; </tt> Correctable error in ASSURE-LARGE-NUMBER: 37 is not a large number.
+<tt> |&gt; </tt> Restart options:
+<tt> |&gt; </tt>  1: Enter a number a bit larger than 37.
+<tt> |&gt; </tt>  2: Top level.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:continue 1</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Type a large number: <b>|&gt;&gt;</b><tt>259</tt><b>&lt;&lt;|</b>
+&rArr;  259
+
+ (define-condition not-a-large-number (error)
+   ((argument :reader not-a-large-number-argument :initarg :argument))
+   (:report (lambda (condition stream)
+              (format stream &quot;~S is not a large number.&quot; 
+                      (not-a-large-number-argument condition)))))
+
+ (defun assure-large-number (n)
+   (loop (when (and (numberp n) (&gt; n 73)) (return n))
+         (cerror &quot;Enter a number~3*~:[~; a bit larger than ~*~D~].&quot;
+                 'not-a-large-number
+                 :argument n 
+                 :ignore (numberp n)
+                 :ignore n
+                 :allow-other-keys t)
+         (format t &quot;~&amp;Type a large number: &quot;)
+         (setq n (read))
+         (fresh-line)))
+
+ (assure-large-number 'a)
+<tt> |&gt; </tt> Correctable error in ASSURE-LARGE-NUMBER: A is not a large number.
+<tt> |&gt; </tt> Restart options:
+<tt> |&gt; </tt>  1: Enter a number.
+<tt> |&gt; </tt>  2: Top level.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:continue 1</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Type a large number: <b>|&gt;&gt;</b><tt>88</tt><b>&lt;&lt;|</b>
+&rArr;  88
+
+ (assure-large-number 37)
+<tt> |&gt; </tt> Correctable error in ASSURE-LARGE-NUMBER: A is not a large number.
+<tt> |&gt; </tt> Restart options:
+<tt> |&gt; </tt>  1: Enter a number a bit larger than 37.
+<tt> |&gt; </tt>  2: Top level.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>:continue 1</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Type a large number: <b>|&gt;&gt;</b><tt>259</tt><b>&lt;&lt;|</b>
+&rArr;  259
+</pre></div>
+
+<a name="Affected-By_003a_003a-20"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*break-on-signals*</b>.
+</p>
+<p>Existing handler bindings.
+</p>
+<a name="See-Also_003a_003a-160"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="error.html#error">error</a>
+, 
+<a href="format.html#format">format</a>
+, 
+<a href="handler_002dbind.html#handler_002dbind">handler-bind</a>
+,
+<b>*break-on-signals*</b>, <b>simple-type-error</b>
+</p>
+<a name="Notes_003a_003a-99"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>If <i>datum</i> is a <i>condition</i> <i>type</i> rather than a 
+<i>string</i>, the <b>format</b> directive <tt>~*</tt> may be especially
+useful in the <i>continue-format-control</i> in order to ignore the
+<i>keywords</i> in the <i>initialization argument list</i>.  For example:
+</p>
+<div class="example">
+<pre class="example">(cerror &quot;enter a new value to replace ~*~s&quot; 
+        'not-a-number
+        :argument a)
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="check_002dtype.html#check_002dtype" accesskey="n" rel="next">check-type</a>, Previous: <a href="error.html#error" accesskey="p" rel="prev">error</a>, Up: <a href="Conditions-Dictionary.html#Conditions-Dictionary" accesskey="u" rel="up">Conditions Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

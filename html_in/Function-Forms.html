@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Function Forms (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Function Forms (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Function Forms (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="The-Evaluation-Model.html#The-Evaluation-Model" rel="up" title="The Evaluation Model">
+<link href="Lambda-Forms.html#Lambda-Forms" rel="next" title="Lambda Forms">
+<link href="Macro-Forms.html#Macro-Forms" rel="prev" title="Macro Forms">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Function-Forms"></a>
+<div class="header">
+<p>
+Next: <a href="Lambda-Forms.html#Lambda-Forms" accesskey="n" rel="next">Lambda Forms</a>, Previous: <a href="Macro-Forms.html#Macro-Forms" accesskey="p" rel="prev">Macro Forms</a>, Up: <a href="The-Evaluation-Model.html#The-Evaluation-Model" accesskey="u" rel="up">The Evaluation Model</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Function-Forms-1"></a>
+<h4 class="subsubsection">3.1.2.10 Function Forms</h4>
+
+<p>If the <i>operator</i> is a <i>symbol</i> naming a <i>function</i>,
+the <i>form</i> represents a <i>function form</i>,
+and the <i>cdr</i> of the list contains the <i>forms</i> 
+which when evaluated will supply the arguments passed to the <i>function</i>.
+</p>
+<p>When a <i>function name</i> is not defined, 
+an error of <i>type</i> <b>undefined-function</b> should be signaled at run time;
+see <a href="Semantic-Constraints.html#Semantic-Constraints">Semantic Constraints</a>.
+</p>
+<p>A <i>function form</i> is evaluated as follows:
+</p>
+<p>The <i>subforms</i> in the <i>cdr</i> of the original <i>form</i>
+are evaluated in left-to-right order in the current lexical and 
+dynamic <i>environments</i>.  The <i>primary value</i> of each
+such <i>evaluation</i> becomes an <i>argument</i> to the named <i>function</i>;
+any additional <i>values</i> returned by the <i>subforms</i> are discarded.
+</p>
+<p>The <i>functional value</i> of the <i>operator</i> 
+is retrieved from the <i>lexical environment</i>,
+and that <i>function</i> is invoked with the indicated arguments.
+</p>
+<p>Although the order of <i>evaluation</i> of 
+the <i>argument</i> <i>subforms</i> themselves is 
+strictly left-to-right, it is not specified whether 
+the definition of the <i>operator</i> in a <i>function form</i> is looked up 
+before the <i>evaluation</i> of the <i>argument</i> <i>subforms</i>,
+after the <i>evaluation</i> of the <i>argument</i> <i>subforms</i>,
+or between the <i>evaluation</i> of any two <i>argument</i> <i>subforms</i> 
+if there is more than one such <i>argument</i> <i>subform</i>.  
+For example, the following might return 23 or~24.
+</p>
+<div class="example">
+<pre class="example"> (defun foo (x) (+ x 3))
+ (defun bar () (setf (symbol-function 'foo) #'(lambda (x) (+ x 4))))
+ (foo (progn (bar) 20))
+</pre></div>
+
+<p>A <i>binding</i> for a <i>function name</i> can be <i>established</i> in 
+one of several ways.  A <i>binding</i> for a <i>function name</i> in 
+the <i>global environment</i> can be <i>established</i> by 
+ <b>defun</b>,
+ <b>setf</b> of <b>fdefinition</b>,
+ <b>setf</b> of <b>symbol-function</b>,
+ <b>ensure-generic-function</b>,
+ <b>defmethod</b> (implicitly, due to <b>ensure-generic-function</b>),
+or
+ <b>defgeneric</b>.
+A <i>binding</i> for a <i>function name</i> in the <i>lexical environment</i>
+can be <i>established</i> by
+   <b>flet</b>
+or <b>labels</b>.
+</p>
+<p>Figure 3&ndash;4 lists some <i>defined names</i> that are applicable to <i>functions</i>.
+</p>
+<p>&nbsp;&nbsp;apply&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fdefinition&nbsp;&nbsp;mapcan&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<span class="nolinebreak">call-arguments-limit</span>&nbsp;&nbsp;flet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mapcar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;complement&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fmakunbound&nbsp;&nbsp;mapcon&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;constantly&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;funcall&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mapl&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defgeneric&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;function&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;maplist&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defmethod&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;functionp&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">multiple-value-call</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;defun&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;labels&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reduce&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;fboundp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">symbol-function</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;3&ndash;4:&nbsp;Some&nbsp;<span class="nolinebreak">function-related</span>&nbsp;defined&nbsp;names&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="Lambda-Forms.html#Lambda-Forms" accesskey="n" rel="next">Lambda Forms</a>, Previous: <a href="Macro-Forms.html#Macro-Forms" accesskey="p" rel="prev">Macro Forms</a>, Up: <a href="The-Evaluation-Model.html#The-Evaluation-Model" accesskey="u" rel="up">The Evaluation Model</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>set-exclusive-or (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conses-Dictionary.html#Conses-Dictionary" rel="up" title="Conses Dictionary">
+<link href="subsetp.html#subsetp" rel="next" title="subsetp">
+<link href="set_002ddifference.html#set_002ddifference" rel="prev" title="set-difference">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="set_002ddifference.html#set_002ddifference" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                set-difference
+                            </a>
+                            <a href="Conses-Dictionary.html#Conses-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Conses Dictionary
+                            </a>
+                            <a href="subsetp.html#subsetp.html" class="nav-btn nav__next ">
+                                subsetp
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="set_002dexclusive_002dor"></a>
+<a name="set_002dexclusive_002dor_002c-nset_002dexclusive_002dor-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">set-exclusive-or, nset-exclusive-or                              </h4>
+
+<p><code>set-exclusive-or</code>  <i>list-1 list-2 &amp;key</i> key test test-not &rArr;  <i>result-list</i>
+</p>
+<p><code>nset-exclusive-or</code>  <i>list-1 list-2 &amp;key</i> key test test-not &rArr;  <i>result-list</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-316"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>list-1</i>&mdash;a <i>proper list</i>.
+</p>
+<p><i>list-2</i>&mdash;a <i>proper list</i>.
+</p>
+<p><i>test</i>&mdash;a <i>designator</i> for a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>test-not</i>&mdash;a <i>designator</i> for 
+  a <i>function</i> of two <i>arguments</i>
+  that returns a <i>generalized boolean</i>.
+</p>
+<p><i>key</i>&mdash;a <i>designator</i> for a <i>function</i> of one argument,
+  or <b>nil</b>.
+</p>
+<p><i>result-list</i>&mdash;a <i>list</i>.
+</p>
+<a name="Description_003a_003a-417"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+<p><b>set-exclusive-or</b> returns a <i>list</i> of elements that appear
+in exactly one of <i>list-1</i> and <i>list-2</i>.
+</p>
+<p><b>nset-exclusive-or</b> 
+is the <i>destructive</i> version of <b>set-exclusive-or</b>.
+</p>
+<p>For all possible ordered pairs consisting of
+one element from <i>list-1</i> and one element from <i>list-2</i>, the 
+<tt>:test</tt> or <tt>:test-not</tt> function is
+used to determine whether they <i>satisfy the test</i>.  
+</p>
+<p>If <tt>:key</tt> is supplied, it is used to
+extract the part to be tested from the <i>list-1</i> or <i>list-2</i> element. 
+The first argument to the <tt>:test</tt> or <tt>:test-not</tt> function 
+is the part of an element of <i>list-1</i> extracted by the <tt>:key</tt>
+function (if supplied); the second argument  is the part of an 
+element of <i>list-2</i> extracted by the <tt>:key</tt> function (if supplied).
+If <tt>:key</tt> is not supplied or <b>nil</b>, the <i>list-1</i> or
+<i>list-2</i> element is used.
+</p>
+<p>The result contains precisely
+those elements of <i>list-1</i> and <i>list-2</i> 
+that appear in no matching pair.
+</p>
+<p>The result <i>list</i> of <b>set-exclusive-or</b> 
+might share storage with one of <i>list-1</i> or <i>list-2</i>.
+</p>
+<a name="Examples_003a_003a-300"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (setq lst1 (list 1 &quot;a&quot; &quot;b&quot;)
+       lst2 (list 1 &quot;A&quot; &quot;b&quot;)) &rArr;  (1 &quot;A&quot; &quot;b&quot;)
+ (set-exclusive-or lst1 lst2) &rArr;  (&quot;b&quot; &quot;A&quot; &quot;b&quot; &quot;a&quot;)
+ (set-exclusive-or lst1 lst2 :test #'equal) &rArr;  (&quot;A&quot; &quot;a&quot;)
+ (set-exclusive-or lst1 lst2 :test 'equalp) &rArr;  NIL 
+ (nset-exclusive-or lst1 lst2) &rArr;  (&quot;a&quot; &quot;b&quot; &quot;A&quot; &quot;b&quot;) 
+ (setq lst1 (list ((&quot;a&quot; . &quot;b&quot;) (&quot;c&quot; . &quot;d&quot;) (&quot;e&quot; . &quot;f&quot;))))
+&rArr;  ((&quot;a&quot; . &quot;b&quot;) (&quot;c&quot; . &quot;d&quot;) (&quot;e&quot; . &quot;f&quot;))
+ (setq lst2 (list ((&quot;c&quot; . &quot;a&quot;) (&quot;e&quot; . &quot;b&quot;) (&quot;d&quot; . &quot;a&quot;))))
+&rArr;  ((&quot;c&quot; . &quot;a&quot;) (&quot;e&quot; . &quot;b&quot;) (&quot;d&quot; . &quot;a&quot;)) 
+ (nset-exclusive-or lst1 lst2 :test #'string= :key #'cdr)
+&rArr;  ((&quot;c&quot; . &quot;d&quot;) (&quot;e&quot; . &quot;f&quot;) (&quot;c&quot; . &quot;a&quot;) (&quot;d&quot; . &quot;a&quot;)) 
+ lst1 &rArr;  ((&quot;a&quot; . &quot;b&quot;) (&quot;c&quot; . &quot;d&quot;) (&quot;e&quot; . &quot;f&quot;))
+ lst2 &rArr;  ((&quot;c&quot; . &quot;a&quot;) (&quot;d&quot; . &quot;a&quot;)) 
+</code>
+</pre></div>
+
+<a name="Side-Effects_003a_003a-47"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Side Effects</h4>
+
+<p><b>nset-exclusive-or</b> is permitted to modify any part,
+<i>car</i> or <i>cdr</i>, of the <i>list structure</i> of <i>list-1</i> or <i>list-2</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-135"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>Should be prepared to signal an error of <i>type</i> <b>type-error</b>
+			 if <i>list-1</i> and <i>list-2</i> are not <i>proper lists</i>.
+</p>
+<a name="See-Also_003a_003a-341"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="Compiler-Terminology.html#Compiler-Terminology">Compiler Terminology</a>,
+</p>
+<p><a href="Traversal-Rules-and-Side-Effects.html#Traversal-Rules-and-Side-Effects">Traversal Rules and Side Effects</a>
+</p>
+<a name="Notes_003a_003a-227"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The <tt>:test-not</tt> parameter is deprecated.
+</p>
+<p>Since the <b>nset-exclusive-or</b> side effect is not required,
+it should not be used in for-effect-only
+  positions in portable code.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

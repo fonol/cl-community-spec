@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>read-delimited-list (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="read-delimited-list (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="read-delimited-list (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Reader-Dictionary.html#Reader-Dictionary" rel="up" title="Reader Dictionary">
+<link href="read_002dfrom_002dstring.html#read_002dfrom_002dstring" rel="next" title="read-from-string">
+<link href="read.html#read" rel="prev" title="read">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="read_002ddelimited_002dlist"></a>
+<div class="header">
+<p>
+Next: <a href="read_002dfrom_002dstring.html#read_002dfrom_002dstring" accesskey="n" rel="next">read-from-string</a>, Previous: <a href="read.html#read" accesskey="p" rel="prev">read</a>, Up: <a href="Reader-Dictionary.html#Reader-Dictionary" accesskey="u" rel="up">Reader Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="read_002ddelimited_002dlist-_005bFunction_005d"></a>
+<h4 class="subsection">23.2.5 read-delimited-list                                              [Function]</h4>
+
+<p><code>read-delimited-list</code>  <i>char &amp;optional</i> input-stream recursive-p &rArr;  <i>list</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-474"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>char</i>&mdash;a <i>character</i>.
+</p>
+<p><i>input-stream</i>&mdash;an <i>input</i> <i>stream designator</i>.
+ The default is <i>standard input</i>.
+</p>
+<p><i>recursive-p</i>&mdash;a <i>generalized boolean</i>.
+ The default is <i>false</i>.
+</p>
+<p><i>list</i>&mdash;a <i>list</i> of the <i>objects</i> read.
+</p>
+<a name="Description_003a_003a-624"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>read-delimited-list</b> reads <i>objects</i> from <i>input-stream</i> 
+until the next character after an <i>object</i>&rsquo;s
+representation (ignoring <i>whitespace</i>_2 characters and comments) is <i>char</i>.
+</p>
+<p><b>read-delimited-list</b> looks ahead at each step
+for the next non-<i>whitespace</i>_2 <i>character</i>
+and peeks at it as if with <b>peek-char</b>.
+If it is <i>char</i>, 
+then the <i>character</i> is consumed and the <i>list</i> of <i>objects</i> is returned.
+If it is a <i>constituent</i> or <i>escape</i> <i>character</i>,
+then <b>read</b> is used to read an <i>object</i>,
+which is added to the end of the <i>list</i>.
+If it is a <i>macro character</i>,
+its <i>reader macro function</i> is called;
+if the function returns a <i>value</i>,
+that <i>value</i> is added to the <i>list</i>.
+The peek-ahead process is then repeated.
+</p>
+<p>If <i>recursive-p</i> is <i>true</i>,
+this call is expected to be embedded in a higher-level call to <b>read</b> 
+or a similar function.
+</p>
+<p>It is an error to reach end-of-file during the operation of
+<b>read-delimited-list</b>.
+</p>
+<p>The consequences are undefined
+if <i>char</i> has a <i>syntax type</i> of <i>whitespace</i>_2
+in the <i>current readtable</i>.
+</p>
+<a name="Examples_003a_003a-445"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (read-delimited-list #\]) 1 2 3 4 5 6 ]
+&rArr;  (1 2 3 4 5 6)
+</pre></div>
+
+<p>Suppose you wanted <tt>#{<i>a</i></tt> <i>b</i> <i>c</i> ... <i>z</i>}
+to read as a list of all pairs of the elements <i>a</i>, <i>b</i>, <i>c</i>, 
+..., <i>z</i>, for example.
+</p>
+<div class="example">
+<pre class="example"> #{p q z a}  reads as  ((p q) (p z) (p a) (q z) (q a) (z a))
+</pre></div>
+
+<p>This can be done by specifying a macro-character definition for <tt>#{</tt>
+that does two things: reads in all the items up to the <tt>}</tt>,
+and constructs the pairs.  <b>read-delimited-list</b> performs
+the first task.
+</p>
+<div class="example">
+<pre class="example"> (defun |#{-reader| (stream char arg)
+   (declare (ignore char arg))
+   (mapcon #'(lambda (x)
+              (mapcar #'(lambda (y) (list (car x) y)) (cdr x)))
+          (read-delimited-list #\} stream t))) &rArr;  |#{-reader|
+
+ (set-dispatch-macro-character #\# #\{ #'|#{-reader|) &rArr;  T 
+ (set-macro-character #\} (get-macro-character #\) <b>nil</b>))
+</pre></div>
+
+<p>Note that <i>true</i> is supplied for the <i>recursive-p</i> argument.
+</p>
+<p>It is necessary here to give a definition to the character <tt>}</tt> as
+well to prevent it from being a constituent.
+If the line
+</p>
+<div class="example">
+<pre class="example"> (set-macro-character #\} (get-macro-character #\) <b>nil</b>))
+</pre></div>
+
+<p>shown above were not included, then the <tt>}</tt> in
+</p>
+<div class="example">
+<pre class="example"> #{ p q z a}
+</pre></div>
+
+<p>would be considered a constituent character, part of the symbol named
+<tt>a}</tt>.  This could be corrected by putting a space before
+the <tt>}</tt>, but it is better to call
+<b>set-macro-character</b>.
+</p>
+<p>Giving <tt>}</tt> the same	      
+definition as the standard definition of the character <tt>)</tt> has the
+twin benefit of making it terminate tokens for use with 
+<b>read-delimited-list</b> and also making it invalid for use in any
+other context. Attempting to read a stray <tt>}</tt> will signal an error.
+</p>
+<a name="Affected-By_003a_003a-109"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*standard-input*</b>,
+<b>*readtable*</b>,
+<b>*terminal-io*</b>.
+</p>
+<a name="See-Also_003a_003a-507"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;read; read-preserving-whitespace&rsquo;
+,
+<a href="peek_002dchar.html#peek_002dchar">peek-char</a>
+,
+<a href="read_002dchar.html#read_002dchar">read-char</a>
+,
+<a href="unread_002dchar.html#unread_002dchar">unread-char</a>
+.
+</p>
+<a name="Notes_003a_003a-313"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>read-delimited-list</b> is intended for use in implementing <i>reader macros</i>.
+Usually it is desirable for <i>char</i> to be a <i>terminating</i> <i>macro character</i>
+so that it can be used to delimit tokens; however, <b>read-delimited-list</b>
+makes no attempt to alter the syntax specified for <i>char</i> by the current
+readtable.  The caller must make any necessary changes to the readtable syntax 
+explicitly.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="read_002dfrom_002dstring.html#read_002dfrom_002dstring" accesskey="n" rel="next">read-from-string</a>, Previous: <a href="read.html#read" accesskey="p" rel="prev">read</a>, Up: <a href="Reader-Dictionary.html#Reader-Dictionary" accesskey="u" rel="up">Reader Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

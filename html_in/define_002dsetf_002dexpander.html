@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>define-setf-expander (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="define-setf-expander (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="define-setf-expander (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="get_002dsetf_002dexpansion.html#get_002dsetf_002dexpansion" rel="next" title="get-setf-expansion">
+<link href="defsetf.html#defsetf" rel="prev" title="defsetf">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="define_002dsetf_002dexpander"></a>
+<div class="header">
+<p>
+Next: <a href="get_002dsetf_002dexpansion.html#get_002dsetf_002dexpansion" accesskey="n" rel="next">get-setf-expansion</a>, Previous: <a href="defsetf.html#defsetf" accesskey="p" rel="prev">defsetf</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="define_002dsetf_002dexpander-_005bMacro_005d"></a>
+<h4 class="subsection">5.3.62 define-setf-expander                                                [Macro]</h4>
+
+<p><code>define-setf-expander</code>  <i>access-fn lambda-list
+			 [[{<i>declaration</i>}*</i> | <i>documentation</i>]] {<i>form</i>}*<br>
+   &rArr;  <i>access-fn</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-80"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>access-fn</i>&mdash;a <i>symbol</i> that <i>names</i> a <i>function</i> or <i>macro</i>.
+</p>
+<p><i>lambda-list</i> &ndash; <i>macro lambda list</i>.
+</p>
+<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+</p>
+<p><i>documentation</i>&mdash;a <i>string</i>; not evaluated.
+</p>
+<p><i>forms</i>&mdash;an <i>implicit progn</i>.
+</p>
+<a name="Description_003a_003a-115"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>define-setf-expander</b> specifies the means by which <b>setf</b> 
+updates a <i>place</i> that is referenced by <i>access-fn</i>.
+</p>
+<p>When <b>setf</b> is given a <i>place</i> that is
+specified in terms of <i>access-fn</i> and a new value for the 
+<i>place</i>, it is expanded into a form that performs
+the appropriate update. 
+</p>
+<p>The <i>lambda-list</i> supports destructuring.
+See <a href="Macro-Lambda-Lists.html#Macro-Lambda-Lists">Macro Lambda Lists</a>.
+</p>
+<p><i>Documentation</i> is attached to <i>access-fn</i> as a <i>documentation string</i>
+of kind <b>setf</b>.
+</p>
+<p><i>Forms</i> constitute the body of the 
+</p>
+<p><i>setf expander</i> 
+</p>
+<p>definition and must compute the <i>setf expansion</i> for a call on <b>setf</b> 
+that references the <i>place</i> by means of the given
+<i>access-fn</i>.
+</p>
+<p>The <i>setf expander</i> function is defined in the same <i>lexical environment</i>
+in which the <b>define-setf-expander</b> <i>form</i> appears.
+</p>
+<p>While <i>forms</i> are being executed,
+the variables in <i>lambda-list</i> are bound to parts of the <i>place</i> <i>form</i>.
+</p>
+<p>The body <i>forms</i> (but not the <i>lambda-list</i>)
+</p>
+<p>in a <b>define-setf-expander</b> <i>form</i> are implicitly enclosed in a 
+<i>block</i> whose name is 
+<i>access-fn</i>.
+</p>
+<p>The evaluation of <i>forms</i> must result in the five values
+described in <a href="Setf-Expansions.html#Setf-Expansions">Setf Expansions</a>.
+</p>
+<p>If a <b>define-setf-expander</b> <i>form</i> appears as a <i>top level form</i>,
+the <i>compiler</i> must make the <i>setf expander</i> available so that
+it may be used to expand calls to <b>setf</b> later on in the <i>file</i>.
+<i>Programmers</i> must ensure that the <i>forms</i> can be evaluated
+at compile time if the <i>access-fn</i> is used in a <i>place</i>
+later in the same <i>file</i>.
+The <i>compiler</i> must make these <i>setf expanders</i> available to 
+compile-time calls to <b>get-setf-expansion</b> when its <i>environment</i> 
+argument is a value received as the <i>environment parameter</i> of a <i>macro</i>.
+</p>
+<a name="Examples_003a_003a-88"></a>
+<h4 class="subsubheading">Examples::</h4>
+<div class="example">
+<pre class="example"> (defun lastguy (x) (car (last x))) &rArr;  LASTGUY
+ (define-setf-expander lastguy (x &amp;environment env)
+   &quot;Set the last element in a list to the given value.&quot;
+   (multiple-value-bind (dummies vals newval setter getter)
+       (get-setf-expansion x env)
+     (let ((store (gensym)))
+       (values dummies
+               vals
+               `(,store)
+               `(progn (rplaca (last ,getter) ,store) ,store)
+               `(lastguy ,getter))))) &rArr;  LASTGUY
+ (setq a (list 'a 'b 'c 'd)
+       b (list 'x)
+       c (list 1 2 3 (list 4 5 6))) &rArr;  (1 2 3 (4 5 6))
+ (setf (lastguy a) 3) &rArr;  3
+ (setf (lastguy b) 7) &rArr;  7
+ (setf (lastguy (lastguy c)) 'lastguy-symbol) &rArr;  LASTGUY-SYMBOL
+ a &rArr;  (A B C 3)
+ b &rArr;  (7)
+ c &rArr;  (1 2 3 (4 5 LASTGUY-SYMBOL))
+</pre></div>
+
+<div class="example">
+<pre class="example">;;; Setf expander for the form (LDB bytespec int).
+;;; Recall that the int form must itself be suitable for SETF.
+ (define-setf-expander ldb (bytespec int &amp;environment env)
+   (multiple-value-bind (temps vals stores
+                          store-form access-form)
+       (get-setf-expansion int env);Get setf expansion for int.
+     (let ((btemp (gensym))     ;Temp var for byte specifier.
+           (store (gensym))     ;Temp var for byte to store.
+           (stemp (first stores))) ;Temp var for int to store.
+       (if (cdr stores) (error &quot;Can't expand this.&quot;))
+;;; Return the setf expansion for LDB as five values.
+       (values (cons btemp temps)       ;Temporary variables.
+               (cons bytespec vals)     ;Value forms.
+               (list store)             ;Store variables.
+               `(let ((,stemp (dpb ,store ,btemp ,access-form)))
+                  ,store-form
+                  ,store)               ;Storing form.
+               `(ldb ,btemp ,access-form) ;Accessing form.
+              ))))
+</pre></div>
+
+<a name="See-Also_003a_003a-99"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;setf; psetf&rsquo;
+,
+<a href="defsetf.html#defsetf">defsetf</a>
+,
+&lsquo;documentation; (setf documentation)&rsquo;
+,
+<a href="get_002dsetf_002dexpansion.html#get_002dsetf_002dexpansion">get-setf-expansion</a>
+,
+<a href="Syntactic-Interaction-of-Documentation-Strings-and-Declarations.html#Syntactic-Interaction-of-Documentation-Strings-and-Declarations">Syntactic Interaction of Documentation Strings and Declarations</a>
+</p>
+<a name="Notes_003a_003a-65"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>define-setf-expander</b> differs from the long form of <b>defsetf</b>
+in that while the body is being executed the <i>variables</i>
+in <i>lambda-list</i> are bound to parts of the <i>place</i> <i>form</i>,
+not to temporary variables that will be bound to the values of such parts.
+In addition, <b>define-setf-expander</b> does not have <b>defsetf</b>&rsquo;s
+restriction that <i>access-fn</i> must be a <i>function</i> 
+or a function-like <i>macro</i>; an arbitrary <b>defmacro</b> destructuring
+pattern is permitted in <i>lambda-list</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="get_002dsetf_002dexpansion.html#get_002dsetf_002dexpansion" accesskey="n" rel="next">get-setf-expansion</a>, Previous: <a href="defsetf.html#defsetf" accesskey="p" rel="prev">defsetf</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

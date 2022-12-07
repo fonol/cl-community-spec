@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Modifying Hash Table Keys (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Modifying Hash Table Keys (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Modifying Hash Table Keys (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Hash-Table-Concepts.html#Hash-Table-Concepts" rel="up" title="Hash Table Concepts">
+<link href="Visible-Modification-of-Objects-with-respect-to-EQ-and-EQL.html#Visible-Modification-of-Objects-with-respect-to-EQ-and-EQL" rel="next" title="Visible Modification of Objects with respect to EQ and EQL">
+<link href="Hash_002dTable-Operations.html#Hash_002dTable-Operations" rel="prev" title="Hash-Table Operations">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Modifying-Hash-Table-Keys"></a>
+<div class="header">
+<p>
+Previous: <a href="Hash_002dTable-Operations.html#Hash_002dTable-Operations" accesskey="p" rel="prev">Hash-Table Operations</a>, Up: <a href="Hash-Table-Concepts.html#Hash-Table-Concepts" accesskey="u" rel="up">Hash Table Concepts</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Modifying-Hash-Table-Keys-1"></a>
+<h4 class="subsection">18.1.2 Modifying Hash Table Keys</h4>
+
+<p>The function supplied as the <tt>:test</tt> argument to <b>make-hash-table</b>
+specifies the &lsquo;equivalence test&rsquo; for the <i>hash table</i> it creates.
+</p>
+<p>An <i>object</i> is &lsquo;visibly modified&rsquo; with regard to an equivalence test
+if there exists some set of <i>objects</i> (or potential <i>objects</i>)
+which are equivalent to the <i>object</i> before the modification but are
+no longer equivalent afterwards.
+</p>
+<p>If an <i>object</i> O_1 is used as a key in a <i>hash table</i> H
+and is then visibly modified with regard to the equivalence test of H,
+then the consequences are unspecified if O_1, or any <i>object</i>
+O_2 equivalent to O_1 under the equivalence test (either before
+or after the modification), is used as a key in further operations on H.
+The consequences of using O_1 as a key are unspecified 
+even if O_1 is visibly modified 
+and then later modified again in such a way as 
+to undo the visible modification.
+</p>
+<p>Following are specifications of the modifications which are visible to the
+equivalence tests which must be supported by <i>hash tables</i>.  The modifications
+are described in terms of modification of components, and are defined
+recursively.  Visible modifications of components of the <i>object</i> are 
+visible modifications of the <i>object</i>.
+</p>
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top">&bull; <a href="Visible-Modification-of-Objects-with-respect-to-EQ-and-EQL.html#Visible-Modification-of-Objects-with-respect-to-EQ-and-EQL" accesskey="1">Visible Modification of Objects with respect to EQ and EQL</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Visible-Modification-of-Objects-with-respect-to-EQUAL.html#Visible-Modification-of-Objects-with-respect-to-EQUAL" accesskey="2">Visible Modification of Objects with respect to EQUAL</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Visible-Modification-of-Conses-with-respect-to-EQUAL.html#Visible-Modification-of-Conses-with-respect-to-EQUAL" accesskey="3">Visible Modification of Conses with respect to EQUAL</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Visible-Modification-of-Bit-Vectors-and-Strings-with-respect-to-EQUAL.html#Visible-Modification-of-Bit-Vectors-and-Strings-with-respect-to-EQUAL" accesskey="4">Visible Modification of Bit Vectors and Strings with respect to EQUAL</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Visible-Modification-of-Objects-with-respect-to-EQUALP.html#Visible-Modification-of-Objects-with-respect-to-EQUALP" accesskey="5">Visible Modification of Objects with respect to EQUALP</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Visible-Modification-of-Structures-with-respect-to-EQUALP.html#Visible-Modification-of-Structures-with-respect-to-EQUALP" accesskey="6">Visible Modification of Structures with respect to EQUALP</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Visible-Modification-of-Arrays-with-respect-to-EQUALP.html#Visible-Modification-of-Arrays-with-respect-to-EQUALP" accesskey="7">Visible Modification of Arrays with respect to EQUALP</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Visible-Modification-of-Hash-Tables-with-respect-to-EQUALP.html#Visible-Modification-of-Hash-Tables-with-respect-to-EQUALP" accesskey="8">Visible Modification of Hash Tables with respect to EQUALP</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+<tr><td align="left" valign="top">&bull; <a href="Visible-Modifications-by-Language-Extensions.html#Visible-Modifications-by-Language-Extensions" accesskey="9">Visible Modifications by Language Extensions</a>:</td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+<hr>
+<div class="header">
+<p>
+Previous: <a href="Hash_002dTable-Operations.html#Hash_002dTable-Operations" accesskey="p" rel="prev">Hash-Table Operations</a>, Up: <a href="Hash-Table-Concepts.html#Hash-Table-Concepts" accesskey="u" rel="up">Hash Table Concepts</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

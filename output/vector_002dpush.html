@@ -1,0 +1,164 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>vector-push (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Arrays-Dictionary.html#Arrays-Dictionary" rel="up" title="Arrays Dictionary">
+<link href="vectorp.html#vectorp" rel="next" title="vectorp">
+<link href="vector_002dpop.html#vector_002dpop" rel="prev" title="vector-pop">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="vector_002dpop.html#vector_002dpop" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                vector-pop
+                            </a>
+                            <a href="Arrays-Dictionary.html#Arrays-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Arrays Dictionary
+                            </a>
+                            <a href="vectorp.html#vectorp.html" class="nav-btn nav__next ">
+                                vectorp
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="vector_002dpush"></a>
+<a name="vector_002dpush_002c-vector_002dpush_002dextend-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">vector-push, vector-push-extend                                  </h4>
+
+<p><code>vector-push</code>  <i>new-element vector</i> &rArr;  <i>new-index-p</i>
+</p>
+<p><code>vector-push-extend</code>  <i>new-element vector &amp;optional</i> extension &rArr;  <i>new-index</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-340"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>new-element</i>&mdash;an <i>object</i>.
+</p>
+<p><i>vector</i>&mdash;a <i>vector</i> with a <i>fill pointer</i>.
+</p>
+<p><i>extension</i>&mdash;a positive <i>integer</i>.
+ The default is <i>implementation-dependent</i>.
+</p>
+<p><i>new-index-p</i>&mdash;a <i>valid array index</i> for <i>vector</i>, or <b>nil</b>.
+</p>
+<p><i>new-index</i>&mdash;a <i>valid array index</i> for <i>vector</i>.
+</p>
+<a name="Description_003a_003a-450"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p><b>vector-push</b> and <b>vector-push-extend</b> store 
+<i>new-element</i> in <i>vector</i>.
+<b>vector-push</b> attempts to store
+<i>new-element</i> 
+in the element of <i>vector</i> designated by the <i>fill pointer</i>,
+and to increase the <i>fill pointer</i> by one.  If the 
+<tt>(&gt;= (fill-pointer <i>vector</i>) (array-dimension <i>vector</i> 0))</tt>,
+neither <i>vector</i> nor its <i>fill pointer</i> are affected.
+Otherwise, the store and increment take
+place and <b>vector-push</b> 
+returns the former value of the <i>fill pointer</i>
+which is one less than the one it leaves in <i>vector</i>.
+</p>
+<p><b>vector-push-extend</b> is just like <b>vector-push</b> except
+that if the <i>fill pointer</i> gets too large, <i>vector</i> is extended using
+<b>adjust-array</b> so that it can contain more elements.
+<i>Extension</i>
+is the minimum number of elements to be added to <i>vector</i> if it
+must be extended.
+</p>
+<p><b>vector-push</b> and 
+<b>vector-push-extend</b> return the index of <i>new-element</i> in <i>vector</i>.
+If <tt>(&gt;= (fill-pointer <i>vector</i>) (array-dimension <i>vector</i> 0))</tt>,
+<b>vector-push</b> returns <b>nil</b>.
+</p>
+<a name="Examples_003a_003a-322"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (vector-push (setq fable (list 'fable))
+              (setq fa (make-array 8 
+                                   :fill-pointer 2
+                                   :initial-element 'first-one))) &rArr;  2 
+ (fill-pointer fa) &rArr;  3 
+ (eq (aref fa 2) fable) &rArr;  <i>true</i>
+ (vector-push-extend #\X
+                    (setq aa 
+                          (make-array 5
+                                      :element-type 'character
+                                      :adjustable t
+                                      :fill-pointer 3))) &rArr;  3 
+ (fill-pointer aa) &rArr;  4 
+ (vector-push-extend #\Y aa 4) &rArr;  4 
+ (array-total-size aa) &rArr;  at least 5 
+ (vector-push-extend #\Z aa 4) &rArr;  5 
+ (array-total-size aa) &rArr;  9 ;(or more)
+</code>
+</pre></div>
+
+<a name="Affected-By_003a_003a-66"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Affected By</h4>
+<p>The value of the <i>fill pointer</i>.
+</p>
+<p>How <i>vector</i> was created.
+</p>
+<a name="Exceptional-Situations_003a_003a-148"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>An error of <i>type</i> <b>error</b> is signaled by <b>vector-push-extend</b>
+if it tries to extend <i>vector</i> and <i>vector</i> is not <i>actually adjustable</i>.
+</p>
+<p>An error of <i>type</i> <b>error</b> is signaled if <i>vector</i> does not 
+have a <i>fill pointer</i>.
+</p>
+<a name="See-Also_003a_003a-370"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="adjustable_002darray_002dp.html#adjustable_002darray_002dp">adjustable-array-p</a>
+, 
+<a href="fill_002dpointer.html#fill_002dpointer">fill-pointer</a>
+, 
+<a href="vector_002dpop.html#vector_002dpop">vector-pop</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

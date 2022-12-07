@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Initialization Arguments (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Initialization Arguments (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Initialization Arguments (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" rel="up" title="Object Creation and Initialization">
+<link href="Declaring-the-Validity-of-Initialization-Arguments.html#Declaring-the-Validity-of-Initialization-Arguments" rel="next" title="Declaring the Validity of Initialization Arguments">
+<link href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" rel="prev" title="Object Creation and Initialization">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Initialization-Arguments"></a>
+<div class="header">
+<p>
+Next: <a href="Declaring-the-Validity-of-Initialization-Arguments.html#Declaring-the-Validity-of-Initialization-Arguments" accesskey="n" rel="next">Declaring the Validity of Initialization Arguments</a>, Previous: <a href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" accesskey="p" rel="prev">Object Creation and Initialization</a>, Up: <a href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" accesskey="u" rel="up">Object Creation and Initialization</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Initialization-Arguments-1"></a>
+<h4 class="subsection">7.1.1 Initialization Arguments</h4>
+
+<p>An initialization argument controls <i>object</i> creation and
+initialization.  It is often convenient to use keyword <i>symbols</i>
+to name initialization arguments, but the <i>name</i> of an
+initialization argument can be any <i>symbol</i>, including <b>nil</b>.  An
+initialization argument can be used in two ways: to fill a <i>slot</i>
+with a value or to provide an argument for an initialization
+<i>method</i>.  A single initialization argument can be used for both
+purposes.
+</p>
+<p>An <i>initialization argument list</i> is a
+<i>property list</i> of
+initialization argument names and values.
+Its structure is identical
+to a <i>property list</i> and also 
+to the portion of an argument list
+processed for <b>&amp;key</b> parameters.
+As in those lists,
+if an initialization
+argument name appears more than once in an initialization argument list,
+the leftmost occurrence supplies the value and the remaining occurrences
+are ignored.  The arguments to <b>make-instance</b> (after the first
+argument) form an <i>initialization argument list</i>.
+</p>
+<p>An initialization argument can be associated with a <i>slot</i>.  If
+the initialization argument has a value in the <i>initialization
+argument list</i>, the value is stored into the <i>slot</i> of the newly
+created <i>object</i>, overriding any <tt>:initform</tt> form associated
+with the <i>slot</i>.  A single initialization argument can initialize
+more than one <i>slot</i>.  An initialization argument that initializes
+a <i>shared slot</i> stores its value into the <i>shared slot</i>,
+replacing any previous value.
+</p>
+<p>An initialization argument can be associated with a <i>method</i>.  When
+an <i>object</i> is created and a particular initialization argument is
+supplied, the <i>generic functions</i> <b>initialize-instance</b>,
+<b>shared-initialize</b>, and <b>allocate-instance</b> are called
+with that initialization argument&rsquo;s name and value as a keyword argument
+pair.  If a value for the initialization argument is not supplied in the
+<i>initialization argument list</i>, the <i>method</i>&rsquo;s 
+<i>lambda list</i> supplies a default value.
+</p>
+<p>Initialization arguments are used in four situations: when making an
+<i>instance</i>, when re-initializing an <i>instance</i>, when updating
+an <i>instance</i> to conform to a redefined <i>class</i>, and when
+updating an <i>instance</i> to conform to the definition of a different
+<i>class</i>.
+</p>
+<p>Because initialization arguments are used to control the creation and
+initialization of an <i>instance</i> of some particular <i>class</i>,
+we say that an initialization argument is
+&ldquo;an initialization argument for&rdquo; that <i>class</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Declaring-the-Validity-of-Initialization-Arguments.html#Declaring-the-Validity-of-Initialization-Arguments" accesskey="n" rel="next">Declaring the Validity of Initialization Arguments</a>, Previous: <a href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" accesskey="p" rel="prev">Object Creation and Initialization</a>, Up: <a href="Object-Creation-and-Initialization.html#Object-Creation-and-Initialization" accesskey="u" rel="up">Object Creation and Initialization</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

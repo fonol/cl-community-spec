@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>write-to-string (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="write-to-string (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="write-to-string (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer-Dictionary.html#Printer-Dictionary" rel="up" title="Printer Dictionary">
+<link href="_002aprint_002darray_002a.html#g_t_002aprint_002darray_002a" rel="next" title="*print-array*">
+<link href="write.html#write" rel="prev" title="write">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="write_002dto_002dstring"></a>
+<div class="header">
+<p>
+Next: <a href="_002aprint_002darray_002a.html#g_t_002aprint_002darray_002a" accesskey="n" rel="next">*print-array*</a>, Previous: <a href="write.html#write" accesskey="p" rel="prev">write</a>, Up: <a href="Printer-Dictionary.html#Printer-Dictionary" accesskey="u" rel="up">Printer Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="write_002dto_002dstring_002c-prin1_002dto_002dstring_002c-princ_002dto_002dstring-_005bFunction_005d"></a>
+<h4 class="subsection">22.4.15 write-to-string, prin1-to-string, princ-to-string                [Function]</h4>
+
+<p><code>write-to-string</code>  <i>object &amp;key</i> \writekeys<br>
+   &rArr;  <i>string</i>
+</p>
+<p><code>prin</code>  <i>1</i> &rArr;  <i>-to-string</i>
+ object string
+</p>
+<p><code>princ-to-string</code>  <i>object</i> &rArr;  <i>string</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-468"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>object</i>&mdash;an <i>object</i>.
+</p>
+<p>\writekeydescriptions
+</p>
+<p><i>string</i>&mdash;a <i>string</i>.
+</p>
+<a name="Description_003a_003a-603"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>write-to-string</b>, <b>prin1-to-string</b>, and <b>princ-to-string</b>
+are used to create a <i>string</i> consisting of the printed representation 
+of <i>object</i>.
+<i>Object</i> is effectively printed as if by <b>write</b>,
+<b>prin1</b>, or <b>princ</b>, respectively,
+and the <i>characters</i> that would be output are made 
+into a <i>string</i>.
+</p>
+<p><b>write-to-string</b> is the general output function.
+It has the ability to specify all the parameters applicable 
+to the printing of <i>object</i>.
+</p>
+<p><b>prin1-to-string</b> acts like <b>write-to-string</b> with 
+<tt>:escape t</tt>, that is, escape characters are written where appropriate.
+</p>
+<p><b>princ-to-string</b> acts like <b>write-to-string</b> with 
+</p>
+<p><tt>:escape nil :readably nil</tt>.  
+</p>
+<p>Thus no <i>escape</i> <i>characters</i> are written.
+</p>
+<p>All other keywords that would be specified to <b>write-to-string</b> 
+are default values when <b>prin1-to-string</b>
+or <b>princ-to-string</b> is invoked.
+</p>
+<p>The meanings and defaults for the keyword arguments to <b>write-to-string</b>
+are the same as those for <b>write</b>.
+</p>
+<a name="Examples_003a_003a-432"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (prin1-to-string &quot;abc&quot;) &rArr;  &quot;\&quot;abc\&quot;&quot;
+ (princ-to-string &quot;abc&quot;) &rArr;  &quot;abc&quot;
+</pre></div>
+
+<a name="Affected-By_003a_003a-103"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*print-escape*</b>,
+<b>*print-radix*</b>,
+<b>*print-base*</b>,
+<b>*print-circle*</b>,
+<b>*print-pretty*</b>,
+<b>*print-level*</b>,
+<b>*print-length*</b>,
+<b>*print-case*</b>,
+<b>*print-gensym*</b>,
+<b>*print-array*</b>,
+<b>*read-default-float-format*</b>.
+</p>
+<a name="See-Also_003a_003a-489"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;write; prin1; print; pprint; princ&rsquo;
+</p>
+<a name="Notes_003a_003a-304"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<div class="example">
+<pre class="example"> (write-to-string <i>object</i> {<i>key</i> <i>argument</i>}*)
+&equiv; (with-output-to-string (#1=#:string-stream) 
+     (write object :stream #1# {<i>key</i> <i>argument</i>}*))
+
+ (princ-to-string <i>object</i>)
+&equiv; (with-output-to-string (string-stream)
+     (princ <i>object</i> string-stream))
+
+ (prin1-to-string <i>object</i>)
+&equiv; (with-output-to-string (string-stream)
+     (prin1 <i>object</i> string-stream))
+</pre></div>
+
+
+
+
+</body>
+</html>

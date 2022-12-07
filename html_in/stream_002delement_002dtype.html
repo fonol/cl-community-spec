@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>stream-element-type (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="stream-element-type (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="stream-element-type (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="streamp.html#streamp" rel="next" title="streamp">
+<link href="open_002dstream_002dp.html#open_002dstream_002dp" rel="prev" title="open-stream-p">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="stream_002delement_002dtype"></a>
+<div class="header">
+<p>
+Next: <a href="streamp.html#streamp" accesskey="n" rel="next">streamp</a>, Previous: <a href="open_002dstream_002dp.html#open_002dstream_002dp" accesskey="p" rel="prev">open-stream-p</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="stream_002delement_002dtype-_005bFunction_005d"></a>
+<h4 class="subsection">21.2.12 stream-element-type                                              [Function]</h4>
+
+<p><code>stream-element-type</code>  <i>stream</i> &rArr;  <i>typespec</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-415"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>stream</i>&mdash;a <i>stream</i>.
+</p>
+<p><i>typespec</i>&mdash;a <i>type specifier</i>.
+</p>
+<a name="Description_003a_003a-543"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>stream-element-type</b> returns a <i>type specifier</i> that
+indicates the <i>types</i> of <i>objects</i> that may be read from 
+or written to <i>stream</i>.
+</p>
+<p><i>Streams</i> created by <b>open</b> have an <i>element type</i>
+restricted to <b>integer</b> or a <i>subtype</i> of <i>type</i> <b>character</b>.
+</p>
+<a name="Examples_003a_003a-390"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">;; Note that the stream must accomodate at least the specified type,
+;; but might accomodate other types.  Further note that even if it does
+;; accomodate exactly the specified type, the type might be specified in
+;; any of several ways.
+ (with-open-file (s &quot;test&quot; :element-type '(integer 0 1)
+                           :if-exists :error
+                           :direction :output)
+   (stream-element-type s))
+&rArr;  INTEGER
+<i>OR</i>&rArr; (UNSIGNED-BYTE 16)
+<i>OR</i>&rArr; (UNSIGNED-BYTE 8)
+<i>OR</i>&rArr; BIT
+<i>OR</i>&rArr; (UNSIGNED-BYTE 1)
+<i>OR</i>&rArr; (INTEGER 0 1)
+<i>OR</i>&rArr; (INTEGER 0 (2))
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-195"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>stream</i> is not a <i>stream</i>.
+</p>
+
+
+
+</body>
+</html>

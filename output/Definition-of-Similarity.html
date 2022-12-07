@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Definition of Similarity (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Literal-Objects-in-Compiled-Files.html#Literal-Objects-in-Compiled-Files" rel="up" title="Literal Objects in Compiled Files">
+<link href="Extensions-to-Similarity-Rules.html#Extensions-to-Similarity-Rules" rel="next" title="Extensions to Similarity Rules">
+<link href="Similarity-of-Aggregate-Objects.html#Similarity-of-Aggregate-Objects" rel="prev" title="Similarity of Aggregate Objects">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Similarity-of-Aggregate-Objects.html#Similarity-of-Aggregate-Objects" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Similarity of Aggregate Objects
+                            </a>
+                            <a href="Literal-Objects-in-Compiled-Files.html#Literal-Objects-in-Compiled-Files.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Literal Objects in Compiled Files
+                            </a>
+                            <a href="Extensions-to-Similarity-Rules.html#Extensions-to-Similarity-Rules.html" class="nav-btn nav__next ">
+                                Extensions to Similarity Rules
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Definition-of-Similarity"></a>
+<a name="Definition-of-Similarity-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Definition of Similarity</h4>
+
+<p>Two <i>objects</i> S (in <i>source code</i>) and C (in <i>compiled code</i>)
+     are defined to be <i>similar</i> if and only if 
+     they are both of one of the <i>types</i> listed here
+      (or defined by the <i>implementation</i>) 
+ and they both satisfy all additional requirements of <i>similarity</i> 
+      indicated for that <i>type</i>.
+</p>
+<dl compact="compact">
+<dt><b>number</b></dt>
+<dd><p>Two <i>numbers</i> S and C are <i>similar</i> if they are of the same <i>type</i>
+and represent the same mathematical value.
+</p>
+</dd>
+<dt><b>character</b></dt>
+<dd><p>Two <i>simple</i> <i>characters</i> S and C are <i>similar</i> 
+if they have <i>similar</i> <i>code</i> <i>attributes</i>.
+</p>
+<p><i>Implementations</i> providing additional, <i>implementation-defined</i> 
+<i>attributes</i> must define whether and how <i>non-simple</i> <i>characters</i> 
+can be regarded as <i>similar</i>.
+</p>
+</dd>
+<dt><b>symbol</b></dt>
+<dd><p>Two <i>apparently uninterned</i> <i>symbols</i> S and C are <i>similar</i>
+if their
+<i>names</i>
+are <i>similar</i>.
+</p>
+<p>Two <i>interned</i> symbols S and C are <i>similar</i> 
+if their <i>names</i> are <i>similar</i>,
+and if either S is accessible in the <i>current package</i> at compile time
+          and C is accessible in the <i>current package</i> at load time,
+       or C is accessible in the <i>package</i> that is <i>similar</i> to
+          the <i>home package</i> of S.
+</p>
+<p>(Note that <i>similarity</i> of
+<i>symbols</i> is dependent
+on neither the <i>current readtable</i> nor how the <i>function</i> <b>read</b> would
+parse the <i>characters</i> in the <i>name</i> of the <i>symbol</i>.)
+</p>
+</dd>
+<dt><b>package</b></dt>
+<dd><p>Two <i>packages</i> S and C are <i>similar</i> if their <i>names</i> are <i>similar</i>.
+</p>
+<p>Note that although a <i>package</i> <i>object</i> is an <i>externalizable object</i>,
+the programmer is responsible for ensuring that the corresponding <i>package</i> is
+already in existence when code referencing it as a <i>literal</i> <i>object</i> 
+is <i>loaded</i>.  The <i>loader</i> finds the corresponding <i>package</i> <i>object</i>
+as if by calling <b>find-package</b> with that <i>name</i> as an <i>argument</i>.
+An error is signaled by the <i>loader</i> if no <i>package</i> exists at load time.
+</p>
+</dd>
+<dt><b>random-state</b></dt>
+<dd><p>Two <i>random states</i> S and C are <i>similar</i> if S
+would always produce the same sequence of pseudo-random numbers 
+as a <i>copy</i>_5 of C
+when given as the <i>random-state</i> <i>argument</i> to the <i>function</i> <b>random</b>, 
+assuming equivalent <i>limit</i> <i>arguments</i> in each case.
+</p>
+<p>(Note that since C has been processed by the <i>file compiler</i>,
+it cannot be used directly as an <i>argument</i> to <b>random</b>
+because <b>random</b> would perform a side effect.)
+</p>
+</dd>
+<dt><b>cons</b></dt>
+<dd><p>Two <i>conses</i>, S and C, are <i>similar</i> if
+    the <i>car</i>_2 of S is <i>similar</i> to the <i>car</i>_2 of C,
+and the <i>cdr</i>_2 of S is <i>similar</i> to the <i>cdr</i>_2 of C.
+</p>
+</dd>
+<dt><b>array</b></dt>
+<dd><p>Two one-dimensional <i>arrays</i>, S and C, are <i>similar</i> if
+     the <i>length</i> of S is <i>similar</i> to the <i>length</i> of C,
+     the <i>actual array element type</i> of S is <i>similar</i> to
+     the <i>actual array element type</i> of C,
+ and each <i>active</i> <i>element</i> of S is <i>similar</i> to
+      the corresponding <i>element</i> of C.
+</p>
+<p>Two <i>arrays</i> of <i>rank</i> other than one, S and C, are <i>similar</i> if
+     the <i>rank</i> of S is <i>similar</i> to the <i>rank</i> of C,
+     each <i>dimension</i>_1 of S is <i>similar</i> to 
+      the corresponding <i>dimension</i>_1 of C,
+     the <i>actual array element type</i> of S is <i>similar</i> to
+     the <i>actual array element type</i> of C,
+ and each <i>element</i> of S is <i>similar</i> to
+      the corresponding <i>element</i> of C.
+</p>
+<p>In addition,
+if S is a <i>simple array</i>, then C must also be a <i>simple array</i>.
+If S is a <i>displaced array</i>,
+       has a <i>fill pointer</i>,
+    or is <i>actually adjustable</i>, 
+C is permitted to lack any or all of these qualities.
+</p>
+</dd>
+<dt><b>hash-table</b></dt>
+<dd><p>Two <i>hash tables</i> S and C are <i>similar</i> if they meet the following
+three requirements:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>They both have the same test 
+ 	    (<i>e.g.</i>, they are both <b>eql</b> <i>hash tables</i>).
+</p>
+</dd>
+<dt>2.</dt>
+<dd><p>There is a unique one-to-one correspondence between the keys of
+           the two <i>hash tables</i>, such that the corresponding keys are 
+	   <i>similar</i>.
+</p>
+</dd>
+<dt>3.</dt>
+<dd><p>For all keys, the values associated with two corresponding keys
+           are <i>similar</i>.
+</p></dd>
+</dl>
+
+<p>If there is more than one possible one-to-one correspondence between
+the keys of S and C, the consequences are unspecified.  
+A <i>conforming program</i> cannot use a table such as S as an
+<i>externalizable constant</i>.
+</p>
+</dd>
+<dt><b>pathname</b></dt>
+<dd><p>Two <i>pathnames</i> S and C are <i>similar</i> if all corresponding 
+<i>pathname components</i> are <i>similar</i>.
+</p>
+</dd>
+<dt><b>function</b></dt>
+<dd>
+<p><i>Functions</i> are not <i>externalizable objects</i>.
+</p>
+</dd>
+<dt><b>structure-object</b> and <b>standard-object</b></dt>
+<dd>
+<p>A general-purpose concept of <i>similarity</i> does not exist for <i>structures</i>
+and <i>standard objects</i>.
+However, a <i>conforming program</i> is permitted to define a <b>make-load-form</b>
+<i>method</i> for any <i>class</i> K defined by that <i>program</i> that is
+a <i>subclass</i> of either <b>structure-object</b> or <b>standard-object</b>.
+The effect of such a <i>method</i> is to define that an <i>object</i> S of <i>type</i> K
+in <i>source code</i> is <i>similar</i> to an <i>object</i> C of <i>type</i> K
+in <i>compiled code</i> if C was constructed from <i>code</i> produced by 
+calling <b>make-load-form</b> on S.
+</p>
+</dd>
+</dl>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

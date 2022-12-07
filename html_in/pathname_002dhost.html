@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>pathname-host (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="pathname-host (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="pathname-host (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Filenames-Dictionary.html#Filenames-Dictionary" rel="up" title="Filenames Dictionary">
+<link href="load_002dlogical_002dpathname_002dtranslations.html#load_002dlogical_002dpathname_002dtranslations" rel="next" title="load-logical-pathname-translations">
+<link href="pathnamep.html#pathnamep" rel="prev" title="pathnamep">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="pathname_002dhost"></a>
+<div class="header">
+<p>
+Next: <a href="load_002dlogical_002dpathname_002dtranslations.html#load_002dlogical_002dpathname_002dtranslations" accesskey="n" rel="next">load-logical-pathname-translations</a>, Previous: <a href="pathnamep.html#pathnamep" accesskey="p" rel="prev">pathnamep</a>, Up: <a href="Filenames-Dictionary.html#Filenames-Dictionary" accesskey="u" rel="up">Filenames Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="pathname_002dhost_002c-pathname_002ddevice_002c-pathname_002ddirectory_002c"></a>
+<h4 class="subsection">19.4.6 pathname-host, pathname-device, pathname-directory,</h4>
+<a name="pathname_002dname_002c-pathname_002dtype_002c-pathname_002dversion"></a>
+<h4 class="subheading">pathname-name, pathname-type,   pathname-version</h4>
+<p align="right"><i>[Function]</i>
+</p>
+<p><code>pathname-host</code>  <i>pathname &amp;key</i> case &rArr;  <i>host</i>
+</p>
+<p><code>pathname-device</code>  <i>pathname &amp;key</i> case &rArr;  <i>device</i>
+</p>
+<p><code>pathname-directory</code>  <i>pathname &amp;key</i> case &rArr;  <i>directory</i>
+</p>
+<p><code>pathname-name</code>  <i>pathname &amp;key</i> case &rArr;  <i>name</i>
+</p>
+<p><code>pathname-type</code>  <i>pathname &amp;key</i> case &rArr;  <i>type</i>
+</p>
+<p><code>pathname-version</code>  <i>pathname</i> &rArr;  <i>version</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-392"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>pathname</i>&mdash;a <i>pathname designator</i>.
+</p>
+<p><i>case</i>&mdash;one of <tt>:local</tt> or <tt>:common</tt>.
+ The default is <tt>:local</tt>.
+</p>
+<p><i>host</i>&mdash;a <i>valid pathname host</i>.
+</p>
+<p><i>device</i>&mdash;a <i>valid pathname device</i>.
+</p>
+<p><i>directory</i>&mdash;a <i>valid pathname directory</i>.
+</p>
+<p><i>name</i>&mdash;a <i>valid pathname name</i>.
+</p>
+<p><i>type</i>&mdash;a <i>valid pathname type</i>.
+</p>
+<p><i>version</i>&mdash;a <i>valid pathname version</i>.
+</p>
+<a name="Description_003a_003a-510"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>These functions return the components of <i>pathname</i>.
+</p>
+<p>If the <i>pathname</i> <i>designator</i> is a <i>pathname</i>,
+it represents the name used to open the file. This may be, but is
+not required to be, the actual name of the file. 
+</p>
+<p>If <i>case</i> is supplied,
+it is treated as described in <a href="Case-in-Pathname-Components.html#Case-in-Pathname-Components">Case in Pathname Components</a>.
+</p>
+<a name="Examples_003a_003a-372"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq q (make-pathname :host &quot;KATHY&quot;
+                        :directory &quot;CHAPMAN&quot; 
+                        :name &quot;LOGIN&quot; :type &quot;COM&quot;))
+&rArr;  #P&quot;KATHY::[CHAPMAN]LOGIN.COM&quot;
+ (pathname-host q) &rArr;  &quot;KATHY&quot;
+ (pathname-name q) &rArr;  &quot;LOGIN&quot;
+ (pathname-type q) &rArr;  &quot;COM&quot;
+
+ ;; Because namestrings are used, the results shown in the remaining
+ ;; examples are not necessarily the only possible results.  Mappings
+ ;; from namestring representation to pathname representation are 
+ ;; dependent both on the file system involved and on the implementation
+ ;; (since there may be several implementations which can manipulate the
+ ;; the same file system, and those implementations are not constrained
+ ;; to agree on all details). Consult the documentation for each
+ ;; implementation for specific information on how namestrings are treated
+ ;; that implementation.
+
+ ;; VMS
+ (pathname-directory (parse-namestring &quot;[FOO.*.BAR]BAZ.LSP&quot;))
+&rArr;  (:ABSOLUTE &quot;FOO&quot; &quot;BAR&quot;)
+ (pathname-directory (parse-namestring &quot;[FOO.*.BAR]BAZ.LSP&quot;) :case :common)
+&rArr;  (:ABSOLUTE &quot;FOO&quot; &quot;BAR&quot;)
+
+ ;; Unix
+ (pathname-directory &quot;foo.l&quot;) &rArr;  NIL
+ (pathname-device &quot;foo.l&quot;) &rArr;  :UNSPECIFIC
+ (pathname-name &quot;foo.l&quot;) &rArr;  &quot;foo&quot;
+ (pathname-name &quot;foo.l&quot; :case :local) &rArr;  &quot;foo&quot;
+ (pathname-name &quot;foo.l&quot; :case :common) &rArr;  &quot;FOO&quot;
+ (pathname-type &quot;foo.l&quot;) &rArr;  &quot;l&quot;
+ (pathname-type &quot;foo.l&quot; :case :local) &rArr;  &quot;l&quot;
+ (pathname-type &quot;foo.l&quot; :case :common) &rArr;  &quot;L&quot;
+ (pathname-type &quot;foo&quot;) &rArr;  :UNSPECIFIC
+ (pathname-type &quot;foo&quot; :case :common) &rArr;  :UNSPECIFIC
+ (pathname-type &quot;foo.&quot;) &rArr;  &quot;&quot;
+ (pathname-type &quot;foo.&quot; :case :common) &rArr;  &quot;&quot;
+ (pathname-directory (parse-namestring &quot;/foo/bar/baz.lisp&quot;) :case :local)
+&rArr;  (:ABSOLUTE &quot;foo&quot; &quot;bar&quot;)
+ (pathname-directory (parse-namestring &quot;/foo/bar/baz.lisp&quot;) :case :local)
+&rArr;  (:ABSOLUTE &quot;FOO&quot; &quot;BAR&quot;)
+ (pathname-directory (parse-namestring &quot;../baz.lisp&quot;))
+&rArr;  (:RELATIVE :UP)
+ (PATHNAME-DIRECTORY (PARSE-NAMESTRING &quot;/foo/BAR/../Mum/baz&quot;))
+&rArr;  (:ABSOLUTE &quot;foo&quot; &quot;BAR&quot; :UP &quot;Mum&quot;)
+ (PATHNAME-DIRECTORY (PARSE-NAMESTRING &quot;/foo/BAR/../Mum/baz&quot;) :case :common)
+&rArr;  (:ABSOLUTE &quot;FOO&quot; &quot;bar&quot; :UP &quot;Mum&quot;)
+ (PATHNAME-DIRECTORY (PARSE-NAMESTRING &quot;/foo/*/bar/baz.l&quot;))
+&rArr;  (:ABSOLUTE &quot;foo&quot; :WILD &quot;bar&quot;)
+ (PATHNAME-DIRECTORY (PARSE-NAMESTRING &quot;/foo/*/bar/baz.l&quot;) :case :common)
+&rArr;  (:ABSOLUTE &quot;FOO&quot; :WILD &quot;BAR&quot;)
+
+ ;; Symbolics LMFS
+ (pathname-directory (parse-namestring &quot;&gt;foo&gt;**&gt;bar&gt;baz.lisp&quot;))
+&rArr;  (:ABSOLUTE &quot;foo&quot; :WILD-INFERIORS &quot;bar&quot;)
+ (pathname-directory (parse-namestring &quot;&gt;foo&gt;*&gt;bar&gt;baz.lisp&quot;))
+&rArr;  (:ABSOLUTE &quot;foo&quot; :WILD &quot;bar&quot;)
+ (pathname-directory (parse-namestring &quot;&gt;foo&gt;*&gt;bar&gt;baz.lisp&quot;) :case :common)
+&rArr;  (:ABSOLUTE &quot;FOO&quot; :WILD &quot;BAR&quot;)
+ (pathname-device (parse-namestring &quot;&gt;foo&gt;baz.lisp&quot;)) &rArr;  :UNSPECIFIC
+</pre></div>
+
+<a name="Affected-By_003a_003a-73"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>The <i>implementation</i> and the host <i>file system</i>.
+</p>
+<a name="Exceptional-Situations_003a_003a-174"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b> if its first argument is not a <i>pathname</i>.
+</p>
+<a name="See-Also_003a_003a-414"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>pathname</b>,
+<b>logical-pathname</b>,
+<a href="File-System-Concepts.html#File-System-Concepts">File System Concepts</a>,
+</p>
+<p><a href="Pathnames-as-Filenames.html#Pathnames-as-Filenames">Pathnames as Filenames</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="load_002dlogical_002dpathname_002dtranslations.html#load_002dlogical_002dpathname_002dtranslations" accesskey="n" rel="next">load-logical-pathname-translations</a>, Previous: <a href="pathnamep.html#pathnamep" accesskey="p" rel="prev">pathnamep</a>, Up: <a href="Filenames-Dictionary.html#Filenames-Dictionary" accesskey="u" rel="up">Filenames Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

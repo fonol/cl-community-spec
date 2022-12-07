@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>remprop (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="remprop (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="remprop (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Symbols-Dictionary.html#Symbols-Dictionary" rel="up" title="Symbols Dictionary">
+<link href="boundp.html#boundp" rel="next" title="boundp">
+<link href="get.html#get" rel="prev" title="get">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="remprop"></a>
+<div class="header">
+<p>
+Next: <a href="boundp.html#boundp" accesskey="n" rel="next">boundp</a>, Previous: <a href="get.html#get" accesskey="p" rel="prev">get</a>, Up: <a href="Symbols-Dictionary.html#Symbols-Dictionary" accesskey="u" rel="up">Symbols Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="remprop-_005bFunction_005d"></a>
+<h4 class="subsection">10.2.16 remprop                                                          [Function]</h4>
+
+<p><code>remprop</code>  <i>symbol indicator</i> &rArr;  <i>generalized-boolean</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-170"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>symbol</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>indicator</i>&mdash;an <i>object</i>.
+</p>
+<p><i>generalized-boolean</i>&mdash;a <i>generalized boolean</i>.
+</p>
+<a name="Description_003a_003a-232"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>remprop</b> removes from the <i>property list</i>_2 of <i>symbol</i>
+a <i>property</i>_1 with a <i>property indicator</i>
+<i>identical</i> to <i>indicator</i>.
+</p>
+<p>If there are multiple <i>properties</i>_1 with the <i>identical</i> key,
+<b>remprop</b> only removes the first such <i>property</i>.
+</p>
+<p><b>remprop</b> returns <i>false</i> if no such <i>property</i> was found,
+or <i>true</i> if a property was found.
+</p>
+<p>The <i>property indicator</i> 
+and the corresponding <i>property value</i> 
+are removed in an undefined order
+by destructively splicing the property list.  
+</p>
+<p>The permissible side-effects correspond to those permitted for <b>remf</b>,
+such that:
+</p>
+<div class="example">
+<pre class="example"> (remprop <i>x</i> <i>y</i>) &equiv; (remf (symbol-plist <i>x</i>) <i>y</i>)
+</pre></div>
+
+<a name="Examples_003a_003a-153"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (setq test (make-symbol &quot;PSEUDO-PI&quot;)) &rArr;  #:PSEUDO-PI
+ (symbol-plist test) &rArr;  ()
+ (setf (get test 'constant) t) &rArr;  T
+ (setf (get test 'approximation) 3.14) &rArr;  3.14
+ (setf (get test 'error-range) 'noticeable) &rArr;  NOTICEABLE
+ (symbol-plist test) 
+&rArr;  (ERROR-RANGE NOTICEABLE APPROXIMATION 3.14 CONSTANT T)
+ (setf (get test 'approximation) nil) &rArr;  NIL
+ (symbol-plist test) 
+&rArr;  (ERROR-RANGE NOTICEABLE APPROXIMATION NIL CONSTANT T)
+ (get test 'approximation) &rArr;  NIL
+ (remprop test 'approximation) &rArr;  <i>true</i>
+ (get test 'approximation) &rArr;  NIL
+ (symbol-plist test)
+&rArr;  (ERROR-RANGE NOTICEABLE CONSTANT T)
+ (remprop test 'approximation) &rArr;  NIL
+ (symbol-plist test)
+&rArr;  (ERROR-RANGE NOTICEABLE CONSTANT T)
+ (remprop test 'error-range) &rArr;  <i>true</i>
+ (setf (get test 'approximation) 3) &rArr;  3
+ (symbol-plist test)
+&rArr;  (APPROXIMATION 3 CONSTANT T)
+</pre></div>
+
+<a name="Side-Effects_003a_003a-21"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>The <i>property list</i> of <i>symbol</i> is modified.
+</p>
+<a name="Exceptional-Situations_003a_003a-60"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>symbol</i> is not a <i>symbol</i>.
+</p>
+<a name="See-Also_003a_003a-205"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="remf.html#remf">remf</a>
+, 
+<a href="symbol_002dplist.html#symbol_002dplist">symbol-plist</a>
+</p>
+<a name="Notes_003a_003a-125"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><i>Numbers</i> and <i>characters</i> are not recommended for use as
+<i>indicators</i> in portable code since <b>remprop</b> tests with
+<b>eq</b> rather than <b>eql</b>, and consequently the effect of
+using such <i>indicators</i> is <i>implementation-dependent</i>.  
+Of course, if you&rsquo;ve gotten as far as needing to remove such a
+<i>property</i>, you don&rsquo;t have much choice&mdash;the time to have been
+thinking about this was when you used <b>setf</b> of <b>get</b> to
+establish the <i>property</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="boundp.html#boundp" accesskey="n" rel="next">boundp</a>, Previous: <a href="get.html#get" accesskey="p" rel="prev">get</a>, Up: <a href="Symbols-Dictionary.html#Symbols-Dictionary" accesskey="u" rel="up">Symbols Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

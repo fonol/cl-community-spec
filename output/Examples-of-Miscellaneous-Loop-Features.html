@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Examples of Miscellaneous Loop Features (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="The-LOOP-Facility.html#The-LOOP-Facility" rel="up" title="The LOOP Facility">
+<link href="Examples-of-clause-grouping.html#Examples-of-clause-grouping" rel="next" title="Examples of clause grouping">
+<link href="Initial-and-Final-Execution.html#Initial-and-Final-Execution" rel="prev" title="Initial and Final Execution">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Initial-and-Final-Execution.html#Initial-and-Final-Execution" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Initial and Final Execution
+                            </a>
+                            <a href="The-LOOP-Facility.html#The-LOOP-Facility.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                The LOOP Facility
+                            </a>
+                            <a href="Examples-of-clause-grouping.html#Examples-of-clause-grouping.html" class="nav-btn nav__next ">
+                                Examples of clause grouping
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Examples-of-Miscellaneous-Loop-Features"></a>
+<a name="Examples-of-Miscellaneous-Loop-Features-1"></a>
+<div class="section top-most">
+<h4 class="subsection">Examples of Miscellaneous Loop Features</h4>
+
+<div class="example">
+<pre class="example"><code> (let ((i 0))                     ; no loop keywords are used
+    (loop (incf i) (if (= i 3) (return i)))) &rArr;  3
+ (let ((i 0)(j 0))
+    (tagbody
+      (loop (incf j 3) (incf i) (if (= i 3) (go exit)))
+      exit)
+    j) &rArr;  9
+</code>
+</pre></div>
+
+<p>In the following example, the variable <tt>x</tt> is stepped
+before <tt>y</tt> is stepped; thus, the value of <tt>y</tt>
+reflects the updated value of <tt>x</tt>:
+</p>
+<div class="example">
+<pre class="example"><code> (loop for x from 1 to 10 
+       for y = nil then x 
+       collect (list x y))
+&rArr;  ((1 NIL) (2 2) (3 3) (4 4) (5 5) (6 6) (7 7) (8 8) (9 9) (10 10))
+</code>
+</pre></div>
+
+<p>In this example, <tt>x</tt> and <tt>y</tt> are stepped in <i>parallel</i>:
+</p>
+<div class="example">
+<pre class="example"><code> (loop for x from 1 to 10 
+       and y = nil then x 
+       collect (list x y))
+&rArr;  ((1 NIL) (2 1) (3 2) (4 3) (5 4) (6 5) (7 6) (8 7) (9 8) (10 9))
+</code>
+</pre></div>
+
+<table class="menu" border="0" cellspacing="0">
+<tr><td align="left" valign="top"><a href="Examples-of-clause-grouping.html#Examples-of-clause-grouping" accesskey="1">Examples of clause grouping</a></td><td>&nbsp;&nbsp;</td><td align="left" valign="top">
+</td></tr>
+</table>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

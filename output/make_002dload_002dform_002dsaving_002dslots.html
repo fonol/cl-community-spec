@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>make-load-form-saving-slots (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Objects-Dictionary.html#Objects-Dictionary" rel="up" title="Objects Dictionary">
+<link href="with_002daccessors.html#with_002daccessors" rel="next" title="with-accessors">
+<link href="make_002dload_002dform.html#make_002dload_002dform" rel="prev" title="make-load-form">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="make_002dload_002dform.html#make_002dload_002dform" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                make-load-form
+                            </a>
+                            <a href="Objects-Dictionary.html#Objects-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Objects Dictionary
+                            </a>
+                            <a href="with_002daccessors.html#with_002daccessors.html" class="nav-btn nav__next ">
+                                with-accessors
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="make_002dload_002dform_002dsaving_002dslots"></a>
+<a name="make_002dload_002dform_002dsaving_002dslots-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">make-load-form-saving-slots                                      </h4>
+
+<p><code>make-load-form-saving-slots</code>  <i>object &amp;key</i> slot-names environment<br>
+   &rArr;  <i>creation-form, initialization-form</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-110"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>object</i>&mdash;an <i>object</i>.
+</p>
+<p><i>slot-names</i>&mdash;a <i>list</i>.
+</p>
+<p><i>environment</i>&mdash;an <i>environment object</i>.
+</p>
+<p><i>creation-form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>initialization-form</i>&mdash;a <i>form</i>.
+</p>
+<a name="Description_003a_003a-149"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Returns <i>forms</i> that, when <i>evaluated</i>, will construct an
+<i>object</i> equivalent to <i>object</i>, without <i>executing</i>
+<i>initialization forms</i>.  The <i>slots</i> in the new <i>object</i>
+that correspond to initialized <i>slots</i> in <i>object</i> are
+initialized using the values from <i>object</i>.  Uninitialized <i>slots</i>
+in <i>object</i> are not initialized in the new <i>object</i>.
+<b>make-load-form-saving-slots</b> works for any <i>instance</i> of
+<b>standard-object</b> or <b>structure-object</b>.
+</p>
+<p><i>Slot-names</i> is a <i>list</i> of the names of the 
+<i>slots</i> to preserve. If <i>slot-names</i> is not
+supplied, its value is all of the <i>local slots</i>.  
+</p>
+<p><b>make-load-form-saving-slots</b> returns two values,
+thus it can deal with circular structures.
+Whether the result is useful in an application depends on
+whether the <i>object</i>&rsquo;s <i>type</i> and slot contents
+fully capture the application&rsquo;s idea of the <i>object</i>&rsquo;s state.
+</p>
+<p><i>Environment</i> is the environment in which the forms will be processed.
+</p>
+<a name="See-Also_003a_003a-131"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="make_002dload_002dform.html#make_002dload_002dform">make-load-form</a>
+,
+<a href="make_002dinstance.html#make_002dinstance">make-instance</a>
+,
+&lsquo;setf; psetf&rsquo;
+,
+<a href="slot_002dvalue.html#slot_002dvalue">slot-value</a>
+,
+<a href="slot_002dmakunbound.html#slot_002dmakunbound">slot-makunbound</a>
+</p>
+<a name="Notes_003a_003a-87"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p><b>make-load-form-saving-slots</b> can be useful in user-written
+<b>make-load-form</b> methods.
+</p>
+<p>When the <i>object</i> is an <i>instance</i> of <b>standard-object</b>,
+<b>make-load-form-saving-slots</b> could return a creation form that
+<i>calls</i> <b>allocate-instance</b> and an initialization form that
+contains <i>calls</i> to <b>setf</b> of <b>slot-value</b> and
+<b>slot-makunbound</b>, though other <i>functions</i> of similar effect
+might actually be used.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

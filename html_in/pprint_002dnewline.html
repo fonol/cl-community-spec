@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>pprint-newline (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="pprint-newline (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="pprint-newline (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer-Dictionary.html#Printer-Dictionary" rel="up" title="Printer Dictionary">
+<link href="pprint_002dpop.html#pprint_002dpop" rel="next" title="pprint-pop">
+<link href="pprint_002dlogical_002dblock.html#pprint_002dlogical_002dblock" rel="prev" title="pprint-logical-block">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="pprint_002dnewline"></a>
+<div class="header">
+<p>
+Next: <a href="pprint_002dpop.html#pprint_002dpop" accesskey="n" rel="next">pprint-pop</a>, Previous: <a href="pprint_002dlogical_002dblock.html#pprint_002dlogical_002dblock" accesskey="p" rel="prev">pprint-logical-block</a>, Up: <a href="Printer-Dictionary.html#Printer-Dictionary" accesskey="u" rel="up">Printer Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="pprint_002dnewline-_005bFunction_005d"></a>
+<h4 class="subsection">22.4.8 pprint-newline                                                   [Function]</h4>
+
+<p><code>pprint-newline</code>  <i>kind &amp;optional</i> stream &rArr;  <i><b>nil</b></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-461"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>kind</i>&mdash;one of <tt>:linear</tt>, <tt>:fill</tt>, <tt>:miser</tt>, or <tt>:mandatory</tt>.
+</p>
+<p><i>stream</i>&mdash;a <i>stream designator</i>.
+ The default is <i>standard output</i>.
+</p>
+<a name="Description_003a_003a-596"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>If <i>stream</i> is a <i>pretty printing stream</i>
+   and the <i>value</i> of <b>*print-pretty*</b> is <i>true</i>,
+a line break is inserted in the output 
+when the appropriate condition below is satisfied;
+otherwise, <b>pprint-newline</b> has no effect.
+</p>
+<p><i>Kind</i> specifies the style of conditional newline.
+This <i>parameter</i> is treated as follows:
+</p>
+<dl compact="compact">
+<dt><tt>:linear</tt></dt>
+<dd><p>This specifies a
+&ldquo;linear-style&rdquo; <i>conditional newline</i>.
+<a name="index-linear_002dstyle-conditional-newline-1"></a>
+</p>
+<p>A line break is inserted 
+if and only if the immediately containing <i>section</i>
+cannot be printed on one line.
+The effect of this is that line breaks are
+either inserted at every linear-style conditional newline in a logical block
+or at none of them.
+</p>
+</dd>
+<dt><tt>:miser</tt></dt>
+<dd><p>This specifies a 
+&ldquo;miser-style&rdquo; <i>conditional newline</i>.
+<a name="index-miser_002dstyle-conditional-newline-1"></a>
+</p>
+<p>A line break is inserted
+if and only if the immediately containing <i>section</i>
+cannot be printed on one line
+and miser style is in effect in the immediately containing logical block.
+The effect of this is that miser-style conditional newlines
+act like linear-style conditional newlines,
+but only when miser style is in effect.
+Miser style is in effect for a logical block if and only if 
+the starting position of the logical block
+is less than or equal to
+<b>*print-miser-width*</b> <i>ems</i> from the right margin.
+</p>
+</dd>
+<dt><tt>:fill</tt></dt>
+<dd><p>This specifies a
+&ldquo;fill-style&rdquo; <i>conditional newline</i>.
+<a name="index-fill_002dstyle-conditional-newline-1"></a>
+</p>
+<p>A line break is inserted if and only if
+either (a) the following <i>section</i> cannot be printed 
+	   on the end of the current line,
+       (b) the preceding <i>section</i> was not printed on a single line,
+    or (c) the immediately containing <i>section</i> cannot
+	   be printed on one line and miser style is in effect
+	   in the immediately containing logical block.
+If a logical block is broken up into a number of subsections
+by fill-style conditional newlines,
+the basic effect is that the logical block
+is printed with as many subsections as possible on each line.
+However, if miser style is in effect,
+fill-style conditional newlines act like linear-style conditional newlines.
+</p>
+</dd>
+<dt><tt>:mandatory</tt></dt>
+<dd><p>This specifies a
+&ldquo;mandatory-style&rdquo; <i>conditional newline</i>.
+<a name="index-mandatory_002dstyle-conditional-newline"></a>
+</p>
+<p>A line break is always inserted.
+This implies that  none of the containing <i>sections</i>
+can be printed on a single line and 
+will therefore trigger the insertion of line breaks 
+at linear-style conditional newlines in these <i>sections</i>.
+</p>
+</dd>
+</dl>
+
+<p>When a line break is inserted by any type of conditional newline, 
+any blanks that immediately precede the conditional newline are omitted 
+from the output and indentation is introduced at the beginning of the next line.
+By default, the indentation causes the following line to begin 
+in the same horizontal position 
+as the first character in the immediately containing logical block.
+(The indentation can be changed via <b>pprint-indent</b>.)
+</p>
+<p>There are a variety of ways unconditional newlines can be introduced into
+the output (<i>i.e.</i>, via <b>terpri</b> or by printing a string containing a newline
+character).  As with mandatory conditional newlines, this prevents any of
+the containing <i>sections</i> from being printed on one line.  In general, when
+an unconditional newline is encountered, it is printed out without
+suppression of the preceding blanks and without any indentation following
+it.  However, if a per-line prefix has been specified (see
+<b>pprint-logical-block</b>), this prefix will always be printed no matter 
+how a newline originates.
+</p>
+<a name="Examples_003a_003a-430"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<p>See <a href="Examples-of-using-the-Pretty-Printer.html#Examples-of-using-the-Pretty-Printer">Examples of using the Pretty Printer</a>.
+</p>
+<a name="Side-Effects_003a_003a-76"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>Output to <i>stream</i>.
+</p>
+<a name="Affected-By_003a_003a-100"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p><b>*print-pretty*</b>, <b>*print-miser*</b>.
+The presence of containing logical blocks.
+The placement of newlines and conditional newlines.
+</p>
+<a name="Exceptional-Situations_003a_003a-223"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>An error of <i>type</i> <b>type-error</b> is signaled if <i>kind</i> 
+is not one of <tt>:linear</tt>, <tt>:fill</tt>, <tt>:miser</tt>, or <tt>:mandatory</tt>.
+</p>
+<a name="See-Also_003a_003a-484"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="Tilde-Underscore_002d_003e-Conditional-Newline.html#Tilde-Underscore_002d_003e-Conditional-Newline">Tilde Underscore-&gt; Conditional Newline</a>,
+<a href="Examples-of-using-the-Pretty-Printer.html#Examples-of-using-the-Pretty-Printer">Examples of using the Pretty Printer</a>
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="pprint_002dpop.html#pprint_002dpop" accesskey="n" rel="next">pprint-pop</a>, Previous: <a href="pprint_002dlogical_002dblock.html#pprint_002dlogical_002dblock" accesskey="p" rel="prev">pprint-logical-block</a>, Up: <a href="Printer-Dictionary.html#Printer-Dictionary" accesskey="u" rel="up">Printer Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

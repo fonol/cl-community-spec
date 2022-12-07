@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Applying method combination to the sorted list of applicable methods (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Applying method combination to the sorted list of applicable methods (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Applying method combination to the sorted list of applicable methods (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" rel="up" title="Method Selection and Combination">
+<link href="Standard-Method-Combination.html#Standard-Method-Combination" rel="next" title="Standard Method Combination">
+<link href="Sorting-the-Applicable-Methods-by-Precedence-Order.html#Sorting-the-Applicable-Methods-by-Precedence-Order" rel="prev" title="Sorting the Applicable Methods by Precedence Order">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Applying-method-combination-to-the-sorted-list-of-applicable-methods"></a>
+<div class="header">
+<p>
+Next: <a href="Standard-Method-Combination.html#Standard-Method-Combination" accesskey="n" rel="next">Standard Method Combination</a>, Previous: <a href="Sorting-the-Applicable-Methods-by-Precedence-Order.html#Sorting-the-Applicable-Methods-by-Precedence-Order" accesskey="p" rel="prev">Sorting the Applicable Methods by Precedence Order</a>, Up: <a href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" accesskey="u" rel="up">Method Selection and Combination</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Applying-method-combination-to-the-sorted-list-of-applicable-methods-1"></a>
+<h4 class="subsubsection">7.6.6.4 Applying method combination to the sorted list of applicable methods</h4>
+
+<p>In the simple case&mdash;if standard method combination is used and all
+applicable methods are primary methods&mdash;the 
+effective method is the most specific method.
+That method can call the next most specific
+method by using the <i>function</i> <b>call-next-method</b>.  The method that
+<b>call-next-method</b> will call is referred to as the 
+<i>next method</i>
+<a name="index-next-method"></a>
+.  The predicate <b>next-method-p</b> tests whether a next
+method exists.  If <b>call-next-method</b> is called and there is no
+next most specific method, the generic function <b>no-next-method</b>
+is invoked.
+</p>
+<p>In general, the effective method is some combination of the applicable
+methods.  It is described by a <i>form</i> that contains calls to some or
+all of the applicable methods, returns the value or values that will
+be returned as the value or values of the generic function, and
+optionally makes some of the methods accessible by means of 
+<b>call-next-method</b>.
+</p>
+<p>The role of each method in the effective method is determined by its
+<i>qualifiers</i> and the specificity of the method.  A <i>qualifier</i>
+serves to mark a method, and the meaning of a <i>qualifier</i> is
+determined by the way that these marks are used by this step
+of the procedure.  If an applicable method has an unrecognized
+<i>qualifier</i>, this step signals an error and does not include that method
+in the effective method.
+</p>
+<p>When standard method combination is used together with qualified methods, 
+the effective method is produced as described in <a href="Standard-Method-Combination.html#Standard-Method-Combination">Standard Method Combination</a>.
+</p>
+<p>Another type of method combination can be specified by using the
+<tt>:method-combination</tt> option of <b>defgeneric</b> or
+of any of the other operators that specify generic function options.  In
+this way this step of the procedure can be customized.
+</p>
+<p>New types of method combination can be defined by using 
+the <b>define-method-combination</b> <i>macro</i>. 
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="Standard-Method-Combination.html#Standard-Method-Combination" accesskey="n" rel="next">Standard Method Combination</a>, Previous: <a href="Sorting-the-Applicable-Methods-by-Precedence-Order.html#Sorting-the-Applicable-Methods-by-Precedence-Order" accesskey="p" rel="prev">Sorting the Applicable Methods by Precedence Order</a>, Up: <a href="Method-Selection-and-Combination.html#Method-Selection-and-Combination" accesskey="u" rel="up">Method Selection and Combination</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

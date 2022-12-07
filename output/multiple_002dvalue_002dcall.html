@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>multiple-value-call (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="multiple_002dvalue_002dlist.html#multiple_002dvalue_002dlist" rel="next" title="multiple-value-list">
+<link href="multiple_002dvalue_002dbind.html#multiple_002dvalue_002dbind" rel="prev" title="multiple-value-bind">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="multiple_002dvalue_002dbind.html#multiple_002dvalue_002dbind" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                multiple-value-bind
+                            </a>
+                            <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Data and Control Flow Dictionary
+                            </a>
+                            <a href="multiple_002dvalue_002dlist.html#multiple_002dvalue_002dlist.html" class="nav-btn nav__next ">
+                                multiple-value-list
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="multiple_002dvalue_002dcall"></a>
+<a name="multiple_002dvalue_002dcall-_005bSpecial-Operator_005d"></a>
+<div class="section top-most">
+<div class="node-type">Special Operator</div>
+<h4 class="subsection">multiple-value-call                                      </h4>
+
+<p><code>multiple-value-call</code>  <i><i>function-form</i> <i>form</i><span class="roman">*</span></i> &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-68"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>function-form</i>&mdash;a <i>form</i>; evaluated to produce <i>function</i>.
+</p>
+<p><i>function</i>&mdash;a <i>function designator</i> 
+		   resulting from the evaluation of <i>function-form</i>.
+</p>
+<p><i>form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>results</i>&mdash;the <i>values</i> returned by the <i>function</i>.
+</p>
+<a name="Description_003a_003a-102"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Applies <i>function</i> to a <i>list</i> of the <i>objects</i> collected from groups of 
+<i>multiple values</i>_2.
+</p>
+<p><b>multiple-value-call</b> first evaluates the <i>function-form</i>
+to obtain <i>function</i>, and then evaluates each <i>form</i>.
+All the values
+of each <i>form</i> are gathered together (not just one value from each)
+and given as arguments to the <i>function</i>.  
+</p>
+<a name="Examples_003a_003a-76"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+<div class="example">
+<pre class="example"><code> (multiple-value-call #'list 1 '/ (values 2 3) '/ (values) '/ (floor 2.5))
+&rArr;  (1 / 2 3 / / 2 0.5)
+ (+ (floor 5 3) (floor 19 4)) &equiv; (+ 1 4)
+&rArr;  5
+ (multiple-value-call #'+ (floor 5 3) (floor 19 4)) &equiv; (+ 1 2 4 3)
+&rArr;  10
+</code>
+</pre></div>
+
+<a name="See-Also_003a_003a-86"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="multiple_002dvalue_002dlist.html#multiple_002dvalue_002dlist">multiple-value-list</a>
+, 
+<a href="multiple_002dvalue_002dbind.html#multiple_002dvalue_002dbind">multiple-value-bind</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

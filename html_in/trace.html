@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>trace (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="trace (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="trace (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Environment-Dictionary.html#Environment-Dictionary" rel="up" title="Environment Dictionary">
+<link href="step.html#step" rel="next" title="step">
+<link href="describe_002dobject.html#describe_002dobject" rel="prev" title="describe-object">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="trace"></a>
+<div class="header">
+<p>
+Next: <a href="step.html#step" accesskey="n" rel="next">step</a>, Previous: <a href="describe_002dobject.html#describe_002dobject" accesskey="p" rel="prev">describe-object</a>, Up: <a href="Environment-Dictionary.html#Environment-Dictionary" accesskey="u" rel="up">Environment Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="trace_002c-untrace-_005bMacro_005d"></a>
+<h4 class="subsection">25.2.8 trace, untrace                                                      [Macro]</h4>
+
+<p><code>trace</code>  <i>{<i>function-name</i>}*</i> &rArr;  <i>trace-result</i>
+</p>
+<p><code>untrace</code>  <i>{<i>function-name</i>}*</i> &rArr;  <i>untrace-result</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-494"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>function-name</i>&mdash;a <i>function name</i>.
+</p>
+<p><i>trace-result</i>&mdash;<i>implementation-dependent</i>,
+  unless no <i>function-names</i> are supplied, 
+  in which case <i>trace-result</i> is a <i>list</i> of <i>function names</i>.
+</p>
+<p><i>untrace-result</i>&mdash;<i>implementation-dependent</i>.
+</p>
+<a name="Description_003a_003a-656"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>trace</b> and <b>untrace</b> control the invocation of the trace facility.  
+</p>
+<p>Invoking <b>trace</b> with one or more <i>function-names</i> causes
+the denoted <i>functions</i> to be &ldquo;traced.&rdquo;
+Whenever a traced <i>function</i> is invoked, information
+     about the call,
+     about the arguments passed,
+ and about any eventually returned values
+is printed to <i>trace output</i>.
+If <b>trace</b> is used with no <i>function-names</i>,
+no tracing action is performed; 
+instead, a list of the <i>functions</i> currently being traced is returned.
+</p>
+<p>Invoking <b>untrace</b> with one or more function names causes those
+functions to be &ldquo;untraced&rdquo; (<i>i.e.</i>, no longer traced).
+If <b>untrace</b> is used with no <i>function-names</i>,
+all <i>functions</i> currently being traced are untraced.
+</p>
+<p>If a <i>function</i> to be traced has been open-coded
+(<i>e.g.</i>, because it was declared <b>inline</b>),
+a call to that <i>function</i> might not produce trace output.
+</p>
+<a name="Examples_003a_003a-466"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defun fact (n) (if (zerop n) 1 (* n (fact (- n 1)))))
+&rArr;  FACT
+ (trace fact)
+&rArr;  (FACT)
+;; Of course, the format of traced output is implementation-dependent.
+ (fact 3)
+<tt> |&gt; </tt> 1 Enter FACT 3
+<tt> |&gt; </tt> | 2 Enter FACT 2
+<tt> |&gt; </tt> |   3 Enter FACT 1
+<tt> |&gt; </tt> |   | 4 Enter FACT 0
+<tt> |&gt; </tt> |   | 4 Exit FACT 1
+<tt> |&gt; </tt> |   3 Exit FACT 1
+<tt> |&gt; </tt> | 2 Exit FACT 2
+<tt> |&gt; </tt> 1 Exit FACT 6
+&rArr;  6
+</pre></div>
+
+<a name="Side-Effects_003a_003a-84"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>Might change the definitions of the <i>functions</i> named by <i>function-names</i>.
+</p>
+<a name="Affected-By_003a_003a-124"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>Whether the functions named are defined or already being traced.
+</p>
+<a name="Exceptional-Situations_003a_003a-239"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Tracing an already traced function,
+or untracing a function not currently being traced,
+should produce no harmful effects, but might signal a warning.
+</p>
+<a name="See-Also_003a_003a-534"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>*trace-output*</b>,
+<a href="step.html#step">step</a>
+</p>
+<a name="Notes_003a_003a-327"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p><b>trace</b> and <b>untrace</b> may also accept additional
+<i>implementation-dependent</i> argument formats.  The format of the trace
+output is <i>implementation-dependent</i>.
+</p>
+<p>Although <b>trace</b> can be extended to permit non-standard options,
+<i>implementations</i> are nevertheless encouraged (but not required)
+to warn about the use of syntax or options 
+that are neither specified by this standard 
+nor added as an extension by the <i>implementation</i>,
+since they could be symptomatic of typographical errors
+or of reliance on features supported in <i>implementations</i> 
+other than the current <i>implementation</i>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="step.html#step" accesskey="n" rel="next">step</a>, Previous: <a href="describe_002dobject.html#describe_002dobject" accesskey="p" rel="prev">describe-object</a>, Up: <a href="Environment-Dictionary.html#Environment-Dictionary" accesskey="u" rel="up">Environment Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

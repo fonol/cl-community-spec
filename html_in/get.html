@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>get (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="get (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="get (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Symbols-Dictionary.html#Symbols-Dictionary" rel="up" title="Symbols Dictionary">
+<link href="remprop.html#remprop" rel="next" title="remprop">
+<link href="symbol_002dvalue.html#symbol_002dvalue" rel="prev" title="symbol-value">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="get"></a>
+<div class="header">
+<p>
+Next: <a href="remprop.html#remprop" accesskey="n" rel="next">remprop</a>, Previous: <a href="symbol_002dvalue.html#symbol_002dvalue" accesskey="p" rel="prev">symbol-value</a>, Up: <a href="Symbols-Dictionary.html#Symbols-Dictionary" accesskey="u" rel="up">Symbols Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="get-_005bAccessor_005d"></a>
+<h4 class="subsection">10.2.15 get                                                              [Accessor]</h4>
+
+<p><code>get</code>  <i>symbol indicator &amp;optional</i> default &rArr;  <i>value</i>
+</p>
+<p>(setf (<code>         get</code> <i>symbol indicator &amp;optional</i> default) new-value)<br>
+</p>
+<a name="Arguments-and-Values_003a_003a-169"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>symbol</i>&mdash;a <i>symbol</i>.
+</p>
+<p><i>indicator</i>&mdash;an <i>object</i>.
+</p>
+<p><i>default</i>&mdash;an <i>object</i>.
+ The default is <b>nil</b>.
+</p>
+<p><i>value</i>&mdash;if the indicated property exists,
+		   the <i>object</i> that is its <i>value</i>;
+		otherwise, the specified <i>default</i>.
+</p>
+<p><i>new-value</i>&mdash;an <i>object</i>.
+</p>
+<a name="Description_003a_003a-231"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>get</b> finds a <i>property</i> 
+on the <i>property list</i>_2 of <i>symbol</i> 
+whose <i>property indicator</i> is <i>identical</i> to <i>indicator</i>,
+and returns its corresponding <i>property value</i>.
+</p>
+<p>If there are multiple <i>properties</i>_1 with that <i>property indicator</i>,
+<b>get</b> uses the first such <i>property</i>.
+</p>
+<p>If there is no <i>property</i> with that <i>property indicator</i>,
+<i>default</i> is returned.
+</p>
+<p><b>setf</b> of <b>get</b> may be used to associate a new <i>object</i>
+with an existing indicator already on the <i>symbol</i>&rsquo;s <i>property list</i>,
+or to create a new assocation if none exists.
+</p>
+<p>If there are multiple <i>properties</i>_1 with that <i>property indicator</i>,
+<b>setf</b> of <b>get</b> associates the <i>new-value</i> 
+with the first such <i>property</i>.
+</p>
+<p>When a <b>get</b> <i>form</i> is used as a <b>setf</b> <i>place</i>,
+any <i>default</i> which is supplied is evaluated according to normal
+left-to-right evaluation rules, but its <i>value</i> is ignored.
+</p>
+<a name="Examples_003a_003a-152"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (defun make-person (first-name last-name)
+   (let ((person (gensym &quot;PERSON&quot;)))
+     (setf (get person 'first-name) first-name)
+     (setf (get person 'last-name) last-name)
+     person)) &rArr;  MAKE-PERSON
+ (defvar *john* (make-person &quot;John&quot; &quot;Dow&quot;)) &rArr;  *JOHN*
+ *john* &rArr;  #:PERSON4603
+ (defvar *sally* (make-person &quot;Sally&quot; &quot;Jones&quot;)) &rArr;  *SALLY*
+ (get *john* 'first-name) &rArr;  &quot;John&quot;
+ (get *sally* 'last-name) &rArr;  &quot;Jones&quot;
+ (defun marry (man woman married-name)
+   (setf (get man 'wife) woman)
+   (setf (get woman 'husband) man)
+   (setf (get man 'last-name) married-name)
+   (setf (get woman 'last-name) married-name)
+   married-name) &rArr;  MARRY
+ (marry *john* *sally* &quot;Dow-Jones&quot;) &rArr;  &quot;Dow-Jones&quot;
+ (get *john* 'last-name) &rArr;  &quot;Dow-Jones&quot;
+ (get (get *john* 'wife) 'first-name) &rArr;  &quot;Sally&quot;
+ (symbol-plist *john*)
+&rArr;  (WIFE #:PERSON4604 LAST-NAME &quot;Dow-Jones&quot; FIRST-NAME &quot;John&quot;)
+ (defmacro age (person &amp;optional (default ''thirty-something)) 
+   `(get ,person 'age ,default)) &rArr;  AGE
+ (age *john*) &rArr;  THIRTY-SOMETHING
+ (age *john* 20) &rArr;  20
+ (setf (age *john*) 25) &rArr;  25
+ (age *john*) &rArr;  25
+ (age *john* 20) &rArr;  25
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-59"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>symbol</i> is not a <i>symbol</i>.
+</p>
+<a name="See-Also_003a_003a-204"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="getf.html#getf">getf</a>
+,
+<a href="symbol_002dplist.html#symbol_002dplist">symbol-plist</a>
+,
+<a href="remprop.html#remprop">remprop</a>
+</p>
+<a name="Notes_003a_003a-124"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<div class="example">
+<pre class="example"> (get x y) &equiv; (getf (symbol-plist x) y)
+</pre></div>
+
+<p><i>Numbers</i> and <i>characters</i> are not recommended for use 
+as <i>indicators</i> in portable code since <b>get</b> tests 
+with <b>eq</b> rather than <b>eql</b>, and consequently 
+the effect of using such <i>indicators</i> is 
+<i>implementation-dependent</i>.
+</p>
+<p>There is no way using <b>get</b> to distinguish an absent property from
+one whose value is <i>default</i>.  However, see <b>get-properties</b>.
+</p>
+<hr>
+<div class="header">
+<p>
+Next: <a href="remprop.html#remprop" accesskey="n" rel="next">remprop</a>, Previous: <a href="symbol_002dvalue.html#symbol_002dvalue" accesskey="p" rel="prev">symbol-value</a>, Up: <a href="Symbols-Dictionary.html#Symbols-Dictionary" accesskey="u" rel="up">Symbols Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

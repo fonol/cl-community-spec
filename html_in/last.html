@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>last (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="last (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="last (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Conses-Dictionary.html#Conses-Dictionary" rel="up" title="Conses Dictionary">
+<link href="ldiff.html#ldiff" rel="next" title="ldiff">
+<link href="butlast.html#butlast" rel="prev" title="butlast">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="last"></a>
+<div class="header">
+<p>
+Next: <a href="ldiff.html#ldiff" accesskey="n" rel="next">ldiff</a>, Previous: <a href="butlast.html#butlast" accesskey="p" rel="prev">butlast</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="last-_005bFunction_005d"></a>
+<h4 class="subsection">14.2.29 last                                                             [Function]</h4>
+
+<p><code>last</code>  <i>list &amp;optional</i> n &rArr;  <i>tail</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-298"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>list</i>&mdash;a <i>list</i>,
+</p>
+<p>which might be a <i>dotted list</i> but must not be a <i>circular list</i>.
+</p>
+<p><i>n</i>&mdash;a non-negative <i>integer</i>.
+ The default is <tt>1</tt>.
+</p>
+<p><i>tail</i>&mdash;an <i>object</i>.
+</p>
+<a name="Description_003a_003a-399"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>last</b> returns the last <i>n</i> <i>conses</i> 
+ (not the last <i>n</i> elements) of <i>list</i>).
+If <i>list</i> is <tt>()</tt>, <b>last</b> returns <tt>()</tt>.
+</p>
+<p>If <i>n</i> is zero,
+  the atom that terminates <i>list</i> is returned.
+If <i>n</i> is greater than or equal to the number of <i>cons</i> cells in <i>list</i>,
+  the result is <i>list</i>.
+</p>
+<a name="Examples_003a_003a-282"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (last nil) &rArr;  NIL
+ (last '(1 2 3)) &rArr;  (3)
+ (last '(1 2 . 3)) &rArr;  (2 . 3)
+ (setq x (list 'a 'b 'c 'd)) &rArr;  (A B C D)
+ (last x) &rArr;  (D)
+ (rplacd (last x) (list 'e 'f)) x &rArr;  (A B C D E F)
+ (last x) &rArr;  (F)
+
+ (last '(a b c))   &rArr;  (C)
+
+ (last '(a b c) 0) &rArr;  ()
+ (last '(a b c) 1) &rArr;  (C)
+ (last '(a b c) 2) &rArr;  (B C)
+ (last '(a b c) 3) &rArr;  (A B C)
+ (last '(a b c) 4) &rArr;  (A B C)
+
+ (last '(a . b) 0) &rArr;  B
+ (last '(a . b) 1) &rArr;  (A . B)
+ (last '(a . b) 2) &rArr;  (A . B)
+</pre></div>
+
+<a name="Exceptional-Situations_003a_003a-125"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>The consequences are undefined if <i>list</i> is a <i>circular list</i>.
+</p>
+<p>Should signal an error of <i>type</i> <b>type-error</b>
+			      if <i>n</i> is not a non-negative <i>integer</i>.
+</p>
+<a name="See-Also_003a_003a-323"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;butlast; nbutlast&rsquo;
+,
+<a href="nth.html#nth">nth</a>
+</p>
+<a name="Notes_003a_003a-215"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>The following code could be used to define <b>last</b>.
+</p>
+<div class="example">
+<pre class="example"> (defun last (list &amp;optional (n 1))
+   (check-type n (integer 0))
+   (do ((l list (cdr l))
+        (r list)
+        (i 0 (+ i 1)))
+       ((atom l) r)
+     (if (&gt;= i n) (pop r))))
+</pre></div>
+
+<hr>
+<div class="header">
+<p>
+Next: <a href="ldiff.html#ldiff" accesskey="n" rel="next">ldiff</a>, Previous: <a href="butlast.html#butlast" accesskey="p" rel="prev">butlast</a>, Up: <a href="Conses-Dictionary.html#Conses-Dictionary" accesskey="u" rel="up">Conses Dictionary</a> &nbsp; </p>
+</div>
+
+
+
+</body>
+</html>

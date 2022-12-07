@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Examples of Inheritance (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="Examples of Inheritance (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="Examples of Inheritance (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Inheritance.html#Inheritance" rel="up" title="Inheritance">
+<link href="Inheritance-of-Class-Options.html#Inheritance-of-Class-Options" rel="next" title="Inheritance of Class Options">
+<link href="Inheritance.html#Inheritance" rel="prev" title="Inheritance">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="Examples-of-Inheritance"></a>
+<div class="header">
+<p>
+Next: <a href="Inheritance-of-Class-Options.html#Inheritance-of-Class-Options" accesskey="n" rel="next">Inheritance of Class Options</a>, Previous: <a href="Inheritance.html#Inheritance" accesskey="p" rel="prev">Inheritance</a>, Up: <a href="Inheritance.html#Inheritance" accesskey="u" rel="up">Inheritance</a> &nbsp; </p>
+</div>
+<hr>
+<a name="Examples-of-Inheritance-1"></a>
+<h4 class="subsubsection">4.3.4.1 Examples of Inheritance</h4>
+
+<div class="example">
+<pre class="example"> (defclass C1 () 
+     ((S1 :initform 5.4 :type number) 
+      (S2 :allocation :class)))
+
+ (defclass C2 (C1) 
+     ((S1 :initform 5 :type integer)
+      (S2 :allocation :instance)
+      (S3 :accessor C2-S3)))
+</pre></div>
+
+<p><i>Instances</i> of the class <tt>C1</tt> have a <i>local slot</i> named <tt>S1</tt>,
+whose default initial value is 5.4 and
+whose <i>value</i> should always be a <i>number</i>.
+The class <tt>C1</tt> also has a <i>shared slot</i> named <tt>S2</tt>.
+</p>
+<p>There is a <i>local slot</i> named <tt>S1</tt> in <i>instances</i> of <tt>C2</tt>.
+The default initial value of <tt>S1</tt> is 5.
+The value of <tt>S1</tt> should always be of type <tt>(and integer number)</tt>.
+There are also <i>local slots</i> named <tt>S2</tt> and <tt>S3</tt> in <i>instances</i> of <tt>C2</tt>.
+The class <tt>C2</tt> has a <i>method</i> for <tt>C2-S3</tt> for reading the value of slot <tt>S3</tt>;
+there is also a <i>method</i> for <tt>(setf C2-S3)</tt> that writes the value of <tt>S3</tt>.
+</p>
+
+
+
+</body>
+</html>

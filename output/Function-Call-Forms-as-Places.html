@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>Function Call Forms as Places (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Kinds-of-Places.html#Kinds-of-Places" rel="up" title="Kinds of Places">
+<link href="VALUES-Forms-as-Places.html#VALUES-Forms-as-Places" rel="next" title="VALUES Forms as Places">
+<link href="Variable-Names-as-Places.html#Variable-Names-as-Places" rel="prev" title="Variable Names as Places">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="Variable-Names-as-Places.html#Variable-Names-as-Places" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                Variable Names as Places
+                            </a>
+                            <a href="Kinds-of-Places.html#Kinds-of-Places.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Kinds of Places
+                            </a>
+                            <a href="VALUES-Forms-as-Places.html#VALUES-Forms-as-Places.html" class="nav-btn nav__next ">
+                                VALUES Forms as Places
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="Function-Call-Forms-as-Places"></a>
+<a name="Function-Call-Forms-as-Places-1"></a>
+<div class="section top-most">
+<h4 class="subsubsection">Function Call Forms as Places</h4>
+
+<p>A <i>function form</i> can be used as a <i>place</i> if it falls
+into one of the following categories:
+</p>
+<dl compact="compact">
+<dt><tt>*</tt></dt>
+<dd><p>A function call form whose first element is the name of
+any one of the functions in Figure 5&ndash;7.
+</p>
+<p>[Editorial Note by KMP: Note that what are in some places still called &lsquo;condition accessors&rsquo;
+		 are deliberately omitted from this table, and are not labeled as
+		 accessors in their entries.  I have not yet had time to do a full
+	         search for these items and eliminate stray references to them as &lsquo;accessors&rsquo;,
+		 which they are not, but I will do that at some point.]
+</p>
+<p>&nbsp;&nbsp;aref&nbsp;&nbsp;&nbsp;&nbsp;cdadr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;get&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;bit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cdar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gethash&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caaaar&nbsp;&nbsp;cddaar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">logical-pathname-translations</span>&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caaadr&nbsp;&nbsp;cddadr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">macro-function</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caaar&nbsp;&nbsp;&nbsp;cddar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ninth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caadar&nbsp;&nbsp;cdddar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caaddr&nbsp;&nbsp;cddddr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">readtable-case</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caadr&nbsp;&nbsp;&nbsp;cdddr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rest&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caar&nbsp;&nbsp;&nbsp;&nbsp;cddr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">row-major-aref</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cadaar&nbsp;&nbsp;cdr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sbit&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cadadr&nbsp;&nbsp;char&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;schar&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cadar&nbsp;&nbsp;&nbsp;<span class="nolinebreak">class-name</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;second&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caddar&nbsp;&nbsp;<span class="nolinebreak">compiler-macro-function</span>&nbsp;&nbsp;seventh&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cadddr&nbsp;&nbsp;documentation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sixth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;caddr&nbsp;&nbsp;&nbsp;eighth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">slot-value</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cadr&nbsp;&nbsp;&nbsp;&nbsp;elt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;subseq&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;car&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fdefinition&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;svref&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cdaaar&nbsp;&nbsp;fifth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">symbol-function</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cdaadr&nbsp;&nbsp;<span class="nolinebreak">fill-pointer</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">symbol-plist</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cdaar&nbsp;&nbsp;&nbsp;<span class="nolinebreak">find-class</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="nolinebreak">symbol-value</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cdadar&nbsp;&nbsp;first&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tenth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;cdaddr&nbsp;&nbsp;fourth&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;third&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;5&ndash;7:&nbsp;Functions&nbsp;that&nbsp;setf&nbsp;can&nbsp;be&nbsp;used&nbsp;with&mdash;1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<p>In the case of <b>subseq</b>, the replacement value must be a <i>sequence</i>
+whose elements might be contained by the sequence argument to <b>subseq</b>,
+but does not have to be a <i>sequence</i> of the same <i>type</i> 
+as the <i>sequence</i> of which the subsequence is specified.
+If the length of the replacement value does not equal the length of
+the subsequence to be replaced, then the shorter length determines
+the number of elements to be stored, as for <b>replace</b>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>A function call form whose first element is the name of
+a selector function constructed by <b>defstruct</b>.
+</p>
+<p>The function name must refer to the global function definition,
+rather than a locally defined <i>function</i>.
+</p>
+</dd>
+<dt><tt>*</tt></dt>
+<dd><p>A function call form whose first element is the name of
+any one of the functions in Figure 5&ndash;8, 
+provided that the supplied argument
+to that function is in turn a <i>place</i> form;
+in this case the new <i>place</i> has stored back into it the
+result of applying the supplied &ldquo;update&rdquo; function.
+</p>
+<p>&nbsp;&nbsp;Function&nbsp;name&nbsp;&nbsp;Argument&nbsp;that&nbsp;is&nbsp;a&nbsp;<i>place</i>&nbsp;&nbsp;Update&nbsp;function&nbsp;used&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>ldb</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;second&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>dpb</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b><span class="nolinebreak">mask-field</span></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;second&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><span class="nolinebreak">deposit-field</span></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+&nbsp;&nbsp;<b>getf</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;first&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><span class="nolinebreak">implementation-dependent</span></i>&nbsp;&nbsp;<!-- /@w -->
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;5&ndash;8:&nbsp;Functions&nbsp;that&nbsp;setf&nbsp;can&nbsp;be&nbsp;used&nbsp;with&mdash;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+</p>
+
+<p>During the <b>setf</b> expansion of these <i>forms</i>, it is necessary to call 
+</p>
+<p><b>get-setf-expansion</b> 
+</p>
+<p>in order to figure out how the inner, nested generalized variable must be treated.  
+</p>
+<p>The information from
+</p>
+<p><b>get-setf-expansion</b>
+</p>
+<p>is used as follows.
+</p><dl compact="compact">
+<dt><b>ldb</b></dt>
+<dd><p>In a form such as:
+</p>
+<p><tt>(setf (ldb <i>byte-spec</i> <i>place-form</i>) <i>value-form</i>)</tt>
+</p>
+<p>the place referred to by the <i>place-form</i> must always be both <i>read</i> 
+and <i>written</i>;  note that the update is to the generalized variable 
+specified by <i>place-form</i>, not to any object of <i>type</i> <b>integer</b>.
+</p>
+<p>Thus this <b>setf</b> should generate code to do the following:
+</p>
+<dl compact="compact">
+<dt>1.</dt>
+<dd><p>Evaluate <i>byte-spec</i> (and bind it into a temporary variable).
+</p></dd>
+<dt>2.</dt>
+<dd><p>Bind the temporary variables for <i>place-form</i>.
+</p></dd>
+<dt>3.</dt>
+<dd><p>Evaluate <i>value-form</i>  (and bind 
+</p>
+<p>its value or values into the store variable).
+</p>
+</dd>
+<dt>4.</dt>
+<dd><p>Do the <i>read</i> from <i>place-form</i>.
+</p></dd>
+<dt>5.</dt>
+<dd><p>Do the <i>write</i> into <i>place-form</i> with 
+the given bits of the <i>integer</i>
+       fetched in step 4 replaced with the value from step 3.
+</p></dd>
+</dl>
+
+<p>If the evaluation of <i>value-form</i> 
+in step 3 alters what is found in <i>place-form</i>,
+such as setting different bits of <i>integer</i>,
+    then the change of the bits denoted by 
+<i>byte-spec</i> is to that 
+    altered <i>integer</i>, 
+because step 4 is done after the <i>value-form</i>
+    evaluation.  Nevertheless, the 
+    evaluations required for <i>binding</i> 
+the temporary variables are done in steps 1 and 
+    2, and thus the expected left-to-right evaluation order is seen.
+For example:
+</p>
+<div class="example">
+<pre class="example"><code> (setq integer #x69) &rArr;  #x69
+ (rotatef (ldb (byte 4 4) integer) 
+          (ldb (byte 4 0) integer))
+ integer &rArr;  #x96
+;;; This example is trying to swap two independent bit fields 
+;;; in an integer.  Note that the generalized variable of 
+;;; interest here is just the (possibly local) program variable
+;;; integer.
+</code>
+</pre></div>
+
+</dd>
+<dt><b>mask-field</b></dt>
+<dd><p>This case is the same as <b>ldb</b> in all essential aspects.
+</p>
+</dd>
+<dt><b>getf</b></dt>
+<dd><p>In a form such as:
+</p>
+<p><tt>(setf (getf <i>place-form</i> <i>ind-form</i>) <i>value-form</i>)</tt>
+</p>
+<p>the place referred to by <i>place-form</i> must always be both <i>read</i>
+    and <i>written</i>;  note that the update is to the generalized variable 
+    specified by <i>place-form</i>, not necessarily to the particular 
+<i>list</i>
+that is the property list in question.
+</p>
+<p>Thus this <b>setf</b> should generate code to do the following:
+</p><dl compact="compact">
+<dt>1.</dt>
+<dd><p>Bind the temporary variables for <i>place-form</i>.
+</p></dd>
+<dt>2.</dt>
+<dd><p>Evaluate <i>ind-form</i> (and bind it into a temporary variable).
+</p></dd>
+<dt>3.</dt>
+<dd><p>Evaluate <i>value-form</i> (and bind 
+</p>
+<p>its value or values into the store variable).
+</p>
+</dd>
+<dt>4.</dt>
+<dd><p>Do the <i>read</i> from <i>place-form</i>.
+</p></dd>
+<dt>5.</dt>
+<dd><p>Do the <i>write</i> into <i>place-form</i> with a possibly-new property list
+       obtained by combining the values from steps 2, 3, and 4.  
+(Note that the phrase &ldquo;possibly-new property list&rdquo; can mean that 
+    the former property list is somehow destructively re-used, or it can 
+    mean partial or full copying of it.  
+Since either copying or destructive re-use can occur, 
+the treatment of the resultant value for the 
+    possibly-new property list must proceed as if it were a different copy
+    needing to be stored back into the generalized variable.)
+</p></dd>
+</dl>
+
+<p>If the evaluation of <i>value-form</i> 
+in step 3 alters what is found in
+<i>place-form</i>, such as setting a different named property in the list,
+    then the change of the property denoted by <i>ind-form</i> 
+is to that 
+    altered list, because step 4 is done after the 
+<i>value-form</i>
+    evaluation.  Nevertheless, the 
+    evaluations required for <i>binding</i> 
+the temporary variables  are done in steps 1 and 
+    2,  and thus the expected left-to-right evaluation order is seen.
+</p>
+<p>For example:
+</p>
+<div class="example">
+<pre class="example"><code> (setq s (setq r (list (list 'a 1 'b 2 'c 3)))) &rArr;  ((a 1 b 2 c 3))
+ (setf (getf (car r) 'b) 
+       (progn (setq r nil) 6)) &rArr;  6
+ r &rArr;  NIL
+ s &rArr;  ((A 1 B 6 C 3))
+;;; Note that the (setq r nil) does not affect the actions of 
+;;; the SETF because the value of R had already been saved in 
+;;; a temporary variable as part of the step 1. Only the CAR
+;;; of this value will be retrieved, and subsequently modified 
+;;; after the value computation.
+</code>
+</pre></div>
+
+</dd>
+</dl>
+
+</dd>
+</dl>
+
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

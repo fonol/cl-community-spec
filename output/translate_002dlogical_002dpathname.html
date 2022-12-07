@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>translate-logical-pathname (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Filenames-Dictionary.html#Filenames-Dictionary" rel="up" title="Filenames Dictionary">
+<link href="translate_002dpathname.html#translate_002dpathname" rel="next" title="translate-pathname">
+<link href="pathname_002dmatch_002dp.html#pathname_002dmatch_002dp" rel="prev" title="pathname-match-p">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="pathname_002dmatch_002dp.html#pathname_002dmatch_002dp" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                pathname-match-p
+                            </a>
+                            <a href="Filenames-Dictionary.html#Filenames-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Filenames Dictionary
+                            </a>
+                            <a href="translate_002dpathname.html#translate_002dpathname.html" class="nav-btn nav__next ">
+                                translate-pathname
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="translate_002dlogical_002dpathname"></a>
+<a name="translate_002dlogical_002dpathname-_005bFunction_005d"></a>
+<div class="section top-most">
+<div class="node-type">Function</div>
+<h4 class="subsection">translate-logical-pathname                                       </h4>
+
+<p><code>translate-logical-pathname</code>  <i>pathname &amp;key</i> &rArr;  <i>physical-pathname</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-400"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>pathname</i>&mdash;a <i>pathname designator</i>,
+		or a <i>logical pathname</i> <i>namestring</i>.
+</p>
+<p><i>physical-pathname</i>&mdash;a <i>physical pathname</i>.
+</p>
+<a name="Description_003a_003a-519"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>Translates <i>pathname</i> to a <i>physical pathname</i>, which it returns.
+</p>
+<p>If <i>pathname</i> is a <i>stream</i>, the
+<i>stream</i> can be either open or closed.
+<b>translate-logical-pathname</b> returns the same 
+physical pathname after a
+    file is closed as it did when the file was open.
+</p>
+<p>It is an error if <i>pathname</i> is a <i>stream</i> that is 
+created with <b>make-two-way-stream</b>, 
+<b>make-echo-stream</b>,             
+<b>make-broadcast-stream</b>, 
+<b>make-concatenated-stream</b>, <b>make-string-input-stream</b>,
+<b>make-string-output-stream</b>.
+</p>
+<p>If <i>pathname</i> is a <i>logical pathname</i> namestring,
+the host portion of the 
+<i>logical pathname</i> namestring and its following <i>colon</i> are required.
+</p>
+<p><i>Pathname</i> is first coerced to a <i>pathname</i>.
+If the coerced <i>pathname</i> is a physical pathname, it is returned.
+If the coerced <i>pathname</i> is a <i>logical pathname</i>,
+the first matching translation (according to <b>pathname-match-p</b>)
+of the <i>logical pathname</i> host is applied, as if by calling 
+<b>translate-pathname</b>.  If the result is
+    a <i>logical pathname</i>, this process is repeated.  
+When the result is
+    finally a physical pathname, it is returned.
+    If no translation matches, an error 
+is signaled.
+</p>
+<p><b>translate-logical-pathname</b> might perform additional translations,
+    typically to provide translation of file types to local naming
+    conventions, to accomodate physical file systems with limited length
+    names, or to deal with special character requirements such as
+    translating hyphens to underscores or uppercase letters to lowercase.
+    Any such additional translations are <i>implementation-defined</i>.  Some
+    implementations do no additional translations.
+</p>
+<p>There are no specified keyword arguments for
+<b>translate-logical-pathname</b>, 
+but implementations are permitted to extend
+    it by adding keyword arguments.  
+</p>
+<a name="Examples_003a_003a-379"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<p>See <b>logical-pathname-translations</b>.
+</p>
+<a name="Exceptional-Situations_003a_003a-181"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Exceptional Situations</h4>
+
+<p>If <i>pathname</i> is incorrectly supplied, an error of <i>type</i> <b>type-error</b> is signaled.
+</p>
+<p>If no translation matches, an error of <i>type</i> <b>file-error</b> is signaled.
+</p>
+<p>[Editorial Note by KMP: Is file-error really right, or should it be pathname-error?]
+</p>
+<a name="See-Also_003a_003a-422"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="logical_002dpathname.html#logical_002dpathname">logical-pathname</a>
+,
+<a href="logical_002dpathname_002dtranslations.html#logical_002dpathname_002dtranslations">logical-pathname-translations</a>
+, 
+<b>logical-pathname</b>,
+<a href="File-System-Concepts.html#File-System-Concepts">File System Concepts</a>,
+</p>
+<p><a href="Pathnames-as-Filenames.html#Pathnames-as-Filenames">Pathnames as Filenames</a>
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

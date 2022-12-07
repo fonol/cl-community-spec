@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>function (Special Operator) (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="function_002dlambda_002dexpression.html#function_002dlambda_002dexpression" rel="next" title="function-lambda-expression">
+<link href="funcall.html#funcall" rel="prev" title="funcall">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                        </div>
+                        <div class="nav">
+                            <a href="funcall.html#funcall" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                funcall
+                            </a>
+                            <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Data and Control Flow Dictionary
+                            </a>
+                            <a href="function_002dlambda_002dexpression.html#function_002dlambda_002dexpression.html" class="nav-btn nav__next ">
+                                function-lambda-expression
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<a name="function-_0028Special-Operator_0029"></a>
+<a name="function-_005bSpecial-Operator_005d"></a>
+<div class="section top-most">
+<div class="node-type">Special Operator</div>
+<h4 class="subsection">function                                                 </h4>
+
+<p><code>function</code>  <i>name</i> &rArr;  <i>function</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-32"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Arguments and Values</h4>
+
+<p><i>name</i>&mdash;a <i>function name</i> or <i>lambda expression</i>.
+</p>
+<p><i>function</i>&mdash;a <i>function</i> <i>object</i>.
+</p>
+<a name="Description_003a_003a-61"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>The <i>value</i> of <b>function</b> is the <i>functional value</i> of <i>name</i>
+in the current <i>lexical environment</i>.
+</p>
+<p>If <i>name</i> is a <i>function name</i>, the functional definition of that name
+is that
+established by the innermost lexically enclosing
+<b>flet</b>, <b>labels</b>, or <b>macrolet</b> <i>form</i>,
+if there is one.  Otherwise the global functional definition of the
+<i>function name</i>
+is returned.
+</p>
+<p>If <i>name</i> is a <i>lambda expression</i>, then a <i>lexical closure</i>
+is returned.  In situations where a <i>closure</i> over the same set of
+<i>bindings</i> might be produced more than once, the various resulting
+<i>closures</i> might or might not be <b>eq</b>.
+</p>
+<p>It is an error to use <b>function</b> on a <i>function name</i> 
+that does not denote a <i>function</i> in the lexical environment in
+which the <b>function</b> form appears. 
+Specifically, it is an error to use <b>function</b> on a <i>symbol</i> 
+that denotes a <i>macro</i> or <i>special form</i>.
+An implementation may choose not to signal this error for
+performance reasons, but implementations are forbidden from
+defining the failure to signal an error as a useful behavior.
+</p>
+<a name="Examples_003a_003a-38"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (defun adder (x) (function (lambda (y) (+ x y))))
+</code>
+</pre></div>
+
+<p>The result of <tt>(adder 3)</tt> is a function that adds <tt>3</tt> to its argument:
+</p>
+<div class="example">
+<pre class="example"><code> (setq add3 (adder 3))
+ (funcall add3 5) &rArr;  8
+</code>
+</pre></div>
+
+<p>This works because <b>function</b> creates a <i>closure</i> of
+the <i>lambda expression</i> that is able to refer to the <i>value</i> <tt>3</tt>
+of the variable <tt>x</tt> even after control has returned from the function <tt>adder</tt>.
+</p>
+<a name="See-Also_003a_003a-48"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p><a href="defun.html#defun">defun</a>
+,
+<a href="fdefinition.html#fdefinition">fdefinition</a>
+,
+&lsquo;flet; labels; macrolet&rsquo;
+,
+<b>labels</b>,
+<a href="symbol_002dfunction.html#symbol_002dfunction">symbol-function</a>
+,
+<a href="Symbols-as-Forms.html#Symbols-as-Forms">Symbols as Forms</a>,
+<a href="Sharpsign-Single_002dQuote.html#Sharpsign-Single_002dQuote">Sharpsign Single-Quote</a>,
+<a href="Printing-Other-Objects.html#Printing-Other-Objects">Printing Other Objects</a>
+</p>
+<a name="Notes_003a_003a-29"></a>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The notation <tt>#'<i>name</i></tt> may be used as an abbreviation
+for <tt>(function <i>name</i>)</tt>.
+</p>
+
+
+
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
+
+</div>

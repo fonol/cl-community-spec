@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>if (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="if (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="if (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" rel="up" title="Data and Control Flow Dictionary">
+<link href="or.html#or" rel="next" title="or">
+<link href="cond.html#cond" rel="prev" title="cond">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="if"></a>
+<div class="header">
+<p>
+Next: <a href="or.html#or" accesskey="n" rel="next">or</a>, Previous: <a href="cond.html#cond" accesskey="p" rel="prev">cond</a>, Up: <a href="Data-and-Control-Flow-Dictionary.html#Data-and-Control-Flow-Dictionary" accesskey="u" rel="up">Data and Control Flow Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="if-_005bSpecial-Operator_005d"></a>
+<h4 class="subsection">5.3.43 if                                                       [Special Operator]</h4>
+
+<p><code>if</code>  <i><i>test-form</i> <i>then-form</i> <span class="roman">[</span><i>else-form</i><span class="roman">]</span></i> &rArr;  <i>{<i>result</i>}*</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-62"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>Test-form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>Then-form</i>&mdash;a <i>form</i>.
+</p>
+<p><i>Else-form</i>&mdash;a <i>form</i>.
+  The default is <b>nil</b>.
+</p>
+<p><i>results</i>&mdash;if the <i>test-form</i> <i>yielded</i> <i>true</i>,
+  the <i>values</i> returned by the <i>then-form</i>; otherwise,
+  the <i>values</i> returned by the <i>else-form</i>.
+</p>
+<a name="Description_003a_003a-96"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>if</b> allows the execution of a <i>form</i> to be dependent
+on a single <i>test-form</i>.
+</p>
+<p>First <i>test-form</i> is evaluated.
+If the result is <i>true</i>, then <i>then-form</i> is selected;
+otherwise <i>else-form</i> is selected.
+Whichever form is selected is then evaluated.
+</p>
+<a name="Examples_003a_003a-70"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (if t 1) &rArr;  1
+ (if nil 1 2) &rArr;  2 
+ (defun test ()
+   (dolist (truth-value '(t nil 1 (a b c)))
+     (if truth-value (print 'true) (print 'false))
+     (prin1 truth-value))) &rArr;  TEST
+ (test)
+<tt> |&gt; </tt> TRUE T
+<tt> |&gt; </tt> FALSE NIL
+<tt> |&gt; </tt> TRUE 1
+<tt> |&gt; </tt> TRUE (A B C)
+&rArr;  NIL
+</pre></div>
+
+<a name="See-Also_003a_003a-80"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="cond.html#cond">cond</a>
+,
+<b>unless</b>,
+&lsquo;when; unless&rsquo;
+</p>
+<a name="Notes_003a_003a-51"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<div class="example">
+<pre class="example"> (if <i>test-form</i> <i>then-form</i> <i>else-form</i>)
+ &equiv; (cond (<i>test-form</i> <i>then-form</i>) (t <i>else-form</i>))
+</pre></div>
+
+
+
+
+</body>
+</html>
