@@ -28,15 +28,15 @@
                             </a>
                         </div>
                         <div class="nav">
-                            <a href="Feature-Expressions.html#Feature-Expressions" class="nav-btn nav__prev ">
+                            <a href="Feature-Expressions.html" class="nav-btn nav__prev ">
                                 <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
                                 Feature Expressions
                             </a>
-                            <a href="Features.html#Features.html" class="nav-btn nav__up ">
+                            <a href="Features.html" class="nav-btn nav__up ">
                                 <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
                                 Features
                             </a>
-                            <a href="System-Construction-Dictionary.html#System-Construction-Dictionary.html" class="nav-btn nav__next ">
+                            <a href="System-Construction-Dictionary.html" class="nav-btn nav__next ">
                                 System Construction Dictionary
                                 <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
                             </a>
@@ -59,29 +59,29 @@
 Figure 24&ndash;1 shows some sample <i>expressions</i>, and how they would be 
 <i>read</i>_2 in these <i>implementations</i>.
 </p>
-<p>&nbsp;&nbsp;<tt>(cons&nbsp;#+spice&nbsp;&quot;Spice&quot;&nbsp;<span class="nolinebreak">#-spice</span>&nbsp;&quot;Lispm&quot;&nbsp;x)</tt>&nbsp;<!-- /@w -->
-&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Spice&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Lispm&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Lispm&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;<tt>(cons&nbsp;#+spice&nbsp;&quot;Spice&quot;&nbsp;#+LispM&nbsp;&quot;Lispm&quot;&nbsp;x)</tt>&nbsp;<!-- /@w -->
-&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Spice&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Lispm&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;<tt>(setq&nbsp;a&nbsp;'(1&nbsp;2&nbsp;#+perq&nbsp;43&nbsp;#+(not&nbsp;perq)&nbsp;27))</tt>&nbsp;<!-- /@w -->
-&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(SETQ&nbsp;A&nbsp;'(1&nbsp;2&nbsp;43))</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(SETQ&nbsp;A&nbsp;'(1&nbsp;2&nbsp;27))</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(SETQ&nbsp;A&nbsp;'(1&nbsp;2&nbsp;27))</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;<tt>(let&nbsp;((a&nbsp;3)&nbsp;#+(or&nbsp;spice&nbsp;lispm)&nbsp;(b&nbsp;3))&nbsp;(foo&nbsp;a))</tt>&nbsp;<!-- /@w -->
-&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(LET&nbsp;((A&nbsp;3)&nbsp;(B&nbsp;3))&nbsp;(FOO&nbsp;A))</tt>&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(LET&nbsp;((A&nbsp;3)&nbsp;(B&nbsp;3))&nbsp;(FOO&nbsp;A))</tt>&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(LET&nbsp;((A&nbsp;3))&nbsp;(FOO&nbsp;A))</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;<tt>(cons&nbsp;#+Lispm&nbsp;&quot;#+Spice&quot;&nbsp;#+Spice&nbsp;&quot;foo&quot;&nbsp;<span class="nolinebreak">#-(or</span>&nbsp;Lispm&nbsp;Spice)&nbsp;7&nbsp;x)</tt>&nbsp;<!-- /@w -->
-&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;foo&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;#+Spice&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;7&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;24&ndash;1:&nbsp;Features&nbsp;examples&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-</p>
+<table>
+<tr><td><tt>(cons</td><td>#+spice</td><td>&quot;Spice&quot;</td><td><span class="nolinebreak">#-spice</span></td><td>&quot;Lispm&quot;</td><td>x)</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>A</td><td>...</td><td><tt>(CONS</td><td>&quot;Spice&quot;</td><td>X)</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>B</td><td>...</td><td><tt>(CONS</td><td>&quot;Lispm&quot;</td><td>X)</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>C</td><td>...</td><td><tt>(CONS</td><td>&quot;Lispm&quot;</td><td>X)</tt></td></tr>
+<tr><td><tt>(cons</td><td>#+spice</td><td>&quot;Spice&quot;</td><td>#+LispM</td><td>&quot;Lispm&quot;</td><td>x)</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>A</td><td>...</td><td><tt>(CONS</td><td>&quot;Spice&quot;</td><td>X)</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>B</td><td>...</td><td><tt>(CONS</td><td>&quot;Lispm&quot;</td><td>X)</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>C</td><td>...</td><td><tt>(CONS</td><td>X)</tt></td></tr>
+<tr><td><tt>(setq</td><td>a</td><td>'(1</td><td>2</td><td>#+perq</td><td>43</td><td>#+(not</td><td>perq)</td><td>27))</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>A</td><td>...</td><td><tt>(SETQ</td><td>A</td><td>'(1</td><td>2</td><td>43))</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>B</td><td>...</td><td><tt>(SETQ</td><td>A</td><td>'(1</td><td>2</td><td>27))</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>C</td><td>...</td><td><tt>(SETQ</td><td>A</td><td>'(1</td><td>2</td><td>27))</tt></td></tr>
+<tr><td><tt>(let</td><td>((a</td><td>3)</td><td>#+(or</td><td>spice</td><td>lispm)</td><td>(b</td><td>3))</td><td>(foo</td><td>a))</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>A</td><td>...</td><td><tt>(LET</td><td>((A</td><td>3)</td><td>(B</td><td>3))</td><td>(FOO</td><td>A))</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>B</td><td>...</td><td><tt>(LET</td><td>((A</td><td>3)</td><td>(B</td><td>3))</td><td>(FOO</td><td>A))</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>C</td><td>...</td><td><tt>(LET</td><td>((A</td><td>3))</td><td>(FOO</td><td>A))</tt></td></tr>
+<tr><td><tt>(cons</td><td>#+Lispm</td><td>&quot;#+Spice&quot;</td><td>#+Spice</td><td>&quot;foo&quot;</td><td><span class="nolinebreak">#-(or</span></td><td>Lispm</td><td>Spice)</td><td>7</td><td>x)</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>A</td><td>...</td><td><tt>(CONS</td><td>&quot;foo&quot;</td><td>X)</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>B</td><td>...</td><td><tt>(CONS</td><td>&quot;#+Spice&quot;</td><td>X)</tt></td></tr>
+<tr><td>in</td><td><i>implementation</i></td><td>C</td><td>...</td><td><tt>(CONS</td><td>7</td><td>X)</tt></td></tr>
+</table>
+<div class="table-subcaption"> Figure 24&ndash;1: Features examples </div>
 
 
 

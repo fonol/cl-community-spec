@@ -35,6 +35,7 @@ def main():
             section_cnt     = 0
             in_style        = False
             in_header       = False
+            in_table        = False
 
             n_up            = None
             n_prev          = None
@@ -43,7 +44,12 @@ def main():
             n_up_title      = None
             n_prev_title    = None
 
+            skip            = 0
+
             for ix, l in enumerate(all_text.split("\n")):
+                if skip > 0:
+                    skip -= 1
+                    continue
                 if l == "<hr>" or l == "<hr/>":
                     continue
                 if l.startswith("<!--"):
@@ -63,16 +69,19 @@ def main():
 
                 if l.startswith("<link href="):
                     if "rel=\"up\"" in l:
-                        n_up            = re.match(".+href=\"([^\"]+)\".+", l).group(1)
+                        n_up            = re.match(".+href=\"([^\"]+?)(#[^\"]+)?\".+", l).group(1)
+                        assert(n_up.endswith(".html"))
                         n_up_title      = re.match(".+title=\"([^\"]+)\".+", l).group(1).replace("``", "\"").replace("''", "\"")
                         if n_up_title == "(dir)":
                             n_up         = None
                             n_up_title   = "-"
                     if "rel=\"next\"" in l:
-                        n_next          = re.match(".+href=\"([^\"]+)\".+", l).group(1)
+                        n_next          = re.match(".+href=\"([^\"]+?)(#[^\"]+)?\".+", l).group(1)
+                        assert(n_next.endswith(".html"))
                         n_next_title    = re.match(".+title=\"([^\"]+)\".+", l).group(1).replace("``", "\"").replace("''", "\"")
                     if "rel=\"prev\"" in l:
-                        n_prev          = re.match(".+href=\"([^\"]+)\".+", l).group(1)
+                        n_prev          = re.match(".+href=\"([^\"]+?)(#[^\"]+)?\".+", l).group(1)
+                        assert(n_prev.endswith(".html"))
                         n_prev_title    = re.match(".+title=\"([^\"]+)\".+", l).group(1).replace("``", "\"").replace("''", "\"")
                         if n_prev_title == "(dir)":
                             n_prev          = None
@@ -151,6 +160,36 @@ def main():
                     l = l.replace("</a>:</td>", "</a></td>")
                     l = l.replace("``", "\"")
                 
+                if re.match(r"<p>.+<!-- /@w -->", l):
+
+                    if re.match(r"<p>(&nbsp;)+Figure.+", l):
+                        l = re.sub("<p/?>", "", l)
+                        l = re.sub("<!-- /@w -->", "", l)
+                        l = re.sub("(&nbsp;)+", " ", l)
+                        l = f"<div class=\"table-subcaption\">{l}</div>"
+                        out.append(l)
+                        skip = 1
+                        continue
+
+                    in_table = True
+                    out.append("<table>")
+                    l = re.sub("<p>", "", l)
+                    l = re.sub("<!-- /@w -->", "", l)
+                    l = re.sub("(&nbsp;)+", "</td><td>", l)
+                    l = f"<tr><td>{l}</td></tr>"
+                    l = re.sub("<td> *</td>", "", l)
+
+                if in_table and re.match(r".+<!-- /@w -->", l):
+                    l = re.sub("<!-- /@w -->", "", l)
+                    l = re.sub("(&nbsp;)+", "</td><td>", l)
+                    l = f"<tr><td>{l}</td></tr>"
+                    l = re.sub("<td> *</td>", "", l)
+
+                if l.startswith("</p>") and in_table:
+                    in_table = False
+                    out.append("</table>")
+                    continue
+                
                 out.append(l)
                 
 
@@ -182,11 +221,11 @@ def main():
                                 <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
                                 {n_prev_title or "-"}
                             </a>
-                            <a href="{n_up}.html" class="nav-btn nav__up {up_disabled}">
+                            <a href="{n_up}" class="nav-btn nav__up {up_disabled}">
                                 <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
                                 {n_up_title  or "-"}
                             </a>
-                            <a href="{n_next}.html" class="nav-btn nav__next {next_disabled}">
+                            <a href="{n_next}" class="nav-btn nav__next {next_disabled}">
                                 {n_next_title  or "-"}
                                 <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
                             </a>

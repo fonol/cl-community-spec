@@ -28,15 +28,15 @@
                             </a>
                         </div>
                         <div class="nav">
-                            <a href="Lambda-Lists.html#Lambda-Lists" class="nav-btn nav__prev ">
+                            <a href="Lambda-Lists.html" class="nav-btn nav__prev ">
                                 <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
                                 Lambda Lists
                             </a>
-                            <a href="Lambda-Lists.html#Lambda-Lists.html" class="nav-btn nav__up ">
+                            <a href="Lambda-Lists.html" class="nav-btn nav__up ">
                                 <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
                                 Lambda Lists
                             </a>
-                            <a href="Specifiers-for-the-required-parameters.html#Specifiers-for-the-required-parameters.html" class="nav-btn nav__next ">
+                            <a href="Specifiers-for-the-required-parameters.html" class="nav-btn nav__next ">
                                 Specifiers for the required parameters
                                 <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
                             </a>
@@ -54,21 +54,21 @@
 The <i>defined names</i> in Figure 3&ndash;12 are those which use
 <i>ordinary lambda lists</i>:
 </p>
-<p>&nbsp;&nbsp;<span class="nolinebreak">define-method-combination</span>&nbsp;&nbsp;<span class="nolinebreak">handler-case</span>&nbsp;&nbsp;<span class="nolinebreak">restart-case</span>&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;defun&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;labels&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;flet&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lambda&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-</p>
-<p>&nbsp;&nbsp;Figure&nbsp;3&ndash;12:&nbsp;Standardized&nbsp;Operators&nbsp;that&nbsp;use&nbsp;Ordinary&nbsp;Lambda&nbsp;Lists<!-- /@w -->
-</p>
+<table>
+<tr><td><span class="nolinebreak">define-method-combination</span></td><td><span class="nolinebreak">handler-case</span></td><td><span class="nolinebreak">restart-case</span></td></tr>
+<tr><td>defun</td><td>labels</td></tr>
+<tr><td>flet</td><td>lambda</td></tr>
+</table>
+<div class="table-subcaption"> Figure 3&ndash;12: Standardized Operators that use Ordinary Lambda Lists</div>
 
 <p>An <i>ordinary lambda list</i> can contain the <i>lambda list keywords</i> shown
 in Figure 3&ndash;13.
 </p>
-<p>&nbsp;&nbsp;<b><span class="nolinebreak">&amp;allow-other-keys</span></b>&nbsp;&nbsp;<b>&amp;key</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>&amp;rest</b>&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;<b>&amp;aux</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>&amp;optional</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-</p>
-<p>&nbsp;&nbsp;Figure&nbsp;3&ndash;13:&nbsp;Lambda&nbsp;List&nbsp;Keywords&nbsp;used&nbsp;by&nbsp;Ordinary&nbsp;Lambda&nbsp;Lists<!-- /@w -->
-</p>
+<table>
+<tr><td><b><span class="nolinebreak">&amp;allow-other-keys</span></b></td><td><b>&amp;key</b></td><td><b>&amp;rest</b></td></tr>
+<tr><td><b>&amp;aux</b></td><td><b>&amp;optional</b></td></tr>
+</table>
+<div class="table-subcaption"> Figure 3&ndash;13: Lambda List Keywords used by Ordinary Lambda Lists</div>
 
 <p>Each <i>element</i> of a <i>lambda list</i> is either a parameter specifier
 or a <i>lambda list keyword</i>.
@@ -78,17 +78,18 @@ used by the implementation, see <b>lambda-list-keywords</b>.
 </p>
 <p>The syntax for <i>ordinary lambda lists</i> is as follows: 
 </p>
-<p><i><span class="nolinebreak">lambda-list</span></i>&nbsp;::=<span class="roman">(</span>{<i>var</i>}*<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>[</tt>&amp;optional<!-- /@w --> {<i>var</i> |
+<table>
+<tr><td><i><span class="nolinebreak">lambda-list</span></i></td><td>::=<span class="roman">(</span>{<i>var</i>}*</td></tr>
+<tr><td><tt>[</tt>&amp;optional {<i>var</i> |</td></tr>
 		       <span class="roman">(</span><i>var</i> <span class="roman">[</span>init-form <span class="roman">[</span>supplied-p-parameter<span class="roman">]</span><span class="roman">]</span><span class="roman">)</span>}*<tt>]</tt>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>[</tt>&amp;rest<!-- /@w --> <i>var</i><tt>]</tt>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>[</tt>&amp;key<!-- /@w --> {<i>var</i> |
+<tr><td><tt>[</tt>&amp;rest <i>var</i><tt>]</tt></td></tr>
+<tr><td><tt>[</tt>&amp;key {<i>var</i> |</td></tr>
 		          	 <span class="roman">(</span>{<i>var</i> | 
 					       <span class="roman">(</span><i>keyword-name</i> <i>var</i><span class="roman">)</span>}
 				 	<span class="roman">[</span>init-form <span class="roman">[</span>supplied-p-parameter<span class="roman">]</span><span class="roman">]</span><span class="roman">)</span>}* pt <span class="roman">[</span><tt>&amp;allow-other-keys</tt><span class="roman">]</span><tt>]</tt>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<tt>[</tt>&amp;aux<!-- /@w --> {<i>var</i> | <span class="roman">(</span><i>var</i> <span class="roman">[</span><i>init-form</i><span class="roman">]</span><span class="roman">)</span>}*<tt>]</tt><span class="roman">)</span>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-</p>
+<tr><td><tt>[</tt>&amp;aux {<i>var</i> | <span class="roman">(</span><i>var</i> <span class="roman">[</span><i>init-form</i><span class="roman">]</span><span class="roman">)</span>}*<tt>]</tt><span class="roman">)</span></td></tr>
+<tr></tr>
+</table>
 <p>A <i>var</i> or <i>supplied-p-parameter</i> must be a <i>symbol</i>
 that is not the name of a <i>constant variable</i>.
 </p>
