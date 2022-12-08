@@ -1,28 +1,88 @@
 :root {
+    color-scheme: light dark;
     display: flex;
     flex-direction: column;
     align-items: center;
-    --default-color: #000000;
+
     --font: Verdana, sans-serif;
+
     --card-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%);
+
+    --body-bg: #f5f5f5;
+    --default-color: #000000;
+
+    --card-bg: white;
+    --card-border: white;
+
+    --section-header-fg: #1c8cb7;
+    --main-sub-hover-bg: #f5f5f5;
+    --nav-btn-bg: white;
+    --nav-btn-border: white;
+    --nav-btn-disabled-fg: grey;
+
     --link-color: #0072ff;
     --link-color-hover: #4498ff;
+    --clickable-hover-bg: #f5f5f5;
+
+    --pre-bg: #f5f5f5;
+
+    --search-input-bg: white;
+    --search-input-focus-border: #1c8cb7;
+    --search-svg-color: grey;
+    --search-drop-bg: white;
+    --search-drop-border: #e5e5e5;
+    --search-drop-mark-bg: #ffe3af;
+    --search-drop-mark-fg: black;
 }
+@media screen and (prefers-color-scheme: dark) {
+    :root {
+        --card-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%);
+
+        --body-bg: #333333;
+        --default-color: #f1f1f1;
+
+        --card-bg: #3e3e3e;
+        --card-border: #4e4e4e;
+
+        --section-header-fg: #28a9db;
+        --main-sub-hover-bg: #4a4a4a;
+        --nav-btn-bg: #3e3e3e;
+        --nav-btn-border: #4e4e4e;
+        --nav-btn-disabled-fg: grey;
+
+        --link-color: #5a9ced;
+        --link-color-hover: #98c6ff;
+        --clickable-hover-bg: #4a4a4a;
+
+        --pre-bg: #2e3032;
+
+        --search-input-bg: #3e3e3e;
+        --search-input-focus-border: #1c8cb7;
+        --search-svg-color: grey;
+        --search-drop-bg: #3e3e3e;
+        --search-drop-border: #4e4e4e;
+        --search-drop-mark-bg: #2c8d00;
+        --search-drop-mark-fg: white;
+
+    }
+  }
 
 body {
   width: 800px;
   font-size: 16px;
   font-family: var(--font);
-  background: #f5f5f5;
+  background: var(--body-bg);
+  color: var(--default-color);
 }
 .top {
     margin: 5px 0 20px 0;
     padding: 10px 15px;
     display: flex;
     align-items: center;
-    background-color: white;
+    background-color: var(--card-bg);
     border-radius: 5px;
     box-shadow: var(--card-shadow);
+    border: 1px solid var(--card-border);
     position: sticky;
     top: 0;
 }
@@ -33,7 +93,7 @@ body {
     border-radius: 4px;
 }
 .index-btn:hover {
-    background-color: #f5f5f5;
+    background-color: var(--clickable-hover-bg);
 }
 input {
     font-family: var(--font);
@@ -49,11 +109,11 @@ a.link-block {
     margin: 2px 0;
 }
 h1, h2, h3, h4, h5, h6 {
-    color: #1c8cb7;
+    color: var(--section-header-fg);
     font-weight: normal;
 }
 pre {
-    background-color: #f5f5f5;
+    background-color: var(--pre-bg);
     padding: 15px 10px !important;
     border-radius: 5px;
     font-size: 16px !important;
@@ -80,10 +140,11 @@ table td {
     font-size: 16px;
     border: none;
     padding: 10px 10px 10px 38px;
+    background: var(--search-input-bg);
     box-sizing: border-box;
 }
 .search input:focus {
-    border-color: #1c8cb7;
+    border-color: var(--search-input-focus-border);
     outline: none;
 }
 .search input::placeholder {
@@ -97,25 +158,28 @@ table td {
     overflow: auto;
     width: 100%;
     border-radius: 3px;
-    background-color: white;
-    border: 1px solid #e5e5e5;
+    background-color: var(--search-drop-bg);
+    border: 1px solid var(--search-drop-border);
     padding: 10px;
-    box-shadow: 0 1px 5px rgb(0 0 0 / 10%);
+    box-shadow: var(--card-shadow);
     box-sizing: border-box;
 }
 #search__drop mark {
-    background-color: #ffe3af;
+    background-color: var(--search-drop-mark-bg);
+    color: var(--search-drop-mark-fg);
+    border-radius: 2px;
+    padding: 0 2px;
 }
 .search__res {
     cursor: pointer;
     padding: 3px 5px;
     text-decoration: none;
-    color: black;
+    color: var(--default-color);
     display: block;
     border-radius: 3px;
 }
 .search__res:hover {
-    background-color: #f5f5f5;
+    background-color: var(--clickable-hover-bg);
 }
 .search svg {
     position: absolute;
@@ -123,7 +187,7 @@ table td {
     top: 10px;
 }
 .search svg > * {
-    stroke: grey;
+    stroke: var(--search-svg-color);
 }
 /* End Search */
 /* Sections */
@@ -143,11 +207,12 @@ table td {
     display: flex;
     align-items: center;
     box-shadow: var(--card-shadow);
+    border: 1px solid var(--nav-btn-border);
     border-radius: 4px;
-    background-color: white;
+    background-color: var(--nav-btn-bg);
 }
 .nav-btn:not(.disabled):hover {
-    background: whitesmoke;
+    background: var(--clickable-hover-bg);
 }
 .nav-btn > svg {
     min-width: 14px;
@@ -167,20 +232,21 @@ table td {
 .nav-btn.disabled {
     pointer-events: none;
     cursor: default;
-    color: grey;
+    color: var(--nav-btn-disabled-fg);
 }
 /* End Nav */
 
 /* Sections & Headers */
 div.section {
-    background-color: white;
+    background-color: var(--card-bg);
     margin: 20px 0 20px 0;
     padding: 15px;
     box-shadow: var(--card-shadow);
+    border: 1px solid var(--card-border);
     border-radius: 5px;
 }
 div.section__header {
-    color: #1c8cb7;
+    color: var(--section-header-fg);
     font-size: 1.2rem;
     margin-bottom: 20px;
 }
@@ -188,7 +254,7 @@ div.section__header:empty {
     display: none;
 }
 div.section h4, h3 {
-    color: #1c8cb7;
+    color: var(--section-header-fg);
     font-size: 1.2rem;
     margin-bottom: 20px
 }
@@ -224,7 +290,7 @@ h2.chapter {
     margin-bottom: 3px;
 }
 .menu-comment {
-    color: #1c8cb7;
+    color: var(--section-header-fg);
     border: none;
     padding: 0 !important;
     background-color: transparent;
@@ -233,7 +299,7 @@ h2.chapter {
     font-weight: bold;
 }
 h1.main {
-    color: #1c8cb7 !important;
+    color: var(--section-header-fg) !important;
 }
 /* End Sections & Headers */
 /* Tables */
@@ -269,7 +335,10 @@ table:not(.menu) {
 }
 .main-sub a:hover {
     cursor: pointer;
-    background-color: #f5f5f5;
+    background-color: var(--main-sub-hover-bg);
+}
+.main-sub svg {
+    fill: var(--default-color);
 }
 /* End First Card on index.html */
 /* Referenced Publications */
