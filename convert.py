@@ -22,6 +22,10 @@ def main():
     files               = get_html_files()
     nodes               = []
 
+    to_write            = []
+    backlinks           = {}
+    keys_to_label       = {}
+
     for f in files:
 
         fpath       = os.path.join(src_folder_path(), f)
@@ -200,6 +204,10 @@ def main():
                     out.append("</table>")
                     continue
 
+                if l.startswith("</body>"):
+                    if in_section:
+                        out.append("</div>")
+                    out.append("<div class=\"bl-placeholder\"></div>")
                 
                 out.append(l)
                 
@@ -248,13 +256,38 @@ def main():
                     out.append("""<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>""")
 
                     
-            if in_section:
-                out.append("</div>")
+          
+
+        text = "\n".join(out)
+        all_refs = re.finditer(r"<a href=\"([^\"]+).html(?:#[^\"]+)?\">([^<]+)</a>", text)
+        key = f.replace(".html", "")
+        for r in all_refs:
+            ref     = r.group(1)
+            label   = r.group(2)
+            assert(label is not None)
+            assert(len(label) > 0)
+            keys_to_label[ref] = label
+            if not ref in backlinks:
+                backlinks[ref] = []
+            if not key in backlinks[ref]:
+                backlinks[ref].append(key)
+
+        to_write.append((outpath, key, text))
+    
+    for outpath, key, text in to_write:
+        if key in backlinks:
+            bl_list = "".join([f"<a href=\"{bl}.html\">{keys_to_label.get(bl, bl)}</a>, " for bl in backlinks[key] if bl != "index"])
+            bl_list = bl_list[:-2]
+            if len(bl_list) > 0:
+                text = text.replace("<div class=\"bl-placeholder\"></div>", f"""
+                    <div class="section">
+                        <h3>Backlinks</h3>
+                        {bl_list}
+                    </div>
+                """)
 
         with open(outpath, "w", encoding="utf-8") as outf:
-            outf.write("\n".join(out))
-
-
+            outf.write(text)
 
     with open(os.path.join(folder_path(), "scripts.js"), "r", encoding="utf-8") as fscripts:
         scripts = fscripts.read()
