@@ -160,35 +160,46 @@ def main():
                     l = l.replace("</a>:</td>", "</a></td>")
                     l = l.replace("``", "\"")
                 
-                if re.match(r"<p>.+<!-- /@w -->", l):
-
-                    if re.match(r"<p>(&nbsp;)+Figure.+", l):
-                        l = re.sub("<p/?>", "", l)
-                        l = re.sub("<!-- /@w -->", "", l)
-                        l = re.sub("(&nbsp;)+", " ", l)
-                        l = f"<div class=\"table-subcaption\">{l}</div>"
-                        out.append(l)
-                        skip = 1
-                        continue
-
+                # table start
+                if re.match(r"(</p>)?<p>.+<!-- /@w -->", l) and not "&nbsp;Figure" in l:
                     in_table = True
                     out.append("<table>")
                     l = re.sub("<p>", "", l)
                     l = re.sub("<!-- /@w -->", "", l)
-                    l = re.sub("(&nbsp;)+", "</td><td>", l)
+                    l = re.sub("(&nbsp;){2,}", "</td><td>", l)
                     l = f"<tr><td>{l}</td></tr>"
                     l = re.sub("<td> *</td>", "", l)
+                    l = re.sub(r"<p>\s*</p>", "", l)
+
+                # table caption
+                if re.match(r"(</p>)?<p>(&nbsp;)+Figure.+", l):
+                    l = re.sub("</?p>", "", l)
+                    l = re.sub("<!-- /@w -->", "", l)
+                    l = re.sub("(&nbsp;)+", " ", l)
+                    l = f"<div class=\"table-subcaption\">{l}</div>"
+                    out.append(l)
+                    skip = 1
+                    continue
+
+                if re.match(r"(&nbsp;)+Figure.+", l):
+                    l = re.sub("<!-- /@w -->", "", l)
+                    l = re.sub("(&nbsp;)+", " ", l)
+                    l = f"<div class=\"table-subcaption\">{l}</div>"
+                    out.append(l)
+                    continue
 
                 if in_table and re.match(r".+<!-- /@w -->", l):
                     l = re.sub("<!-- /@w -->", "", l)
-                    l = re.sub("(&nbsp;)+", "</td><td>", l)
+                    l = re.sub("(&nbsp;){2,}", "</td><td>", l)
                     l = f"<tr><td>{l}</td></tr>"
                     l = re.sub("<td> *</td>", "", l)
+                    l = re.sub(r"<p>\s*</p>", "", l)
 
                 if l.startswith("</p>") and in_table:
                     in_table = False
                     out.append("</table>")
                     continue
+
                 
                 out.append(l)
                 
