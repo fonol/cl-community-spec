@@ -62,6 +62,8 @@ def main():
                     continue
                 if l.startswith("<meta "):
                     continue
+                if l.startswith("<a name=\""):
+                    continue
                 if l.startswith("<style"):
                     in_style = True
                     continue
