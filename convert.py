@@ -283,13 +283,13 @@ def main():
         if key in backlinks:
             bl_list = "".join([f"<a href=\"{bl}.html\">{keys_to_label.get(bl, bl)}</a>, " for bl in backlinks[key] if bl != "index"])
             bl_list = bl_list[:-2]
-            if len(bl_list) > 0:
-                text = text.replace("<div class=\"bl-placeholder\"></div>", f"""
+            bl_sec  = f"""
                     <div class="section">
                         <h3>Backlinks</h3>
                         {bl_list}
                     </div>
-                """)
+                """ if len(bl_list) > 0 else ""
+            text = text.replace("<div class=\"bl-placeholder\"></div>", bl_sec)
 
         with open(outpath, "w", encoding="utf-8") as outf:
             outf.write(text)
