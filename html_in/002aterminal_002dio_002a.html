@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>*terminal-io* (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="*terminal-io* (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="*terminal-io* (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Streams-Dictionary.html#Streams-Dictionary" rel="up" title="Streams Dictionary">
+<link href="stream_002derror.html#stream_002derror" rel="next" title="stream-error">
+<link href="002adebug_002dio_002a.html#g_t_002adebug_002dio_002a" rel="prev" title="*debug-io*">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="g_t_002aterminal_002dio_002a"></a>
+<div class="header">
+<p>
+Next: <a href="stream_002derror.html#stream_002derror" accesskey="n" rel="next">stream-error</a>, Previous: <a href="002adebug_002dio_002a.html#g_t_002adebug_002dio_002a" accesskey="p" rel="prev">*debug-io*</a>, Up: <a href="Streams-Dictionary.html#Streams-Dictionary" accesskey="u" rel="up">Streams Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="g_t_002aterminal_002dio_002a-_005bVariable_005d"></a>
+<h4 class="subsection">21.2.54 *terminal-io*                                                    [Variable]</h4>
+
+<a name="Value-Type_003a_003a-8"></a>
+<h4 class="subsubheading">Value Type::</h4>
+
+<p>a <i>bidirectional</i> <i>stream</i>.
+</p>
+<a name="Initial-Value_003a_003a-8"></a>
+<h4 class="subsubheading">Initial Value::</h4>
+
+<p><i>implementation-dependent</i>, but
+it must be an <i>open</i> <i>stream</i> 
+that is not a  <i>generalized synonym stream</i>
+to an <i>I/O customization variables</i>
+but that might be a <i>generalized synonym stream</i> to 
+the <i>value</i> of some <i>I/O customization variable</i>.
+</p>
+<a name="Description_003a_003a-585"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>The <i>value</i> of <b>*terminal-io*</b>, called  <i>terminal I/O</i>, is ordinarily 
+a <i>bidirectional</i> <i>stream</i> that connects to the user&rsquo;s console.
+Typically, writing to this <i>stream</i> 
+would cause the output to appear
+on a display screen, for example, and reading from the <i>stream</i> would
+accept input from a keyboard.  It is intended
+that standard input functions such as <b>read</b> and <b>read-char</b>,
+when used with this <i>stream</i>, cause echoing of the input
+into the output side of the <i>stream</i>. The means by which this is
+accomplished are <i>implementation-dependent</i>.
+</p>
+<p>The effect of changing the <i>value</i> of <b>*terminal-io*</b>,
+either by <i>binding</i> or <i>assignment</i>,
+is <i>implementation-defined</i>.
+</p>
+<a name="Examples_003a_003a-426"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (progn (prin1 'foo) (prin1 'bar *terminal-io*))
+<tt> |&gt; </tt> FOOBAR
+&rArr;  BAR
+ (with-output-to-string (*standard-output*)
+   (prin1 'foo) 
+   (prin1 'bar *terminal-io*))
+<tt> |&gt; </tt> BAR
+&rArr;  &quot;FOO&quot;
+</pre></div>
+
+<a name="See-Also_003a_003a-476"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><b>*debug-io*</b>,
+<b>*error-output*</b>,
+<b>*query-io*</b>,
+<b>*standard-input*</b>,
+<b>*standard-output*</b>,
+<b>*trace-output*</b>
+</p>
+
+
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>*read-default-float-format* (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="*read-default-float-format* (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="*read-default-float-format* (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Reader-Dictionary.html#Reader-Dictionary" rel="up" title="Reader Dictionary">
+<link href="002aread_002deval_002a.html#g_t_002aread_002deval_002a" rel="next" title="*read-eval*">
+<link href="002aread_002dbase_002a.html#g_t_002aread_002dbase_002a" rel="prev" title="*read-base*">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="g_t_002aread_002ddefault_002dfloat_002dformat_002a"></a>
+<div class="header">
+<p>
+Next: <a href="002aread_002deval_002a.html#g_t_002aread_002deval_002a" accesskey="n" rel="next">*read-eval*</a>, Previous: <a href="002aread_002dbase_002a.html#g_t_002aread_002dbase_002a" accesskey="p" rel="prev">*read-base*</a>, Up: <a href="Reader-Dictionary.html#Reader-Dictionary" accesskey="u" rel="up">Reader Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="g_t_002aread_002ddefault_002dfloat_002dformat_002a-_005bVariable_005d"></a>
+<h4 class="subsection">23.2.14 *read-default-float-format*                                      [Variable]</h4>
+
+<a name="Value-Type_003a_003a-23"></a>
+<h4 class="subsubheading">Value Type::</h4>
+
+<p>one of the <i>atomic type specifiers</i> 
+    <b>short-float</b>,
+    <b>single-float</b>,
+    <b>double-float</b>,
+ or <b>long-float</b>, 
+ or else some other <i>type specifier</i> defined 
+    by the <i>implementation</i> to be acceptable.
+</p>
+<a name="Initial-Value_003a_003a-23"></a>
+<h4 class="subsubheading">Initial Value::</h4>
+
+<p>The <i>symbol</i> <b>single-float</b>.
+</p>
+<a name="Description_003a_003a-633"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Controls the floating-point format that is to be used when reading a
+floating-point number that has no <i>exponent marker</i> or that has
+<tt>e</tt> or <tt>E</tt> for an <i>exponent marker</i>.  Other <i>exponent markers</i>
+explicitly prescribe the floating-point format to be used.
+</p>
+<p>The printer uses <b>*read-default-float-format*</b> to guide the
+choice of <i>exponent markers</i> when printing floating-point numbers.
+</p>
+<a name="Examples_003a_003a-454"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (let ((*read-default-float-format* 'double-float))
+   (read-from-string &quot;(1.0 1.0e0 1.0s0 1.0f0 1.0d0 1.0L0)&quot;))
+&rArr;  (1.0   1.0   1.0   1.0 1.0   1.0)   ;Implementation has float format F.
+&rArr;  (1.0   1.0   1.0s0 1.0 1.0   1.0)   ;Implementation has float formats S and F.
+&rArr;  (1.0d0 1.0d0 1.0   1.0 1.0d0 1.0d0) ;Implementation has float formats F and D.
+&rArr;  (1.0d0 1.0d0 1.0s0 1.0 1.0d0 1.0d0) ;Implementation has float formats S, F, D.
+&rArr;  (1.0d0 1.0d0 1.0   1.0 1.0d0 1.0L0) ;Implementation has float formats F, D, L.
+&rArr;  (1.0d0 1.0d0 1.0s0 1.0 1.0d0 1.0L0) ;Implementation has formats S, F, D, L.
+</pre></div>
+
+
+
+
+</body>
+</html>

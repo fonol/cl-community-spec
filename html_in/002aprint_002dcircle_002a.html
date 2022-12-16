@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>*print-circle* (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="*print-circle* (ANSI and GNU Common Lisp Document)">
+<meta name="keywords" content="*print-circle* (ANSI and GNU Common Lisp Document)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer-Dictionary.html#Printer-Dictionary" rel="up" title="Printer Dictionary">
+<link href="002aprint_002descape_002a.html#g_t_002aprint_002descape_002a" rel="next" title="*print-escape*">
+<link href="002aprint_002dcase_002a.html#g_t_002aprint_002dcase_002a" rel="prev" title="*print-case*">
+<style type="text/css">
+<!--
+a.summary-letter {text-decoration: none}
+blockquote.indentedblock {margin-right: 0em}
+blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
+blockquote.smallquotation {font-size: smaller}
+div.display {margin-left: 3.2em}
+div.example {margin-left: 3.2em}
+div.lisp {margin-left: 3.2em}
+div.smalldisplay {margin-left: 3.2em}
+div.smallexample {margin-left: 3.2em}
+div.smalllisp {margin-left: 3.2em}
+kbd {font-style: oblique}
+pre.display {font-family: inherit}
+pre.format {font-family: inherit}
+pre.menu-comment {font-family: serif}
+pre.menu-preformatted {font-family: serif}
+pre.smalldisplay {font-family: inherit; font-size: smaller}
+pre.smallexample {font-size: smaller}
+pre.smallformat {font-family: inherit; font-size: smaller}
+pre.smalllisp {font-size: smaller}
+span.nolinebreak {white-space: nowrap}
+span.roman {font-family: initial; font-weight: normal}
+span.sansserif {font-family: sans-serif; font-weight: normal}
+ul.no-bullet {list-style: none}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<a name="g_t_002aprint_002dcircle_002a"></a>
+<div class="header">
+<p>
+Next: <a href="002aprint_002descape_002a.html#g_t_002aprint_002descape_002a" accesskey="n" rel="next">*print-escape*</a>, Previous: <a href="002aprint_002dcase_002a.html#g_t_002aprint_002dcase_002a" accesskey="p" rel="prev">*print-case*</a>, Up: <a href="Printer-Dictionary.html#Printer-Dictionary" accesskey="u" rel="up">Printer Dictionary</a> &nbsp; </p>
+</div>
+<hr>
+<a name="g_t_002aprint_002dcircle_002a-_005bVariable_005d"></a>
+<h4 class="subsection">22.4.19 *print-circle*                                                   [Variable]</h4>
+
+<a name="Value-Type_003a_003a-12"></a>
+<h4 class="subsubheading">Value Type::</h4>
+
+<p>a <i>generalized boolean</i>.
+</p>
+<a name="Initial-Value_003a_003a-12"></a>
+<h4 class="subsubheading">Initial Value::</h4>
+
+<p><i>false</i>.
+</p>
+<a name="Description_003a_003a-607"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Controls the attempt to detect circularity and sharing in an <i>object</i> 
+being printed.
+</p>
+<p>If <i>false</i>,
+the printing process merely proceeds by recursive descent without attempting 
+to detect circularity and sharing.
+</p>
+<p>If <i>true</i>,
+the printer will endeavor to detect cycles and sharing
+in the structure to be printed, 
+and to use <tt>#<i>n</i>=</tt> and <tt>#<i>n</i>#</tt>
+syntax to indicate the circularities or shared components.
+</p>
+<p>If <i>true</i>, a user-defined 
+</p>
+<p><b>print-object</b> <i>method</i>
+</p>
+<p>can print
+<i>objects</i> to the supplied <i>stream</i> using <b>write</b>, <b>prin1</b>, 
+<b>princ</b>, or <b>format</b> and expect circularities and sharing
+to be detected and printed using the <tt>#<i>n</i>#</tt> syntax.
+</p>
+<p>If a user-defined 
+</p>
+<p><b>print-object</b> <i>method</i>
+</p>
+<p>prints to a <i>stream</i> other than the one
+that was supplied, then circularity detection starts over for that <i>stream</i>. 
+</p>
+<p>Note that implementations should not use <tt>#<i>n</i>#</tt> notation 
+when the <i>Lisp reader</i> would automatically assure sharing without it
+(<i>e.g.</i>, as happens with <i>interned</i> <i>symbols</i>).
+</p>
+<a name="Examples_003a_003a-435"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (let ((a (list 1 2 3)))
+   (setf (cdddr a) a)
+   (let ((*print-circle* t))
+     (write a)
+     :done))
+<tt> |&gt; </tt> #1=(1 2 3 . #1#)
+&rArr;  :DONE
+</pre></div>
+
+<a name="See-Also_003a_003a-493"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p>&lsquo;write; prin1; print; pprint; princ&rsquo;
+</p>
+<a name="Notes_003a_003a-306"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<p>An attempt to print a circular structure with <b>*print-circle*</b> 
+set to <a href="NILv.html">nil</a> may lead to looping behavior and failure to terminate.
+</p>
+
+
+
+</body>
+</html>

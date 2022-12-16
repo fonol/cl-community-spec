@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/highlight-lisp/themes/github.css">
+<script defer src="/scripts.js"></script>
+<title>*print-readably* (CLCS)</title>
+
+<link href="index.html#Top" rel="start" title="Top">
+<link href="Printer-Dictionary.html#Printer-Dictionary" rel="up" title="Printer Dictionary">
+<link href="002aprint_002dright_002dmargin_002a.html#g_t_002aprint_002dright_002dmargin_002a" rel="next" title="*print-right-margin*">
+<link href="002aprint_002dpretty_002a.html#g_t_002aprint_002dpretty_002a" rel="prev" title="*print-pretty*">
+
+
+</head>
+
+<body lang="en">
+
+                        <div class="top-wrapper">
+                            <div class="top">
+                                <div class="search">
+                                    <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                    <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                    <div id="search__drop" onblur="hideSearch()"></div>
+                                </div>
+                                <a class="index-btn" href="index.html">
+                                    <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="nav">
+                            <a href="002aprint_002dpretty_002a.html" class="nav-btn nav__prev ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                *print-pretty*
+                            </a>
+                            <a href="Printer-Dictionary.html" class="nav-btn nav__up ">
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                Printer Dictionary
+                            </a>
+                            <a href="002aprint_002dright_002dmargin_002a.html" class="nav-btn nav__next ">
+                                *print-right-margin*
+                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                            </a>
+                        </div>
+                    
+<div class="section top-most">
+<div class="node-type">Variable</div>
+<h4 class="subsection">*print-readably*                                                 </h4>
+
+</div>
+<div class="section">
+<h4 class="subsubheading">Value Type</h4>
+
+<p>a <i>generalized boolean</i>.
+</p>
+</div>
+<div class="section">
+<h4 class="subsubheading">Initial Value</h4>
+
+<p><i>false</i>.
+</p>
+</div>
+<div class="section">
+<h4 class="subsubheading">Description</h4>
+
+<p>If <b>*print-readably*</b> is <i>true</i>,
+some special rules for printing <i>objects</i> go into effect.
+Specifically, printing any <i>object</i> O_1 produces a printed 
+representation that, when seen by the <i>Lisp reader</i> 
+while the <i>standard readtable</i> is in effect,
+will produce 
+an <i>object</i> O_2 that is <i>similar</i> to O_1.
+The printed representation produced might or might not be the same as
+the printed representation produced when <b>*print-readably*</b> is <i>false</i>.
+If printing an <i>object</i> <i>readably</i> is not possible,
+an error of <i>type</i> <b>print-not-readable</b> is signaled rather than 
+using a syntax (<i>e.g.</i>, the &ldquo;<tt>#&lt;</tt>&rdquo; syntax) that would not be readable by
+the same <i>implementation</i>.
+If the <i>value</i> of some other <i>printer control variable</i> is such
+that these requirements would be violated, the <i>value</i> of that other
+<i>variable</i> is ignored.
+</p>
+<p>Specifically, if <b>*print-readably*</b> is <i>true</i>,
+printing proceeds as if
+      <b>*print-escape*</b>,
+      <b>*print-array*</b>,
+  and <b>*print-gensym*</b> were also <i>true</i>,
+and as if 
+      <b>*print-length*</b>,
+      <b>*print-level*</b>,
+  and <b>*print-lines*</b> were <i>false</i>.
+</p>
+<p>If <b>*print-readably*</b> is <i>false</i>,
+the normal rules for printing and the normal interpretations
+of other <i>printer control variables</i> are in effect.
+</p>
+<p>Individual <i>methods</i> for <b>print-object</b>, including user-defined
+<i>methods</i>, are responsible for implementing these requirements.
+</p>
+<p>If <b>*read-eval*</b> is <i>false</i> and <b>*print-readably*</b> is <i>true</i>,
+any such method that would output a reference to the &ldquo;<tt>#.</tt>&rdquo; <i>reader macro</i>
+will either output something else or will signal an error (as described above).
+</p>
+</div>
+<div class="section">
+<h4 class="subsubheading">Examples</h4>
+
+<div class="example">
+<pre class="example"><code> (let ((x (list &quot;a&quot; '\a (gensym) '((a (b (c))) d e f g)))
+       (*print-escape* nil)
+       (*print-gensym* nil)
+       (*print-level* 3)
+       (*print-length* 3))
+   (write x)
+   (let ((*print-readably* t))
+     (terpri)
+     (write x)
+     :done))
+<tt> |&gt; </tt> (a a G4581 ((A #) D E ...))
+<tt> |&gt; </tt> (&quot;a&quot; |a| #:G4581 ((A (B (C))) D E F G))
+&rArr;  :DONE
+
+;; This is setup code is shared between the examples
+;; of three hypothetical implementations which follow.
+ (setq table (make-hash-table)) &rArr;  #&lt;HASH-TABLE EQL 0/120 32005763&gt; 
+ (setf (gethash table 1) 'one) &rArr;  ONE
+ (setf (gethash table 2) 'two) &rArr;  TWO
+
+;; Implementation A
+ (let ((*print-readably* t)) (print table))
+ Error: Can't print #&lt;HASH-TABLE EQL 0/120 32005763&gt; readably.
+
+;; Implementation B
+;; No standardized #S notation for hash tables is defined, 
+;; but there might be an implementation-defined notation.
+ (let ((*print-readably* t)) (print table))
+<tt> |&gt; </tt> #S(HASH-TABLE :TEST EQL :SIZE 120 :CONTENTS (1 ONE 2 TWO))
+&rArr;  #&lt;HASH-TABLE EQL 0/120 32005763&gt;
+
+;; Implementation C
+;; Note that #. notation can only be used if *READ-EVAL* is true.
+;; If *READ-EVAL* were false, this same implementation might have to
+;; signal an error unless it had yet another printing strategy to fall
+;; back on.
+ (let ((*print-readably* t)) (print table))
+<tt> |&gt; </tt> #.(LET ((HASH-TABLE (MAKE-HASH-TABLE)))
+<tt> |&gt; </tt>     (SETF (GETHASH 1 HASH-TABLE) ONE)
+<tt> |&gt; </tt>     (SETF (GETHASH 2 HASH-TABLE) TWO)
+<tt> |&gt; </tt>     HASH-TABLE)
+&rArr;  #&lt;HASH-TABLE EQL 0/120 32005763&gt;
+</code>
+</pre></div>
+
+</div>
+<div class="section">
+<h4 class="subsubheading">See Also</h4>
+
+<p>&lsquo;write; prin1; print; pprint; princ&rsquo;
+, 
+<a href="print_002dunreadable_002dobject.html#print_002dunreadable_002dobject">print-unreadable-object</a>
+</p>
+</div>
+<div class="section">
+<h4 class="subsubheading">Notes</h4>
+
+<p>The rules for &ldquo;<i>similarity</i>&rdquo; imply that 
+<tt>#A</tt> or <tt>#(</tt> 
+syntax cannot be used for <i>arrays</i> of <i>element type</i>
+other than <a href="t.html">t</a>.  
+An implementation will have to use another syntax 
+or signal an error of <i>type</i> <b>print-not-readable</b>.  
+</p>
+
+
+
+</div>
+
+                    <div class="section">
+                        <h3>Backlinks</h3>
+                        <a href="Printer-Dictionary.html">Printer Dictionary</a>
+                    </div>
+                
+</body>
+<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>
+</html>
