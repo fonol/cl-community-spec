@@ -112,17 +112,17 @@ a <i>define-method-combination arguments lambda list</i>.
 		    that returns a <i>generalized boolean</i>.
 </p>
 <p><i>qualifier-pattern</i>&mdash;a <i>list</i>,
-			 or the <i>symbol</i> <b>*</b>.
+			 or the <i>symbol</i> <a href="002a.html">*</a>.
 </p>
 <p><i>required-p</i>&mdash;a <i>generalized boolean</i>.
 </p>
 <a name="Description_003a_003a-160"></a>
 <h4 class="subsubheading">Description::</h4>
 
-<p>The macro <b>define-method-combination</b> is used to define new types
+<p>The macro <a href="define_002dmethod_002dcombination.html">define-method-combination</a> is used to define new types
 of method combination.
 </p>
-<p>There are two forms of <b>define-method-combination</b>.  The short
+<p>There are two forms of <a href="define_002dmethod_002dcombination.html">define-method-combination</a>.  The short
 form is a simple facility for the cases that are expected
 to be most commonly needed.  The long form is more powerful but more
 verbose.  It resembles <a href="defmacro.html">defmacro</a> in that the body is an
@@ -132,7 +132,7 @@ allows arbitrary processing of method <i>qualifiers</i>.
 </p>
 <dl compact="compact">
 <dt><b>Short Form</b></dt>
-<dd><p>The short form syntax of <b>define-method-combination</b> is recognized
+<dd><p>The short form syntax of <a href="define_002dmethod_002dcombination.html">define-method-combination</a> is recognized
 when the second <i>subform</i> is a <i>non-nil</i> symbol or is not present.
 When the short form is used, <i>name</i> is defined as a type of
 method combination that produces a Lisp form
@@ -157,7 +157,7 @@ exactly one applicable method and it is a primary method, that method
 serves as the effective method and <i>operator</i> is not called.
 This optimization avoids the need to create a new effective method and
 avoids the overhead of a <i>function</i> call.  This option is designed to be
-used with operators such as <b><a href="progn.html">progn</a></b>, <b>and</b>, <b>+</b>, and
+used with operators such as <b><a href="progn.html">progn</a></b>, <b>and</b>, <a href="002b.html">+</a>, and
 <b><a href="max.html">max</a></b>.
 </p>
 </dd>
@@ -182,9 +182,9 @@ this type of method combination is defined to be a primary method.  At
 least one primary method must be applicable or an error is signaled.
 A method with <tt>:around</tt> as its one <i>qualifier</i> is an auxiliary
 method that behaves the same as an <i>around method</i> in standard
-method combination.  The <i>function</i> <b>call-next-method</b> can only be
+method combination.  The <i>function</i> <a href="call_002dnext_002dmethod.html">call-next-method</a> can only be
 used in <i>around methods</i>; it cannot be used in primary methods
-defined by the short form of the <b>define-method-combination</b> macro.
+defined by the short form of the <a href="define_002dmethod_002dcombination.html">define-method-combination</a> macro.
 </p>
 <p>A method combination procedure defined in this way accepts an optional
 argument named <i>order</i>, which defaults to 
@@ -200,7 +200,7 @@ see <a href="Built_002din-Method-Combination-Types.html#Built_002din-Method-Comb
 </p>
 </dd>
 <dt><b>Long Form</b></dt>
-<dd><p>The long form syntax of <b>define-method-combination</b> is recognized 
+<dd><p>The long form syntax of <a href="define_002dmethod_002dcombination.html">define-method-combination</a> is recognized 
 when the second <i>subform</i> is a list.  
 </p>
 <p>The <i>lambda-list</i> 
@@ -218,26 +218,26 @@ that can be used with this type of method combination.
 <p>The <i>car</i> of each <i>method-group-specifier</i> is a <i>symbol</i>
 which <i>names</i> a <i>variable</i>.
 During the execution of
-the <i>forms</i> in the body of <b>define-method-combination</b>, this
+the <i>forms</i> in the body of <a href="define_002dmethod_002dcombination.html">define-method-combination</a>, this
 <i>variable</i> is bound to a list of the <i>methods</i> in the method group.  The
 <i>methods</i> in this list occur in the order specified by the 
 <tt>:order</tt> option.
 </p>
-<p>If <i>qualifier-pattern</i> is a <i>symbol</i> it must be <b>*</b>.  
+<p>If <i>qualifier-pattern</i> is a <i>symbol</i> it must be <a href="002a.html">*</a>.  
 A method matches
 a <i>qualifier-pattern</i> if the method&rsquo;s 
 list of <i>qualifiers</i> is <b><a href="equal.html">equal</a></b>
-to the <i>qualifier-pattern</i> (except that the symbol <b>*</b> in a 
+to the <i>qualifier-pattern</i> (except that the symbol <a href="002a.html">*</a> in a 
 <i>qualifier-pattern</i> matches anything).  Thus 
 a <i>qualifier-pattern</i> can be one of the
 following:
  the <i>empty list</i>, which matches <i>unqualified methods</i>;
- the symbol <b>*</b>, which matches all methods;
+ the symbol <a href="002a.html">*</a>, which matches all methods;
  a true list, which matches methods with the same number of <i>qualifiers</i> 
    as the length of the list when each <i>qualifier</i> matches 
    the corresponding list element; or
- a dotted list that ends in the symbol <b>*</b> 
-   (the <b>*</b> matches any number of additional <i>qualifiers</i>).
+ a dotted list that ends in the symbol <a href="002a.html">*</a> 
+   (the <a href="002a.html">*</a> matches any number of additional <i>qualifiers</i>).
 </p>
 <p>Each applicable method is tested against the <i>qualifier-patterns</i> and
 <i>predicates</i> in left-to-right order.  
@@ -258,15 +258,15 @@ is called with one argument, the method&rsquo;s <i>qualifier</i> <i>list</i>.
 The <i>predicate</i> should return true if the method is to be a member of the
 method group.  A <i>predicate</i> can be distinguished from a 
 <i>qualifier-pattern</i>
-because it is a <i>symbol</i> other than <a href="NILv.html">nil</a> or <b>*</b>.
+because it is a <i>symbol</i> other than <a href="NILv.html">nil</a> or <a href="002a.html">*</a>.
 </p>
 <p>If there is an applicable method that does not fall into any method group,
-the <i>function</i> <b>invalid-method-error</b> is called.
+the <i>function</i> <a href="invalid_002dmethod_002derror.html">invalid-method-error</a> is called.
 </p>
 <p>Method group specifiers can have keyword options following the
 <i>qualifier</i> patterns or predicate.  Keyword options can be distinguished from
 additional <i>qualifier</i> patterns because they are neither lists nor the symbol
-<b>*</b>.  The keyword options are as follows:
+<a href="002a.html">*</a>.  The keyword options are as follows:
 </p>
 <dl compact="compact">
 <dt><tt>*</tt></dt>
@@ -311,12 +311,12 @@ it defaults to <a href="NILv.html">nil</a>.
 select methods, to divide them among the possible roles, and to perform the
 necessary error checking.  It is possible to perform further filtering
 of methods in the body <i>forms</i> by using normal list-processing operations
-and the functions <b>method-qualifiers</b> and 
-<b>invalid-method-error</b>.  It is permissible to use <b><a href="setq.html">setq</a></b> on the
+and the functions <a href="method_002dqualifiers.html">method-qualifiers</a> and 
+<a href="invalid_002dmethod_002derror.html">invalid-method-error</a>.  It is permissible to use <b><a href="setq.html">setq</a></b> on the
 variables named in the method group specifiers and to bind additional
 variables.  It is also possible to bypass the method group specifier
 mechanism and do everything in the body <i>forms</i>.  This is accomplished
-by writing a single method group with <b>*</b> as its only 
+by writing a single method group with <a href="002a.html">*</a> as its only 
 <i>qualifier-pattern</i>; 
 the variable is then bound to a <i>list</i> of all of the
 <i>applicable methods</i>, in most-specific-first order.
@@ -325,13 +325,13 @@ the variable is then bound to a <i>list</i> of all of the
 how the methods are combined, that is, the effective method.
 The effective method is evaluated in
 the <i>null lexical environment</i> augmented with a local macro definition
-for <b>call-method</b> and with bindings named by
+for <a href="call_002dmethod.html">call-method</a> and with bindings named by
 symbols not <i>accessible</i> from the <tt>COMMON-LISP-USER</tt> <i>package</i>.
 Given a method object in one of the 
 <i>lists</i> produced by the method group
 specifiers and a <i>list</i> of next methods,
-<b>call-method</b>
-will invoke the method such that <b>call-next-method</b> has available
+<a href="call_002dmethod.html">call-method</a>
+will invoke the method such that <a href="call_002dnext_002dmethod.html">call-next-method</a> has available
 the next methods.
 </p>
 <p>When an effective method has no effect other than to call a single
@@ -339,11 +339,11 @@ method, some implementations employ an optimization that uses the
 single method directly as the effective method, thus avoiding the need
 to create a new effective method.  This optimization is active when
 the effective method form consists entirely of an invocation of
-the <b>call-method</b> macro whose first <i>subform</i> is a method object and
+the <a href="call_002dmethod.html">call-method</a> macro whose first <i>subform</i> is a method object and
 whose second <i>subform</i> is <a href="NILv.html">nil</a> or unsupplied.  Each
-<b>define-method-combination</b> body is responsible for stripping off
+<a href="define_002dmethod_002dcombination.html">define-method-combination</a> body is responsible for stripping off
 redundant invocations of <b><a href="progn.html">progn</a></b>, <b>and</b>,
-<b>multiple-value-prog1</b>, and the like, if this optimization is desired.
+<a href="multiple_002dvalue_002dprog1.html">multiple-value-prog1</a>, and the like, if this optimization is desired.
 </p>
 <p>The list <tt>(:arguments . <i>lambda-list</i>)</tt> can appear before
 any declarations or <i>documentation string</i>.  This form is useful when
@@ -388,7 +388,7 @@ to the <i>generic function</i>.  This is different from <b>&amp;rest</b> because
 accesses all of the arguments, not just the keyword/rest <i>arguments</i>.
 </p>
 <p>Erroneous conditions detected by the body should be reported with
-<b>method-combination-error</b> or <b>invalid-method-error</b>; these
+<a href="method_002dcombination_002derror.html">method-combination-error</a> or <a href="invalid_002dmethod_002derror.html">invalid-method-error</a>; these
 <i>functions</i>
 add any necessary contextual information to the error message and will
 signal the appropriate error.
@@ -408,7 +408,7 @@ around the body, however.
 is bound to the <i>generic function</i> <i>object</i>.
 </p>
 <p><i>Documentation</i> is attached as a <i>documentation string</i> 
-    to <i>name</i> (as kind <b>method-combination</b>)
+    to <i>name</i> (as kind <a href="method_002dcombination.html">method-combination</a>)
 and to the <i>method combination</i> <i>object</i>.
 </p>
 <p>Note that two methods with identical specializers, but with different
@@ -423,24 +423,24 @@ role and their order matters,
 <p>[Reviewer Note by Barmar: How does the system know when the order matters?]
 an error is signaled.  This happens as
 part of the <i>qualifier</i> pattern matching in
-<b>define-method-combination</b>.
+<a href="define_002dmethod_002dcombination.html">define-method-combination</a>.
 </p>
 </dd>
 </dl>
 
-<p>If a <b>define-method-combination</b> <i>form</i> appears as a
+<p>If a <a href="define_002dmethod_002dcombination.html">define-method-combination</a> <i>form</i> appears as a
 <i>top level form</i>, the <i>compiler</i> must make the
 <i>method combination</i> <i>name</i> be recognized as a valid
 <i>method combination</i> <i>name</i> in subsequent <b><a href="defgeneric.html">defgeneric</a></b>
 <i>forms</i>.  However, the <i>method combination</i> is executed
-no earlier than when the <b>define-method-combination</b> <i>form</i>
+no earlier than when the <a href="define_002dmethod_002dcombination.html">define-method-combination</a> <i>form</i>
 is executed, and possibly as late as the time that <i>generic functions</i>
 that use the <i>method combination</i> are executed.
 </p>
 <a name="Examples_003a_003a-110"></a>
 <h4 class="subsubheading">Examples::</h4>
 
-<p>Most examples of the long form of <b>define-method-combination</b> also
+<p>Most examples of the long form of <a href="define_002dmethod_002dcombination.html">define-method-combination</a> also
 illustrate the use of the related <i>functions</i> that are provided as part
 of the declarative method combination facility.
 </p>

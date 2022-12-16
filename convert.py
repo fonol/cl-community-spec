@@ -34,6 +34,49 @@ def insert_table_links():
         with open(fpath, "w", encoding="utf-8") as outf:
             outf.write(content)
 
+def insert_escaped_links():
+    files               = get_html_files()
+    file_names          = [f[:-5] for f in files if f.startswith("002") or  "_002" in f or "_006" in f]
+
+    file_names          = [(fn.replace("_002d", "-")
+                                .replace("_002a", "*")
+                                .replace("_002b", "+")
+                                .replace("_002f", "/")
+                                .replace("_0028", "(")
+                                .replace("_0029", ")")
+                                .replace("_0060", "`")
+                                .replace("_0026", "&")
+                                .replace("_0027", "'")
+                                , fn) for fn in file_names if len(fn.strip()) > 0]
+
+    for f in files:
+        fpath       = os.path.join(src_folder_path(), f)
+
+        with open(fpath, 'r') as r:
+
+            content        = r.read()
+            for fprint, flink in file_names:
+                if fprint.startswith("002a"):
+                    fprint = "*" +fprint[4:]
+                elif fprint.startswith("002b"):
+                    fprint = "+" +fprint[4:]
+                elif fprint.startswith("002d"):
+                    fprint = "-" +fprint[4:]
+                elif fprint.startswith("002f"):
+                    fprint = "/" +fprint[4:]
+                if "002" in fprint or "006" in fprint:
+                    print(fprint)
+                assert(not "002" in fprint)
+                assert(not "006" in fprint)
+                content = content.replace(f"&nbsp;&nbsp;{fprint}&nbsp;&nbsp;", f"&nbsp;&nbsp;<a href=\"{flink}.html\">{fprint}</a>&nbsp;&nbsp;")
+                content = content.replace(f"&nbsp;<span class=\"nolinebreak\">{fprint}</span>&nbsp;", f"&nbsp;<a href=\"{flink}.html\">{fprint}</a>&nbsp;")
+                content = content.replace(f"<b><span class=\"nolinebreak\">{fprint}</span></b>", f"<b><a href=\"{flink}.html\">{fprint}</a></b>")
+                content = content.replace(f"<b>{fprint}</b>", f"<a href=\"{flink}.html\">{fprint}</a>")
+                
+
+
+        with open(fpath, "w", encoding="utf-8") as outf:
+            outf.write(content)
 
 def main():
 
@@ -327,7 +370,10 @@ def main():
 
 main()
 # insert_table_links()
+# insert_escaped_links()
                 
 
                 
+       
+               
        

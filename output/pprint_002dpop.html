@@ -69,9 +69,9 @@
 
 <p>Pops one <i>element</i> from the <i>list</i> being printed
 in the <i>lexically current logical block</i>, obeying <b>*print-length*</b>
-and <b>*print-circle*</b> as described below.
+and <a href="002aprint_002dcircle_002a.html">*print-circle*</a> as described below.
 </p>
-<p>Each time <b>pprint-pop</b> is called, it pops the next value off the
+<p>Each time <a href="pprint_002dpop.html">pprint-pop</a> is called, it pops the next value off the
 <i>list</i> passed to the <i>lexically current logical block</i> and returns it.
 However, before doing this, it performs three tests:
 </p>
@@ -85,7 +85,7 @@ However, before doing this, it performs three tests:
 </dd>
 <dt><tt>*</tt></dt>
 <dd><p>If <b>*print-length*</b> is <i>non-nil</i>,
-    and <b>pprint-pop</b> has already been called <b>*print-length*</b> times 
+    and <a href="pprint_002dpop.html">pprint-pop</a> has already been called <b>*print-length*</b> times 
     within the immediately containing logical block,
     &ldquo;<tt>...</tt>&rdquo; is printed.
     (This makes it easy to write printing functions that properly handle
@@ -93,7 +93,7 @@ However, before doing this, it performs three tests:
 </p>
 </dd>
 <dt><tt>*</tt></dt>
-<dd><p>If <b>*print-circle*</b> is
+<dd><p>If <a href="002aprint_002dcircle_002a.html">*print-circle*</a> is
     <i>non-nil</i>, and the remaining list is a circular (or shared) reference,
     then &ldquo;<tt>. </tt>&rdquo; is printed followed by an appropriate
     &ldquo;<tt>#<i>n</i>#</tt>&rdquo; marker.
@@ -103,23 +103,23 @@ However, before doing this, it performs three tests:
 
 <p>If either of the three conditions above occurs, the indicated output is
 printed on the <i>pretty printing stream</i> created by the immediately containing
-<b>pprint-logical-block</b> and the execution of the immediately containing
-<b>pprint-logical-block</b> is terminated except for the printing of the suffix.
+<a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a> and the execution of the immediately containing
+<a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a> is terminated except for the printing of the suffix.
 </p>
-<p>If <b>pprint-logical-block</b> is given a &lsquo;list&rsquo; argument of <a href="NILv.html">nil</a>&mdash;because
-it is not processing a list&mdash;<b>pprint-pop</b> can still be used to obtain 
+<p>If <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a> is given a &lsquo;list&rsquo; argument of <a href="NILv.html">nil</a>&mdash;because
+it is not processing a list&mdash;<a href="pprint_002dpop.html">pprint-pop</a> can still be used to obtain 
 support for <b>*print-length*</b>.  
 In this situation, the first and third tests above are disabled and
-<b>pprint-pop</b> always returns <a href="NILv.html">nil</a>.
+<a href="pprint_002dpop.html">pprint-pop</a> always returns <a href="NILv.html">nil</a>.
 See <a href="Examples-of-using-the-Pretty-Printer.html#Examples-of-using-the-Pretty-Printer">Examples of using the Pretty Printer</a>&mdash;specifically, the <b>pprint-vector</b> example.
 </p>
-<p>Whether or not <b>pprint-pop</b> is <i>fbound</i> in the
+<p>Whether or not <a href="pprint_002dpop.html">pprint-pop</a> is <i>fbound</i> in the
 <i>global environment</i> is <i>implementation-dependent</i>;
 however, the restrictions on redefinition and <i>shadowing</i> of
-<b>pprint-pop</b> are the same as for <i>symbols</i> in the <tt>COMMON-LISP</tt> <i>package</i>
+<a href="pprint_002dpop.html">pprint-pop</a> are the same as for <i>symbols</i> in the <tt>COMMON-LISP</tt> <i>package</i>
 which are <i>fbound</i> in the <i>global environment</i>.
-The consequences of attempting to use <b>pprint-pop</b> outside
-of <b>pprint-logical-block</b> are undefined.
+The consequences of attempting to use <a href="pprint_002dpop.html">pprint-pop</a> outside
+of <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a> are undefined.
 </p>
 </div>
 <div class="section">
@@ -132,18 +132,18 @@ to the <i>pretty printing stream</i> associated with the lexically current logic
 <div class="section">
 <h4 class="subsubheading">Affected By</h4>
 
-<p><b>*print-length*</b>, <b>*print-circle*</b>.
+<p><b>*print-length*</b>, <a href="002aprint_002dcircle_002a.html">*print-circle*</a>.
 </p>
 </div>
 <div class="section">
 <h4 class="subsubheading">Exceptional Situations</h4>
 
 <p>An error is signaled (either at macro expansion time or at run time)
-if a usage of <b>pprint-pop</b> occurs where there is no lexically
-containing <b>pprint-logical-block</b> <i>form</i>.
+if a usage of <a href="pprint_002dpop.html">pprint-pop</a> occurs where there is no lexically
+containing <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a> <i>form</i>.
 </p>
-<p>The consequences are undefined if <b>pprint-pop</b> is executed outside
-of the <i>dynamic extent</i> of this <b>pprint-logical-block</b>.
+<p>The consequences are undefined if <a href="pprint_002dpop.html">pprint-pop</a> is executed outside
+of the <i>dynamic extent</i> of this <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a>.
 </p>
 </div>
 <div class="section">
@@ -158,8 +158,8 @@ of the <i>dynamic extent</i> of this <b>pprint-logical-block</b>.
 <div class="section">
 <h4 class="subsubheading">Notes</h4>
 
-<p>It is frequently a good idea to call <b>pprint-exit-if-list-exhausted</b> 
-before calling <b>pprint-pop</b>.
+<p>It is frequently a good idea to call <a href="pprint_002dexit_002dif_002dlist_002dexhausted.html">pprint-exit-if-list-exhausted</a> 
+before calling <a href="pprint_002dpop.html">pprint-pop</a>.
 </p>
 
 
@@ -168,7 +168,7 @@ before calling <b>pprint-pop</b>.
 
                     <div class="section">
                         <h3>Backlinks</h3>
-                        <a href="pprint_002dexit_002dif_002dlist_002dexhausted.html">pprint-exit-if-list-exhausted</a>, <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a>, <a href="print_002dobject.html">print-object</a>
+                        <a href="Format-Directive-Interface.html">Format Directive Interface</a>, <a href="pprint_002dexit_002dif_002dlist_002dexhausted.html">pprint-exit-if-list-exhausted</a>, <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a>, <a href="pprint_002dpop.html">pprint-pop</a>, <a href="print_002dobject.html">print-object</a>, <a href="Symbols-in-the-COMMON_002dLISP-Package.html">Symbols in the COMMON-LISP Package</a>, <a href="Tilde-Less_002dThan_002dSign_002d_003e-Logical-Block.html">Tilde Less-Than-Sign-&gt; Logical Block</a>
                     </div>
                 
 </body>

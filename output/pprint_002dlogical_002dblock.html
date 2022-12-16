@@ -113,13 +113,13 @@ If <i>object</i> is not a <i>list</i>,
 it is printed using <b><a href="write.html">write</a></b>.
 (This makes it easier to write printing functions that are robust
  in the face of malformed arguments.)
-If <b>*print-circle*</b>
+If <a href="002aprint_002dcircle_002a.html">*print-circle*</a>
 is <i>non-nil</i> and <i>object</i> is a circular (or shared) reference to a <i>cons</i>,
 then an appropriate &ldquo;<tt>#<i>n</i>#</tt>&rdquo; marker is printed.  (This
 makes it easy to write printing functions that provide full support
-for circularity and sharing abbreviation.)  If <b>*print-level*</b> is not
+for circularity and sharing abbreviation.)  If <a href="002aprint_002dlevel_002a.html">*print-level*</a> is not
 <a href="NILv.html">nil</a> and the logical block is at a dynamic nesting depth of greater
-than <b>*print-level*</b> in logical blocks, &ldquo;<tt>#</tt>&rdquo; is printed.
+than <a href="002aprint_002dlevel_002a.html">*print-level*</a> in logical blocks, &ldquo;<tt>#</tt>&rdquo; is printed.
 (This makes easy to write printing functions that provide full support for depth
 abbreviation.)
 </p>
@@ -130,42 +130,42 @@ along with the printing of the <tt>:prefix</tt> and <tt>:suffix</tt>.
 then the first two tests above can be turned off by supplying <a href="NILv.html">nil</a> for
 the <i>object</i> argument.)
 </p>
-<p>In addition to the <i>object</i> argument of <b>pprint-logical-block</b>,
+<p>In addition to the <i>object</i> argument of <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a>,
 the arguments of the standard printing functions (such as <b><a href="write.html">write</a></b>, 
 <b>print</b>, <b>prin1</b>, and <b>pprint</b>, as well as the arguments
 of the standard <i>format directives</i> such as <tt>~A</tt>, <tt>~S</tt>,
 (and <tt>~W</tt>) are all checked (when necessary) for circularity and sharing.
 However, such checking is not applied to the arguments of the
-functions <b>write-line</b>, <b>write-string</b>, and <b>write-char</b>
+functions <b>write-line</b>, <a href="write_002dstring.html">write-string</a>, and <a href="write_002dchar.html">write-char</a>
 or to the literal text output by <b><a href="format.html">format</a></b>.  A consequence of this is
 that you must use one of the latter functions if you want to print some 
 literal text in the output that is not supposed to be checked for circularity
 or sharing.
 </p>
-<p>The body <i>forms</i> of a <b>pprint-logical-block</b> <i>form</i>
+<p>The body <i>forms</i> of a <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a> <i>form</i>
 must not perform any side-effects on the surrounding environment; for 
 example, no <i>variables</i> must be assigned which have not been
 <i>bound</i> within its scope.  
 </p>
-<p>The <b>pprint-logical-block</b> <i>macro</i> may be used regardless of the <i>value</i> of <b>*print-pretty*</b>.
+<p>The <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a> <i>macro</i> may be used regardless of the <i>value</i> of <a href="002aprint_002dpretty_002a.html">*print-pretty*</a>.
 </p>
 </div>
 <div class="section">
 <h4 class="subsubheading">Affected By</h4>
 
-<p><b>*print-circle*</b>, <b>*print-level*</b>.
+<p><a href="002aprint_002dcircle_002a.html">*print-circle*</a>, <a href="002aprint_002dlevel_002a.html">*print-level*</a>.
 </p>
 </div>
 <div class="section">
 <h4 class="subsubheading">Exceptional Situations</h4>
 
-<p>An error of <i>type</i> <b>type-error</b> is signaled if any of the <tt>:suffix</tt>, 
+<p>An error of <i>type</i> <a href="type_002derror.html">type-error</a> is signaled if any of the <tt>:suffix</tt>, 
 <tt>:prefix</tt>, or <tt>:per-line-prefix</tt> is supplied but does not evaluate 
 to a <i>string</i>.
 </p>
 <p>An error is signaled if <tt>:prefix</tt> and <tt>:pre-line-prefix</tt> are both used.
 </p>
-<p><b>pprint-logical-block</b> and the <i>pretty printing stream</i> it creates 
+<p><a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a> and the <i>pretty printing stream</i> it creates 
 have <i>dynamic extent</i>.  The consequences are undefined if, outside
 of this extent, output is attempted to the <i>pretty printing stream</i> it creates.
 </p>
@@ -186,10 +186,10 @@ sent directly to the underlying destination stream.
 <div class="section">
 <h4 class="subsubheading">Notes</h4>
 
-<p>One reason for using the <b>pprint-logical-block</b> <i>macro</i> when the <i>value</i> of <b>*print-pretty*</b>
+<p>One reason for using the <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a> <i>macro</i> when the <i>value</i> of <a href="002aprint_002dpretty_002a.html">*print-pretty*</a>
 is <a href="NILv.html">nil</a> would be to allow it to perform checking for <i>dotted lists</i>, 
-as well as (in conjunction with <b>pprint-pop</b>) 
-checking for <b>*print-level*</b> or <b>*print-length*</b> being exceeded.
+as well as (in conjunction with <a href="pprint_002dpop.html">pprint-pop</a>) 
+checking for <a href="002aprint_002dlevel_002a.html">*print-level*</a> or <b>*print-length*</b> being exceeded.
 </p>
 <p>Detection of circularity and sharing is supported by the <i>pretty printer</i>
 by in essence performing requested output twice.  On the first pass,
@@ -197,9 +197,9 @@ circularities and sharing are detected and the actual outputting of characters
 is suppressed.  On the second pass, the appropriate &ldquo;<tt>#<i>n</i>=</tt>&rdquo; 
 and &ldquo;<tt>#<i>n</i>#</tt>&rdquo; markers are inserted and characters are output.
 This is why the restriction on side-effects is necessary.
-Obeying this restriction is facilitated by using <b>pprint-pop</b>,
+Obeying this restriction is facilitated by using <a href="pprint_002dpop.html">pprint-pop</a>,
 instead of an ordinary <b><a href="pop.html">pop</a></b> when traversing a list being printed by 
-the body <i>forms</i> of the <b>pprint-logical-block</b> <i>form</i>.)
+the body <i>forms</i> of the <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a> <i>form</i>.)
 </p>
 
 
@@ -208,7 +208,7 @@ the body <i>forms</i> of the <b>pprint-logical-block</b> <i>form</i>.)
 
                     <div class="section">
                         <h3>Backlinks</h3>
-                        <a href="pprint_002dexit_002dif_002dlist_002dexhausted.html">pprint-exit-if-list-exhausted</a>, <a href="pprint_002dpop.html">pprint-pop</a>, <a href="pprint_002dtab.html">pprint-tab</a>, <a href="print_002dobject.html">print-object</a>
+                        <a href="declare.html">declare</a>, <a href="Dynamic-Control-of-the-Arrangement-of-Output.html">Dynamic Control of the Arrangement of Output</a>, <a href="Examples-of-using-the-Pretty-Printer.html">Examples of using the Pretty Printer</a>, <a href="Format-Directive-Interface.html">Format Directive Interface</a>, <a href="Glossary.html">Glossary</a>, <a href="pprint_002dexit_002dif_002dlist_002dexhausted.html">pprint-exit-if-list-exhausted</a>, <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a>, <a href="pprint_002dnewline.html">pprint-newline</a>, <a href="pprint_002dpop.html">pprint-pop</a>, <a href="pprint_002dtab.html">pprint-tab</a>, <a href="Pretty-Printer-Concepts.html">Pretty Printer Concepts</a>, <a href="print_002dobject.html">print-object</a>, <a href="Stream-Arguments-to-Standardized-Functions.html">Stream Arguments to Standardized Functions</a>, <a href="Symbols-in-the-COMMON_002dLISP-Package.html">Symbols in the COMMON-LISP Package</a>, <a href="Tilde-Less_002dThan_002dSign_002d_003e-Logical-Block.html">Tilde Less-Than-Sign-&gt; Logical Block</a>
                     </div>
                 
 </body>

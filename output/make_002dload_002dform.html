@@ -59,9 +59,9 @@
 <div class="section">
 <h4 class="subsubheading">Method Signatures</h4>
 
-<p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <b>standard-object</b><span class="roman">)</span>  &amp;optional</i> environment
+<p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <a href="standard_002dobject.html">standard-object</a><span class="roman">)</span>  &amp;optional</i> environment
 </p>
-<p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <b>structure-object</b><span class="roman">)</span> &amp;optional</i> environment
+<p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <a href="structure_002dobject.html">structure-object</a><span class="roman">)</span> &amp;optional</i> environment
 </p>
 <p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <b><a href="condition.html">condition</a></b><span class="roman">)</span>        &amp;optional</i> environment
 </p>
@@ -83,7 +83,7 @@
 <div class="section">
 <h4 class="subsubheading">Description</h4>
 
-<p>The <i>generic function</i> <b>make-load-form</b> creates and returns 
+<p>The <i>generic function</i> <a href="make_002dload_002dform.html">make-load-form</a> creates and returns 
 one or two <i>forms</i>,
      a <i>creation-form</i>
  and an <i>initialization-form</i>,
@@ -93,12 +93,12 @@ equivalent to <i>object</i>.
 corresponding to the <i>lexical environment</i> 
 in which the <i>forms</i> will be processed.
 </p>
-<p>The <i>file compiler</i> calls <b>make-load-form</b> to process certain
+<p>The <i>file compiler</i> calls <a href="make_002dload_002dform.html">make-load-form</a> to process certain
 <i>classes</i> of <i>literal objects</i>; see <a href="Additional-Constraints-on-Externalizable-Objects.html#Additional-Constraints-on-Externalizable-Objects">Additional Constraints on Externalizable Objects</a>.
 </p>
-<p><i>Conforming programs</i> may call <b>make-load-form</b> directly,
+<p><i>Conforming programs</i> may call <a href="make_002dload_002dform.html">make-load-form</a> directly,
 providing <i>object</i> is a <i>generalized instance</i> of
-<b>standard-object</b>, <b>structure-object</b>, 
+<a href="standard_002dobject.html">standard-object</a>, <a href="structure_002dobject.html">structure-object</a>, 
 or <b><a href="condition.html">condition</a></b>.
 </p>
 <p>The creation form is a <i>form</i> that, when evaluated at
@@ -106,13 +106,13 @@ or <b><a href="condition.html">condition</a></b>.
 is equivalent to <i>object</i>.  The exact meaning of
 equivalent depends on the <i>type</i> of <i>object</i> 
 and is up to the programmer who defines a <i>method</i> for
-<b>make-load-form</b>;
+<a href="make_002dload_002dform.html">make-load-form</a>;
 see <a href="Literal-Objects-in-Compiled-Files.html#Literal-Objects-in-Compiled-Files">Literal Objects in Compiled Files</a>.
 </p>
 <p>The initialization form is a <i>form</i> that, when evaluated at <b><a href="load.html">load</a></b> time, 
 should perform further initialization of the <i>object</i>.  
 The value returned by the initialization form is ignored.
-If <b>make-load-form</b>
+If <a href="make_002dload_002dform.html">make-load-form</a>
 returns only one value, 
 the initialization form is <a href="NILv.html">nil</a>, which has no effect.
 If <i>object</i> appears as a constant in the initialization form,
@@ -136,7 +136,7 @@ the initialization form references other <i>objects</i> that have not been
 referenced earlier in the <i>file</i> being <i>compiled</i>, the <i>compiler</i> ensures
 that all of the referenced <i>objects</i> have been created before <i>evaluating</i>
 the referencing <i>form</i>.  When the referenced <i>object</i> is of a <i>type</i> which
-the <i>file compiler</i> processes using <b>make-load-form</b>,
+the <i>file compiler</i> processes using <a href="make_002dload_002dform.html">make-load-form</a>,
 this involves <i>evaluating</i>
 the creation form returned for it.  (This is the reason for the
 prohibition against circular references among creation forms).
@@ -147,7 +147,7 @@ initialization form for an <i>object</i> does not reference any other <i>objects
 not referenced earlier in the <i>file</i> and processed by 
 the <i>file compiler</i>
 using
-<b>make-load-form</b>, the initialization form is evaluated immediately after
+<a href="make_002dload_002dform.html">make-load-form</a>, the initialization form is evaluated immediately after
 the creation form.  If a creation or initialization form F does contain
 references to such <i>objects</i>, the creation forms for those other objects
 are evaluated before F, and the initialization forms for those other
@@ -160,11 +160,11 @@ forms, the order of <i>evaluation</i> is unspecified.
   <i>objects</i> are possibly in an uninitialized state, 
 analogous to the state
   of an <i>object</i> 
-between the time it has been created by <b>allocate-instance</b>
+between the time it has been created by <a href="allocate_002dinstance.html">allocate-instance</a>
   and it has been processed fully by 
 <b>initialize-instance</b>.  Programmers
   writing <i>methods</i> for 
-<b>make-load-form</b> must take care in manipulating
+<a href="make_002dload_002dform.html">make-load-form</a> must take care in manipulating
   <i>objects</i> not to depend on 
 <i>slots</i> that have not yet been initialized.
 </p>
@@ -186,14 +186,14 @@ All that is required is that the
 a <i>proper name</i> in <i>environment</i>, signaling an error of <i>type</i> <b><a href="error.html">error</a></b>
 if it does not have a <i>proper name</i>.  <i>Evaluation</i> of the creation
 <i>form</i> uses the <i>name</i> to find the <i>class</i> with that
-<i>name</i>, as if by <i>calling</i> <b>find-class</b>.  If a <i>class</i>
+<i>name</i>, as if by <i>calling</i> <a href="find_002dclass.html">find-class</a>.  If a <i>class</i>
 with that <i>name</i> has not been defined, then a <i>class</i> may be
 computed in an <i>implementation-defined</i> manner.  If a <i>class</i>
 cannot be returned as the result of <i>evaluating</i> the creation
 <i>form</i>, then an error of <i>type</i> <b><a href="error.html">error</a></b> is signaled.
 </p>
 <p>Both <i>conforming implementations</i> and <i>conforming programs</i> may
-further <i>specialize</i> <b>make-load-form</b>.
+further <i>specialize</i> <a href="make_002dload_002dform.html">make-load-form</a>.
 </p>
 </div>
 <div class="section">
@@ -229,10 +229,10 @@ further <i>specialize</i> <b>make-load-form</b>.
 reconstructed by using the values of two of its <i>slots</i>.  
 The value of the third <i>slot</i> is derived from those two values.
 </p>
-<p>Another way to write the <b>make-load-form</b> <i>method</i>
-in that example is to use <b>make-load-form-saving-slots</b>.
+<p>Another way to write the <a href="make_002dload_002dform.html">make-load-form</a> <i>method</i>
+in that example is to use <a href="make_002dload_002dform_002dsaving_002dslots.html">make-load-form-saving-slots</a>.
 The code it generates might yield a slightly different result 
-from the <b>make-load-form</b> <i>method</i> shown above,
+from the <a href="make_002dload_002dform.html">make-load-form</a> <i>method</i> shown above,
 but the operational effect will be the same.  For example:
 </p>
 <div class="example">
@@ -270,7 +270,7 @@ have been signaled in that case.
 
 <p>In the following example, the data structure to be dumped is circular, 
 because each parent has a list of its children and each child has a reference
-back to its parent.  If <b>make-load-form</b> is called on one   
+back to its parent.  If <a href="make_002dload_002dform.html">make-load-form</a> is called on one   
 <i>object</i> in such a structure,  the creation form creates an equivalent 
 <i>object</i> and fills in the children slot, which forces creation of equivalent
 <i>objects</i> for all of its children, grandchildren, etc.  At this point
@@ -278,7 +278,7 @@ none of the parent <i>slots</i> have been filled in.
 The initialization form fills in the parent <i>slot</i>, which forces creation 
 of an equivalent <i>object</i> for the parent if it was not already created.
 Thus the entire tree is recreated at <b><a href="load.html">load</a></b> time.  
-At compile time, <b>make-load-form</b> is called once for each <i>object</i> 
+At compile time, <a href="make_002dload_002dform.html">make-load-form</a> is called once for each <i>object</i> 
 in the tree.  
 All of the creation forms are evaluated,
 in <i>implementation-dependent</i> order,
@@ -314,13 +314,13 @@ simply by reconstructing the <i>slots</i>&rsquo; contents.
 <h4 class="subsubheading">Exceptional Situations</h4>
 
 <p>The <i>methods</i> <i>specialized</i> on 
-     <b>standard-object</b>,
-     <b>structure-object</b>,
+     <a href="standard_002dobject.html">standard-object</a>,
+     <a href="structure_002dobject.html">structure-object</a>,
  and <b><a href="condition.html">condition</a></b>
 all signal an error of <i>type</i> <b><a href="error.html">error</a></b>.
 </p>
 <p>It is <i>implementation-dependent</i> whether <i>calling</i>
-<b>make-load-form</b> on a <i>generalized instance</i> of a
+<a href="make_002dload_002dform.html">make-load-form</a> on a <i>generalized instance</i> of a
 <i>system class</i> signals an error or returns creation and
 initialization <i>forms</i>.
 </p>
@@ -341,17 +341,17 @@ initialization <i>forms</i>.
 <h4 class="subsubheading">Notes</h4>
 
 <p>The <i>file compiler</i>
-calls <b>make-load-form</b> in specific circumstances
+calls <a href="make_002dload_002dform.html">make-load-form</a> in specific circumstances
 detailed in <a href="Additional-Constraints-on-Externalizable-Objects.html#Additional-Constraints-on-Externalizable-Objects">Additional Constraints on Externalizable Objects</a>.
 </p>
 <p>Some <i>implementations</i> may provide facilities for defining new
 <i>subclasses</i> of <i>classes</i> which are specified as
 <i>system classes</i>.  (Some likely candidates include
-<b>generic-function</b>, <b><a href="method.html">method</a></b>, and <b><a href="stream.html">stream</a></b>).  Such
+<a href="generic_002dfunction.html">generic-function</a>, <b><a href="method.html">method</a></b>, and <b><a href="stream.html">stream</a></b>).  Such
 <i>implementations</i> should document how the <i>file compiler</i> processes
 <i>instances</i> of such <i>classes</i> when encountered as
 <i>literal objects</i>, and should document any relevant <i>methods</i>
-for <b>make-load-form</b>.
+for <a href="make_002dload_002dform.html">make-load-form</a>.
 </p>
 
 
@@ -360,7 +360,7 @@ for <b>make-load-form</b>.
 
                     <div class="section">
                         <h3>Backlinks</h3>
-                        <a href="make_002dload_002dform_002dsaving_002dslots.html">make-load-form-saving-slots</a>, <a href="Objects-Dictionary.html">Objects Dictionary</a>
+                        <a href="Additional-Constraints-on-Externalizable-Objects.html">Additional Constraints on Externalizable Objects</a>, <a href="compile_002dfile.html">compile-file</a>, <a href="Definition-of-Similarity.html">Definition of Similarity</a>, <a href="make_002dload_002dform.html">make-load-form</a>, <a href="make_002dload_002dform_002dsaving_002dslots.html">make-load-form-saving-slots</a>, <a href="Objects-Dictionary.html">Objects Dictionary</a>, <a href="print_002dobject.html">print-object</a>, <a href="Symbols-in-the-COMMON_002dLISP-Package.html">Symbols in the COMMON-LISP Package</a>
                     </div>
                 
 </body>
