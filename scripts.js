@@ -64,7 +64,7 @@ function showSearch(results, q) {
     if (results.length === 0) {
         html = '<div>Nothing found, sorry.</div>';
     }
-    var qre = new RegExp('('+q+')', 'gi');
+    var qre = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')+')', 'gi');
     for (let r of results) {
         let text = r[0].replace(qre, '<mark>$1</mark>');
         html += `<a class="search__res" href="${r[1]}.html">${text}</a>`;
