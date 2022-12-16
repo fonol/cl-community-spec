@@ -72,7 +72,7 @@
 </p>
 <p><i>store-variable</i>&mdash;a <i>symbol</i> (a <i>variable</i> <i>name</i>).
 </p>
-<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+<p><i>declaration</i>&mdash;a <b><a href="declare.html">declare</a></b> <i>expression</i>; not evaluated.
 </p>
 <p><i>documentation</i>&mdash;a <i>string</i>; not evaluated.
 </p>
@@ -82,27 +82,27 @@
 <div class="section">
 <h4 class="subsubheading">Description</h4>
 
-<p><b>defsetf</b> defines how to 
-<b>setf</b> a <i>place</i>
+<p><b><a href="defsetf.html">defsetf</a></b> defines how to 
+<b><a href="setf.html">setf</a></b> a <i>place</i>
 of the form <tt>(<i>access-fn</i> ...)</tt> for relatively simple cases.
 (See <b>define-setf-expander</b> for more general access to this facility.)
 </p>
 <p>It must be the case that the <i>function</i> or <i>macro</i> named by <i>access-fn</i> 
 evaluates all of its arguments.
 </p>
-<p><b>defsetf</b> may take one of two forms, called the &ldquo;short form&rdquo; and the &ldquo;long form,&rdquo;
+<p><b><a href="defsetf.html">defsetf</a></b> may take one of two forms, called the &ldquo;short form&rdquo; and the &ldquo;long form,&rdquo;
 which are distinguished by the <i>type</i> of the second <i>argument</i>.
 </p>
 <p>When the short form is used, 
 <i>update-fn</i> must name 
 a <i>function</i> (or <i>macro</i>) that takes one more argument
-than <i>access-fn</i> takes.  When <b>setf</b> is given a <i>place</i>
+than <i>access-fn</i> takes.  When <b><a href="setf.html">setf</a></b> is given a <i>place</i>
 that is a call on <i>access-fn</i>, it expands into
 a call on <i>update-fn</i> that is given all the arguments to
 <i>access-fn</i> and also, as its last argument, the new value
 (which must be returned by <i>update-fn</i> as its value).
 </p>
-<p>The long form <b>defsetf</b> 
+<p>The long form <b><a href="defsetf.html">defsetf</a></b> 
 resembles <a href="defmacro.html">defmacro</a>.
 The <i>lambda-list</i> describes the arguments of <i>access-fn</i>. 
 The <i>store-variables</i> describe the
@@ -112,39 +112,39 @@ value
 </p>
 <p>to be stored into the <i>place</i>.
 The <i>body</i> must
-compute the expansion of a <b>setf</b> of a call on <i>access-fn</i>.
+compute the expansion of a <b><a href="setf.html">setf</a></b> of a call on <i>access-fn</i>.
 </p>
 <p>The expansion function is defined in the same <i>lexical environment</i>
-in which the <b>defsetf</b> <i>form</i> appears.
+in which the <b><a href="defsetf.html">defsetf</a></b> <i>form</i> appears.
 </p>
 <p>During the evaluation of the
 <i>forms</i>, the variables in the <i>lambda-list</i> and the
 <i>store-variables</i>
 are bound to names of temporary variables,
-generated as if by <b>gensym</b>
-or <b>gentemp</b>,
+generated as if by <b><a href="gensym.html">gensym</a></b>
+or <b><a href="gentemp.html">gentemp</a></b>,
 that will be bound by the
-expansion of <b>setf</b> 
+expansion of <b><a href="setf.html">setf</a></b> 
 to the values of those <i>subforms</i>.  This binding
 permits the
 <i>forms</i> to be written without regard for order-of-evaluation
-issues.  <b>defsetf</b> arranges for the temporary variables to be
+issues.  <b><a href="defsetf.html">defsetf</a></b> arranges for the temporary variables to be
 optimized out of the final result in cases where that is possible.  
 </p>
-<p>The body code in <b>defsetf</b> is implicitly enclosed in a 
+<p>The body code in <b><a href="defsetf.html">defsetf</a></b> is implicitly enclosed in a 
 <i>block</i> whose name is 
 <i>access-fn</i>
 </p>
-<p><b>defsetf</b> 
+<p><b><a href="defsetf.html">defsetf</a></b> 
 ensures that <i>subforms</i> 
 of the <i>place</i> are evaluated exactly once.
 </p>
 <p><i>Documentation</i> is attached to <i>access-fn</i> as a <i>documentation string</i>
-of kind <b>setf</b>.
+of kind <b><a href="setf.html">setf</a></b>.
 </p>
-<p>If a <b>defsetf</b> <i>form</i> appears as a <i>top level form</i>,
+<p>If a <b><a href="defsetf.html">defsetf</a></b> <i>form</i> appears as a <i>top level form</i>,
 the <i>compiler</i> must make the <i>setf expander</i> available so that
-it may be used to expand calls to <b>setf</b> later on in the <i>file</i>.
+it may be used to expand calls to <b><a href="setf.html">setf</a></b> later on in the <i>file</i>.
 Users must ensure that the <i>forms</i>, if any, can be evaluated
 at compile time if the <i>access-fn</i> is used in a <i>place</i>
 later in the same <i>file</i>.
@@ -173,7 +173,7 @@ to expand into <tt>(set foo fu)</tt>.
 </code>
 </pre></div>
 
-<p>would be incorrect because <b>rplaca</b> does not return its last argument.
+<p>would be incorrect because <b><a href="rplaca.html">rplaca</a></b> does not return its last argument.
 </p>
 <div class="example">
 <pre class="example"><code> (defun middleguy (x) (nth (truncate (1- (list-length x)) 2) x)) &rArr;  MIDDLEGUY
@@ -194,7 +194,7 @@ to expand into <tt>(set foo fu)</tt>.
 </code>
 </pre></div>
 
-<p>An example of the use of the long form of <b>defsetf</b>:
+<p>An example of the use of the long form of <b><a href="defsetf.html">defsetf</a></b>:
 </p>
 <div class="example">
 <pre class="example"><code> (defsetf subseq (sequence start &amp;optional end) (new-sequence)
@@ -259,21 +259,21 @@ for returning the correct value (the value
 </p>
 <p>of <i>store-variable</i>).  
 This is
-handled by <i>forms</i> rather than by <b>defsetf</b> because
+handled by <i>forms</i> rather than by <b><a href="defsetf.html">defsetf</a></b> because
 in many cases this value can be returned at no extra cost, by calling a
 function that simultaneously stores into the <i>place</i> and 
 returns the correct value.
 </p>
-<p>A <b>setf</b> of a call on <i>access-fn</i> also evaluates
+<p>A <b><a href="setf.html">setf</a></b> of a call on <i>access-fn</i> also evaluates
 all of <i>access-fn</i>&rsquo;s arguments; it cannot treat any of them specially.
-This means that <b>defsetf</b> 
+This means that <b><a href="defsetf.html">defsetf</a></b> 
 cannot be used to describe how to store into
 a <i>generalized reference</i> to a byte, such as <tt>(ldb field reference)</tt>.
 </p>
 <p><b>define-setf-expander</b>
 </p>
 <p>is used to handle situations that 
-do not fit the restrictions imposed by <b>defsetf</b>
+do not fit the restrictions imposed by <b><a href="defsetf.html">defsetf</a></b>
 and gives the user additional control.
 </p>
 
@@ -283,7 +283,7 @@ and gives the user additional control.
 
                     <div class="section">
                         <h3>Backlinks</h3>
-                        <a href="Data-and-Control-Flow-Dictionary.html">Data and Control Flow Dictionary</a>, <a href="define_002dmodify_002dmacro.html">define-modify-macro</a>, <a href="define_002dsetf_002dexpander.html">define-setf-expander</a>, <a href="get_002dsetf_002dexpansion.html">get-setf-expansion</a>, <a href="rotatef.html">rotatef</a>, <a href="setf.html">setf; psetf</a>
+                        <a href="Constraints-on-the-COMMON_002dLISP-Package-for-Conforming-Programs.html">Constraints on the COMMON-LISP Package for Conforming Programs</a>, <a href="Data-and-Control-Flow-Dictionary.html">Data and Control Flow Dictionary</a>, <a href="declare.html">declare</a>, <a href="define_002dmodify_002dmacro.html">define-modify-macro</a>, <a href="define_002dsetf_002dexpander.html">define-setf-expander</a>, <a href="Defsetf-Lambda-Lists.html">Defsetf Lambda Lists</a>, <a href="defsetf.html">defsetf</a>, <a href="defstruct.html">defstruct</a>, <a href="get_002dsetf_002dexpansion.html">get-setf-expansion</a>, <a href="Lambda-Lists.html">Lambda Lists</a>, <a href="Overview-of-Places-and-Generalized-Reference.html">Overview of Places and Generalized Reference</a>, <a href="Processing-of-Defining-Macros.html">Processing of Defining Macros</a>, <a href="rotatef.html">rotatef</a>, <a href="setf.html">setf</a>, <a href="shiftf.html">shiftf</a>, <a href="Symbols-in-the-COMMON_002dLISP-Package.html">Symbols in the COMMON-LISP Package</a>
                     </div>
                 
 </body>

@@ -83,7 +83,7 @@ Next: <a href="find_002dmethod.html#find_002dmethod" accesskey="n" rel="next">fi
 <p><i>args-lambda-list</i>&mdash;
 a <i>define-method-combination arguments lambda list</i>.
 </p>
-<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+<p><i>declaration</i>&mdash;a <b><a href="declare.html">declare</a></b> <i>expression</i>; not evaluated.
 </p>
 <p><i>description</i>&mdash;a <i>format control</i>.
 </p>
@@ -157,8 +157,8 @@ exactly one applicable method and it is a primary method, that method
 serves as the effective method and <i>operator</i> is not called.
 This optimization avoids the need to create a new effective method and
 avoids the overhead of a <i>function</i> call.  This option is designed to be
-used with operators such as <b>progn</b>, <b>and</b>, <b>+</b>, and
-<b>max</b>.
+used with operators such as <b><a href="progn.html">progn</a></b>, <b>and</b>, <b>+</b>, and
+<b><a href="max.html">max</a></b>.
 </p>
 </dd>
 <dt><tt>*</tt></dt>
@@ -206,7 +206,7 @@ when the second <i>subform</i> is a list.
 <p>The <i>lambda-list</i> 
 receives any arguments provided after the <i>name</i> of the method
 combination type in the <tt>:method-combination</tt> option to
-<b>defgeneric</b>.
+<b><a href="defgeneric.html">defgeneric</a></b>.
 </p>
 <p>A list of method group specifiers follows.  Each specifier selects a subset
 of the applicable methods to play a particular role, either by matching
@@ -226,7 +226,7 @@ the <i>forms</i> in the body of <b>define-method-combination</b>, this
 <p>If <i>qualifier-pattern</i> is a <i>symbol</i> it must be <b>*</b>.  
 A method matches
 a <i>qualifier-pattern</i> if the method&rsquo;s 
-list of <i>qualifiers</i> is <b>equal</b>
+list of <i>qualifiers</i> is <b><a href="equal.html">equal</a></b>
 to the <i>qualifier-pattern</i> (except that the symbol <b>*</b> in a 
 <i>qualifier-pattern</i> matches anything).  Thus 
 a <i>qualifier-pattern</i> can be one of the
@@ -279,7 +279,7 @@ is expected to be concise.  This keyword
 option allows the description of a method <i>qualifier</i> to be defined in
 the same module that defines the meaning of the 
 method <i>qualifier</i>.  In most cases, <i>format-control</i> will not contain any
-<b>format</b> directives, but they are available for generality.  
+<b><a href="format.html">format</a></b> directives, but they are available for generality.  
 If <tt>:description</tt> is not supplied, a default description is generated
 based on the variable name and the <i>qualifier</i> patterns and on whether
 this method group includes the <i>unqualified methods</i>.  
@@ -312,7 +312,7 @@ select methods, to divide them among the possible roles, and to perform the
 necessary error checking.  It is possible to perform further filtering
 of methods in the body <i>forms</i> by using normal list-processing operations
 and the functions <b>method-qualifiers</b> and 
-<b>invalid-method-error</b>.  It is permissible to use <b>setq</b> on the
+<b>invalid-method-error</b>.  It is permissible to use <b><a href="setq.html">setq</a></b> on the
 variables named in the method group specifiers and to bind additional
 variables.  It is also possible to bypass the method group specifier
 mechanism and do everything in the body <i>forms</i>.  This is accomplished
@@ -342,7 +342,7 @@ the effective method form consists entirely of an invocation of
 the <b>call-method</b> macro whose first <i>subform</i> is a method object and
 whose second <i>subform</i> is <a href="NILv.html">nil</a> or unsupplied.  Each
 <b>define-method-combination</b> body is responsible for stripping off
-redundant invocations of <b>progn</b>, <b>and</b>,
+redundant invocations of <b><a href="progn.html">progn</a></b>, <b>and</b>,
 <b>multiple-value-prog1</b>, and the like, if this optimization is desired.
 </p>
 <p>The list <tt>(:arguments . <i>lambda-list</i>)</tt> can appear before
@@ -354,7 +354,7 @@ the <i>generic function</i>.  Each parameter variable defined by
 effective method.  When this <i>form</i> is evaluated during execution of the
 effective method, its value is the corresponding argument to the
 <i>generic function</i>; the consequences of using such a <i>form</i> as
-the <i>place</i> in a <b>setf</b> <i>form</i> are undefined.
+the <i>place</i> in a <b><a href="setf.html">setf</a></b> <i>form</i> are undefined.
 </p>
 <p>Argument correspondence is computed by dividing the <tt>:arguments</tt> <i>lambda-list</i>
 and the <i>generic function</i> <i>lambda-list</i> into three sections:
@@ -401,7 +401,7 @@ the
 Declarations at the head of
 the body are positioned directly inside of <i>bindings</i> created by the
 <i>lambda list</i> and outside of the <i>bindings</i> of the method group variables. 
-Thus method group variables cannot be declared in this way.  <b>locally</b> may be used
+Thus method group variables cannot be declared in this way.  <b><a href="locally.html">locally</a></b> may be used
 around the body, however.
 </p>
 <p>Within the body <i>forms</i>, <i>generic-function-symbol</i>
@@ -431,7 +431,7 @@ part of the <i>qualifier</i> pattern matching in
 <p>If a <b>define-method-combination</b> <i>form</i> appears as a
 <i>top level form</i>, the <i>compiler</i> must make the
 <i>method combination</i> <i>name</i> be recognized as a valid
-<i>method combination</i> <i>name</i> in subsequent <b>defgeneric</b>
+<i>method combination</i> <i>name</i> in subsequent <b><a href="defgeneric.html">defgeneric</a></b>
 <i>forms</i>.  However, the <i>method combination</i> is executed
 no earlier than when the <b>define-method-combination</b> <i>form</i>
 is executed, and possibly as late as the time that <i>generic functions</i>
@@ -584,25 +584,25 @@ of the declarative method combination facility.
 
 <p>Method combination types defined with the short form require exactly
 one <i>qualifier</i> per method.  
-An error of <i>type</i> <b>error</b> is signaled if there are
+An error of <i>type</i> <b><a href="error.html">error</a></b> is signaled if there are
 applicable methods with no <i>qualifiers</i> or with <i>qualifiers</i> that are not
 supported by the method combination type.
 At least one primary method must be applicable or 
-an error of <i>type</i> <b>error</b> is signaled.
+an error of <i>type</i> <b><a href="error.html">error</a></b> is signaled.
 </p>
 <p>If an applicable method does not fall into any method group, the
-system signals an error of <i>type</i> <b>error</b>
+system signals an error of <i>type</i> <b><a href="error.html">error</a></b>
 indicating that the method is invalid for the kind of
 method combination in use.
 </p>
 <p>If the value of the <tt>:required</tt> option is <i>true</i>
 and the method group is empty (that is, no applicable
 methods match the <i>qualifier</i> patterns or satisfy the predicate), 
-an error of <i>type</i> <b>error</b> is signaled.
+an error of <i>type</i> <b><a href="error.html">error</a></b> is signaled.
 </p>
 <p>If the <tt>:order</tt> option evaluates to a value other than 
 <tt>:most-specific-first</tt> or <tt>:most-specific-last</tt>, 
-an error of <i>type</i> <b>error</b> is signaled.
+an error of <i>type</i> <b><a href="error.html">error</a></b> is signaled.
 </p>
 <a name="See-Also_003a_003a-142"></a>
 <h4 class="subsubheading">See Also::</h4>
@@ -628,7 +628,7 @@ an error of <i>type</i> <b>error</b> is signaled.
 <a name="Notes_003a_003a-90"></a>
 <h4 class="subsubheading">Notes::</h4>
 
-<p>The <tt>:method-combination</tt> option of <b>defgeneric</b> is used to
+<p>The <tt>:method-combination</tt> option of <b><a href="defgeneric.html">defgeneric</a></b> is used to
 specify that a <i>generic function</i> should use a particular method
 combination type.  The first argument to the <tt>:method-combination</tt>
 option is the <i>name</i> of a method combination type and the remaining

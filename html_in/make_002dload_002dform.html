@@ -67,9 +67,9 @@ Next: <a href="make_002dload_002dform_002dsaving_002dslots.html#make_002dload_00
 </p>
 <p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <b>structure-object</b><span class="roman">)</span> &amp;optional</i> environment
 </p>
-<p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <b>condition</b><span class="roman">)</span>        &amp;optional</i> environment
+<p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <b><a href="condition.html">condition</a></b><span class="roman">)</span>        &amp;optional</i> environment
 </p>
-<p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <b>class</b><span class="roman">)</span>            &amp;optional</i> environment
+<p><code>make-load-form</code>  <i><span class="roman">(</span><i>object</i> <b><a href="class.html">class</a></b><span class="roman">)</span>            &amp;optional</i> environment
 </p>
 <a name="Arguments-and-Values_003a_003a-109"></a>
 <h4 class="subsubheading">Arguments and Values::</h4>
@@ -89,7 +89,7 @@ Next: <a href="make_002dload_002dform_002dsaving_002dslots.html#make_002dload_00
 one or two <i>forms</i>,
      a <i>creation-form</i>
  and an <i>initialization-form</i>,
-that enable <b>load</b> to construct an <i>object</i>
+that enable <b><a href="load.html">load</a></b> to construct an <i>object</i>
 equivalent to <i>object</i>.
 <i>Environment</i> is an <i>environment object</i> 
 corresponding to the <i>lexical environment</i> 
@@ -101,24 +101,24 @@ in which the <i>forms</i> will be processed.
 <p><i>Conforming programs</i> may call <b>make-load-form</b> directly,
 providing <i>object</i> is a <i>generalized instance</i> of
 <b>standard-object</b>, <b>structure-object</b>, 
-or <b>condition</b>.
+or <b><a href="condition.html">condition</a></b>.
 </p>
 <p>The creation form is a <i>form</i> that, when evaluated at
-<b>load</b> time, should return an <i>object</i> that 
+<b><a href="load.html">load</a></b> time, should return an <i>object</i> that 
 is equivalent to <i>object</i>.  The exact meaning of
 equivalent depends on the <i>type</i> of <i>object</i> 
 and is up to the programmer who defines a <i>method</i> for
 <b>make-load-form</b>;
 see <a href="Literal-Objects-in-Compiled-Files.html#Literal-Objects-in-Compiled-Files">Literal Objects in Compiled Files</a>.
 </p>
-<p>The initialization form is a <i>form</i> that, when evaluated at <b>load</b> time, 
+<p>The initialization form is a <i>form</i> that, when evaluated at <b><a href="load.html">load</a></b> time, 
 should perform further initialization of the <i>object</i>.  
 The value returned by the initialization form is ignored.
 If <b>make-load-form</b>
 returns only one value, 
 the initialization form is <a href="NILv.html">nil</a>, which has no effect.
 If <i>object</i> appears as a constant in the initialization form,
-at <b>load</b> time it will be replaced by the equivalent <i>object</i> 
+at <b><a href="load.html">load</a></b> time it will be replaced by the equivalent <i>object</i> 
 constructed by the creation form;
 this is how the further initialization gains access to the <i>object</i>.
 </p>
@@ -171,28 +171,28 @@ between the time it has been created by <b>allocate-instance</b>
 <i>slots</i> that have not yet been initialized.
 </p>
 <p>It is <i>implementation-dependent</i>
-whether <b>load</b> calls <a href="eval.html">eval</a> on the 
+whether <b><a href="load.html">load</a></b> calls <a href="eval.html">eval</a> on the 
 <i>forms</i> or does some
   other operation that has an equivalent effect.  For example, the
   <i>forms</i> might be translated into different but equivalent 
 <i>forms</i> and
   then evaluated, they might be compiled and the resulting functions
-  called by <b>load</b>, 
+  called by <b><a href="load.html">load</a></b>, 
 or they might be interpreted by a special-purpose
 function different from <a href="eval.html">eval</a>.  
 All that is required is that the
   effect be equivalent to evaluating the <i>forms</i>.
 </p>
-<p>The <i>method</i> <i>specialized</i> on <b>class</b> returns a creation
+<p>The <i>method</i> <i>specialized</i> on <b><a href="class.html">class</a></b> returns a creation
 <i>form</i> using the <i>name</i> of the <i>class</i> if the <i>class</i> has
-a <i>proper name</i> in <i>environment</i>, signaling an error of <i>type</i> <b>error</b>
+a <i>proper name</i> in <i>environment</i>, signaling an error of <i>type</i> <b><a href="error.html">error</a></b>
 if it does not have a <i>proper name</i>.  <i>Evaluation</i> of the creation
 <i>form</i> uses the <i>name</i> to find the <i>class</i> with that
 <i>name</i>, as if by <i>calling</i> <b>find-class</b>.  If a <i>class</i>
 with that <i>name</i> has not been defined, then a <i>class</i> may be
 computed in an <i>implementation-defined</i> manner.  If a <i>class</i>
 cannot be returned as the result of <i>evaluating</i> the creation
-<i>form</i>, then an error of <i>type</i> <b>error</b> is signaled.
+<i>form</i>, then an error of <i>type</i> <b><a href="error.html">error</a></b> is signaled.
 </p>
 <p>Both <i>conforming implementations</i> and <i>conforming programs</i> may
 further <i>specialize</i> <b>make-load-form</b>.
@@ -275,7 +275,7 @@ back to its parent.  If <b>make-load-form</b> is called on one
 none of the parent <i>slots</i> have been filled in.  
 The initialization form fills in the parent <i>slot</i>, which forces creation 
 of an equivalent <i>object</i> for the parent if it was not already created.
-Thus the entire tree is recreated at <b>load</b> time.  
+Thus the entire tree is recreated at <b><a href="load.html">load</a></b> time.  
 At compile time, <b>make-load-form</b> is called once for each <i>object</i> 
 in the tree.  
 All of the creation forms are evaluated,
@@ -311,8 +311,8 @@ simply by reconstructing the <i>slots</i>&rsquo; contents.
 <p>The <i>methods</i> <i>specialized</i> on 
      <b>standard-object</b>,
      <b>structure-object</b>,
- and <b>condition</b>
-all signal an error of <i>type</i> <b>error</b>.
+ and <b><a href="condition.html">condition</a></b>
+all signal an error of <i>type</i> <b><a href="error.html">error</a></b>.
 </p>
 <p>It is <i>implementation-dependent</i> whether <i>calling</i>
 <b>make-load-form</b> on a <i>generalized instance</i> of a
@@ -340,7 +340,7 @@ detailed in <a href="Additional-Constraints-on-Externalizable-Objects.html#Addit
 <p>Some <i>implementations</i> may provide facilities for defining new
 <i>subclasses</i> of <i>classes</i> which are specified as
 <i>system classes</i>.  (Some likely candidates include
-<b>generic-function</b>, <b>method</b>, and <b>stream</b>).  Such
+<b>generic-function</b>, <b><a href="method.html">method</a></b>, and <b><a href="stream.html">stream</a></b>).  Such
 <i>implementations</i> should document how the <i>file compiler</i> processes
 <i>instances</i> of such <i>classes</i> when encountered as
 <i>literal objects</i>, and should document any relevant <i>methods</i>

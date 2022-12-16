@@ -17,6 +17,24 @@ def out_folder_path():
     return os.path.join(folder_path(), "output/")
 
 
+def insert_table_links():
+    files               = get_html_files()
+    file_names          = [f[:-5] for f in files]
+
+    file_names_re       = "|".join([re.escape(fn) for fn in file_names if len(fn.strip()) > 0 and fn != "list" and fn != "or" and fn != "and"])
+
+    for f in files:
+        fpath       = os.path.join(src_folder_path(), f)
+
+        with open(fpath, 'r') as r:
+
+            content        = r.read()
+            content        = re.sub(f"(&nbsp;|<b>)(?:<span class=\"nolinebreak\">)?({file_names_re})(?:</span>)?(&nbsp;|</b>)", "\\1<a href=\"\\2.html\">\\2</a>\\3", content)
+
+        with open(fpath, "w", encoding="utf-8") as outf:
+            outf.write(content)
+
+
 def main():
 
     files               = get_html_files()
@@ -201,6 +219,7 @@ def main():
                     l = re.sub("<td> *</td>", "", l)
                     l = re.sub(r"<p>\s*</p>", "", l)
 
+
                 if l.startswith("</p>") and in_table:
                     in_table = False
                     out.append("</table>")
@@ -307,4 +326,8 @@ def main():
     print("Finished conversion.\nResults can be found in /output.")
 
 main()
+# insert_table_links()
                 
+
+                
+       

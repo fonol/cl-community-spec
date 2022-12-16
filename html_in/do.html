@@ -78,22 +78,22 @@ Next: <a href="dotimes.html#dotimes" accesskey="n" rel="next">dotimes</a>, Previ
 </p>
 <p><i>result-forms</i>&mdash;an <i>implicit progn</i>.
 </p>
-<p><i>declaration</i>&mdash;a <b>declare</b> <i>expression</i>; not evaluated.
+<p><i>declaration</i>&mdash;a <b><a href="declare.html">declare</a></b> <i>expression</i>; not evaluated.
 </p>
 <p><i>tag</i>&mdash;a <i>go tag</i>; not evaluated.
 </p>
 <p><i>statement</i>&mdash;a <i>compound form</i>; evaluated as described below.
 </p>
-<p><i>results</i>&mdash;if a <b>return</b> or <b>return-from</b> form is executed,
+<p><i>results</i>&mdash;if a <b><a href="return.html">return</a></b> or <b>return-from</b> form is executed,
  the <i>values</i> passed from that <i>form</i>;
  otherwise, the <i>values</i> returned by the <i>result-forms</i>.
 </p>
 <a name="Description_003a_003a-123"></a>
 <h4 class="subsubheading">Description::</h4>
 
-<p><b>do</b> iterates over a group of <i>statements</i>
+<p><b><a href="do.html">do</a></b> iterates over a group of <i>statements</i>
 while a test condition holds.
-<b>do</b> accepts an arbitrary number of iteration <i>vars</i>
+<b><a href="do.html">do</a></b> accepts an arbitrary number of iteration <i>vars</i>
 which are bound within the iteration and stepped in parallel.
 An initial value may be supplied for each iteration variable by use of
 an <i>init-form</i>.
@@ -105,7 +105,7 @@ If the <i>end-test-form</i> condition
 is met prior to an execution of the body, the iteration terminates.
 <i>Tags</i> label <i>statements</i>.
 </p>
-<p><b>do*</b> is exactly like <b>do</b> 
+<p><b>do*</b> is exactly like <b><a href="do.html">do</a></b> 
 except that the <i>bindings</i> and steppings
 of the <i>vars</i> are performed sequentially rather than in parallel.
 </p>
@@ -114,12 +114,12 @@ each <i>var</i> is bound to the value of its respective <i>init-form</i>,
 if supplied.
 This is a <i>binding</i>, not an assignment; when the loop terminates,
 the old values of those variables will be restored.
-For <b>do</b>, all 
+For <b><a href="do.html">do</a></b>, all 
 of the <i>init-forms</i> are evaluated before any <i>var</i>
 is bound. The
 <i>init-forms</i> can refer to the <i>bindings</i> of the <i>vars</i>
 visible before beginning execution of
-<b>do</b>.
+<b><a href="do.html">do</a></b>.
 For <b>do*</b>, the first <i>init-form</i> is evaluated, then the first
 <i>var</i> is bound to that value, then the second <i>init-form</i> 
 is evaluated, then the second <i>var</i> is bound, and so on;
@@ -129,20 +129,20 @@ old binding of the <i>j</i>th <i>var</i>.
 </p>
 <p>At the beginning of each iteration, after processing the variables,
 the <i>end-test-form</i> is evaluated.  If the result is
-<i>false</i>, execution proceeds with the body of the <b>do</b> 
+<i>false</i>, execution proceeds with the body of the <b><a href="do.html">do</a></b> 
 (or <b>do*</b>) form.
 If the result is <i>true</i>, the <i>result-forms</i> are evaluated in order
 as an <i>implicit progn</i>,
-and then <b>do</b> or <b>do*</b> returns.  
+and then <b><a href="do.html">do</a></b> or <b>do*</b> returns.  
 </p>
 <p>At the beginning of each iteration other than the first, 
 <i>vars</i> are updated as follows.  All the <i>step-forms</i>, if supplied,
 are evaluated, from left to right, and the resulting values are
 assigned to the respective <i>vars</i>.
 Any <i>var</i> that has no associated <i>step-form</i> is not assigned to.
-For <b>do</b>, all the <i>step-forms</i> are evaluated before any <i>var</i>
+For <b><a href="do.html">do</a></b>, all the <i>step-forms</i> are evaluated before any <i>var</i>
 is updated; the assignment of values to <i>vars</i> is done in parallel,
-as if by <b>psetq</b>.
+as if by <b><a href="psetq.html">psetq</a></b>.
 Because all of the <i>step-forms</i> are evaluated before any
 of the <i>vars</i> are altered, a <i>step-form</i> when evaluated always has
 access to the old values of all the <i>vars</i>, even if other <i>step-forms</i>
@@ -151,24 +151,24 @@ For <b>do*</b>, the first <i>step-form</i> is evaluated, then the
 value is assigned to the first <i>var</i>, then the second <i>step-form</i> 
 is evaluated, then the value is assigned to the second <i>var</i>, and so on;
 the assignment of values to variables is done sequentially,
-as if by <b>setq</b>.
-For either <b>do</b> or <b>do*</b>,
+as if by <b><a href="setq.html">setq</a></b>.
+For either <b><a href="do.html">do</a></b> or <b>do*</b>,
 after the <i>vars</i> have been updated,
 the <i>end-test-form</i> 
 is evaluated as described above, and the iteration continues.
 </p>
-<p>The remainder of the <b>do</b> (or <b>do*</b>) form constitutes 
+<p>The remainder of the <b><a href="do.html">do</a></b> (or <b>do*</b>) form constitutes 
 an <i>implicit tagbody</i>.
-<i>Tags</i> may appear within the body of a <b>do</b> loop
-for use by <b>go</b> statements appearing in the body (but such <b>go</b>
+<i>Tags</i> may appear within the body of a <b><a href="do.html">do</a></b> loop
+for use by <b><a href="go.html">go</a></b> statements appearing in the body (but such <b><a href="go.html">go</a></b>
 statements may not appear in the variable specifiers, the <i>end-test-form</i>,
 or the <i>result-forms</i>).
-When the end of a <b>do</b> body is reached, the next iteration cycle
+When the end of a <b><a href="do.html">do</a></b> body is reached, the next iteration cycle
 (beginning with the evaluation of <i>step-forms</i>) occurs.
 </p>
-<p>An <i>implicit block</i> named <a href="NILv.html">nil</a> surrounds the entire <b>do</b> 
+<p>An <i>implicit block</i> named <a href="NILv.html">nil</a> surrounds the entire <b><a href="do.html">do</a></b> 
 (or <b>do*</b>) form.
-A <b>return</b> statement may be used at any point to exit the loop
+A <b><a href="return.html">return</a></b> statement may be used at any point to exit the loop
 immediately.
 </p>
 <p><i>Init-form</i>  is an
@@ -177,10 +177,10 @@ If <i>init-form</i> is omitted, the initial value of <i>var</i> is <a href="NILv
 If a <i>declaration</i> is supplied for a <i>var</i>, <i>init-form</i> 
 must be consistent with the <i>declaration</i>.
 </p>
-<p><i>Declarations</i> can appear at the beginning of a <b>do</b> 
+<p><i>Declarations</i> can appear at the beginning of a <b><a href="do.html">do</a></b> 
 (or <b>do*</b>) body.
-They apply to code in the <b>do</b> (or <b>do*</b>) body, 
-to the <i>bindings</i> of the <b>do</b> (or <b>do*</b>) 
+They apply to code in the <b><a href="do.html">do</a></b> (or <b>do*</b>) body, 
+to the <i>bindings</i> of the <b><a href="do.html">do</a></b> (or <b>do*</b>) 
 <i>vars</i>, 
 to the <i>step-forms</i>,
 to the <i>end-test-form</i>, and to the <i>result-forms</i>.
@@ -231,7 +231,7 @@ a-vector &rArr;  #(1 0 3 0)
 
 <p>is an example of parallel assignment to index variables.  On the first
 iteration, the value of <tt>oldx</tt> is whatever value <tt>x</tt> had before
-the <b>do</b> was entered.  On succeeding iterations, <tt>oldx</tt> contains
+the <b><a href="do.html">do</a></b> was entered.  On succeeding iterations, <tt>oldx</tt> contains
 the value that <tt>x</tt> had on the previous iteration. 
 </p>
 <div class="example">
@@ -306,15 +306,15 @@ and more primitive functionality
 <h4 class="subsubheading">Notes::</h4>
 <p>If <i>end-test-form</i> is <a href="NILv.html">nil</a>, the test will never succeed.
 This provides an idiom for &ldquo;do forever&rdquo;:
-the body of the <b>do</b> or <b>do*</b> 
+the body of the <b><a href="do.html">do</a></b> or <b>do*</b> 
 is executed repeatedly.
-The infinite loop can be terminated by the use of <b>return</b>,
-<b>return-from</b>, <b>go</b> to an outer level, or <b>throw</b>.
+The infinite loop can be terminated by the use of <b><a href="return.html">return</a></b>,
+<b>return-from</b>, <b><a href="go.html">go</a></b> to an outer level, or <b><a href="throw.html">throw</a></b>.
 </p>
-<p>A <b>do</b> <i>form</i> may be explained in terms of the more primitive <i>forms</i>
-<b>block</b>, <b>return</b>, 
-<b>let</b>, <b>loop</b>, <b>tagbody</b>,
-and <b>psetq</b> as follows:
+<p>A <b><a href="do.html">do</a></b> <i>form</i> may be explained in terms of the more primitive <i>forms</i>
+<b><a href="block.html">block</a></b>, <b><a href="return.html">return</a></b>, 
+<b><a href="let.html">let</a></b>, <b><a href="loop.html">loop</a></b>, <b><a href="tagbody.html">tagbody</a></b>,
+and <b><a href="psetq.html">psetq</a></b> as follows:
 </p>
 <div class="example">
 <pre class="example"> (block nil        
@@ -331,8 +331,8 @@ and <b>psetq</b> as follows:
                   varn stepn))))
 </pre></div>
 
-<p><b>do*</b> is similar, except that <b>let*</b> and <b>setq</b> replace
-the <b>let</b> and <b>psetq</b>, respectively.
+<p><b>do*</b> is similar, except that <b>let*</b> and <b><a href="setq.html">setq</a></b> replace
+the <b><a href="let.html">let</a></b> and <b><a href="psetq.html">psetq</a></b>, respectively.
 </p>
 <hr>
 <div class="header">

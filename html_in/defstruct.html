@@ -133,7 +133,7 @@ even if it would expand into a <i>structure name</i>.
 </p>
 <p><i>type</i>&mdash;one of the <i>type specifiers</i>
 		    <b>list</b>,
-		    <b>vector</b>,
+		    <b><a href="vector.html">vector</a></b>,
 	         or <tt>(vector <i>size</i>)</tt>,
 		 or some other <i>type specifier</i> defined 
 		    by the <i>implementation</i> to be appropriate.
@@ -143,29 +143,29 @@ even if it would expand into a <i>structure name</i>.
 <a name="Description_003a_003a-169"></a>
 <h4 class="subsubheading">Description::</h4>
 
-<p><b>defstruct</b> defines a structured <i>type</i>, named <i>structure-type</i>,
+<p><b><a href="defstruct.html">defstruct</a></b> defines a structured <i>type</i>, named <i>structure-type</i>,
 with named slots as specified by the <i>slot-options</i>.
 </p>
-<p><b>defstruct</b> defines <i>readers</i> for the slots and
-arranges for <b>setf</b> to work properly on such
+<p><b><a href="defstruct.html">defstruct</a></b> defines <i>readers</i> for the slots and
+arranges for <b><a href="setf.html">setf</a></b> to work properly on such
 <i>reader</i> functions.
 Also, unless overridden, it
      defines a predicate named <tt><i>name</i>-p</tt>,
      defines a constructor function named <tt>make-<i>constructor-name</i></tt>,
  and defines a copier function named <tt>copy-<i>constructor-name</i></tt>.
 All names of automatically created functions might automatically
-be declared <b>inline</b> (at the discretion of the <i>implementation</i>).
+be declared <b><a href="inline.html">inline</a></b> (at the discretion of the <i>implementation</i>).
 </p>
 <p>If <i>documentation</i> is supplied, it is attached to <i>structure-name</i>
 as a <i>documentation string</i> of kind <b>structure</b>,
 </p>
 <p>and unless <tt>:type</tt> is used, the <i>documentation</i> is also attached 
 to <i>structure-name</i> as a <i>documentation string</i> of kind
-<b>type</b> and as a <i>documentation string</i> to the <i>class</i> <i>object</i> 
+<b><a href="type.html">type</a></b> and as a <i>documentation string</i> to the <i>class</i> <i>object</i> 
 for the <i>class</i> named <i>structure-name</i>.
 </p>
-<p><b>defstruct</b> defines a constructor function that is used to
-create instances of the structure created by <b>defstruct</b>.
+<p><b><a href="defstruct.html">defstruct</a></b> defines a constructor function that is used to
+create instances of the structure created by <b><a href="defstruct.html">defstruct</a></b>.
 The default name is <tt>make-<i>structure-name</i></tt>.
 A different name can be supplied
 by giving the name as the argument to the <i>constructor</i> option.
@@ -195,7 +195,7 @@ it is initialized by evaluating <i>slot-initform</i> in the slot description
 the consequences are undefined if an attempt is later made to read the slot&rsquo;s value
 before a value is explicitly assigned.
 </p>
-<p>Each <i>slot-initform</i> supplied for a <b>defstruct</b> component,
+<p>Each <i>slot-initform</i> supplied for a <b><a href="defstruct.html">defstruct</a></b> component,
 when used by the constructor function for an otherwise unsupplied
 component, is re-evaluated on every call to the
 constructor function.  
@@ -222,18 +222,18 @@ of the constructor function.
 <p>The <i>symbols</i> which name the slots must not be used by the 
 <i>implementation</i> as the <i>names</i> for the <i>lambda variables</i>
 in the constructor function, since one or more of those <i>symbols</i>
-might have been proclaimed <b>special</b> or might be defined as
+might have been proclaimed <b><a href="special.html">special</a></b> or might be defined as
 the name of a <i>constant variable</i>.
 The slot default init forms are evaluated 
-in the <i>lexical environment</i> in which the <b>defstruct</b> form itself appears and
+in the <i>lexical environment</i> in which the <b><a href="defstruct.html">defstruct</a></b> form itself appears and
 in the <i>dynamic environment</i> in which the call to the constructor function appears.
 </p>
 <p>For example, if the form <tt>(gensym)</tt> were used as an initialization form,
 either in the constructor-function call or as the default initialization form
-in <b>defstruct</b>, then every call to the constructor function would call
-<b>gensym</b> once to generate a new <i>symbol</i>.
+in <b><a href="defstruct.html">defstruct</a></b>, then every call to the constructor function would call
+<b><a href="gensym.html">gensym</a></b> once to generate a new <i>symbol</i>.
 </p>
-<p>Each <i>slot-description</i> in <b>defstruct</b> can specify zero or more
+<p>Each <i>slot-description</i> in <b><a href="defstruct.html">defstruct</a></b> can specify zero or more
 <i>slot-options</i>.  
 </p>
 <p>A <i>slot-option</i> consists of a pair of a keyword and a value
@@ -268,7 +268,7 @@ It is <i>implementation-dependent</i> whether the <i>type</i> is checked
 <dd><p>When <i>x</i> is <i>true</i>,
 this specifies that this slot cannot be
 altered; it will always contain the value supplied at construction time.
-<b>setf</b> will not accept the <i>reader</i> function for this slot.
+<b><a href="setf.html">setf</a></b> will not accept the <i>reader</i> function for this slot.
 If <i>x</i> is <i>false</i>, this slot-option has no effect.
 <i>X</i> is not evaluated.
 </p>
@@ -279,12 +279,12 @@ the slot is implemented by a <i>setf function</i> or a <i>setf expander</i>.
 </dd>
 </dl>
 
-<p>The following keyword options are available for use with <b>defstruct</b>.  
-A <b>defstruct</b> option can be either a keyword or a <i>list</i>
+<p>The following keyword options are available for use with <b><a href="defstruct.html">defstruct</a></b>.  
+A <b><a href="defstruct.html">defstruct</a></b> option can be either a keyword or a <i>list</i>
 of a keyword and arguments for that keyword; 
 specifying the keyword by itself is equivalent to specifying a list consisting of
 the keyword and no arguments.
-The syntax for <b>defstruct</b> options differs from the pair syntax 
+The syntax for <b><a href="defstruct.html">defstruct</a></b> options differs from the pair syntax 
 used for slot-options.  No part of any of these options is evaluated.
 </p><dl compact="compact">
 <dt><tt>:conc-name</tt></dt>
@@ -303,13 +303,13 @@ If a <i>non-nil</i> prefix is given,
 the name of the <i>reader</i> <i>function</i> for each slot is constructed by
 concatenating that prefix and the name of the slot, and interning the resulting
 <i>symbol</i> in the <i>package</i> that is current at the time the 
-<b>defstruct</b> form is expanded.
+<b><a href="defstruct.html">defstruct</a></b> form is expanded.
 </p>
 <p>Note that no matter what is supplied for <tt>:conc-name</tt>,
 slot keywords that match the slot names with no prefix attached are used
 with a constructor function.
 The <i>reader</i> function name is used
-in conjunction with <b>setf</b>.  Here is an example:
+in conjunction with <b><a href="setf.html">setf</a></b>.  Here is an example:
 </p>
 <div class="example">
 <pre class="example"> (defstruct (door (:conc-name dr-)) knob-color width material) &rArr;  DOOR
@@ -340,14 +340,14 @@ that argument is a <i>symbol</i> which specifies the name of the
 constructor function.  If the argument is not supplied (or if the option itself is not
 supplied), the name of the constructor is produced by concatenating the
 string <tt>&quot;MAKE-&quot;</tt> and the name of the structure, interning the name
-in whatever <i>package</i> is current at the time <b>defstruct</b>
+in whatever <i>package</i> is current at the time <b><a href="defstruct.html">defstruct</a></b>
 is expanded.  If the argument is provided and is <a href="NILv.html">nil</a>,
 no constructor function is defined.
 </p>
 <p>If <tt>:constructor</tt> is given as
 <tt>(:constructor <i>name</i> <i>arglist</i>)</tt>, 
 then instead of making a keyword
-driven constructor function, <b>defstruct</b> 
+driven constructor function, <b><a href="defstruct.html">defstruct</a></b> 
 defines a &ldquo;positional&rdquo; constructor function,
 taking arguments whose meaning is determined by the argument&rsquo;s position
 and possibly by keywords.
@@ -371,15 +371,15 @@ different constructor functions, each taking different parameters.
 <p>[Reviewer Note by Barmar: What about (:constructor) and (:constructor nil).
 		  Should we worry about it?]
 </p>
-<p><b>defstruct</b> creates the default-named keyword constructor function
+<p><b><a href="defstruct.html">defstruct</a></b> creates the default-named keyword constructor function
 only if no explicit <tt>:constructor</tt> options are specified, or if the
 <tt>:constructor</tt> option is specified without a <i>name</i> argument.
 </p>
 <p><tt>(:constructor nil)</tt> is meaningful only when there are no other
-<tt>:constructor</tt> options specified.  It prevents <b>defstruct</b>
+<tt>:constructor</tt> options specified.  It prevents <b><a href="defstruct.html">defstruct</a></b>
 from generating any constructors at all.
 </p>
-<p>Otherwise, <b>defstruct</b> creates a constructor function corresponding
+<p>Otherwise, <b><a href="defstruct.html">defstruct</a></b> creates a constructor function corresponding
 to each supplied <tt>:constructor</tt> option.  It is permissible to specify
 multiple keyword constructor functions as well as multiple 
 &ldquo;boa constructors&rdquo;.
@@ -391,7 +391,7 @@ which specifies the name of the copier
 function.  If the argument is not provided or if the option itself is not
 provided, the name of the copier is produced by concatenating the
 string <tt>&quot;COPY-&quot;</tt> and the name of the structure, interning the name
-in whatever <i>package</i> is current at the time <b>defstruct</b>
+in whatever <i>package</i> is current at the time <b><a href="defstruct.html">defstruct</a></b>
 is expanded.
 If the argument is provided and is <a href="NILv.html">nil</a>, no copier function is defined.
 </p>
@@ -405,7 +405,7 @@ structure that has the same <i>type</i> as its <i>argument</i>,
 and that has the <i>same</i> component values as the original 
 structure; that is, the component values are not copied recursively.
 </p>
-<p>If the <b>defstruct</b> <tt>:type</tt> option was not used,
+<p>If the <b><a href="defstruct.html">defstruct</a></b> <tt>:type</tt> option was not used,
 the following equivalence applies:
 </p>
 <div class="example">
@@ -472,7 +472,7 @@ including an <tt>astronaut</tt>, while <tt>astro-name</tt> can be correctly
 applied only to an <tt>astronaut</tt>.  An implementation might 
 check for incorrect use of <i>reader</i> functions.
 </p>
-<p>At most one <tt>:include</tt> can be supplied in a single <b>defstruct</b>.
+<p>At most one <tt>:include</tt> can be supplied in a single <b><a href="defstruct.html">defstruct</a></b>.
 The argument to <tt>:include</tt> is required and must be the
 name of some previously defined structure.  If the structure being
 defined has no <tt>:type</tt> option, then the included structure must
@@ -484,7 +484,7 @@ option specifying the same representation <i>type</i>.
 <p>If no <tt>:type</tt> option is involved, then
 the structure name of the including structure definition
 becomes the name of a <i>data type</i>, and therefore
-a valid <i>type specifier</i> recognizable by <b>typep</b>; it becomes
+a valid <i>type specifier</i> recognizable by <b><a href="typep.html">typep</a></b>; it becomes
 a <i>subtype</i> of the included structure.  
 In the above example,
 <tt>astronaut</tt> is a <i>subtype</i> of <tt>person</tt>; hence
@@ -562,9 +562,9 @@ slots for an <tt>annotated-binop</tt>.
 </p>
 </dd>
 <dt><tt>:initial-offset</tt></dt>
-<dd><p><tt>:initial-offset</tt> instructs <b>defstruct</b> to skip over a certain
+<dd><p><tt>:initial-offset</tt> instructs <b><a href="defstruct.html">defstruct</a></b> to skip over a certain
 number of slots before it starts allocating the slots described in the
-body.  This option&rsquo;s argument is the number of slots <b>defstruct</b> 
+body.  This option&rsquo;s argument is the number of slots <b><a href="defstruct.html">defstruct</a></b> 
 should skip.  <tt>:initial-offset</tt> can be used only if <tt>:type</tt> is also supplied.
 </p>
 <p>[Reviewer Note by Barmar: What are initial values of the skipped slots?]
@@ -644,7 +644,7 @@ and <tt>binop-operand-2</tt>.  (It does not, however, define a predicate
 keyword arguments and performs slot defaulting appropriate to the <tt>binop</tt>
 conceptual data type.  Similarly, the selector functions
 <tt>binop-operator</tt>, <tt>binop-operand-1</tt>,
-and <tt>binop-operand-2</tt> are essentially equivalent to <b>car</b>,
+and <tt>binop-operand-2</tt> are essentially equivalent to <b><a href="car.html">car</a></b>,
 <b>cadr</b>, and <b>caddr</b>, respectively.  They might not be
 completely equivalent because,
 for example, an implementation would be justified in adding error-checking
@@ -652,7 +652,7 @@ code to ensure that the argument to each selector function is a length-3
 list.
 </p>
 <p><tt>binop</tt> is a conceptual data type in that it is not made a part of
-the <span class="roman">Common Lisp</span> type system.  <b>typep</b> does not recognize <tt>binop</tt> as
+the <span class="roman">Common Lisp</span> type system.  <b><a href="typep.html">typep</a></b> does not recognize <tt>binop</tt> as
 a <i>type specifier</i>, and <b>type-of</b> returns <tt>list</tt> when
 given a <tt>binop</tt> structure.  There is no way to distinguish a data
 structure constructed by <tt>make-binop</tt> from any other <i>list</i> that 
@@ -668,7 +668,7 @@ with no <tt>:type</tt> option, the structure name actually becomes part
 of the <span class="roman">Common Lisp</span> data-type system.  <b>type-of</b>,
 when applied to such a structure, returns the structure name
 as the <i>type</i> of the <i>object</i>;
-<b>typep</b> recognizes
+<b><a href="typep.html">typep</a></b> recognizes
 the structure name as a valid <i>type specifier</i>.
 </p>
 <p>For structures defined with a <tt>:type</tt> option, <b>type-of</b> 
@@ -677,7 +677,7 @@ depending on the type supplied to the <tt>:type</tt> option.
 The structure name does not become a valid <i>type specifier</i>.
 However,
 if the <tt>:named</tt> option is also supplied, then the first component
-of the structure (as created by a <b>defstruct</b> constructor function)
+of the structure (as created by a <b><a href="defstruct.html">defstruct</a></b> constructor function)
 always contains the structure name.  This allows the structure name
 to be recovered from an instance of the structure and allows a reasonable
 predicate for the conceptual type to be defined:
@@ -723,7 +723,7 @@ definition:
 </pre></div>
 
 <p>The name <tt>binop</tt> is still not a valid <i>type specifier</i> recognizable
-to <b>typep</b>, but at least there is a way of distinguishing <tt>binop</tt>
+to <b><a href="typep.html">typep</a></b>, but at least there is a way of distinguishing <tt>binop</tt>
 structures from other similarly defined structures.
 </p>
 </dd>
@@ -732,7 +732,7 @@ structures from other similarly defined structures.
 If the argument is not supplied or if the option itself is not
 supplied, the name of the predicate is made by concatenating the
 name of the structure to the string <tt>&quot;-P&quot;</tt>, interning the name
-in whatever <i>package</i> is current at the time <b>defstruct</b>
+in whatever <i>package</i> is current at the time <b><a href="defstruct.html">defstruct</a></b>
 is expanded.
 If the argument is provided and is <a href="NILv.html">nil</a>, no predicate is defined.
 A predicate can be defined only if the structure is named;
@@ -822,7 +822,7 @@ structures using <tt>#S</tt> notation; see <a href="Printing-Structures.html#Pri
 <p>If neither a <tt>:print-function</tt> 
        nor a <tt>:print-object</tt> option 
 is supplied,
-then <b>defstruct</b> does not generate a <b>print-object</b> <i>method</i>
+then <b><a href="defstruct.html">defstruct</a></b> does not generate a <b>print-object</b> <i>method</i>
 <i>specialized</i> for <i>structure-name</i> and some default behavior is inherited
 either from a structure named in an <tt>:include</tt> option 
     or from the default behavior for printing structures;
@@ -831,10 +831,10 @@ see the <i>function</i> <b>print-object</b> and <a href="Printing-Structures.htm
 <p>When <b>*print-circle*</b> is <i>true</i>,
 a user-defined print function can print <i>objects</i> 
 to the supplied <i>stream</i> using  
-    <b>write</b>,
+    <b><a href="write.html">write</a></b>,
     <b>prin1</b>,
     <b>princ</b>, 
- or <b>format</b>
+ or <b><a href="format.html">format</a></b>
 and expect circularities to be detected and printed using the <tt>#<i>n</i>#</tt> syntax.
 This applies to <i>methods</i> on <b>print-object</b> in addition to
 <tt>:print-function</tt> options.
@@ -848,7 +848,7 @@ See the <i>variable</i> <b>*print-circle*</b>.
 the structure.  Its argument must be one of these <i>types</i>:
 </p>
 <dl compact="compact">
-<dt><b>vector</b></dt>
+<dt><b><a href="vector.html">vector</a></b></dt>
 <dd><p>This produces the same result as specifying <tt>(vector t)</tt>.
 The structure is represented
 as a general <i>vector</i>, storing components as vector elements.
@@ -864,7 +864,7 @@ components as vector elements.  Every component must be of a <i>type</i>
 that can be stored in a <i>vector</i> of the <i>type</i> specified.  
 The first component is vector
 element 1 if the structure is <tt>:named</tt>, and element 0 otherwise.
-The structure can be <tt>:named</tt> only if the <i>type</i> <b>symbol</b> 
+The structure can be <tt>:named</tt> only if the <i>type</i> <b><a href="symbol.html">symbol</a></b> 
 is a <i>subtype</i> of the supplied <i>element-type</i>.
 </p>
 </dd>
@@ -877,10 +877,10 @@ and the <i>car</i> if it is not <tt>:named</tt>.
 
 <p>Specifying this option has the effect of forcing
 a specific representation and of forcing the components to be
-stored in the order specified in <b>defstruct</b> 
+stored in the order specified in <b><a href="defstruct.html">defstruct</a></b> 
 in corresponding successive elements of the specified representation.
 It also prevents the structure name from becoming a valid
-<i>type specifier</i> recognizable by <b>typep</b>.
+<i>type specifier</i> recognizable by <b><a href="typep.html">typep</a></b>.
 </p>
 <p>For example:
 </p>
@@ -913,16 +913,16 @@ with <tt>quux</tt> as its <i>car</i>.
 <p>If <tt>:type</tt> is not supplied,
 the structure is represented as an <i>object</i> of <i>type</i> <b>structure-object</b>.
 </p>
-<p><b>defstruct</b> without a <tt>:type</tt> option defines a <i>class</i> with
+<p><b><a href="defstruct.html">defstruct</a></b> without a <tt>:type</tt> option defines a <i>class</i> with
 the structure name as its name. The <i>metaclass</i> of structure
 <i>instances</i> is <b>structure-class</b>.  
 </p>
 </dd>
 </dl>
 
-<p>The consequences of redefining a <b>defstruct</b> structure are undefined.
+<p>The consequences of redefining a <b><a href="defstruct.html">defstruct</a></b> structure are undefined.
 </p>
-<p>In the case where no <b>defstruct</b> options have been supplied, 
+<p>In the case where no <b><a href="defstruct.html">defstruct</a></b> options have been supplied, 
 the following functions are automatically defined to operate 
 on instances of the new structure:
 </p>
@@ -931,7 +931,7 @@ on instances of the new structure:
 <dd><p>A predicate with the name <tt><i>structure-name</i>-p</tt> is defined to
 test membership in the structure type.  The predicate 
 <tt>(<i>structure-name</i>-p <i>object</i>)</tt> is <i>true</i> if an <i>object</i> 
-is of this <i>type</i>; otherwise it is <i>false</i>.  <b>typep</b> can also
+is of this <i>type</i>; otherwise it is <i>false</i>.  <b><a href="typep.html">typep</a></b> can also
 be used with the name of the new <i>type</i> to test whether an 
 <i>object</i>
 belongs to the <i>type</i>. 
@@ -946,7 +946,7 @@ structure.  For each slot name, there is a corresponding
 This function <i>reads</i> the contents of that slot.  
 Each <i>reader</i> function takes one argument, which is
 an instance of the structure type.  
-<b>setf</b> can be used with any of these <i>reader</i> functions
+<b><a href="setf.html">setf</a></b> can be used with any of these <i>reader</i> functions
 to alter the slot contents.
 </p>
 </dd>
@@ -962,18 +962,18 @@ The copier function takes an object of the structure type and creates a
 new object of the same  type that is a copy of the first.  The copier
 function creates a new structure with the same component entries
 as the original.  Corresponding components of the two structure instances
-are <b>eql</b>.
+are <b><a href="eql.html">eql</a></b>.
 </p></dd>
 </dl>
 
-<p>If a <b>defstruct</b> <i>form</i> appears as a <i>top level form</i>,
+<p>If a <b><a href="defstruct.html">defstruct</a></b> <i>form</i> appears as a <i>top level form</i>,
 the <i>compiler</i> must make the <i>structure</i> <i>type</i> name recognized
-as a valid <i>type</i> name in subsequent declarations (as for <b>deftype</b>)
-and make the structure slot readers known to <b>setf</b>.  In addition, the
+as a valid <i>type</i> name in subsequent declarations (as for <b><a href="deftype.html">deftype</a></b>)
+and make the structure slot readers known to <b><a href="setf.html">setf</a></b>.  In addition, the
 <i>compiler</i> must save enough information about the <i>structure</i> <i>type</i>
-so that further <b>defstruct</b> definitions can use <tt>:include</tt> in a subsequent
-<b>deftype</b> in the same <i>file</i> to refer to the <i>structure</i> <i>type</i> name.
-The functions which <b>defstruct</b> generates are not defined 
+so that further <b><a href="defstruct.html">defstruct</a></b> definitions can use <tt>:include</tt> in a subsequent
+<b><a href="deftype.html">deftype</a></b> in the same <i>file</i> to refer to the <i>structure</i> <i>type</i> name.
+The functions which <b><a href="defstruct.html">defstruct</a></b> generates are not defined 
 in the compile time environment, although the <i>compiler</i> may save enough
 information about the functions to code subsequent calls inline.
 The <tt>#S</tt> <i>reader macro</i> might or might not recognize the newly defined 
@@ -1008,7 +1008,7 @@ are used to <i>access</i> elements of the structure.
 </dd>
 <dt>2.</dt>
 <dd><p><tt>ship</tt> becomes the name of a <i>type</i> of which instances
-of ships are elements.  <tt>ship</tt> becomes acceptable to <b>typep</b>,
+of ships are elements.  <tt>ship</tt> becomes acceptable to <b><a href="typep.html">typep</a></b>,
 for example; <tt>(typep x 'ship)</tt> is <i>true</i> if <tt>x</tt> is a ship
 and false if <tt>x</tt> is any <i>object</i> other than a ship.
 </p>
@@ -1051,15 +1051,15 @@ This function is called the &ldquo;copier function.&rdquo;
 </p></dd>
 </dl>
 
-<p><b>setf</b> can be used to alter the components of a <tt>ship</tt>:
+<p><b><a href="setf.html">setf</a></b> can be used to alter the components of a <tt>ship</tt>:
 </p>
 <div class="example">
 <pre class="example"> (setf (ship-x-position ship2) 100)
 </pre></div>
 
 <p>This alters the <tt>x-position</tt> of <tt>ship2</tt> to be <tt>100</tt>.
-This works because <b>defstruct</b> behaves as if
-it generates an appropriate <b>defsetf</b>
+This works because <b><a href="defstruct.html">defstruct</a></b> behaves as if
+it generates an appropriate <b><a href="defsetf.html">defsetf</a></b>
 for each <i>access</i> function.
 </p>
 <div class="example">
@@ -1159,7 +1159,7 @@ for each <i>access</i> function.
 
 <p>If any two slot names (whether present directly or inherited by the <tt>:include</tt> option)
 are the <i>same</i> under <b>string=</b>,
-<b>defstruct</b> should signal an error of <i>type</i> <b>program-error</b>.
+<b><a href="defstruct.html">defstruct</a></b> should signal an error of <i>type</i> <b>program-error</b>.
 </p>
 <p>The consequences are undefined if the <i>included-structure-name</i> 
 does not name a <i>structure type</i>.
@@ -1192,11 +1192,11 @@ a <i>slot-initform</i> and the corresponding slot&rsquo;s <tt>:type</tt> option 
 necessary because a <i>slot-initform</i> must be specified in order to
 specify slot options; in some cases, no suitable default may exist.
 </p>
-<p>The mechanism by which <b>defstruct</b> arranges for slot accessors to
-be usable with <b>setf</b> is <i>implementation-dependent</i>; 
+<p>The mechanism by which <b><a href="defstruct.html">defstruct</a></b> arranges for slot accessors to
+be usable with <b><a href="setf.html">setf</a></b> is <i>implementation-dependent</i>; 
 for example, it may use <i>setf functions</i>, <i>setf expanders</i>, or
 some other <i>implementation-dependent</i> mechanism known to that
-<i>implementation</i>&rsquo;s <i>code</i> for <b>setf</b>.
+<i>implementation</i>&rsquo;s <i>code</i> for <b><a href="setf.html">setf</a></b>.
 </p>
 <hr>
 <div class="header">

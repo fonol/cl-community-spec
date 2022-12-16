@@ -49,7 +49,7 @@
 <h4 class="subsubsection">The RECURSIVE-P argument</h4>
 
 <p>If <i>recursive-p</i> is supplied and not <a href="NILv.html">nil</a>, it specifies that
-this function call is not an outermost call to <b>read</b> but an 
+this function call is not an outermost call to <b><a href="read.html">read</a></b> but an 
 embedded call, typically from a <i>reader macro function</i>.
 It is important to distinguish such recursive calls for three reasons.
 </p>
@@ -75,7 +75,7 @@ the expression
 </pre></div>
 
 <p>then each call to the <i>single-quote</i> <i>reader macro function</i> would establish
-independent contexts for the scope of <b>read</b> information, including the scope of
+independent contexts for the scope of <b><a href="read.html">read</a></b> information, including the scope of
 identifications between markers like &ldquo;<tt>#3=</tt>&rdquo; and &ldquo;<tt>#3#</tt>&rdquo;.  However, for
 this expression, the scope was clearly intended to be determined by the outer set 
 of parentheses, so such a definition would be incorrect.
@@ -94,17 +94,17 @@ The correct way to define the <i>single-quote</i>
 <dt>2.</dt>
 <dd><p>A recursive call does not alter whether the reading process
 is to preserve <i>whitespace</i>_2 or not (as determined by whether the
-outermost call was to <b>read</b> or <b>read-preserving-whitespace</b>).
+outermost call was to <b><a href="read.html">read</a></b> or <b>read-preserving-whitespace</b>).
 Suppose again that <i>single-quote</i> 
 were to be defined as shown above in the incorrect definition.
 Then a call to <b>read-preserving-whitespace</b>
 that read the expression <tt>'foo&lt;<i>Space</i>&gt;</tt> would fail to preserve the space
 character following the symbol <tt>foo</tt> because the <i>single-quote</i>
-<i>reader macro function</i> calls <b>read</b>, 
+<i>reader macro function</i> calls <b><a href="read.html">read</a></b>, 
 not <b>read-preserving-whitespace</b>,
 to read the following expression (in this case <tt>foo</tt>).
 The correct definition, which passes the value <i>true</i> for <i>recursive-p</i>
-to <b>read</b>, allows the outermost call to determine
+to <b><a href="read.html">read</a></b>, allows the outermost call to determine
 whether <i>whitespace</i>_2 is preserved.
 </p>
 </dd>
