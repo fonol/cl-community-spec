@@ -278,6 +278,9 @@ def main():
                         if l.startswith("<p>"):
                             l = re.sub("&lsquo;(.+)&rsquo;", f"""<a href="{possible_ref_esc}.html">\\1</a>""", l)
 
+                if l == ", " or l == ",":
+                    out[-1] += ", "
+                    continue
 
                 if l.startswith("</body>"):
                     if in_section:
