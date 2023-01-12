@@ -87,6 +87,8 @@ def main():
     backlinks           = {}
     keys_to_label       = {}
 
+    all_fnames = [f for f in files]
+
     for f in files:
 
         fpath       = os.path.join(src_folder_path(), f)
@@ -267,6 +269,15 @@ def main():
                     in_table = False
                     out.append("</table>")
                     continue
+
+                m = re.match("^(?:<p>)?&lsquo;([^;]+); [^&]+&rsquo;$", l)
+                if m:
+                    possible_ref = m.group(1)
+                    possible_ref_esc = possible_ref.replace("-", "_002d")
+                    if f"{possible_ref_esc}.html" in all_fnames:
+                        if l.startswith("<p>"):
+                            l = re.sub("&lsquo;(.+)&rsquo;", f"""<a href="{possible_ref_esc}.html">\\1</a>""", l)
+
 
                 if l.startswith("</body>"):
                     if in_section:
