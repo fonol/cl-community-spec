@@ -1,5 +1,6 @@
 import os
 import re
+import json
 
 
 def get_html_files():
@@ -114,6 +115,8 @@ def main():
             n_up_title      = None
             n_prev_title    = None
 
+            title           = None
+
             skip            = 0
             if f == "index.html":
                 out = all_text.split("\n")
@@ -186,6 +189,15 @@ def main():
                         if m is not None:
                             out.append(f"<div class=\"node-type\">{m.group(1)}</div>")
                             l = re.sub(r"\[(.+)\]", "", l)
+                        if "," in l:
+                            tline = re.sub("<h[23456] class=\"(sub)?(sub)?section\">", "", l)
+                            tline = re.sub("</h[23456]>", "", tline)
+                            tline = re.sub("&(gt|GT);", ">", tline)
+                            tline = re.sub("&(lt|LT);", "<", tline)
+                            keywords = [t.strip() for t in tline.split(",")]
+                            for k in keywords:
+                                if k != title and len(k.strip()) > 0:
+                                    nodes.append((k, f.replace(".html", "")))
                         out.append(l)
                        
                         in_section  = True
@@ -318,8 +330,6 @@ def main():
                                 </a>
                             </div>
                         """)
-
-                    
                     if l.startswith("</body>"):
                         out.append("""<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>""")
 
@@ -341,8 +351,6 @@ def main():
 
         to_write.append((outpath, key, text))
     
-
-
     for outpath, key, text in to_write:
         if key in backlinks:
             bl_list = "".join([f"<a href=\"{bl}.html\">{keys_to_label.get(bl, bl)}</a>, " for bl in backlinks[key] if bl != "index"])
@@ -366,6 +374,15 @@ def main():
     
     with open(os.path.join(folder_path(), "scripts.js"), "w", encoding="utf-8") as fscripts:
         fscripts.write(scripts)
+    
+    searchable_terms = {}
+    for term, file in nodes:
+        term = term.replace("&gt;", ">")
+        term = term.replace("&lt;", "<")
+        searchable_terms[term] = f"{file}.html"
+
+    with open(os.path.join(folder_path(), "searchable_terms.json"), "w") as out:
+        out.write(json.dumps(searchable_terms, indent=4))
 
     print(f"Total: {len(nodes)} pages")
     print("Finished conversion.\nResults can be found in /output.")
