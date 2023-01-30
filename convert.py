@@ -65,6 +65,8 @@ def insert_escaped_links():
                     fprint = "-" +fprint[4:]
                 elif fprint.startswith("002f"):
                     fprint = "/" +fprint[4:]
+                elif fprint.startswith("0028"):
+                    fprint = "(" +fprint[4:]
                 if "002" in fprint or "006" in fprint:
                     print(fprint)
                 assert(not "002" in fprint)
