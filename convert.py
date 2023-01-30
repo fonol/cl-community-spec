@@ -1,7 +1,7 @@
 import os
 import re
 import json
-
+import functools
 
 def get_html_files():
 
@@ -92,6 +92,8 @@ def main():
     keys_to_label       = {}
 
     all_fnames          = [f for f in files]
+    
+    parents             = {}
 
     for f in files:
 
@@ -118,6 +120,7 @@ def main():
             n_prev_title    = None
 
             title           = None
+            numbering       = None
 
             skip            = 0
             if f == "index.html":
@@ -154,6 +157,7 @@ def main():
                             if n_up_title == "(dir)":
                                 n_up         = None
                                 n_up_title   = "-"
+                            nodes[-1] = (nodes[-1][0], nodes[-1][1], n_up, nodes[-1][3])
                         if "rel=\"next\"" in l:
                             n_next          = re.match(".+href=\"([^\"]+?)(#[^\"]+)?\".+", l).group(1)
                             assert(n_next.endswith(".html"))
@@ -180,11 +184,16 @@ def main():
                         title   = re.match("<title>(.+)</title>", l).group(1)
                         l       = l.replace("</title>", " (CLCS)</title>")
 
-                        nodes.append((title, f.replace(".html", "")))
+                        nodes.append((title, f.replace(".html", ""), n_up, None))
 
 
                     # take the very first header as page header
                     if (l.startswith("<h3 ") or l.startswith("<h4 ") or l.startswith("<h2") or l.startswith("<h1")) and section_cnt == 0:
+                        mnum = re.match(r".+>(\d+(\.\d+){0,4}) .+", l, flags= re.MULTILINE)
+                        if mnum is not None:
+                            numbering = mnum.group(1)
+                            nodes[-1] = (nodes[-1][0], nodes[-1][1], nodes[-1][2], numbering)
+
                         l = re.sub(r">\d+(\.\d+){0,4} ", ">", l)
                         out.append("<div class=\"section top-most\">")
                         m = re.match(r".+\[(.+)\].*", l)
@@ -199,13 +208,12 @@ def main():
                             keywords = [t.strip() for t in tline.split(",")]
                             for k in keywords:
                                 if k != title and len(k.strip()) > 0:
-                                    nodes.append((k, f.replace(".html", "")))
+                                    nodes.append((k, f.replace(".html", ""), n_up, None))
                         out.append(l)
                        
                         in_section  = True
                         section_cnt += 1
                         continue
-
 
                     elif l.startswith("<h4 ") or l.startswith("<h3 "):
                         if in_section:
@@ -216,7 +224,6 @@ def main():
                         in_section  = True
                         section_cnt += 1
                         continue
-                    
 
                     if l.startswith("</pre>"):
                         out.append("</code>")
@@ -287,7 +294,12 @@ def main():
                         if in_section:
                             out.append("</div>")
                         out.append("<div class=\"bl-placeholder\"></div>")
-                    
+                        # close body main
+                        out.append("</div>")
+                        # close body inner
+                        out.append("</div>")
+                        # close body main inner
+                        out.append("</div>")
                     out.append(l)
                     
 
@@ -305,34 +317,51 @@ def main():
                         next_disabled   = "disabled" if n_next is None else ""
 
                         out.append(f"""
-                            <div class="top-wrapper">
-                                <div class="top">
-                                    <div class="search">
-                                        <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
-                                        <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
-                                        <div id="search__drop" onblur="hideSearch()"></div>
-                                    </div>
-                                    <a class="index-btn" href="index.html">
-                                        <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="nav">
-                                <a href="{n_prev}" class="nav-btn nav__prev {prev_disabled}">
-                                    <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
-                                    {n_prev_title or "-"}
-                                </a>
-                                <a href="{n_up}" class="nav-btn nav__up {up_disabled}">
-                                    <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
-                                    {n_up_title  or "-"}
-                                </a>
-                                <a href="{n_next}" class="nav-btn nav__next {next_disabled}">
-                                    {n_next_title  or "-"}
-                                    <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
-                                </a>
-                            </div>
+                            <div class="body__inner">
+                                __nav-placeholder__
+                                <div class="body__main">
+                                    <div class="body__main__inner">
+                                        <div class="top-wrapper">
+                                            <div class="top">
+                                                <div class="search">
+                                                    <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                                    <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                                    <div id="search__drop" onblur="hideSearch()"></div>
+                                                </div>
+                                                <a class="index-btn" href="index.html">
+                                                    <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="nav">
+                                            <a href="{n_prev}" class="nav-btn nav__prev {prev_disabled}">
+                                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                                                {n_prev_title or "-"}
+                                            </a>
+                                            <a href="{n_up}" class="nav-btn nav__up {up_disabled}">
+                                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                                                {n_up_title  or "-"}
+                                            </a>
+                                            <a href="{n_next}" class="nav-btn nav__next {next_disabled}">
+                                                {n_next_title  or "-"}
+                                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                                            </a>
+                                        </div>
                         """)
                     if l.startswith("</body>"):
+                        # remember sidebar scroll position
+                        out.append("""<script>
+                        (() => {
+                            let sidebar = document.querySelector(".sidenav__main");
+                            let t = localStorage.getItem("sidebar-scroll");
+                            if (t !== null) {
+                                sidebar.scrollTop = parseInt(t, 10);
+                            }
+                            window.addEventListener("beforeunload", () => {
+                                localStorage.setItem("sidebar-scroll", sidebar.scrollTop);
+                            });
+                        })();
+                        </script>""")
                         out.append("""<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>""")
 
         
@@ -352,6 +381,64 @@ def main():
                 backlinks[ref].append(key)
 
         to_write.append((outpath, key, text))
+        n = nodes[-1]
+        nodes[-1] = (n[0], n[1], n_up, n[3])
+
+    parents = {}
+    for title, file, parent, numbering in nodes: 
+        if numbering is None:
+            continue
+        if parent is None or parent == "Top" or parent == "index.html":
+            parent = ""
+        parent = parent.replace(".html", "")
+        if parent not in parents:
+            parents[parent] = []
+        parents[parent].append((title, file, numbering))
+    
+    def cmp_nav_item(i1, i2):
+        num1 = i1[2]
+        num2 = i2[2]
+        comps1 = num1.split(".")
+        comps2 = num2.split(".")
+
+        if len(comps1) == len(comps2):
+            if int(comps1[-1]) > int(comps2[-1]):
+                return 1
+            if int(comps1[-1]) < int(comps2[-1]):
+                return -1
+            return 0
+        return 0
+
+    def print_nav_item(parents, children):
+        html = ""
+        for ctitle, cfile, numbering in sorted(children, key=functools.cmp_to_key(cmp_nav_item)):
+            cnode = ""
+            if cfile in parents:
+                cnode = print_nav_item(parents, parents[cfile])
+                cnode = f"<ul>{cnode}</ul>"
+            ctitle = ctitle.replace("``", "\"")
+            html += f"""<li>
+                            <div><span class="sidenav__num">{numbering}</span><a href="{cfile}.html">{ctitle}</a></div>
+                            {cnode}
+                        </li>"""
+        return html
+
+    nav = print_nav_item(parents, parents[""])
+    nav = f"""<div class="sidenav">
+                <div class="sidenav__header"> CLCS </div>
+                <div class="sidenav__main">
+                    <ul>{nav}</ul>
+                </div>
+                <div class="sidenav__footer">
+                    <a href="https://github.com/fonol/cl-community-spec">
+                        src
+                    </a>
+                    <a href="https://github.com/fonol/cl-community-spec/issues/new">
+                        report error
+                    </a>
+                </div>
+            </div>"""
+        
     
     for outpath, key, text in to_write:
         if key in backlinks:
@@ -365,6 +452,7 @@ def main():
                 """ if len(bl_list) > 0 else ""
             text = text.replace("<div class=\"bl-placeholder\"></div>", bl_sec)
 
+        text = text.replace("__nav-placeholder__", nav)
         with open(outpath, "w", encoding="utf-8") as outf:
             outf.write(text)
 
@@ -378,7 +466,7 @@ def main():
         fscripts.write(scripts)
     
     searchable_terms = {}
-    for term, file in nodes:
+    for term, file, _, _ in nodes:
         term = term.replace("&gt;", ">")
         term = term.replace("&lt;", "<")
         searchable_terms[term] = f"{file}.html"
