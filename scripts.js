@@ -100,7 +100,7 @@ function getCurrentPage() {
 // highlight current page in sidebar nav
 (() => {
     let currentPath = getCurrentPage();
-    let navEl = document.querySelector(`a[href="${currentPath}"]`);
+    let navEl = document.querySelector(`.sidenav__main a[href="${currentPath}"]`);
     if (navEl) {
         navEl.classList.add('active');
     }
