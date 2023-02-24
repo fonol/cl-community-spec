@@ -81,14 +81,38 @@ function hideSearch() {
     document.getElementById('search__drop').style.display = 'none';
     window.onclick = null;
 }
+function scrollSidenavToCurrentPage() {
+    let scrEl = document.getElementsByClassName('sidenav__main')[0];
+    let page = getCurrentPage();
+    let navEl = document.querySelector(`a[href="${page}"]`);
+    if (navEl && scrEl) {
+        let navElTop = navEl.getBoundingClientRect().top;
+        let scrElTop = scrEl.getBoundingClientRect().top;
+        let scrElH = scrEl.getBoundingClientRect().height;
+        scrEl.scrollTop = Math.max(0, scrEl.scrollTop + navElTop - scrElTop - scrElH / 2);
+    }
+}
+function getCurrentPage() {
+    return window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+}
 
 
+// highlight current page in sidebar nav
+(() => {
+    let currentPath = getCurrentPage();
+    let navEl = document.querySelector(`a[href="${currentPath}"]`);
+    if (navEl) {
+        navEl.classList.add('active');
+    }
+})();
 
 // syntax highlighting
-for (let el of document.getElementsByTagName('code')) {
-    el.innerHTML = el.innerHTML
-        .replace(/<br>/g, '\n')
-        .replace(/<i\/?>/g, '')
-        .replace(/<tt\/?>/g, '');
-    HighlightLisp.highlight_element(el);
-}
+(() => {
+    for (let el of document.getElementsByTagName('code')) {
+        el.innerHTML = el.innerHTML
+            .replace(/<br>/g, '\n')
+            .replace(/<i\/?>/g, '')
+            .replace(/<tt\/?>/g, '');
+        HighlightLisp.highlight_element(el);
+    }
+})();
