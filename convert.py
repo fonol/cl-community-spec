@@ -417,10 +417,7 @@ def main():
                 cnode = print_nav_item(parents, parents[cfile])
                 cnode = f"<ul>{cnode}</ul>"
             ctitle = ctitle.replace("``", "\"")
-            html += f"""<li>
-                            <div><span class="sidenav__num">{numbering}</span><a href="{cfile}.html">{ctitle}</a></div>
-                            {cnode}
-                        </li>"""
+            html += f"""<li><div><span>{numbering}</span><a href="{cfile}.html">{ctitle}</a></div>{cnode}</li>"""
         return html
 
     nav = print_nav_item(parents, parents[""])
