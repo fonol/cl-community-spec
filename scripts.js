@@ -107,6 +107,15 @@ function getCurrentPage() {
     let navEl = document.querySelector(`.sidenav__main a[href="${currentPath}"]`);
     if (navEl) {
         navEl.classList.add('active');
+        // if currently active element is not scrolled into view in sidebar, scroll into view
+        let scrEl = document.getElementsByClassName('sidenav__main')[0];
+        let navElTop = navEl.getBoundingClientRect().top;
+        let scrElTop = scrEl.getBoundingClientRect().top;
+        let scrElH = scrEl.getBoundingClientRect().height;
+        let isVisible = navElTop > scrElTop && navElTop < (scrElTop + scrElH);
+        if (!isVisible) {
+            scrollSidenavToCurrentPage();
+        }
     }
 })();
 
