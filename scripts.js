@@ -100,7 +100,17 @@ function getCurrentPage() {
     return pth;
 }
 
-
+function toggleTheme() {
+    if (window._theme === 'dark') {
+        window._theme = 'light';
+        window.localStorage.setItem('clcs-theme', 'light');
+        document.documentElement.removeAttribute("data-theme");
+    } else {
+        window._theme = 'dark';
+        window.localStorage.setItem('clcs-theme', 'dark');
+        document.documentElement.setAttribute("data-theme", "dark");
+    }
+}
 // highlight current page in sidebar nav
 (() => {
     let currentPath = getCurrentPage();
