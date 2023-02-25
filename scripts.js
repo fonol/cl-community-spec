@@ -93,7 +93,11 @@ function scrollSidenavToCurrentPage() {
     }
 }
 function getCurrentPage() {
-    return window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+    let pth = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+    if (pth.indexOf('#') !== -1) {
+        pth = pth.substring(0, pth.indexOf('#'));
+    }
+    return pth;
 }
 
 
