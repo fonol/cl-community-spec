@@ -111,6 +111,7 @@ def main():
             in_style        = False
             in_header       = False
             in_table        = False
+            in_arguments    = False
 
             n_up            = None
             n_prev          = None
@@ -217,10 +218,18 @@ def main():
 
                     elif l.startswith("<h4 ") or l.startswith("<h3 "):
                         if in_section:
+                            if in_arguments:
+                                out.append("</table>")
+                                in_arguments = False
                             out.append("</div>")
                         out.append("<div class=\"section\">")
                         l           = re.sub("::<", "<", l)
                         out.append(l)
+                        if "Arguments and Values" in l:
+                            in_arguments = True
+                            out.append("""<table class="arguments-table">""")
+                        else:
+                            in_arguments = False
                         in_section  = True
                         section_cnt += 1
                         continue
@@ -277,6 +286,19 @@ def main():
                         in_table = False
                         out.append("</table>")
                         continue
+
+                    if in_arguments: 
+                        if "&mdash;" in l or "&ndash;" in l:
+                            l = re.sub(r"^\s*<p>", "", l)
+                            l = re.sub("&[mn]dash;", "</td><td>", l)
+                            l = f"<tr><td>{l}"
+                            out.append(l)
+                            continue
+                        elif re.match(r"^\s*</p>", l):
+                            out.append("</td></tr>")
+                            continue
+                        elif re.match(r"^\s*<a .*", l):
+                            continue
 
                     m = re.match("^(?:<p>)?&lsquo;([^;]+); [^&]+&rsquo;$", l)
                     if m:
