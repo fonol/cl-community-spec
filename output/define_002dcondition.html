@@ -29,6 +29,7 @@
 <link href="ignore_002derrors.html#ignore_002derrors" rel="prev" title="ignore-errors">
 
 
+
 </head>
 
 <body lang="en">
@@ -90,31 +91,27 @@
                         {<i>option</i>}*<br>
    &rArr;  <i>name</i>
 </p>
-<table>
-<tr><td><i><span class="nolinebreak">slot-spec</span></i>&nbsp;<span class="nolinebreak">::=slot-name</span>&nbsp;|&nbsp;<span class="roman">(</span><span class="nolinebreak">slot-name</span>&nbsp;!<i><span class="nolinebreak">slot-option</span></i><span class="roman">)</span></td></tr>
-</table>
-<table>
-<tr><td><i><span class="nolinebreak">slot-option</span></i>&nbsp;::=[[&nbsp;{:reader <i>symbol</i>}* | </td></tr>
-<tr><td>{:writer !<i>function-name</i>}* | </td></tr>
-<tr><td>{:accessor <i>symbol</i>}* | </td></tr>
-<tr><td>{:allocation !<i>allocation-type</i>} | </td></tr>
-<tr><td>{:initarg <i>symbol</i>}* | </td></tr>
-<tr><td>{:initform <i>form</i>} | </td></tr>
-<tr><td>{:type <i>type-specifier</i>} ]]</td></tr>
-</table>
-<table>
-<tr><td><i>option</i>&nbsp;::=[[&nbsp;<span class="roman">(</span><tt><span class="nolinebreak">:default-initargs</span></tt>&nbsp;<tt>.</tt>&nbsp;<i><span class="nolinebreak">initarg-list</span></i><span class="roman">)</span>&nbsp;|&nbsp;</td></tr>
-<tr><td><span class="roman">(</span><tt>:documentation</tt>&nbsp;<i>string</i><span class="roman">)</span>&nbsp;|&nbsp;</td></tr>
-<tr><td><span class="roman">(</span><tt>:report</tt>&nbsp;<i><span class="nolinebreak">report-name</span></i><span class="roman">)</span>&nbsp;]]</td></tr>
-</table>
-<table>
-<tr><td><i><span class="nolinebreak">function-name</span></i>&nbsp;::={<i>symbol</i>&nbsp;|&nbsp;<tt>(setf&nbsp;<i>symbol</i>)</tt>}</td></tr>
-</table>
-<table>
-<tr><td><i><span class="nolinebreak">allocation-type</span></i>&nbsp;::=<tt>:instance</tt>&nbsp;|&nbsp;<tt>:class</tt></td></tr>
-</table>
-<table>
-<tr><td><i><span class="nolinebreak">report-name</span></i>&nbsp;::=<i>string</i>&nbsp;|&nbsp;<i>symbol</i>&nbsp;|&nbsp;<i>lambda&nbsp;expression</i></td></tr>
+<table class="syntax-table">
+<tr><td><i><span class="nolinebreak">slot-spec</span></i>&nbsp;<span class="nolinebreak"></td><td>::=</td><td>slot-name</span>&nbsp;|&nbsp;<span class="roman">(</span><span class="nolinebreak">slot-name</span>&nbsp;!<i><span class="nolinebreak">slot-option</span></i><span class="roman">)</span>
+</td></tr>
+<tr><td><i><span class="nolinebreak">slot-option</span></i>&nbsp;</td><td>::=</td><td>[[&nbsp;{:reader <i>symbol</i>}* |
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:writer !<i>function-name</i>}* | 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:accessor <i>symbol</i>}* | 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:allocation !<i>allocation-type</i>} | 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:initarg <i>symbol</i>}* | 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:initform <i>form</i>} | 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{:type <i>type-specifier</i>} ]]
+</td></tr>
+<tr><td><i>option</i>&nbsp;</td><td>::=</td><td>[[&nbsp;<span class="roman">(</span><tt><span class="nolinebreak">:default-initargs</span></tt>&nbsp;<tt>.</tt>&nbsp;<i><span class="nolinebreak">initarg-list</span></i><span class="roman">)</span>&nbsp;|&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">(</span><tt>:documentation</tt>&nbsp;<i>string</i><span class="roman">)</span>&nbsp;|&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">(</span><tt>:report</tt>&nbsp;<i><span class="nolinebreak">report-name</span></i><span class="roman">)</span>&nbsp;]]
+</td></tr>
+<tr><td><i><span class="nolinebreak">function-name</span></i>&nbsp;</td><td>::=</td><td>{<i>symbol</i>&nbsp;|&nbsp;<tt>(setf&nbsp;<i>symbol</i>)</tt>}
+</td></tr>
+<tr><td><i><span class="nolinebreak">allocation-type</span></i>&nbsp;</td><td>::=</td><td><tt>:instance</tt>&nbsp;|&nbsp;<tt>:class</tt>
+</td></tr>
+<tr><td><i><span class="nolinebreak">report-name</span></i>&nbsp;</td><td>::=</td><td><i>string</i>&nbsp;|&nbsp;<i>symbol</i>&nbsp;|&nbsp;<i>lambda&nbsp;expression</i>
+</td></tr>
 </table>
 </div>
 <div class="section">
@@ -128,7 +125,7 @@
   the <i>parent-types</i> default to <tt>(condition)</tt>.
 </td></tr>
 <tr><td><i>default-initargs</i></td><td>a <i>list</i> of <i>keyword/value pairs</i>.
-</td></tr>
+</p>
 <p>[Editorial Note by KMP: This is all mixed up as to which is a slot option and which is
 		 a main option.  I&rsquo;ll sort that out.  Also, some of this is implied
 		 by the bnf and needn&rsquo;t be stated explicitly.]
@@ -141,50 +138,51 @@ the <i>list</i> of a slot name, or the
 <i>list</i> of slot name/slot form pairs.
 </td></tr>
 <tr><td><i>Option</i> </td><td> Any of the following:
-</td></tr>
+</p>
+<p>
 <dl compact="compact">
 <dt><tt>:reader</tt></dt>
 <dd><p><tt>:reader</tt> can be supplied more than once for a given <i>slot</i> 
 and cannot be <a href="NILv.html">nil</a>.
-</td></tr>
+</p>
 </dd>
 <dt><tt>:writer</tt></dt>
 <dd><p><tt>:writer</tt> can be supplied more than once for a given <i>slot</i>
 and must name a <i>generic function</i>.
-</td></tr>
+</p>
 </dd>
 <dt><tt>:accessor</tt></dt>
 <dd><p><tt>:accessor</tt> can be supplied more than once for a given <i>slot</i>
 and cannot be <a href="NILv.html">nil</a>.
-</td></tr>
+</p>
 </dd>
 <dt><tt>:allocation</tt></dt>
 <dd><p><tt>:allocation</tt> can be supplied once at most for a given <i>slot</i>.
 The default if <tt>:allocation</tt> is not supplied is <tt>:instance</tt>.
-</td></tr>
+</p>
 </dd>
 <dt><tt>:initarg</tt></dt>
 <dd><p><tt>:initarg</tt> can be supplied more than once for a given <i>slot</i>.  
-</td></tr>
+</p>
 </dd>
 <dt><tt>:initform</tt></dt>
 <dd><p><tt>:initform</tt> can be supplied once at most for a given <i>slot</i>.  
-</td></tr>
+</p>
 </dd>
 <dt><tt>:type</tt></dt>
 <dd><p><tt>:type</tt> can be supplied once at most for a given <i>slot</i>. 
-</td></tr>
+</p>
 </dd>
 <dt><tt>:documentation</tt></dt>
 <dd><p><tt>:documentation</tt> can be supplied once at most for a given <i>slot</i>. 
-</td></tr>
+</p>
 </dd>
 <dt><tt>:report</tt></dt>
 <dd><p><tt>:report</tt> can be supplied once at most.
-</td></tr>
+</p>
 </dd>
 </dl>
-
+</td></tr>
 </table>
 </div>
 <div class="section">

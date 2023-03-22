@@ -17,6 +17,24 @@ def src_folder_path():
 def out_folder_path():
     return os.path.join(folder_path(), "output/")
 
+def check_for_tag_mismatch(html):
+    m = []
+    if html.count("<table") != html.count("</table>"):
+        m.append("<table>")
+    if html.count("<td") != html.count("</td>"):
+        m.append("<td>")
+    if html.count("<div") != html.count("</div>"):
+        m.append("<div>")
+    if html.count("<span") != html.count("</span>"):
+        m.append("<span>")
+    if html.count("<code") != html.count("</code>"):
+        m.append("<code>")
+    return m
+
+def cleanup(html):
+
+    html = re.sub(r"<br ?/?>\s*</td>", "</td>", html, flags=re.MULTILINE)
+    return html
 
 def insert_table_links():
     files               = get_html_files()
@@ -112,6 +130,7 @@ def main():
             in_header       = False
             in_table        = False
             in_arguments    = False
+            in_syntax_table = False
 
             n_up            = None
             n_prev          = None
@@ -124,16 +143,21 @@ def main():
             numbering       = None
 
             skip            = 0
+            
+            lines           = all_text.split("\n")
+            nextl           = None
             if f == "index.html":
-                out = all_text.split("\n")
+                out = lines
             else:
-                for ix, l in enumerate(all_text.split("\n")):
+                for ix, l in enumerate(lines):
                     if skip > 0:
                         skip -= 1
                         continue
+                    if ix < len(lines) - 1:
+                        nextl = lines[ix+1]
+                    else:
+                        nextl = None
                     if l == "<hr>" or l == "<hr/>":
-                        continue
-                    if l.startswith("<!--"):
                         continue
                     if l == """<h1 class="settitle" align="center">ANSI and GNU Common Lisp Document</h1>""":
                         continue
@@ -221,6 +245,15 @@ def main():
                             if in_arguments:
                                 out.append("</table>")
                                 in_arguments = False
+                            if in_syntax_table:
+                                for r in range(1, 5):
+                                    if "</tr>" in out[-r]:
+                                        break
+                                    if "<td>" in out[-r]:
+                                        out.append("</td></tr>")
+                                        break
+                                out.append("</table>")
+                                in_syntax_table = False
                             out.append("</div>")
                         out.append("<div class=\"section\">")
                         l           = re.sub("::<", "<", l)
@@ -245,9 +278,33 @@ def main():
                         l = l.replace("&bull; ", "")
                         l = l.replace("</a>:</td>", "</a></td>")
                         l = l.replace("``", "\"")
+
+                    if "::=" in l and not "<td" in l and section_cnt == 1 and not in_syntax_table:
+                        in_syntax_table = True
+                        out.append("""<table class="syntax-table">""")
+
+                    if in_syntax_table:
+                        if "::=" in l:
+                            for ib in range(10):
+                                if "<td>" in out[-ib]:
+                                    out.append("</td></tr>")
+                                    break
+                            l  = re.sub("<!-- /@w -->", "", l)
+                            l  = re.sub("^<p>", "", l)
+                            c0 = l.split("::=")[0]
+                            c1 = re.sub(r"\s+$", "", l.split("::=")[1])
+                            out.append(f"<tr><td>{c0}</td><td>::=</td><td>{c1}")
+                            continue
+                        elif re.match(r"^\s*</p>", l):
+                            continue
+                        elif "<!--end-syntax-table-->" in l:
+                            in_syntax_table = False
+                            out.append("</td></tr></table>")
+                            continue
+
                     
                     # table start
-                    if re.match(r"(</p>)?<p>.+<!-- /@w -->", l) and not "&nbsp;Figure" in l:
+                    if re.match(r"(</p>)?<p>.+<!-- /@w -->", l) and not "&nbsp;Figure" in l and not in_syntax_table:
                         in_table = True
                         out.append("<table>")
                         l = re.sub("<p>", "", l)
@@ -274,7 +331,8 @@ def main():
                         out.append(l)
                         continue
 
-                    if in_table and re.match(r".+<!-- /@w -->", l):
+                    
+                    if in_table and not in_syntax_table and re.match(r".+<!-- /@w -->", l):
                         l = re.sub("<!-- /@w -->", "", l)
                         l = re.sub("(&nbsp;){2,}", "</td><td>", l)
                         l = f"<tr><td>{l}</td></tr>"
@@ -282,7 +340,7 @@ def main():
                         l = re.sub(r"<p>\s*</p>", "", l)
 
 
-                    if l.startswith("</p>") and in_table:
+                    if l.startswith("</p>") and in_table and not in_syntax_table:
                         in_table = False
                         out.append("</table>")
                         continue
@@ -295,8 +353,12 @@ def main():
                             out.append(l)
                             continue
                         elif re.match(r"^\s*</p>", l):
-                            out.append("</td></tr>")
-                            continue
+                            if ("&mdash;" in nextl 
+                                or "&ndash;" in nextl 
+                                or nextl.startswith("<a")
+                                or nextl.startswith("</body")):
+                                out.append("</td></tr>")
+                                continue
                         elif re.match(r"^\s*<a .*", l):
                             continue
 
@@ -312,8 +374,19 @@ def main():
                         out[-1] += ", "
                         continue
 
+                    if l.startswith("<!--"):
+                        continue
+
                     if l.startswith("</body>"):
                         if in_section:
+                            if in_arguments or in_syntax_table:
+                                for r in range(5):
+                                    if "</tr>" in out[-r]:
+                                        break
+                                    if "<td>" in out[-r]:
+                                        out.append("</td></tr>")
+                                        break
+                                out.append("</table>")
                             out.append("</div>")
                         out.append("<div class=\"bl-placeholder\"></div>")
                         # close body main
@@ -406,6 +479,7 @@ def main():
         
 
         text = "\n".join(out)
+        text = cleanup(text)
         all_refs = re.finditer(r"<a href=\"([^\"]+).html(?:#[^\"]+)?\">([^<]+)</a>", text)
         key = f.replace(".html", "")
         for r in all_refs:
@@ -489,6 +563,10 @@ def main():
             text = text.replace("<div class=\"bl-placeholder\"></div>", bl_sec)
 
         text = text.replace("__nav-placeholder__", nav)
+        mismatched_tags = check_for_tag_mismatch(text)
+        for t in mismatched_tags:
+            fd = outpath[outpath.rindex("/"):]
+            print(f"WARN: File {fd} has mismatched tag: {t}")
         with open(outpath, "w", encoding="utf-8") as outf:
             outf.write(text)
 

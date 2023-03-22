@@ -14,33 +14,7 @@
 <link href="Features.html#Features" rel="up" title="Features">
 <link href="System-Construction-Dictionary.html#System-Construction-Dictionary" rel="next" title="System Construction Dictionary">
 <link href="Feature-Expressions.html#Feature-Expressions" rel="prev" title="Feature Expressions">
-<style type="text/css">
-<!--
-a.summary-letter {text-decoration: none}
-blockquote.indentedblock {margin-right: 0em}
-blockquote.smallindentedblock {margin-right: 0em; font-size: smaller}
-blockquote.smallquotation {font-size: smaller}
-div.display {margin-left: 3.2em}
-div.example {margin-left: 3.2em}
-div.lisp {margin-left: 3.2em}
-div.smalldisplay {margin-left: 3.2em}
-div.smallexample {margin-left: 3.2em}
-div.smalllisp {margin-left: 3.2em}
-kbd {font-style: oblique}
-pre.display {font-family: inherit}
-pre.format {font-family: inherit}
-pre.menu-comment {font-family: serif}
-pre.menu-preformatted {font-family: serif}
-pre.smalldisplay {font-family: inherit; font-size: smaller}
-pre.smallexample {font-size: smaller}
-pre.smallformat {font-family: inherit; font-size: smaller}
-pre.smalllisp {font-size: smaller}
-span.nolinebreak {white-space: nowrap}
-span.roman {font-family: initial; font-weight: normal}
-span.sansserif {font-family: sans-serif; font-weight: normal}
-ul.no-bullet {list-style: none}
--->
-</style>
+
 
 
 </head>
@@ -67,28 +41,28 @@ Previous: <a href="Feature-Expressions.html#Feature-Expressions" accesskey="p" r
 Figure 24&ndash;1 shows some sample <i>expressions</i>, and how they would be 
 <i>read</i>_2 in these <i>implementations</i>.
 </p>
-<p>&nbsp;&nbsp;<tt>(cons&nbsp;#+spice&nbsp;&quot;Spice&quot;&nbsp;<span class="nolinebreak">#-spice</span>&nbsp;&quot;Lispm&quot;&nbsp;x)</tt>&nbsp;<!-- /@w -->
-&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Spice&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Lispm&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Lispm&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;<tt>(cons&nbsp;#+spice&nbsp;&quot;Spice&quot;&nbsp;#+LispM&nbsp;&quot;Lispm&quot;&nbsp;x)</tt>&nbsp;<!-- /@w -->
-&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Spice&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Lispm&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;<tt>(setq&nbsp;a&nbsp;'(1&nbsp;2&nbsp;#+perq&nbsp;43&nbsp;#+(not&nbsp;perq)&nbsp;27))</tt>&nbsp;<!-- /@w -->
-&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(SETQ&nbsp;A&nbsp;'(1&nbsp;2&nbsp;43))</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(SETQ&nbsp;A&nbsp;'(1&nbsp;2&nbsp;27))</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(SETQ&nbsp;A&nbsp;'(1&nbsp;2&nbsp;27))</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;<tt>(let&nbsp;((a&nbsp;3)&nbsp;#+(or&nbsp;spice&nbsp;lispm)&nbsp;(b&nbsp;3))&nbsp;(foo&nbsp;a))</tt>&nbsp;<!-- /@w -->
-&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(LET&nbsp;((A&nbsp;3)&nbsp;(B&nbsp;3))&nbsp;(FOO&nbsp;A))</tt>&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(LET&nbsp;((A&nbsp;3)&nbsp;(B&nbsp;3))&nbsp;(FOO&nbsp;A))</tt>&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(LET&nbsp;((A&nbsp;3))&nbsp;(FOO&nbsp;A))</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;<tt>(cons&nbsp;#+Lispm&nbsp;&quot;#+Spice&quot;&nbsp;#+Spice&nbsp;&quot;foo&quot;&nbsp;<span class="nolinebreak">#-(or</span>&nbsp;Lispm&nbsp;Spice)&nbsp;7&nbsp;x)</tt>&nbsp;<!-- /@w -->
-&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;foo&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;#+Spice&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
-&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;7&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+<p>&nbsp;&nbsp;<tt>(cons&nbsp;#+spice&nbsp;&quot;Spice&quot;&nbsp;<span class="nolinebreak">#-spice</span>&nbsp;&quot;Lispm&quot;&nbsp;x)</tt>&nbsp;
+&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Spice&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Lispm&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Lispm&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;<tt>(cons&nbsp;#+spice&nbsp;&quot;Spice&quot;&nbsp;#+LispM&nbsp;&quot;Lispm&quot;&nbsp;x)</tt>&nbsp;
+&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Spice&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;Lispm&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;<tt>(setq&nbsp;a&nbsp;'(1&nbsp;2&nbsp;#+perq&nbsp;43&nbsp;#+(not&nbsp;perq)&nbsp;27))</tt>&nbsp;
+&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(SETQ&nbsp;A&nbsp;'(1&nbsp;2&nbsp;43))</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(SETQ&nbsp;A&nbsp;'(1&nbsp;2&nbsp;27))</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(SETQ&nbsp;A&nbsp;'(1&nbsp;2&nbsp;27))</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;<tt>(let&nbsp;((a&nbsp;3)&nbsp;#+(or&nbsp;spice&nbsp;lispm)&nbsp;(b&nbsp;3))&nbsp;(foo&nbsp;a))</tt>&nbsp;
+&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(LET&nbsp;((A&nbsp;3)&nbsp;(B&nbsp;3))&nbsp;(FOO&nbsp;A))</tt>&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(LET&nbsp;((A&nbsp;3)&nbsp;(B&nbsp;3))&nbsp;(FOO&nbsp;A))</tt>&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(LET&nbsp;((A&nbsp;3))&nbsp;(FOO&nbsp;A))</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;<tt>(cons&nbsp;#+Lispm&nbsp;&quot;#+Spice&quot;&nbsp;#+Spice&nbsp;&quot;foo&quot;&nbsp;<span class="nolinebreak">#-(or</span>&nbsp;Lispm&nbsp;Spice)&nbsp;7&nbsp;x)</tt>&nbsp;
+&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;A&nbsp;...&nbsp;&nbsp;&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;foo&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;B&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;&quot;#+Spice&quot;&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;<i>implementation</i>&nbsp;C&nbsp;...&nbsp;&nbsp;<tt>(CONS&nbsp;7&nbsp;X)</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;24&ndash;1:&nbsp;<a href="Features.html">Features</a>&nbsp;examples&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Figure&nbsp;24&ndash;1:&nbsp;<a href="Features.html">Features</a>&nbsp;examples&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </p>
 
 

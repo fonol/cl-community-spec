@@ -29,6 +29,7 @@
 <link href="Specialized-Lambda-Lists.html#Specialized-Lambda-Lists" rel="prev" title="Specialized Lambda Lists">
 
 
+
 </head>
 
 <body lang="en">
@@ -86,10 +87,9 @@
  is used in describing <i>macros</i> 
 defined by the <i>operators</i> in Figure 3&ndash;17.
 </p>
-<table>
-<tr><td><a href="define_002dcompiler_002dmacro.html">define-compiler-macro</a></td><td><a href="defmacro.html">defmacro</a></td><td>macrolet</td></tr>
-<tr><td><a href="define_002dsetf_002dexpander.html">define-setf-expander</a></td></tr>
-</table>
+<p>&nbsp;&nbsp;<a href="define_002dcompiler_002dmacro.html">define-compiler-macro</a>&nbsp;&nbsp;<a href="defmacro.html">defmacro</a>&nbsp;&nbsp;macrolet&nbsp;&nbsp;
+&nbsp;&nbsp;<a href="define_002dsetf_002dexpander.html">define-setf-expander</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</p>
 <div class="table-subcaption"> Figure 3&ndash;17: Operators that use Macro Lambda Lists</div>
 
 <p>With the additional restriction that
@@ -97,54 +97,43 @@ an <i>environment parameter</i> may appear only once
 (at any of the positions indicated),
 a <i>macro lambda list</i> has the following syntax:
 </p>
-
-<table>
-<tr><td><i>reqvars</i>&nbsp;::={<i>var</i>&nbsp;|&nbsp;!<i>pattern</i>}*</td></tr>
-</table>
-<table>
-<tr><td><i>optvars</i>&nbsp;::=<tt>[</tt>&amp;optional {<i>var</i> |</td></tr>
+<table class="syntax-table">
+<tr><td><i>reqvars</i>&nbsp;</td><td>::=</td><td>{<i>var</i>&nbsp;|&nbsp;!<i>pattern</i>}*
+</td></tr>
+<tr><td><i>optvars</i>&nbsp;</td><td>::=</td><td><tt>[</tt>&amp;optional {<i>var</i> |
 		       <span class="roman">(</span>{<i>var</i> | !<i>pattern</i>} <span class="roman">[</span>init-form <span class="roman">[</span>supplied-p-parameter<span class="roman">]</span><span class="roman">]</span><span class="roman">)</span>}*<tt>]</tt>
-</table>
-<table>
-<tr><td><i>restvar</i>&nbsp;::=<tt>[</tt>{<tt>&amp;rest</tt> | &amp;body} <i>{<i>var</i> | !<i>pattern</i>}</i><tt>]</tt></td></tr>
-</table>
-<table>
-<tr><td><i>keyvars</i>&nbsp;::=<span class="roman">[</span>&amp;key {<i>var</i> |</td></tr>
+</td></tr>
+<tr><td><i>restvar</i>&nbsp;</td><td>::=</td><td><tt>[</tt>{<tt>&amp;rest</tt> | &amp;body} <i>{<i>var</i> | !<i>pattern</i>}</i><tt>]</tt>
+</td></tr>
+<tr><td><i>keyvars</i>&nbsp;</td><td>::=</td><td><span class="roman">[</span>&amp;key {<i>var</i> |
 		          	 <span class="roman">(</span>{<i>var</i> | 
 					       <span class="roman">(</span><i>keyword-name</i> {<i>var</i> | !<i>pattern</i>}<span class="roman">)</span>}
 				 	<span class="roman">[</span>init-form <span class="roman">[</span>supplied-p-parameter<span class="roman">]</span><span class="roman">]</span><span class="roman">)</span>}*
-<tr><td><span class="roman">[</span><tt><span class="nolinebreak">&amp;allow-other-keys</span></tt><span class="roman">]</span><span class="roman">]</span></td></tr>
-</table>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">[</span><tt><span class="nolinebreak">&amp;allow-other-keys</span></tt><span class="roman">]</span><span class="roman">]</span>
+</td></tr>
+<tr><td><i>auxvars</i>&nbsp;</td><td>::=</td><td><tt>[</tt>&amp;aux {<i>var</i> | <span class="roman">(</span><i>var</i> <span class="roman">[</span><i>init-form</i><span class="roman">]</span><span class="roman">)</span>}*<tt>]</tt>
 
-<table>
-<tr><td><i>auxvars</i>&nbsp;::=<tt>[</tt>&amp;aux {<i>var</i> | <span class="roman">(</span><i>var</i> <span class="roman">[</span><i>init-form</i><span class="roman">]</span><span class="roman">)</span>}*<tt>]</tt></td></tr>
-
-<tr><td><i>envvar</i>&nbsp;::=<tt>[</tt>&amp;environment <i>var</i><tt>]</tt></td></tr>
-</table>
-<table>
-<tr><td><i>wholevar</i>&nbsp;::=<tt>[</tt>&amp;whole <i>var</i><tt>]</tt></td></tr>
-</table>
-<table>
-<tr><td><i><span class="nolinebreak">lambda-list</span></i>&nbsp;::=<span class="roman">(</span>!<i>wholevar</i>&nbsp;!<i>envvar</i>&nbsp;!<i>reqvars</i>&nbsp;!<i>envvar</i>&nbsp;!<i>optvars</i>&nbsp;!<i>envvar</i></td></tr>
-<tr><td>!<i>restvar</i>&nbsp;!<i>envvar</i>&nbsp;!<i>keyvars</i>&nbsp;!<i>envvar</i>&nbsp;!<i>auxvars</i>&nbsp;!<i>envvar</i><span class="roman">)</span>&nbsp;|</td></tr>
-<tr><td><span class="roman">(</span>!<i>wholevar</i>&nbsp;!<i>envvar</i>&nbsp;!<i>reqvars</i>&nbsp;!<i>envvar</i>&nbsp;!<i>optvars</i>&nbsp;!<i>envvar</i>&nbsp;<tt>.</tt>&nbsp;<i>var</i><span class="roman">)</span></td></tr>
-</table>
-<table>
-<tr><td><i>pattern</i>&nbsp;::=<span class="roman">(</span>!<i>wholevar</i>&nbsp;!<i>reqvars</i>&nbsp;!<i>optvars</i>&nbsp;!<i>restvar</i>&nbsp;!<i>keyvars</i>&nbsp;!<i>auxvars</i><span class="roman">)</span>&nbsp;|</td></tr>
-<tr><td><span class="roman">(</span>!<i>wholevar</i>&nbsp;!<i>reqvars</i>&nbsp;!<i>optvars</i>&nbsp;<tt>.</tt>&nbsp;<i>var</i><span class="roman">)</span></td></tr>
-</table>
-
-
+</td></tr>
+<tr><td><i>envvar</i>&nbsp;</td><td>::=</td><td><tt>[</tt>&amp;environment <i>var</i><tt>]</tt>
+</td></tr>
+<tr><td><i>wholevar</i>&nbsp;</td><td>::=</td><td><tt>[</tt>&amp;whole <i>var</i><tt>]</tt>
+</td></tr>
+<tr><td><i><span class="nolinebreak">lambda-list</span></i>&nbsp;</td><td>::=</td><td><span class="roman">(</span>!<i>wholevar</i>&nbsp;!<i>envvar</i>&nbsp;!<i>reqvars</i>&nbsp;!<i>envvar</i>&nbsp;!<i>optvars</i>&nbsp;!<i>envvar</i>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;!<i>restvar</i>&nbsp;!<i>envvar</i>&nbsp;!<i>keyvars</i>&nbsp;!<i>envvar</i>&nbsp;!<i>auxvars</i>&nbsp;!<i>envvar</i><span class="roman">)</span>&nbsp;|
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">(</span>!<i>wholevar</i>&nbsp;!<i>envvar</i>&nbsp;!<i>reqvars</i>&nbsp;!<i>envvar</i>&nbsp;!<i>optvars</i>&nbsp;!<i>envvar</i>&nbsp;<tt>.</tt>&nbsp;<i>var</i><span class="roman">)</span>
+</td></tr>
+<tr><td><i>pattern</i>&nbsp;</td><td>::=</td><td><span class="roman">(</span>!<i>wholevar</i>&nbsp;!<i>reqvars</i>&nbsp;!<i>optvars</i>&nbsp;!<i>restvar</i>&nbsp;!<i>keyvars</i>&nbsp;!<i>auxvars</i><span class="roman">)</span>&nbsp;|
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="roman">(</span>!<i>wholevar</i>&nbsp;!<i>reqvars</i>&nbsp;!<i>optvars</i>&nbsp;<tt>.</tt>&nbsp;<i>var</i><span class="roman">)</span>
+</td></tr></table>
+<br>
 <p>A <i>macro lambda list</i> can contain
 the <i>lambda list keywords</i> shown in Figure 3&ndash;18.
 </p>
-<table>
-<tr><td><b><span class="nolinebreak">&amp;allow-other-keys</span></b></td><td><b>&amp;environment</b></td><td><b>&amp;rest</b></td></tr>
-<tr><td><b>&amp;aux</b></td><td><b>&amp;key</b></td><td><b>&amp;whole</b></td></tr>
-<tr><td><b>&amp;body</b></td><td><b>&amp;optional</b></td></tr>
-</table>
+<p>&nbsp;&nbsp;<b><span class="nolinebreak">&amp;allow-other-keys</span></b>&nbsp;&nbsp;<b>&amp;environment</b>&nbsp;&nbsp;<b>&amp;rest</b>&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;<b>&amp;aux</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>&amp;key</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>&amp;whole</b>&nbsp;&nbsp;
+&nbsp;&nbsp;<b>&amp;body</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>&amp;optional</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</p>
 <div class="table-subcaption"> Figure 3&ndash;18: Lambda List Keywords used by Macro Lambda Lists</div>
-
 <p><i>Optional parameters</i> (introduced by <b>&amp;optional</b>) and
 <i>keyword parameters</i> (introduced by <b>&amp;key</b>)
 can be supplied in a <i>macro lambda list</i>,
