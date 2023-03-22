@@ -258,7 +258,7 @@ def main():
                         out.append("<div class=\"section\">")
                         l           = re.sub("::<", "<", l)
                         out.append(l)
-                        if "Arguments" in l:
+                        if re.match(".+(>Arguments|Compound Type Specifier Arguments).+", l):
                             in_arguments = True
                             out.append("""<table class="arguments-table">""")
                         else:
