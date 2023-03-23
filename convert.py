@@ -404,21 +404,23 @@ def main():
                         out.append("<link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\">")
                         out.append("<link rel=\"stylesheet\" href=\"/styles.css\">")
                         out.append("<link rel=\"stylesheet\" href=\"/highlight-lisp/themes/github.css\">")
-                        out.append("""<script>(() => {
-                            let savedTheme = localStorage.getItem('clcs-theme');
-                            let isDarkTheme = false;
-                            if (savedTheme) {
-                                isDarkTheme = savedTheme === 'dark';
-                            } else {
-                                isDarkTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-                            }
-                            if (isDarkTheme) {
-                                window._theme = 'dark';
-                                document.documentElement.setAttribute("data-theme", "dark");
-                            } else {
-                                window._theme = 'light';
-                            }
-                        })()</script>""")
+                        out.append("""<script>
+    (() => {
+        let savedTheme = localStorage.getItem('clcs-theme');
+        let isDarkTheme = false;
+        if (savedTheme) {
+            isDarkTheme = savedTheme === 'dark';
+        } else {
+            isDarkTheme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        }
+        if (isDarkTheme) {
+            window._theme = 'dark';
+            document.documentElement.setAttribute("data-theme", "dark");
+        } else {
+            window._theme = 'light';
+        }
+    })()
+</script>""")
                         out.append("<script defer src=\"/scripts.js\"></script>")
 
                     if l.startswith("<body "):
