@@ -399,6 +399,7 @@ def main():
                     
 
                     if l.startswith("<head"):
+                        out.append("<meta charset=\"UTF-8\">")
                         out.append("<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\">")
                         out.append("<link rel=\"icon\" type=\"image/x-icon\" href=\"/favicon.ico\">")
                         out.append("<link rel=\"stylesheet\" href=\"/styles.css\">")
