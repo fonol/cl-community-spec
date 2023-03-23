@@ -33,7 +33,7 @@ def check_for_tag_mismatch(html):
 
 def cleanup(html):
 
-    html = re.sub(r"<br ?/?>\s*</td>", "</td>", html, flags=re.MULTILINE)
+    html  = re.sub(r"<br ?/?>\s*</td>", "</td>", html, flags=re.MULTILINE)
     return html
 
 def insert_table_links():
@@ -430,54 +430,55 @@ def main():
                         next_disabled   = "disabled" if n_next is None else ""
 
                         out.append(f"""
-                            <div class="body__inner">
-                                __nav-placeholder__
-                                <div class="body__main">
-                                    <div class="body__main__inner">
-                                        <div class="top-wrapper">
-                                            <div class="top">
-                                                <div class="search">
-                                                    <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
-                                                    <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
-                                                    <div id="search__drop" onblur="hideSearch()"></div>
-                                                </div>
-                                                <a class="index-btn" href="index.html">
-                                                    <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
-                                                </a>
-                                                <div id="theme-btn--dark" onclick="toggleTheme()" title="Switch to light mode" class="index-btn"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="none" d="M0 0h24v24H0z"/><path fill="currentColor" d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z"/></svg></div>
-                                                <div id="theme-btn--light" onclick="toggleTheme()" title="Switch to dark mode" class="index-btn"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="none" d="M0 0h24v24H0z"/><path fill="currentColor" d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></svg></div>
-                                            </div>
-                                        </div>
-                                        <div class="nav">
-                                            <a href="{n_prev}" class="nav-btn nav__prev {prev_disabled}">
-                                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
-                                                {n_prev_title or "-"}
-                                            </a>
-                                            <a href="{n_up}" class="nav-btn nav__up {up_disabled}">
-                                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
-                                                {n_up_title  or "-"}
-                                            </a>
-                                            <a href="{n_next}" class="nav-btn nav__next {next_disabled}">
-                                                {n_next_title  or "-"}
-                                                <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
-                                            </a>
-                                        </div>
+        <div class="body__inner">
+            __nav-placeholder__
+            <div class="body__main">
+                <div class="body__main__inner">
+                    <div class="top-wrapper">
+                        <div class="top">
+                            <div class="search">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M338.29 338.29L448 448"/></svg>
+                                <input type="text" oninput="search(event)" onkeydown="searchKeydown(event)" placeholder="Search for pages">
+                                <div id="search__drop" onblur="hideSearch()"></div>
+                            </div>
+                            <a class="index-btn" href="index.html">
+                                <svg height="20" width="20" viewBox="0 0 512 512"><title>Index</title><path d="M80 212v236a16 16 0 0016 16h96V328a24 24 0 0124-24h80a24 24 0 0124 24v136h96a16 16 0 0016-16V212" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/><path d="M480 256L266.89 52c-5-5.28-16.69-5.34-21.78 0L32 256M400 179V64h-48v69" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"/></svg>
+                            </a>
+                            <div id="theme-btn--dark" onclick="toggleTheme()" title="Switch to light mode" class="index-btn"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="none" d="M0 0h24v24H0z"/><path fill="currentColor" d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z"/></svg></div>
+                            <div id="theme-btn--light" onclick="toggleTheme()" title="Switch to dark mode" class="index-btn"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="none" d="M0 0h24v24H0z"/><path fill="currentColor" d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></svg></div>
+                        </div>
+                    </div>
+                    <div class="nav">
+                        <a href="{n_prev}" class="nav-btn nav__prev {prev_disabled}">
+                            <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>
+                            {n_prev_title or "-"}
+                        </a>
+                        <a href="{n_up}" class="nav-btn nav__up {up_disabled}">
+                            <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 328l144-144 144 144"/></svg>
+                            {n_up_title  or "-"}
+                        </a>
+                        <a href="{n_next}" class="nav-btn nav__next {next_disabled}">
+                            {n_next_title  or "-"}
+                            <svg height="14" width="14" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M184 112l144 144-144 144"/></svg>
+                        </a>
+                    </div>
                         """)
                     if l.startswith("</body>"):
                         # remember sidebar scroll position
-                        out.append("""<script>
-                        (() => {
-                            let sidebar = document.querySelector(".sidenav__main");
-                            let t = localStorage.getItem("sidebar-scroll");
-                            if (t !== null) {
-                                sidebar.scrollTop = parseInt(t, 10);
-                            }
-                            window.addEventListener("beforeunload", () => {
-                                localStorage.setItem("sidebar-scroll", sidebar.scrollTop);
-                            });
-                        })();
-                        </script>""")
-                        out.append("""<script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>""")
+                        out.append("""
+        <script>
+            (() => {
+                let sidebar = document.querySelector(".sidenav__main");
+                let t = localStorage.getItem("sidebar-scroll");
+                if (t !== null) {
+                    sidebar.scrollTop = parseInt(t, 10);
+                }
+                window.addEventListener("beforeunload", () => {
+                    localStorage.setItem("sidebar-scroll", sidebar.scrollTop);
+                });
+            })();
+        </script>""")
+                        out.append("""      <script type="text/javascript" src="/highlight-lisp/highlight-lisp.js"></script>""")
 
         
 
@@ -538,7 +539,11 @@ def main():
 
     nav = print_nav_item(parents, parents[""])
     nav = f"""<div class="sidenav">
-                <div class="sidenav__header"> CLCS <div title="Scroll to current page" onclick="scrollSidenavToCurrentPage()"><svg viewBox="0 0 24 24" width="22" height="22"><path fill="none" d="M0 0h24v24H0z"/><path fill="currentColor" d="M13 1l.001 3.062A8.004 8.004 0 0 1 19.938 11H23v2l-3.062.001a8.004 8.004 0 0 1-6.937 6.937L13 23h-2v-3.062a8.004 8.004 0 0 1-6.938-6.937L1 13v-2h3.062A8.004 8.004 0 0 1 11 4.062V1h2zm-1 5a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm0 4a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg></div> </div>
+                <div class="sidenav__header"> CLCS 
+                    <div title="Scroll to current page" onclick="scrollSidenavToCurrentPage()">
+                        <svg viewBox="0 0 24 24" width="22" height="22"><path fill="none" d="M0 0h24v24H0z"/><path fill="currentColor" d="M13 1l.001 3.062A8.004 8.004 0 0 1 19.938 11H23v2l-3.062.001a8.004 8.004 0 0 1-6.937 6.937L13 23h-2v-3.062a8.004 8.004 0 0 1-6.938-6.937L1 13v-2h3.062A8.004 8.004 0 0 1 11 4.062V1h2zm-1 5a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm0 4a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg>
+                    </div> 
+                </div>
                 <div class="sidenav__main">
                     <ul>{nav}</ul>
                 </div>
@@ -551,6 +556,9 @@ def main():
                     </a>
                 </div>
             </div>"""
+    mismatched_tags = check_for_tag_mismatch(nav)
+    for t in mismatched_tags:
+        print(f"WARN: nav has mismatched tag: {t}")
         
     
     for outpath, key, text in to_write:
