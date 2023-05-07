@@ -45,7 +45,7 @@ def create_tables():
                     l = re.sub("(&nbsp;){2,} ?$", "</td></tr>", l)
                     l = re.sub("(&nbsp;){2,}", "</td><td>", l)
                     while l.count("</td>") < max_cols:
-                        l = re.sub("</td></tr>", "</td><td></td></tr>")
+                        l = re.sub("</td></tr>", "</td><td></td></tr>", l)
                     assert(l.count("<td>") == l.count("</td>"))
                     out.append(l)
                 elif inside and l == "</p>":
