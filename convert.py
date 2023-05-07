@@ -214,12 +214,12 @@ def main():
 
                     # take the very first header as page header
                     if (l.startswith("<h3 ") or l.startswith("<h4 ") or l.startswith("<h2") or l.startswith("<h1")) and section_cnt == 0:
-                        mnum = re.match(r".+>(\d+(\.\d+){0,4}) .+", l, flags= re.MULTILINE)
+                        mnum = re.match(r".+>(\d+(\.\d+){0,6}) .+", l, flags= re.MULTILINE)
                         if mnum is not None:
                             numbering = mnum.group(1)
                             nodes[-1] = (nodes[-1][0], nodes[-1][1], nodes[-1][2], numbering)
 
-                        l = re.sub(r">\d+(\.\d+){0,4} ", ">", l)
+                        l = re.sub(r">\d+(\.\d+){0,6} ", ">", l)
                         out.append("<div class=\"section top-most\">")
                         m = re.match(r".+\[(.+)\].*", l)
                         if m is not None:
