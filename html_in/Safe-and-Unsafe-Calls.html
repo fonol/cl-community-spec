@@ -35,95 +35,73 @@ Next: <a href="Error-Detection-Time-in-Safe-Calls.html#Error-Detection-Time-in-S
 either <i>safe</i> <i>code</i> or <i>system code</i> (other than
 <i>system code</i> that results from <i>macro expansion</i> of 
 <i>programmer code</i>):
-</p><dl compact="compact">
-<dt><tt>*</tt></dt>
-<dd><p>the <i>call</i>.
-</p></dd>
-<dt><tt>*</tt></dt>
-<dd><p>the definition of the <i>function</i> being <i>called</i>.
-</p></dd>
-<dt><tt>*</tt></dt>
-<dd><p>the point of <i>functional evaluation</i> 
-</p></dd>
-</dl>
+</p><ul><li><p>the <i>call</i>.
+</p></li>
+<li><p>the definition of the <i>function</i> being <i>called</i>.
+</p></li>
+<li><p>the point of <i>functional evaluation</i> 
+</p></li></ul>
 
 <p>The following special cases require some elaboration:
 </p>
-<dl compact="compact">
-<dt><tt>*</tt></dt>
-<dd><p>If the <i>function</i> being called is a <i>generic function</i>,
-it is considered <i>safe</i> if all of the following are
+<ul>
+	<li><p>If the <i>function</i> being called is a <i>generic function</i>,
+it is considered <i>safe</i> if all of the following are <i>safe code</i> or <i>system code</i>:
 </p>
-<p><i>safe code</i> or <i>system code</i>:
+<ul>
+<li><p>its definition (if it was defined explicitly).
+</p></li>
+<li><p>the <i>method</i> definitions for all <i>applicable</i> <i>methods</i>.
 </p>
-<dl compact="compact">
-<dt>&ndash;</dt>
-<dd><p>its definition (if it was defined explicitly).
-</p></dd>
-<dt>&ndash;</dt>
-<dd><p>the <i>method</i> definitions for all <i>applicable</i> <i>methods</i>.
-</p></dd>
-<dt>&ndash;</dt>
-<dd><p>the definition of its <i>method combination</i>.
-</p></dd>
-</dl>
-
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>For the form <tt>(coerce <i>x</i> 'function)</tt>, 
+</li>
+<li><p>the definition of its <i>method combination</i>.
+</p>
+</li>
+</ul>
+</li>
+<li><p>For the form <tt>(coerce <i>x</i> 'function)</tt>, 
 where <i>x</i> is a <i>lambda expression</i>,
 the value of the <i>optimize quality</i> <b>safety</b>
 in the global environment at the time the <b><a href="coerce.html">coerce</a></b>
 is <i>executed</i> applies to the resulting <i>function</i>.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>For a call to the <i>function</i> <a href="ensure_002dgeneric_002dfunction.html">ensure-generic-function</a>, the value of the
+</li>
+<li><p>For a call to the <i>function</i> <a href="ensure_002dgeneric_002dfunction.html">ensure-generic-function</a>, the value of the
 <i>optimize quality</i> <b>safety</b> in the <i>environment</i>
 <i>object</i> passed as the <tt>:environment</tt> <i>argument</i> applies 
 to the resulting <i>generic function</i>.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>For a call to <a href="compile.html">compile</a> with a <i>lambda expression</i> as the
+</li>
+<li><p>For a call to <a href="compile.html">compile</a> with a <i>lambda expression</i> as the
 <i>argument</i>, the value of the <i>optimize quality</i> <b>safety</b>
 in the <i>global environment</i> at the time <a href="compile.html">compile</a> is <i>called</i>
 applies to the resulting <i>compiled function</i>.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>For a call to <a href="compile.html">compile</a> with only one argument, if the original definition
+</li>
+<li><p>For a call to <a href="compile.html">compile</a> with only one argument, if the original definition
 of the <i>function</i> was <i>safe</i>, then the resulting <i>compiled function</i>
 must also be <i>safe</i>.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>A <i>call</i> to a <i>method</i> by <a href="call_002dnext_002dmethod.html">call-next-method</a> must be 
-considered <i>safe</i> if each of the following is 
+</li>
+<li><p>A <i>call</i> to a <i>method</i> by <a href="call_002dnext_002dmethod.html">call-next-method</a> must be 
+considered <i>safe</i> if each of the following is <i>safe code</i> or <i>system code</i>:
 </p>
-<p><i>safe code</i> or <i>system code</i>:
-</p>
-<dl compact="compact">
-<dt>&ndash;</dt>
-<dd><p>the definition of the <i>generic function</i> (if it was defined explicitly).
-</p></dd>
-<dt>&ndash;</dt>
-<dd><p>the <i>method</i> definitions for all <i>applicable</i> <i>methods</i>.
-</p></dd>
-<dt>&ndash;</dt>
-<dd><p>the definition of the <i>method combination</i>.
-</p></dd>
-<dt>&ndash;</dt>
-<dd><p>the point of entry into the body of the <i>method defining form</i>,
+<ul>
+<li><p>the definition of the <i>generic function</i> (if it was defined explicitly).
+</p></li>
+<li><p>the <i>method</i> definitions for all <i>applicable</i> <i>methods</i>.
+</p></li>
+<li><p>the definition of the <i>method combination</i>.
+</p></li>
+<li><p>the point of entry into the body of the <i>method defining form</i>,
 	      where the <i>binding</i> of <a href="call_002dnext_002dmethod.html">call-next-method</a> is established.
-</p></dd>
-<dt>&ndash;</dt>
-<dd><p>the point of <i>functional evaluation</i> of the name <a href="call_002dnext_002dmethod.html">call-next-method</a>.
-</p></dd>
-</dl>
+</p></li>
+<li><p>the point of <i>functional evaluation</i> of the name <a href="call_002dnext_002dmethod.html">call-next-method</a>.
+</p></li>
+</ul>
 
-</dd>
-</dl>
+</li>
+</ul>
 
 <p>An <i>unsafe call</i>
 <a name="index-unsafe-call"></a>

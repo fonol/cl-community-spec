@@ -124,37 +124,30 @@ combination types.
 defined by the short form of <a href="define_002dmethod_002dcombination.html">define-method-combination</a>.  
 They recognize two roles for <i>methods</i>:
 </p>
-<dl compact="compact">
-<dt><tt>*</tt></dt>
-<dd><p>An <i>around method</i> has the keyword symbol 
+<ul><li><p>An <i>around method</i> has the keyword symbol 
 <tt>:around</tt> as its sole <i>qualifier</i>.  The meaning of 
 <tt>:around</tt> <i>methods</i> is the same as in standard method combination.
 Use of the functions <a href="call_002dnext_002dmethod.html">call-next-method</a> and <a href="next_002dmethod_002dp.html">next-method-p</a>
 is supported in <i>around methods</i>.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>A primary method has the name of the method combination
+</li>
+<li><p>A primary method has the name of the method combination
 type as its sole <i>qualifier</i>.  For example, the built-in method
 combination type <tt>and</tt> recognizes methods whose sole <i>qualifier</i> is
 <tt>and</tt>; these are primary methods. Use of the functions 
 <a href="call_002dnext_002dmethod.html">call-next-method</a> and <a href="next_002dmethod_002dp.html">next-method-p</a> is not supported 
 in <i>primary methods</i>.
 </p>
-</dd>
-</dl>
+</li></ul>
 
 <p>The semantics of the simple built-in method combination types is as
 follows:
 </p>
-<dl compact="compact">
-<dt><tt>*</tt></dt>
-<dd><p>If there are any <i>around methods</i>, the most specific <i>around method</i>
+<ul><li><p>If there are any <i>around methods</i>, the most specific <i>around method</i>
 is called.   It supplies the value or values of the <i>generic function</i>. 
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>Inside the body of an <i>around method</i>, the function
+</li>
+<li><p>Inside the body of an <i>around method</i>, the function
 <a href="call_002dnext_002dmethod.html">call-next-method</a> can be used to call the <i>next method</i>.
 The <i>generic function</i> <a href="no_002dnext_002dmethod.html">no-next-method</a> is invoked if 
 <a href="call_002dnext_002dmethod.html">call-next-method</a> is used and there is no applicable method to call.
@@ -163,9 +156,8 @@ The <i>function</i> <a href="next_002dmethod_002dp.html">next-method-p</a> may b
 the <i>around method</i> can execute more code,
 perhaps based on the returned value or values.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>If an <i>around method</i> invokes <a href="call_002dnext_002dmethod.html">call-next-method</a>,
+</li>
+<li><p>If an <i>around method</i> invokes <a href="call_002dnext_002dmethod.html">call-next-method</a>,
 the next most specific <i>around method</i> is
 called, if one is applicable.  If there are no <i>around methods</i>
 or if <a href="call_002dnext_002dmethod.html">call-next-method</a> is called by the least specific
@@ -177,18 +169,14 @@ and the call to the generic function is of the form
 </p>
 <div align="center">(<i>generic-function</i> a_1... a_n)
 </div>
-</dd>
-<dt><tt></tt></dt>
-<dd><p>Let M_1,...,M_k be the applicable primary methods
+<p>Let M_1,...,M_k be the applicable primary methods
 in order; then the derived Lisp form is
 </p>
 <div align="center">(<i>operator</i> &lt; M_1
 </div><p>a_1... a_n&gt;...&lt;
 M_k a_1... a_n&gt;)
 </p>
-</dd>
-<dt><tt></tt></dt>
-<dd><p>If the expression &lt; M_i  a_1... a_n&gt; is
+<p>If the expression &lt; M_i  a_1... a_n&gt; is
 evaluated, the method M_i will be applied to the arguments
 a_1... a_n.  
 For example,
@@ -196,14 +184,11 @@ if <i>operator</i> is <tt>or</tt>,
 the expression &lt; M_i  a_1... a_n&gt; is
 evaluated only if &lt; M_j  a_1... a_n&gt;,
 1&lt;= j&lt;i, returned <tt>nil</tt>.
-</p>
-</dd>
-<dt><tt></tt></dt>
-<dd><p>The default order for the primary methods is 
+</p><p>The default order for the primary methods is 
 <tt>:most-specific-first</tt>.  However, the order can be reversed by supplying
 <tt>:most-specific-last</tt> as the second argument to the <tt>:method-combination</tt> option.
-</p></dd>
-</dl>
+</p></li>
+</ul>
 
 <p>The simple built-in method combination types require exactly one
 <i>qualifier</i> per method.  An error is signaled if there are applicable

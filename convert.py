@@ -29,6 +29,12 @@ def check_for_tag_mismatch(html):
         m.append("<span>")
     if html.count("<code") != html.count("</code>"):
         m.append("<code>")
+    if html.count("<li>") != html.count("</li>"):
+        m.append("<li>")
+    if html.count("<ul>") != html.count("</ul>"):
+        m.append("<ul>")
+    if html.count("<ol>") != html.count("</ol>"):
+        m.append("<ol>")
     return m
 
 def cleanup(html):

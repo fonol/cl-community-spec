@@ -46,41 +46,33 @@ Standard method combination
 allows no more than one <i>qualifier</i> per method; if a method definition
 specifies more than one <i>qualifier</i> per method, an error is signaled.
 </p>
-<dl compact="compact">
-<dt><tt>*</tt></dt>
-<dd><p>A <i>before method</i> has the keyword <tt>:before</tt> as its only <i>qualifier</i>.
+<ul><li><p>A <i>before method</i> has the keyword <tt>:before</tt> as its only <i>qualifier</i>.
 A <i>before method</i> specifies <i>code</i> that is to be run before any 
 <i>primary methods</i>.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>An <i>after method</i> has the keyword <tt>:after</tt> as its only <i>qualifier</i>.
+</li>
+<li><p>An <i>after method</i> has the keyword <tt>:after</tt> as its only <i>qualifier</i>.
 An <i>after method</i> specifies <i>code</i> that is to be run after
 <i>primary methods</i>.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>An <i>around method</i> has the keyword <tt>:around</tt> as its only <i>qualifier</i>.
+</li>
+<li><p>An <i>around method</i> has the keyword <tt>:around</tt> as its only <i>qualifier</i>.
 An <i>around method</i> specifies <i>code</i> that is to be run instead of other
 <i>applicable methods</i>,
 but which might contain explicit <i>code</i>
 which calls some of those <i>shadowed</i> <i>methods</i>
 (via <a href="call_002dnext_002dmethod.html">call-next-method</a>).
 </p>
-</dd>
-</dl>
+</li></ul>
 
 <p>The semantics of standard method combination is as follows:
 </p>
-<dl compact="compact">
-<dt><tt>*</tt></dt>
-<dd><p>If there are any <i>around methods</i>, the most specific
+<ul><li><p>If there are any <i>around methods</i>, the most specific
 <i>around method</i> is called.  It supplies the value or values of the
 generic function.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>Inside the body of an <i>around method</i>, 
+</li>
+<li><p>Inside the body of an <i>around method</i>, 
 <a href="call_002dnext_002dmethod.html">call-next-method</a> can be used to call the <i>next method</i>.  When the next
 method returns, the <i>around method</i> can execute more code,
 perhaps based on the returned value or values.
@@ -88,9 +80,8 @@ The <i>generic function</i> <a href="no_002dnext_002dmethod.html">no-next-method
 there is no <i>applicable method</i> to call.  The <i>function</i> <a href="next_002dmethod_002dp.html">next-method-p</a>
 may be used to determine whether a <i>next method</i> exists.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>If an <i>around method</i> invokes <a href="call_002dnext_002dmethod.html">call-next-method</a>,
+</li>
+<li><p>If an <i>around method</i> invokes <a href="call_002dnext_002dmethod.html">call-next-method</a>,
 the next most specific <i>around method</i>
 is called, if one is applicable.  If there are no <i>around methods</i> 
 or if <a href="call_002dnext_002dmethod.html">call-next-method</a> is called by the least
@@ -103,7 +94,7 @@ most-specific-first order.  Their values are ignored.
 An error is signaled if <a href="call_002dnext_002dmethod.html">call-next-method</a> is used in a
 <i>before method</i>.
 </p>
-</dd>
+</li>
 <dt>&ndash;</dt>
 <dd><p>The most specific primary method is called.  Inside the
 body of a primary method, <a href="call_002dnext_002dmethod.html">call-next-method</a> may be used to call
@@ -125,15 +116,13 @@ An error is signaled if <a href="call_002dnext_002dmethod.html">call-next-method
 </dl>
 
 </dd>
-<dt><tt>*</tt></dt>
-<dd><p>If no <i>around methods</i> were invoked, the most
+<li><p>If no <i>around methods</i> were invoked, the most
 specific primary method supplies the value or values returned by the
 generic function.  The value or values returned by the invocation of
 <a href="call_002dnext_002dmethod.html">call-next-method</a> in the least specific <i>around method</i> are
 those returned by the most specific primary method.
 </p>
-</dd>
-</dl>
+</li></ul>
 
 <p>In standard method combination, if there is an applicable method
 but no applicable primary method, an error is signaled.

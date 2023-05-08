@@ -127,16 +127,14 @@ If at end of file, step 10 is entered.
 Otherwise, a <i>character</i>, <i>y</i>, is read, and
 one of the following actions is performed according to its <i>syntax type</i>:
 </p>
-<dl compact="compact">
-<dt><tt>*</tt></dt>
-<dd><p>If <i>y</i> is a <i>constituent</i> or <i>non-terminating</i> <i>macro character</i>:
+<ul><li><p>If <i>y</i> is a <i>constituent</i> or <i>non-terminating</i> <i>macro character</i>:
 </p><dl compact="compact">
 <dt>&ndash;</dt>
 <dd><p>If <i>y</i> is a <i>character</i> with <i>case</i>,
 it might be replaced with the corresponding <i>character</i> of the opposite <i>case</i>, 
 depending on the <i>readtable case</i> of the <i>current readtable</i>,
 as outlined in <a href="Effect-of-Readtable-Case-on-the-Lisp-Reader.html#Effect-of-Readtable-Case-on-the-Lisp-Reader">Effect of Readtable Case on the Lisp Reader</a>.
-</p></dd>
+</p></li>
 <dt>&ndash;</dt>
 <dd><p><i>Y</i> is appended to the <i>token</i> being built.
 </p></dd>
@@ -146,39 +144,33 @@ as outlined in <a href="Effect-of-Readtable-Case-on-the-Lisp-Reader.html#Effect-
 </dl>
 
 </dd>
-<dt><tt>*</tt></dt>
-<dd><p>If <i>y</i> is a <i>single escape</i> <i>character</i>, then the next <i>character</i>,
+<li><p>If <i>y</i> is a <i>single escape</i> <i>character</i>, then the next <i>character</i>,
 <i>z</i>, is read, or an error of <i>type</i> <a href="end_002dof_002dfile.html">end-of-file</a> is signaled if at end of file.
 <i>Z</i> is treated as if it is a <i>constituent</i> 
 whose only <i>constituent trait</i> is <i>alphabetic</i>_2.
 <i>Z</i> is appended to the <i>token</i> being built,
 and step 8 is repeated.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>If <i>y</i> is a <i>multiple escape</i> <i>character</i>,
+</li>
+<li><p>If <i>y</i> is a <i>multiple escape</i> <i>character</i>,
 then step 9 is entered.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>If <i>y</i> is an <i>invalid</i> <i>character</i>,
+</li>
+<li><p>If <i>y</i> is an <i>invalid</i> <i>character</i>,
 an error of <i>type</i> <a href="reader_002derror.html">reader-error</a> is signaled.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>If <i>y</i> is a <i>terminating</i> <i>macro character</i>,
+</li>
+<li><p>If <i>y</i> is a <i>terminating</i> <i>macro character</i>,
 then it terminates the <i>token</i>.
 First the <i>character</i> <i>y</i> is unread (see <a href="unread_002dchar.html">unread-char</a>),
 and then step 10 is entered.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>If <i>y</i> is a <i>whitespace</i>_2 <i>character</i>, then it terminates
+</li>
+<li><p>If <i>y</i> is a <i>whitespace</i>_2 <i>character</i>, then it terminates
 the <i>token</i>.  First the <i>character</i> <i>y</i> is unread
 if appropriate (see <b>read-preserving-whitespace</b>),
 and then step 10 is entered.
-</p></dd>
-</dl>
+</p></li></ul>
 
 </dd>
 <dt>9.</dt>
@@ -188,33 +180,27 @@ If at end of file, an error of <i>type</i> <a href="end_002dof_002dfile.html">en
 Otherwise, a <i>character</i>, <i>y</i>, is read, and
 one of the following actions is performed according to its <i>syntax type</i>:
 </p>
-<dl compact="compact">
-<dt><tt>*</tt></dt>
-<dd><p>If <i>y</i> is a <i>constituent</i>, macro, or <i>whitespace</i>_2 <i>character</i>,
+<ul><li><p>If <i>y</i> is a <i>constituent</i>, macro, or <i>whitespace</i>_2 <i>character</i>,
 <i>y</i> is treated as a <i>constituent</i> 
 whose only <i>constituent trait</i> is <i>alphabetic</i>_2.             
 <i>Y</i> is appended to the <i>token</i> being built, and step 9 is repeated.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>If <i>y</i> is a <i>single escape</i> <i>character</i>, then the next <i>character</i>,
+</li>
+<li><p>If <i>y</i> is a <i>single escape</i> <i>character</i>, then the next <i>character</i>,
 <i>z</i>, is read, or an error of <i>type</i> <a href="end_002dof_002dfile.html">end-of-file</a> is signaled if at end of file.
 <i>Z</i> is treated as a <i>constituent</i>
 whose only <i>constituent trait</i> is <i>alphabetic</i>_2.
 <i>Z</i> is appended to the <i>token</i> being built,
 and step 9 is repeated.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>If <i>y</i> is a <i>multiple escape</i> <i>character</i>,
+</li>
+<li><p>If <i>y</i> is a <i>multiple escape</i> <i>character</i>,
 then step 8 is entered.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>If <i>y</i> is an <i>invalid</i> <i>character</i>,
+</li>
+<li><p>If <i>y</i> is an <i>invalid</i> <i>character</i>,
 an error of <i>type</i> <a href="reader_002derror.html">reader-error</a> is signaled.
-</p></dd>
-</dl>
+</p></li></ul>
 
 </dd>
 <dt>10.</dt>

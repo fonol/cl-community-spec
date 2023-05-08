@@ -33,9 +33,7 @@ Previous: <a href="Minimal-Compilation.html#Minimal-Compilation" accesskey="p" r
 which are designed to minimize the observable differences 
 between compiled and interpreted programs:
 </p>
-<dl compact="compact">
-<dt><tt>*</tt></dt>
-<dd><p>Definitions of any referenced <i>macros</i>
+<ul><li><p>Definitions of any referenced <i>macros</i>
 must be present in the <i>compilation environment</i>.  
 Any <i>form</i> that is a <i>list</i>
 beginning with a <i>symbol</i> that does not name a
@@ -43,23 +41,20 @@ beginning with a <i>symbol</i> that does not name a
 <i>compilation environment</i> is treated by the compiler as a 
 function call.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p><b>Special</b> proclamations for <i>dynamic variables</i>
+</li>
+<li><p><b>Special</b> proclamations for <i>dynamic variables</i>
 must be made in the <i>compilation environment</i>.  Any <i>binding</i>
 for which there is no <b><a href="special.html">special</a></b> declaration or proclamation in
 the <i>compilation environment</i> is treated by the compiler as
 a <i>lexical binding</i>.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>The definition of a function that is defined and
+</li>
+<li><p>The definition of a function that is defined and
 declared <b><a href="inline.html">inline</a></b> in the <i>compilation environment</i> must be
 the same at run time.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>Within a <i>function</i> named F, the compiler may
+</li>
+<li><p>Within a <i>function</i> named F, the compiler may
 (but is not required to)
 assume that an apparent recursive call to a <i>function</i> named F 
 refers to the same definition of F,
@@ -67,32 +62,28 @@ unless that function has been declared <b>notinline</b>.
 The consequences of redefining such a recursively defined <i>function</i> F 
 while it is executing are undefined.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>A call within a file to a named function that is
+</li>
+<li><p>A call within a file to a named function that is
 defined in the same file refers to that function, unless that function
 has been declared <b>notinline</b>.  The consequences are unspecified
 if functions are redefined individually at run time or multiply
 defined in the same file.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>The argument syntax and number of return values for
+</li>
+<li><p>The argument syntax and number of return values for
 all functions whose <b><a href="ftype.html">ftype</a></b> is declared at compile time must
 remain the same at run time.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p><i>Constant variables</i> defined in
+</li>
+<li><p><i>Constant variables</i> defined in
 the <i>compilation environment</i> must have a <i>similar</i> value at
 run time.  A reference to 
 a <i>constant variable</i> 
 in <i>source code</i> is equivalent to a reference to 
 a <i>literal</i> <i>object</i> that is the <i>value</i> of the <i>constant variable</i>.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>Type definitions made with <b><a href="deftype.html">deftype</a></b> or
+</li>
+<li><p>Type definitions made with <b><a href="deftype.html">deftype</a></b> or
 <b><a href="defstruct.html">defstruct</a></b> in the <i>compilation environment</i> must
 retain the same definition at run time.  Classes defined by <b><a href="defclass.html">defclass</a></b>
 in the <i>compilation environment</i> must be defined
@@ -102,23 +93,20 @@ at run time to have the same <i>superclasses</i> and same
 <p>This implies that <i>subtype</i>/<i>supertype</i> relationships of 
 <i>type specifiers</i> must not change between <i>compile time</i> and <i>run time</i>.  
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>Type declarations present in the compilation 
+</li>
+<li><p>Type declarations present in the compilation 
 <i>environment</i> must accurately describe the corresponding values at run time;
 otherwise, the consequences are undefined.  It is permissible
 for an unknown <i>type</i> to appear in a declaration at 
 compile time, though a warning might be signaled in such a case.
 </p>
-</dd>
-<dt><tt>*</tt></dt>
-<dd><p>Except in the situations explicitly listed above, a
+</li>
+<li><p>Except in the situations explicitly listed above, a
 <i>function</i> defined in the <i>evaluation environment</i>
 is permitted to have a different definition or a different <i>signature</i>
 at run time, and the run-time definition prevails.
 </p>
-</dd>
-</dl>
+</li></ul>
 
 <p><i>Conforming programs</i> should not be written using any additional
 assumptions about consistency between the run-time 
@@ -128,18 +116,13 @@ assumptions about consistency between the run-time
 <p>Except where noted, when a compile-time and a run-time definition are
 different, one of the following occurs at run time:
 </p>
-<dl compact="compact">
-<dt><tt>*</tt></dt>
-<dd><p>an error of <i>type</i> <b><a href="error.html">error</a></b> is signaled
-</p></dd>
-<dt><tt>*</tt></dt>
-<dd><p>the compile-time definition prevails
-</p></dd>
-<dt><tt>*</tt></dt>
-<dd><p>the run-time definition prevails
+<ul><li><p>an error of <i>type</i> <b><a href="error.html">error</a></b> is signaled
+</p></li>
+<li><p>the compile-time definition prevails
+</p></li>
+<li><p>the run-time definition prevails
 </p>
-</dd>
-</dl>
+</li></ul>
 
 <p>If the <i>compiler</i> processes a <i>function form</i> whose <i>operator</i> 
 is not defined at compile time, no error is signaled at compile time.
