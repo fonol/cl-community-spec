@@ -32,9 +32,8 @@ Next: <a href="Processing-of-Defining-Macros.html#Processing-of-Defining-Macros"
 <p>Processing of <i>top level forms</i> in the file compiler is defined
 as follows:
 </p>
-<dl compact="compact">
-<dt>1.</dt>
-<dd><p>If the <i>form</i> is a <i>compiler macro form</i>
+<ol>
+	<li><p>If the <i>form</i> is a <i>compiler macro form</i>
 (not disabled by a <b>notinline</b> <i>declaration</i>),
 the <i>implementation</i> might or might not choose to compute
 the <i>compiler macro expansion</i> of the <i>form</i> and,
@@ -43,22 +42,19 @@ as a <i>top level form</i> in the same processing mode
 (compile-time-too or not-compile-time).
 If it declines to obtain or use the expansion, it must process the original <i>form</i>.
 </p>
-</dd>
-<dt>2.</dt>
-<dd><p>If the form is a <i>macro form</i>,
+</li>
+<li><p>If the form is a <i>macro form</i>,
 its <i>macro expansion</i> is computed and processed as a 
 <i>top level form</i> in
 the same processing mode (compile-time-too or not-compile-time).
 </p>
-</dd>
-<dt>3.</dt>
-<dd><p>If the form is a <b><a href="progn.html">progn</a></b> form, each of its
+</li>
+<li><p>If the form is a <b><a href="progn.html">progn</a></b> form, each of its
 body <i>forms</i> is sequentially processed as a 
 <i>top level form</i> in the same processing mode.
 </p>
-</dd>
-<dt>4.</dt>
-<dd><p>If the form is a <b><a href="locally.html">locally</a></b>, 
+</li>
+<li><p>If the form is a <b><a href="locally.html">locally</a></b>, 
 <a href="flet.html">macrolet</a>, or <a href="symbol_002dmacrolet.html">symbol-macrolet</a>, 
 <a href="compile_002dfile.html">compile-file</a> establishes the appropriate bindings and processes the
 body forms as <i>top level forms</i> with those bindings in effect
@@ -66,9 +62,8 @@ in the same processing mode.  (Note that this implies that the lexical
 <i>environment</i> in which <i>top level forms</i> are processed
 is not necessarily the <i>null lexical environment</i>.)
 </p>
-</dd>
-<dt>5.</dt>
-<dd><p>If the form is an <a href="eval_002dwhen.html">eval-when</a>
+</li>
+<li><p>If the form is an <a href="eval_002dwhen.html">eval-when</a>
 <a name="index-eval_002dwhen"></a>
  form, it is
 handled according to Figure 3&ndash;7.
@@ -101,7 +96,7 @@ Column <b>Mode</b> indicates the processing mode;
 <dd><p><b>Process:</b> process the body as <i>top level forms</i> in the
 specified mode.
 </p>
-</dd>
+</li>
 <dt><tt></tt></dt>
 <dd><p><b>Evaluate:</b> evaluate the body in the dynamic execution
 context of the compiler, using the <i>evaluation environment</i> as
@@ -118,8 +113,7 @@ the <a href="eval_002dwhen.html">eval-when</a> appears.
 A dash (&mdash;) indicates the compiler remains in its current mode.
 </p>
 </dd>
-<dt>6.</dt>
-<dd><p>Otherwise, the form is a <i>top level form</i> that
+<li><p>Otherwise, the form is a <i>top level form</i> that
 is not one of the special cases.  In compile-time-too mode, the
 compiler first evaluates the form in the evaluation 
 <i>environment</i> and then minimally compiles it.  In not-compile-time
@@ -134,8 +128,8 @@ read.  However, the order of processing (including macro expansion) of
 further compilation is unspecified as long as Common Lisp semantics
 are preserved.
 </p>
-</dd>
-</dl>
+</li>
+</ol>
 
 <p><a href="eval_002dwhen.html">eval-when</a> forms cause compile-time evaluation only at
 top level.  Both <tt>:compile-toplevel</tt> and <tt>:load-toplevel</tt> situation specifications

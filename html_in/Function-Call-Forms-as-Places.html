@@ -126,28 +126,23 @@ specified by <i>place-form</i>, not to any object of <i>type</i> <b><a href="int
 </p>
 <p>Thus this <b><a href="setf.html">setf</a></b> should generate code to do the following:
 </p>
-<dl compact="compact">
-<dt>1.</dt>
-<dd><p>Evaluate <i>byte-spec</i> (and bind it into a temporary variable).
-</p></dd>
-<dt>2.</dt>
-<dd><p>Bind the temporary variables for <i>place-form</i>.
-</p></dd>
-<dt>3.</dt>
-<dd><p>Evaluate <i>value-form</i>  (and bind 
+<ol>
+	<li><p>Evaluate <i>byte-spec</i> (and bind it into a temporary variable).
+</p></li>
+<li><p>Bind the temporary variables for <i>place-form</i>.
+</p></li>
+<li><p>Evaluate <i>value-form</i>  (and bind 
 </p>
 <p>its value or values into the store variable).
 </p>
-</dd>
-<dt>4.</dt>
-<dd><p>Do the <i>read</i> from <i>place-form</i>.
-</p></dd>
-<dt>5.</dt>
-<dd><p>Do the <i>write</i> into <i>place-form</i> with 
+</li>
+<li><p>Do the <i>read</i> from <i>place-form</i>.
+</p></li>
+<li><p>Do the <i>write</i> into <i>place-form</i> with 
 the given bits of the <i>integer</i>
        fetched in step 4 replaced with the value from step 3.
-</p></dd>
-</dl>
+</p></li>
+</ol>
 
 <p>If the evaluation of <i>value-form</i> 
 in step 3 alters what is found in <i>place-form</i>,
@@ -190,24 +185,19 @@ For example:
 that is the property list in question.
 </p>
 <p>Thus this <b><a href="setf.html">setf</a></b> should generate code to do the following:
-</p><dl compact="compact">
-<dt>1.</dt>
-<dd><p>Bind the temporary variables for <i>place-form</i>.
-</p></dd>
-<dt>2.</dt>
-<dd><p>Evaluate <i>ind-form</i> (and bind it into a temporary variable).
-</p></dd>
-<dt>3.</dt>
-<dd><p>Evaluate <i>value-form</i> (and bind 
+</p><ol>
+	<li><p>Bind the temporary variables for <i>place-form</i>.
+</p></li>
+<li><p>Evaluate <i>ind-form</i> (and bind it into a temporary variable).
+</p></li>
+<li><p>Evaluate <i>value-form</i> (and bind 
 </p>
 <p>its value or values into the store variable).
 </p>
-</dd>
-<dt>4.</dt>
-<dd><p>Do the <i>read</i> from <i>place-form</i>.
-</p></dd>
-<dt>5.</dt>
-<dd><p>Do the <i>write</i> into <i>place-form</i> with a possibly-new property list
+</li>
+<li><p>Do the <i>read</i> from <i>place-form</i>.
+</p></li>
+<li><p>Do the <i>write</i> into <i>place-form</i> with a possibly-new property list
        obtained by combining the values from steps 2, 3, and 4.  
 (Note that the phrase "possibly-new property list" can mean that 
     the former property list is somehow destructively re-used, or it can 
@@ -216,8 +206,8 @@ Since either copying or destructive re-use can occur,
 the treatment of the resultant value for the 
     possibly-new property list must proceed as if it were a different copy
     needing to be stored back into the generalized variable.)
-</p></dd>
-</dl>
+</p></li>
+</ol>
 
 <p>If the evaluation of <i>value-form</i> 
 in step 3 alters what is found in

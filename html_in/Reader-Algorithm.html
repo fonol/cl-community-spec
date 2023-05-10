@@ -47,28 +47,24 @@ it represents a <i>symbol</i>.
 </p>
 <p>The algorithm performed by the <i>Lisp reader</i> is as follows:
 </p>
-<dl compact="compact">
-<dt>1.</dt>
-<dd><p>If at end of file, end-of-file processing is performed as specified
+<ol>
+	<li><p>If at end of file, end-of-file processing is performed as specified
 in <b><a href="read.html">read</a></b>.
 Otherwise,
 one <i>character</i>, <i>x</i>,  is read from the <i>input</i> <i>stream</i>, and
 dispatched according to the <i>syntax type</i> of <i>x</i> to one
 of steps 2 to 7.
 </p>
-</dd>
-<dt>2.</dt>
-<dd><p>If <i>x</i> is an <i>invalid</i> <i>character</i>,
+</li>
+<li><p>If <i>x</i> is an <i>invalid</i> <i>character</i>,
 an error of <i>type</i> <a href="reader_002derror.html">reader-error</a> is signaled.
 </p>
-</dd>
-<dt>3.</dt>
-<dd><p>If <i>x</i> is a <i>whitespace</i>_2 <i>character</i>,
+</li>
+<li><p>If <i>x</i> is a <i>whitespace</i>_2 <i>character</i>,
 then it is discarded and step 1 is re-entered.
 </p>
-</dd>
-<dt>4.</dt>
-<dd><p>If <i>x</i> is a <i>terminating</i> or <i>non-terminating</i> <i>macro character</i>
+</li>
+<li><p>If <i>x</i> is a <i>terminating</i> or <i>non-terminating</i> <i>macro character</i>
 then its associated <i>reader macro function</i> is called with two <i>arguments</i>,
 the <i>input</i> <i>stream</i> and <i>x</i>.
 </p>
@@ -90,24 +86,21 @@ then that value is returned as the result of the read operation;
 the algorithm is done.
 If zero values are returned, then step 1 is re-entered.
 </p>
-</dd>
-<dt>5.</dt>
-<dd><p>If <i>x</i> is a <i>single escape</i> <i>character</i>
+</li>
+<li><p>If <i>x</i> is a <i>single escape</i> <i>character</i>
 then the next <i>character</i>, <i>y</i>, is read, or an error of <i>type</i> <a href="end_002dof_002dfile.html">end-of-file</a> 
 is signaled if at the end of file.
 <i>y</i> is treated as if it is a <i>constituent</i> 
 whose only <i>constituent trait</i> is <i>alphabetic</i>_2.
 <i>y</i> is used to begin a <i>token</i>, and step 8 is entered.
 </p>
-</dd>
-<dt>6.</dt>
-<dd><p>If <i>x</i> is a <i>multiple escape</i> <i>character</i>
+</li>
+<li><p>If <i>x</i> is a <i>multiple escape</i> <i>character</i>
 then a <i>token</i> (initially
 containing no <i>characters</i>) is  begun and step 9 is entered.
 </p>
-</dd>
-<dt>7.</dt>
-<dd><p>If <i>x</i> is a <i>constituent</i> <i>character</i>, then it begins a <i>token</i>.
+</li>
+<li><p>If <i>x</i> is a <i>constituent</i> <i>character</i>, then it begins a <i>token</i>.
 After the <i>token</i> is read in, it will be interpreted
 either as a <span class="roman">Lisp</span> <i>object</i> or as being of invalid syntax.
 If the <i>token</i> represents an <i>object</i>,
@@ -119,9 +112,8 @@ depending on the <i>readtable case</i> of the <i>current readtable</i>,
 as outlined in <a href="Effect-of-Readtable-Case-on-the-Lisp-Reader.html#Effect-of-Readtable-Case-on-the-Lisp-Reader">Effect of Readtable Case on the Lisp Reader</a>.
 <i>X</i> is used to begin a <i>token</i>, and step 8 is entered.
 </p>
-</dd>
-<dt>8.</dt>
-<dd><p>At this point a <i>token</i> is being accumulated, and an even number
+</li>
+<li><p>At this point a <i>token</i> is being accumulated, and an even number
 of <i>multiple escape</i> <i>characters</i> have been encountered.
 If at end of file, step 10 is entered.
 Otherwise, a <i>character</i>, <i>y</i>, is read, and
@@ -169,9 +161,8 @@ if appropriate (see <b>read-preserving-whitespace</b>),
 and then step 10 is entered.
 </p></li></ul>
 
-</dd>
-<dt>9.</dt>
-<dd><p>At this point a <i>token</i> is being accumulated, and an odd number
+</li>
+<li><p>At this point a <i>token</i> is being accumulated, and an odd number
 of <i>multiple escape</i> <i>characters</i> have been encountered.
 If at end of file, an error of <i>type</i> <a href="end_002dof_002dfile.html">end-of-file</a> is signaled.
 Otherwise, a <i>character</i>, <i>y</i>, is read, and
@@ -199,14 +190,13 @@ then step 8 is entered.
 an error of <i>type</i> <a href="reader_002derror.html">reader-error</a> is signaled.
 </p></li></ul>
 
-</dd>
-<dt>10.</dt>
-<dd><p>An entire <i>token</i> has been accumulated.
+</li>
+<li><p>An entire <i>token</i> has been accumulated.
 The <i>object</i> represented by the <i>token</i> is returned 
 as the result of the read operation,
 or an error of <i>type</i> <a href="reader_002derror.html">reader-error</a> is signaled if the <i>token</i> is not of valid syntax.
-</p></dd>
-</dl>
+</p></li>
+</ol>
 
 
 <hr>
