@@ -1,10 +1,7 @@
 import os
 import re
-import json
-import functools
 
 def get_html_files():
-
     files = [f for f in os.listdir(src_folder_path()) if re.match(r'^.*\.html$', f)]
     return files
 

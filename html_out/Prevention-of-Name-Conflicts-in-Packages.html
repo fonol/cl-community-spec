@@ -96,23 +96,20 @@ one candidate <i>symbol</i>.  Any time a name conflict is about to occur,
 a <i>correctable</i> <i>error</i> is signaled.  
 </p>
 <p>The following rules apply to name conflicts:
-</p><dl compact="compact">
-<dt>&ndash;</dt>
-<dd><p>Name conflicts are detected when they become possible, that is, when the
+</p><ul>
+	<li><p>Name conflicts are detected when they become possible, that is, when the
 package structure is altered.  Name
 conflicts are not checked during every name lookup.
 </p>
-</dd>
-<dt>&ndash;</dt>
-<dd><p>If the <i>same</i> <i>symbol</i> is <i>accessible</i> to a <i>package</i> 
+</li>
+<li><p>If the <i>same</i> <i>symbol</i> is <i>accessible</i> to a <i>package</i> 
 through more than one path, there is no name conflict.
 A <i>symbol</i> cannot conflict with itself. 
 Name conflicts occur only between <i>distinct</i> <i>symbols</i> with
 the same name (under <b>string=</b>).
 </p>
-</dd>
-<dt>&ndash;</dt>
-<dd><p>Every <i>package</i> has a list of shadowing <i>symbols</i>.  
+</li>
+<li><p>Every <i>package</i> has a list of shadowing <i>symbols</i>.  
 A shadowing <i>symbol</i> takes precedence over any other <i>symbol</i> of
 the same name that would otherwise be <i>accessible</i> in the <i>package</i>.  
 A name conflict involving a shadowing symbol is always resolved in favor of
@@ -120,33 +117,28 @@ the shadowing <i>symbol</i>, without signaling an error (except for one
 exception involving <b><a href="import.html">import</a></b>).
 See <b><a href="shadow.html">shadow</a></b> and <a href="shadowing_002dimport.html">shadowing-import</a>.
 </p>
-</dd>
-<dt>&ndash;</dt>
-<dd><p>The functions <a href="use_002dpackage.html">use-package</a>, <b><a href="import.html">import</a></b>, and 
+</li>
+<li><p>The functions <a href="use_002dpackage.html">use-package</a>, <b><a href="import.html">import</a></b>, and 
 <b><a href="export.html">export</a></b> check for name conflicts.  
 </p>
-</dd>
-<dt>&ndash;</dt>
-<dd><p><b><a href="shadow.html">shadow</a></b> and <a href="shadowing_002dimport.html">shadowing-import</a> 
+</li>
+<li><p><b><a href="shadow.html">shadow</a></b> and <a href="shadowing_002dimport.html">shadowing-import</a> 
 never signal a name-conflict error.
 </p>
-</dd>
-<dt>&ndash;</dt>
-<dd><p><a href="unuse_002dpackage.html">unuse-package</a> and <b><a href="unexport.html">unexport</a></b>
+</li>
+<li><p><a href="unuse_002dpackage.html">unuse-package</a> and <b><a href="unexport.html">unexport</a></b>
 do not need to do any name-conflict checking.
 <b><a href="unintern.html">unintern</a></b> does name-conflict checking only when a <i>symbol</i> 
 being <i>uninterned</i> is a <i>shadowing symbol</i>
 .
 </p>
-</dd>
-<dt>&ndash;</dt>
-<dd><p>Giving a shadowing symbol to <b><a href="unintern.html">unintern</a></b> 
+</li>
+<li><p>Giving a shadowing symbol to <b><a href="unintern.html">unintern</a></b> 
 can uncover a name conflict that had
 previously been resolved by the shadowing.  
 </p>
-</dd>
-<dt>&ndash;</dt>
-<dd><p>Package functions signal name-conflict errors of <i>type</i> <a href="package_002derror.html">package-error</a> before making any
+</li>
+<li><p>Package functions signal name-conflict errors of <i>type</i> <a href="package_002derror.html">package-error</a> before making any
   change to the package structure.  When multiple changes are to be made,
   it is
   permissible for the implementation to process each change separately.
@@ -161,9 +153,8 @@ previously been resolved by the shadowing.
   of a single <i>symbol</i> will be signaled before
   that <i>symbol</i>&rsquo;s <i>accessibility</i> in any <i>package</i> is changed.
 </p>
-</dd>
-<dt>&ndash;</dt>
-<dd><p>Continuing from a name-conflict error must offer the user a chance to
+</li>
+<li><p>Continuing from a name-conflict error must offer the user a chance to
 resolve the name conflict in favor of either of the candidates.  The
 <i>package</i> 
 structure should be altered to reflect the resolution of the
@@ -171,17 +162,15 @@ name conflict, via <a href="shadowing_002dimport.html">shadowing-import</a>,
 <b><a href="unintern.html">unintern</a></b>,
 or <b><a href="unexport.html">unexport</a></b>.
 </p>
-</dd>
-<dt>&ndash;</dt>
-<dd><p>A name conflict in <a href="use_002dpackage.html">use-package</a> between a <i>symbol</i> 
+</li>
+<li><p>A name conflict in <a href="use_002dpackage.html">use-package</a> between a <i>symbol</i> 
 <i>present</i> in the using <i>package</i> and an <i>external symbol</i> of the used 
 <i>package</i> is resolved in favor of the first <i>symbol</i> by making it a
 shadowing <i>symbol</i>, or in favor of the second <i>symbol</i> by uninterning
 the first <i>symbol</i> from the using <i>package</i>. 
 </p>
-</dd>
-<dt>&ndash;</dt>
-<dd><p>A name conflict in <b><a href="export.html">export</a></b> or <b><a href="unintern.html">unintern</a></b> 
+</li>
+<li><p>A name conflict in <b><a href="export.html">export</a></b> or <b><a href="unintern.html">unintern</a></b> 
 due to a <i>package</i>&rsquo;s inheriting two <i>distinct</i> <i>symbols</i> 
 with the <i>same</i> <i>name</i> (under <b>string=</b>)
 from two other <i>packages</i> can be resolved in
@@ -190,8 +179,8 @@ favor of either <i>symbol</i> by importing it into the using
 <a name="index-shadowing-symbol-1"></a>, 
 
 just as with <a href="use_002dpackage.html">use-package</a>.
-</p></dd>
-</dl>
+</p></li>
+</ul>
 
 
 

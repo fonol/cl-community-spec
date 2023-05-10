@@ -35,6 +35,10 @@ def check_for_tag_mismatch(html):
         m.append("<ul>")
     if html.count("<ol>") != html.count("</ol>"):
         m.append("<ol>")
+    if html.count("<dd>") != html.count("</dd>"):
+        m.append("<dd>")
+    if html.count("<dt") != html.count("</dt>"):
+        m.append("<dt>")
     return m
 
 def cleanup(html):
