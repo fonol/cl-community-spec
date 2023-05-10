@@ -15,7 +15,7 @@ def src_folder_path():
     return os.path.join(folder_path(), "html_in/")
 
 def out_folder_path():
-    return os.path.join(folder_path(), "output/")
+    return os.path.join(folder_path(), "html_out/")
 
 def check_for_tag_mismatch(html):
     m = []
@@ -606,7 +606,7 @@ def main():
         out.write(json.dumps(searchable_terms, indent=4))
 
     print(f"Total: {len(nodes)} pages")
-    print("Finished conversion.\nResults can be found in /output.")
+    print("Finished conversion.\nResults can be found in /html_out.")
 
 main()
 # insert_table_links()
