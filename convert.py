@@ -2,6 +2,7 @@ import os
 import re
 import json
 import functools
+import collections
 
 def get_html_files():
 
@@ -219,7 +220,10 @@ def main():
                         title   = re.match("<title>(.+)</title>", l).group(1)
                         l       = l.replace("</title>", " (CLCS)</title>")
 
-                        nodes.append((title, f.replace(".html", ""), n_up, None))
+                        keywords = [t.strip() for t in title.split(",")]
+                        for k in keywords:
+                            if len(k.strip()) > 0:
+                                nodes.append((k, f.replace(".html", ""), n_up, None, None))
 
 
                     # take the very first header as page header
@@ -227,14 +231,17 @@ def main():
                         mnum = re.match(r".+>(\d+(\.\d+){0,6}) .+", l, flags= re.MULTILINE)
                         if mnum is not None:
                             numbering = mnum.group(1)
-                            nodes[-1] = (nodes[-1][0], nodes[-1][1], nodes[-1][2], numbering)
+                            nodes[-1] = (nodes[-1][0], nodes[-1][1], nodes[-1][2], numbering, None)
 
                         l = re.sub(r">\d+(\.\d+){0,6} ", ">", l)
                         out.append("<div class=\"section top-most\">")
                         m = re.match(r".+\[(.+)\].*", l)
+                        ntype = None
                         if m is not None:
-                            out.append(f"<div class=\"node-type\">{m.group(1)}</div>")
+                            ntype = m.group(1)
+                            out.append(f"<div class=\"node-type\">{ntype}</div>")
                             l = re.sub(r"\[(.+)\]", "", l)
+                            nodes[-1] = (nodes[-1][0], nodes[-1][1], nodes[-1][2], nodes[-1][3], ntype)
                         if "," in l:
                             tline = re.sub("<h[23456] class=\"(sub)?(sub)?section\">", "", l)
                             tline = re.sub("</h[23456]>", "", tline)
@@ -243,7 +250,7 @@ def main():
                             keywords = [t.strip() for t in tline.split(",")]
                             for k in keywords:
                                 if k != title and len(k.strip()) > 0:
-                                    nodes.append((k, f.replace(".html", ""), n_up, None))
+                                    nodes.append((k, f.replace(".html", ""), n_up, None, ntype))
                         out.append(l)
                        
                         in_section  = True
@@ -509,10 +516,10 @@ def main():
 
         to_write.append((outpath, key, text))
         n = nodes[-1]
-        nodes[-1] = (n[0], n[1], n_up, n[3])
+        nodes[-1] = (n[0], n[1], n_up, n[3], n[4])
 
     parents = {}
-    for title, file, parent, numbering in nodes: 
+    for title, file, parent, numbering, ntype in nodes: 
         if numbering is None:
             continue
         if parent is None or parent == "Top" or parent == "index.html":
@@ -594,14 +601,36 @@ def main():
     with open(os.path.join(folder_path(), "scripts.js"), "r", encoding="utf-8") as fscripts:
         scripts = fscripts.read()
 
-    nodelist    =  ",".join(["['{}','{}']".format(t[0].replace("'", "\\'").replace("``", "\"").replace("''", "\""), t[1].replace("'", "\\'")) for t in nodes])
-    scripts     = scripts.replace("{{nodes}}", nodelist)
+    def clean_name(name):
+        return name.replace("'", "\\'").replace("``", "\"").replace("''", "\"")
+
+    nodelist    = []
+    dup_names   = set([clean_name(t) for t, count in collections.Counter([t[0] for t in nodes]).items() if count > 1])
+    dup_ntypes  = {}
+    for t in nodes:
+        name = clean_name(t[0])
+        if name in dup_names and t[4] is not None:
+            file = t[1].replace("'", "\\'")
+            dup_ntypes[file] = t[4]
+
+    for t in nodes:
+        name = clean_name(t[0])
+        file = t[1].replace("'", "\\'")
+        if name in dup_names:
+            ntype = dup_ntypes[file]
+            assert(ntype is not None)
+            name = f"{name} ({ntype})"
+        nodelist.append((name, file))
+
+    nodelist    =  ",".join(set(["['{}','{}']".format(t[0], t[1]) for t in nodelist]))
+
+    scripts     = re.sub(r"const NODES = \[.+\]; //N", f"const NODES = [{nodelist}]; //N", scripts)
     
     with open(os.path.join(folder_path(), "scripts.js"), "w", encoding="utf-8") as fscripts:
         fscripts.write(scripts)
     
     searchable_terms = {}
-    for term, file, _, _ in nodes:
+    for term, file, _, _, _ in nodes:
         term = term.replace("&gt;", ">")
         term = term.replace("&lt;", "<")
         searchable_terms[term] = f"{file}.html"

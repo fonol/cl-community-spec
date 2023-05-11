@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>abort, continue, muffle-warning, store-value, use-value (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="ANSI and GNU Common Lisp Document">
+<meta name="keywords" content="ANSI and GNU Common Lisp Document">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="Symbols.html" rel="next" title="Symbols">
+<link href="Conditions-Dictionary.html" rel="up" title="Conditions Dictionary">
+<link href="use_002dvalue.html" rel="prev" title="use-value">
+
+
+
+</head>
+<body lang="en">
+
+<a name="abort_002c-continue_002c-muffle_002dwarning_002c-store_002dvalue_002c-use_002dvalue-_005bFunction_005d"></a>
+<h4 class="subsection">9.2.46 abort, continue, muffle-warning, store-value, use-value          [Function]</h4>
+
+<p><code>abort</code>  <i>&amp;optional</i> condition 
+       &rArr;  #&lt;NoValue&gt;
+</p>
+<p><code>continue</code>  <i>&amp;optional</i> condition &rArr;  <i><a href="NILv.html">nil</a></i>
+</p>
+<p><code>muffle-warning</code>  <i>&amp;optional</i> condition 
+       &rArr;  #&lt;NoValue&gt;
+</p>
+<p><code>store-value</code>  <i>value &amp;optional</i> condition &rArr;  <i><a href="NILv.html">nil</a></i>
+</p>
+<p><code>use-value</code>  <i>value &amp;optional</i> condition &rArr;  <i><a href="NILv.html">nil</a></i>
+</p>
+<a name="Arguments-and-Values_003a_003a-157"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>value</i>&mdash;an <i>object</i>.
+</p>
+<p><i>condition</i>&mdash;a <i>condition</i> <i>object</i>, or <a href="NILv.html">nil</a>.
+</p>
+<a name="Description_003a_003a-216"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p>Transfers control to the most recently established <i>applicable restart</i>
+having the same name as the function.  That is,
+  the <i>function</i> <b><a href="abort.html">abort</a></b>    searches for an <i>applicable</i> <b><a href="abort.html">abort</a></b>    <i>restart</i>, 
+  the <i>function</i> <b><a href="continue.html">continue</a></b> searches for an <i>applicable</i> <b><a href="continue.html">continue</a></b> <i>restart</i>,
+and so on.
+</p>
+<p>If no such <i>restart</i> exists, 
+the functions
+     <b><a href="continue.html">continue</a></b>,
+     <a href="store_002dvalue.html">store-value</a>, 
+ and <a href="use_002dvalue.html">use-value</a>
+return <a href="NILv.html">nil</a>, and 
+the functions
+     <b><a href="abort.html">abort</a></b>
+ and <a href="muffle_002dwarning.html">muffle-warning</a>
+signal an error of <i>type</i> <a href="control_002derror.html">control-error</a>.
+</p>
+<p>When <i>condition</i> is <i>non-nil</i>,
+only those <i>restarts</i> are considered that are 
+  either explicitly associated with that <i>condition</i>,
+      or not associated with any <i>condition</i>;
+that is, the excluded <i>restarts</i> are 
+those that are associated with a non-empty set of <i>conditions</i>
+of which the given <i>condition</i> is not an <i>element</i>.
+If <i>condition</i> is <a href="NILv.html">nil</a>, all <i>restarts</i> are considered.
+</p>
+<a name="Examples_003a_003a-140"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example">;;; Example of the ABORT retart
+
+ (defmacro abort-on-error (&amp;body forms)
+   `(handler-bind ((error #'abort))
+      ,@forms)) &rArr;  ABORT-ON-ERROR
+ (abort-on-error (+ 3 5)) &rArr;  8
+ (abort-on-error (error &quot;You lose.&quot;))
+<tt> |&gt; </tt> Returned to Lisp Top Level.
+
+;;; Example of the CONTINUE restart
+
+ (defun real-sqrt (n)
+   (when (minusp n)
+     (setq n (- n))
+     (cerror &quot;Return sqrt(~D) instead.&quot; &quot;Tried to take sqrt(-~D).&quot; n))
+   (sqrt n))
+
+ (real-sqrt 4) &rArr;  2
+ (real-sqrt -9)
+<tt> |&gt; </tt> Error: Tried to take sqrt(-9).
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number:
+<tt> |&gt; </tt>  1: Return sqrt(9) instead.
+<tt> |&gt; </tt>  2: Return to Lisp Toplevel.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>(continue)</tt><b>&lt;&lt;|</b>
+<tt> |&gt; </tt> Return sqrt(9) instead.
+&rArr;  3
+
+ (handler-bind ((error #'(lambda (c) (continue))))
+   (real-sqrt -9)) &rArr;  3
+
+;;; Example of the MUFFLE-WARNING restart
+
+ (defun count-down (x)
+   (do ((counter x (1- counter)))
+       ((= counter 0) 'done)
+     (when (= counter 1)
+       (warn &quot;Almost done&quot;))
+     (format t &quot;~&amp;~D~
+&rArr;  COUNT-DOWN
+ (count-down 3)
+<tt> |&gt; </tt> 3
+<tt> |&gt; </tt> 2
+<tt> |&gt; </tt> Warning: Almost done
+<tt> |&gt; </tt> 1
+&rArr;  DONE
+ (defun ignore-warnings-while-counting (x)
+   (handler-bind ((warning #'ignore-warning))
+     (count-down x)))
+&rArr;  IGNORE-WARNINGS-WHILE-COUNTING
+ (defun ignore-warning (condition)
+   (declare (ignore condition))
+   (muffle-warning))
+&rArr;  IGNORE-WARNING
+ (ignore-warnings-while-counting 3)
+<tt> |&gt; </tt> 3
+<tt> |&gt; </tt> 2
+<tt> |&gt; </tt> 1
+&rArr;  DONE
+
+;;; Example of the STORE-VALUE and USE-VALUE restarts
+
+ (defun careful-symbol-value (symbol)
+   (check-type symbol symbol)
+   (restart-case (if (boundp symbol)
+                     (return-from careful-symbol-value 
+                                  (symbol-value symbol))
+                     (error 'unbound-variable
+                            :name symbol))
+     (use-value (value)
+       :report &quot;Specify a value to use this time.&quot;
+       value)
+     (store-value (value)
+       :report &quot;Specify a value to store and use in the future.&quot;
+       (setf (symbol-value symbol) value))))
+ (setq a 1234) &rArr;  1234
+ (careful-symbol-value 'a) &rArr;  1234
+ (makunbound 'a) &rArr;  A
+ (careful-symbol-value 'a)
+<tt> |&gt; </tt> Error: A is not bound.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number.
+<tt> |&gt; </tt>  1: Specify a value to use this time.
+<tt> |&gt; </tt>  2: Specify a value to store and use in the future.
+<tt> |&gt; </tt>  3: Return to Lisp Toplevel.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>(use-value 12)</tt><b>&lt;&lt;|</b>
+&rArr;  12
+ (careful-symbol-value 'a)
+<tt> |&gt; </tt> Error: A is not bound.
+<tt> |&gt; </tt> To continue, type :CONTINUE followed by an option number.
+<tt> |&gt; </tt>   1: Specify a value to use this time.
+<tt> |&gt; </tt>   2: Specify a value to store and use in the future.
+<tt> |&gt; </tt>   3: Return to Lisp Toplevel.
+<tt> |&gt; </tt> Debug&gt; <b>|&gt;&gt;</b><tt>(store-value 24)</tt><b>&lt;&lt;|</b>
+&rArr;  24
+ (careful-symbol-value 'a)
+&rArr;  24
+
+;;; Example of the USE-VALUE restart
+
+ (defun add-symbols-with-default (default &amp;rest symbols)
+   (handler-bind ((sys:unbound-symbol
+                    #'(lambda (c)
+                        (declare (ignore c)) 
+                        (use-value default))))
+     (apply #'+ (mapcar #'careful-symbol-value symbols))))
+&rArr;  ADD-SYMBOLS-WITH-DEFAULT
+ (setq x 1 y 2) &rArr;  2
+ (add-symbols-with-default 3 'x 'y 'z) &rArr;  6
+
+</pre></div>
+
+<a name="Side-Effects_003a_003a-18"></a>
+<h4 class="subsubheading">Side Effects::</h4>
+
+<p>A transfer of control may occur if an appropriate <i>restart</i> is available,
+or (in the case of the <i>function</i> <b><a href="abort.html">abort</a></b> or the <i>function</i> <a href="muffle_002dwarning.html">muffle-warning</a>)
+execution may be stopped.
+</p>
+<a name="Affected-By_003a_003a-35"></a>
+<h4 class="subsubheading">Affected By::</h4>
+
+<p>Each of these functions can be affected by 
+the presence of a <i>restart</i> having the same name.
+</p>
+<a name="Exceptional-Situations_003a_003a-49"></a>
+<h4 class="subsubheading">Exceptional Situations::</h4>
+
+<p>If an appropriate <b><a href="abort.html">abort</a></b> <i>restart</i>
+ is not available for the <i>function</i> <b><a href="abort.html">abort</a></b>,
+or an appropriate <a href="muffle_002dwarning.html">muffle-warning</a> <i>restart</i> 
+ is not available for the <i>function</i> <a href="muffle_002dwarning.html">muffle-warning</a>,
+an error of <i>type</i> <a href="control_002derror.html">control-error</a> is signaled.
+</p>
+<a name="See-Also_003a_003a-190"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="invoke_002drestart.html#invoke_002drestart">invoke-restart</a>, 
+
+<a href="Restarts.html#Restarts">Restarts</a>,
+<a href="Interfaces-to-Restarts.html#Interfaces-to-Restarts">Interfaces to Restarts</a>,
+<a href="assert.html#assert">assert</a>, 
+
+<b>ccase</b>,
+<a href="cerror.html#cerror">cerror</a>, 
+
+<a href="check_002dtype.html#check_002dtype">check-type</a>, 
+
+<b>ctypecase</b>,
+<a href="use_002dvalue.html#use_002dvalue">use-value</a>, 
+
+<a href="warn.html#warn">warn</a>
+</p>
+<a name="Notes_003a_003a-114"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<div class="example">
+<pre class="example"> (abort condition) &equiv; (invoke-restart 'abort)
+ (muffle-warning)  &equiv; (invoke-restart 'muffle-warning)
+ (continue)        &equiv; (let ((r (find-restart 'continue))) (if r (invoke-restart r)))
+ (use-value <i>x</i>) &equiv; (let ((r (find-restart 'use-value))) (if r (invoke-restart r <i>x</i>)))
+ (store-value x) &equiv; (let ((r (find-restart 'store-value))) (if r (invoke-restart r <i>x</i>)))
+</pre></div>
+
+<p>No functions defined in this specification are required to provide
+a <a href="use_002dvalue.html">use-value</a> <i>restart</i>.
+</p>
+
+</body>
+</html>

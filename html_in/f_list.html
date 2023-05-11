@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 6.5, http://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>list, list* (ANSI and GNU Common Lisp Document)</title>
+
+<meta name="description" content="ANSI and GNU Common Lisp Document">
+<meta name="keywords" content="ANSI and GNU Common Lisp Document">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<link href="list_002dlength.html" rel="next" title="list-length">
+<link href="Conses-Dictionary.html" rel="up" title="Conses Dictionary">
+<link href="copy_002dlist.html" rel="prev" title="copy-list">
+
+
+
+</head>
+<body lang="en">
+
+<hr>
+
+<h4 class="subsection">14.2.15 list, list*                                                      [Function]</h4>
+
+<p><code>list</code>  <i>&amp;rest</i> objects &rArr;  <i>list</i>
+</p>
+<p><code>list*</code>  <i>&amp;rest</i> objects^+ &rArr;  <i>result</i>
+</p>
+<a name="Arguments-and-Values_003a_003a-284"></a>
+<h4 class="subsubheading">Arguments and Values::</h4>
+
+<p><i>object</i>&mdash;an <i>object</i>.
+</p>
+<p><i>list</i>&mdash;a <i>list</i>.
+</p>
+<p><i>result</i>&mdash;an <i>object</i>.
+</p>
+<a name="Description_003a_003a-385"></a>
+<h4 class="subsubheading">Description::</h4>
+
+<p><b>list</b> returns a <i>list</i> containing the supplied <i>objects</i>.  
+</p>
+<p><b>list*</b> is like <b>list</b> except that 
+the last <i>argument</i> to <b>list</b> becomes 
+the <i>car</i> of the last <i>cons</i> constructed, while
+the last <i>argument</i> to <b>list*</b> becomes 
+the <i>cdr</i> of the last <i>cons</i> constructed.
+Hence, any given call to <b>list*</b> always produces one fewer <i>conses</i>
+than a call to <b>list</b> with the same number of arguments.
+</p>
+<p>If the last <i>argument</i> to <b>list*</b> is a <i>list</i>, 
+the effect is to construct a new <i>list</i> which is similar, but
+which has additional elements added to the front corresponding to
+the preceding <i>arguments</i> of <b>list*</b>.
+</p>
+<p>If <b>list*</b> receives only one <i>object</i>,
+that <i>object</i> is returned, regardless of whether or not it is a <i>list</i>.
+</p>
+<a name="Examples_003a_003a-268"></a>
+<h4 class="subsubheading">Examples::</h4>
+
+<div class="example">
+<pre class="example"> (list 1) &rArr;  (1)
+ (list* 1) &rArr;  1
+ (setq a 1) &rArr;  1
+ (list a 2) &rArr;  (1 2)
+ '(a 2) &rArr;  (A 2)
+ (list 'a 2) &rArr;  (A 2)
+ (list* a 2) &rArr;  (1 . 2)
+ (list) &rArr;  NIL ;<i>i.e.</i>, ()
+ (setq a '(1 2)) &rArr;  (1 2)
+ (eq a (list* a)) &rArr;  <i>true</i>
+ (list 3 4 'a (car '(b . c)) (+ 6 -2)) &rArr;  (3 4 A B 4)
+ (list* 'a 'b 'c 'd) &equiv; (cons 'a (cons 'b (cons 'c 'd))) &rArr;  (A B C . D)
+ (list* 'a 'b 'c '(d e f)) &rArr;  (A B C D E F)
+</pre></div>
+
+<a name="See-Also_003a_003a-311"></a>
+<h4 class="subsubheading">See Also::</h4>
+
+<p><a href="cons.html#cons">cons</a>
+</p>
+<a name="Notes_003a_003a-205"></a>
+<h4 class="subsubheading">Notes::</h4>
+
+<div class="example">
+<pre class="example"> (list* <i>x</i>) &equiv; <i>x</i>
+</pre></div>
+
+
+
+</body>
+</html>
