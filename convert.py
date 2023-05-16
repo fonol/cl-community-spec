@@ -580,7 +580,39 @@ def main():
     
     for outpath, key, text in to_write:
         if key in backlinks:
-            bl_list = "".join([f"<a href=\"{bl}.html\">{keys_to_label.get(bl, bl)}</a>, " for bl in backlinks[key] if bl != "index"])
+            bl_list = []
+            for bl in backlinks[key]:
+                if bl == "index":
+                    continue
+                lbl     = keys_to_label.get(bl, bl)
+                lbl     = lbl.replace("_002d", "-")
+                lbl     = lbl.replace("_003e", "&gt;")
+                lbl     = lbl.replace("_0028", "(")
+                lbl     = lbl.replace("_0029", ")")
+                lbl     = lbl.replace("_0060_0060", "\"")
+                lbl     = lbl.replace("_0027_0027", "\"")
+                lbl     = lbl.replace("_0026", "&amp;")
+                if lbl == "v_dash":
+                    lbl = "/, //, ///"
+                elif lbl == "v_times":
+                    lbl = "*, **, **"
+                elif lbl == "v_plus":
+                    lbl = "+, ++, ++"
+                elif lbl == "f_mod":
+                    lbl = "mod (Function)"
+                elif lbl == "f_abort":
+                    lbl = "abort (Function)"
+                elif lbl == "f_list":
+                    lbl = "list, list* (Function)"
+                elif lbl == "f_member":
+                    lbl = "member, member-if, member-if-not (Function)"
+                elif lbl == "bit_sbit":
+                    lbl = "bit, sbit"
+                elif lbl == "rational_rationalize":
+                    lbl = "rational, rationalize"
+                assert "_" not in lbl, lbl
+                bl_list.append(f"<a href=\"{bl}.html\">{lbl}</a>, ")
+            bl_list = "".join(bl_list)
             bl_list = bl_list[:-2]
             bl_sec  = f"""
                     <div class="section">
