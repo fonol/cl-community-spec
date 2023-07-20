@@ -608,6 +608,8 @@ def main():
                     lbl = "member, member-if, member-if-not (Function)"
                 elif lbl == "bit_sbit":
                     lbl = "bit, sbit"
+                elif lbl == "m_time":
+                    lbl = "time (Macro)"
                 elif lbl == "rational_rationalize":
                     lbl = "rational, rationalize"
                 assert "_" not in lbl, lbl
