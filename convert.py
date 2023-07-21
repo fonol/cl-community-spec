@@ -562,7 +562,10 @@ def main():
                     </div> 
                 </div>
                 <div class="sidenav__main">
-                    <ul>{nav}</ul>
+                    <ul>
+                        <li><div><span>0</span><a href="index.html">Home</a></div></li>
+                        {nav}
+                    </ul>
                 </div>
                 <div class="sidenav__footer">
                     <a href="https://github.com/fonol/cl-community-spec">
