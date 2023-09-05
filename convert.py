@@ -535,13 +535,19 @@ def main():
         comps1 = num1.split(".")
         comps2 = num2.split(".")
 
-        if len(comps1) == len(comps2):
-            if int(comps1[-1]) > int(comps2[-1]):
-                return 1
-            if int(comps1[-1]) < int(comps2[-1]):
+        for i in range(0, max(len(comps1), len(comps2))):
+            if i >= len(comps1):
                 return -1
-            return 0
+            if i >= len(comps2):
+                return 1
+            n1 = int(comps1[i])
+            n2 = int(comps2[i])
+            if n1 > n2:
+                return 1
+            if n2 > n1:
+                return -1
         return 0
+        
 
     def print_nav_item(parents, children):
         html = ""
