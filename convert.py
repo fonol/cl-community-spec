@@ -665,7 +665,7 @@ def main():
             name = f"{name} ({ntype})"
         nodelist.append((name, file))
 
-    nodelist    =  ",".join(set(["['{}','{}']".format(t[0], t[1]) for t in nodelist]))
+    nodelist    =  ",".join(sorted(set(["['{}','{}']".format(t[0], t[1]) for t in nodelist])))
 
     scripts     = re.sub(r"const NODES = \[.+\]; //N", f"const NODES = [{nodelist}]; //N", scripts)
     
