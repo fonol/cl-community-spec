@@ -623,7 +623,7 @@ def main():
                     lbl = "rational, rationalize"
                 assert "_" not in lbl, lbl
                 bl_list.append(f"<a href=\"{bl}.html\">{lbl}</a>, ")
-            bl_list = "".join(bl_list)
+            bl_list = "".join(sorted(bl_list, key = lambda b: b[b.index(">"):].lower()))
             bl_list = bl_list[:-2]
             bl_sec  = f"""
                     <div class="section">
