@@ -103,11 +103,7 @@
 <p>Controls whether the <i><a href="Glossary.html#Lisp-printer">Lisp printer</a></i> calls the <i><a href="Glossary.html#pretty-printer">pretty printer</a></i>.
 </p>
 <p>If it is <i><a href="Glossary.html#false">false</a></i>,
-the <i><a href="Glossary.html#pretty-printer">pretty printer</a></i> is not used and 
-</p>
-<p>a minimum
-</p>
-<p>of <i><a href="Glossary.html#whitespace">whitespace</a></i>_1
+the <i><a href="Glossary.html#pretty-printer">pretty printer</a></i> is not used and a minimum of <i><a href="Glossary.html#whitespace">whitespace</a></i>_1
 is output when printing an expression.
 </p>
 <p>If it is <i><a href="Glossary.html#true">true</a></i>,
@@ -124,14 +120,14 @@ is <i><a href="Glossary.html#false">false</a></i>.
 <div class="example">
 <pre class="example"><code> (setq *print-pretty* 'nil) ⇒  NIL
  (progn (write '(let ((a 1) (b 2) (c 3)) (+ a b c))) nil)
-<code class="no-highlight"> |&gt; </code> (LET ((A 1) (B 2) (C 3)) (+ A B C))
+ |&gt;  (LET ((A 1) (B 2) (C 3)) (+ A B C))
 ⇒  NIL
  (let ((*print-pretty* t))
    (progn (write '(let ((a 1) (b 2) (c 3)) (+ a b c))) nil))
-<code class="no-highlight"> |&gt; </code> (LET ((A 1)
-<code class="no-highlight"> |&gt; </code>       (B 2)
-<code class="no-highlight"> |&gt; </code>       (C 3))
-<code class="no-highlight"> |&gt; </code>   (+ A B C))
+ |&gt;  (LET ((A 1)
+ |&gt;        (B 2)
+ |&gt;        (C 3))
+ |&gt;    (+ A B C))
 ⇒  NIL
 ;; Note that the first two expressions printed by this next form
 ;; differ from the second two only in whether escape characters are printed.
@@ -139,18 +135,18 @@ is <i><a href="Glossary.html#false">false</a></i>.
  (flet ((test (x)
           (let ((*print-pretty* t))
             (print x)
-            (format t "~
+            (format t "~%~S " x) 
             (terpri) (princ x) (princ " ")
-            (format t "~
-  (test '#'(lambda () (list "a" #<b>’c</b> #'d))))
-<code class="no-highlight"> |&gt; </code> #'(LAMBDA ()
-<code class="no-highlight"> |&gt; </code>     (LIST "a" #<b>’C</b> #'D))
-<code class="no-highlight"> |&gt; </code> #'(LAMBDA ()
-<code class="no-highlight"> |&gt; </code>     (LIST "a" #<b>’C</b> #'D))
-<code class="no-highlight"> |&gt; </code> #'(LAMBDA ()
-<code class="no-highlight"> |&gt; </code>     (LIST a b 'C #'D)) 
-<code class="no-highlight"> |&gt; </code> #'(LAMBDA ()
-<code class="no-highlight"> |&gt; </code>     (LIST a b 'C #'D))
+            (format t "~%~A " x)))) 
+  (test '#'(lambda () (list "a" #’c #'d))))
+ |&gt;  #'(LAMBDA ()
+ |&gt;      (LIST "a" #’C #'D))
+ |&gt;  #'(LAMBDA ()
+ |&gt;      (LIST "a" #’C #'D))
+ |&gt;  #'(LAMBDA ()
+ |&gt;      (LIST a b 'C #'D)) 
+ |&gt;  #'(LAMBDA ()
+ |&gt;      (LIST a b 'C #'D))
 ⇒  NIL
 </code>
 </pre></div>
