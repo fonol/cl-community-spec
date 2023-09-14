@@ -8,6 +8,9 @@ A more or less recent live version of the repository can be found at [cl-communi
 
 For the syntax highlighting, [orthecreedence/highlight-lisp](https://github.com/orthecreedence/highlight-lisp) is used.
 
-The content is left unchanged at this stage*, the only work right now goes into the presentation.
+PRs welcome!
 
-\* with the exception that I added a "Backlinks" section at the end of each page, if there are any links pointing to that page
+### Note for contributing
+
+The generated HTML is kind of messy, but please be careful with auto-formatting tools. A lot of the HTML is preformatted, and not all of the
+preformatted text sits inside `<pre></pre>` tags yet.
