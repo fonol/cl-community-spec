@@ -105,15 +105,15 @@ For example, writing
 occurs in the template, 
 the <i><a href="Glossary.html#expression">expression</a></i>
 following the comma is to be evaluated to produce an <i><a href="Glossary.html#object">object</a></i> to
-be inserted at that point.  Assume <tt>b</tt> has the value 3, for example, then
-evaluating the <i><a href="Glossary.html#form">form</a></i> denoted by <tt>`(a b ,b ,(+ b 1) b)</tt> produces
-the result <tt>(a b 3 4 b)</tt>.
+be inserted at that point.  Assume <code>b</code> has the value 3, for example, then
+evaluating the <i><a href="Glossary.html#form">form</a></i> denoted by <code>`(a b ,b ,(+ b 1) b)</code> produces
+the result <code>(a b 3 4 b)</code>.
 </p>
 <p>If a comma is immediately followed by an <i><a href="Glossary.html#at_002dsign">at-sign</a></i>, 
 then the <i><a href="Glossary.html#form">form</a></i> following the <i><a href="Glossary.html#at_002dsign">at-sign</a></i>
 is evaluated to produce a <i><a href="Glossary.html#list">list</a></i> of <i><a href="Glossary.html#object">objects</a></i>.
 These <i><a href="Glossary.html#object">objects</a></i> are then "spliced" into place in the template.  For
-example, if <tt>x</tt> has the value <tt>(a b c)</tt>, then
+example, if <code>x</code> has the value <code>(a b c)</code>, then
 </p>
 <div class="example">
 <pre class="example"><code> `(x ,x ,@x foo ,(cadr x) bar ,(cdr x) baz ,@(cdr x))
@@ -122,20 +122,20 @@ example, if <tt>x</tt> has the value <tt>(a b c)</tt>, then
 </pre></div>
 <p>The backquote syntax can be summarized formally as follows.
 </p>
-<ul><li><p><tt>`<i>basic</i></tt> is the same as <tt>'<i>basic</i></tt>,
-that is, <tt>(quote <i>basic</i>)</tt>, for any <i><a href="Glossary.html#expression">expression</a></i>
+<ul><li><p><code>`<i>basic</i></code> is the same as <code>'<i>basic</i></code>,
+that is, <code>(quote <i>basic</i>)</code>, for any <i><a href="Glossary.html#expression">expression</a></i>
 <i>basic</i> that is not a <i><a href="Glossary.html#list">list</a></i> or a general <i><a href="Glossary.html#vector">vector</a></i>.
 </p>
 </li>
-<li><p><tt>`,<i><a href="Glossary.html#form">form</a></i></tt> is the same as <i><a href="Glossary.html#form">form</a></i>, for any <i><a href="Glossary.html#form">form</a></i>, provided
+<li><p><code>`,<i><a href="Glossary.html#form">form</a></i></code> is the same as <i><a href="Glossary.html#form">form</a></i>, for any <i><a href="Glossary.html#form">form</a></i>, provided
 that the representation of <i><a href="Glossary.html#form">form</a></i> does not begin with <i><a href="Glossary.html#at_002dsign">at-sign</a></i>
 or <i><a href="Glossary.html#dot">dot</a></i>.  (A similar caveat holds for all occurrences of a form after a <i><a href="Glossary.html#comma">comma</a></i>.)
 </p>
 </li>
-<li><p><tt>`,@<i><a href="Glossary.html#form">form</a></i></tt> has undefined consequences.
+<li><p><code>`,@<i><a href="Glossary.html#form">form</a></i></code> has undefined consequences.
 </p>
 </li>
-<li><p><tt>`(x1 x2 x3 ... xn . atom)</tt>
+<li><p><code>`(x1 x2 x3 ... xn . atom)</code>
 may be interpreted to mean
 </p>
 <div class="example">
@@ -146,41 +146,41 @@ may be interpreted to mean
 a transformation of an <i>xj</i> as follows:
 </p>
 <ul>
-<li><p><tt>[<i><a href="Glossary.html#form">form</a></i>]</tt> is interpreted as <tt>(list `<i><a href="Glossary.html#form">form</a></i>)</tt>, 
+<li><p><code>[<i><a href="Glossary.html#form">form</a></i>]</code> is interpreted as <code>(list `<i><a href="Glossary.html#form">form</a></i>)</code>, 
 which contains a backquoted form that must then be further interpreted.
 </p>
 </li>
-<li><p><tt>[,<i><a href="Glossary.html#form">form</a></i>]</tt> is interpreted as <tt>(list <i><a href="Glossary.html#form">form</a></i>)</tt>.
+<li><p><code>[,<i><a href="Glossary.html#form">form</a></i>]</code> is interpreted as <code>(list <i><a href="Glossary.html#form">form</a></i>)</code>.
 </p>
 </li>
-<li><p><tt>[,@<i><a href="Glossary.html#form">form</a></i>]</tt> is interpreted as <i><a href="Glossary.html#form">form</a></i>.
+<li><p><code>[,@<i><a href="Glossary.html#form">form</a></i>]</code> is interpreted as <i><a href="Glossary.html#form">form</a></i>.
 </p></li>
 </ul>
 </li>
-<li><p><tt>`(x1 x2 x3 ... xn)</tt> may be interpreted to mean
+<li><p><code>`(x1 x2 x3 ... xn)</code> may be interpreted to mean
 the same as the backquoted form
-<tt>`(x1 x2 x3 ... xn . <a href="NILv.html">nil</a>)</tt>,
+<code>`(x1 x2 x3 ... xn . <a href="NILv.html">nil</a>)</code>,
 thereby reducing it to the previous case.
 </p>
 </li>
-<li><p><tt>`(x1 x2 x3 ... xn . ,form)</tt> may be interpreted to mean
+<li><p><code>`(x1 x2 x3 ... xn . ,form)</code> may be interpreted to mean
 </p>
 <div class="example">
 <pre class="example"><code> (append [ x1] [ x2] [ x3] ... [ xn] form)
 </code>
 </pre></div>
-<p>where the brackets indicate a transformation of an <tt>xj</tt> as described above.
+<p>where the brackets indicate a transformation of an <code>xj</code> as described above.
 </p>
 </li>
-<li><p><tt>`(x1 x2 x3 ... xn . ,@form)</tt> has undefined consequences.
+<li><p><code>`(x1 x2 x3 ... xn . ,@form)</code> has undefined consequences.
 </p>
 </li>
-<li><p><tt>`#(x1 x2 x3 ... xn)</tt> may be interpreted to mean
-<tt>(apply #'vector `(x1 x2 x3 ... xn))</tt>.
+<li><p><code>`#(x1 x2 x3 ... xn)</code> may be interpreted to mean
+<code>(apply #'vector `(x1 x2 x3 ... xn))</code>.
 </p></li></ul>
-<p>Anywhere "<tt>,@</tt>" may be used, the syntax "<tt>,.</tt>" may be used instead
+<p>Anywhere "<code>,@</code>" may be used, the syntax "<code>,.</code>" may be used instead
 to indicate that it is permissible to operate <i>destructively</i> on 
-the <i><a href="Glossary.html#list-structure">list structure</a></i>  produced by the form following the "<tt>,.</tt>" 
+the <i><a href="Glossary.html#list-structure">list structure</a></i>  produced by the form following the "<code>,.</code>" 
 (in effect, to use <b><a href="nconc.html">nconc</a></b> instead of <b><a href="append.html">append</a></b>).
 </p>
 <p>If the backquote syntax is nested, the innermost backquoted form

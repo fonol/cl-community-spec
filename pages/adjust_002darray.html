@@ -126,8 +126,8 @@
  <i>initial-elements</i> and <i>initial-contents</i> must not be supplied
  if <i>displaced-to</i> is supplied.
 </td></tr>
-<tr><td><i>displaced-index-offset</i></td><td>an <i><a href="Glossary.html#object">object</a></i> of <i><a href="Glossary.html#type">type</a></i> <tt>(fixnum 0 <i>n</i>)</tt> 
- where <i>n</i> is <tt>(array-total-size <i>displaced-to</i>)</tt>.
+<tr><td><i>displaced-index-offset</i></td><td>an <i><a href="Glossary.html#object">object</a></i> of <i><a href="Glossary.html#type">type</a></i> <code>(fixnum 0 <i>n</i>)</code> 
+ where <i>n</i> is <code>(array-total-size <i>displaced-to</i>)</code>.
  <i>displaced-index-offset</i> may be supplied only if <i>displaced-to</i> is supplied.
 </td></tr>
 <tr><td><i>adjusted-array</i></td><td>an <i><a href="Glossary.html#array">array</a></i>.
@@ -180,58 +180,58 @@ the resulting <i><a href="Glossary.html#array">array</a></i> is not a <i><a href
 </p>
 <p>The interaction between <a href="adjust_002darray.html">adjust-array</a> and 
 displaced <i><a href="Glossary.html#array">arrays</a></i> 
-is as follows given three <i><a href="Glossary.html#array">arrays</a></i>, <tt>A</tt>, <tt>B</tt>, and~<tt>C</tt>:
+is as follows given three <i><a href="Glossary.html#array">arrays</a></i>, <code>A</code>, <code>B</code>, and~<code>C</code>:
 </p>
 <dl compact="compact">
-<dt><tt>A</tt> is not displaced before or after the call</dt>
+<dt><code>A</code> is not displaced before or after the call</dt>
 <dd><div class="example">
 <pre class="example"><code> (adjust-array A ...)
 </code>
 </pre></div>
-<p>The dimensions of <tt>A</tt> are altered, and the
+<p>The dimensions of <code>A</code> are altered, and the
 contents rearranged as appropriate.  
-Additional elements of <tt>A</tt> are taken from
+Additional elements of <code>A</code> are taken from
 <i>initial-element</i>.  
 The use of <i>initial-contents</i> causes all old contents to be
 discarded.
 </p>
 </dd>
-<dt><tt>A</tt> is not displaced before, but is displaced to</dt>
-<dd><p><tt>C</tt> after the call  
+<dt><code>A</code> is not displaced before, but is displaced to</dt>
+<dd><p><code>C</code> after the call  
 </p><div class="example">
 <pre class="example"><code> (adjust-array A ... :displaced-to C)
 </code>
 </pre></div>
-<p>None of the original contents of <tt>A</tt> appears in 
-<tt>A</tt> afterwards; <tt>A</tt> now contains
-the contents of <tt>C</tt>, without any rearrangement of <tt>C</tt>.
+<p>None of the original contents of <code>A</code> appears in 
+<code>A</code> afterwards; <code>A</code> now contains
+the contents of <code>C</code>, without any rearrangement of <code>C</code>.
 </p>
 </dd>
-<dt><tt>A</tt> is displaced to <tt>B</tt></dt>
-<dd><p>before the call, and is displaced to <tt>C</tt> after 
+<dt><code>A</code> is displaced to <code>B</code></dt>
+<dd><p>before the call, and is displaced to <code>C</code> after 
 the call  
 </p><div class="example">
 <pre class="example"><code> (adjust-array A ... :displaced-to B)
  (adjust-array A ... :displaced-to C)
 </code>
 </pre></div>
-<p><tt>B</tt> and <tt>C</tt> might be the same. The contents of <tt>B</tt> do not appear in 
-<tt>A</tt> afterward unless such contents also happen to be in <tt>C</tt>  If
+<p><code>B</code> and <code>C</code> might be the same. The contents of <code>B</code> do not appear in 
+<code>A</code> afterward unless such contents also happen to be in <code>C</code>  If
 <i>displaced-index-offset</i> 
 is not supplied in the <a href="adjust_002darray.html">adjust-array</a> call, it defaults
-to zero; the old offset into <tt>B</tt> is not retained.
+to zero; the old offset into <code>B</code> is not retained.
 </p>
 </dd>
-<dt><tt>A</tt> is displaced to <tt>B</tt> before the call, but not displaced</dt>
+<dt><code>A</code> is displaced to <code>B</code> before the call, but not displaced</dt>
 <dd><p>afterward.  
 </p><div class="example">
 <pre class="example"><code> (adjust-array A ... :displaced-to B)
  (adjust-array A ... :displaced-to nil)
 </code>
 </pre></div>
-<p><tt>A</tt> gets a
-new "data region," and contents of <tt>B</tt> are copied into it as appropriate to
-maintain the existing old contents; additional elements of <tt>A</tt> 
+<p><code>A</code> gets a
+new "data region," and contents of <code>B</code> are copied into it as appropriate to
+maintain the existing old contents; additional elements of <code>A</code> 
 are taken from
 <i>initial-element</i> if supplied.  However, 
 the use of <i>initial-contents</i> causes all old contents
@@ -267,9 +267,9 @@ to a size smaller than its <i><a href="Glossary.html#fill-pointer">fill pointer<
 the <i>fill-pointer</i> argument so that its <i>fill-pointer</i>
 is properly adjusted in the process.
 </p>
-<p>If <tt>A</tt> is displaced to <tt>B</tt>, the consequences are unspecified 
-if <tt>B</tt> is adjusted in such a way that it no longer has enough elements
-to satisfy <tt>A</tt>.  
+<p>If <code>A</code> is displaced to <code>B</code>, the consequences are unspecified 
+if <code>B</code> is adjusted in such a way that it no longer has enough elements
+to satisfy <code>A</code>.  
 </p>
 <p>If <a href="adjust_002darray.html">adjust-array</a> is applied to an <i><a href="Glossary.html#array">array</a></i> that is <i><a href="Glossary.html#actually-adjustable">actually adjustable</a></i>,
 the <i><a href="Glossary.html#array">array</a></i> returned is <i><a href="Glossary.html#identical">identical</a></i> to <i><a href="Glossary.html#array">array</a></i>.
@@ -307,7 +307,7 @@ semantics specified here.
  (aref beta 1 1) ⇒  2 
 </code>
 </pre></div>
-<p>Suppose that the 4-by-4 array in <tt>m</tt> looks like this:
+<p>Suppose that the 4-by-4 array in <code>m</code> looks like this:
 </p>
 <div class="example">
 <pre class="example"><code>#2A(( alpha     beta      gamma     delta )

@@ -136,7 +136,7 @@ function toggleTheme() {
         el.innerHTML = el.innerHTML
             .replace(/<br>/g, '\n')
             .replace(/<i\/?>/g, '')
-            .replace(/<tt\/?>/g, '');
+            .replace(/<code\/?>/g, '');
         HighlightLisp.highlight_element(el);
     }
 })();

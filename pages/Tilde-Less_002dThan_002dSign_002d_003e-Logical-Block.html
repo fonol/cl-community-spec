@@ -86,21 +86,21 @@
 </div>
 <div class="section top-most">
 <h4 class="subsubsection">Tilde Less-Than-Sign: Logical Block</h4>
-<p><tt>~&lt;...~:&gt;</tt>
+<p><code>~&lt;...~:&gt;</code>
 </p>
-<p>If <tt>~:&gt;</tt> is used to terminate a <tt>~&lt;...~&gt;</tt>,
+<p>If <code>~:&gt;</code> is used to terminate a <code>~&lt;...~&gt;</code>,
 the directive is equivalent to a call to <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a>.
-The argument corresponding to the <tt>~&lt;...~:&gt;</tt> directive is treated in
+The argument corresponding to the <code>~&lt;...~:&gt;</code> directive is treated in
 the same way as the <i><a href="Glossary.html#list">list</a></i> argument to <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a>,
 thereby providing automatic support for non-<i><a href="Glossary.html#list">list</a></i> arguments and
 the detection of circularity, sharing, and depth abbreviation.  
-The portion of the <i>control-string</i> nested within the <tt>~&lt;...~:&gt;</tt>
-specifies the <tt>:prefix</tt> (or <tt>:per-line-prefix</tt>), <tt>:suffix</tt>,
+The portion of the <i>control-string</i> nested within the <code>~&lt;...~:&gt;</code>
+specifies the <code>:prefix</code> (or <code>:per-line-prefix</code>), <code>:suffix</code>,
 and body of the <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a>.
 </p>
-<p>The <i>control-string</i> portion enclosed by <tt>~&lt;...~:&gt;</tt> can be divided
-into segments <tt>~&lt;<i>prefix</i>~;<i>body</i>~;<i>suffix</i>~:&gt;</tt>
-by <tt>~;</tt> directives.  If the first section is terminated by <tt>~@;</tt>, 
+<p>The <i>control-string</i> portion enclosed by <code>~&lt;...~:&gt;</code> can be divided
+into segments <code>~&lt;<i>prefix</i>~;<i>body</i>~;<i>suffix</i>~:&gt;</code>
+by <code>~;</code> directives.  If the first section is terminated by <code>~@;</code>, 
 it specifies a per-line prefix rather than a simple prefix.  
 The <i>prefix</i> and <i>suffix</i> cannot contain format directives.  
 An error is signaled if either the prefix or suffix fails to be a
@@ -109,44 +109,44 @@ constant string or if the enclosed portion is divided into more than three segme
 <p>If the enclosed portion is divided into only two segments, the <i>suffix</i>
 defaults to the null string.  If the enclosed portion consists of only
 a single segment, both the <i>prefix</i> and the <i>suffix</i> default to 
-the null string.  If the <i><a href="Glossary.html#colon">colon</a></i> modifier is used (<i>i.e.</i>, <tt>~:&lt;...~:&gt;</tt>),
-the <i>prefix</i> and <i>suffix</i> default to <tt>"("</tt> and <tt>")"</tt>
+the null string.  If the <i><a href="Glossary.html#colon">colon</a></i> modifier is used (<i>i.e.</i>, <code>~:&lt;...~:&gt;</code>),
+the <i>prefix</i> and <i>suffix</i> default to <code>"("</code> and <code>")"</code>
 (respectively) instead of the null string.
 </p>
 <p>The body segment can be any arbitrary <i><a href="Glossary.html#format-string">format string</a></i>.
 This <i><a href="Glossary.html#format-string">format string</a></i> is applied to the elements of the list
-corresponding to the <tt>~&lt;...~:&gt;</tt> directive as a whole.
+corresponding to the <code>~&lt;...~:&gt;</code> directive as a whole.
 Elements are extracted from this list using <a href="pprint_002dpop.html">pprint-pop</a>,
 thereby providing automatic support for malformed lists, and the detection
 of circularity, sharing, and length abbreviation.
-Within the body segment, <tt>~<tt>^</tt></tt> acts like <a href="pprint_002dexit_002dif_002dlist_002dexhausted.html">pprint-exit-if-list-exhausted</a>.
+Within the body segment, <code>~<code>^</code></code> acts like <a href="pprint_002dexit_002dif_002dlist_002dexhausted.html">pprint-exit-if-list-exhausted</a>.
 </p>
-<p><tt>~&lt;...~:&gt;</tt> supports a feature not supported by <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a>.
-If <tt>~:@&gt;</tt> is used to terminate the directive (<i>i.e.</i>, <tt>~&lt;...~:@&gt;</tt>), 
+<p><code>~&lt;...~:&gt;</code> supports a feature not supported by <a href="pprint_002dlogical_002dblock.html">pprint-logical-block</a>.
+If <code>~:@&gt;</code> is used to terminate the directive (<i>i.e.</i>, <code>~&lt;...~:@&gt;</code>), 
 then a fill-style conditional newline is automatically inserted after each
 group of blanks immediately contained in the body (except for blanks
 after a ~&lt;<i><a href="Glossary.html#newline">Newline</a></i>&gt; directive).  This makes it easy to achieve the
 equivalent of paragraph filling.
 </p>
-<p>If the <i><a href="Glossary.html#at_002dsign">at-sign</a></i> modifier is used with <tt>~&lt;...~:&gt;</tt>, the entire remaining argument
+<p>If the <i><a href="Glossary.html#at_002dsign">at-sign</a></i> modifier is used with <code>~&lt;...~:&gt;</code>, the entire remaining argument
 list is passed to the directive as its argument.  All of the remaining
-arguments are always consumed by <tt>~@&lt;...~:&gt;</tt>, even if they are not all used
+arguments are always consumed by <code>~@&lt;...~:&gt;</code>, even if they are not all used
 by the <i><a href="Glossary.html#format-string">format string</a></i> nested in the directive.  Other than the difference in
-its argument, <tt>~@&lt;...~:&gt;</tt> is exactly the same as <tt>~&lt;...~:&gt;</tt> except that
-circularity detection is not applied if <tt>~@&lt;...~:&gt;</tt> is encountered at top
+its argument, <code>~@&lt;...~:&gt;</code> is exactly the same as <code>~&lt;...~:&gt;</code> except that
+circularity detection is not applied if <code>~@&lt;...~:&gt;</code> is encountered at top
 level in a <i><a href="Glossary.html#format-string">format string</a></i>.  This ensures that circularity detection is
 applied only to data lists, not to <i><a href="Glossary.html#format-argument">format argument</a></i> <i><a href="Glossary.html#list">lists</a></i>.
 </p>
-<p><tt>" . #<i>n</i>#"</tt> is printed if circularity or sharing has to be indicated
+<p><code>" . #<i>n</i>#"</code> is printed if circularity or sharing has to be indicated
 for its argument as a whole.
 </p>
-<p>To a considerable extent, the basic form of the directive <tt>~&lt;...~&gt;</tt> is
+<p>To a considerable extent, the basic form of the directive <code>~&lt;...~&gt;</code> is
 incompatible with the dynamic control of the arrangement of output by
-<tt>~W</tt>, <tt>~_</tt>, <tt>~&lt;...~:&gt;</tt>, <tt>~I</tt>, and <tt>~:T</tt>.  As a result, an error 
-is signaled if any of these directives is nested within <tt>~&lt;...~&gt;</tt>.  
-Beyond this, an error is also signaled if the <tt>~&lt;...~:;...~&gt;</tt> form of
-<tt>~&lt;...~&gt;</tt> is used in the same <i><a href="Glossary.html#format-string">format string</a></i> with 
-<tt>~W</tt>, <tt>~_</tt>, <tt>~&lt;...~:&gt;</tt>, <tt>~I</tt>, or <tt>~:T</tt>.
+<code>~W</code>, <code>~_</code>, <code>~&lt;...~:&gt;</code>, <code>~I</code>, and <code>~:T</code>.  As a result, an error 
+is signaled if any of these directives is nested within <code>~&lt;...~&gt;</code>.  
+Beyond this, an error is also signaled if the <code>~&lt;...~:;...~&gt;</code> form of
+<code>~&lt;...~&gt;</code> is used in the same <i><a href="Glossary.html#format-string">format string</a></i> with 
+<code>~W</code>, <code>~_</code>, <code>~&lt;...~:&gt;</code>, <code>~I</code>, or <code>~:T</code>.
 </p>
 <p>See also <a href="Tilde-Less_002dThan_002dSign_002d_003e-Justification.html#Tilde-Less_002dThan_002dSign_002d_003e-Justification">Tilde Less-Than-Sign-&gt; Justification</a>.
 </p>

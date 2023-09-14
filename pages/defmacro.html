@@ -181,11 +181,11 @@ the following is not valid:
 </code>
 </pre></div>
 <p>because <i><a href="Glossary.html#ordinary-lambda-list">ordinary lambda list</a></i> syntax does permit a 
-<i><a href="Glossary.html#list">list</a></i> following <tt>&amp;optional</tt>;
-the list <tt>(a b &amp;rest c)</tt> would be interpreted as describing an
-optional parameter named <tt>a</tt> whose default value is that of the
-form <tt>b</tt>, with a supplied-p parameter named <b>&amp;rest</b> (not valid),
-and an extraneous symbol <tt>c</tt> in the list (also not valid).  An almost
+<i><a href="Glossary.html#list">list</a></i> following <code>&amp;optional</code>;
+the list <code>(a b &amp;rest c)</code> would be interpreted as describing an
+optional parameter named <code>a</code> whose default value is that of the
+form <code>b</code>, with a supplied-p parameter named <b>&amp;rest</b> (not valid),
+and an extraneous symbol <code>c</code> in the list (also not valid).  An almost
 correct way to express this is
 </p>
 <div class="example">
@@ -194,13 +194,13 @@ correct way to express this is
 </code>
 </pre></div>
 <p>The extra set of parentheses removes the ambiguity.  However, the
-definition is now incorrect because a macro call such as <tt>(loser (car pool))</tt>
-would not provide any argument form for the lambda list <tt>(a b &amp;rest c)</tt>,
+definition is now incorrect because a macro call such as <code>(loser (car pool))</code>
+would not provide any argument form for the lambda list <code>(a b &amp;rest c)</code>,
 and so the default value against which to match the <i><a href="Glossary.html#lambda-list">lambda list</a></i> would be
 <a href="NILv.html">nil</a> because no explicit default value was specified.  
 The consequences of this are  unspecified
 since the empty list, <a href="NILv.html">nil</a>, does not have <i><a href="Glossary.html#form">forms</a></i> to satisfy the
-parameters <tt>a</tt> and <tt>b</tt>.  The fully correct definition would be either
+parameters <code>a</code> and <code>b</code>.  The fully correct definition would be either
 </p>
 <div class="example">
 <pre class="example"><code> (defmacro loser (x &amp;optional ((a b &amp;rest c) '(nil nil)) &amp;rest z)
@@ -215,7 +215,7 @@ parameters <tt>a</tt> and <tt>b</tt>.  The fully correct definition would be eit
 </code>
 </pre></div>
 <p>These differ slightly: the first requires that if the macro call
-specifies <tt>a</tt> explicitly then it must also specify <tt>b</tt> explicitly,
+specifies <code>a</code> explicitly then it must also specify <code>b</code> explicitly,
 whereas the second does not have this requirement.  For example,
 </p>
 <div class="example">

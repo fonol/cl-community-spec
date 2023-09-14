@@ -86,46 +86,46 @@
 </div>
 <div class="section top-most">
 <h4 class="subsection">Termination Test Clauses</h4>
-<p>The <tt>repeat</tt> construct causes iteration to terminate after a
+<p>The <code>repeat</code> construct causes iteration to terminate after a
 specified number of times.
  The loop body executes <i>n</i> times, where <i>n</i> is the value 
 of the expression <i><a href="Glossary.html#form">form</a></i>.  The <i><a href="Glossary.html#form">form</a></i> argument is evaluated one time
 in the loop prologue.  If the expression evaluates to 0 or 
 to a negative <i><a href="Glossary.html#number">number</a></i>, the loop body is not evaluated.
 </p>
-<p>The constructs <tt>always</tt>,
-<tt>never</tt>,
-<tt>thereis</tt>,
-<tt>while</tt>,
-<tt>until</tt>,
+<p>The constructs <code>always</code>,
+<code>never</code>,
+<code>thereis</code>,
+<code>while</code>,
+<code>until</code>,
 and the macro <a href="loop_002dfinish.html">loop-finish</a>
 allow conditional termination of iteration within
 a <b><a href="loop.html">loop</a></b>.
 </p>
-<p>The constructs <tt>always</tt>, <tt>never</tt>, and <tt>thereis</tt> provide
+<p>The constructs <code>always</code>, <code>never</code>, and <code>thereis</code> provide
 specific values to be returned when a <b><a href="loop.html">loop</a></b> terminates.  
-Using <tt>always</tt>, <tt>never</tt>, or <tt>thereis</tt> in a loop with 
-value accumulation clauses that are not <tt>into</tt> causes 
+Using <code>always</code>, <code>never</code>, or <code>thereis</code> in a loop with 
+value accumulation clauses that are not <code>into</code> causes 
 an error of <i><a href="Glossary.html#type">type</a></i> <a href="program_002derror.html">program-error</a> to be signaled (at macro expansion time).
-Since <tt>always</tt>, <tt>never</tt>, and <tt>thereis</tt>
+Since <code>always</code>, <code>never</code>, and <code>thereis</code>
 use 
 </p>
 <p>the <a href="return_002dfrom.html">return-from</a> <i><a href="Glossary.html#special-operator">special operator</a></i>
 </p>
 <p>to terminate iteration,
-any <tt>finally</tt> clause that is supplied is not evaluated
+any <code>finally</code> clause that is supplied is not evaluated
 when exit occurs due to any of these constructs.
 In all other respects these
-constructs behave like the <tt>while</tt> and <tt>until</tt> constructs.
+constructs behave like the <code>while</code> and <code>until</code> constructs.
 </p>
-<p>The <tt>always</tt> construct takes one <i><a href="Glossary.html#form">form</a></i> and terminates the 
+<p>The <code>always</code> construct takes one <i><a href="Glossary.html#form">form</a></i> and terminates the 
 <b><a href="loop.html">loop</a></b>
   if the <i><a href="Glossary.html#form">form</a></i> ever evaluates to <a href="NILv.html">nil</a>; in this case, it returns
   <a href="NILv.html">nil</a>.  Otherwise, it provides a default return value of <a href="t.html">t</a>.
 If the value of the supplied <i><a href="Glossary.html#form">form</a></i> is never <a href="NILv.html">nil</a>, some other construct
 can terminate the iteration.
 </p>
-<p>The <tt>never</tt> construct terminates iteration the first time that
+<p>The <code>never</code> construct terminates iteration the first time that
 the value of the supplied <i><a href="Glossary.html#form">form</a></i> is <i><a href="Glossary.html#non_002dnil">non-nil</a></i>; the <b><a href="loop.html">loop</a></b> returns 
 <a href="NILv.html">nil</a>.                                         
 If the value of the supplied <i><a href="Glossary.html#form">form</a></i> is always  <a href="NILv.html">nil</a>, some other 
@@ -133,7 +133,7 @@ construct can terminate the iteration.
 Unless some other clause contributes 
 a return value, the default value returned is <a href="t.html">t</a>.
 </p>
-<p>The <tt>thereis</tt> construct terminates iteration the first time that the
+<p>The <code>thereis</code> construct terminates iteration the first time that the
 value of the supplied <i><a href="Glossary.html#form">form</a></i> is <i><a href="Glossary.html#non_002dnil">non-nil</a></i>; the <b><a href="loop.html">loop</a></b> returns the
 value of the supplied <i><a href="Glossary.html#form">form</a></i>.
 If the value of the supplied <i><a href="Glossary.html#form">form</a></i> 
@@ -141,65 +141,65 @@ is always  <a href="NILv.html">nil</a>, some other
 construct can terminate the iteration.  Unless some other clause contributes a 
 return value, the default value returned is <a href="NILv.html">nil</a>.
 </p>
-<p>There are two differences between the <tt>thereis</tt> and <tt>until</tt>
+<p>There are two differences between the <code>thereis</code> and <code>until</code>
 constructs: 
 </p>
-<ul><li><p>The <tt>until</tt> construct does not return a value or 
+<ul><li><p>The <code>until</code> construct does not return a value or 
 <a href="NILv.html">nil</a> based on the value of the supplied <i><a href="Glossary.html#form">form</a></i>.
 </p>
 </li>
-<li><p>The <tt>until</tt> construct executes 
-any <tt>finally</tt> clause.
-Since <tt>thereis</tt> uses
+<li><p>The <code>until</code> construct executes 
+any <code>finally</code> clause.
+Since <code>thereis</code> uses
 </p>
 <p>the <a href="return_002dfrom.html">return-from</a> <i><a href="Glossary.html#special-operator">special operator</a></i>
 </p>
 <p>to terminate iteration,
-any <tt>finally</tt> clause that is supplied is not evaluated
-when exit occurs due to <tt>thereis</tt>.
+any <code>finally</code> clause that is supplied is not evaluated
+when exit occurs due to <code>thereis</code>.
 </p>
 </li></ul>
-<p>The <tt>while</tt> construct allows iteration to continue until the 
+<p>The <code>while</code> construct allows iteration to continue until the 
 supplied <i><a href="Glossary.html#form">form</a></i> 
 evaluates to <i><a href="Glossary.html#false">false</a></i>.  The supplied <i><a href="Glossary.html#form">form</a></i> 
-is reevaluated at the location of the <tt>while</tt> clause.
+is reevaluated at the location of the <code>while</code> clause.
 </p>
-<p>The <tt>until</tt> construct is equivalent to 
-<tt>while (not <i><a href="Glossary.html#form">form</a></i>)\dots</tt>.  If the value of the
+<p>The <code>until</code> construct is equivalent to 
+<code>while (not <i><a href="Glossary.html#form">form</a></i>)\dots</code>.  If the value of the
 supplied <i><a href="Glossary.html#form">form</a></i> is <i><a href="Glossary.html#non_002dnil">non-nil</a></i>, iteration terminates.
 </p>
 <p>Termination-test control constructs can be used anywhere within the loop body.
 The termination tests are used in the order in which they appear.
-If an <tt>until</tt> or <tt>while</tt> clause causes
+If an <code>until</code> or <code>while</code> clause causes
 termination, any clauses that precede it in the source
 are still evaluated.  
-If the <tt>until</tt> and <tt>while</tt> constructs cause termination,
-control is passed to the loop epilogue, where any <tt>finally</tt>
+If the <code>until</code> and <code>while</code> constructs cause termination,
+control is passed to the loop epilogue, where any <code>finally</code>
 clauses will be executed.  
 </p>
-<p>There are two differences between the <tt>never</tt> and <tt>until</tt>
+<p>There are two differences between the <code>never</code> and <code>until</code>
 constructs: 
 </p>
-<ul><li><p>The <tt>until</tt> construct does not return 
+<ul><li><p>The <code>until</code> construct does not return 
 <a href="t.html">t</a> or <a href="NILv.html">nil</a> based on the value of the supplied <i><a href="Glossary.html#form">form</a></i>.
 </p>
 </li>
-<li><p>The <tt>until</tt> construct 
-does not bypass any <tt>finally</tt> clauses.
-Since <tt>never</tt> uses 
+<li><p>The <code>until</code> construct 
+does not bypass any <code>finally</code> clauses.
+Since <code>never</code> uses 
 </p>
 <p>the <a href="return_002dfrom.html">return-from</a> <i><a href="Glossary.html#special-operator">special operator</a></i>
 </p>
 <p>to terminate iteration,
-any <tt>finally</tt> clause that is supplied is not evaluated
-when exit occurs due to <tt>never</tt>. 
+any <code>finally</code> clause that is supplied is not evaluated
+when exit occurs due to <code>never</code>. 
 </p></li></ul>
 <p>In most cases it is not necessary to use <a href="loop_002dfinish.html">loop-finish</a>
 because other loop control clauses terminate the <b><a href="loop.html">loop</a></b>.  
 The macro <a href="loop_002dfinish.html">loop-finish</a> is used to provide a normal exit
 from a nested conditional inside a <b><a href="loop.html">loop</a></b>.
 Since <a href="loop_002dfinish.html">loop-finish</a> transfers control to the loop epilogue,
-using <a href="loop_002dfinish.html">loop-finish</a> within a <tt>finally</tt> expression can cause
+using <a href="loop_002dfinish.html">loop-finish</a> within a <code>finally</code> expression can cause
 infinite looping.
 </p>
 <table border="0" cellspacing="0" class="menu">
