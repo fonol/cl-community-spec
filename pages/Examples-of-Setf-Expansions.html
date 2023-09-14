@@ -91,43 +91,43 @@ follow.
 </p>
 <p>For a variable <i>x</i>:
 </p>
-<p>  <code>()</code>              ;list of temporary variables  
-  <code>()</code>              ;list of value forms          
-  <code>(g0001)</code>         ;list of store variables      
-  <code>(setq <i>x</i> g0001)</code>  ;storing form                 
+<p>  <code class="no-highlight">()</code>              ;list of temporary variables  
+  <code class="no-highlight">()</code>              ;list of value forms          
+  <code class="no-highlight">(g0001)</code>         ;list of store variables      
+  <code class="no-highlight">(setq <i>x</i> g0001)</code>  ;storing form                 
   <i>x</i>               ;accessing form               
 </p>
 <div class="table-subcaption"> Figure 5–3: Sample Setf Expansion of a Variable</div>
-<p>For <code>(car <i>exp</i>)</code>:
+<p>For <code class="no-highlight">(car <i>exp</i>)</code>:
 </p>
-<p>  <code>(g0002)</code>                             ;list of temporary variables  
-  <code>(<i>exp</i>)</code>                               ;list of value forms          
-  <code>(g0003)</code>                             ;list of store variables      
-  <code>(progn (rplaca g0002 g0003) g0003)</code>  ;storing form                 
-  <code>(car g0002)</code>                         ;accessing form               
+<p>  <code class="no-highlight">(g0002)</code>                             ;list of temporary variables  
+  <code class="no-highlight">(<i>exp</i>)</code>                               ;list of value forms          
+  <code class="no-highlight">(g0003)</code>                             ;list of store variables      
+  <code class="no-highlight">(progn (rplaca g0002 g0003) g0003)</code>  ;storing form                 
+  <code class="no-highlight">(car g0002)</code>                         ;accessing form               
 </p>
 <div class="table-subcaption"> Figure 5–4: Sample Setf Expansion of a CAR Form </div>
-<p>For <code>(subseq <i>seq</i> <i>s</i> <i>e</i>)</code>:
+<p>For <code class="no-highlight">(subseq <i>seq</i> <i>s</i> <i>e</i>)</code>:
 </p>
-<p>  <code>(g0004 g0005 g0006)</code>         ;list of temporary variables  
-  <code>(<i>seq</i> <i>s</i> <i>e</i>)</code>                   ;list of value forms          
-  <code>(g0007)</code>                     ;list of store variables      
-  <code>(progn (replace g0004 g0007 :start1 g0005 :end1 g0006) g0007)</code> 
+<p>  <code class="no-highlight">(g0004 g0005 g0006)</code>         ;list of temporary variables  
+  <code class="no-highlight">(<i>seq</i> <i>s</i> <i>e</i>)</code>                   ;list of value forms          
+  <code class="no-highlight">(g0007)</code>                     ;list of store variables      
+  <code class="no-highlight">(progn (replace g0004 g0007 :start1 g0005 :end1 g0006) g0007)</code> 
                               ;storing form                 
-  <code>(subseq g0004 g0005 g0006)</code>  ; accessing form              
+  <code class="no-highlight">(subseq g0004 g0005 g0006)</code>  ; accessing form              
 </p>
 <div class="table-subcaption"> Figure 5–5: Sample Setf Expansion of a SUBSEQ Form </div>
 <p>In some cases, if a <i><a href="Glossary.html#subform">subform</a></i> of a <i><a href="Glossary.html#place">place</a></i> is itself
 a <i><a href="Glossary.html#place">place</a></i>, it is necessary to expand the <i><a href="Glossary.html#subform">subform</a></i>
 in order to compute some of the values in the expansion of the outer
-<i><a href="Glossary.html#place">place</a></i>.  For <code>(ldb <i>bs</i> (car <i>exp</i>))</code>:
+<i><a href="Glossary.html#place">place</a></i>.  For <code class="no-highlight">(ldb <i>bs</i> (car <i>exp</i>))</code>:
 </p>
-<p>  <code>(g0001 g0002)</code>            ;list of temporary variables  
-  <code>(<i>bs</i> <i>exp</i>)</code>                 ;list of value forms          
-  <code>(g0003)</code>                  ;list of store variables      
-  <code>(progn (rplaca g0002 (dpb g0003 g0001 (car g0002))) g0003)</code> 
+<p>  <code class="no-highlight">(g0001 g0002)</code>            ;list of temporary variables  
+  <code class="no-highlight">(<i>bs</i> <i>exp</i>)</code>                 ;list of value forms          
+  <code class="no-highlight">(g0003)</code>                  ;list of store variables      
+  <code class="no-highlight">(progn (rplaca g0002 (dpb g0003 g0001 (car g0002))) g0003)</code> 
                            ;storing form                 
-  <code>(ldb g0001 (car g0002))</code>  ; accessing form              
+  <code class="no-highlight">(ldb g0001 (car g0002))</code>  ; accessing form              
 </p>
 <div class="table-subcaption"> Figure 5–6: Sample Setf Expansion of a LDB Form </div>
 </div>
