@@ -133,11 +133,13 @@ function toggleTheme() {
 // syntax highlighting
 (() => {
     for (let el of document.getElementsByTagName('code')) {
+        el.innerHTML = el.innerHTML
+            .replace(/<br>/g, '\n')
+            .replace(/<i\/?>/g, '')
+            .replace(/<b\/?>/g, '')
+            .replace(/<code\/?>/g, '');
+
         if (!el.classList.contains('no-highlight')) {
-            el.innerHTML = el.innerHTML
-                .replace(/<br>/g, '\n')
-                .replace(/<i\/?>/g, '')
-                .replace(/<code\/?>/g, '');
             HighlightLisp.highlight_element(el);
         }
     }
