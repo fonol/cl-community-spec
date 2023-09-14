@@ -1,3 +1,7 @@
+"""
+This script was used for the initial conversion of the generated HTML to what is now inside pages/.
+"""
+
 import os
 import re
 import json
