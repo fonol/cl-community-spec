@@ -155,12 +155,12 @@ and the <i><a href="Glossary.html#value">values</a></i> it returns are returned 
 <dd><p>If no <i>normal-clause</i> matches,
 a <i><a href="Glossary.html#correctable">correctable</a></i> <i><a href="Glossary.html#error">error</a></i> of <i><a href="Glossary.html#type">type</a></i> <a href="type_002derror.html">type-error</a> is signaled.
 The offending datum is the <i>test-key</i> and
-the expected type is <i><a href="Glossary.html#type-equivalent">type equivalent</a></i> to <code>(or <i>type1</i> <i>type2</i> ...)</code>.
+the expected type is <i><a href="Glossary.html#type-equivalent">type equivalent</a></i> to <code class="no-highlight">(or <i>type1</i> <i>type2</i> ...)</code>.
 The <a href="store_002dvalue.html">store-value</a> <i><a href="Glossary.html#restart">restart</a></i> can be used to correct the error.
 </p>
 <p>If the <a href="store_002dvalue.html">store-value</a> <i><a href="Glossary.html#restart">restart</a></i> is invoked, its <i><a href="Glossary.html#argument">argument</a></i> becomes the 
 new <i>test-key</i>, and is stored in <i>keyplace</i> as if by
-<code>(setf <i>keyplace</i> <i>test-key</i>)</code>.
+<code class="no-highlight">(setf <i>keyplace</i> <i>test-key</i>)</code>.
 Then <b>ctypecase</b> starts over, considering each <i>clause</i> anew.
 </p>
 <p>If the <a href="store_002dvalue.html">store-value</a> <i><a href="Glossary.html#restart">restart</a></i> is invoked interactively, 
@@ -174,7 +174,7 @@ none of the cases holds.
 <dd><p>If no <i>normal-clause</i> matches,
 a <i><a href="Glossary.html#non_002dcorrectable">non-correctable</a></i> <i><a href="Glossary.html#error">error</a></i> of <i><a href="Glossary.html#type">type</a></i> <a href="type_002derror.html">type-error</a> is signaled.
 The offending datum is the <i>test-key</i> and
-the expected type is <i><a href="Glossary.html#type-equivalent">type equivalent</a></i> to <code>(or <i>type1</i> <i>type2</i> ...)</code>.
+the expected type is <i><a href="Glossary.html#type-equivalent">type equivalent</a></i> to <code class="no-highlight">(or <i>type1</i> <i>type2</i> ...)</code>.
 </p>
 <p>Note that in contrast with <b>ctypecase</b>,
 the caller of <b>etypecase</b> may rely on the fact that <b>etypecase</b> 
@@ -201,29 +201,29 @@ the earliest applicable <i>clause</i> is chosen.
                (t (format nil "a(n) ~(~A~)" (type-of x))))))
 ⇒  WHAT-IS-IT
  (map 'nil #'what-is-it '(nil (a b) 7.0 7 box))
-<code> |&gt; </code> NIL is a symbol, boolean false, or the empty list.
-<code> |&gt; </code> (A B) is a list.
-<code> |&gt; </code> 7.0 is a float.
-<code> |&gt; </code> 7 is a(n) integer.
-<code> |&gt; </code> BOX is a(n) symbol.
+<code class="no-highlight"> |&gt; </code> NIL is a symbol, boolean false, or the empty list.
+<code class="no-highlight"> |&gt; </code> (A B) is a list.
+<code class="no-highlight"> |&gt; </code> 7.0 is a float.
+<code class="no-highlight"> |&gt; </code> 7 is a(n) integer.
+<code class="no-highlight"> |&gt; </code> BOX is a(n) symbol.
 ⇒  NIL
  (setq x 1/3)
 ⇒  1/3
  (ctypecase x
      (integer (* x 4))
      (symbol  (symbol-value x)))
-<code> |&gt; </code> Error: The value of X, 1/3, is neither an integer nor a symbol.
-<code> |&gt; </code> To continue, type :CONTINUE followed by an option number:
-<code> |&gt; </code>  1: Specify a value to use instead.
-<code> |&gt; </code>  2: Return to Lisp Toplevel.
-<code> |&gt; </code> Debug&gt; <b>|&gt;&gt;</b><code>:CONTINUE 1</code><b>&lt;&lt;|</b>
-<code> |&gt; </code> Use value: <b>|&gt;&gt;</b><code>3.7</code><b>&lt;&lt;|</b>
-<code> |&gt; </code> Error: The value of X, 3.7, is neither an integer nor a symbol.
-<code> |&gt; </code> To continue, type :CONTINUE followed by an option number:
-<code> |&gt; </code>  1: Specify a value to use instead.
-<code> |&gt; </code>  2: Return to Lisp Toplevel.
-<code> |&gt; </code> Debug&gt; <b>|&gt;&gt;</b><code>:CONTINUE 1</code><b>&lt;&lt;|</b>
-<code> |&gt; </code> Use value: <b>|&gt;&gt;</b><code>12</code><b>&lt;&lt;|</b>
+<code class="no-highlight"> |&gt; </code> Error: The value of X, 1/3, is neither an integer nor a symbol.
+<code class="no-highlight"> |&gt; </code> To continue, type :CONTINUE followed by an option number:
+<code class="no-highlight"> |&gt; </code>  1: Specify a value to use instead.
+<code class="no-highlight"> |&gt; </code>  2: Return to Lisp Toplevel.
+<code class="no-highlight"> |&gt; </code> Debug&gt; <b>|&gt;&gt;</b><code class="no-highlight">:CONTINUE 1</code><b>&lt;&lt;|</b>
+<code class="no-highlight"> |&gt; </code> Use value: <b>|&gt;&gt;</b><code class="no-highlight">3.7</code><b>&lt;&lt;|</b>
+<code class="no-highlight"> |&gt; </code> Error: The value of X, 3.7, is neither an integer nor a symbol.
+<code class="no-highlight"> |&gt; </code> To continue, type :CONTINUE followed by an option number:
+<code class="no-highlight"> |&gt; </code>  1: Specify a value to use instead.
+<code class="no-highlight"> |&gt; </code>  2: Return to Lisp Toplevel.
+<code class="no-highlight"> |&gt; </code> Debug&gt; <b>|&gt;&gt;</b><code class="no-highlight">:CONTINUE 1</code><b>&lt;&lt;|</b>
+<code class="no-highlight"> |&gt; </code> Use value: <b>|&gt;&gt;</b><code class="no-highlight">12</code><b>&lt;&lt;|</b>
 ⇒  48
  x ⇒  12
 </code>

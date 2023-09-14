@@ -91,7 +91,7 @@
 </p>
 <table class="syntax-table">
 <tr><td><i>clause</i> </td><td>::=</td><td><span class="roman">(</span> <span class="nolinebreak">case-name</span> <span class="nolinebreak">lambda-list</span> 
-            [[<code>:interactive</code> <span class="nolinebreak">interactive-expression</span> | <code>:report</code> <span class="nolinebreak">report-expression</span> | <code>:test</code> <span class="nolinebreak">test-expression]]</span> 
+            [[<code class="no-highlight">:interactive</code> <span class="nolinebreak">interactive-expression</span> | <code class="no-highlight">:report</code> <span class="nolinebreak">report-expression</span> | <code class="no-highlight">:test</code> <span class="nolinebreak">test-expression]]</span> 
             {<i>declaration</i>}* {<i>form</i>}*<span class="roman">)</span>
 </td></tr>
 </table>
@@ -159,16 +159,16 @@ to <a href="invoke_002drestart.html">invoke-restart</a>.
 <p>By default, <a href="invoke_002drestart_002dinteractively.html">invoke-restart-interactively</a> passes no arguments and
 all arguments must be optional in order to accomodate interactive
 restarting.  However, the arguments need not be optional if the
-<code>:interactive</code> 
+<code class="no-highlight">:interactive</code> 
 keyword has been used to inform <a href="invoke_002drestart_002dinteractively.html">invoke-restart-interactively</a>
   about how to compute a proper argument list.
 </p>
 <p><i><a href="Glossary.html#keyword">Keyword</a></i> options have the following meaning.
 </p><dl compact="compact">
-<dt><code>:interactive</code></dt>
-<dd><p>The <i><a href="Glossary.html#value">value</a></i> supplied by <code>:interactive <i><a href="Glossary.html#value">value</a></i></code>
+<dt><code class="no-highlight">:interactive</code></dt>
+<dd><p>The <i><a href="Glossary.html#value">value</a></i> supplied by <code class="no-highlight">:interactive <i><a href="Glossary.html#value">value</a></i></code>
 must be a suitable argument to <b>function</b>. 
-<code>(function <i><a href="Glossary.html#value">value</a></i>)</code> is evaluated in the current lexical
+<code class="no-highlight">(function <i><a href="Glossary.html#value">value</a></i>)</code> is evaluated in the current lexical
     environment.  It should return a <i><a href="Glossary.html#function">function</a></i> of no arguments which 
     returns arguments to be used by 
 <a href="invoke_002drestart_002dinteractively.html">invoke-restart-interactively</a> when it is invoked.
@@ -177,16 +177,16 @@ is called in the dynamic
     environment available prior to any restart attempt, and uses 
 <i><a href="Glossary.html#query-I_002fO">query I/O</a></i> for user interaction.
 </p>
-<p>If a restart is invoked interactively but no <code>:interactive</code> option
+<p>If a restart is invoked interactively but no <code class="no-highlight">:interactive</code> option
     was supplied, the argument list used in the invocation is the empty
     list.
 </p>
 </dd>
-<dt><code>:report</code></dt>
-<dd><p>If the <i><a href="Glossary.html#value">value</a></i> supplied by <code>:report <i><a href="Glossary.html#value">value</a></i></code>
+<dt><code class="no-highlight">:report</code></dt>
+<dd><p>If the <i><a href="Glossary.html#value">value</a></i> supplied by <code class="no-highlight">:report <i><a href="Glossary.html#value">value</a></i></code>
 is a <i><a href="Glossary.html#lambda-expression">lambda expression</a></i> or a <i><a href="Glossary.html#symbol">symbol</a></i>, it 
 must be acceptable to <b>function</b>.
-<code>(function <i><a href="Glossary.html#value">value</a></i>)</code> is evaluated in the current lexical
+<code class="no-highlight">(function <i><a href="Glossary.html#value">value</a></i>)</code> is evaluated in the current lexical
 environment.  It should return a <i><a href="Glossary.html#function">function</a></i> of one
 argument, a <i>stream</i>, which prints on the <i>stream</i> a 
 description of the restart.  This <i><a href="Glossary.html#function">function</a></i> is called 
@@ -217,18 +217,18 @@ printer uses the report information for
 </code>
 </pre></div>
 <p>The consequences are unspecified if an unnamed restart is specified
-but no <code>:report</code> option is provided.
+but no <code class="no-highlight">:report</code> option is provided.
 </p>
 </dd>
-<dt><code>:test</code></dt>
-<dd><p>The <i><a href="Glossary.html#value">value</a></i> supplied by <code>:test <i><a href="Glossary.html#value">value</a></i></code>
+<dt><code class="no-highlight">:test</code></dt>
+<dd><p>The <i><a href="Glossary.html#value">value</a></i> supplied by <code class="no-highlight">:test <i><a href="Glossary.html#value">value</a></i></code>
 must be a suitable argument to <b>function</b>. 
-<code>(function <i><a href="Glossary.html#value">value</a></i>)</code> is evaluated in the current lexical
+<code class="no-highlight">(function <i><a href="Glossary.html#value">value</a></i>)</code> is evaluated in the current lexical
     environment.  It should return a <i><a href="Glossary.html#function">function</a></i> of one <i><a href="Glossary.html#argument">argument</a></i>, the
 <i><a href="Glossary.html#condition">condition</a></i>, that
 returns <i><a href="Glossary.html#true">true</a></i> if the restart is to be considered visible.
 </p>
-<p>The default for this option is equivalent to <code>(lambda (c) (declare (ignore c)) t)</code>.
+<p>The default for this option is equivalent to <code class="no-highlight">(lambda (c) (declare (ignore c)) t)</code>.
 </p>
 </dd>
 </dl>
@@ -294,15 +294,15 @@ signaled.
    (values ice-cream sauce topping))
 ⇒  VERIFY-OR-FIX-PERFECT-SUNDAE
  (verify-or-fix-perfect-sundae 'vanilla 'caramel 'cherry)
-<code> |&gt; </code> Error: Bad tasting sundae with VANILLA, CARAMEL, and CHERRY.
-<code> |&gt; </code> To continue, type :CONTINUE followed by an option number:
-<code> |&gt; </code>  1: Use a new ice cream.
-<code> |&gt; </code>  2: Use a new sauce.
-<code> |&gt; </code>  3: Use a new topping.
-<code> |&gt; </code>  4: Return to Lisp Toplevel.
-<code> |&gt; </code> Debug&gt; <b>|&gt;&gt;</b><code>:continue 1</code><b>&lt;&lt;|</b>
-<code> |&gt; </code> Use a new ice cream.
-<code> |&gt; </code> Enter a new ice cream: <b>|&gt;&gt;</b><code>'chocolate</code><b>&lt;&lt;|</b>
+<code class="no-highlight"> |&gt; </code> Error: Bad tasting sundae with VANILLA, CARAMEL, and CHERRY.
+<code class="no-highlight"> |&gt; </code> To continue, type :CONTINUE followed by an option number:
+<code class="no-highlight"> |&gt; </code>  1: Use a new ice cream.
+<code class="no-highlight"> |&gt; </code>  2: Use a new sauce.
+<code class="no-highlight"> |&gt; </code>  3: Use a new topping.
+<code class="no-highlight"> |&gt; </code>  4: Return to Lisp Toplevel.
+<code class="no-highlight"> |&gt; </code> Debug&gt; <b>|&gt;&gt;</b><code class="no-highlight">:continue 1</code><b>&lt;&lt;|</b>
+<code class="no-highlight"> |&gt; </code> Use a new ice cream.
+<code class="no-highlight"> |&gt; </code> Enter a new ice cream: <b>|&gt;&gt;</b><code class="no-highlight">'chocolate</code><b>&lt;&lt;|</b>
 ⇒  CHOCOLATE, CARAMEL, CHERRY
 
 </pre></div>
