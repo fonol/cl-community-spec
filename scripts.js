@@ -134,11 +134,10 @@ function toggleTheme() {
 (() => {
     for (let el of document.getElementsByTagName('code')) {
         el.innerHTML = el.innerHTML
-            .replace(/<br>/g, '\n')
-            .replace(/<i\/?>/g, '')
-            .replace(/<b\/?>/g, '')
-            .replace(/<code\/?>/g, '');
-
+            .replace(/<br\/?>/g, '\n')
+            .replace(/<\/?i>/g, '')
+            .replace(/<\/?b>/g, '')
+            .replace(/<\/?code[^>]+>/g, '');
         if (!el.classList.contains('no-highlight')) {
             HighlightLisp.highlight_element(el);
         }
