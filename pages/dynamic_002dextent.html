@@ -90,7 +90,7 @@
 </div>
 <div class="section">
 <h4 class="subsubheading">Syntax</h4>
-<p><tt>(dynamic-extent [[{<i>var</i>}*</tt> |
+<p><code>(dynamic-extent [[{<i>var</i>}*</code> |
 		               <span class="roman">(</span><b>function</b> <i>fn</i><span class="roman">)</span><span class="roman">*</span>]])
 </p>
 </div>
@@ -161,7 +161,7 @@ For example, it is probably useful to write:
 </code>
 </pre></div>
 <p>This would permit those compilers that wish to do so to <i><a href="Glossary.html#stack-allocate">stack allocate</a></i>
-the list held by the local variable <tt>x</tt>.  It is permissible,
+the list held by the local variable <code>x</code>.  It is permissible,
 but in practice probably not as useful, to write:
 </p>
 <div class="example">
@@ -170,11 +170,11 @@ but in practice probably not as useful, to write:
 </code>
 </pre></div>
 <p>Most compilers would probably not <i><a href="Glossary.html#stack-allocate">stack allocate</a></i> the <i><a href="Glossary.html#argument">argument</a></i>
-to <tt>g</tt> in <tt>f</tt> because it would be a modularity violation for the compiler
-to assume facts about <tt>g</tt> from within <tt>f</tt>.   Only an implementation that 
-was willing to be responsible for recompiling <tt>f</tt> if the definition of <tt>g</tt> 
+to <code>g</code> in <code>f</code> because it would be a modularity violation for the compiler
+to assume facts about <code>g</code> from within <code>f</code>.   Only an implementation that 
+was willing to be responsible for recompiling <code>f</code> if the definition of <code>g</code> 
 changed incompatibly could legitimately <i><a href="Glossary.html#stack-allocate">stack allocate</a></i> the <i><a href="Glossary.html#list">list</a></i> 
-argument to <tt>g</tt> in <tt>f</tt>.
+argument to <code>g</code> in <code>f</code>.
 </p>
 <p>Here is another example:
 </p>
@@ -201,9 +201,9 @@ that can be achieved (in implementations supporting the optimization) by:
    ...)
 </code>
 </pre></div>
-<p>Note that although the initial value of <tt>x</tt> is not explicit, the <tt>f</tt>
-function is responsible for assembling the list <tt>x</tt> from the passed arguments,
-so the <tt>f</tt> function can be optimized by the compiler to construct a 
+<p>Note that although the initial value of <code>x</code> is not explicit, the <code>f</code>
+function is responsible for assembling the list <code>x</code> from the passed arguments,
+so the <code>f</code> function can be optimized by the compiler to construct a 
 <i><a href="Glossary.html#stack_002dallocated">stack-allocated</a></i> list instead of a heap-allocated list in implementations
 that support such.
 </p>
@@ -216,12 +216,12 @@ that support such.
    ...)
 </code>
 </pre></div>
-<p>The <i><a href="Glossary.html#otherwise-inaccessible-part">otherwise inaccessible parts</a></i> of <tt>x</tt> are three 
+<p>The <i><a href="Glossary.html#otherwise-inaccessible-part">otherwise inaccessible parts</a></i> of <code>x</code> are three 
 <i><a href="Glossary.html#cons">conses</a></i>,  and the <i><a href="Glossary.html#otherwise-inaccessible-part">otherwise inaccessible parts</a></i>
-of <tt>y</tt> are three other <i><a href="Glossary.html#cons">conses</a></i>.  
-None of the symbols <tt>a1</tt>,  <tt>b1</tt>,  <tt>c1</tt>,  <tt>a2</tt>,
-<tt>b2</tt>,  <tt>c2</tt>,  or <a href="NILv.html">nil</a> is an
-<i><a href="Glossary.html#otherwise-inaccessible-part">otherwise inaccessible part</a></i> of <tt>x</tt> or <tt>y</tt> because each
+of <code>y</code> are three other <i><a href="Glossary.html#cons">conses</a></i>.  
+None of the symbols <code>a1</code>,  <code>b1</code>,  <code>c1</code>,  <code>a2</code>,
+<code>b2</code>,  <code>c2</code>,  or <a href="NILv.html">nil</a> is an
+<i><a href="Glossary.html#otherwise-inaccessible-part">otherwise inaccessible part</a></i> of <code>x</code> or <code>y</code> because each
 is <i><a href="Glossary.html#interned">interned</a></i> and hence <i><a href="Glossary.html#accessible">accessible</a></i> by the <i><a href="Glossary.html#package">package</a></i>
 (or <i><a href="Glossary.html#package">packages</a></i>) in which it is <i><a href="Glossary.html#interned">interned</a></i>.
 However, if a freshly allocated <i><a href="Glossary.html#uninterned">uninterned</a></i> <i><a href="Glossary.html#symbol">symbol</a></i> had
@@ -235,7 +235,7 @@ the <i><a href="Glossary.html#list">list</a></i> which contained it.
    (declare (dynamic-extent x))
    (print x)
    :done)
-<tt> |&gt; </tt> (1 2 3)
+<code> |&gt; </code> (1 2 3)
 ⇒  :DONE
 
 ;; In this example, the list to be bound to L can be <i>stack-allocated</i>.
@@ -245,7 +245,7 @@ the <i><a href="Glossary.html#list">list</a></i> which contained it.
      (declare (dynamic-extent l))
      (prin1 (car l)))) ⇒  ZAP
  (zap 1 2 3)
-<tt> |&gt; </tt> 123
+<code> |&gt; </code> 123
 ⇒  NIL
 
 ;; Some implementations might open-code LIST-ALL-PACKAGES in a way
@@ -255,8 +255,8 @@ the <i><a href="Glossary.html#list">list</a></i> which contained it.
    (declare (dynamic-extent l))
    (let ((name (package-name (car l))))
      (when (string-search "COMMON-LISP" name) (print name))))
-<tt> |&gt; </tt> "COMMON-LISP"
-<tt> |&gt; </tt> "COMMON-LISP-USER"
+<code> |&gt; </code> "COMMON-LISP"
+<code> |&gt; </code> "COMMON-LISP-USER"
 ⇒  NIL
 
 ;; Some implementations might have the ability to <i>stack allocate</i> 
@@ -281,7 +281,7 @@ the <i><a href="Glossary.html#list">list</a></i> which contained it.
  (&lt; (zap 5 3) 3) ⇒  <i>true</i>
 </code>
 </pre></div>
-<p>The following are in error, since the value of <tt>x</tt> is used outside of its
+<p>The following are in error, since the value of <code>x</code> is used outside of its
 <i><a href="Glossary.html#extent">extent</a></i>:
 </p>
 <div class="example">

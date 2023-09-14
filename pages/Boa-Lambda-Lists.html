@@ -104,27 +104,27 @@ The way these <i><a href="Glossary.html#lambda-list-keyword">lambda list keyword
 use in an <i><a href="Glossary.html#ordinary-lambda-list">ordinary lambda list</a></i> follows.
 </p>
 <p>Consider this example, which describes how <b>destruct</b> processes
-its <tt>:constructor</tt> option.
+its <code>:constructor</code> option.
 </p>
 <div class="example">
 <pre class="example"><code> (:constructor create-foo
          (a &amp;optional b (c 'sea) &amp;rest d &amp;aux e (f 'eff)))
 </code>
 </pre></div>
-<p>This defines <tt>create-foo</tt> to be a constructor of one or more arguments.
-The first argument is used to initialize the <tt>a</tt> slot.  The second
-argument is used to initialize the <tt>b</tt> slot.  If there isn’t any
+<p>This defines <code>create-foo</code> to be a constructor of one or more arguments.
+The first argument is used to initialize the <code>a</code> slot.  The second
+argument is used to initialize the <code>b</code> slot.  If there isn’t any
 second argument, then the default value given in the body of the
 <b><a href="defstruct.html">defstruct</a></b> (if given) is used instead.  
 The third argument is used to
-initialize the <tt>c</tt> slot.  If there isn’t any third argument, then the
-symbol <tt>sea</tt> is used instead.  Any arguments following the third
+initialize the <code>c</code> slot.  If there isn’t any third argument, then the
+symbol <code>sea</code> is used instead.  Any arguments following the third
 argument are collected into a <i><a href="Glossary.html#list">list</a></i> 
-and used to initialize the <tt>d</tt>
+and used to initialize the <code>d</code>
 slot.  If there are three or fewer arguments, then <a href="NILv.html">nil</a> is placed in
-the <tt>d</tt> slot.  The <tt>e</tt> slot is not initialized; 
+the <code>d</code> slot.  The <code>e</code> slot is not initialized; 
 its initial value is <i><a href="Glossary.html#implementation_002ddefined">implementation-defined</a></i>.
-Finally, the <tt>f</tt> slot is initialized to contain the symbol <tt>eff</tt>.
+Finally, the <code>f</code> slot is initialized to contain the symbol <code>eff</code>.
 </p>
 <p><b>&amp;key</b> and <b>&amp;allow-other-keys</b> arguments default
 in a manner similar to that of <b>&amp;optional</b> arguments: if no default
@@ -144,11 +144,11 @@ For example:
 </code>
 </pre></div>
 <p>If keyword arguments of the form 
-<tt>((<i><a href="Glossary.html#key">key</a></i> <i>var</i>) <span class="roman">[</span><i>default</i> <span class="roman">[</span><i>svar</i><span class="roman">]</span><span class="roman">]</span>)</tt>
+<code>((<i><a href="Glossary.html#key">key</a></i> <i>var</i>) <span class="roman">[</span><i>default</i> <span class="roman">[</span><i>svar</i><span class="roman">]</span><span class="roman">]</span>)</code>
 are specified, the <i><a href="Glossary.html#slot">slot</a></i> <i><a href="Glossary.html#name">name</a></i> is matched with <i>var</i> 
 (not <i><a href="Glossary.html#key">key</a></i>).
 </p>
-<p>The actions taken in the <tt>b</tt> and <tt>e</tt> cases were carefully
+<p>The actions taken in the <code>b</code> and <code>e</code> cases were carefully
 chosen to allow the user to specify all possible behaviors. 
 The <b>&amp;aux</b> variables can be used to completely override the default
 initializations given in the body.
@@ -156,7 +156,7 @@ initializations given in the body.
 <p>If no default value is supplied for an <i><a href="Glossary.html#aux-variable">aux variable</a></i> variable,
 the consequences are undefined if an attempt is later made to read
 the corresponding <i><a href="Glossary.html#slot">slot</a></i>’s value before a value is explicitly assigned.
-If such a <i><a href="Glossary.html#slot">slot</a></i> has a <tt>:type</tt> option specified,
+If such a <i><a href="Glossary.html#slot">slot</a></i> has a <code>:type</code> option specified,
 this suppressed initialization does not imply a type mismatch situation;
 the declared type is only required to apply when the <i><a href="Glossary.html#slot">slot</a></i> is finally assigned.
 </p>
@@ -172,8 +172,8 @@ the declared type is only required to apply when the <i><a href="Glossary.html#s
 <pre class="example"><code> (make-foo :a 1 :b 2)
 </code>
 </pre></div>
-<p>and <tt>create-foo</tt> provides defaulting different
-from that of <tt>make-foo</tt>.
+<p>and <code>create-foo</code> provides defaulting different
+from that of <code>make-foo</code>.
 </p>
 <p>Additional arguments that do not correspond to slot names but
 are merely present to supply values used in subsequent initialization 
@@ -187,8 +187,8 @@ For example, in the definition
          a b c)
 </code>
 </pre></div>
-<p>the <tt>c-token</tt> argument is used merely to supply a value used in the 
-initialization of the <tt>c</tt> slot. The <i><a href="Glossary.html#supplied_002dp-parameter">supplied-p parameters</a></i> 
+<p>the <code>c-token</code> argument is used merely to supply a value used in the 
+initialization of the <code>c</code> slot. The <i><a href="Glossary.html#supplied_002dp-parameter">supplied-p parameters</a></i> 
 associated with <i><a href="Glossary.html#optional-parameter">optional parameters</a></i> and <i><a href="Glossary.html#keyword-parameter">keyword parameters</a></i>
 might also be used this way.
 </p>

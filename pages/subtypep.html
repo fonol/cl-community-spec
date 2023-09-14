@@ -178,28 +178,28 @@ implemented as <i><a href="Glossary.html#derived-type">derived types</a></i>, <b
 <p>The relationships between <i><a href="Glossary.html#type">types</a></i> reflected by <b><a href="subtypep.html">subtypep</a></b>
 are those specific to the particular implementation.  For example, if
 an implementation supports only a single type of floating-point numbers,
-in that implementation <tt>(subtypep 'float 'long-float)</tt> 
+in that implementation <code>(subtypep 'float 'long-float)</code> 
 returns the <i><a href="Glossary.html#value">values</a></i> <i><a href="Glossary.html#true">true</a></i> and <i><a href="Glossary.html#true">true</a></i> 
 (since the two <i><a href="Glossary.html#type">types</a></i> are identical).
 </p>
-<p>For all <i>T1</i> and <i>T2</i> other than <tt>*</tt>, 
-<tt>(array <i>T1</i>)</tt> and <tt>(array <i>T2</i>)</tt> 
+<p>For all <i>T1</i> and <i>T2</i> other than <code>*</code>, 
+<code>(array <i>T1</i>)</code> and <code>(array <i>T2</i>)</code> 
 are two different <i><a href="Glossary.html#type-specifier">type specifiers</a></i> that always refer to the same sets of
 things if and only if they refer to <i><a href="Glossary.html#array">arrays</a></i>
-of exactly the same specialized representation, <i>i.e.</i>, if <tt>(upgraded-array-element-type '<i>T1</i>)</tt>  and
-   <tt>(upgraded-array-element-type '<i>T2</i>)</tt> 
+of exactly the same specialized representation, <i>i.e.</i>, if <code>(upgraded-array-element-type '<i>T1</i>)</code>  and
+   <code>(upgraded-array-element-type '<i>T2</i>)</code> 
 return two different <i><a href="Glossary.html#type-specifier">type specifiers</a></i> that always refer to the same sets of
 <i><a href="Glossary.html#object">objects</a></i>.
 This is another way of saying that 
-<tt>`(array <i>type-specifier</i>)</tt>
+<code>`(array <i>type-specifier</i>)</code>
 and
-<tt>`(array ,(upgraded-array-element-type '<i>type-specifier</i>))</tt> 
+<code>`(array ,(upgraded-array-element-type '<i>type-specifier</i>))</code> 
 refer to the same
 set of specialized <i><a href="Glossary.html#array">array</a></i> representations.
-For all <i>T1</i> and <i>T2</i> other than <tt>*</tt>, 
+For all <i>T1</i> and <i>T2</i> other than <code>*</code>, 
 the intersection of
-    <tt>(array <i>T1</i>)</tt>
-and <tt>(array <i>T2</i>)</tt> is the empty set
+    <code>(array <i>T1</i>)</code>
+and <code>(array <i>T2</i>)</code> is the empty set
 if and only if they refer to <i><a href="Glossary.html#array">arrays</a></i> of different,
 distinct specialized representations.  
 </p>
@@ -219,7 +219,7 @@ distinct specialized representations.
 <p>return two different <i><a href="Glossary.html#type-specifier">type specifiers</a></i> that always refer to the same sets of
 <i><a href="Glossary.html#object">objects</a></i>.
 </p>
-<p>For all type-specifiers <i>T1</i> and <i>T2</i> other than <tt>*</tt>, 
+<p>For all type-specifiers <i>T1</i> and <i>T2</i> other than <code>*</code>, 
 </p>
 <div class="example">
 <pre class="example"><code> (subtypep '(complex T1) '(complex T2)) ⇒  <i>true</i>, <i>true</i>
@@ -227,14 +227,14 @@ distinct specialized representations.
 </pre></div>
 <p>if:
 </p><ol>
-<li><p><tt>T1</tt> is a <i><a href="Glossary.html#subtype">subtype</a></i> of <tt>T2</tt>, or
+<li><p><code>T1</code> is a <i><a href="Glossary.html#subtype">subtype</a></i> of <code>T2</code>, or
 </p></li>
-<li><p><tt>(upgraded-complex-part-type '<i>T1</i>)</tt> and
-	      <tt>(upgraded-complex-part-type '<i>T2</i>)</tt> 
+<li><p><code>(upgraded-complex-part-type '<i>T1</i>)</code> and
+	      <code>(upgraded-complex-part-type '<i>T2</i>)</code> 
    return two different <i><a href="Glossary.html#type-specifier">type specifiers</a></i> that always refer to the 
    same sets of <i><a href="Glossary.html#object">objects</a></i>; in this case,
-    <tt>(complex <i>T1</i>)</tt> and 
-    <tt>(complex <i>T2</i>)</tt> both refer to the 
+    <code>(complex <i>T1</i>)</code> and 
+    <code>(complex <i>T2</i>)</code> both refer to the 
    same specialized representation.
 </p></li>
 </ol>
@@ -272,7 +272,7 @@ representation for <i><a href="Glossary.html#single-float">single floats</a></i>
  (subtypep 'nil '(member)) ⇒  <i>true</i>, <i>true</i> ;or <i>false</i>, <i>false</i>
 </code>
 </pre></div>
-<p>Let <tt>&lt;aet-x&gt;</tt> and <tt>&lt;aet-y&gt;</tt> be two distinct <i><a href="Glossary.html#type-specifier">type specifiers</a></i> that 
+<p>Let <code>&lt;aet-x&gt;</code> and <code>&lt;aet-y&gt;</code> be two distinct <i><a href="Glossary.html#type-specifier">type specifiers</a></i> that 
 do not always refer to the same sets of
 <i><a href="Glossary.html#object">objects</a></i>
 in a given implementation, but for which
@@ -291,8 +291,8 @@ in a given implementation, but for which
 ⇒  <i>true</i>, <i>true</i>
 </code>
 </pre></div>
-<p>If  <tt>(array &lt;aet-x&gt;)</tt> 
-and <tt>(array &lt;aet-y&gt;)</tt> are different names for
+<p>If  <code>(array &lt;aet-x&gt;)</code> 
+and <code>(array &lt;aet-y&gt;)</code> are different names for
 exactly the same set of <i><a href="Glossary.html#object">objects</a></i>, 
 these names should always refer to the same sets of
 <i><a href="Glossary.html#object">objects</a></i>.
@@ -318,9 +318,9 @@ the specification of the resultant part type independently of
 the actual types of the parts.  Thus in the case of the <i><a href="Glossary.html#type">type</a></i> <b><a href="complex.html">complex</a></b>,
 the actual type of the parts is referred to, although a <i><a href="Glossary.html#number">number</a></i> 
 can be a member of more than one <i><a href="Glossary.html#type">type</a></i>.
-For example, <tt>17</tt> is of <i><a href="Glossary.html#type">type</a></i> <tt>(mod 18)</tt> 
-as well as <i><a href="Glossary.html#type">type</a></i> <tt>(mod 256)</tt> and <i><a href="Glossary.html#type">type</a></i> <b><a href="integer.html">integer</a></b>;
-and <tt>2.3f5</tt> is of <i><a href="Glossary.html#type">type</a></i> <b>single-float</b> 
+For example, <code>17</code> is of <i><a href="Glossary.html#type">type</a></i> <code>(mod 18)</code> 
+as well as <i><a href="Glossary.html#type">type</a></i> <code>(mod 256)</code> and <i><a href="Glossary.html#type">type</a></i> <b><a href="integer.html">integer</a></b>;
+and <code>2.3f5</code> is of <i><a href="Glossary.html#type">type</a></i> <b>single-float</b> 
 as well as <i><a href="Glossary.html#type">type</a></i> <b><a href="float.html">float</a></b>.
 </p>
 </div>

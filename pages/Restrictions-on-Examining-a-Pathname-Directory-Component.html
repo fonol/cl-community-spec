@@ -87,31 +87,31 @@
 <div class="section top-most">
 <h4 class="subsubsection">Restrictions on Examining a Pathname Directory Component</h4>
 <p>The directory might be a <i><a href="Glossary.html#string">string</a></i>,
-<tt>:wild</tt>, <tt>:unspecific</tt>, or <a href="NILv.html">nil</a>.
+<code>:wild</code>, <code>:unspecific</code>, or <a href="NILv.html">nil</a>.
 </p>
 <p>The directory can be a <i><a href="Glossary.html#list">list</a></i> of <i><a href="Glossary.html#string">strings</a></i> and <i><a href="Glossary.html#symbol">symbols</a></i>. 
 </p>
-<p>The <i><a href="Glossary.html#car">car</a></i> of the <i><a href="Glossary.html#list">list</a></i> is one of the symbols <tt>:absolute</tt>
+<p>The <i><a href="Glossary.html#car">car</a></i> of the <i><a href="Glossary.html#list">list</a></i> is one of the symbols <code>:absolute</code>
  or 
-<tt>:relative</tt>
+<code>:relative</code>
 <a name="index-relative-1"></a>, 
  meaning:
 </p>
 <dl compact="compact">
-<dt><tt>:absolute</tt></dt>
-<dd><p>A <i><a href="Glossary.html#list">list</a></i> whose <i><a href="Glossary.html#car">car</a></i> is the symbol <tt>:absolute</tt> represents 
+<dt><code>:absolute</code></dt>
+<dd><p>A <i><a href="Glossary.html#list">list</a></i> whose <i><a href="Glossary.html#car">car</a></i> is the symbol <code>:absolute</code> represents 
   a directory path starting from the root directory.  The list 
-  <tt>(:absolute)</tt> represents the root directory.  The list 
-  <tt>(:absolute "foo" "bar" "baz")</tt> represents the directory called
-  <tt>"/foo/bar/baz"</tt> in Unix (except possibly for <i><a href="Glossary.html#case">case</a></i>).
+  <code>(:absolute)</code> represents the root directory.  The list 
+  <code>(:absolute "foo" "bar" "baz")</code> represents the directory called
+  <code>"/foo/bar/baz"</code> in Unix (except possibly for <i><a href="Glossary.html#case">case</a></i>).
 </p>
 </dd>
-<dt><tt>:relative</tt></dt>
-<dd><p>A <i><a href="Glossary.html#list">list</a></i> whose <i><a href="Glossary.html#car">car</a></i> is the symbol <tt>:relative</tt> represents 
+<dt><code>:relative</code></dt>
+<dd><p>A <i><a href="Glossary.html#list">list</a></i> whose <i><a href="Glossary.html#car">car</a></i> is the symbol <code>:relative</code> represents 
   a directory path starting from a default directory.  
-  The list <tt>(:relative)</tt> has the same meaning as <a href="NILv.html">nil</a> and hence is not used.
-  The list <tt>(:relative "foo" "bar")</tt> represents the directory named <tt>"bar"</tt> 
-  in the directory named <tt>"foo"</tt> in the default directory.
+  The list <code>(:relative)</code> has the same meaning as <a href="NILv.html">nil</a> and hence is not used.
+  The list <code>(:relative "foo" "bar")</code> represents the directory named <code>"bar"</code> 
+  in the directory named <code>"foo"</code> in the default directory.
 </p>
 </dd>
 </dl>
@@ -132,54 +132,54 @@ represented with the standard <i><a href="Glossary.html#string">strings</a></i> 
 <p>Supplying any non-<i><a href="Glossary.html#string">string</a></i>, including any of the <i><a href="Glossary.html#symbol">symbols</a></i> listed below, 
 to a file system for which it does not make sense
 signals an error of <i><a href="Glossary.html#type">type</a></i> <a href="file_002derror.html">file-error</a>.
-For example, Unix does not support <tt>:wild-inferiors</tt> in most implementations.
+For example, Unix does not support <code>:wild-inferiors</code> in most implementations.
 </p>
 <p>  Symbol           Meaning                                             
-  <tt>:wild</tt>            Wildcard match of one level of <a href="directory.html">directory</a> structure  
-  <tt><span class="nolinebreak">:wild-inferiors</span></tt>  Wildcard match of any <a href="number.html">number</a> of <a href="directory.html">directory</a> levels    
-  <tt>:up</tt>              Go upward in <a href="directory.html">directory</a> structure (semantic)         
-  <tt>:back</tt>            Go upward in <a href="directory.html">directory</a> structure (syntactic)        
+  <code>:wild</code>            Wildcard match of one level of <a href="directory.html">directory</a> structure  
+  <code><span class="nolinebreak">:wild-inferiors</span></code>  Wildcard match of any <a href="number.html">number</a> of <a href="directory.html">directory</a> levels    
+  <code>:up</code>              Go upward in <a href="directory.html">directory</a> structure (semantic)         
+  <code>:back</code>            Go upward in <a href="directory.html">directory</a> structure (syntactic)        
 </p>
 <div class="table-subcaption"> Figure 19–3: Special Markers In Directory Component </div>
 <p>The following notes apply to the previous figure:
 </p>
 <dl compact="compact">
 <dt>Invalid Combinations</dt>
-<dd><p>Using <tt>:absolute</tt> or <tt>:wild-inferiors</tt> 
-immediately followed by <tt>:up</tt> or <tt>:back</tt>
+<dd><p>Using <code>:absolute</code> or <code>:wild-inferiors</code> 
+immediately followed by <code>:up</code> or <code>:back</code>
 signals an error of <i><a href="Glossary.html#type">type</a></i> <a href="file_002derror.html">file-error</a>.
 </p>
 </dd>
 <dt>Syntactic vs Semantic</dt>
-<dd><p>"Syntactic" means that the action of <tt>:back</tt> 
+<dd><p>"Syntactic" means that the action of <code>:back</code> 
 depends only on the <i><a href="Glossary.html#pathname">pathname</a></i>
 and not on the contents of the file system.  
 </p>
-<p>"Semantic" means that the action of <tt>:up</tt> 
+<p>"Semantic" means that the action of <code>:up</code> 
 depends on the contents of the file system; 
 to resolve a <i><a href="Glossary.html#pathname">pathname</a></i> containing 
-<tt>:up</tt> to a <i><a href="Glossary.html#pathname">pathname</a></i> whose directory component
-contains only <tt>:absolute</tt> and 
+<code>:up</code> to a <i><a href="Glossary.html#pathname">pathname</a></i> whose directory component
+contains only <code>:absolute</code> and 
 <i><a href="Glossary.html#string">strings</a></i> requires probing the file system.
 </p>
-<p><tt>:up</tt> differs from 
-<tt>:back</tt> only in file systems that support multiple
+<p><code>:up</code> differs from 
+<code>:back</code> only in file systems that support multiple
   names for directories, perhaps via symbolic links.  For example,
   suppose that there is a directory
-<tt>(:absolute "X" "Y" "Z")</tt>
+<code>(:absolute "X" "Y" "Z")</code>
   linked to 
-<tt>(:absolute "A" "B" "C")</tt>
+<code>(:absolute "A" "B" "C")</code>
   and there also exist directories
-<tt>(:absolute "A" "B" "Q")</tt> and 
-<tt>(:absolute "X" "Y" "Q")</tt>.
+<code>(:absolute "A" "B" "Q")</code> and 
+<code>(:absolute "X" "Y" "Q")</code>.
 Then
-<tt>(:absolute "X" "Y" "Z" :up "Q")</tt>
+<code>(:absolute "X" "Y" "Z" :up "Q")</code>
   designates
-<tt>(:absolute "A" "B" "Q")</tt>
+<code>(:absolute "A" "B" "Q")</code>
   while
-<tt>(:absolute "X" "Y" "Z" :back "Q")</tt>
+<code>(:absolute "X" "Y" "Z" :back "Q")</code>
   designates
-<tt>(:absolute "X" "Y" "Q")</tt>
+<code>(:absolute "X" "Y" "Q")</code>
 </p></dd>
 </dl>
 </div>

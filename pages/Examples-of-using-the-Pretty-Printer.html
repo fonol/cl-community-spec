@@ -87,9 +87,9 @@
 <div class="section top-most">
 <h4 class="subsection">Examples of using the Pretty Printer</h4>
 <p>As an example of the interaction of logical blocks, conditional newlines,
-and indentation, consider the function <tt>simple-pprint-defun</tt> below.  This
+and indentation, consider the function <code>simple-pprint-defun</code> below.  This
 function prints out lists whose <i><a href="Glossary.html#car">cars</a></i> are <b><a href="defun.html">defun</a></b> in the 
-standard way assuming that the list has exactly length <tt>4</tt>.
+standard way assuming that the list has exactly length <code>4</code>.
 </p>
 <div class="example">
 <pre class="example"><code>(defun simple-pprint-defun (*standard-output* list)
@@ -114,24 +114,24 @@ standard way assuming that the list has exactly length <tt>4</tt>.
 <pre class="example"><code>(simple-pprint-defun *standard-output* '(defun prod (x y) (* x y)))
 </code>
 </pre></div>
-<p>If the line width available is greater than or equal to <tt>26</tt>, then all of the
-output appears on one line.  If the line width available is reduced to <tt>25</tt>,
+<p>If the line width available is greater than or equal to <code>26</code>, then all of the
+output appears on one line.  If the line width available is reduced to <code>25</code>,
 a line break is inserted at the 
 linear-style conditional newline
 </p>
 <p>before the
-<i><a href="Glossary.html#expression">expression</a></i> <tt>(* x y)</tt>, producing the output shown.  The
-<tt>(pprint-indent :block 1)</tt> causes <tt>(* x y)</tt> to be printed at a relative
-indentation of <tt>1</tt> in the logical block.
+<i><a href="Glossary.html#expression">expression</a></i> <code>(* x y)</code>, producing the output shown.  The
+<code>(pprint-indent :block 1)</code> causes <code>(* x y)</code> to be printed at a relative
+indentation of <code>1</code> in the logical block.
 </p>
 <div class="example">
 <pre class="example"><code> (DEFUN PROD (X Y) 
    (* X Y))
 </code>
 </pre></div>
-<p>If the line width available is <tt>15</tt>, a line break is also inserted at the
+<p>If the line width available is <code>15</code>, a line break is also inserted at the
 fill style conditional newline before the argument list.  The call on
-<tt>(pprint-indent :current 0)</tt> causes the argument list to line up under the
+<code>(pprint-indent :current 0)</code> causes the argument list to line up under the
 function name.
 </p>
 <div class="example">
@@ -153,7 +153,7 @@ miser-style conditional newlines.
 </code>
 </pre></div>
 <p>As an example of a per-line prefix, consider that evaluating the following
-produces the output shown with a line width of <tt>20</tt> and
+produces the output shown with a line width of <code>20</code> and
 <a href="002aprint_002dmiser_002dwidth_002a.html">*print-miser-width*</a> of <a href="NILv.html">nil</a>.
 </p>
 <div class="example">
@@ -165,7 +165,7 @@ produces the output shown with a line width of <tt>20</tt> and
  ;;;   (* X Y))
 </code>
 </pre></div>
-<p>As a more complex (and realistic) example, consider the function <tt>pprint-let</tt>
+<p>As a more complex (and realistic) example, consider the function <code>pprint-let</code>
 below.  This specifies how to print a <b><a href="let.html">let</a></b> <i><a href="Glossary.html#form">form</a></i> in the traditional
 style.  It is more complex than the example above, because it has to deal with
 nested structure.  Also, unlike the example above it contains complete code to 
@@ -221,13 +221,13 @@ and <a href="002aprint_002dcircle_002a.html">*print-circle*</a> being <i><a href
                    (setq x (sqrt z)) #1#))
 </code>
 </pre></div>
-<p>If the line length is greater than or equal to <tt>77</tt>, the output produced
-appears on one line.  However, if the line length is <tt>76</tt>, line breaks are
+<p>If the line length is greater than or equal to <code>77</code>, the output produced
+appears on one line.  However, if the line length is <code>76</code>, line breaks are
 inserted at the linear-style conditional newlines separating the forms in
 the body and the output below is produced.  Note that, the degenerate
-binding pair <tt>x</tt> is printed readably even though it fails to be a list; a
-depth abbreviation marker is printed in place of <tt>(g 3)</tt>; the binding pair
-<tt>(z . 2)</tt> is printed readably even though it is not a proper list; and
+binding pair <code>x</code> is printed readably even though it fails to be a list; a
+depth abbreviation marker is printed in place of <code>(g 3)</code>; the binding pair
+<code>(z . 2)</code> is printed readably even though it is not a proper list; and
 appropriate circularity markers are printed.
 </p>
 <div class="example">
@@ -236,7 +236,7 @@ appropriate circularity markers are printed.
       #1#)
 </code>
 </pre></div>
-<p>If the line length is reduced to <tt>35</tt>, a line break is inserted at one of the
+<p>If the line length is reduced to <code>35</code>, a line break is inserted at one of the
 fill-style conditional newlines separating the binding pairs.
 </p>
 <div class="example">
@@ -246,12 +246,12 @@ fill-style conditional newlines separating the binding pairs.
       #1#)
 </code>
 </pre></div>
-<p>Suppose that the line length is further reduced to <tt>22</tt> and <b>*print-length*</b> is
-set to <tt>3</tt>. In this situation, line breaks are inserted after both the first
+<p>Suppose that the line length is further reduced to <code>22</code> and <b>*print-length*</b> is
+set to <code>3</code>. In this situation, line breaks are inserted after both the first
 and second binding pairs.  In addition, the second binding pair is itself
 broken across two lines.  Clause (b) of the description of fill-style
 conditional newlines (see the <i><a href="Glossary.html#function">function</a></i> <a href="pprint_002dnewline.html">pprint-newline</a>) 
-prevents the binding pair <tt>(z . 2)</tt> from being printed
+prevents the binding pair <code>(z . 2)</code> from being printed
 at the end of the third line.  Note that the length abbreviation hides the
 circularity from view and therefore the printing of circularity markers
 disappears.
@@ -265,7 +265,7 @@ disappears.
    ...)
 </code>
 </pre></div>
-<p>The next function prints a vector using "<tt>#(...)</tt>" notation.
+<p>The next function prints a vector using "<code>#(...)</code>" notation.
 </p>
 <div class="example">
 <pre class="example"><code>(defun pprint-vector (*standard-output* v)
@@ -290,9 +290,9 @@ disappears.
 </code>
 </pre></div>
 <p>As examples of the convenience of specifying pretty printing with 
-<i><a href="Glossary.html#format-string">format strings</a></i>, consider that the functions <tt>simple-pprint-defun</tt>
-and <tt>pprint-let</tt> used as examples above can be compactly defined as follows.
-(The function <tt>pprint-vector</tt> cannot be defined using <b><a href="format.html">format</a></b>
+<i><a href="Glossary.html#format-string">format strings</a></i>, consider that the functions <code>simple-pprint-defun</code>
+and <code>pprint-let</code> used as examples above can be compactly defined as follows.
+(The function <code>pprint-vector</code> cannot be defined using <b><a href="format.html">format</a></b>
 because the data structure it traverses is not a list.)
 </p>
 <div class="example">
@@ -300,7 +300,7 @@ because the data structure it traverses is not a list.)
   (format T "~:&lt;~W ~@_~:I~W ~:_~W~1I ~_~W~:&gt;" list))
 
 (defun pprint-let (*standard-output* list)
-  (format T "~:&lt;~W~<tt>^</tt>~:&lt;~@{~:&lt;~@{~W~<tt>^</tt>~_~}~:&gt;~<tt>^</tt>~:_~}~:&gt;~1I~@{~<tt>^</tt>~_~W~}~:&gt;" list)) 
+  (format T "~:&lt;~W~<code>^</code>~:&lt;~@{~:&lt;~@{~W~<code>^</code>~_~}~:&gt;~<code>^</code>~:_~}~:&gt;~1I~@{~<code>^</code>~_~W~}~:&gt;" list)) 
 </code>
 </pre></div>
 <p>In the following example, the first <i><a href="Glossary.html#form">form</a></i> restores
@@ -333,7 +333,7 @@ pretty printing functions for types of <i><a href="Glossary.html#code">code</a><
 for printing quoted objects using <i><a href="Glossary.html#single_002dquote">single-quote</a></i>.  Note
 the care taken to ensure that data lists that happen to begin
 with <a href="quote.html">quote</a> will be printed readably.  The second form 
-specifies that lists beginning with the symbol <tt>my-let</tt>
+specifies that lists beginning with the symbol <code>my-let</code>
 should print the same way that lists beginning with <b><a href="let.html">let</a></b>
 print when the initial <i><a href="Glossary.html#pprint-dispatch-table">pprint dispatch table</a></i> is in effect.
 </p>
@@ -352,7 +352,7 @@ print when the initial <i><a href="Glossary.html#pprint-dispatch-table">pprint d
 correspond to function calls.  Note that the functions <b>pprint-linear</b>,
 <a href="pprint_002dfill.html">pprint-fill</a>, and <b>pprint-tabular</b> are all defined with
 optional <i>colon-p</i> and <i>at-sign-p</i> arguments so that they can 
-be used as <b>pprint dispatch functions</b> as well as <tt>~/.../</tt> 
+be used as <b>pprint dispatch functions</b> as well as <code>~/.../</code> 
 functions.
 </p>
 <div class="example">
@@ -378,7 +378,7 @@ user defined data structure.
                s (family-mom f) (family-kids f))))
 </code>
 </pre></div>
-<p>The pretty printing function for the structure <tt>family</tt> specifies how to
+<p>The pretty printing function for the structure <code>family</code> specifies how to
 adjust the layout of the output so that it can fit aesthetically into
 a variety of line widths.  In addition, it obeys 
 the printer control variables <a href="002aprint_002dlevel_002a.html">*print-level*</a>,
@@ -386,9 +386,9 @@ the printer control variables <a href="002aprint_002dlevel_002a.html">*print-lev
 <a href="002aprint_002dcircle_002a.html">*print-circle*</a>
 and <a href="002aprint_002descape_002a.html">*print-escape*</a>,
 and can tolerate several different kinds of malformity in the data structure.
-The output below shows what is printed out with a right margin of <tt>25</tt>,
+The output below shows what is printed out with a right margin of <code>25</code>,
 <a href="002aprint_002dpretty_002a.html">*print-pretty*</a> being <i><a href="Glossary.html#true">true</a></i>, <a href="002aprint_002descape_002a.html">*print-escape*</a> being <i><a href="Glossary.html#false">false</a></i>,
-and a malformed <tt>kids</tt> list.
+and a malformed <code>kids</code> list.
 </p>
 <div class="example">
 <pre class="example"><code> (write (list 'principal-family
