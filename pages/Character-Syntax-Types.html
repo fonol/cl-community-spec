@@ -102,9 +102,10 @@ the <i><a href="Glossary.html#input">input</a></i> <i>stream</i> and dispatches 
 Every <i><a href="Glossary.html#character">character</a></i> that can appear in the <i><a href="Glossary.html#input">input</a></i> <i>stream</i>
 is of one of the <i><a href="Glossary.html#syntax-type">syntax types</a></i> shown in <i>Figure~2–6</i>.
 </p>
-<p>  <i><a href="Glossary.html#constituent">constituent</a></i>  <i>macro character</i>  <i>single escape</i>  
-  <i><a href="Glossary.html#invalid">invalid</a></i>      <i>multiple escape</i>  <i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span>   
-</p>
+<table>
+   <tr><td> <i><a href="Glossary.html#constituent">constituent</a></i></td><td><i>macro character</i></td><td><i>single escape</i></td></tr>
+   <tr><td> <i><a href="Glossary.html#invalid">invalid</a></i></td><td><i>multiple escape</i></td><td><i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span></td></tr>
+</table>
 <div class="table-subcaption"> Figure 2–6: Possible Character <a href="Syntax.html">Syntax</a> Types </div>
 <p>The <i><a href="Glossary.html#syntax-type">syntax type</a></i> of a <i><a href="Glossary.html#character">character</a></i> in a <i><a href="Glossary.html#readtable">readtable</a></i>
 determines how that character is interpreted by the <i><a href="Glossary.html#Lisp-reader">Lisp reader</a></i>
@@ -115,29 +116,34 @@ At any given time, every character has exactly one <i><a href="Glossary.html#syn
 lists the <i><a href="Glossary.html#syntax-type">syntax type</a></i> of each <i><a href="Glossary.html#character">character</a></i> in <i><a href="Glossary.html#standard-syntax">standard syntax</a></i>.
 </p>
 <table>
-<tr><td><a href="character.html">character</a></td><td>syntax <a href="type.html">type</a></td><td><a href="character.html">character</a></td><td>syntax <a href="type.html">type</a></td></tr>
-<tr><td>Backspace</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td>0–9</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
-<tr><td>Tab</td><td><i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span></td><td>:</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
-<tr><td>Newline</td><td><i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span></td><td>;</td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td></tr>
-<tr><td>Linefeed</td><td><i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span></td><td><code class="no-highlight">&lt;</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
-<tr><td>Page</td><td><i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span></td><td>=</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
-<tr><td>Return</td><td><i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span></td><td><code class="no-highlight">&gt;</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
-<tr><td>Space</td><td><i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span></td><td>?</td><td><i><a href="Glossary.html#constituent">constituent</a></i>*</td></tr>
-<tr><td>!</td><td><i><a href="Glossary.html#constituent">constituent</a></i>*</td><td><code class="no-highlight">@</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
-<tr><td><code class="no-highlight">"</code></td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td><td>A–Z</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
-<tr><td>#</td><td><i><span class="nolinebreak">non-terminating</span></i> <i>macro char</i></td><td><code class="no-highlight">[</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i>*</td></tr>
-<tr><td>$</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td><code class="no-highlight">\</code></td><td><i>single escape</i></td></tr>
-<tr><td>%</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td><code class="no-highlight">]</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i>*</td></tr>
-<tr><td>&amp;</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td><code class="no-highlight">^</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
-<tr><td>’</td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td><td><code class="no-highlight"><span class="nolinebreak">_</span></code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
-<tr><td>(</td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td><td>‘</td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td></tr>
-<tr><td>)</td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td><td>a–z</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
-<tr><td><code class="no-highlight">*</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td><code class="no-highlight">{</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i>*</td></tr>
-<tr><td><a href="002b.html">+</a></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td><code class="no-highlight">|</code></td><td><i>multiple escape</i></td></tr>
-<tr><td>,</td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td><td><code class="no-highlight">}</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i>*</td></tr>
-<tr><td><a href="002d.html">-</a></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td><code class="no-highlight">~</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
-<tr><td>.</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td>Rubout</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
-<tr><td><a href="002f.html">/</a></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td></td><td></td></tr>
+    <thead>
+        <tr><th>character</th><th>syntax type</th><th>character</th><th>syntax type</th></tr>
+    </thead>
+    <tbody>
+        <tr><td>Backspace</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td>0–9</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
+        <tr><td>Tab</td><td><i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span></td><td>:</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
+        <tr><td>Newline</td><td><i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span></td><td>;</td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td></tr>
+        <tr><td>Linefeed</td><td><i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span></td><td><code class="no-highlight">&lt;</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
+        <tr><td>Page</td><td><i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span></td><td>=</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
+        <tr><td>Return</td><td><i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span></td><td><code class="no-highlight">&gt;</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
+        <tr><td>Space</td><td><i><a href="Glossary.html#whitespace">whitespace</a></i><span class="nolinebreak">_2</span></td><td>?</td><td><i><a href="Glossary.html#constituent">constituent</a></i>*</td></tr>
+        <tr><td>!</td><td><i><a href="Glossary.html#constituent">constituent</a></i>*</td><td><code class="no-highlight">@</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
+        <tr><td><code class="no-highlight">"</code></td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td><td>A–Z</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
+        <tr><td>#</td><td><i><span class="nolinebreak">non-terminating</span></i> <i>macro char</i></td><td><code class="no-highlight">[</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i>*</td></tr>
+        <tr><td>$</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td><code class="no-highlight">\</code></td><td><i>single escape</i></td></tr>
+        <tr><td>%</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td><code class="no-highlight">]</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i>*</td></tr>
+        <tr><td>&amp;</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td><code class="no-highlight">^</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
+        <tr><td>’</td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td><td><code class="no-highlight"><span class="nolinebreak">_</span></code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
+        <tr><td>(</td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td><td>‘</td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td></tr>
+        <tr><td>)</td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td><td>a–z</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
+        <tr><td><code class="no-highlight">*</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td><code class="no-highlight">{</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i>*</td></tr>
+        <tr><td><a href="002b.html">+</a></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td><code class="no-highlight">|</code></td><td><i>multiple escape</i></td></tr>
+        <tr><td>,</td><td><i><a href="Glossary.html#terminating">terminating</a></i> <i>macro char</i></td><td><code class="no-highlight">}</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i>*</td></tr>
+        <tr><td><a href="002d.html">-</a></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td><code class="no-highlight">~</code></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
+        <tr><td>.</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td>Rubout</td><td><i><a href="Glossary.html#constituent">constituent</a></i></td></tr>
+        <tr><td><a href="002f.html">/</a></td><td><i><a href="Glossary.html#constituent">constituent</a></i></td><td></td><td></td></tr>
+
+    </tbody>
 </table>
 <div class="table-subcaption"> Figure 2–7: Character <a href="Syntax.html">Syntax</a> Types in Standard <a href="Syntax.html">Syntax</a> </div>
 <p>The characters marked with an asterisk (*) are initially <i><a href="Glossary.html#constituent">constituents</a></i>,
