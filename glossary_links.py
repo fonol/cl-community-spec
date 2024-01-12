@@ -1,4 +1,8 @@
-
+"""
+    Script that was used to turn keywords inside tables or italic/bold text into links to the glossary page. 
+    You most likely do not want to use this anymore, if you find some link that is not correct/missing, please change
+    it in the HTML in pages/ directly.
+"""
 import os
 import re
 from bs4 import BeautifulSoup

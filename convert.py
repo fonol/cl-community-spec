@@ -1,5 +1,6 @@
 """
 This script was used for the initial conversion of the generated HTML to what is now inside pages/.
+Most likely, you do not want to use this anymore, and if you want to do changes, just change the HTML files in pages/ directly.
 """
 
 import os

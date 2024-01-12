@@ -1,5 +1,6 @@
 """
     Regenerate the "backlinks" section on each page.
+    Should be used after you made modifications to any page that either changed the title or changed any links inside the page.
     Needs beautifulsoup, e.g. `pip install beautifulsoup4`
     Slow, will take ~3-5mins!
 """

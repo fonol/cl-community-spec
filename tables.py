@@ -1,3 +1,7 @@
+"""
+    Script that was used to create tables from some indented sections in the initial HTML output.
+    You most likely do not want to use this anymore.    
+"""
 import os
 import re
 
